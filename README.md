@@ -21,11 +21,14 @@ A modern Next.js template with Supabase authentication, profiles, and file uploa
 
 ## 🛠 Setup
 
-1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/boring-next.git
-cd boring-next
-```
+1. Fork the repository:
+   - Go to [boring-next](https://github.com/yourusername/boring-next)
+   - Click the "Fork" button in the top right corner
+   - Clone your forked repository:
+   ```bash
+   git clone https://github.com/yourusername/boring-next.git
+   cd boring-next
+   ```
 
 2. Install dependencies:
 ```bash
