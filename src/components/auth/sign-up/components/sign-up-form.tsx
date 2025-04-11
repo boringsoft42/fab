@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/utils/password-input";
+import { PasswordStrengthIndicator } from "@/components/utils/password-strength-indicator";
 import type { SignUpFormProps, SignUpFormData } from "@/types/auth/sign-up";
 import { signUpFormSchema } from "@/types/auth/sign-up";
 import { toast } from "@/components/ui/use-toast";
@@ -28,6 +29,7 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
   const { signUp } = useAuth();
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [password, setPassword] = useState("");
   const router = useRouter();
 
   const form = useForm<SignUpFormData>({
@@ -54,6 +56,11 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
     }
   };
 
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+    form.setValue("password", e.target.value);
+  };
+
   async function onSubmit(data: SignUpFormData) {
     try {
       setIsLoading(true);
@@ -76,7 +83,8 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
             console.error("Avatar upload failed:", error);
             toast({
               title: "Warning",
-              description: "Failed to upload avatar, you can add it later from your profile.",
+              description:
+                "Failed to upload avatar, you can add it later from your profile.",
               variant: "default",
             });
           }
@@ -221,8 +229,13 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <PasswordInput placeholder="********" {...field} />
+                  <PasswordInput
+                    placeholder="********"
+                    {...field}
+                    onChange={handlePasswordChange}
+                  />
                 </FormControl>
+                <PasswordStrengthIndicator password={password} />
                 <FormMessage />
               </FormItem>
             )}
