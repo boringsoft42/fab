@@ -1,101 +1,100 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import Image from "next/image";
-import { Camera, Loader2 } from "lucide-react";
+import { UploadCloud } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  FormControl,
-  FormDescription,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { useToast } from "@/components/ui/use-toast";
 import { uploadAvatar } from "@/lib/supabase/upload-avatar";
 
 interface AvatarUploadProps {
   userId: string;
-  currentAvatarUrl?: string | null;
+  currentAvatarUrl: string | null;
   onUploadComplete: (url: string) => void;
   onUploadError: (error: Error) => void;
 }
 
-export function AvatarUpload({ 
-  userId, 
-  currentAvatarUrl, 
+export function AvatarUpload({
+  userId,
+  currentAvatarUrl,
   onUploadComplete,
-  onUploadError 
+  onUploadError,
 }: AvatarUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
-  const [preview, setPreview] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const { toast } = useToast();
 
-  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
     if (!file) return;
 
-    // Create preview
-    const objectUrl = URL.createObjectURL(file);
-    setPreview(objectUrl);
+    // Create preview URL
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreviewUrl(reader.result as string);
+    };
+    reader.readAsDataURL(file);
 
     try {
       setIsUploading(true);
       const avatarUrl = await uploadAvatar(file, userId);
       onUploadComplete(avatarUrl);
+      toast({
+        title: "Avatar actualizado",
+        description: "Tu foto de perfil ha sido actualizada correctamente.",
+      });
     } catch (error) {
-      onUploadError(error as Error);
-      // Reset preview on error
-      setPreview(null);
+      console.error("Error uploading avatar:", error);
+      onUploadError(
+        error instanceof Error
+          ? error
+          : new Error("Error al subir la imagen de perfil")
+      );
     } finally {
       setIsUploading(false);
     }
   };
 
   return (
-    <FormItem>
-      <FormLabel>Profile Picture</FormLabel>
-      <FormControl>
-        <div className="flex items-center gap-4">
-          <div className="relative h-24 w-24">
-            {(preview || currentAvatarUrl) ? (
-              <Image
-                src={preview || currentAvatarUrl || ""}
-                alt="Avatar preview"
-                fill
-                className="rounded-full object-cover"
-              />
-            ) : (
-              <div className="flex h-24 w-24 items-center justify-center rounded-full bg-muted">
-                <Camera className="h-8 w-8 text-muted-foreground" />
-              </div>
-            )}
-            {isUploading && (
-              <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/50">
-                <Loader2 className="h-8 w-8 animate-spin text-white" />
-              </div>
-            )}
+    <div className="flex flex-col items-center gap-4">
+      <div className="relative h-24 w-24">
+        {previewUrl || currentAvatarUrl ? (
+          <Image
+            src={previewUrl || currentAvatarUrl || ""}
+            alt="Avatar preview"
+            fill
+            className="rounded-full object-cover"
+          />
+        ) : (
+          <div className="flex h-24 w-24 items-center justify-center rounded-full bg-muted">
+            <UploadCloud className="h-8 w-8 text-muted-foreground" />
           </div>
+        )}
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <Button variant="outline" className="relative" disabled={isUploading}>
+          {isUploading ? (
+            <>
+              <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-opacity-20 border-t-current"></span>
+              Subiendo...
+            </>
+          ) : (
+            "Cambiar foto"
+          )}
           <input
-            ref={fileInputRef}
             type="file"
             accept="image/*"
-            className="hidden"
-            onChange={handleFileSelect}
-          />
-          <Button
-            type="button"
-            variant="outline"
+            onChange={handleFileChange}
+            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
             disabled={isUploading}
-            onClick={() => fileInputRef.current?.click()}
-          >
-            {isUploading ? "Uploading..." : "Change Picture"}
-          </Button>
-        </div>
-      </FormControl>
-      <FormDescription>
-        Choose a profile picture. Max size 2MB.
-      </FormDescription>
-      <FormMessage />
-    </FormItem>
+          />
+        </Button>
+        <p className="text-xs text-muted-foreground">
+          PNG, JPG o GIF. Máximo 2MB.
+        </p>
+      </div>
+    </div>
   );
-} 
+}
