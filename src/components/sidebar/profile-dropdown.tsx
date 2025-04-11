@@ -2,11 +2,7 @@
 
 import Link from "next/link";
 import { BadgeCheck, LogOut, Settings, User } from "lucide-react";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,11 +13,20 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/providers/auth-provider";
+import { useCurrentUser } from "@/hooks/use-current-user";
 import { Badge } from "@/components/ui/badge";
+import { UserRole } from "@prisma/client";
 
 export function ProfileDropdown() {
-  const { signOut, profile, user } = useAuth();
+  const { profile, user, isLoading } = useCurrentUser();
+
+  if (isLoading) {
+    return (
+      <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+        <div className="h-8 w-8 rounded-full bg-primary/10 animate-pulse" />
+      </Button>
+    );
+  }
 
   if (!profile || !user) return null;
 
@@ -41,8 +46,11 @@ export function ProfileDropdown() {
   };
 
   // Get role display name
-  const getRoleDisplay = (role: string) => {
-    return role.replace("_", " ").replace(/\b\w/g, l => l.toUpperCase());
+  const getRoleDisplay = (role: UserRole) => {
+    return role
+      .toString()
+      .replace("_", " ")
+      .replace(/\b\w/g, (l) => l.toUpperCase());
   };
 
   return (
@@ -50,9 +58,9 @@ export function ProfileDropdown() {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8 ring-2 ring-primary/10">
-            <AvatarImage 
-              src={profile.avatarUrl || ""} 
-              alt={displayName || user.email || "User"} 
+            <AvatarImage
+              src={profile.avatarUrl || ""}
+              alt={displayName || user.email || "User"}
             />
             <AvatarFallback className="bg-primary/10">
               {getInitials()}
@@ -65,7 +73,7 @@ export function ProfileDropdown() {
           <div className="flex flex-col space-y-1">
             <div className="flex items-center justify-between">
               <p className="text-sm font-medium leading-none">
-                {displayName || user.email?.split('@')[0]}
+                {displayName || user.email?.split("@")[0]}
               </p>
               <Badge variant="outline" className="ml-2 text-xs">
                 {getRoleDisplay(profile.role)}
@@ -85,12 +93,12 @@ export function ProfileDropdown() {
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href="/settings/account">
+            <Link href="/settings">
               <Settings className="mr-2 h-4 w-4" />
               Settings
             </Link>
           </DropdownMenuItem>
-          {profile.role === "SUPERADMIN" && (
+          {profile.role === UserRole.SUPERADMIN && (
             <DropdownMenuItem asChild>
               <Link href="/admin">
                 <BadgeCheck className="mr-2 h-4 w-4" />
@@ -100,7 +108,12 @@ export function ProfileDropdown() {
           )}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => signOut()}>
+        <DropdownMenuItem
+          onClick={async () => {
+            await fetch("/api/auth/signout", { method: "POST" });
+            window.location.href = "/login";
+          }}
+        >
           <LogOut className="mr-2 h-4 w-4" />
           Log out
         </DropdownMenuItem>
