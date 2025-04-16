@@ -95,9 +95,7 @@ const SidebarMenuLink = ({
       >
         <Link href={item.url} onClick={() => setOpenMobile(false)}>
           {item.icon && <item.icon />}
-          <div className="flex flex-col items-start">
-            <span>{item.title}</span>
-          </div>
+          <span>{item.title}</span>
           {item.badge && <NavBadge>{item.badge}</NavBadge>}
         </Link>
       </SidebarMenuButton>
@@ -123,9 +121,7 @@ const SidebarMenuCollapsible = ({
         <CollapsibleTrigger asChild>
           <SidebarMenuButton tooltip={item.title}>
             {item.icon && <item.icon />}
-            <div className="flex flex-col items-start">
-              <span>{item.title}</span>
-            </div>
+            <span>{item.title}</span>
             {item.badge && <NavBadge>{item.badge}</NavBadge>}
             <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
           </SidebarMenuButton>
@@ -145,14 +141,7 @@ const SidebarMenuCollapsible = ({
                         onClick={() => setOpenMobile(false)}
                       >
                         {subItem.icon && <subItem.icon />}
-                        <div className="flex flex-col items-start">
-                          <span>{subItem.title}</span>
-                          {subItem.subtitle && (
-                            <span className="text-xs text-muted-foreground mt-0.5 line-clamp-1">
-                              {subItem.subtitle}
-                            </span>
-                          )}
-                        </div>
+                        <span>{subItem.title}</span>
                         {subItem.badge && <NavBadge>{subItem.badge}</NavBadge>}
                       </Link>
                     </SidebarMenuSubButton>
@@ -180,7 +169,7 @@ const SidebarMenuCollapsedDropdown = ({
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <SidebarMenuButton
-            tooltip={item.subtitle || item.title}
+            tooltip={item.title}
             isActive={checkIsActive(pathname, item)}
           >
             {item.icon && <item.icon />}
@@ -192,11 +181,6 @@ const SidebarMenuCollapsedDropdown = ({
         <DropdownMenuContent side="right" align="start" sideOffset={4}>
           <DropdownMenuLabel>
             {item.title} {item.badge ? `(${item.badge})` : ""}
-            {item.subtitle && (
-              <div className="text-xs text-muted-foreground mt-0.5">
-                {item.subtitle}
-              </div>
-            )}
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           {item.items.map((sub: NavItem) => {
@@ -208,17 +192,8 @@ const SidebarMenuCollapsedDropdown = ({
                     className={`${checkIsActive(pathname, sub) ? "bg-secondary" : ""}`}
                   >
                     {sub.icon && <sub.icon />}
-                    <div className="flex flex-col items-start max-w-52 text-wrap">
-                      <span>{sub.title}</span>
-                      {sub.subtitle && (
-                        <span className="text-xs text-muted-foreground mt-0.5 line-clamp-1">
-                          {sub.subtitle}
-                        </span>
-                      )}
-                    </div>
-                    {sub.badge && (
-                      <span className="ml-auto text-xs">{sub.badge}</span>
-                    )}
+                    <span className="max-w-52 text-wrap">{sub.title}</span>
+                    {sub.badge && <span className="ml-auto text-xs">{sub.badge}</span>}
                   </Link>
                 </DropdownMenuItem>
               );

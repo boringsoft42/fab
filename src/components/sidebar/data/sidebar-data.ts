@@ -21,10 +21,6 @@ import {
   UserCog,
   UserX,
   Users,
-  ShoppingCart,
-  BarChart3,
-  User,
-  CalendarCheck,
 } from "lucide-react";
 import type { SidebarData } from "../types";
 
@@ -57,31 +53,27 @@ export const sidebarData: SidebarData = {
       items: [
         {
           title: "Dashboard",
-          url: "/dashboard",
+          url: "/",
           icon: LayoutDashboard,
         },
         {
-          title: "Leads",
-          url: "/leads",
-          icon: User,
+          title: "Tasks",
+          url: "/tasks",
+          icon: CheckSquare,
         },
         {
-          title: "Ventas",
-          url: "/ventas",
-          icon: ShoppingCart,
+          title: "Apps",
+          url: "/apps",
+          icon: AppWindow,
         },
         {
-          title: "Reportes",
-          url: "/reportes",
-          icon: BarChart3,
+          title: "Chats",
+          url: "/chats",
+          badge: "3",
+          icon: MessageSquare,
         },
         {
-          title: "Tareas",
-          url: "/tareas",
-          icon: CalendarCheck,
-        },
-        {
-          title: "Usuarios",
+          title: "Users",
           url: "/users",
           icon: Users,
         },
