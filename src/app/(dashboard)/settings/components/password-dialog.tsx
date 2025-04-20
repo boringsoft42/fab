@@ -6,12 +6,14 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -23,6 +25,7 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { PasswordInput } from "@/components/utils/password-input";
 import { PasswordStrengthIndicator } from "@/components/utils/password-strength-indicator";
+import { AlertCircle, CheckCircle2, Loader2 } from "lucide-react";
 
 // Password validation schema
 const passwordFormSchema = z
@@ -47,7 +50,12 @@ const passwordFormSchema = z
 
 type PasswordFormValues = z.infer<typeof passwordFormSchema>;
 
-export function PasswordForm() {
+interface PasswordDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+export function PasswordDialog({ open, onOpenChange }: PasswordDialogProps) {
   const [password, setPassword] = useState("");
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -93,11 +101,13 @@ export function PasswordForm() {
       toast({
         title: "Contraseña actualizada",
         description: "Tu contraseña ha sido actualizada correctamente.",
+        icon: <CheckCircle2 className="h-4 w-4 text-green-500" />,
       });
 
-      // Reset form
+      // Reset form and close dialog
       form.reset();
       setPassword("");
+      onOpenChange(false);
     } catch (error: any) {
       console.error("Error updating password:", error);
 
@@ -115,21 +125,31 @@ export function PasswordForm() {
         title: "Error",
         description: errorMessage,
         variant: "destructive",
+        icon: <AlertCircle className="h-4 w-4" />,
       });
     } finally {
       setIsSubmitting(false);
     }
   }
 
+  const handleDialogOpenChange = (value: boolean) => {
+    if (!value) {
+      // Reset the form when dialog is closed
+      form.reset();
+      setPassword("");
+    }
+    onOpenChange(value);
+  };
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Cambiar Contraseña</CardTitle>
-        <CardDescription>
-          Actualiza tu contraseña para mantener tu cuenta segura.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
+    <Dialog open={open} onOpenChange={handleDialogOpenChange}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Cambiar Contraseña</DialogTitle>
+          <DialogDescription>
+            Actualiza tu contraseña para mantener tu cuenta segura.
+          </DialogDescription>
+        </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
@@ -179,19 +199,26 @@ export function PasswordForm() {
               )}
             />
 
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? (
-                <>
-                  <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-opacity-20 border-t-white"></span>
-                  Actualizando...
-                </>
-              ) : (
-                "Actualizar Contraseña"
-              )}
-            </Button>
+            <DialogFooter className="gap-2 sm:gap-0">
+              <DialogClose asChild>
+                <Button type="button" variant="outline">
+                  Cancelar
+                </Button>
+              </DialogClose>
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Actualizando...
+                  </>
+                ) : (
+                  "Actualizar Contraseña"
+                )}
+              </Button>
+            </DialogFooter>
           </form>
         </Form>
-      </CardContent>
-    </Card>
+      </DialogContent>
+    </Dialog>
   );
 }

@@ -8,15 +8,8 @@ export default function SettingsLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="space-y-6 p-6 pb-16">
-      <div className="space-y-0.5">
-        <h1 className="text-2xl font-bold tracking-tight">Mi Perfil</h1>
-        <p className="text-muted-foreground">
-          Actualiza tu información personal y gestiona tu contraseña.
-        </p>
-      </div>
-      <Separator className="my-6" />
-      <div className="max-w-3xl mx-auto">{children}</div>
+    <div className="container mx-auto py-8 md:py-10">
+      <div className="flex flex-col gap-8">{children}</div>
     </div>
   );
 }
