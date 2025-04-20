@@ -1,7 +1,4 @@
 import type { Metadata } from "next";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Card } from "@/components/ui/card";
 import AuthLayout from "@/components/auth/auth-layout";
 import { UserAuthForm } from "@/components/auth/sign-in/components/user-auth-form";
@@ -12,15 +9,7 @@ export const metadata: Metadata = {
   description: "Sign in to your account",
 };
 
-export default async function SignInPage() {
-  const supabase = createServerComponentClient({ cookies });
-  const { data: { session } } = await supabase.auth.getSession();
-
-  console.log(session);
-  if (session) {
-    redirect("/dashboard");
-  }
-
+export default function SignInPage() {
   return (
     <AuthLayout>
       <Card className="p-6">
@@ -58,4 +47,4 @@ export default async function SignInPage() {
       </Card>
     </AuthLayout>
   );
-} 
+}
