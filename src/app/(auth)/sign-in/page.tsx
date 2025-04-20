@@ -16,6 +16,7 @@ export default async function SignInPage() {
   const supabase = createServerComponentClient({ cookies });
   const { data: { session } } = await supabase.auth.getSession();
 
+  console.log(session);
   if (session) {
     redirect("/dashboard");
   }

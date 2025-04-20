@@ -65,12 +65,12 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
     try {
       setIsLoading(true);
 
-      const { success, user, session, error } = await signUp(
+      const { success, user, session, confirmEmail, error } = await signUp(
         data.email,
         data.password
       );
 
-      if (!success || error || !session) {
+      if (!success || error) {
         throw error || new Error("Failed to sign up");
       }
 
@@ -130,10 +130,16 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
 
         toast({
           title: "Success",
-          description: "Your account has been created successfully!",
+          description:
+            "Your account has been created! Please verify your email to continue.",
         });
 
-        router.push("/dashboard");
+        // Redirect to verification page instead of dashboard if email confirmation is required
+        if (confirmEmail) {
+          router.push("/verify-email");
+        } else if (session) {
+          router.push("/dashboard");
+        }
       }
     } catch (error) {
       console.error("Sign up error:", error);

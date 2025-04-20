@@ -49,32 +49,37 @@ export function useAuth() {
 
   const signUp = async (email: string, password: string) => {
     try {
+      // Get the site URL from the environment or current location
+      const siteUrl =
+        process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
+
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
-        }
+          emailRedirectTo: `${siteUrl}/auth/callback`,
+          data: {
+            email_confirmed: false,
+          },
+        },
       });
 
       if (error) {
         throw error;
       }
 
-      if (data?.session) {
-        setSession(data.session);
-        setUser(data.session.user);
-        await supabase.auth.setSession({
-          access_token: data.session.access_token,
-          refresh_token: data.session.refresh_token,
-        });
-      }
+      // For email confirmation sign-ups, we won't get a session immediately
+      // The user needs to verify their email first
+      // Note: Profile creation is handled in two places:
+      // 1. On the client during signup (in sign-up-form.tsx) with user-provided data
+      // 2. As a fallback in auth/callback route if the client-side creation failed
 
-      return { 
-        success: true, 
+      return {
+        success: true,
         user: data.user,
         session: data.session,
-        error: null 
+        confirmEmail: true,
+        error: null,
       };
     } catch (error) {
       console.error("Sign up error:", error);
@@ -82,7 +87,8 @@ export function useAuth() {
         success: false,
         user: null,
         session: null,
-        error
+        confirmEmail: false,
+        error,
       };
     }
   };
