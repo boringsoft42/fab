@@ -1,22 +1,20 @@
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
 import { UserRole } from "@prisma/client";
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get("code");
 
   if (code) {
-    const cookieStore = cookies();
-    const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
+    const supabase = createRouteHandlerClient({ cookies });
+    const { data } = await supabase.auth.exchangeCodeForSession(code);
 
-    // Exchange the code for a session
-    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
-
-    if (!error && data.session) {
-      // Create user profile in Prisma if it doesn't exist
+    // Create user profile in Prisma if it doesn't exist and we have a session
+    if (data?.session) {
       const userId = data.session.user.id;
 
       const existingProfile = await prisma.profile.findUnique({
@@ -34,6 +32,6 @@ export async function GET(request: Request) {
     }
   }
 
-  // Redirect to the dashboard
+  // URL to redirect to after sign in process completes
   return NextResponse.redirect(new URL("/dashboard", request.url));
 }

@@ -27,6 +27,17 @@ export default function SignInPage() {
           </p>
         </div>
         <UserAuthForm />
+        <div className="mt-4 text-center text-sm">
+          <p className="text-muted-foreground">
+            Prefer to sign in without a password?{" "}
+            <Link
+              href="/magic-link"
+              className="underline underline-offset-4 hover:text-primary"
+            >
+              Sign in with a magic link
+            </Link>
+          </p>
+        </div>
         <p className="mt-4 px-8 text-center text-sm text-muted-foreground">
           By clicking login, you agree to our{" "}
           <Link
