@@ -5,11 +5,13 @@ import prisma from "@/lib/prisma";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { userId: string } }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
   try {
+    const userId = (await params).userId;
+
+    // Create Supabase client with awaited cookies
     const supabase = createRouteHandlerClient({ cookies });
-    const { userId } = params;
 
     // Get the current user's session
     const {
@@ -57,8 +59,10 @@ export async function PATCH(
   { params }: { params: { userId: string } }
 ) {
   try {
+    const userId = params.userId;
+
+    // Create Supabase client with awaited cookies
     const supabase = createRouteHandlerClient({ cookies });
-    const { userId } = params;
 
     // Get the current user's session
     const {
