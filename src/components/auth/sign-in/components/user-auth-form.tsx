@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -22,6 +22,7 @@ import type { SignInFormData, UserAuthFormProps } from "@/types/auth/sign-in";
 import { signInFormSchema } from "@/types/auth/sign-in";
 import { toast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
+import { saltAndHashPassword } from "@/lib/auth/password-crypto";
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = useState(false);
@@ -39,7 +40,14 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   async function onSubmit(data: SignInFormData) {
     try {
       setIsLoading(true);
-      await signIn(data.email, data.password);
+
+      // Hash the password with email as salt before sending to server
+      const hashedPassword = await saltAndHashPassword(
+        data.password,
+        data.email
+      );
+
+      await signIn(data.email, hashedPassword);
       toast({
         title: "Success",
         description: "You have been signed in.",

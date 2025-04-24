@@ -31,10 +31,16 @@ export function useAuth() {
     };
   }, []);
 
-  const signIn = async (email: string, password: string) => {
+  /**
+   * Sign in with email and password
+   * @param email User's email
+   * @param hashedPassword Password that has been hashed client-side
+   */
+  const signIn = async (email: string, hashedPassword: string) => {
+    // The password has already been hashed client-side
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
-      password,
+      password: hashedPassword,
     });
 
     if (error) throw error;
@@ -47,15 +53,21 @@ export function useAuth() {
     }
   };
 
-  const signUp = async (email: string, password: string) => {
+  /**
+   * Sign up with email and password
+   * @param email User's email
+   * @param hashedPassword Password that has been hashed client-side
+   */
+  const signUp = async (email: string, hashedPassword: string) => {
     try {
       // Get the site URL from the environment or current location
       const siteUrl =
         process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
 
+      // The password has already been hashed client-side
       const { data, error } = await supabase.auth.signUp({
         email,
-        password,
+        password: hashedPassword,
         options: {
           emailRedirectTo: `${siteUrl}/auth/callback`,
           data: {

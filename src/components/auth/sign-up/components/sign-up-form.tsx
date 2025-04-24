@@ -23,6 +23,7 @@ import { toast } from "@/components/ui/use-toast";
 import Image from "next/image";
 import { uploadAvatar } from "@/lib/supabase/upload-avatar";
 import { useRouter } from "next/navigation";
+import { saltAndHashPassword } from "@/lib/auth/password-crypto";
 
 export function SignUpForm({ className, ...props }: SignUpFormProps) {
   const [isLoading, setIsLoading] = useState(false);
@@ -65,9 +66,15 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
     try {
       setIsLoading(true);
 
+      // Hash the password with email as salt before sending to server
+      const hashedPassword = await saltAndHashPassword(
+        data.password,
+        data.email
+      );
+
       const { success, user, session, confirmEmail, error } = await signUp(
         data.email,
-        data.password
+        hashedPassword
       );
 
       if (!success || error) {
