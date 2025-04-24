@@ -5,13 +5,10 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { UserRole } from "@prisma/client";
 import { CalendarClock } from "lucide-react";
 
 export function AccountSection() {
@@ -20,8 +17,8 @@ export function AccountSection() {
   if (!profile || !user) return null;
 
   // Format user creation date
-  const createdAt = user.createdAt
-    ? new Date(user.createdAt).toLocaleDateString("es-ES", {
+  const createdAt = user.created_at
+    ? new Date(user.created_at).toLocaleDateString("es-ES", {
         year: "numeric",
         month: "long",
         day: "numeric",
@@ -65,8 +62,8 @@ export function AccountSection() {
           <div className="space-y-1">
             <p className="text-sm font-medium">Rol</p>
             <p className="text-sm text-muted-foreground">
-              {profile.role === UserRole.USER && "Usuario"}
-              {profile.role === UserRole.SUPERADMIN && "Administrador"}
+              {(profile.role as string) === "USER" && "Usuario"}
+              {(profile.role as string) === "SUPERADMIN" && "Administrador"}
             </p>
           </div>
 

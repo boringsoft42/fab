@@ -42,7 +42,7 @@ const formSchema = z
 
 type FormValues = z.infer<typeof formSchema>;
 
-interface ResetPasswordFormProps extends React.HTMLAttributes<HTMLDivElement> {}
+type ResetPasswordFormProps = React.HTMLAttributes<HTMLDivElement>;
 
 export function ResetPasswordForm({
   className,

@@ -10,11 +10,11 @@ export default function VerifyEmailPage() {
 
         <div className="text-center mb-8">
           <p className="mb-4">
-            We've sent you a verification link to your email address.
+            We&apos;ve sent you a verification link to your email address.
           </p>
           <p className="text-sm text-gray-600">
             Please check your inbox and click the link to verify your account.
-            If you don't see the email, check your spam folder.
+            If you don&apos;t see the email, check your spam folder.
           </p>
         </div>
 

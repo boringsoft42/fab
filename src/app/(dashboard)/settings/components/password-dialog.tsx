@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -26,6 +26,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { PasswordInput } from "@/components/utils/password-input";
 import { PasswordStrengthIndicator } from "@/components/utils/password-strength-indicator";
 import { AlertCircle, CheckCircle2, Loader2 } from "lucide-react";
+import { hashPassword } from "@/lib/auth/password-crypto";
 
 // Password validation schema
 const passwordFormSchema = z
@@ -75,20 +76,22 @@ export function PasswordDialog({ open, onOpenChange }: PasswordDialogProps) {
   };
 
   async function onSubmit(data: PasswordFormValues) {
-    if (isSubmitting) return;
-
     try {
       setIsSubmitting(true);
 
-      // Use our API endpoint to change the password
-      const response = await fetch("/api/auth/change-password", {
-        method: "POST",
+      // Get current user's password hash to send to API
+      const hashedCurrentPassword = await hashPassword(data.currentPassword);
+      const hashedNewPassword = await hashPassword(data.newPassword);
+
+      // Call API to update password
+      const response = await fetch("/api/user/password", {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          currentPassword: data.currentPassword,
-          newPassword: data.newPassword,
+          currentPassword: hashedCurrentPassword,
+          newPassword: hashedNewPassword,
         }),
       });
 
@@ -100,32 +103,42 @@ export function PasswordDialog({ open, onOpenChange }: PasswordDialogProps) {
 
       toast({
         title: "Contraseña actualizada",
-        description: "Tu contraseña ha sido actualizada correctamente.",
-        icon: <CheckCircle2 className="h-4 w-4 text-green-500" />,
+        description: (
+          <div className="flex items-center">
+            <CheckCircle2 className="h-4 w-4 text-green-500 mr-2" />
+            <span>Tu contraseña ha sido actualizada correctamente.</span>
+          </div>
+        ),
       });
 
       // Reset form and close dialog
       form.reset();
       setPassword("");
       onOpenChange(false);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error updating password:", error);
 
       let errorMessage =
         "No se pudo actualizar la contraseña. Por favor, intenta de nuevo.";
 
       // Handle specific errors
-      if (error.message.includes("incorrect")) {
-        errorMessage = "La contraseña actual es incorrecta.";
-      } else if (error.message.includes("weak")) {
-        errorMessage = "La nueva contraseña es demasiado débil.";
+      if (error instanceof Error) {
+        if (error.message.includes("incorrect")) {
+          errorMessage = "La contraseña actual es incorrecta.";
+        } else if (error.message.includes("weak")) {
+          errorMessage = "La nueva contraseña es demasiado débil.";
+        }
       }
 
       toast({
         title: "Error",
-        description: errorMessage,
+        description: (
+          <div className="flex items-center">
+            <AlertCircle className="h-4 w-4 text-destructive mr-2" />
+            <span>{errorMessage}</span>
+          </div>
+        ),
         variant: "destructive",
-        icon: <AlertCircle className="h-4 w-4" />,
       });
     } finally {
       setIsSubmitting(false);

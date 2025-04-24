@@ -23,7 +23,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { UserRole } from "@prisma/client";
 import { useToast } from "@/components/ui/use-toast";
 import { LoadingScreen } from "@/components/ui/loading-screen";
 import { AvatarUpload } from "@/components/settings/avatar-upload";
@@ -230,7 +229,7 @@ export function SettingsForm() {
             </CardContent>
           </Card>
 
-          {profile?.role === UserRole.SUPERADMIN && (
+          {(profile?.role as string) === "SUPERADMIN" && (
             <Card>
               <CardHeader>
                 <CardTitle>Información de Rol</CardTitle>
@@ -242,8 +241,9 @@ export function SettingsForm() {
                 <div className="flex items-center space-x-2">
                   <span className="text-sm font-medium">Rol:</span>
                   <span className="text-sm text-muted-foreground">
-                    {profile?.role === UserRole.USER && "Usuario"}
-                    {profile?.role === UserRole.SUPERADMIN && "Administrador"}
+                    {(profile?.role as string) === "USER" && "Usuario"}
+                    {(profile?.role as string) === "SUPERADMIN" &&
+                      "Administrador"}
                   </span>
                 </div>
               </CardContent>

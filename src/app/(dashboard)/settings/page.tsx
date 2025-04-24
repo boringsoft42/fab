@@ -6,7 +6,6 @@ import { PasswordDialog } from "./components/password-dialog";
 import { AccountSection } from "./components/account-section";
 import { SettingsLoader } from "./components/settings-loader";
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { LockKeyhole, RefreshCw } from "lucide-react";
 import {
@@ -20,7 +19,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function SettingsPage() {
-  const { profile, user, isLoading, refetch } = useCurrentUser();
+  const { profile, isLoading, refetch } = useCurrentUser();
   const [passwordDialogOpen, setPasswordDialogOpen] = useState(false);
   const [pageLoading, setPageLoading] = useState(true);
   const [retryLoading, setRetryLoading] = useState(false);

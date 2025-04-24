@@ -27,7 +27,7 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-interface MagicLinkFormProps extends React.HTMLAttributes<HTMLDivElement> {}
+type MagicLinkFormProps = React.HTMLAttributes<HTMLDivElement>;
 
 export function MagicLinkForm({ className, ...props }: MagicLinkFormProps) {
   const [isLoading, setIsLoading] = useState(false);
@@ -64,7 +64,7 @@ export function MagicLinkForm({ className, ...props }: MagicLinkFormProps) {
       setIsSuccess(true);
       toast({
         title: "Check your email",
-        description: "We've sent you a magic link to sign in.",
+        description: "We&apos;ve sent you a magic link to sign in.",
       });
     } catch (error) {
       console.error("Magic link error:", error);
@@ -84,8 +84,8 @@ export function MagicLinkForm({ className, ...props }: MagicLinkFormProps) {
         <div className="text-center">
           <h3 className="mb-1 text-lg font-medium">Check your email</h3>
           <p className="text-sm text-muted-foreground">
-            We've sent a magic link to your email. Please check your inbox and
-            click the link to sign in.
+            We&apos;ve sent a magic link to your email. Please check your inbox
+            and click the link to sign in.
           </p>
         </div>
       ) : (
