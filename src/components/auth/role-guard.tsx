@@ -28,6 +28,18 @@ export function RoleGuard({ children }: RoleGuardProps) {
       return;
     }
 
+    // If user has a role, ensure they're not on role selection page
+    if (user && user.role) {
+      if (pathname === "/select-role") {
+        setIsRedirecting(true);
+        router.replace("/dashboard");
+        return;
+      }
+      // User has role and is not on role selection page, stop redirecting
+      setIsRedirecting(false);
+      return;
+    }
+
     // If user exists but has no role
     if (user && !user.role) {
       // Only redirect to role selection if not already there
@@ -41,14 +53,7 @@ export function RoleGuard({ children }: RoleGuardProps) {
       return;
     }
 
-    // If user has role but is on role selection page, redirect to dashboard
-    if (user && user.role && pathname === "/select-role") {
-      setIsRedirecting(true);
-      router.replace("/dashboard");
-      return;
-    }
-
-    // If we reach here, user is in the right place, stop redirecting
+    // If we reach here, everything is fine, stop redirecting
     setIsRedirecting(false);
   }, [user, isLoading, router, pathname, isRedirecting]);
 
@@ -76,13 +81,13 @@ export function RoleGuard({ children }: RoleGuardProps) {
     return <LoadingScreen />;
   }
 
-  // If user has no role and not on role selection page (should be redirecting)
-  if (!user.role && pathname !== "/select-role") {
+  // If user has role but is on role selection page (should be redirecting to dashboard)
+  if (user.role && pathname === "/select-role") {
     return <LoadingScreen />;
   }
 
-  // If user has role but is on role selection page (should be redirecting)
-  if (user.role && pathname === "/select-role") {
+  // If user has no role and not on role selection page (should be redirecting to role selection)
+  if (!user.role && pathname !== "/select-role") {
     return <LoadingScreen />;
   }
 

@@ -82,13 +82,12 @@ export function MockLoginScreen() {
 
     try {
       if (isSignUp) {
-        await signUp(email, password, name);
+        await signUp(email, password, name, selectedRole);
       } else {
-        await signIn(email, password);
+        await signIn(email, password, selectedRole);
       }
 
-      // Update user role and redirect to dashboard
-      updateUserRole(selectedRole);
+      // Redirect to dashboard (role is already set during sign-in)
       router.replace("/dashboard");
     } catch (err) {
       // Error is handled by the context
@@ -115,8 +114,7 @@ export function MockLoginScreen() {
     setSelectedRole(demoRole);
 
     try {
-      await signIn(demoEmail, "demo123");
-      updateUserRole(demoRole);
+      await signIn(demoEmail, "demo123", demoRole);
       router.replace("/dashboard");
     } catch (err) {
       // Error handled by context

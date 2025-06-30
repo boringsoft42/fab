@@ -18,6 +18,7 @@ export function RootRedirect() {
           router.replace("/dashboard");
         } else {
           // User doesn't have a role, go to role selection
+          // This should rarely happen now since roles are set during login
           router.replace("/select-role");
         }
       } else {

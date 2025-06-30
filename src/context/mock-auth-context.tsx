@@ -21,8 +21,13 @@ interface MockAuthContextType {
   user: MockUser | null;
   isLoading: boolean;
   error: Error | null;
-  signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string, name: string) => Promise<void>;
+  signIn: (email: string, password: string, role?: UserRole) => Promise<void>;
+  signUp: (
+    email: string,
+    password: string,
+    name: string,
+    role?: UserRole
+  ) => Promise<void>;
   signOut: () => void;
   updateUserRole: (role: UserRole) => void;
   setUser: (user: MockUser) => void;
@@ -37,36 +42,8 @@ export function MockAuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  const signIn = useCallback(async (email: string, password: string) => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      // Simulate API delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Mock user data - no role initially
-      const mockUser: MockUser = {
-        id: "mock-user-id",
-        email,
-        name: email.split("@")[0],
-        role: null, // No role initially - will need to select
-        profile: null,
-      };
-
-      setUserState(mockUser);
-
-      // Store in localStorage for persistence
-      localStorage.setItem("mockUser", JSON.stringify(mockUser));
-    } catch (err) {
-      setError(err instanceof Error ? err : new Error("Sign in failed"));
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  const signUp = useCallback(
-    async (email: string, password: string, name: string) => {
+  const signIn = useCallback(
+    async (email: string, password: string, role?: UserRole) => {
       setIsLoading(true);
       setError(null);
 
@@ -74,13 +51,60 @@ export function MockAuthProvider({ children }: { children: React.ReactNode }) {
         // Simulate API delay
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
-        // Mock user data
+        // Mock user data - set role immediately if provided
+        const mockUser: MockUser = {
+          id: "mock-user-id",
+          email,
+          name: email.split("@")[0],
+          role: role || null, // Set role immediately if provided
+          profile: role
+            ? {
+                id: "mock-profile-id",
+                firstName: email.split("@")[0],
+                lastName: "",
+                profilePicture: null,
+                completionPercentage: 75,
+              }
+            : null,
+        };
+
+        setUserState(mockUser);
+
+        // Store in localStorage for persistence
+        localStorage.setItem("mockUser", JSON.stringify(mockUser));
+      } catch (err) {
+        setError(err instanceof Error ? err : new Error("Sign in failed"));
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    []
+  );
+
+  const signUp = useCallback(
+    async (email: string, password: string, name: string, role?: UserRole) => {
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        // Simulate API delay
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        // Mock user data - set role immediately if provided
         const mockUser: MockUser = {
           id: "mock-user-id",
           email,
           name,
-          role: null, // No role initially
-          profile: null,
+          role: role || null, // Set role immediately if provided
+          profile: role
+            ? {
+                id: "mock-profile-id",
+                firstName: name.split(" ")[0] || name,
+                lastName: name.split(" ")[1] || "",
+                profilePicture: null,
+                completionPercentage: 75,
+              }
+            : null,
         };
 
         setUserState(mockUser);
