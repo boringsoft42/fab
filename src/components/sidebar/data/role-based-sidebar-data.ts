@@ -97,20 +97,32 @@ export const youthSidebarData: SidebarData = {
           icon: Lightbulb,
           items: [
             {
+              title: "Hub de Emprendimiento",
+              url: "/entrepreneurship",
+            },
+            {
+              title: "Simulador de Plan de Negocios",
+              url: "/business-plan-simulator",
+            },
+            {
               title: "Centro de Recursos",
               url: "/entrepreneurship/resources",
             },
             {
-              title: "Simulador de Plan",
-              url: "/entrepreneurship/business-plan",
+              title: "Directorio de Instituciones",
+              url: "/entrepreneurship/directory",
             },
             {
-              title: "Mi Emprendimiento",
-              url: "/entrepreneurship/my-business",
+              title: "Publicar mi Emprendimiento",
+              url: "/publish-entrepreneurship",
             },
             {
-              title: "Marketplace",
-              url: "/entrepreneurship/marketplace",
+              title: "Red de Contactos",
+              url: "/entrepreneurship/network",
+            },
+            {
+              title: "Mentorías",
+              url: "/mentorship",
             },
           ],
         },
@@ -189,20 +201,32 @@ export const adolescentSidebarData: SidebarData = {
           icon: Lightbulb,
           items: [
             {
+              title: "Hub de Emprendimiento",
+              url: "/entrepreneurship",
+            },
+            {
+              title: "Simulador de Plan de Negocios",
+              url: "/business-plan-simulator",
+            },
+            {
               title: "Centro de Recursos",
               url: "/entrepreneurship/resources",
             },
             {
-              title: "Simulador de Plan",
-              url: "/entrepreneurship/business-plan",
+              title: "Directorio de Instituciones",
+              url: "/entrepreneurship/directory",
             },
             {
-              title: "Mi Emprendimiento",
-              url: "/entrepreneurship/my-business",
+              title: "Publicar mi Emprendimiento",
+              url: "/publish-entrepreneurship",
             },
             {
-              title: "Marketplace",
-              url: "/entrepreneurship/marketplace",
+              title: "Red de Contactos",
+              url: "/entrepreneurship/network",
+            },
+            {
+              title: "Mentorías",
+              url: "/mentorship",
             },
           ],
         },
@@ -333,6 +357,14 @@ export const municipalGovernmentSidebarData: SidebarData = {
           icon: Lightbulb,
           items: [
             {
+              title: "Dashboard de Emprendimiento",
+              url: "/admin/entrepreneurship",
+            },
+            {
+              title: "Crear Recurso",
+              url: "/admin/entrepreneurship/create-resource",
+            },
+            {
               title: "Gestión de Programas",
               url: "/admin/entrepreneurship/programs",
             },
@@ -343,6 +375,16 @@ export const municipalGovernmentSidebarData: SidebarData = {
             {
               title: "Mentorías",
               url: "/admin/entrepreneurship/mentorship",
+            },
+          ],
+        },
+        {
+          title: "Directorio",
+          icon: Building2,
+          items: [
+            {
+              title: "Gestión de Instituciones",
+              url: "/admin/institutions",
             },
           ],
         },
@@ -381,102 +423,23 @@ export const trainingCenterSidebarData: SidebarData = {
   teams: commonTeams,
   navGroups: [
     {
-      title: "Educación",
+      title: "Administración",
       items: [
         {
-          title: "Dashboard Educativo",
+          title: "Dashboard",
           url: "/dashboard",
           icon: LayoutDashboard,
         },
         {
-          title: "Gestión de Cursos",
-          icon: BookOpen,
-          items: [
-            {
-              title: "Todos los Cursos",
-              url: "/admin/courses",
-            },
-            {
-              title: "Crear Curso",
-              url: "/admin/courses/create",
-            },
-          ],
-        },
-        {
-          title: "Estudiantes",
-          url: "/admin/students",
-          icon: Users,
-        },
-        {
-          title: "Instructores",
-          url: "/admin/instructors",
-          icon: UserCheck,
+          title: "Gestión de Usuarios",
+          url: "/admin/users",
+          icon: UserCog,
         },
       ],
     },
     {
       title: "Programas",
       items: [
-        {
-          title: "Emprendimiento",
-          icon: Lightbulb,
-          items: [
-            {
-              title: "Gestión de Programas",
-              url: "/admin/entrepreneurship/programs",
-            },
-            {
-              title: "Emprendedores",
-              url: "/admin/entrepreneurship/entrepreneurs",
-            },
-            {
-              title: "Recursos",
-              url: "/admin/entrepreneurship/resources",
-            },
-          ],
-        },
-      ],
-    },
-    {
-      title: "Análisis",
-      items: [
-        {
-          title: "Reportes Educativos",
-          url: "/reports/educational",
-          icon: BarChart3,
-        },
-      ],
-    },
-    {
-      title: "Institución",
-      items: [
-        {
-          title: "Perfil Institucional",
-          url: "/profile/institution",
-          icon: Building2,
-        },
-      ],
-    },
-  ],
-};
-
-// NGOs AND FOUNDATIONS navigation
-export const ngoSidebarData: SidebarData = {
-  user: {
-    name: "ONG/Fundación",
-    email: "ngo@example.com",
-    avatar: "/avatars/ngo.jpg",
-  },
-  teams: commonTeams,
-  navGroups: [
-    {
-      title: "Social",
-      items: [
-        {
-          title: "Dashboard Social",
-          url: "/dashboard",
-          icon: LayoutDashboard,
-        },
         {
           title: "Capacitación",
           icon: GraduationCap,
@@ -504,6 +467,14 @@ export const ngoSidebarData: SidebarData = {
           icon: Lightbulb,
           items: [
             {
+              title: "Dashboard de Emprendimiento",
+              url: "/admin/entrepreneurship",
+            },
+            {
+              title: "Crear Recurso",
+              url: "/admin/entrepreneurship/create-resource",
+            },
+            {
               title: "Gestión de Programas",
               url: "/admin/entrepreneurship/programs",
             },
@@ -512,8 +483,18 @@ export const ngoSidebarData: SidebarData = {
               url: "/admin/entrepreneurship/entrepreneurs",
             },
             {
-              title: "Recursos Sociales",
-              url: "/admin/entrepreneurship/social-resources",
+              title: "Mentorías",
+              url: "/admin/entrepreneurship/mentorship",
+            },
+          ],
+        },
+        {
+          title: "Directorio",
+          icon: Building2,
+          items: [
+            {
+              title: "Gestión de Instituciones",
+              url: "/admin/institutions",
             },
           ],
         },
@@ -523,26 +504,135 @@ export const ngoSidebarData: SidebarData = {
       title: "Análisis",
       items: [
         {
-          title: "Impacto Social",
-          url: "/reports/social-impact",
+          title: "Reportes de Capacitación",
+          url: "/reports/training",
           icon: BarChart3,
         },
       ],
     },
     {
-      title: "Organización",
+      title: "Sistema",
       items: [
         {
-          title: "Perfil de ONG",
-          url: "/profile/ngo",
-          icon: Building2,
+          title: "Configuración",
+          url: "/admin/settings",
+          icon: Settings,
         },
       ],
     },
   ],
 };
 
-// Function to get sidebar data based on user role
+// NGOS AND FOUNDATIONS navigation
+export const ngoFoundationSidebarData: SidebarData = {
+  user: {
+    name: "ONG/Fundación",
+    email: "ngo@example.com",
+    avatar: "/avatars/ngo.jpg",
+  },
+  teams: commonTeams,
+  navGroups: [
+    {
+      title: "Administración",
+      items: [
+        {
+          title: "Dashboard",
+          url: "/dashboard",
+          icon: LayoutDashboard,
+        },
+        {
+          title: "Gestión de Usuarios",
+          url: "/admin/users",
+          icon: UserCog,
+        },
+      ],
+    },
+    {
+      title: "Programas",
+      items: [
+        {
+          title: "Capacitación",
+          icon: GraduationCap,
+          items: [
+            {
+              title: "Gestión de Cursos",
+              url: "/admin/courses",
+            },
+            {
+              title: "Crear Curso",
+              url: "/admin/courses/create",
+            },
+            {
+              title: "Estudiantes",
+              url: "/admin/students",
+            },
+            {
+              title: "Instructores",
+              url: "/admin/instructors",
+            },
+          ],
+        },
+        {
+          title: "Emprendimiento",
+          icon: Lightbulb,
+          items: [
+            {
+              title: "Dashboard de Emprendimiento",
+              url: "/admin/entrepreneurship",
+            },
+            {
+              title: "Crear Recurso",
+              url: "/admin/entrepreneurship/create-resource",
+            },
+            {
+              title: "Gestión de Programas",
+              url: "/admin/entrepreneurship/programs",
+            },
+            {
+              title: "Emprendedores",
+              url: "/admin/entrepreneurship/entrepreneurs",
+            },
+            {
+              title: "Mentorías",
+              url: "/admin/entrepreneurship/mentorship",
+            },
+          ],
+        },
+        {
+          title: "Directorio",
+          icon: Building2,
+          items: [
+            {
+              title: "Gestión de Instituciones",
+              url: "/admin/institutions",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      title: "Análisis",
+      items: [
+        {
+          title: "Reportes de Impacto Social",
+          url: "/reports/impact",
+          icon: BarChart3,
+        },
+      ],
+    },
+    {
+      title: "Sistema",
+      items: [
+        {
+          title: "Configuración",
+          url: "/admin/settings",
+          icon: Settings,
+        },
+      ],
+    },
+  ],
+};
+
 export function getSidebarDataByRole(role: UserRole): SidebarData {
   switch (role) {
     case "YOUTH":
@@ -556,8 +646,8 @@ export function getSidebarDataByRole(role: UserRole): SidebarData {
     case "TRAINING_CENTERS":
       return trainingCenterSidebarData;
     case "NGOS_AND_FOUNDATIONS":
-      return ngoSidebarData;
+      return ngoFoundationSidebarData;
     default:
-      return youthSidebarData;
+      return youthSidebarData; // fallback
   }
 }
