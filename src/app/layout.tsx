@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { QueryProvider } from "@/lib/providers/QueryProvider";
 import { Toaster } from "@/components/ui/toaster";
-import { AuthProvider } from "@/providers/auth-provider";
+import { MockAuthProvider } from "@/context/mock-auth-context";
 import { ThemeProvider } from "@/context/theme-context";
 
 const APP_NAME = "POSITIVE-NEXT";
@@ -45,6 +45,10 @@ export const metadata: Metadata = {
       url: "/apple-icon.png",
     },
   },
+  other: {
+    "Permissions-Policy":
+      "microphone=(), camera=(), geolocation=(), interest-cohort=()",
+  },
 };
 
 const geistSans = Geist({
@@ -64,14 +68,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
         <ThemeProvider defaultTheme="system" storageKey="app-theme">
-          <AuthProvider>
+          <MockAuthProvider>
             <QueryProvider>
               {children}
               <Toaster />
             </QueryProvider>
-          </AuthProvider>
+          </MockAuthProvider>
         </ThemeProvider>
       </body>
     </html>

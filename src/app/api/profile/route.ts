@@ -1,35 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
-import prisma from "@/lib/prisma";
 
-// GET: Fetch profile for the current authenticated user
+// GET: Fetch mock profile data since we're using mock authentication
 export async function GET() {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
+    // Return mock profile data for development
+    const mockProfile = {
+      id: "mock-profile-id",
+      userId: "mock-user-id",
+      firstName: "John",
+      lastName: "Doe",
+      role: "YOUTH",
+      avatarUrl: null,
+      active: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      completionPercentage: 25,
+    };
 
-    // Get the current user's session
-    const {
-      data: { session },
-      error: sessionError,
-    } = await supabase.auth.getSession();
-
-    if (sessionError || !session) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-    }
-
-    const userId = session.user.id;
-
-    // Fetch profile from the database
-    const profile = await prisma.profile.findUnique({
-      where: { userId },
-    });
-
-    if (!profile) {
-      return NextResponse.json({ error: "Profile not found" }, { status: 404 });
-    }
-
-    return NextResponse.json(profile);
+    return NextResponse.json(mockProfile);
   } catch (error) {
     console.error("Error fetching profile:", error);
     return NextResponse.json(
@@ -39,35 +27,25 @@ export async function GET() {
   }
 }
 
-// PUT: Update profile for the current authenticated user
+// PUT: Update mock profile data since we're using mock authentication
 export async function PUT(request: NextRequest) {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
-
-    // Get the current user's session
-    const {
-      data: { session },
-      error: sessionError,
-    } = await supabase.auth.getSession();
-
-    if (sessionError || !session) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-    }
-
-    const userId = session.user.id;
     const data = await request.json();
     const { firstName, lastName, avatarUrl, active } = data;
 
-    // Update profile in the database
-    const updatedProfile = await prisma.profile.update({
-      where: { userId },
-      data: {
-        firstName,
-        lastName,
-        avatarUrl,
-        active,
-      },
-    });
+    // Return mock updated profile data for development
+    const updatedProfile = {
+      id: "mock-profile-id",
+      userId: "mock-user-id",
+      firstName: firstName || "John",
+      lastName: lastName || "Doe",
+      role: "YOUTH",
+      avatarUrl: avatarUrl || null,
+      active: active !== undefined ? active : true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      completionPercentage: 50,
+    };
 
     return NextResponse.json(updatedProfile);
   } catch (error) {
@@ -79,79 +57,25 @@ export async function PUT(request: NextRequest) {
   }
 }
 
-// POST: Create a new profile for the current authenticated user
+// POST: Create mock profile data since we're using mock authentication
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
     const { userId, firstName, lastName, avatarUrl } = data;
 
-    // If userId is provided directly (during signup flow)
-    if (userId) {
-      // Check if profile already exists
-      const existingProfile = await prisma.profile.findUnique({
-        where: { userId },
-      });
-
-      if (existingProfile) {
-        return NextResponse.json(
-          { error: "Profile already exists" },
-          { status: 409 }
-        );
-      }
-
-      // Create profile in the database
-      const newProfile = await prisma.profile.create({
-        data: {
-          userId,
-          firstName,
-          lastName,
-          avatarUrl,
-          active: true,
-          role: "YOUTH",
-        },
-      });
-
-      return NextResponse.json(newProfile, { status: 201 });
-    }
-
-    // Normal flow requiring authentication
-    const supabase = createRouteHandlerClient({ cookies });
-
-    // Get the current user's session
-    const {
-      data: { session },
-      error: sessionError,
-    } = await supabase.auth.getSession();
-
-    if (sessionError || !session) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-    }
-
-    const authenticatedUserId = session.user.id;
-
-    // Check if profile already exists
-    const existingProfile = await prisma.profile.findUnique({
-      where: { userId: authenticatedUserId },
-    });
-
-    if (existingProfile) {
-      return NextResponse.json(
-        { error: "Profile already exists" },
-        { status: 409 }
-      );
-    }
-
-    // Create profile in the database
-    const newProfile = await prisma.profile.create({
-      data: {
-        userId: authenticatedUserId,
-        firstName,
-        lastName,
-        avatarUrl,
-        active: true,
-        role: "YOUTH",
-      },
-    });
+    // Return mock new profile data for development
+    const newProfile = {
+      id: "mock-profile-id",
+      userId: userId || "mock-user-id",
+      firstName: firstName || "John",
+      lastName: lastName || "Doe",
+      role: "YOUTH",
+      avatarUrl: avatarUrl || null,
+      active: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      completionPercentage: 10,
+    };
 
     return NextResponse.json(newProfile, { status: 201 });
   } catch (error) {

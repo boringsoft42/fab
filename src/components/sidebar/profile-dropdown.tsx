@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { BadgeCheck, LogOut, Settings, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -14,11 +15,21 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { useCurrentUser } from "@/hooks/use-current-user";
+import { useMockAuth } from "@/context/mock-auth-context";
 import { Badge } from "@/components/ui/badge";
-import { UserRole } from "@prisma/client";
+type UserRole =
+  | "YOUTH"
+  | "ADOLESCENTS"
+  | "COMPANIES"
+  | "MUNICIPAL_GOVERNMENTS"
+  | "TRAINING_CENTERS"
+  | "NGOS_AND_FOUNDATIONS"
+  | "SUPERADMIN";
 
 export function ProfileDropdown() {
   const { profile, user, isLoading } = useCurrentUser();
+  const { signOut } = useMockAuth();
+  const router = useRouter();
 
   if (isLoading) {
     return (
@@ -30,23 +41,33 @@ export function ProfileDropdown() {
 
   if (!profile || !user) return null;
 
-  const displayName = [profile.firstName, profile.lastName]
-    .filter(Boolean)
-    .join(" ");
+  const displayName =
+    [profile?.firstName, profile?.lastName].filter(Boolean).join(" ") ||
+    user?.name ||
+    user?.email?.split("@")[0] ||
+    "Usuario";
 
   // Get initials for avatar fallback
   const getInitials = () => {
-    if (profile.firstName || profile.lastName) {
+    if (profile?.firstName || profile?.lastName) {
       return [profile.firstName?.[0], profile.lastName?.[0]]
         .filter(Boolean)
         .join("")
         .toUpperCase();
     }
-    return user.email?.[0]?.toUpperCase() || "U";
+    if (user?.name) {
+      return user.name
+        .split(" ")
+        .map((n: string) => n[0])
+        .join("")
+        .toUpperCase();
+    }
+    return user?.email?.[0]?.toUpperCase() || "U";
   };
 
   // Get role display name
-  const getRoleDisplay = (role: UserRole) => {
+  const getRoleDisplay = (role?: UserRole | null) => {
+    if (!role) return "Sin rol";
     return role
       .toString()
       .replace("_", " ")
@@ -59,8 +80,8 @@ export function ProfileDropdown() {
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8 ring-2 ring-primary/10">
             <AvatarImage
-              src={profile.avatarUrl || ""}
-              alt={displayName || user.email || "User"}
+              src={profile?.profilePicture || ""}
+              alt={displayName || user?.email || "User"}
             />
             <AvatarFallback className="bg-primary/10">
               {getInitials()}
@@ -72,15 +93,13 @@ export function ProfileDropdown() {
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <div className="flex items-center justify-between">
-              <p className="text-sm font-medium leading-none">
-                {displayName || user.email?.split("@")[0]}
-              </p>
+              <p className="text-sm font-medium leading-none">{displayName}</p>
               <Badge variant="outline" className="ml-2 text-xs">
-                {getRoleDisplay(profile.role)}
+                {getRoleDisplay(profile?.role)}
               </Badge>
             </div>
             <p className="text-xs leading-none text-muted-foreground">
-              {user.email}
+              {user?.email}
             </p>
           </div>
         </DropdownMenuLabel>
@@ -98,7 +117,7 @@ export function ProfileDropdown() {
               Settings
             </Link>
           </DropdownMenuItem>
-          {profile.role === UserRole.SUPERADMIN && (
+          {profile?.role === "SUPERADMIN" && (
             <DropdownMenuItem asChild>
               <Link href="/admin">
                 <BadgeCheck className="mr-2 h-4 w-4" />
@@ -109,9 +128,9 @@ export function ProfileDropdown() {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          onClick={async () => {
-            await fetch("/api/auth/signout", { method: "POST" });
-            window.location.href = "/login";
+          onClick={() => {
+            signOut();
+            router.replace("/login");
           }}
         >
           <LogOut className="mr-2 h-4 w-4" />

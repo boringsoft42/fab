@@ -25,446 +25,347 @@ import {
   Target,
   Award,
   MessageSquare,
+  FileText,
+  Building,
 } from "lucide-react";
 import Link from "next/link";
 
 export function DashboardCompany() {
+  const modules = [
+    {
+      title: "Publicación de Ofertas de Trabajo",
+      description:
+        "Gestiona y publica ofertas laborales para atraer el mejor talento",
+      icon: Briefcase,
+      href: "/job-publishing",
+      color: "bg-blue-500",
+      stats: [
+        { label: "Ofertas Activas", value: "8" },
+        { label: "Candidatos", value: "124" },
+        { label: "En Proceso", value: "15" },
+      ],
+      actions: [
+        { label: "Crear Oferta", href: "/job-publishing/create" },
+        { label: "Mis Ofertas", href: "/job-publishing/my-offers" },
+        { label: "Gestionar Candidatos", href: "/job-publishing/candidates" },
+      ],
+    },
+    {
+      title: "Reportes Empresariales",
+      description:
+        "Analiza métricas de reclutamiento y rendimiento empresarial",
+      icon: BarChart3,
+      href: "/reports",
+      color: "bg-green-500",
+      stats: [
+        { label: "Postulaciones", value: "124" },
+        { label: "Conversión", value: "12%" },
+        { label: "Tiempo Promedio", value: "18d" },
+      ],
+      actions: [
+        { label: "Ver Reportes", href: "/reports/company" },
+        { label: "Métricas de Reclutamiento", href: "/reports/recruitment" },
+        { label: "Análisis de Talento", href: "/reports/talent-analysis" },
+      ],
+    },
+    // NOTE: Only Job Publishing and Reports for companies according to the permissions matrix
+  ];
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Welcome Section */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">
-            Panel Empresarial
-          </h1>
-          <p className="text-muted-foreground">
-            Gestiona tus ofertas laborales y encuentra el talento ideal
-          </p>
+      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg p-6 text-white">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold mb-2">Panel de Empresa</h1>
+            <p className="text-blue-100">
+              Encuentra el talento ideal para tu empresa y gestiona tus procesos
+              de reclutamiento
+            </p>
+          </div>
+          <div className="hidden md:flex">
+            <Building className="w-16 h-16 text-blue-200" />
+          </div>
         </div>
-        <Badge variant="secondary" className="px-3 py-1">
-          <Building2 className="w-4 h-4 mr-1" />
-          Empresa
-        </Badge>
       </div>
 
       {/* Quick Stats */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Empleos Activos
-            </CardTitle>
-            <Briefcase className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">5</div>
-            <p className="text-xs text-muted-foreground">
-              3 publicados esta semana
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Postulaciones</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">127</div>
-            <p className="text-xs text-muted-foreground">
-              +23% vs. mes anterior
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Candidatos Pre-seleccionados
-            </CardTitle>
-            <UserCheck className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">18</div>
-            <p className="text-xs text-muted-foreground">
-              7 pendientes entrevista
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Tiempo Promedio
-            </CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">14</div>
-            <p className="text-xs text-muted-foreground">días para contratar</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Quick Actions */}
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card className="hover:shadow-md transition-shadow cursor-pointer">
-          <Link href="/jobs/create">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Plus className="h-5 w-5" />
-                Publicar Nueva Oferta
-              </CardTitle>
-              <CardDescription>
-                Crea una nueva oportunidad laboral
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button className="w-full">
-                Crear Empleo
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            </CardContent>
-          </Link>
-        </Card>
-
-        <Card className="hover:shadow-md transition-shadow cursor-pointer">
-          <Link href="/jobs/manage">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Briefcase className="h-5 w-5" />
-                Gestionar Empleos
-              </CardTitle>
-              <CardDescription>
-                Administra tus ofertas existentes
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button variant="outline" className="w-full">
-                Ver Empleos
-                <Eye className="w-4 h-4 ml-2" />
-              </Button>
-            </CardContent>
-          </Link>
-        </Card>
-
-        <Card className="hover:shadow-md transition-shadow cursor-pointer">
-          <Link href="/candidates">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Users className="h-5 w-5" />
-                Revisar Candidatos
-              </CardTitle>
-              <CardDescription>Evalúa postulaciones pendientes</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm">Pendientes</span>
-                <Badge className="bg-orange-500">12</Badge>
+          <CardContent className="p-4">
+            <div className="flex items-center space-x-2">
+              <Briefcase className="w-5 h-5 text-blue-500" />
+              <div>
+                <p className="text-sm font-medium">Ofertas Activas</p>
+                <p className="text-2xl font-bold">8</p>
               </div>
-              <Button variant="outline" className="w-full">
-                Revisar Ahora
-              </Button>
-            </CardContent>
-          </Link>
-        </Card>
-      </div>
-
-      <div className="grid gap-6 md:grid-cols-2">
-        {/* Recent Job Performance */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <BarChart3 className="h-5 w-5" />
-              Rendimiento de Ofertas
-            </CardTitle>
-            <CardDescription>
-              Estadísticas de tus últimas publicaciones
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-3">
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <p className="text-sm font-medium">Desarrollador Frontend</p>
-                  <p className="text-xs text-muted-foreground">
-                    Publicado hace 3 días
-                  </p>
-                </div>
-                <div className="text-right">
-                  <Badge className="bg-green-500 mb-1">42 postulaciones</Badge>
-                  <div className="text-xs text-muted-foreground">86 vistas</div>
-                </div>
-              </div>
-              <Progress value={85} className="h-2" />
-
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <p className="text-sm font-medium">Marketing Digital</p>
-                  <p className="text-xs text-muted-foreground">
-                    Publicado hace 1 semana
-                  </p>
-                </div>
-                <div className="text-right">
-                  <Badge className="bg-blue-500 mb-1">28 postulaciones</Badge>
-                  <div className="text-xs text-muted-foreground">64 vistas</div>
-                </div>
-              </div>
-              <Progress value={60} className="h-2" />
-
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <p className="text-sm font-medium">
-                    Asistente Administrativo
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Publicado hace 2 semanas
-                  </p>
-                </div>
-                <div className="text-right">
-                  <Badge variant="secondary" className="mb-1">
-                    15 postulaciones
-                  </Badge>
-                  <div className="text-xs text-muted-foreground">38 vistas</div>
-                </div>
-              </div>
-              <Progress value={35} className="h-2" />
             </div>
           </CardContent>
         </Card>
 
-        {/* Hiring Pipeline */}
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Target className="h-5 w-5" />
-              Pipeline de Contratación
-            </CardTitle>
-            <CardDescription>
-              Estado actual de candidatos por etapa
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-3">
-              <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-blue-500 rounded-full" />
-                  <span className="text-sm font-medium">
-                    Postulaciones Nuevas
-                  </span>
-                </div>
-                <Badge className="bg-blue-500">24</Badge>
+          <CardContent className="p-4">
+            <div className="flex items-center space-x-2">
+              <Users className="w-5 h-5 text-green-500" />
+              <div>
+                <p className="text-sm font-medium">Total Candidatos</p>
+                <p className="text-2xl font-bold">124</p>
               </div>
+            </div>
+          </CardContent>
+        </Card>
 
-              <div className="flex justify-between items-center p-3 bg-yellow-50 rounded-lg">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-yellow-500 rounded-full" />
-                  <span className="text-sm font-medium">En Revisión</span>
-                </div>
-                <Badge className="bg-yellow-500">12</Badge>
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center space-x-2">
+              <UserCheck className="w-5 h-5 text-purple-500" />
+              <div>
+                <p className="text-sm font-medium">En Proceso</p>
+                <p className="text-2xl font-bold">15</p>
               </div>
+            </div>
+          </CardContent>
+        </Card>
 
-              <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-green-500 rounded-full" />
-                  <span className="text-sm font-medium">
-                    Entrevistas Programadas
-                  </span>
-                </div>
-                <Badge className="bg-green-500">7</Badge>
-              </div>
-
-              <div className="flex justify-between items-center p-3 bg-purple-50 rounded-lg">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-purple-500 rounded-full" />
-                  <span className="text-sm font-medium">Ofertas Enviadas</span>
-                </div>
-                <Badge className="bg-purple-500">3</Badge>
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center space-x-2">
+              <TrendingUp className="w-5 h-5 text-orange-500" />
+              <div>
+                <p className="text-sm font-medium">Tasa Conversión</p>
+                <p className="text-2xl font-bold">12%</p>
               </div>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-3">
-        {/* Upcoming Interviews */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Calendar className="h-5 w-5" />
-              Próximas Entrevistas
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-3">
-              <div className="flex items-start gap-3 p-2 border rounded-lg">
-                <div className="w-2 h-2 bg-blue-500 rounded-full mt-2" />
-                <div className="flex-1">
-                  <p className="text-sm font-medium">María González</p>
-                  <p className="text-xs text-muted-foreground">
-                    Desarrollador Frontend
-                  </p>
-                  <p className="text-xs text-muted-foreground">Hoy 14:00</p>
+      {/* Main Modules */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {modules.map((module) => {
+          const Icon = module.icon;
+          return (
+            <Card
+              key={module.title}
+              className="hover:shadow-lg transition-shadow"
+            >
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div
+                      className={`w-12 h-12 ${module.color} rounded-lg flex items-center justify-center`}
+                    >
+                      <Icon className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-lg">{module.title}</CardTitle>
+                      <CardDescription>{module.description}</CardDescription>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              </CardHeader>
 
-              <div className="flex items-start gap-3 p-2 border rounded-lg">
-                <div className="w-2 h-2 bg-green-500 rounded-full mt-2" />
-                <div className="flex-1">
-                  <p className="text-sm font-medium">Carlos Mamani</p>
-                  <p className="text-xs text-muted-foreground">
-                    Marketing Digital
-                  </p>
-                  <p className="text-xs text-muted-foreground">Mañana 10:30</p>
+              <CardContent className="space-y-4">
+                {/* Stats */}
+                <div className="grid grid-cols-3 gap-4">
+                  {module.stats.map((stat, index) => (
+                    <div key={index} className="text-center">
+                      <p className="text-2xl font-bold text-gray-900">
+                        {stat.value}
+                      </p>
+                      <p className="text-xs text-gray-500">{stat.label}</p>
+                    </div>
+                  ))}
                 </div>
-              </div>
-            </div>
-            <Button asChild variant="outline" size="sm" className="w-full">
-              <Link href="/interviews">Ver Todas las Entrevistas</Link>
-            </Button>
-          </CardContent>
-        </Card>
 
-        {/* Company Metrics */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5" />
-              Métricas Clave
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="text-sm">Tasa de Respuesta</span>
-                <div className="flex items-center gap-2">
-                  <Progress value={78} className="w-16 h-2" />
-                  <span className="text-sm font-medium">78%</span>
+                {/* Actions */}
+                <div className="flex flex-wrap gap-2">
+                  {module.actions.map((action, index) => (
+                    <Button
+                      key={index}
+                      variant={index === 0 ? "default" : "outline"}
+                      size="sm"
+                      asChild
+                    >
+                      <Link href={action.href}>
+                        {action.label}
+                        <ArrowRight className="w-3 h-3 ml-1" />
+                      </Link>
+                    </Button>
+                  ))}
                 </div>
-              </div>
-
-              <div className="flex justify-between items-center">
-                <span className="text-sm">Conversión a Entrevista</span>
-                <div className="flex items-center gap-2">
-                  <Progress value={22} className="w-16 h-2" />
-                  <span className="text-sm font-medium">22%</span>
-                </div>
-              </div>
-
-              <div className="flex justify-between items-center">
-                <span className="text-sm">Tasa de Contratación</span>
-                <div className="flex items-center gap-2">
-                  <Progress value={15} className="w-16 h-2" />
-                  <span className="text-sm font-medium">15%</span>
-                </div>
-              </div>
-            </div>
-            <Button asChild variant="outline" size="sm" className="w-full">
-              <Link href="/reports/company">Ver Reportes Completos</Link>
-            </Button>
-          </CardContent>
-        </Card>
-
-        {/* Recent Messages */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <MessageSquare className="h-5 w-5" />
-              Mensajes Recientes
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-3">
-              <div className="flex items-start gap-3">
-                <div className="w-2 h-2 bg-blue-500 rounded-full mt-2" />
-                <div className="flex-1">
-                  <p className="text-sm">
-                    Pregunta sobre beneficios - Desarrollador Frontend
-                  </p>
-                  <p className="text-xs text-muted-foreground">Hace 2 horas</p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3">
-                <div className="w-2 h-2 bg-green-500 rounded-full mt-2" />
-                <div className="flex-1">
-                  <p className="text-sm">
-                    Confirmación de entrevista - Marketing
-                  </p>
-                  <p className="text-xs text-muted-foreground">Hace 4 horas</p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3">
-                <div className="w-2 h-2 bg-orange-500 rounded-full mt-2" />
-                <div className="flex-1">
-                  <p className="text-sm">
-                    Consulta sobre modalidad - Administrativo
-                  </p>
-                  <p className="text-xs text-muted-foreground">Ayer</p>
-                </div>
-              </div>
-            </div>
-            <Button asChild variant="outline" size="sm" className="w-full">
-              <Link href="/messages">Ver Todos los Mensajes</Link>
-            </Button>
-          </CardContent>
-        </Card>
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
 
-      {/* Company Profile Completion */}
+      {/* Active Job Postings */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Award className="h-5 w-5" />
-            Perfil de Empresa
+            <Briefcase className="w-5 h-5" />
+            Ofertas de Trabajo Activas
           </CardTitle>
           <CardDescription>
-            Un perfil completo atrae mejores candidatos
+            Gestiona tus publicaciones laborales activas
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-6 md:grid-cols-2">
-            <div className="space-y-4">
-              <div>
-                <div className="flex justify-between text-sm mb-2">
-                  <span>Completitud del perfil</span>
-                  <span>85%</span>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg">
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                  <Briefcase className="w-5 h-5 text-white" />
                 </div>
-                <Progress value={85} className="h-2" />
+                <div>
+                  <h4 className="font-medium">Desarrollador Frontend Senior</h4>
+                  <p className="text-sm text-gray-600">Publicado hace 3 días</p>
+                </div>
               </div>
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-500 rounded-full" />
-                    Información básica
-                  </span>
-                  <Badge variant="secondary" >
-                    Completo
-                  </Badge>
+              <div className="flex items-center gap-4">
+                <div className="text-right">
+                  <p className="font-medium">24 candidatos</p>
+                  <p className="text-sm text-gray-600">5 nuevos</p>
                 </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-yellow-500 rounded-full" />
-                    Cultura empresarial
-                  </span>
-                  <Badge variant="outline" >
-                    Pendiente
-                  </Badge>
-                </div>
+                <Badge variant="default">Activa</Badge>
               </div>
             </div>
-            <div className="flex items-center">
-              <Button asChild className="w-full">
-                <Link href="/profile/company">
-                  Completar Perfil
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Link>
-              </Button>
+
+            <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg">
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
+                  <Users className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h4 className="font-medium">Especialista en Marketing</h4>
+                  <p className="text-sm text-gray-600">
+                    Publicado hace 1 semana
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="text-right">
+                  <p className="font-medium">18 candidatos</p>
+                  <p className="text-sm text-gray-600">2 en entrevista</p>
+                </div>
+                <Badge variant="secondary">En proceso</Badge>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between p-4 bg-orange-50 rounded-lg">
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
+                  <TrendingUp className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h4 className="font-medium">Analista de Datos</h4>
+                  <p className="text-sm text-gray-600">
+                    Publicado hace 2 semanas
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="text-right">
+                  <p className="font-medium">31 candidatos</p>
+                  <p className="text-sm text-gray-600">1 finalista</p>
+                </div>
+                <Badge variant="outline">Por cerrar</Badge>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-4 pt-4 border-t">
+            <Button asChild className="w-full">
+              <Link href="/job-publishing/my-offers">
+                Ver Todas las Ofertas
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Link>
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Recent Activity */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <FileText className="w-5 h-5" />
+            Actividad Reciente
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+              <div className="flex items-center gap-3">
+                <Eye className="w-4 h-4 text-blue-600" />
+                <span className="text-sm">
+                  Nueva postulación para "Desarrollador Frontend Senior"
+                </span>
+              </div>
+              <Badge variant="secondary">Hace 30 min</Badge>
+            </div>
+
+            <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+              <div className="flex items-center gap-3">
+                <MessageSquare className="w-4 h-4 text-green-600" />
+                <span className="text-sm">
+                  Entrevista programada con candidato para "Marketing"
+                </span>
+              </div>
+              <Badge variant="secondary">Hace 2 horas</Badge>
+            </div>
+
+            <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
+              <div className="flex items-center gap-3">
+                <Briefcase className="w-4 h-4 text-purple-600" />
+                <span className="text-sm">
+                  Publicaste nueva oferta "Desarrollador Backend"
+                </span>
+              </div>
+              <Badge variant="secondary">Hace 1 día</Badge>
             </div>
           </div>
         </CardContent>
       </Card>
+
+      {/* Quick Actions */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Card className="border-dashed">
+          <CardContent className="p-6 text-center">
+            <Briefcase className="w-8 h-8 text-blue-500 mx-auto mb-4" />
+            <h3 className="text-lg font-medium mb-2">Crear Nueva Oferta</h3>
+            <p className="text-gray-600 mb-4">
+              Publica una nueva oferta de trabajo para encontrar candidatos
+              ideales
+            </p>
+            <Button asChild>
+              <Link href="/job-publishing/create">
+                Crear Oferta
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card className="border-dashed">
+          <CardContent className="p-6 text-center">
+            <BarChart3 className="w-8 h-8 text-green-500 mx-auto mb-4" />
+            <h3 className="text-lg font-medium mb-2">
+              Análisis de Rendimiento
+            </h3>
+            <p className="text-gray-600 mb-4">
+              Revisa métricas detalladas de tus procesos de reclutamiento
+            </p>
+            <Button variant="outline" asChild>
+              <Link href="/reports/recruitment">
+                Ver Reportes
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
