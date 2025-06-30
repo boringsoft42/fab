@@ -346,45 +346,19 @@ export const municipalGovernmentSidebarData: SidebarData = {
               title: "Estudiantes",
               url: "/admin/students",
             },
-            {
-              title: "Instructores",
-              url: "/admin/instructors",
-            },
           ],
         },
         {
-          title: "Emprendimiento",
+          title: "Contenido para Jóvenes",
           icon: Lightbulb,
           items: [
             {
-              title: "Dashboard de Emprendimiento",
-              url: "/admin/entrepreneurship",
+              title: "Gestión de Contenido",
+              url: "/admin/youth-content",
             },
             {
-              title: "Crear Recurso",
-              url: "/admin/entrepreneurship/create-resource",
-            },
-            {
-              title: "Gestión de Programas",
-              url: "/admin/entrepreneurship/programs",
-            },
-            {
-              title: "Emprendedores",
-              url: "/admin/entrepreneurship/entrepreneurs",
-            },
-            {
-              title: "Mentorías",
-              url: "/admin/entrepreneurship/mentorship",
-            },
-          ],
-        },
-        {
-          title: "Directorio",
-          icon: Building2,
-          items: [
-            {
-              title: "Gestión de Instituciones",
-              url: "/admin/institutions",
+              title: "Gestión de Eventos",
+              url: "/admin/entrepreneurship/events",
             },
           ],
         },
@@ -456,45 +430,19 @@ export const trainingCenterSidebarData: SidebarData = {
               title: "Estudiantes",
               url: "/admin/students",
             },
-            {
-              title: "Instructores",
-              url: "/admin/instructors",
-            },
           ],
         },
         {
-          title: "Emprendimiento",
+          title: "Contenido para Jóvenes",
           icon: Lightbulb,
           items: [
             {
-              title: "Dashboard de Emprendimiento",
-              url: "/admin/entrepreneurship",
+              title: "Gestión de Contenido",
+              url: "/admin/youth-content",
             },
             {
-              title: "Crear Recurso",
-              url: "/admin/entrepreneurship/create-resource",
-            },
-            {
-              title: "Gestión de Programas",
-              url: "/admin/entrepreneurship/programs",
-            },
-            {
-              title: "Emprendedores",
-              url: "/admin/entrepreneurship/entrepreneurs",
-            },
-            {
-              title: "Mentorías",
-              url: "/admin/entrepreneurship/mentorship",
-            },
-          ],
-        },
-        {
-          title: "Directorio",
-          icon: Building2,
-          items: [
-            {
-              title: "Gestión de Instituciones",
-              url: "/admin/institutions",
+              title: "Gestión de Eventos",
+              url: "/admin/entrepreneurship/events",
             },
           ],
         },
@@ -566,45 +514,19 @@ export const ngoFoundationSidebarData: SidebarData = {
               title: "Estudiantes",
               url: "/admin/students",
             },
-            {
-              title: "Instructores",
-              url: "/admin/instructors",
-            },
           ],
         },
         {
-          title: "Emprendimiento",
+          title: "Contenido para Jóvenes",
           icon: Lightbulb,
           items: [
             {
-              title: "Dashboard de Emprendimiento",
-              url: "/admin/entrepreneurship",
+              title: "Gestión de Contenido",
+              url: "/admin/youth-content",
             },
             {
-              title: "Crear Recurso",
-              url: "/admin/entrepreneurship/create-resource",
-            },
-            {
-              title: "Gestión de Programas",
-              url: "/admin/entrepreneurship/programs",
-            },
-            {
-              title: "Emprendedores",
-              url: "/admin/entrepreneurship/entrepreneurs",
-            },
-            {
-              title: "Mentorías",
-              url: "/admin/entrepreneurship/mentorship",
-            },
-          ],
-        },
-        {
-          title: "Directorio",
-          icon: Building2,
-          items: [
-            {
-              title: "Gestión de Instituciones",
-              url: "/admin/institutions",
+              title: "Gestión de Eventos",
+              url: "/admin/entrepreneurship/events",
             },
           ],
         },
