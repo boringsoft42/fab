@@ -1,14 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useCallback } from "react";
-type UserRole =
-  | "YOUTH"
-  | "ADOLESCENTS"
-  | "COMPANIES"
-  | "MUNICIPAL_GOVERNMENTS"
-  | "TRAINING_CENTERS"
-  | "NGOS_AND_FOUNDATIONS"
-  | "SUPERADMIN";
+type UserRole = "YOUTH" | "COMPANIES" | "MUNICIPAL_GOVERNMENTS";
 
 interface MockUser {
   id: string;

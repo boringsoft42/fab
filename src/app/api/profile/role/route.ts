@@ -1,12 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-type UserRole =
-  | "YOUTH"
-  | "ADOLESCENTS"
-  | "COMPANIES"
-  | "MUNICIPAL_GOVERNMENTS"
-  | "TRAINING_CENTERS"
-  | "NGOS_AND_FOUNDATIONS";
+type UserRole = "YOUTH" | "COMPANIES" | "MUNICIPAL_GOVERNMENTS";
 
 export async function PATCH(request: NextRequest) {
   try {
@@ -15,11 +9,8 @@ export async function PATCH(request: NextRequest) {
     // Validate role
     const validRoles: UserRole[] = [
       "YOUTH",
-      "ADOLESCENTS",
       "COMPANIES",
       "MUNICIPAL_GOVERNMENTS",
-      "TRAINING_CENTERS",
-      "NGOS_AND_FOUNDATIONS",
     ];
 
     if (!validRoles.includes(role)) {

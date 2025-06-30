@@ -18,7 +18,7 @@ import {
   Trophy,
   RotateCcw,
 } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 
 interface QuizComponentProps {
   quiz: Quiz;
@@ -169,11 +169,45 @@ export const QuizComponent = ({ quiz, onComplete }: QuizComponentProps) => {
   };
 
   const getCurrentAnswer = () => {
+    if (!currentQuestion?.id) return "";
     return (
       answers[currentQuestion.id]?.answer ||
       (currentQuestion.type === QuestionType.MULTIPLE_SELECT ? [] : "")
     );
   };
+
+  // Early return if no questions or current question is not available
+  if (!quiz.questions || quiz.questions.length === 0) {
+    return (
+      <div className="max-w-2xl mx-auto">
+        <Card>
+          <CardContent className="p-8 text-center">
+            <AlertCircle className="h-16 w-16 text-orange-600 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Quiz no disponible</h3>
+            <p className="text-muted-foreground">
+              Este quiz no tiene preguntas configuradas.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (!currentQuestion) {
+    return (
+      <div className="max-w-2xl mx-auto">
+        <Card>
+          <CardContent className="p-8 text-center">
+            <AlertCircle className="h-16 w-16 text-orange-600 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Error en el quiz</h3>
+            <p className="text-muted-foreground">
+              No se pudo cargar la pregunta actual.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   if (quizState === "completed") {
     return (
@@ -368,24 +402,27 @@ export const QuizComponent = ({ quiz, onComplete }: QuizComponentProps) => {
       <Card className="mb-6">
         <CardHeader>
           <CardTitle className="text-lg">
-            {currentQuestionIndex + 1}. {currentQuestion.question}
+            {currentQuestionIndex + 1}.{" "}
+            {currentQuestion?.question || "Pregunta no disponible"}
           </CardTitle>
           <div className="flex items-center gap-2">
             <Badge variant="outline">
-              {currentQuestion.type.replace("_", " ")}
+              {currentQuestion?.type?.replace("_", " ") || "Pregunta"}
             </Badge>
             <span className="text-sm text-muted-foreground">
-              {currentQuestion.points} puntos
+              {currentQuestion?.points || 0} puntos
             </span>
           </div>
         </CardHeader>
 
         <CardContent>
-          <QuestionInput
-            question={currentQuestion}
-            value={getCurrentAnswer()}
-            onChange={(answer) => updateAnswer(currentQuestion.id, answer)}
-          />
+          {currentQuestion && (
+            <QuestionInput
+              question={currentQuestion}
+              value={getCurrentAnswer()}
+              onChange={(answer) => updateAnswer(currentQuestion.id, answer)}
+            />
+          )}
         </CardContent>
       </Card>
 
@@ -402,7 +439,7 @@ export const QuizComponent = ({ quiz, onComplete }: QuizComponentProps) => {
         <div className="flex gap-2">
           <Button
             onClick={isLastQuestion ? submitQuiz : goToNextQuestion}
-            disabled={!answers[currentQuestion.id]}
+            disabled={!currentQuestion?.id || !answers[currentQuestion.id]}
           >
             {isLastQuestion ? "Finalizar Quiz" : "Siguiente"}
           </Button>

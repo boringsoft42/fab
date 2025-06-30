@@ -391,6 +391,16 @@ export const trainingCenterSidebarData: SidebarData = {
           title: "Gestión de Cursos",
           url: "/admin/courses",
           icon: BookOpen,
+          items: [
+            {
+              title: "Todos los Cursos",
+              url: "/admin/courses",
+            },
+            {
+              title: "Crear Curso",
+              url: "/admin/courses/create",
+            },
+          ],
         },
         {
           title: "Estudiantes",
@@ -521,17 +531,14 @@ export const ngoSidebarData: SidebarData = {
 export function getSidebarDataByRole(role: UserRole): SidebarData {
   switch (role) {
     case "YOUTH":
+      // Youth role encompasses both young people and adolescents
       return youthSidebarData;
-    case "ADOLESCENTS":
-      return adolescentSidebarData;
     case "COMPANIES":
       return companySidebarData;
     case "MUNICIPAL_GOVERNMENTS":
+      // Municipal/NGO/Center role uses municipal government sidebar as primary
+      // This encompasses municipalities, NGOs, training centers, and foundations
       return municipalGovernmentSidebarData;
-    case "TRAINING_CENTERS":
-      return trainingCenterSidebarData;
-    case "NGOS_AND_FOUNDATIONS":
-      return ngoSidebarData;
     default:
       return youthSidebarData; // Default fallback
   }

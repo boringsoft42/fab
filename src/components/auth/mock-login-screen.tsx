@@ -13,15 +13,68 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2, Mail, Lock, Users, AlertCircle, LogIn } from "lucide-react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  Loader2,
+  Mail,
+  Lock,
+  Users,
+  AlertCircle,
+  LogIn,
+  User,
+  Building,
+  Target,
+} from "lucide-react";
 import { useMockAuth } from "@/context/mock-auth-context";
+
+type UserRole = "YOUTH" | "COMPANIES" | "MUNICIPAL_GOVERNMENTS";
+
+interface RoleOption {
+  value: UserRole;
+  label: string;
+  description: string;
+  icon: any;
+  color: string;
+  examples: string[];
+}
+
+const roleOptions: RoleOption[] = [
+  {
+    value: "YOUTH",
+    label: "Youth",
+    description:
+      "Para jóvenes y adolescentes que buscan empleo y oportunidades de desarrollo",
+    icon: User,
+    color: "bg-blue-500",
+    examples: ["Estudiantes", "Jóvenes profesionales", "Adolescentes"],
+  },
+  {
+    value: "COMPANIES",
+    label: "Company",
+    description:
+      "Para empresas que buscan talento y publican ofertas de trabajo",
+    icon: Building,
+    color: "bg-purple-500",
+    examples: ["Startups", "PYMEs", "Grandes empresas"],
+  },
+  {
+    value: "MUNICIPAL_GOVERNMENTS",
+    label: "Municipality, NGO, or Center",
+    description:
+      "Para gobiernos municipales, ONGs, centros de capacitación y fundaciones",
+    icon: Target,
+    color: "bg-green-500",
+    examples: ["Alcaldías", "ONGs", "Centros de formación", "Fundaciones"],
+  },
+];
 
 export function MockLoginScreen() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const { signIn, signUp, isLoading, error } = useMockAuth();
+  const [selectedRole, setSelectedRole] = useState<UserRole>("YOUTH");
+  const { signIn, signUp, updateUserRole, isLoading, error } = useMockAuth();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -34,41 +87,37 @@ export function MockLoginScreen() {
         await signIn(email, password);
       }
 
-      // After successful login, redirect to role selection
-      router.replace("/select-role");
+      // Update user role and redirect to dashboard
+      updateUserRole(selectedRole);
+      router.replace("/dashboard");
     } catch (err) {
       // Error is handled by the context
     }
   };
 
   const demoUsers = [
-    { email: "joven@demo.com", role: "YOUTH", label: "Demo Joven" },
+    { email: "youth@demo.com", role: "YOUTH" as UserRole, label: "Demo Youth" },
     {
-      email: "adolescente@demo.com",
-      role: "ADOLESCENTS",
-      label: "Demo Adolescente",
-    },
-    { email: "empresa@demo.com", role: "COMPANIES", label: "Demo Empresa" },
-    {
-      email: "municipio@demo.com",
-      role: "MUNICIPAL_GOVERNMENTS",
-      label: "Demo Municipio",
+      email: "company@demo.com",
+      role: "COMPANIES" as UserRole,
+      label: "Demo Company",
     },
     {
-      email: "centro@demo.com",
-      role: "TRAINING_CENTERS",
-      label: "Demo Centro",
+      email: "municipality@demo.com",
+      role: "MUNICIPAL_GOVERNMENTS" as UserRole,
+      label: "Demo Municipality",
     },
-    { email: "ong@demo.com", role: "NGOS_AND_FOUNDATIONS", label: "Demo ONG" },
   ];
 
-  const handleDemoLogin = async (demoEmail: string) => {
+  const handleDemoLogin = async (demoEmail: string, demoRole: UserRole) => {
     setEmail(demoEmail);
     setPassword("demo123");
+    setSelectedRole(demoRole);
 
     try {
       await signIn(demoEmail, "demo123");
-      router.replace("/select-role");
+      updateUserRole(demoRole);
+      router.replace("/dashboard");
     } catch (err) {
       // Error handled by context
     }
@@ -76,7 +125,7 @@ export function MockLoginScreen() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <div className="max-w-md w-full space-y-6">
+      <div className="max-w-lg w-full space-y-6">
         {/* Header */}
         <div className="text-center space-y-2">
           <h1 className="text-3xl font-bold text-gray-900">CEMSE</h1>
@@ -94,12 +143,12 @@ export function MockLoginScreen() {
             </CardTitle>
             <CardDescription>
               {isSignUp
-                ? "Crea tu cuenta para acceder a CEMSE"
-                : "Accede a tu cuenta de CEMSE"}
+                ? "Crea tu cuenta y selecciona tu tipo de usuario"
+                : "Accede a tu cuenta y selecciona tu tipo de usuario"}
             </CardDescription>
           </CardHeader>
 
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-6">
             {error && (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
@@ -107,54 +156,110 @@ export function MockLoginScreen() {
               </Alert>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {isSignUp && (
-                <div className="space-y-2">
-                  <Label htmlFor="name">Nombre Completo</Label>
-                  <Input
-                    id="name"
-                    type="text"
-                    placeholder="Tu nombre completo"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required={isSignUp}
-                    disabled={isLoading}
-                  />
-                </div>
-              )}
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Personal Information */}
+              <div className="space-y-4">
+                {isSignUp && (
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Nombre Completo</Label>
+                    <Input
+                      id="name"
+                      type="text"
+                      placeholder="Tu nombre completo"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      required={isSignUp}
+                      disabled={isLoading}
+                    />
+                  </div>
+                )}
 
-              <div className="space-y-2">
-                <Label htmlFor="email">Correo Electrónico</Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="tu@correo.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10"
-                    required
-                    disabled={isLoading}
-                  />
+                <div className="space-y-2">
+                  <Label htmlFor="email">Correo Electrónico</Label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="tu@correo.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="pl-10"
+                      required
+                      disabled={isLoading}
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="password">Contraseña</Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Input
+                      id="password"
+                      type="password"
+                      placeholder="Tu contraseña"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="pl-10"
+                      required
+                      disabled={isLoading}
+                    />
+                  </div>
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="password">Contraseña</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                  <Input
-                    id="password"
-                    type="password"
-                    placeholder="Tu contraseña"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10"
-                    required
-                    disabled={isLoading}
-                  />
+              {/* Role Selection */}
+              <div className="space-y-4">
+                <div>
+                  <Label className="text-base font-medium">
+                    Tipo de Usuario
+                  </Label>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Selecciona el tipo que mejor te describe
+                  </p>
                 </div>
+
+                <RadioGroup
+                  value={selectedRole}
+                  onValueChange={(value) => setSelectedRole(value as UserRole)}
+                  className="space-y-3"
+                  disabled={isLoading}
+                >
+                  {roleOptions.map((option) => {
+                    const Icon = option.icon;
+                    return (
+                      <div key={option.value} className="relative">
+                        <RadioGroupItem
+                          value={option.value}
+                          id={option.value}
+                          className="peer sr-only"
+                        />
+                        <Label
+                          htmlFor={option.value}
+                          className="flex items-start gap-4 p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all"
+                        >
+                          <div
+                            className={`w-10 h-10 ${option.color} rounded-full flex items-center justify-center flex-shrink-0 mt-1`}
+                          >
+                            <Icon className="w-5 h-5 text-white" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="font-medium text-gray-900">
+                              {option.label}
+                            </div>
+                            <div className="text-sm text-gray-600 mt-1">
+                              {option.description}
+                            </div>
+                            <div className="text-xs text-gray-500 mt-2">
+                              Ejemplos: {option.examples.join(", ")}
+                            </div>
+                          </div>
+                        </Label>
+                      </div>
+                    );
+                  })}
+                </RadioGroup>
               </div>
 
               <Button type="submit" className="w-full" disabled={isLoading}>
@@ -196,28 +301,25 @@ export function MockLoginScreen() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 gap-2">
               {demoUsers.map((demo) => (
                 <Button
                   key={demo.email}
                   variant="outline"
                   size="sm"
-                  onClick={() => handleDemoLogin(demo.email)}
+                  onClick={() => handleDemoLogin(demo.email, demo.role)}
                   disabled={isLoading}
-                  className="text-xs h-8"
+                  className="justify-start h-auto py-2"
                 >
-                  {demo.label}
+                  <div className="text-left">
+                    <div className="font-medium text-xs">{demo.label}</div>
+                    <div className="text-xs text-gray-600">{demo.email}</div>
+                  </div>
                 </Button>
               ))}
             </div>
           </CardContent>
         </Card>
-
-        {/* Info Note */}
-        <div className="text-center text-xs text-gray-500">
-          <p>🚀 Sistema de demostración - Solo frontend</p>
-          <p>Cualquier email y contraseña funcionará</p>
-        </div>
       </div>
     </div>
   );

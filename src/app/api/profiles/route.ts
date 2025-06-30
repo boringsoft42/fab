@@ -1,12 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-type UserRole =
-  | "YOUTH"
-  | "ADOLESCENTS"
-  | "COMPANIES"
-  | "MUNICIPAL_GOVERNMENTS"
-  | "TRAINING_CENTERS"
-  | "NGOS_AND_FOUNDATIONS";
+type UserRole = "YOUTH" | "COMPANIES" | "MUNICIPAL_GOVERNMENTS";
 
 // GET: Fetch mock profiles data since we're using mock authentication
 export async function GET(req: NextRequest) {
@@ -43,7 +37,7 @@ export async function GET(req: NextRequest) {
         userId: "mock-user-3",
         firstName: "Bob",
         lastName: "Wilson",
-        role: "ADOLESCENTS" as UserRole,
+        role: "MUNICIPAL_GOVERNMENTS" as UserRole,
         avatarUrl: null,
         active: false,
         createdAt: new Date().toISOString(),
