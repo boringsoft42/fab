@@ -17,6 +17,9 @@ import {
   Command,
   GalleryVerticalEnd,
   AudioWaveform,
+  Plus,
+  Eye,
+  UserCheck,
 } from "lucide-react";
 import type { SidebarData } from "../types";
 import type { UserRole } from "@prisma/client";
@@ -73,7 +76,6 @@ export const youthSidebarData: SidebarData = {
       items: [
         {
           title: "Capacitación",
-          url: "/courses",
           icon: GraduationCap,
           items: [
             {
@@ -92,7 +94,6 @@ export const youthSidebarData: SidebarData = {
         },
         {
           title: "Emprendimiento",
-          url: "/entrepreneurship",
           icon: Lightbulb,
           items: [
             {
@@ -167,7 +168,6 @@ export const adolescentSidebarData: SidebarData = {
       items: [
         {
           title: "Capacitación",
-          url: "/courses",
           icon: GraduationCap,
           items: [
             {
@@ -186,7 +186,6 @@ export const adolescentSidebarData: SidebarData = {
         },
         {
           title: "Emprendimiento",
-          url: "/entrepreneurship",
           icon: Lightbulb,
           items: [
             {
@@ -309,26 +308,28 @@ export const municipalGovernmentSidebarData: SidebarData = {
       items: [
         {
           title: "Capacitación",
-          url: "/admin/training",
           icon: GraduationCap,
           items: [
             {
               title: "Gestión de Cursos",
-              url: "/admin/training/courses",
+              url: "/admin/courses",
+            },
+            {
+              title: "Crear Curso",
+              url: "/admin/courses/create",
             },
             {
               title: "Estudiantes",
-              url: "/admin/training/students",
+              url: "/admin/students",
             },
             {
               title: "Instructores",
-              url: "/admin/training/instructors",
+              url: "/admin/instructors",
             },
           ],
         },
         {
           title: "Emprendimiento",
-          url: "/admin/entrepreneurship",
           icon: Lightbulb,
           items: [
             {
@@ -389,7 +390,6 @@ export const trainingCenterSidebarData: SidebarData = {
         },
         {
           title: "Gestión de Cursos",
-          url: "/admin/courses",
           icon: BookOpen,
           items: [
             {
@@ -407,6 +407,11 @@ export const trainingCenterSidebarData: SidebarData = {
           url: "/admin/students",
           icon: Users,
         },
+        {
+          title: "Instructores",
+          url: "/admin/instructors",
+          icon: UserCheck,
+        },
       ],
     },
     {
@@ -414,7 +419,6 @@ export const trainingCenterSidebarData: SidebarData = {
       items: [
         {
           title: "Emprendimiento",
-          url: "/admin/entrepreneurship",
           icon: Lightbulb,
           items: [
             {
@@ -474,43 +478,54 @@ export const ngoSidebarData: SidebarData = {
           icon: LayoutDashboard,
         },
         {
-          title: "Programas de Capacitación",
-          url: "/admin/training",
+          title: "Capacitación",
           icon: GraduationCap,
-        },
-      ],
-    },
-    {
-      title: "Desarrollo",
-      items: [
-        {
-          title: "Gestión de Emprendimiento",
-          url: "/admin/entrepreneurship",
-          icon: Target,
           items: [
             {
-              title: "Programas Sociales",
-              url: "/admin/entrepreneurship/social-programs",
+              title: "Gestión de Cursos",
+              url: "/admin/courses",
             },
             {
-              title: "Beneficiarios",
-              url: "/admin/entrepreneurship/beneficiaries",
+              title: "Crear Curso",
+              url: "/admin/courses/create",
             },
             {
-              title: "Impacto Social",
-              url: "/admin/entrepreneurship/impact",
+              title: "Estudiantes",
+              url: "/admin/students",
+            },
+            {
+              title: "Instructores",
+              url: "/admin/instructors",
+            },
+          ],
+        },
+        {
+          title: "Emprendimiento",
+          icon: Lightbulb,
+          items: [
+            {
+              title: "Gestión de Programas",
+              url: "/admin/entrepreneurship/programs",
+            },
+            {
+              title: "Emprendedores",
+              url: "/admin/entrepreneurship/entrepreneurs",
+            },
+            {
+              title: "Recursos Sociales",
+              url: "/admin/entrepreneurship/social-resources",
             },
           ],
         },
       ],
     },
     {
-      title: "Impacto",
+      title: "Análisis",
       items: [
         {
-          title: "Reportes de Impacto",
-          url: "/reports/impact",
-          icon: PieChart,
+          title: "Impacto Social",
+          url: "/reports/social-impact",
+          icon: BarChart3,
         },
       ],
     },
@@ -518,8 +533,8 @@ export const ngoSidebarData: SidebarData = {
       title: "Organización",
       items: [
         {
-          title: "Perfil Organizacional",
-          url: "/profile/organization",
+          title: "Perfil de ONG",
+          url: "/profile/ngo",
           icon: Building2,
         },
       ],
@@ -531,15 +546,18 @@ export const ngoSidebarData: SidebarData = {
 export function getSidebarDataByRole(role: UserRole): SidebarData {
   switch (role) {
     case "YOUTH":
-      // Youth role encompasses both young people and adolescents
       return youthSidebarData;
+    case "ADOLESCENTS":
+      return adolescentSidebarData;
     case "COMPANIES":
       return companySidebarData;
     case "MUNICIPAL_GOVERNMENTS":
-      // Municipal/NGO/Center role uses municipal government sidebar as primary
-      // This encompasses municipalities, NGOs, training centers, and foundations
       return municipalGovernmentSidebarData;
+    case "TRAINING_CENTERS":
+      return trainingCenterSidebarData;
+    case "NGOS_AND_FOUNDATIONS":
+      return ngoSidebarData;
     default:
-      return youthSidebarData; // Default fallback
+      return youthSidebarData;
   }
 }
