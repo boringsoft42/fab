@@ -2,21 +2,21 @@
 
 ## 📋 CORRECTED PERMISSIONS MATRIX
 
-| USER TYPE | JOB SEARCH | PUBLISH OFFERS | TRAINING | ENTREPRENEURSHIP | REPORTS |
-|-----------|------------|----------------|----------|------------------|---------|
-| **YOUTH** | ✓ | ✗ | ✓ | ✓ | ✓ |
-| **ADOLESCENTS** | ✓ | ✗ | ✓ | ✓ | ✗ |
-| **COMPANIES** | ✗ | ✓ | ✗ | ✗ | ✓ |
-| **MUNICIPAL GOVERNMENTS** | ✗ | ✗ | ✓ | ✓ | ✓ |
-| **TRAINING CENTERS** | ✗ | ✗ | ✓ | ✓ | ✓ |
-| **NGOs AND FOUNDATIONS** | ✗ | ✗ | ✓ | ✓ | ✓ |
+| USER TYPE                 | JOB SEARCH | PUBLISH OFFERS | TRAINING | ENTREPRENEURSHIP | REPORTS |
+| ------------------------- | ---------- | -------------- | -------- | ---------------- | ------- |
+| **YOUTH**                 | ✓          | ✗              | ✓        | ✓                | ✓       |
+| **ADOLESCENTS**           | ✓          | ✗              | ✓        | ✓                | ✗       |
+| **COMPANIES**             | ✗          | ✓              | ✗        | ✗                | ✓       |
+| **MUNICIPAL GOVERNMENTS** | ✗          | ✗              | ✓        | ✓                | ✓       |
+| **TRAINING CENTERS**      | ✗          | ✗              | ✓        | ✓                | ✓       |
+| **NGOs AND FOUNDATIONS**  | ✗          | ✗              | ✓        | ✓                | ✓       |
 
 ---
 
 ## 🏗️ PROJECT BASE SETUP
 
-
 ### **Architectural Folder Structure**
+
 ```
 src/
 ├── app/                     # App Router (Next.js 14)
@@ -42,6 +42,7 @@ src/
 ```
 
 ### **Base Design System**
+
 - [ ] Configure design tokens (colors, typography, spacing)
 - [ ] Create Shadcn/UI base components:
   - Button, Input, Label, Textarea
@@ -52,6 +53,7 @@ src/
 - [ ] Create icon system (Lucide React)
 
 ### **State Management and Context**
+
 - [ ] Setup Zustand for global state management
 - [ ] Create base stores:
   - `useAuthStore` - authentication and current user
@@ -64,12 +66,14 @@ src/
 ## 🔐 AUTHENTICATION MODULE
 
 ### **Authentication Layout**
+
 - [ ] `AuthLayout` - Layout for public pages
   - Header with public navigation
   - Institutional footer
   - Responsive design
 
 ### **Authentication Pages**
+
 - [ ] `/auth/login` - Login page
 - [ ] `/auth/register` - Multi-step registration by user type
 - [ ] `/auth/forgot-password` - Password recovery
@@ -77,7 +81,9 @@ src/
 - [ ] `/auth/verify-email` - Email verification
 
 ### **Authentication Components**
+
 - [ ] `LoginForm` component
+
   ```tsx
   // Features:
   - Email/password validation with Zod
@@ -87,6 +93,7 @@ src/
   ```
 
 - [ ] `RegisterForm` multi-step component
+
   ```tsx
   // Step 1: User type selection (Youth/Adolescent/Company/Admin)
   // Step 2: Basic data (email, password, confirmation)
@@ -98,11 +105,13 @@ src/
 - [ ] `ResetPasswordForm` component
 
 ### **Route Protection System**
+
 - [ ] `AuthGuard` component - protect authenticated routes
 - [ ] `RoleGuard` component - permissions matrix based protection
 - [ ] `RedirectByRole` component - automatic redirection by role
 
 ### **Authentication Hooks**
+
 - [ ] `useAuth()` - authentication state
 - [ ] `useUser()` - current user data
 - [ ] `usePermissions()` - verify permissions according to matrix
@@ -113,10 +122,12 @@ src/
 ## 🏠 MAIN LAYOUTS AND NAVIGATION
 
 ### **Adaptive Main Layout**
+
 - [ ] `MainLayout` component with user-differentiated navigation
 - [ ] `Sidebar` component with role-specific menus:
 
 **For YOUTH:**
+
 - Dashboard
 - Search Jobs
 - My Applications
@@ -126,6 +137,7 @@ src/
 - Personal Reports
 
 **For ADOLESCENTS:**
+
 - Dashboard
 - Search Jobs
 - My Applications
@@ -135,6 +147,7 @@ src/
 - (No Reports)
 
 **For COMPANIES:**
+
 - Dashboard
 - Publish Jobs
 - My Jobs
@@ -143,6 +156,7 @@ src/
 - Company Profile
 
 **For MUNICIPAL GOVERNMENTS:**
+
 - Administrative Dashboard
 - User Management
 - Training (Management)
@@ -151,6 +165,7 @@ src/
 - Configuration
 
 **For TRAINING CENTERS:**
+
 - Educational Dashboard
 - Course Management
 - Students
@@ -159,6 +174,7 @@ src/
 - Institutional Profile
 
 **For NGOs AND FOUNDATIONS:**
+
 - Social Dashboard
 - Training Programs
 - Entrepreneurship Management
@@ -166,6 +182,7 @@ src/
 - Organizational Profile
 
 ### **Adaptive Header Component**
+
 - [ ] Logo and branding
 - [ ] Global search (when applicable by user)
 - [ ] Notification center
@@ -173,8 +190,9 @@ src/
 - [ ] Dynamic breadcrumbs
 
 ### **User Type Specific Dashboards**
+
 - [ ] `DashboardYouth` component
-- [ ] `DashboardAdolescent` component 
+- [ ] `DashboardAdolescent` component
 - [ ] `DashboardCompany` component
 - [ ] `DashboardMunicipalGovernment` component
 - [ ] `DashboardTrainingCenter` component
@@ -185,8 +203,10 @@ src/
 ## 👤 USER PROFILE MANAGEMENT BY TYPE
 
 ### **Youth and Adolescent Profiles**
+
 - [ ] `/profile` - Complete profile view
 - [ ] `PersonalInfoForm` component
+
   ```tsx
   // Specific fields:
   - Personal data (name, ID, birth date, gender)
@@ -195,6 +215,7 @@ src/
   ```
 
 - [ ] `AcademicProfileForm` component
+
   ```tsx
   // Specific fields:
   - Education level (primary/secondary/technical/university)
@@ -204,6 +225,7 @@ src/
   ```
 
 - [ ] `WorkExperienceForm` component
+
   ```tsx
   // For youth (optional for adolescents):
   - Dynamic list of work experiences
@@ -212,6 +234,7 @@ src/
   ```
 
 - [ ] `SkillsAndCompetencesForm` component
+
   ```tsx
   // Features:
   - Tags input for technical skills
@@ -230,6 +253,7 @@ src/
   ```
 
 ### **Company Profiles**
+
 - [ ] `/company-profile` - Company profile view
 - [ ] `CompanyInfoForm` component
   ```tsx
@@ -243,6 +267,7 @@ src/
   ```
 
 ### **Administrator Profiles (Governments, Centers, NGOs)**
+
 - [ ] `/admin-profile` - Institutional profile view
 - [ ] `InstitutionalProfileForm` component
   ```tsx
@@ -255,6 +280,7 @@ src/
   ```
 
 ### **Shared Profile Components**
+
 - [ ] `ProfileCompletionIndicator` component
 - [ ] `ImageUpload` component with drag & drop
 - [ ] `SkillsSelector` component with autocomplete
@@ -267,8 +293,10 @@ src/
 ### **For YOUTH and ADOLESCENTS (Job Search)**
 
 #### **Main Search**
+
 - [ ] `/jobs` - Main search page Upwork/Fiverr style
 - [ ] `JobSearchInterface` component
+
   ```tsx
   // Main features:
   - Intelligent search bar
@@ -279,6 +307,7 @@ src/
   ```
 
 - [ ] `JobSearchFilters` component
+
   ```tsx
   // Specific filters:
   - Location/Municipality (multiselect)
@@ -307,8 +336,10 @@ src/
   ```
 
 #### **Detail and Application**
+
 - [ ] `/jobs/[id]` - Complete job detail page
 - [ ] `JobDetailView` component
+
   ```tsx
   // Complete information:
   - Header with title, company, location
@@ -331,6 +362,7 @@ src/
   ```
 
 #### **Application Management**
+
 - [ ] `/my-applications` - Application history
 - [ ] `ApplicationsList` component
   ```tsx
@@ -343,6 +375,7 @@ src/
   ```
 
 #### **Alert System**
+
 - [ ] `/job-alerts` - Alert configuration
 - [ ] `JobAlertsSetup` component
 - [ ] `SavedSearches` component
@@ -350,8 +383,10 @@ src/
 ### **For COMPANIES (Job Management)**
 
 #### **Job Management**
+
 - [ ] `/my-jobs` - Company jobs dashboard
 - [ ] `CompanyJobsDashboard` component
+
   ```tsx
   // Overview:
   - Statistics: Total jobs, active, paused, closed
@@ -377,8 +412,10 @@ src/
   ```
 
 #### **Candidate Management**
+
 - [ ] `/jobs/[id]/candidates` - Application management
 - [ ] `CandidateManagement` component
+
   ```tsx
   // ATS-style features:
   - Candidate list per job
@@ -402,7 +439,9 @@ src/
   ```
 
 #### **Communication Tools**
+
 - [ ] `MessagingSystem` component
+
   ```tsx
   // Company-candidate chat:
   - Active conversation list
@@ -429,8 +468,10 @@ src/
 ### **For YOUTH, ADOLESCENTS, GOVERNMENTS, CENTERS, NGOs**
 
 #### **Course Catalog**
+
 - [ ] `/courses` - Main catalog Platzi/Coursera style
 - [ ] `CourseCatalog` component
+
   ```tsx
   // Educational marketplace view:
   - Grid/List of available courses
@@ -457,6 +498,7 @@ src/
   ```
 
 #### **Course Detail**
+
 - [ ] `/courses/[id]` - Complete detail page
 - [ ] `CourseDetailView` component
   ```tsx
@@ -473,8 +515,10 @@ src/
   ```
 
 #### **Learning Platform**
+
 - [ ] `/courses/[id]/learn` - Learning interface
 - [ ] `LearningInterface` component
+
   ```tsx
   // Platzi-style layout:
   - Sidebar with complete curriculum
@@ -488,6 +532,7 @@ src/
   ```
 
 - [ ] `LessonPlayer` component
+
   ```tsx
   // Multimedia player:
   - Video player with advanced controls
@@ -511,7 +556,9 @@ src/
   ```
 
 #### **Assessment System**
+
 - [ ] `QuizComponent` component
+
   ```tsx
   // Question types:
   - Multiple choice
@@ -534,6 +581,7 @@ src/
   ```
 
 #### **Personal Course Management**
+
 - [ ] `/my-courses` - Personal learning dashboard
 - [ ] `StudentDashboard` component
   ```tsx
@@ -550,6 +598,7 @@ src/
 #### **Development of 5 Mandatory Courses**
 
 **Course 1: Soft Skills (20h - 10 modules)**
+
 - [ ] Interactive content per module:
   1. Personal Empowerment
   2. Self-esteem
@@ -563,6 +612,7 @@ src/
   10. Personal Development Plans
 
 **Course 2: Basic Competencies (5h)**
+
 - [ ] Interactive modules:
   1. Literacy
   2. Communication
@@ -571,6 +621,7 @@ src/
   5. Percentages
 
 **Course 3: Job Placement (8h)**
+
 - [ ] Practical content:
   1. Labor rights and duties
   2. CV creation
@@ -579,12 +630,14 @@ src/
   5. **AI Interview Simulator**
 
 **Course 4: Entrepreneurship (12h)**
+
 - [ ] Practical tools:
   1. Business plan
   2. Marketing for entrepreneurs
   3. Basic finance
 
 **Course 5: Technical Skills**
+
 - [ ] Curated links and content:
   1. Digital tools
   2. Sales and customer service
@@ -593,8 +646,10 @@ src/
   5. Specialized external links
 
 #### **Certification System**
+
 - [ ] `/certificates` - Certificate gallery
 - [ ] `CertificateGenerator` component
+
   ```tsx
   // Automatic generation:
   - Institutional certificate template
@@ -616,8 +671,10 @@ src/
 ### **For TRAINING CENTERS and GOVERNMENTS (Content Management)**
 
 #### **Course Management**
+
 - [ ] `/admin/courses` - Course administration
 - [ ] `CourseManagement` component
+
   ```tsx
   // Administrative features:
   - Create/edit/delete courses
@@ -644,6 +701,7 @@ src/
 ### **For YOUTH, ADOLESCENTS, GOVERNMENTS, CENTERS, NGOs**
 
 #### **Resource Center**
+
 - [ ] `/entrepreneurship` - Main entrepreneurship hub
 - [ ] `EntrepreneurshipHub` component
   ```tsx
@@ -657,8 +715,10 @@ src/
   ```
 
 #### **Business Plan Simulator**
+
 - [ ] `/business-plan-simulator` - Main tool
 - [ ] `BusinessPlanBuilder` component
+
   ```tsx
   // Guided workflow:
   - Step-by-step wizard
@@ -673,6 +733,7 @@ src/
   ```
 
 - [ ] `FinancialCalculator` component
+
   ```tsx
   // Integrated calculators:
   - Revenue projection
@@ -694,6 +755,7 @@ src/
   ```
 
 #### **Resource Library**
+
 - [ ] `/entrepreneurship/resources` - Resource center
 - [ ] `ResourceLibrary` component
   ```tsx
@@ -708,22 +770,25 @@ src/
   ```
 
 #### **Institution Directory**
-- [ ] `/entrepreneurship/directory` - Support directory
-- [ ] `InstitutionDirectory` component
+
+- [x] `/entrepreneurship/directory` - Support directory ✅
+- [x] `InstitutionDirectory` component ✅
   ```tsx
   // Organization listing:
-  - Incubators and accelerators
-  - Financial institutions
-  - Government programs
-  - Support NGOs
-  - Mentors and consultants
-  - Filters by support type
-  - Contact information
+  - Incubators and accelerators ✅
+  - Financial institutions ✅
+  - Government programs ✅
+  - Support NGOs ✅
+  - Mentors and consultants ✅
+  - Filters by support type ✅
+  - Contact information ✅
   ```
 
 #### **Virtual Commercial Window**
+
 - [ ] `/marketplace` - Entrepreneurship marketplace
 - [ ] `EntrepreneurshipMarketplace` component
+
   ```tsx
   // Fiverr-style showcase:
   - Grid of active entrepreneurships
@@ -736,6 +801,7 @@ src/
 
 - [ ] `/marketplace/[id]` - Entrepreneurship detail
 - [ ] `EntrepreneurshipProfile` component
+
   ```tsx
   // Complete profile:
   - Entrepreneurship story
@@ -760,8 +826,10 @@ src/
   ```
 
 #### **Support Network and Networking**
+
 - [ ] `/entrepreneurship/network` - Contact network
 - [ ] `NetworkingHub` component
+
   ```tsx
   // Social features:
   - Entrepreneur profiles
@@ -789,6 +857,7 @@ src/
 ## 📊 REPORTS AND ANALYTICS MODULE
 
 ### **For YOUTH (Personal Reports)**
+
 - [ ] `/reports/personal` - Personal dashboard
 - [ ] `PersonalReports` component
   ```tsx
@@ -802,6 +871,7 @@ src/
   ```
 
 ### **For COMPANIES (Business Reports)**
+
 - [ ] `/reports/company` - Business analytics
 - [ ] `CompanyReports` component
   ```tsx
@@ -815,6 +885,7 @@ src/
   ```
 
 ### **For GOVERNMENTS, CENTERS, NGOs (Advanced Reports)**
+
 - [ ] `/reports/admin` - Advanced administrative dashboard
 - [ ] `AdminReports` component
   ```tsx
@@ -827,7 +898,9 @@ src/
   ```
 
 #### **Module-Specific Reports**
+
 - [ ] `EmploymentReports` component
+
   ```tsx
   // Employment reports:
   - Published jobs vs applications
@@ -839,6 +912,7 @@ src/
   ```
 
 - [ ] `TrainingReports` component
+
   ```tsx
   // Training reports:
   - Course enrollments
@@ -861,6 +935,7 @@ src/
   ```
 
 #### **Custom Report Builder**
+
 - [ ] `/reports/builder` - Report builder
 - [ ] `ReportBuilder` component
   ```tsx
@@ -874,7 +949,9 @@ src/
   ```
 
 #### **Interactive Visualizations**
+
 - [ ] `DashboardCharts` component using Recharts
+
   ```tsx
   // Chart types:
   - Line charts for temporal trends
@@ -898,6 +975,7 @@ src/
   ```
 
 #### **Alert and Notification System**
+
 - [ ] `AlertsSystem` component
   ```tsx
   // Automatic alerts:
@@ -913,6 +991,7 @@ src/
 ## 🔧 CROSS-CUTTING COMPONENTS AND UTILITIES
 
 ### **Shared UI Components**
+
 - [ ] `SearchBar` component with autocomplete
 - [ ] `FilterSidebar` reusable component
 - [ ] `DataTable` component with sorting and pagination
@@ -925,7 +1004,9 @@ src/
 - [ ] `ProgressIndicator` component for workflows
 
 ### **Smart Forms**
+
 - [ ] `DynamicForm` component
+
   ```tsx
   // JSON-configurable form:
   - Dynamic validations with Zod
@@ -946,6 +1027,7 @@ src/
   ```
 
 ### **Notification System**
+
 - [ ] `NotificationSystem` component
   ```tsx
   // Notification types:
@@ -957,6 +1039,7 @@ src/
   ```
 
 ### **Loading State Management**
+
 - [ ] `LoadingStates` components
   ```tsx
   // Different types:
@@ -968,6 +1051,7 @@ src/
   ```
 
 ### **Permission System**
+
 - [ ] `PermissionWrapper` component
   ```tsx
   // Granular access control:
@@ -978,6 +1062,7 @@ src/
   ```
 
 ### **Internationalization (i18n)**
+
 - [ ] Setup next-intl for multiple languages
 - [ ] Language change components
 - [ ] Translations for Spanish and Quechua preparation
@@ -988,6 +1073,7 @@ src/
 ## 📱 MOBILE OPTIMIZATION AND PWA
 
 ### **Advanced Responsive Design**
+
 - [ ] Mobile-first optimization of all components
 - [ ] Mobile-specific navigation:
   - Bottom tab navigation for main functions
@@ -996,6 +1082,7 @@ src/
   - Pull-to-refresh functionality
 
 ### **Progressive Web App (PWA)**
+
 - [ ] Complete PWA configuration:
   - Manifest.json with adaptive icons
   - Service worker for intelligent cache
@@ -1004,7 +1091,9 @@ src/
   - Native push notifications
 
 ### **Mobile-Specific Optimizations**
+
 - [ ] `MobileFormOptimization` component
+
   ```tsx
   // Specific optimizations:
   - Specific input types (tel, email, number)
@@ -1028,6 +1117,7 @@ src/
 ## 🎯 SPECIAL AND ADVANCED FEATURES
 
 ### **AI Interview Simulator**
+
 - [ ] `/interview-simulator` - Practice tool
 - [ ] `AIInterviewSimulator` component
   ```tsx
@@ -1042,6 +1132,7 @@ src/
   ```
 
 ### **Intelligent Matching System**
+
 - [ ] `IntelligentMatching` component
   ```tsx
   // Recommendation algorithm:
@@ -1053,6 +1144,7 @@ src/
   ```
 
 ### **System Gamification**
+
 - [ ] `GamificationSystem` component
   ```tsx
   // Game elements:
@@ -1065,6 +1157,7 @@ src/
   ```
 
 ### **Recommendation System**
+
 - [ ] `RecommendationEngine` component
   ```tsx
   // AI for recommendations:
@@ -1080,6 +1173,7 @@ src/
 ## 🔐 SECURITY AND AUTHORIZATIONS
 
 ### **Parental Authorization System**
+
 - [ ] `ParentalConsent` component for adolescents
   ```tsx
   // Specific features:
@@ -1091,6 +1185,7 @@ src/
   ```
 
 ### **Sensitive Data Protection**
+
 - [ ] `DataProtection` components
   ```tsx
   // Privacy and security:
@@ -1102,6 +1197,7 @@ src/
   ```
 
 ### **Content Moderation System**
+
 - [ ] `ContentModeration` component
   ```tsx
   // Content moderation:
@@ -1116,7 +1212,9 @@ src/
 ## 🔄 EXTERNAL INTEGRATIONS
 
 ### **Communication APIs**
+
 - [ ] `WhatsAppIntegration` component
+
   ```tsx
   // WhatsApp Business integration:
   - Direct WhatsApp link from job offers
@@ -1134,6 +1232,7 @@ src/
   ```
 
 ### **Geolocation Integrations**
+
 - [ ] `LocationServices` component
   ```tsx
   // Location services:
@@ -1144,6 +1243,7 @@ src/
   ```
 
 ### **Payment Integrations (Future)**
+
 - [ ] `PaymentGateway` component prepared for:
   ```tsx
   // Payment gateways:
@@ -1158,6 +1258,7 @@ src/
 ## 🧪 TESTING AND QUALITY
 
 ### **Testing Strategy**
+
 - [ ] Unit tests for critical components
 - [ ] Integration tests for main flows
 - [ ] E2E tests for complete user journeys
@@ -1166,6 +1267,7 @@ src/
 - [ ] Cross-browser compatibility testing
 
 ### **Quality Assurance**
+
 - [ ] Code review guidelines
 - [ ] TypeScript strict mode
 - [ ] Project-specific ESLint rules
@@ -1178,6 +1280,7 @@ src/
 ## 📈 ANALYTICS AND METRICS
 
 ### **User Tracking**
+
 - [ ] `AnalyticsProvider` component
   ```tsx
   // Usage metrics:
@@ -1189,6 +1292,7 @@ src/
   ```
 
 ### **Performance Monitoring**
+
 - [ ] `PerformanceMonitoring` setup
   ```tsx
   // Performance monitoring:
@@ -1203,6 +1307,7 @@ src/
 ## 🚀 DEPLOYMENT AND DEVOPS
 
 ### **Build and Deployment**
+
 - [ ] Optimized build configuration
 - [ ] Environment variables management
 - [ ] CI/CD pipeline setup
@@ -1211,6 +1316,7 @@ src/
 - [ ] Health checks and monitoring
 
 ### **SEO and Performance**
+
 - [ ] Server-side rendering optimization
 - [ ] Dynamic meta tags
 - [ ] Open Graph tags
@@ -1225,6 +1331,7 @@ src/
 ## 📋 DOCUMENTATION
 
 ### **Technical Documentation**
+
 - [ ] Storybook for components
 - [ ] API documentation
 - [ ] Development setup guide
@@ -1232,6 +1339,7 @@ src/
 - [ ] Architecture decision records
 
 ### **User Documentation**
+
 - [ ] User guides by user type
 - [ ] Integrated video tutorials
 - [ ] Help center with FAQ
@@ -1243,7 +1351,9 @@ src/
 ## 🔄 ADVANCED WORKFLOW COMPONENTS
 
 ### **Multi-Step Processes**
+
 - [ ] `OnboardingWizard` component
+
   ```tsx
   // User onboarding:
   - Welcome tour by user type
@@ -1254,6 +1364,7 @@ src/
   ```
 
 - [ ] `ApplicationWorkflow` component
+
   ```tsx
   // Job application process:
   - Multi-step application form
@@ -1273,7 +1384,9 @@ src/
   ```
 
 ### **Advanced Search and Discovery**
+
 - [ ] `SmartSearch` component
+
   ```tsx
   // Intelligent search features:
   - Auto-suggestions
@@ -1295,7 +1408,9 @@ src/
   ```
 
 ### **Communication and Collaboration**
+
 - [ ] `RealTimeCommunication` component
+
   ```tsx
   // Real-time features:
   - Live chat support
@@ -1320,7 +1435,9 @@ src/
 ## 🎨 ADVANCED UI/UX COMPONENTS
 
 ### **Interactive Visualization Components**
+
 - [ ] `SkillsRadarChart` component
+
   ```tsx
   // Skills visualization:
   - Radar chart for skill levels
@@ -1331,6 +1448,7 @@ src/
   ```
 
 - [ ] `CareerPathVisualizer` component
+
   ```tsx
   // Career progression:
   - Interactive career path map
@@ -1351,7 +1469,9 @@ src/
   ```
 
 ### **Advanced Form Components**
+
 - [ ] `ConditionalForm` component
+
   ```tsx
   // Dynamic forms:
   - Field visibility based on previous answers
@@ -1370,7 +1490,6 @@ src/
   - Data validation
   - Error reporting
   ```
-
 
 This comprehensive task list is designed to create a robust platform that combines the best features of Platzi (education), Upwork/Fiverr (job marketplace), Coursera (certifications), and entrepreneurship tools, all specifically adapted for the youth employability context in Cochabamba, Bolivia, while respecting the exact permissions matrix from the TDR.
 
