@@ -73,20 +73,20 @@ export const youthSidebarData: SidebarData = {
       items: [
         {
           title: "Capacitación",
-          url: "/training",
+          url: "/courses",
           icon: GraduationCap,
           items: [
             {
               title: "Cursos Disponibles",
-              url: "/training/courses",
+              url: "/courses",
             },
             {
               title: "Mis Cursos",
-              url: "/training/my-courses",
+              url: "/my-courses",
             },
             {
               title: "Certificados",
-              url: "/training/certificates",
+              url: "/certificates",
             },
           ],
         },
@@ -167,20 +167,20 @@ export const adolescentSidebarData: SidebarData = {
       items: [
         {
           title: "Capacitación",
-          url: "/training",
+          url: "/courses",
           icon: GraduationCap,
           items: [
             {
               title: "Cursos Disponibles",
-              url: "/training/courses",
+              url: "/courses",
             },
             {
               title: "Mis Cursos",
-              url: "/training/my-courses",
+              url: "/my-courses",
             },
             {
               title: "Certificados",
-              url: "/training/certificates",
+              url: "/certificates",
             },
           ],
         },

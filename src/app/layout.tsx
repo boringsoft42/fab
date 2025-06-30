@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { QueryProvider } from "@/lib/providers/QueryProvider";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "sonner";
 import { MockAuthProvider } from "@/context/mock-auth-context";
 import { ThemeProvider } from "@/context/theme-context";
 
@@ -75,7 +75,12 @@ export default function RootLayout({
           <MockAuthProvider>
             <QueryProvider>
               {children}
-              <Toaster />
+              <Toaster
+                position="top-right"
+                richColors
+                closeButton
+                duration={4000}
+              />
             </QueryProvider>
           </MockAuthProvider>
         </ThemeProvider>
