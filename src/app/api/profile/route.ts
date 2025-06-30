@@ -107,7 +107,7 @@ export async function POST(request: NextRequest) {
           lastName,
           avatarUrl,
           active: true,
-          role: "USER",
+          role: "YOUTH",
         },
       });
 
@@ -149,7 +149,7 @@ export async function POST(request: NextRequest) {
         lastName,
         avatarUrl,
         active: true,
-        role: "USER",
+        role: "YOUTH",
       },
     });
 
