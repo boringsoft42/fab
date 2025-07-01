@@ -20,6 +20,7 @@ import {
   Plus,
   Eye,
   UserCheck,
+  Newspaper,
 } from "lucide-react";
 import type { SidebarData } from "../types";
 import type { UserRole } from "@prisma/client";
@@ -275,8 +276,18 @@ export const companySidebarData: SidebarData = {
         },
         {
           title: "Gestionar Candidatos",
-          url: "/candidates",
+          url: "/job-publishing/candidates",
           icon: Users,
+        },
+      ],
+    },
+    {
+      title: "Comunicación",
+      items: [
+        {
+          title: "Gestión de Noticias",
+          url: "/company/news",
+          icon: FileText,
         },
       ],
     },
@@ -359,6 +370,29 @@ export const municipalGovernmentSidebarData: SidebarData = {
             {
               title: "Gestión de Eventos",
               url: "/admin/entrepreneurship/events",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      title: "Comunicación",
+      items: [
+        {
+          title: "Gestión de Noticias",
+          icon: FileText,
+          items: [
+            {
+              title: "Mis Noticias",
+              url: "/admin/news",
+            },
+            {
+              title: "Crear Noticia",
+              url: "/admin/news/create",
+            },
+            {
+              title: "Borradores",
+              url: "/admin/news/drafts",
             },
           ],
         },
@@ -449,6 +483,29 @@ export const trainingCenterSidebarData: SidebarData = {
       ],
     },
     {
+      title: "Comunicación",
+      items: [
+        {
+          title: "Gestión de Noticias",
+          icon: FileText,
+          items: [
+            {
+              title: "Mis Noticias",
+              url: "/admin/news",
+            },
+            {
+              title: "Crear Noticia",
+              url: "/admin/news/create",
+            },
+            {
+              title: "Borradores",
+              url: "/admin/news/drafts",
+            },
+          ],
+        },
+      ],
+    },
+    {
       title: "Análisis",
       items: [
         {
@@ -527,6 +584,29 @@ export const ngoFoundationSidebarData: SidebarData = {
             {
               title: "Gestión de Eventos",
               url: "/admin/entrepreneurship/events",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      title: "Comunicación",
+      items: [
+        {
+          title: "Gestión de Noticias",
+          icon: FileText,
+          items: [
+            {
+              title: "Mis Noticias",
+              url: "/admin/news",
+            },
+            {
+              title: "Crear Noticia",
+              url: "/admin/news/create",
+            },
+            {
+              title: "Borradores",
+              url: "/admin/news/drafts",
             },
           ],
         },

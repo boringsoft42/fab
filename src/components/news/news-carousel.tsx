@@ -2,63 +2,28 @@
 
 import { useState, useEffect } from "react";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import {
-  Search,
-  FileText,
-  GraduationCap,
-  Lightbulb,
-  TrendingUp,
-  Clock,
-  Award,
-  Target,
-  ArrowRight,
-  Users,
-  BookOpen,
-  Briefcase,
-  Shield,
-  Info,
-  GraduationCapIcon,
-  Heart,
   ChevronLeft,
   ChevronRight,
-  Eye,
+  Clock,
+  Heart,
   MessageSquare,
+  Eye,
   ExternalLink,
   Building2,
+  Shield,
 } from "lucide-react";
-import Link from "next/link";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
+import { NewsArticle } from "@/types/news";
 
-// News types
-interface NewsArticle {
-  id: string;
-  title: string;
-  summary: string;
-  imageUrl?: string;
-  authorName: string;
-  authorType: "COMPANY" | "GOVERNMENT" | "NGO";
-  authorLogo?: string;
-  priority: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
-  publishedAt: string;
-  viewCount: number;
-  likeCount: number;
-  commentCount: number;
-  tags: string[];
+interface NewsCarouselProps {
+  className?: string;
 }
 
-// News Carousel Component
-function NewsCarousel() {
+export function NewsCarousel({ className }: NewsCarouselProps) {
   const [companyNews, setCompanyNews] = useState<NewsArticle[]>([]);
   const [governmentNews, setGovernmentNews] = useState<NewsArticle[]>([]);
   const [loading, setLoading] = useState(true);
@@ -251,7 +216,7 @@ function NewsCarousel() {
 
   if (loading) {
     return (
-      <div className="space-y-6">
+      <div className={`space-y-6 ${className}`}>
         <div className="text-center">
           <Skeleton className="h-8 w-64 mx-auto mb-2" />
           <Skeleton className="h-4 w-96 mx-auto" />
@@ -277,7 +242,7 @@ function NewsCarousel() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className={`space-y-6 ${className}`}>
       {/* Header */}
       <div className="text-center">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">
@@ -389,226 +354,6 @@ function NewsCarousel() {
           <ExternalLink className="w-4 h-4 ml-2" />
         </Button>
       </div>
-    </div>
-  );
-}
-
-export function DashboardAdolescent() {
-  return (
-    <div className="space-y-8">
-      {/* Welcome Section */}
-      <div className="bg-gradient-to-r from-green-600 to-blue-600 rounded-lg p-6 text-white">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">¡Bienvenido Joven!</h1>
-            <p className="text-green-100">
-              Explora oportunidades, desarrolla tus habilidades y construye tu
-              futuro profesional
-            </p>
-          </div>
-          <div className="hidden md:flex">
-            <GraduationCapIcon className="w-16 h-16 text-green-200" />
-          </div>
-        </div>
-      </div>
-
-      {/* Parental Consent Notice */}
-      <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-        <div className="flex items-center gap-3">
-          <Shield className="w-5 h-5 text-amber-600" />
-          <div>
-            <h3 className="text-sm font-medium text-amber-800">
-              Recordatorio Importante
-            </h3>
-            <p className="text-sm text-amber-700">
-              Recuerda que para ciertas actividades necesitas autorización de
-              tus padres o tutores.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* News Carousel */}
-      <NewsCarousel />
-
-      {/* Quick Access Modules */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-          <CardHeader className="pb-3">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
-                <Search className="w-5 h-5 text-white" />
-              </div>
-              <CardTitle className="text-lg">Búsqueda de Empleo</CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground mb-4">
-              Encuentra oportunidades laborales apropiadas para jóvenes
-            </p>
-            <Button asChild size="sm" className="w-full">
-              <Link href="/jobs">
-                Explorar Ofertas
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-          <CardHeader className="pb-3">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
-                <GraduationCap className="w-5 h-5 text-white" />
-              </div>
-              <CardTitle className="text-lg">Capacitación</CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground mb-4">
-              Desarrolla nuevas habilidades y obtén certificaciones
-            </p>
-            <Button asChild size="sm" className="w-full">
-              <Link href="/courses">
-                Ver Cursos
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-          <CardHeader className="pb-3">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center">
-                <Target className="w-5 h-5 text-white" />
-              </div>
-              <CardTitle className="text-lg">Emprendimiento</CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground mb-4">
-              Desarrolla ideas de negocio y habilidades empresariales
-            </p>
-            <Button asChild size="sm" className="w-full">
-              <Link href="/entrepreneurship">
-                Explorar Ideas
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Recent Activity */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <FileText className="w-5 h-5" />
-            Actividad Reciente
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
-              <div className="flex items-center gap-3">
-                <BookOpen className="w-4 h-4 text-green-600" />
-                <span className="text-sm">
-                  Completaste "Orientación Vocacional - Módulo 1"
-                </span>
-              </div>
-              <Badge variant="secondary">Hace 1 día</Badge>
-            </div>
-
-            <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
-              <div className="flex items-center gap-3">
-                <Target className="w-4 h-4 text-purple-600" />
-                <span className="text-sm">
-                  Participaste en taller "Educación Financiera Básica"
-                </span>
-              </div>
-              <Badge variant="secondary">Hace 3 días</Badge>
-            </div>
-
-            <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
-              <div className="flex items-center gap-3">
-                <Search className="w-4 h-4 text-blue-600" />
-                <span className="text-sm">
-                  Guardaste oferta de trabajo de medio tiempo
-                </span>
-              </div>
-              <Badge variant="secondary">Hace 5 días</Badge>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Simplified Metrics at Bottom */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <TrendingUp className="w-5 h-5" />
-            Progreso Personal
-          </CardTitle>
-          <CardDescription>
-            Un vistazo a tu actividad y avances en la plataforma
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div className="text-center">
-              <div className="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-lg mx-auto mb-2">
-                <Search className="w-6 h-6 text-blue-600" />
-              </div>
-              <div className="text-2xl font-bold text-gray-900">3</div>
-              <p className="text-sm text-gray-600">Postulaciones Activas</p>
-            </div>
-
-            <div className="text-center">
-              <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg mx-auto mb-2">
-                <GraduationCap className="w-6 h-6 text-green-600" />
-              </div>
-              <div className="text-2xl font-bold text-gray-900">2</div>
-              <p className="text-sm text-gray-600">Cursos en Progreso</p>
-            </div>
-
-            <div className="text-center">
-              <div className="flex items-center justify-center w-12 h-12 bg-purple-100 rounded-lg mx-auto mb-2">
-                <Target className="w-6 h-6 text-purple-600" />
-              </div>
-              <div className="text-2xl font-bold text-gray-900">1</div>
-              <p className="text-sm text-gray-600">Proyecto Emprendimiento</p>
-            </div>
-
-            <div className="text-center">
-              <div className="flex items-center justify-center w-12 h-12 bg-orange-100 rounded-lg mx-auto mb-2">
-                <Award className="w-6 h-6 text-orange-600" />
-              </div>
-              <div className="text-2xl font-bold text-gray-900">53%</div>
-              <p className="text-sm text-gray-600">Tasa de Respuesta</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Support Section */}
-      <Card className="border-dashed">
-        <CardContent className="p-6 text-center">
-          <Heart className="w-8 h-8 text-pink-500 mx-auto mb-4" />
-          <h3 className="text-lg font-medium mb-2">¿Necesitas ayuda?</h3>
-          <p className="text-gray-600 mb-4">
-            Estamos aquí para apoyarte en tu desarrollo académico y profesional
-          </p>
-          <div className="flex flex-col sm:flex-row gap-2 justify-center">
-            <Button variant="outline" size="sm" asChild>
-              <Link href="/support/academic">Apoyo Académico</Link>
-            </Button>
-            <Button variant="outline" size="sm" asChild>
-              <Link href="/support/career">Orientación Profesional</Link>
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }
