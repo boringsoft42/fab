@@ -21,14 +21,15 @@ export type ApplicationStatus =
 export interface Company {
   id: string;
   name: string;
-  logo?: string;
+  logo: string;
   description: string;
-  website?: string;
+  website: string;
   sector: string;
   size: string;
   location: string;
   rating?: number;
   reviewCount?: number;
+  images?: string[];
 }
 
 export interface JobOffer {

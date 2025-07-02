@@ -20,6 +20,11 @@ const mockJobs: JobOffer[] = [
       location: "Cochabamba, Bolivia",
       rating: 4.5,
       reviewCount: 28,
+      images: [
+        "https://placehold.co/800x400/67e8f9/1e293b?text=Modern+Office+Space",
+        "https://placehold.co/800x400/67e8f9/1e293b?text=Development+Team",
+        "https://placehold.co/800x400/67e8f9/1e293b?text=Meeting+Room",
+      ],
     },
     location: "Cochabamba, Bolivia",
     contractType: "FULL_TIME",

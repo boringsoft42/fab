@@ -24,6 +24,8 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { JobApplicationModal } from "@/components/jobs/job-application-modal";
 import { JobOffer } from "@/types/jobs";
+import { CompanyGallery } from "@/components/jobs/company-gallery";
+import { LocationMap } from "@/components/jobs/location-map";
 
 export default function JobDetailPage() {
   const [job, setJob] = useState<JobOffer | null>(null);
@@ -450,67 +452,48 @@ export default function JobDetailPage() {
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <h3 className="font-semibold">{job.company.name}</h3>
+                    <h3 className="font-medium">{job.company.name}</h3>
                     <p className="text-sm text-gray-600">{job.company.size}</p>
                   </div>
                 </div>
-                <p className="text-gray-700">{job.company.description}</p>
-                <div className="space-y-2">
-                  <div className="flex items-center space-x-2 text-sm text-gray-600">
-                    <MapPin className="w-4 h-4" />
-                    <span>{job.company.location}</span>
+
+                {job.company.images && job.company.images.length > 0 && (
+                  <div className="mt-4">
+                    <CompanyGallery images={job.company.images} />
                   </div>
-                  <div className="flex items-center space-x-2 text-sm text-gray-600">
-                    <Building className="w-4 h-4" />
-                    <span>{job.company.sector}</span>
-                  </div>
-                  {job.company.website && (
-                    <div className="flex items-center space-x-2 text-sm text-gray-600">
-                      <Globe className="w-4 h-4" />
-                      <a
-                        href={job.company.website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:underline"
-                      >
-                        Sitio web
-                      </a>
-                    </div>
-                  )}
+                )}
+
+                <div className="mt-4">
+                  <p className="text-gray-700">{job.company.description}</p>
+                </div>
+
+                <div className="flex items-center space-x-2 text-sm">
+                  <Globe className="w-4 h-4" />
+                  <a
+                    href={job.company.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline"
+                  >
+                    {job.company.website.replace(/^https?:\/\//, "")}
+                  </a>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* Similar Jobs */}
-          {similarJobs.length > 0 && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Empleos similares</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {similarJobs.map((similarJob) => (
-                    <div
-                      key={similarJob.id}
-                      className="border rounded-lg p-3 hover:bg-gray-50 cursor-pointer"
-                      onClick={() => router.push(`/jobs/${similarJob.id}`)}
-                    >
-                      <h4 className="font-medium text-sm text-gray-900 mb-1">
-                        {similarJob.title}
-                      </h4>
-                      <p className="text-sm text-gray-600">
-                        {similarJob.company.name}
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        {similarJob.location}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          )}
+          {/* Location Map */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <MapPin className="w-5 h-5" />
+                <span>Ubicación</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <LocationMap location={job.location} />
+            </CardContent>
+          </Card>
         </div>
       </div>
 
