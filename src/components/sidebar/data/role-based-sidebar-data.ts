@@ -380,21 +380,8 @@ export const municipalGovernmentSidebarData: SidebarData = {
       items: [
         {
           title: "Gestión de Noticias",
+          url: "/admin/news",
           icon: FileText,
-          items: [
-            {
-              title: "Mis Noticias",
-              url: "/admin/news",
-            },
-            {
-              title: "Crear Noticia",
-              url: "/admin/news/create",
-            },
-            {
-              title: "Borradores",
-              url: "/admin/news/drafts",
-            },
-          ],
         },
       ],
     },
@@ -487,21 +474,8 @@ export const trainingCenterSidebarData: SidebarData = {
       items: [
         {
           title: "Gestión de Noticias",
+          url: "/admin/news",
           icon: FileText,
-          items: [
-            {
-              title: "Mis Noticias",
-              url: "/admin/news",
-            },
-            {
-              title: "Crear Noticia",
-              url: "/admin/news/create",
-            },
-            {
-              title: "Borradores",
-              url: "/admin/news/drafts",
-            },
-          ],
         },
       ],
     },
@@ -594,21 +568,8 @@ export const ngoFoundationSidebarData: SidebarData = {
       items: [
         {
           title: "Gestión de Noticias",
+          url: "/admin/news",
           icon: FileText,
-          items: [
-            {
-              title: "Mis Noticias",
-              url: "/admin/news",
-            },
-            {
-              title: "Crear Noticia",
-              url: "/admin/news/create",
-            },
-            {
-              title: "Borradores",
-              url: "/admin/news/drafts",
-            },
-          ],
         },
       ],
     },
