@@ -56,6 +56,7 @@ export interface JobOffer {
   viewCount: number;
   questions?: JobQuestion[];
   featured?: boolean;
+  expiresAt: string;
 }
 
 export interface JobQuestion {

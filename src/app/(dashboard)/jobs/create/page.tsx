@@ -8,6 +8,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import dynamic from "next/dynamic";
+const MapPicker = dynamic(() => import("@/components/dashboard/MapPicker"), { ssr: false });
 import {
   Select,
   SelectContent,
@@ -28,12 +30,36 @@ import {
   JobQuestion,
 } from "@/types/jobs";
 
+import { ImageIcon, Trash } from "lucide-react";
+import { useRef } from "react";
+
+
+
+
 export default function CreateJobPage() {
   const router = useRouter();
   const { toast } = useToast();
-
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [images, setImages] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [preview, setPreview] = useState(false);
+
+  const handleFiles = (files: FileList | null) => {
+    if (!files) return;
+    Array.from(files).forEach((file) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (reader.result) {
+          setImages((prev) => [...prev, reader.result as string]);
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+  
+  const removeImage = (index: number) => {
+    setImages((prev) => prev.filter((_, i) => i !== index));
+  };
 
   // Form state
   const [jobData, setJobData] = useState({
@@ -53,6 +79,8 @@ export default function CreateJobPage() {
     responsibilities: [] as string[],
     closingDate: "",
     questions: [] as JobQuestion[],
+    coordinates: null as [number, number] | null,
+    workSchedule: "",
   });
 
   const [skillInput, setSkillInput] = useState("");
@@ -470,51 +498,69 @@ export default function CreateJobPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <Label htmlFor="salaryMin">Salario mínimo (BOB)</Label>
-                <Input
-                  id="salaryMin"
-                  type="number"
-                  placeholder="3000"
-                  value={jobData.salaryMin}
-                  onChange={(e) =>
-                    setJobData((prev) => ({
-                      ...prev,
-                      salaryMin: e.target.value,
-                    }))
-                  }
-                />
-              </div>
-              <div>
-                <Label htmlFor="salaryMax">Salario máximo (BOB)</Label>
-                <Input
-                  id="salaryMax"
-                  type="number"
-                  placeholder="5000"
-                  value={jobData.salaryMax}
-                  onChange={(e) =>
-                    setJobData((prev) => ({
-                      ...prev,
-                      salaryMax: e.target.value,
-                    }))
-                  }
-                />
-              </div>
-              <div>
-                <Label htmlFor="closingDate">Fecha de cierre</Label>
-                <Input
-                  id="closingDate"
-                  type="date"
-                  value={jobData.closingDate}
-                  onChange={(e) =>
-                    setJobData((prev) => ({
-                      ...prev,
-                      closingDate: e.target.value,
-                    }))
-                  }
-                />
-              </div>
-            </div>
+  <div>
+    <Label htmlFor="salaryMin">Salario mínimo (BOB)</Label>
+    <Input
+      id="salaryMin"
+      type="number"
+      placeholder="3000"
+      value={jobData.salaryMin}
+      onChange={(e) =>
+        setJobData((prev) => ({
+          ...prev,
+          salaryMin: e.target.value,
+        }))
+      }
+    />
+  </div>
+
+  <div>
+    <Label htmlFor="salaryMax">Salario máximo (BOB)</Label>
+    <Input
+      id="salaryMax"
+      type="number"
+      placeholder="5000"
+      value={jobData.salaryMax}
+      onChange={(e) =>
+        setJobData((prev) => ({
+          ...prev,
+          salaryMax: e.target.value,
+        }))
+      }
+    />
+  </div>
+
+  <div>
+    <Label htmlFor="closingDate">Fecha de cierre</Label>
+    <Input
+      id="closingDate"
+      type="date"
+      value={jobData.closingDate}
+      onChange={(e) =>
+        setJobData((prev) => ({
+          ...prev,
+          closingDate: e.target.value,
+        }))
+      }
+    />
+  </div>
+
+  <div className="md:col-span-3">
+    <Label htmlFor="workSchedule">Horario de trabajo</Label>
+    <Input
+      id="workSchedule"
+      placeholder="Ej: Lunes a viernes, 8:00 a 17:00"
+      value={jobData.workSchedule || ""}
+      onChange={(e) =>
+        setJobData((prev) => ({
+          ...prev,
+          workSchedule: e.target.value,
+        }))
+      }
+    />
+  </div>
+</div>
+
           </CardContent>
         </Card>
 
@@ -783,6 +829,150 @@ export default function CreateJobPage() {
             )}
           </CardContent>
         </Card>
+
+        <Card>
+  <CardHeader>
+    <CardTitle>Redes Sociales y Sitio Web</CardTitle>
+  </CardHeader>
+  <CardContent className="space-y-4">
+    <div>
+      <Label htmlFor="website">Sitio web</Label>
+      <Input
+        id="website"
+        placeholder="https://www.tuempresa.com"
+        value={jobData.website || ""}
+        onChange={(e) =>
+          setJobData((prev) => ({ ...prev, website: e.target.value }))
+        }
+      />
+    </div>
+
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <Label htmlFor="linkedin">LinkedIn</Label>
+        <Input
+          id="linkedin"
+          placeholder="https://linkedin.com/company/tuempresa"
+          value={jobData.linkedin || ""}
+          onChange={(e) =>
+            setJobData((prev) => ({ ...prev, linkedin: e.target.value }))
+          }
+        />
+      </div>
+
+      <div>
+        <Label htmlFor="facebook">Facebook</Label>
+        <Input
+          id="facebook"
+          placeholder="https://facebook.com/tuempresa"
+          value={jobData.facebook || ""}
+          onChange={(e) =>
+            setJobData((prev) => ({ ...prev, facebook: e.target.value }))
+          }
+        />
+      </div>
+
+      <div>
+        <Label htmlFor="instagram">Instagram</Label>
+        <Input
+          id="instagram"
+          placeholder="https://instagram.com/tuempresa"
+          value={jobData.instagram || ""}
+          onChange={(e) =>
+            setJobData((prev) => ({ ...prev, instagram: e.target.value }))
+          }
+        />
+      </div>
+
+      <div>
+        <Label htmlFor="twitter">Twitter</Label>
+        <Input
+          id="twitter"
+          placeholder="https://twitter.com/tuempresa"
+          value={jobData.twitter || ""}
+          onChange={(e) =>
+            setJobData((prev) => ({ ...prev, twitter: e.target.value }))
+          }
+        />
+      </div>
+    </div>
+  </CardContent>
+</Card>
+
+
+        <Card>
+  <CardHeader>
+    <CardTitle>Ubicación Geográfica</CardTitle>
+  </CardHeader>
+  <CardContent className="space-y-2">
+    <Label>Selecciona en el mapa la ubicación del empleo</Label>
+    <MapPicker
+      onChange={(coords) =>
+        setJobData((prev) => ({ ...prev, coordinates: coords }))
+      }
+    />
+    {jobData.coordinates && (
+      <p className="text-sm text-muted-foreground mt-2">
+        Latitud: {jobData.coordinates[0]}, Longitud: {jobData.coordinates[1]}
+      </p>
+    )}
+  </CardContent>
+</Card>
+
+<Card>
+  <CardHeader>
+    <CardTitle>Imágenes del Empleo</CardTitle>
+  </CardHeader>
+  <CardContent className="space-y-4">
+    <div>
+      <Label>Selecciona una o varias imágenes</Label>
+      <div className="flex items-center space-x-2 mt-2">
+        <Input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          multiple
+          className="hidden"
+          onChange={(e) => handleFiles(e.target.files)}
+        />
+        <Button
+          variant="outline"
+          onClick={() => fileInputRef.current?.click()}
+        >
+          <ImageIcon className="w-4 h-4 mr-2" />
+          Subir imágenes
+        </Button>
+      </div>
+    </div>
+
+    {images.length > 0 && (
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        {images.map((src, index) => (
+          <div
+            key={index}
+            className="relative group rounded-lg overflow-hidden border"
+          >
+            <img
+              src={src}
+              alt={`imagen-${index}`}
+              className="object-cover w-full h-32"
+            />
+            <Button
+              size="icon"
+              variant="destructive"
+              className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+              onClick={() => removeImage(index)}
+            >
+              <Trash className="w-4 h-4" />
+            </Button>
+          </div>
+        ))}
+      </div>
+    )}
+  </CardContent>
+</Card>
+
+
 
         {/* Actions */}
         <div className="flex justify-end space-x-4 pb-8">

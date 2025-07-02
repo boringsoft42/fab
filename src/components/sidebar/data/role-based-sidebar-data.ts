@@ -111,22 +111,29 @@ export const youthSidebarData: SidebarData = {
               url: "/entrepreneurship/resources",
             },
             {
-              title: "Directorio de Instituciones",
-              url: "/entrepreneurship/directory",
-            },
-            {
               title: "Publicar mi Emprendimiento",
               url: "/publish-entrepreneurship",
-            },
-            {
-              title: "Red de Contactos",
-              url: "/entrepreneurship/network",
             },
             {
               title: "Mentorías",
               url: "/mentorship",
             },
           ],
+        },
+      ],
+    },
+    {
+      title: "Recursos de Emprendimiento",
+      items: [
+        {
+          title: "Directorio de Instituciones",
+          url: "/entrepreneurship/directory",
+          icon: Building2,
+        },
+        {
+          title: "Red de Contactos",
+          url: "/entrepreneurship/network",
+          icon: Users,
         },
       ],
     },
@@ -148,15 +155,16 @@ export const youthSidebarData: SidebarData = {
           url: "/profile",
           icon: User,
         },
-        {
-          title: "Reportes Personales",
-          url: "/reports/personal",
-          icon: BarChart3,
-        },
+        // {
+        //   title: "Reportes Personales",
+        //   url: "/reports/personal",
+        //   icon: BarChart3,
+        // },
       ],
     },
   ],
 };
+
 
 // ADOLESCENTS navigation (similar to youth but no reports)
 export const adolescentSidebarData: SidebarData = {
@@ -224,18 +232,18 @@ export const adolescentSidebarData: SidebarData = {
               title: "Centro de Recursos",
               url: "/entrepreneurship/resources",
             },
-            {
-              title: "Directorio de Instituciones",
-              url: "/entrepreneurship/directory",
-            },
+            // {
+            //   title: "Directorio de Instituciones",
+            //   url: "/entrepreneurship/directory",
+            // },
             {
               title: "Publicar mi Emprendimiento",
               url: "/publish-entrepreneurship",
             },
-            {
-              title: "Red de Contactos",
-              url: "/entrepreneurship/network",
-            },
+            // {
+            //   title: "Red de Contactos",
+            //   url: "/entrepreneurship/network",
+            // },
             {
               title: "Mentorías",
               url: "/mentorship",
@@ -307,7 +315,7 @@ export const companySidebarData: SidebarData = {
       items: [
         {
           title: "Reportes Empresariales",
-          url: "/reports/company",
+          url: "/company/report",
           icon: BarChart3,
         },
       ],
@@ -317,7 +325,7 @@ export const companySidebarData: SidebarData = {
       items: [
         {
           title: "Perfil de Empresa",
-          url: "/profile/company",
+          url: "/company/profile",
           icon: Building2,
         },
       ],
@@ -378,10 +386,10 @@ export const municipalGovernmentSidebarData: SidebarData = {
               title: "Gestión de Contenido",
               url: "/admin/youth-content",
             },
-            {
-              title: "Gestión de Eventos",
-              url: "/admin/entrepreneurship/events",
-            },
+            // {
+            //   title: "Gestión de Eventos",
+            //   url: "/admin/entrepreneurship/events",
+            // },
           ],
         },
       ],
@@ -410,7 +418,7 @@ export const municipalGovernmentSidebarData: SidebarData = {
       title: "Sistema",
       items: [
         {
-          title: "Configuración",
+          title: "Perfil",
           url: "/admin/settings",
           icon: Settings,
         },
@@ -704,11 +712,11 @@ export const youthSidebarItems: SidebarItem[] = [
         icon: UserCircle,
         href: "/profile",
       },
-      {
-        title: "Reportes Personales",
-        icon: BarChart3,
-        href: "/reports",
-      },
+      // {
+      //   title: "Reportes Personales",
+      //   icon: BarChart3,
+      //   href: "/reports",
+      // },
     ],
   },
 ];

@@ -424,7 +424,7 @@ export default function MyApplicationsPage() {
                             Ver oferta
                           </Button>
 
-                          {application.cvUrl && (
+                          {/* {application.cvUrl && (
                             <Button
                               variant="outline"
                               size="sm"
@@ -435,7 +435,7 @@ export default function MyApplicationsPage() {
                               <Download className="w-4 h-4 mr-2" />
                               Ver CV
                             </Button>
-                          )}
+                          )} */}
                         </div>
 
                         {canWithdraw(application.status) && (

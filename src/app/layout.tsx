@@ -5,6 +5,7 @@ import { QueryProvider } from "@/lib/providers/QueryProvider";
 import { Toaster } from "sonner";
 import { MockAuthProvider } from "@/context/mock-auth-context";
 import { ThemeProvider } from "@/context/theme-context";
+import 'leaflet/dist/leaflet.css';
 
 const APP_NAME = "POSITIVE-NEXT";
 const APP_DESCRIPTION = "Your Mind's Best Friend";

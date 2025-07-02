@@ -1185,13 +1185,7 @@ export default function YouthContentManagementPage() {
                 {getTabIcon("resources")}
                 Centro de Recursos
               </TabsTrigger>
-              <TabsTrigger
-                value="institutions"
-                className="flex items-center gap-2"
-              >
-                {getTabIcon("institutions")}
-                Directorio
-              </TabsTrigger>
+              
               <TabsTrigger value="contacts" className="flex items-center gap-2">
                 {getTabIcon("contacts")}
                 Red de Contactos

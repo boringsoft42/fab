@@ -386,7 +386,7 @@ Incluye acceso a recursos externos especializados y certificaciones reconocidas 
     totalLessons: 20,
     rating: 4.6,
     studentCount: 890,
-    price: 150,
+    price: 0,
     isMandatory: false,
     isActive: true,
     objectives: [

@@ -12,22 +12,18 @@ export function RootRedirect() {
   useEffect(() => {
     if (!isLoading) {
       if (user) {
-        // User is logged in
+        // Usuario autenticado
         if (user.role) {
-          // User has a role, go to dashboard
           router.replace("/dashboard");
         } else {
-          // User doesn't have a role, go to role selection
-          // This should rarely happen now since roles are set during login
           router.replace("/select-role");
         }
       } else {
-        // User is not logged in, go to login
-        router.replace("/login");
+        // Usuario NO autenticado → redirigir a landing
+        router.replace("/landing");
       }
     }
   }, [user, isLoading, router]);
 
-  // Show loading screen while determining where to redirect
   return <LoadingScreen />;
 }

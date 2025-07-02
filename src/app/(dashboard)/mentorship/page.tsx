@@ -258,7 +258,7 @@ export default function MentorshipPage() {
           mentorAvatar: "/api/placeholder/50/50",
           participants: 12,
           maxParticipants: 15,
-          price: 500,
+          price: 0,
           startDate: new Date("2024-04-01"),
           topics: [
             "Modelo de Negocio",
@@ -285,7 +285,7 @@ export default function MentorshipPage() {
           mentorAvatar: "/api/placeholder/50/50",
           participants: 8,
           maxParticipants: 20,
-          price: 300,
+          price: 0,
           startDate: new Date("2024-03-20"),
           topics: [
             "Estrategia Digital",

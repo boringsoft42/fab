@@ -17,6 +17,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { JobOffer } from "@/types/jobs";
+import { Calendar } from "lucide-react"
+import { format } from "date-fns"
+import { es } from "date-fns/locale"  
 
 interface JobCardProps {
   job: JobOffer;
@@ -26,7 +29,9 @@ interface JobCardProps {
 export const JobCard = ({ job, viewMode }: JobCardProps) => {
   const [isSaved, setIsSaved] = useState(false);
   const router = useRouter();
-
+  const expiresAt = job.expiresAt
+  ? new Date(job.expiresAt)
+  : new Date(new Date(job.publishedAt).getTime() + 15 * 24 * 60 * 60 * 1000);
   const formatSalary = (min?: number, max?: number, currency = "BOB") => {
     if (!min && !max) return "Salario a convenir";
     if (min && max)
@@ -210,6 +215,13 @@ export const JobCard = ({ job, viewMode }: JobCardProps) => {
                           <p className="text-sm text-gray-500">
                             {formatDate(job.publishedAt)}
                           </p>
+                          {expiresAt && (
+  <p className="text-sm text-gray-400 flex items-center justify-end">
+    <Calendar className="w-4 h-4 mr-1" />
+    Vence el {format(expiresAt, "dd 'de' MMMM", { locale: es })}
+  </p>
+)}
+
                         </div>
 
                         <div className="flex space-x-2">
@@ -340,6 +352,10 @@ export const JobCard = ({ job, viewMode }: JobCardProps) => {
                 <p className="text-xs text-gray-500">
                   {formatDate(job.publishedAt)}
                 </p>
+                <p className="text-xs text-gray-400 flex items-center">
+    <Calendar className="w-3 h-3 mr-1" />
+    Vence el {format(expiresAt, "dd 'de' MMMM", { locale: es })}
+  </p>
               </div>
 
               <div className="flex items-center space-x-3 text-xs text-gray-500">

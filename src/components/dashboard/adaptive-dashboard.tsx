@@ -10,28 +10,12 @@ import { AlertCircle } from "lucide-react";
 import { DashboardYouth } from "./role-specific/dashboard-youth";
 import { DashboardAdolescent } from "./role-specific/dashboard-adolescent";
 import { DashboardCompany } from "./role-specific/dashboard-company";
+import { DashboardMunicipio } from "./dashboard-municipio";
 
 // Placeholder components for other roles (to be implemented later)
 function DashboardMunicipalGovernment() {
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">
-          Dashboard Administrativo
-        </h1>
-        <p className="text-muted-foreground">
-          Panel de administración municipal - En desarrollo
-        </p>
-      </div>
-      <Card>
-        <CardHeader>
-          <CardTitle>Panel en Construcción</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p>El dashboard para gobiernos municipales está en desarrollo.</p>
-        </CardContent>
-      </Card>
-    </div>
+    <DashboardMunicipio/>
   );
 }
 
