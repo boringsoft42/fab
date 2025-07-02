@@ -33,6 +33,7 @@ import {
   CheckCircle,
   Award,
 } from "lucide-react";
+import Image from "next/image";
 
 export interface Institution {
   id: string;
@@ -76,16 +77,14 @@ export interface Institution {
     instagram?: string;
   };
 
-  // Metrics
-  rating?: number;
-  reviewsCount: number;
-  successStories?: number;
-
   // Status
   isActive: boolean;
   isVerified: boolean;
   lastUpdated: Date;
   createdAt: Date;
+
+  // New fields
+  coverImage?: string;
 }
 
 export default function InstitutionDirectoryPage() {
@@ -164,13 +163,11 @@ export default function InstitutionDirectoryPage() {
             facebook: "https://facebook.com/cemsehub",
             linkedin: "https://linkedin.com/company/cemse-hub",
           },
-          rating: 4.8,
-          reviewsCount: 45,
-          successStories: 23,
           isActive: true,
           isVerified: true,
           lastUpdated: new Date(),
           createdAt: new Date("2023-01-15"),
+          coverImage: "/images/institutions/cemse-cover.jpg",
         },
         {
           id: "financial-1",
@@ -221,6 +218,7 @@ export default function InstitutionDirectoryPage() {
           isVerified: true,
           lastUpdated: new Date(),
           createdAt: new Date("2020-03-10"),
+          coverImage: "/images/institutions/bdp-cover.jpg",
         },
         {
           id: "government-1",
@@ -268,6 +266,7 @@ export default function InstitutionDirectoryPage() {
           isVerified: true,
           lastUpdated: new Date(),
           createdAt: new Date("2021-05-20"),
+          coverImage: "/images/institutions/programa-municipal-cover.jpg",
         },
         {
           id: "ngo-1",
@@ -327,6 +326,8 @@ export default function InstitutionDirectoryPage() {
           isVerified: true,
           lastUpdated: new Date(),
           createdAt: new Date("2018-08-12"),
+          coverImage:
+            "/images/institutions/fundacion-pro-joven-bolivia-cover.jpg",
         },
         {
           id: "accelerator-1",
@@ -386,6 +387,8 @@ export default function InstitutionDirectoryPage() {
           isVerified: true,
           lastUpdated: new Date(),
           createdAt: new Date("2022-02-28"),
+          coverImage:
+            "/images/institutions/startup-cochabamba-accelerator-cover.jpg",
         },
         {
           id: "mentor-1",
@@ -436,6 +439,8 @@ export default function InstitutionDirectoryPage() {
           isVerified: true,
           lastUpdated: new Date(),
           createdAt: new Date("2019-11-05"),
+          coverImage:
+            "/images/institutions/red-de-mentores-empresariales-cochabamba-cover.jpg",
         },
       ];
 
@@ -700,273 +705,59 @@ export default function InstitutionDirectoryPage() {
         </Button>
       </div>
 
-      {/* Institution Cards */}
-      <div className="space-y-6">
+      {/* Institution Cards Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredInstitutions.map((institution) => (
-          <Card
+          <Link
+            href={`/entrepreneurship/directory/${institution.id}`}
             key={institution.id}
-            className="hover:shadow-lg transition-shadow"
           >
-            <CardContent className="p-6">
-              <div className="flex flex-col lg:flex-row gap-6">
-                {/* Left Side - Main Info */}
-                <div className="flex-1 space-y-4">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg flex items-center justify-center">
-                          {getTypeIcon(institution.type)}
-                        </div>
-                        <div>
-                          <h3 className="text-xl font-semibold">
-                            {institution.name}
-                          </h3>
-                          <div className="flex items-center gap-2">
-                            <Badge className={getTypeColor(institution.type)}>
-                              {getTypeLabel(institution.type)}
-                            </Badge>
-                            <Badge variant="outline">
-                              {institution.category}
-                            </Badge>
-                            {institution.isVerified && (
-                              <Badge
-                                variant="secondary"
-                                className="text-green-700 bg-green-100"
-                              >
-                                <CheckCircle className="h-3 w-3 mr-1" />
-                                Verificado
-                              </Badge>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                      <p className="text-muted-foreground mb-4">
-                        {institution.description}
-                      </p>
-
-                      {/* Location and Contact */}
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-2">
-                            <MapPin className="h-4 w-4 text-muted-foreground" />
-                            <span>
-                              {institution.municipality},{" "}
-                              {institution.department}
-                            </span>
-                          </div>
-                          {institution.phone && (
-                            <div className="flex items-center gap-2">
-                              <Phone className="h-4 w-4 text-muted-foreground" />
-                              <span>{institution.phone}</span>
-                            </div>
-                          )}
-                        </div>
-                        <div className="space-y-2">
-                          {institution.email && (
-                            <div className="flex items-center gap-2">
-                              <Mail className="h-4 w-4 text-muted-foreground" />
-                              <span className="truncate">
-                                {institution.email}
-                              </span>
-                            </div>
-                          )}
-                          {institution.website && (
-                            <div className="flex items-center gap-2">
-                              <Globe className="h-4 w-4 text-muted-foreground" />
-                              <a
-                                href={institution.website}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-blue-600 hover:underline flex items-center gap-1"
-                              >
-                                Sitio Web
-                                <ExternalLink className="h-3 w-3" />
-                              </a>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Services Offered */}
-                      <div className="space-y-2">
-                        <h4 className="font-medium">Servicios Ofrecidos:</h4>
-                        <div className="flex flex-wrap gap-2">
-                          {institution.servicesOffered.map((service, index) => (
-                            <Badge
-                              key={index}
-                              variant="secondary"
-                              className="text-xs"
-                            >
-                              {service}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Focus Areas */}
-                      <div className="space-y-2">
-                        <h4 className="font-medium">Áreas de Enfoque:</h4>
-                        <div className="flex flex-wrap gap-2">
-                          {institution.focusAreas.map((area, index) => (
-                            <Badge
-                              key={index}
-                              variant="outline"
-                              className="text-xs"
-                            >
-                              {area}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Right Side - Additional Info */}
-                <div className="lg:w-80 space-y-4">
-                  {/* Contact Person */}
-                  {institution.contactPerson && (
-                    <div className="bg-gray-50 rounded-lg p-4">
-                      <h4 className="font-medium mb-2">Persona de Contacto</h4>
-                      <p className="text-sm">{institution.contactPerson}</p>
-                    </div>
-                  )}
-
-                  {/* Funding Information */}
-                  {institution.funding && (
-                    <div className="bg-green-50 rounded-lg p-4">
-                      <h4 className="font-medium mb-2 flex items-center gap-2">
-                        <DollarSign className="h-4 w-4" />
-                        Financiamiento
-                      </h4>
-                      <div className="space-y-2 text-sm">
-                        <div>
-                          <span className="font-medium">Tipo: </span>
-                          {institution.funding.type === "grants"
-                            ? "Subsidios"
-                            : institution.funding.type === "loans"
-                              ? "Préstamos"
-                              : institution.funding.type === "equity"
-                                ? "Inversión de Capital"
-                                : "Mentoría"}
-                        </div>
-                        {institution.funding.amount && (
-                          <div>
-                            <span className="font-medium">Monto: </span>
-                            {institution.funding.amount}
-                          </div>
-                        )}
-                        {institution.funding.duration && (
-                          <div>
-                            <span className="font-medium">Duración: </span>
-                            {institution.funding.duration}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Stats */}
-                  <div className="bg-blue-50 rounded-lg p-4">
-                    <h4 className="font-medium mb-2">Estadísticas</h4>
-                    <div className="space-y-2 text-sm">
-                      {institution.rating && (
-                        <div className="flex items-center gap-2">
-                          <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                          <span>{institution.rating}/5</span>
-                          <span className="text-muted-foreground">
-                            ({institution.reviewsCount} reseñas)
-                          </span>
-                        </div>
-                      )}
-                      {institution.successStories && (
-                        <div className="flex items-center gap-2">
-                          <Award className="h-4 w-4 text-green-600" />
-                          <span>
-                            {institution.successStories} historias de éxito
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Action Buttons */}
-                  <div className="space-y-2">
-                    <Button className="w-full">
-                      <Mail className="h-4 w-4 mr-2" />
-                      Contactar
-                    </Button>
-                    {institution.website && (
-                      <Button variant="outline" className="w-full" asChild>
-                        <a
-                          href={institution.website}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <Globe className="h-4 w-4 mr-2" />
-                          Visitar Sitio Web
-                        </a>
-                      </Button>
-                    )}
+            <Card className="group h-full overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer">
+              {/* Card Background Image */}
+              <div className="relative h-48">
+                <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-transparent z-10" />
+                <Image
+                  src={
+                    institution.coverImage ||
+                    "/images/institutions/default-cover.jpg"
+                  }
+                  alt={institution.name}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+                <div className="absolute top-4 left-4 z-20">
+                  <div className="bg-white rounded-lg p-2 shadow-md">
+                    <Image
+                      src={
+                        institution.logo ||
+                        "/images/institutions/default-logo.jpg"
+                      }
+                      alt={`${institution.name} logo`}
+                      width={40}
+                      height={40}
+                      className="object-contain"
+                    />
                   </div>
                 </div>
               </div>
 
-              {/* Expandable Details */}
-              <div className="mt-6 pt-6 border-t">
-                <Tabs defaultValue="requirements" className="w-full">
-                  <TabsList className="grid w-full grid-cols-3">
-                    <TabsTrigger value="requirements">Requisitos</TabsTrigger>
-                    <TabsTrigger value="target">Público Objetivo</TabsTrigger>
-                    <TabsTrigger value="process">Proceso</TabsTrigger>
-                  </TabsList>
+              <CardContent className="p-4">
+                {/* Institution Name and Description */}
+                <h3 className="text-lg font-semibold mb-2">
+                  {institution.name}
+                </h3>
+                <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
+                  {institution.description}
+                </p>
 
-                  <TabsContent value="requirements" className="mt-4">
-                    <div className="space-y-2">
-                      <h4 className="font-medium">
-                        Requisitos de Elegibilidad:
-                      </h4>
-                      <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
-                        {institution.eligibilityRequirements.map(
-                          (req, index) => (
-                            <li key={index}>{req}</li>
-                          )
-                        )}
-                      </ul>
-                    </div>
-                  </TabsContent>
-
-                  <TabsContent value="target" className="mt-4">
-                    <div className="space-y-2">
-                      <h4 className="font-medium">Público Objetivo:</h4>
-                      <div className="flex flex-wrap gap-2">
-                        {institution.targetAudience.map((audience, index) => (
-                          <Badge
-                            key={index}
-                            variant="outline"
-                            className="text-xs"
-                          >
-                            {audience}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  </TabsContent>
-
-                  <TabsContent value="process" className="mt-4">
-                    {institution.applicationProcess && (
-                      <div className="space-y-2">
-                        <h4 className="font-medium">Proceso de Aplicación:</h4>
-                        <p className="text-sm text-muted-foreground">
-                          {institution.applicationProcess}
-                        </p>
-                      </div>
-                    )}
-                  </TabsContent>
-                </Tabs>
-              </div>
-            </CardContent>
-          </Card>
+                {/* Location */}
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <MapPin className="h-4 w-4" />
+                  <span>{institution.municipality}</span>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
         ))}
       </div>
 
