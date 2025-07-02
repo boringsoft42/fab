@@ -42,3 +42,31 @@ export interface SidebarData {
 }
 
 export type NavGroupProps = NavGroup;
+
+export interface SidebarItem {
+  title: string;
+  items: {
+    title: string;
+    icon?: LucideIcon;
+    href: string;
+    items?: {
+      title: string;
+      href: string;
+    }[];
+  }[];
+}
+
+export interface SidebarData {
+  [key: string]: {
+    title: string;
+    items: {
+      title: string;
+      icon?: LucideIcon;
+      url: string;
+      items?: {
+        title: string;
+        url: string;
+      }[];
+    }[];
+  }[];
+}

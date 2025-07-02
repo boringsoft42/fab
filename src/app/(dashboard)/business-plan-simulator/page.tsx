@@ -26,9 +26,28 @@ import {
   ChevronLeft,
   ChevronRight,
   CheckCircle,
+  Leaf,
+  Heart,
+  CircleDollarSign,
+  HelpCircle,
+  Link,
+  Video,
 } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface BusinessPlan {
+  tripleImpactAssessment: {
+    problemSolved: string;
+    beneficiaries: string;
+    resourcesUsed: string;
+    communityInvolvement: string;
+    longTermImpact: string;
+  };
   executiveSummary: string;
   businessDescription: string;
   marketAnalysis: string;
@@ -57,6 +76,13 @@ interface FinancialData {
 export default function BusinessPlanSimulatorPage() {
   const [currentStep, setCurrentStep] = useState(0);
   const [businessPlan, setBusinessPlan] = useState<BusinessPlan>({
+    tripleImpactAssessment: {
+      problemSolved: "",
+      beneficiaries: "",
+      resourcesUsed: "",
+      communityInvolvement: "",
+      longTermImpact: "",
+    },
     executiveSummary: "",
     businessDescription: "",
     marketAnalysis: "",
@@ -86,58 +112,124 @@ export default function BusinessPlanSimulatorPage() {
 
   const planSteps = [
     {
+      title: "¿Tu Negocio Ayuda?",
+      description: "Cuéntanos sobre el impacto de tu negocio",
+      icon: <Leaf className="h-5 w-5" />,
+      field: "tripleImpactAssessment",
+      tooltip:
+        "Vamos a descubrir juntos si tu negocio puede ayudar a la sociedad y al medio ambiente",
+    },
+    {
       title: "Resumen Ejecutivo",
       description: "Una visión general de tu negocio",
       icon: <FileText className="h-5 w-5" />,
       field: "executiveSummary",
+      tooltip:
+        "Resume los puntos clave de tu plan de negocio, incluyendo la propuesta de valor y los objetivos principales",
     },
     {
       title: "Descripción del Negocio",
       description: "¿Qué hace tu empresa?",
       icon: <Lightbulb className="h-5 w-5" />,
       field: "businessDescription",
+      tooltip:
+        "Detalla el propósito de tu empresa, los productos o servicios que ofrece y el problema que resuelve",
     },
     {
       title: "Análisis de Mercado",
       description: "Tu mercado objetivo y oportunidades",
       icon: <TrendingUp className="h-5 w-5" />,
       field: "marketAnalysis",
+      tooltip:
+        "Identifica y analiza tu mercado objetivo, tendencias del sector y oportunidades de crecimiento",
     },
     {
       title: "Análisis Competitivo",
       description: "Quiénes son tus competidores",
       icon: <Target className="h-5 w-5" />,
       field: "competitiveAnalysis",
+      tooltip:
+        "Evalúa tus competidores directos e indirectos, sus fortalezas y debilidades, y tu ventaja competitiva",
     },
     {
       title: "Plan de Marketing",
       description: "Cómo vas a atraer clientes",
       icon: <Users className="h-5 w-5" />,
       field: "marketingPlan",
+      tooltip:
+        "Define tus estrategias de marketing, canales de distribución y tácticas para llegar a tus clientes",
     },
     {
       title: "Plan Operacional",
       description: "Cómo funcionará tu negocio",
       icon: <Cog className="h-5 w-5" />,
       field: "operationalPlan",
+      tooltip:
+        "Describe los procesos operativos, recursos necesarios y estructura organizacional de tu negocio",
     },
     {
       title: "Equipo de Gestión",
       description: "Quiénes están detrás del negocio",
       icon: <Users className="h-5 w-5" />,
       field: "managementTeam",
+      tooltip:
+        "Presenta al equipo directivo, sus roles, experiencia y las posiciones clave por cubrir",
     },
     {
       title: "Proyecciones Financieras",
       description: "Números y proyecciones",
       icon: <DollarSign className="h-5 w-5" />,
       field: "financialProjections",
+      tooltip:
+        "Desarrolla proyecciones financieras realistas, incluyendo costos, ingresos y punto de equilibrio",
     },
     {
       title: "Análisis de Riesgos",
       description: "Identificar y mitigar riesgos",
       icon: <Shield className="h-5 w-5" />,
       field: "riskAnalysis",
+      tooltip:
+        "Identifica los principales riesgos del negocio y las estrategias para mitigarlos",
+    },
+  ];
+
+  const impactQuestions = [
+    {
+      field: "problemSolved",
+      question: "¿Qué problema ayuda a resolver tu negocio?",
+      placeholder:
+        "Por ejemplo: reducir la basura, dar trabajo a jóvenes, mejorar la educación...",
+      helpLink: "/courses/impact/problem-identification",
+      videoLink: "/courses/impact/video-1",
+    },
+    {
+      field: "beneficiaries",
+      question: "¿A quiénes beneficia tu negocio además de tus clientes?",
+      placeholder: "Por ejemplo: familias locales, estudiantes, el barrio...",
+      helpLink: "/courses/impact/beneficiaries",
+      videoLink: "/courses/impact/video-2",
+    },
+    {
+      field: "resourcesUsed",
+      question: "¿Qué recursos naturales usa tu negocio?",
+      placeholder: "Por ejemplo: agua, electricidad, materiales reciclados...",
+      helpLink: "/courses/impact/resources",
+      videoLink: "/courses/impact/video-3",
+    },
+    {
+      field: "communityInvolvement",
+      question: "¿Cómo participa la comunidad en tu negocio?",
+      placeholder: "Por ejemplo: como trabajadores, proveedores, socios...",
+      helpLink: "/courses/impact/community",
+      videoLink: "/courses/impact/video-4",
+    },
+    {
+      field: "longTermImpact",
+      question: "¿Cómo ayudará tu negocio en el futuro?",
+      placeholder:
+        "Por ejemplo: crear más empleos, cuidar el medio ambiente...",
+      helpLink: "/courses/impact/long-term",
+      videoLink: "/courses/impact/video-5",
     },
   ];
 
@@ -184,6 +276,63 @@ export default function BusinessPlanSimulatorPage() {
     return months;
   };
 
+  const analyzeTripleImpact = () => {
+    const assessment = businessPlan.tripleImpactAssessment;
+    let impacts = {
+      economic: false,
+      social: false,
+      environmental: false,
+    };
+
+    if (
+      assessment.problemSolved.toLowerCase().includes("trabajo") ||
+      assessment.problemSolved.toLowerCase().includes("empleo") ||
+      assessment.communityInvolvement.toLowerCase().includes("trabajo")
+    ) {
+      impacts.economic = true;
+    }
+
+    if (
+      assessment.beneficiaries.length > 0 ||
+      assessment.communityInvolvement.length > 0
+    ) {
+      impacts.social = true;
+    }
+
+    if (
+      assessment.resourcesUsed.toLowerCase().includes("recicl") ||
+      assessment.problemSolved.toLowerCase().includes("ambiente") ||
+      assessment.longTermImpact.toLowerCase().includes("ambiente")
+    ) {
+      impacts.environmental = true;
+    }
+
+    return impacts;
+  };
+
+  const getImpactFeedback = () => {
+    const impacts = analyzeTripleImpact();
+    const impactCount = Object.values(impacts).filter(Boolean).length;
+
+    if (impactCount === 0) {
+      return {
+        message:
+          "Tu negocio aún puede crecer en su impacto. ¡Sigue explorando!",
+        color: "text-blue-600",
+      };
+    } else if (impactCount === 3) {
+      return {
+        message: "¡Excelente! Tu negocio tiene triple impacto. 🌟",
+        color: "text-green-600",
+      };
+    } else {
+      return {
+        message: `Tu negocio ya genera ${impactCount} tipos de impacto. ¡Vas por buen camino!`,
+        color: "text-blue-600",
+      };
+    }
+  };
+
   const progress = ((currentStep + 1) / planSteps.length) * 100;
 
   return (
@@ -214,14 +363,28 @@ export default function BusinessPlanSimulatorPage() {
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle className="flex items-center gap-2">
-                    {planSteps[currentStep].icon}
-                    Paso {currentStep + 1}: {planSteps[currentStep].title}
-                  </CardTitle>
-                  <p className="text-muted-foreground mt-1">
-                    {planSteps[currentStep].description}
-                  </p>
+                <div className="flex items-center gap-2">
+                  <div>
+                    <CardTitle className="flex items-center gap-2">
+                      {planSteps[currentStep].icon}
+                      Paso {currentStep + 1}: {planSteps[currentStep].title}
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <HelpCircle className="h-4 w-4 ml-2 text-muted-foreground" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p className="max-w-xs">
+                              {planSteps[currentStep].tooltip}
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </CardTitle>
+                    <p className="text-muted-foreground mt-1">
+                      {planSteps[currentStep].description}
+                    </p>
+                  </div>
                 </div>
                 <Badge variant="outline">
                   {currentStep + 1} de {planSteps.length}
@@ -230,127 +393,240 @@ export default function BusinessPlanSimulatorPage() {
               <Progress value={progress} className="mt-4" />
             </CardHeader>
             <CardContent className="space-y-6">
-              {currentStep < 8 && (
-                <div className="space-y-4">
-                  <Label className="text-lg">
-                    Describe {planSteps[currentStep].title.toLowerCase()}
-                  </Label>
-                  <Textarea
-                    placeholder={`Explica ${planSteps[currentStep].description.toLowerCase()}...`}
-                    value={
-                      businessPlan[
-                        planSteps[currentStep].field as keyof BusinessPlan
-                      ] as string
-                    }
-                    onChange={(e) =>
-                      updateBusinessPlan(
-                        planSteps[currentStep].field,
-                        e.target.value
-                      )
-                    }
-                    className="min-h-[200px]"
-                  />
-                  <div className="text-sm text-muted-foreground">
-                    Tip: Sé específico y detallado. Esto te ayudará a clarificar
-                    tu idea de negocio.
-                  </div>
-                </div>
-              )}
+              {currentStep === 0 ? (
+                <div className="max-w-6xl mx-auto">
+                  {/* Impact Questions Grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {impactQuestions.map((q, index) => (
+                      <div
+                        key={index}
+                        className="bg-white rounded-xl p-6 shadow-sm border-2 border-transparent hover:border-blue-100 transition-all"
+                      >
+                        <div className="space-y-4">
+                          <div className="flex items-start gap-3">
+                            <div className="bg-blue-50 rounded-full p-2 mt-1">
+                              <div className="h-6 w-6 text-blue-600">
+                                {index === 0 ? (
+                                  <Lightbulb className="h-6 w-6" />
+                                ) : index === 1 ? (
+                                  <Users className="h-6 w-6" />
+                                ) : index === 2 ? (
+                                  <Leaf className="h-6 w-6" />
+                                ) : index === 3 ? (
+                                  <Heart className="h-6 w-6" />
+                                ) : (
+                                  <Target className="h-6 w-6" />
+                                )}
+                              </div>
+                            </div>
+                            <Label className="text-lg font-medium leading-tight">
+                              {q.question}
+                            </Label>
+                          </div>
 
-              {currentStep === 7 && (
-                <div className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label>Costos de Inicio (Bs.)</Label>
-                      <Input
-                        type="number"
-                        value={businessPlan.financialProjections.startupCosts}
-                        onChange={(e) =>
-                          updateBusinessPlan("financialProjections", {
-                            ...businessPlan.financialProjections,
-                            startupCosts: Number(e.target.value),
-                          })
-                        }
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Ingresos Mensuales Proyectados (Bs.)</Label>
-                      <Input
-                        type="number"
-                        value={businessPlan.financialProjections.monthlyRevenue}
-                        onChange={(e) =>
-                          updateBusinessPlan("financialProjections", {
-                            ...businessPlan.financialProjections,
-                            monthlyRevenue: Number(e.target.value),
-                          })
-                        }
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Gastos Mensuales (Bs.)</Label>
-                      <Input
-                        type="number"
-                        value={
-                          businessPlan.financialProjections.monthlyExpenses
-                        }
-                        onChange={(e) =>
-                          updateBusinessPlan("financialProjections", {
-                            ...businessPlan.financialProjections,
-                            monthlyExpenses: Number(e.target.value),
-                          })
-                        }
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Mes de Punto de Equilibrio</Label>
-                      <Input
-                        type="number"
-                        value={businessPlan.financialProjections.breakEvenMonth}
-                        onChange={(e) =>
-                          updateBusinessPlan("financialProjections", {
-                            ...businessPlan.financialProjections,
-                            breakEvenMonth: Number(e.target.value),
-                          })
-                        }
-                      />
-                    </div>
-                  </div>
-                </div>
-              )}
+                          <Textarea
+                            value={
+                              businessPlan.tripleImpactAssessment[
+                                q.field as keyof typeof businessPlan.tripleImpactAssessment
+                              ]
+                            }
+                            onChange={(e) =>
+                              updateBusinessPlan("tripleImpactAssessment", {
+                                ...businessPlan.tripleImpactAssessment,
+                                [q.field]: e.target.value,
+                              })
+                            }
+                            placeholder={q.placeholder}
+                            className="min-h-[120px] text-base resize-none bg-gray-50/50"
+                          />
 
-              <div className="flex justify-between">
-                <Button
-                  variant="outline"
-                  onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
-                  disabled={currentStep === 0}
-                >
-                  <ChevronLeft className="h-4 w-4 mr-2" />
-                  Anterior
-                </Button>
-                <div className="flex gap-2">
-                  <Button variant="outline">
-                    <Save className="h-4 w-4 mr-2" />
-                    Guardar Borrador
-                  </Button>
-                  {currentStep === planSteps.length - 1 ? (
-                    <Button>
-                      <CheckCircle className="h-4 w-4 mr-2" />
-                      Finalizar Plan
-                    </Button>
-                  ) : (
-                    <Button
-                      onClick={() =>
-                        setCurrentStep(
-                          Math.min(planSteps.length - 1, currentStep + 1)
-                        )
-                      }
-                    >
-                      Siguiente
-                      <ChevronRight className="h-4 w-4 ml-2" />
-                    </Button>
+                          <div className="flex gap-3 pt-2">
+                            <Link
+                              href={q.helpLink}
+                              className="flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700 hover:underline"
+                            >
+                              <FileText className="h-4 w-4" />
+                              Ver guía
+                            </Link>
+                            <Link
+                              href={q.videoLink}
+                              className="flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700 hover:underline"
+                            >
+                              <Video className="h-4 w-4" />
+                              Ver video
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Impact Feedback */}
+                  {Object.values(businessPlan.tripleImpactAssessment).some(
+                    (value) => value.length > 0
+                  ) && (
+                    <div className="mt-8 bg-white rounded-xl p-6 shadow-sm border-2 border-transparent">
+                      <div
+                        className={`text-lg font-medium ${getImpactFeedback().color} flex items-center gap-2`}
+                      >
+                        <CheckCircle className="h-5 w-5" />
+                        {getImpactFeedback().message}
+                      </div>
+                    </div>
                   )}
                 </div>
-              </div>
+              ) : (
+                <>
+                  {currentStep < 8 && (
+                    <div className="space-y-4">
+                      <Label className="text-lg">
+                        Describe {planSteps[currentStep].title.toLowerCase()}
+                      </Label>
+                      <Textarea
+                        placeholder={`Explica ${planSteps[currentStep].description.toLowerCase()}...`}
+                        value={
+                          businessPlan[
+                            planSteps[currentStep].field as keyof BusinessPlan
+                          ] as string
+                        }
+                        onChange={(e) =>
+                          updateBusinessPlan(
+                            planSteps[currentStep].field,
+                            e.target.value
+                          )
+                        }
+                        className="min-h-[200px]"
+                      />
+                      <div className="space-y-2">
+                        <Label>Material de Apoyo</Label>
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2">
+                            <Link className="h-4 w-4 text-blue-600" />
+                            <Input
+                              placeholder="URL de recursos adicionales..."
+                              className="flex-1"
+                            />
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Video className="h-4 w-4 text-blue-600" />
+                            <Input
+                              placeholder="URL del video explicativo..."
+                              className="flex-1"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        Tip: Sé específico y detallado. Esto te ayudará a
+                        clarificar tu idea de negocio.
+                      </div>
+                    </div>
+                  )}
+
+                  {currentStep === 7 && (
+                    <div className="space-y-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label>Costos de Inicio (Bs.)</Label>
+                          <Input
+                            type="number"
+                            value={
+                              businessPlan.financialProjections.startupCosts
+                            }
+                            onChange={(e) =>
+                              updateBusinessPlan("financialProjections", {
+                                ...businessPlan.financialProjections,
+                                startupCosts: Number(e.target.value),
+                              })
+                            }
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Ingresos Mensuales Proyectados (Bs.)</Label>
+                          <Input
+                            type="number"
+                            value={
+                              businessPlan.financialProjections.monthlyRevenue
+                            }
+                            onChange={(e) =>
+                              updateBusinessPlan("financialProjections", {
+                                ...businessPlan.financialProjections,
+                                monthlyRevenue: Number(e.target.value),
+                              })
+                            }
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Gastos Mensuales (Bs.)</Label>
+                          <Input
+                            type="number"
+                            value={
+                              businessPlan.financialProjections.monthlyExpenses
+                            }
+                            onChange={(e) =>
+                              updateBusinessPlan("financialProjections", {
+                                ...businessPlan.financialProjections,
+                                monthlyExpenses: Number(e.target.value),
+                              })
+                            }
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Mes de Punto de Equilibrio</Label>
+                          <Input
+                            type="number"
+                            value={
+                              businessPlan.financialProjections.breakEvenMonth
+                            }
+                            onChange={(e) =>
+                              updateBusinessPlan("financialProjections", {
+                                ...businessPlan.financialProjections,
+                                breakEvenMonth: Number(e.target.value),
+                              })
+                            }
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex justify-between">
+                    <Button
+                      variant="outline"
+                      onClick={() =>
+                        setCurrentStep(Math.max(0, currentStep - 1))
+                      }
+                      disabled={currentStep === 0}
+                    >
+                      <ChevronLeft className="h-4 w-4 mr-2" />
+                      Anterior
+                    </Button>
+                    <div className="flex gap-2">
+                      <Button variant="outline">
+                        <Save className="h-4 w-4 mr-2" />
+                        Guardar Borrador
+                      </Button>
+                      {currentStep === planSteps.length - 1 ? (
+                        <Button>
+                          <CheckCircle className="h-4 w-4 mr-2" />
+                          Finalizar Plan
+                        </Button>
+                      ) : (
+                        <Button
+                          onClick={() =>
+                            setCurrentStep(
+                              Math.min(planSteps.length - 1, currentStep + 1)
+                            )
+                          }
+                        >
+                          Siguiente
+                          <ChevronRight className="h-4 w-4 ml-2" />
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </>
+              )}
             </CardContent>
           </Card>
 

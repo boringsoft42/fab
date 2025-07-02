@@ -21,8 +21,9 @@ import {
   Eye,
   UserCheck,
   Newspaper,
+  UserCircle,
 } from "lucide-react";
-import type { SidebarData } from "../types";
+import type { SidebarData, SidebarItem } from "../types";
 import type { UserRole } from "@prisma/client";
 
 const commonTeams = [
@@ -126,6 +127,16 @@ export const youthSidebarData: SidebarData = {
               url: "/mentorship",
             },
           ],
+        },
+      ],
+    },
+    {
+      title: "Información",
+      items: [
+        {
+          title: "Noticias",
+          icon: Newspaper,
+          url: "/news",
         },
       ],
     },
@@ -614,3 +625,90 @@ export function getSidebarDataByRole(role: UserRole): SidebarData {
       return youthSidebarData; // fallback
   }
 }
+
+export const youthSidebarItems: SidebarItem[] = [
+  {
+    title: "Principal",
+    items: [
+      {
+        title: "Dashboard",
+        icon: LayoutDashboard,
+        href: "/dashboard",
+      },
+      {
+        title: "Buscar Empleos",
+        icon: Briefcase,
+        href: "/jobs",
+      },
+      {
+        title: "Mis Postulaciones",
+        icon: Briefcase,
+        href: "/my-applications",
+      },
+    ],
+  },
+  {
+    title: "Desarrollo",
+    items: [
+      {
+        title: "Capacitación",
+        icon: GraduationCap,
+        href: "/courses",
+        items: [
+          {
+            title: "Explorar Cursos",
+            href: "/courses",
+          },
+          {
+            title: "Mis Cursos",
+            href: "/my-courses",
+          },
+        ],
+      },
+      {
+        title: "Emprendimiento",
+        icon: Lightbulb,
+        href: "/entrepreneurship",
+        items: [
+          {
+            title: "Recursos",
+            href: "/entrepreneurship/resources",
+          },
+          {
+            title: "Directorio",
+            href: "/entrepreneurship/directory",
+          },
+          {
+            title: "Red de Contactos",
+            href: "/entrepreneurship/network",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    title: "Información",
+    items: [
+      {
+        title: "Noticias",
+        icon: Newspaper,
+        href: "/news",
+      },
+    ],
+  },
+  {
+    title: "Personal",
+    items: [
+      {
+        title: "Mi Perfil",
+        icon: UserCircle,
+        href: "/profile",
+      },
+      {
+        title: "Reportes Personales",
+        icon: BarChart3,
+        href: "/reports",
+      },
+    ],
+  },
+];

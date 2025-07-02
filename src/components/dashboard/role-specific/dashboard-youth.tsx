@@ -42,11 +42,19 @@ import {
   MessageSquare,
   ExternalLink,
   Users,
+  Rocket,
+  Sparkles,
+  Trophy,
+  Heart,
+  Zap,
+  PartyPopper,
+  Send,
 } from "lucide-react";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 
 // News types
 interface NewsArticle {
@@ -300,248 +308,223 @@ function NewsCarousel() {
 export function DashboardYouth() {
   const modules = [
     {
-      title: "Búsqueda de Empleo",
-      description:
-        "Encuentra oportunidades laborales que se ajusten a tu perfil",
-      icon: Search,
+      title: "Empleos",
+      description: "¡Encuentra tu trabajo ideal!",
+      icon: Rocket,
       href: "/jobs",
       color: "bg-blue-500",
-      stats: [
-        { label: "Ofertas Activas", value: "156" },
-        { label: "Postulaciones", value: "3" },
-        { label: "Entrevistas", value: "1" },
-      ],
+      metric: { label: "Ofertas", value: "156", icon: Sparkles },
       actions: [
-        { label: "Explorar Ofertas", href: "/jobs/browse" },
+        { label: "Explorar", href: "/jobs/browse" },
         { label: "Mis Postulaciones", href: "/jobs/applications" },
-        { label: "Crear Alerta", href: "/jobs/alerts" },
       ],
     },
     {
-      title: "Capacitación y Recursos Formativos",
-      description: "Desarrolla nuevas habilidades y obtén certificaciones",
+      title: "Cursos",
+      description: "¡Aprende algo nuevo!",
       icon: GraduationCap,
       href: "/training",
       color: "bg-green-500",
-      stats: [
-        { label: "Cursos Disponibles", value: "45" },
-        { label: "En Progreso", value: "2" },
-        { label: "Completados", value: "8" },
-      ],
+      metric: { label: "En curso", value: "2", icon: Play },
       actions: [
         { label: "Ver Cursos", href: "/training/courses" },
         { label: "Mis Cursos", href: "/training/my-courses" },
-        { label: "Certificados", href: "/training/certificates" },
       ],
     },
     {
       title: "Emprendimiento",
-      description: "Convierte tus ideas en negocios exitosos",
-      icon: Target,
+      description: "¡Crea tu negocio!",
+      icon: Zap,
       href: "/entrepreneurship",
       color: "bg-purple-500",
-      stats: [
-        { label: "Recursos", value: "28" },
-        { label: "Mentorías", value: "12" },
-        { label: "Mi Proyecto", value: "1" },
-      ],
+      metric: { label: "Proyectos", value: "1", icon: Target },
       actions: [
-        { label: "Ideas de Negocio", href: "/entrepreneurship/ideas" },
-        { label: "Buscar Mentor", href: "/entrepreneurship/mentoring" },
+        { label: "Empezar", href: "/entrepreneurship/ideas" },
         { label: "Mi Proyecto", href: "/entrepreneurship/my-project" },
-      ],
-    },
-    {
-      title: "Reportes Personales",
-      description: "Analiza tu progreso y rendimiento laboral",
-      icon: BarChart3,
-      href: "/reports",
-      color: "bg-orange-500",
-      stats: [
-        { label: "Postulaciones", value: "15" },
-        { label: "Respuestas", value: "8" },
-        { label: "Tasa Éxito", value: "53%" },
-      ],
-      actions: [
-        { label: "Ver Reportes", href: "/reports/personal" },
-        { label: "Análisis CV", href: "/reports/cv-analysis" },
-        { label: "Progreso", href: "/reports/progress" },
       ],
     },
   ];
 
   return (
     <div className="space-y-8">
-      {/* Welcome Section */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-6 text-white">
+      {/* Welcome Section with Animation */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white shadow-lg"
+      >
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">¡Bienvenido Joven!</h1>
-            <p className="text-blue-100">
-              Explora oportunidades de empleo, desarrolla tus habilidades y
-              construye tu futuro profesional
-            </p>
+          <div className="space-y-2">
+            <motion.h1
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+              className="text-4xl font-bold"
+            >
+              ¡Hola! 👋
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+              className="text-xl text-blue-100"
+            >
+              ¿Qué quieres hacer hoy?
+            </motion.p>
           </div>
-          <div className="hidden md:flex">
-            <BrainCircuit className="w-16 h-16 text-blue-200" />
-          </div>
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.4, type: "spring", stiffness: 200 }}
+            className="hidden md:block"
+          >
+            <BrainCircuit className="w-24 h-24 text-blue-200" />
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
 
       {/* News Section */}
-      <NewsCarousel />
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, duration: 0.5 }}
+      >
+        <NewsCarousel />
+      </motion.div>
 
-      {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-2">
-              <Search className="w-5 h-5 text-blue-500" />
-              <div>
-                <p className="text-sm font-medium">Postulaciones Activas</p>
-                <p className="text-2xl font-bold">3</p>
-              </div>
+      {/* Quick Stats with Animation - Single Row */}
+      <div className="grid grid-cols-3 gap-6">
+        {modules.map((module, index) => (
+          <motion.div
+            key={module.title}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 * index, duration: 0.5 }}
+            whileHover={{ scale: 1.05 }}
+            className={`${module.color} rounded-2xl p-6 text-white shadow-lg`}
+          >
+            <div className="flex flex-col items-center text-center space-y-3">
+              <motion.div
+                whileHover={{ rotate: 10 }}
+                className="bg-white/20 rounded-xl p-3"
+              >
+                <module.metric.icon className="w-8 h-8" />
+              </motion.div>
+              <p className="text-3xl font-bold">{module.metric.value}</p>
+              <p className="text-sm text-white/90">{module.metric.label}</p>
             </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-2">
-              <GraduationCap className="w-5 h-5 text-green-500" />
-              <div>
-                <p className="text-sm font-medium">Cursos en Progreso</p>
-                <p className="text-2xl font-bold">2</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-2">
-              <Target className="w-5 h-5 text-purple-500" />
-              <div>
-                <p className="text-sm font-medium">Proyecto Emprendimiento</p>
-                <p className="text-2xl font-bold">1</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-2">
-              <TrendingUp className="w-5 h-5 text-orange-500" />
-              <div>
-                <p className="text-sm font-medium">Tasa de Respuesta</p>
-                <p className="text-2xl font-bold">53%</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+          </motion.div>
+        ))}
       </div>
 
-      {/* Main Modules */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {modules.map((module) => {
+      {/* Main Modules with Animation */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {modules.map((module, index) => {
           const Icon = module.icon;
           return (
-            <Card
+            <motion.div
               key={module.title}
-              className="hover:shadow-lg transition-shadow"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 * index, duration: 0.5 }}
             >
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div
-                      className={`w-12 h-12 ${module.color} rounded-lg flex items-center justify-center`}
+              <Card className="group cursor-pointer hover:shadow-xl transition-all duration-300">
+                <CardHeader>
+                  <div className="flex items-center gap-4">
+                    <motion.div
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      className={`w-16 h-16 ${module.color} rounded-2xl flex items-center justify-center`}
                     >
-                      <Icon className="w-6 h-6 text-white" />
-                    </div>
+                      <Icon className="w-8 h-8 text-white" />
+                    </motion.div>
                     <div>
-                      <CardTitle className="text-lg">{module.title}</CardTitle>
-                      <CardDescription>{module.description}</CardDescription>
+                      <CardTitle className="text-2xl">{module.title}</CardTitle>
+                      <CardDescription className="text-base">
+                        {module.description}
+                      </CardDescription>
                     </div>
                   </div>
-                </div>
-              </CardHeader>
+                </CardHeader>
 
-              <CardContent className="space-y-4">
-                {/* Stats */}
-                <div className="grid grid-cols-3 gap-4">
-                  {module.stats.map((stat, index) => (
-                    <div key={index} className="text-center">
-                      <p className="text-2xl font-bold text-gray-900">
-                        {stat.value}
-                      </p>
-                      <p className="text-xs text-gray-500">{stat.label}</p>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Actions */}
-                <div className="flex flex-wrap gap-2">
-                  {module.actions.map((action, index) => (
-                    <Button
-                      key={index}
-                      variant={index === 0 ? "default" : "outline"}
-                      size="sm"
-                      asChild
-                    >
-                      <Link href={action.href}>
-                        {action.label}
-                        <ArrowRight className="w-3 h-3 ml-1" />
-                      </Link>
-                    </Button>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+                <CardContent>
+                  {/* Actions */}
+                  <div className="flex gap-3">
+                    {module.actions.map((action, index) => (
+                      <Button
+                        key={index}
+                        variant={index === 0 ? "default" : "outline"}
+                        size="lg"
+                        className="flex-1"
+                        asChild
+                      >
+                        <Link href={action.href}>
+                          {action.label}
+                          <ArrowRight className="w-4 h-4 ml-2" />
+                        </Link>
+                      </Button>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
           );
         })}
       </div>
 
-      {/* Recent Activity */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <FileText className="w-5 h-5" />
-            Actividad Reciente
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
-              <div className="flex items-center gap-3">
-                <Briefcase className="w-4 h-4 text-blue-600" />
-                <span className="text-sm">
-                  Te postulaste a "Desarrollador Frontend Jr."
-                </span>
-              </div>
-              <Badge variant="secondary">Hace 2 días</Badge>
-            </div>
-
-            <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
-              <div className="flex items-center gap-3">
-                <BookOpen className="w-4 h-4 text-green-600" />
-                <span className="text-sm">
-                  Completaste "Fundamentos de React"
-                </span>
-              </div>
-              <Badge variant="secondary">Hace 5 días</Badge>
-            </div>
-
-            <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
-              <div className="flex items-center gap-3">
-                <Target className="w-4 h-4 text-purple-600" />
-                <span className="text-sm">Actualizaste tu plan de negocio</span>
-              </div>
-              <Badge variant="secondary">Hace 1 semana</Badge>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Recent Activity with Animation */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.6, duration: 0.5 }}
+      >
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-2xl">
+              <FileText className="w-8 h-8" />
+              Actividad Reciente
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <motion.div className="space-y-4">
+              {[
+                {
+                  icon: Briefcase,
+                  text: "¡Postulaste a un trabajo!",
+                  time: "Hace 2 días",
+                  color: "blue",
+                },
+                {
+                  icon: BookOpen,
+                  text: "¡Completaste un curso!",
+                  time: "Hace 5 días",
+                  color: "green",
+                },
+                {
+                  icon: Target,
+                  text: "¡Nueva idea de negocio!",
+                  time: "Hace 1 semana",
+                  color: "purple",
+                },
+              ].map((activity, index) => (
+                <motion.div
+                  key={index}
+                  whileHover={{ x: 5 }}
+                  className={`flex items-center justify-between p-4 bg-${activity.color}-50 rounded-xl`}
+                >
+                  <div className="flex items-center gap-3">
+                    <activity.icon
+                      className={`w-6 h-6 text-${activity.color}-600`}
+                    />
+                    <span className="text-lg">{activity.text}</span>
+                  </div>
+                  <Badge variant="secondary">{activity.time}</Badge>
+                </motion.div>
+              ))}
+            </motion.div>
+          </CardContent>
+        </Card>
+      </motion.div>
     </div>
   );
 }

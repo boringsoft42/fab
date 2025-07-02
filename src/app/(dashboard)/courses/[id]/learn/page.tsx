@@ -40,6 +40,25 @@ import {
 } from "lucide-react";
 import { QuizComponent } from "@/components/courses/quiz-component";
 import { LessonNotes } from "@/components/courses/lesson-notes";
+import { CourseSection } from "@/components/courses/course-section";
+import type {
+  CourseResource,
+  Quiz,
+  QuizQuestion,
+  ResourceType,
+} from "@/types/courses";
+
+interface Resource {
+  id: string;
+  title: string;
+  description?: string;
+  type: "PDF" | "VIDEO" | "LINK" | "IMAGE";
+  url: string;
+  fileSize?: string;
+  duration?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 interface Lesson {
   id: string;
@@ -50,24 +69,8 @@ interface Lesson {
   videoUrl?: string;
   content?: string;
   locked?: boolean;
-  quiz?: {
-    id: string;
-    title: string;
-    description: string;
-    timeLimit: number;
-    passingScore: number;
-    allowedAttempts: number;
-    showCorrectAnswers: boolean;
-    questions: Array<{
-      id: string;
-      question: string;
-      type: "MULTIPLE_CHOICE" | "TRUE_FALSE" | "SHORT_ANSWER";
-      options?: string[];
-      correctAnswer: string | string[];
-      points: number;
-      explanation?: string;
-    }>;
-  };
+  resources?: CourseResource[];
+  quiz?: Quiz;
 }
 
 interface Module {
@@ -145,6 +148,38 @@ export default function CourseLeanPage() {
               type: "video",
               videoUrl:
                 "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4",
+              resources: [
+                {
+                  id: "res-1",
+                  title: "Guía de Introducción",
+                  description: "PDF con el contenido detallado del curso",
+                  type: "PDF" as ResourceType,
+                  url: "/resources/guia-introduccion.pdf",
+                  fileSize: "2.4 MB",
+                  createdAt: new Date(),
+                  updatedAt: new Date(),
+                },
+                {
+                  id: "res-2",
+                  title: "Video de Bienvenida",
+                  description: "Mensaje del instructor",
+                  type: "VIDEO" as ResourceType,
+                  url: "https://sample-videos.com/welcome.mp4",
+                  duration: "3:45",
+                  createdAt: new Date(),
+                  updatedAt: new Date(),
+                },
+                {
+                  id: "res-3",
+                  title: "Material Complementario",
+                  description: "Lecturas recomendadas y ejercicios prácticos",
+                  type: "PDF" as ResourceType,
+                  url: "/resources/material-complementario.pdf",
+                  fileSize: "1.8 MB",
+                  createdAt: new Date(),
+                  updatedAt: new Date(),
+                },
+              ],
             },
             {
               id: "lesson-2",
@@ -154,6 +189,27 @@ export default function CourseLeanPage() {
               type: "video",
               videoUrl:
                 "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4",
+              resources: [
+                {
+                  id: "res-4",
+                  title: "Presentación de Habilidades Laborales",
+                  description: "Slides de la presentación",
+                  type: "PDF" as ResourceType,
+                  url: "/resources/presentacion-habilidades.pdf",
+                  fileSize: "3.1 MB",
+                  createdAt: new Date(),
+                  updatedAt: new Date()
+                },
+                {
+                  id: "res-5",
+                  title: "Enlaces Útiles",
+                  description: "Recursos externos recomendados",
+                  type: "LINK" as ResourceType,
+                  url: "https://example.com/recursos",
+                  createdAt: new Date(),
+                  updatedAt: new Date()
+                },
+              ],
             },
             {
               id: "quiz-1",
@@ -168,40 +224,37 @@ export default function CourseLeanPage() {
                   "Evalúa tu comprensión de los conceptos fundamentales",
                 timeLimit: 10,
                 passingScore: 70,
-                allowedAttempts: 3,
-                showCorrectAnswers: true,
+                attempts: 0,
+                isRequired: true,
                 questions: [
                   {
                     id: "q1",
                     question:
                       "¿Cuáles son las habilidades blandas más importantes en el trabajo?",
-                    type: "MULTIPLE_CHOICE" as const,
                     options: [
                       "Comunicación y trabajo en equipo",
                       "Solo conocimientos técnicos",
                       "Experiencia laboral únicamente",
                       "Ninguna de las anteriores",
                     ],
-                    correctAnswer: "Comunicación y trabajo en equipo",
-                    points: 10,
+                    correctOption: 0,
                     explanation:
                       "Las habilidades blandas como comunicación y trabajo en equipo son fundamentales para el éxito profesional.",
+                    points: 10,
                   },
                   {
                     id: "q2",
                     question: "¿Qué significa ser proactivo en el trabajo?",
-                    type: "MULTIPLE_CHOICE" as const,
                     options: [
                       "Esperar instrucciones constantemente",
                       "Tomar iniciativa y anticiparse a los problemas",
                       "Trabajar solo cuando sea necesario",
                       "Evitar responsabilidades adicionales",
                     ],
-                    correctAnswer:
-                      "Tomar iniciativa y anticiparse a los problemas",
-                    points: 10,
+                    correctOption: 1,
                     explanation:
                       "Ser proactivo implica tomar la iniciativa y buscar soluciones antes de que surjan problemas.",
+                    points: 10,
                   },
                 ],
               },
@@ -425,116 +478,24 @@ export default function CourseLeanPage() {
       <div className="flex">
         {/* Main Content */}
         <div className={`flex-1 ${sidebarCollapsed ? "mr-0" : "mr-80"}`}>
-          {currentLesson.type === "video" ? (
-            <div className="bg-black">
-              {/* Video Player */}
-              <div className="relative aspect-video bg-black">
-                <video
-                  className="w-full h-full"
-                  controls
-                  onEnded={() => handleLessonComplete(currentLessonId)}
-                  onTimeUpdate={(e) => {
-                    const video = e.target as HTMLVideoElement;
-                    setCurrentTime(video.currentTime);
-
-                    // Auto-complete when 90% watched
-                    if (
-                      video.currentTime / video.duration >= 0.9 &&
-                      !currentLesson.completed
-                    ) {
-                      handleLessonComplete(currentLessonId);
-                    }
-                  }}
-                >
-                  <source src={currentLesson.videoUrl} type="video/mp4" />
-                </video>
-              </div>
-            </div>
-          ) : currentLesson.type === "quiz" && currentLesson.quiz ? (
-            <div className="p-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <FileText className="h-5 w-5" />
-                    {currentLesson.quiz.title}
-                  </CardTitle>
-                  <p className="text-muted-foreground">
-                    {currentLesson.quiz.description}
-                  </p>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                      <div className="flex items-center gap-1">
-                        <Clock className="h-4 w-4" />
-                        {currentLesson.quiz.timeLimit} minutos
-                      </div>
-                      <div>
-                        Puntuación mínima: {currentLesson.quiz.passingScore}%
-                      </div>
-                      <div>{currentLesson.quiz.questions.length} preguntas</div>
-                    </div>
-
-                    <div className="bg-blue-50 p-4 rounded-lg">
-                      <h4 className="font-medium mb-2">
-                        Vista previa de preguntas:
-                      </h4>
-                      <ul className="space-y-2 text-sm">
-                        {currentLesson.quiz.questions.map((q, index) => (
-                          <li key={q.id} className="flex items-start gap-2">
-                            <span className="text-blue-600 font-medium">
-                              {index + 1}.
-                            </span>
-                            <span>{q.question}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <div className="flex gap-2">
-                      <Button
-                        onClick={() => handleLessonComplete(currentLessonId)}
-                      >
-                        Simular aprobar quiz
-                      </Button>
-                      <Button variant="outline">Iniciar quiz real</Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          ) : (
-            <div className="p-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <BookOpen className="h-5 w-5" />
-                    {currentLesson.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="bg-gray-50 p-6 rounded-lg">
-                    <h4 className="font-medium mb-3">Contenido de lectura</h4>
-                    <p className="text-muted-foreground mb-4">
-                      {currentLesson.content ||
-                        "Material de lectura sobre habilidades laborales básicas. Este contenido incluye conceptos fundamentales, ejercicios prácticos y ejemplos del mundo real."}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      📖 Tiempo estimado de lectura: {currentLesson.duration}
-                    </p>
-                  </div>
-
-                  <div className="flex gap-2">
-                    <Button
-                      onClick={() => handleLessonComplete(currentLessonId)}
-                    >
-                      Marcar como completado
-                    </Button>
-                    <Button variant="outline">Descargar material</Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+          {currentLesson && (
+            <CourseSection
+              section={{
+                id: currentLesson.id,
+                title: currentLesson.title,
+                description: currentModule?.title || "",
+                order: course.modules.findIndex(
+                  (m) => m.id === currentModuleId
+                ),
+                videoUrl: currentLesson.videoUrl,
+                videoDuration: currentLesson.duration,
+                content: currentLesson.content,
+                resources: currentLesson.resources || [],
+                quiz: currentLesson.quiz,
+              }}
+              isActive={!currentLesson.locked}
+              onComplete={() => handleLessonComplete(currentLessonId)}
+            />
           )}
 
           {/* Lesson Info */}

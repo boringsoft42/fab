@@ -27,6 +27,17 @@ export interface Course {
   createdAt: Date;
   updatedAt: Date;
   publishedAt?: Date;
+  sections: CourseSection[];
+  totalQuizzes: number;
+  totalResources: number;
+  progress?: number;
+  enrolledAt?: Date;
+  completedAt?: Date;
+  certificate?: {
+    id: string;
+    url: string;
+    issuedAt: Date;
+  };
 }
 
 export interface Instructor {
@@ -116,22 +127,44 @@ export interface Quiz {
   id: string;
   title: string;
   description: string;
-  questions: Question[];
   timeLimit?: number; // in minutes
-  passingScore: number; // percentage
-  allowedAttempts: number;
-  showCorrectAnswers: boolean;
+  passingScore: number;
+  questions: QuizQuestion[];
+  attempts: number;
+  isRequired: boolean;
 }
 
-export interface Question {
+export interface QuizQuestion {
   id: string;
-  type: QuestionType;
   question: string;
-  options?: string[];
-  correctAnswer: string | string[];
-  explanation?: string;
+  options: string[];
+  correctOption: number;
+  explanation: string;
   points: number;
+}
+
+export interface CourseSection {
+  id: string;
+  title: string;
+  description: string;
   order: number;
+  videoUrl?: string;
+  videoDuration?: string;
+  content?: string;
+  resources: CourseResource[];
+  quiz?: Quiz;
+}
+
+export interface CourseResource {
+  id: string;
+  title: string;
+  description?: string;
+  type: ResourceType;
+  url: string;
+  fileSize?: string;
+  duration?: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface Enrollment {
@@ -146,35 +179,20 @@ export interface Enrollment {
 }
 
 export interface CourseProgress {
-  courseId: string;
   userId: string;
-  completedLessons: string[];
-  completedModules: string[];
-  currentLesson?: string;
-  currentModule?: string;
-  totalProgress: number; // percentage
-  timeSpent: number; // in minutes
-  quizScores: QuizResult[];
-  certificates: string[];
-}
-
-export interface QuizResult {
-  quizId: string;
-  lessonId: string;
-  score: number;
-  totalQuestions: number;
-  correctAnswers: number;
-  timeSpent: number;
-  attemptNumber: number;
-  completedAt: Date;
-  answers: QuizAnswer[];
-}
-
-export interface QuizAnswer {
-  questionId: string;
-  answer: string | string[];
-  isCorrect: boolean;
-  timeSpent: number;
+  courseId: string;
+  completedSections: string[];
+  quizAttempts: {
+    quizId: string;
+    attempts: number;
+    bestScore: number;
+    passed: boolean;
+    lastAttemptAt: Date;
+  }[];
+  downloadedResources: string[];
+  lastAccessedAt: Date;
+  isCompleted: boolean;
+  completedAt?: Date;
 }
 
 export interface Certificate {
@@ -252,6 +270,13 @@ export enum EnrollmentStatus {
   COMPLETED = "completed",
   DROPPED = "dropped",
   SUSPENDED = "suspended",
+}
+
+export enum ResourceType {
+  PDF = "PDF",
+  VIDEO = "VIDEO",
+  LINK = "LINK",
+  IMAGE = "IMAGE",
 }
 
 // Filter and Search Types

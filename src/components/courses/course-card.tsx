@@ -15,7 +15,6 @@ import {
   Users,
   BookOpen,
   Award,
-  Heart,
   Play,
   CheckCircle,
 } from "lucide-react";
@@ -37,7 +36,6 @@ export const CourseCard = ({
   viewMode = "grid",
   enrollment,
 }: CourseCardProps) => {
-  const [isSaved, setIsSaved] = useState(false);
   const [imageError, setImageError] = useState(false);
 
   const formatDuration = (hours: number) => {
@@ -125,16 +123,6 @@ export const CourseCard = ({
                   </Badge>
                 )}
               </div>
-
-              {/* Save Button */}
-              <button
-                onClick={() => setIsSaved(!isSaved)}
-                className="absolute top-3 right-3 p-2 bg-white rounded-full shadow-md hover:bg-gray-50 transition-colors"
-              >
-                <Heart
-                  className={`h-4 w-4 ${isSaved ? "fill-red-500 text-red-500" : "text-gray-600"}`}
-                />
-              </button>
             </div>
 
             {/* Course Info */}
@@ -264,11 +252,6 @@ export const CourseCard = ({
                     <Link href={`/courses/${course.id}`}>Ver curso</Link>
                   </Button>
                 )}
-                <Button variant="outline" size="icon">
-                  <Heart
-                    className={`h-4 w-4 ${isSaved ? "fill-red-500 text-red-500" : ""}`}
-                  />
-                </Button>
               </div>
             </div>
           </div>
@@ -318,16 +301,6 @@ export const CourseCard = ({
             </Badge>
           )}
         </div>
-
-        {/* Save Button */}
-        <button
-          onClick={() => setIsSaved(!isSaved)}
-          className="absolute top-3 right-3 p-2 bg-white rounded-full shadow-md hover:bg-gray-50 transition-colors"
-        >
-          <Heart
-            className={`h-4 w-4 ${isSaved ? "fill-red-500 text-red-500" : "text-gray-600"}`}
-          />
-        </button>
 
         {/* Price */}
         <div className="absolute bottom-3 right-3 bg-white px-2 py-1 rounded-md shadow-md">
