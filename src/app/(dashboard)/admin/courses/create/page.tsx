@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
@@ -63,6 +64,9 @@ interface CourseFormData {
 
 export default function CreateCoursePage() {
   const router = useRouter();
+  const [certificateDialogOpen, setCertificateDialogOpen] = useState(false)
+const [certificateFile, setCertificateFile] = useState<File | null>(null)
+
   const [activeTab, setActiveTab] = useState("basic");
   const [formData, setFormData] = useState<CourseFormData>({
     title: "",
@@ -671,12 +675,23 @@ export default function CreateCoursePage() {
                       handleInputChange("certification", checked)
                     }
                   />
+                  
                   <Label
                     htmlFor="certification"
                     className="text-sm font-medium"
                   >
                     Incluir Certificado de Finalización
                   </Label>
+                  {formData.certification && (
+  <Button
+    variant="outline"
+    className="mt-2"
+    onClick={() => setCertificateDialogOpen(true)}
+  >
+    Subir Certificado Personalizado
+  </Button>
+)}
+
                   <Award className="h-4 w-4 text-muted-foreground" />
                 </div>
 
@@ -756,6 +771,49 @@ export default function CreateCoursePage() {
           </Card>
         </TabsContent>
       </Tabs>
+      <Dialog open={certificateDialogOpen} onOpenChange={setCertificateDialogOpen}>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Subir Certificado Personalizado</DialogTitle>
+    </DialogHeader>
+
+    <div className="space-y-4">
+      <Input
+        type="file"
+        accept=".pdf"
+        onChange={(e) => {
+          const file = e.target.files?.[0]
+          if (file) {
+            setCertificateFile(file)
+          }
+        }}
+      />
+
+      {certificateFile && (
+        <p className="text-sm text-muted-foreground">
+          Archivo seleccionado: {certificateFile.name}
+        </p>
+      )}
+
+      <div className="flex justify-end gap-2">
+        <Button variant="outline" onClick={() => setCertificateDialogOpen(false)}>
+          Cancelar
+        </Button>
+        <Button
+          disabled={!certificateFile}
+          onClick={() => {
+            console.log("Subiendo certificado:", certificateFile)
+            // Aquí podrías hacer tu fetch a una API
+            setCertificateDialogOpen(false)
+          }}
+        >
+          Subir
+        </Button>
+      </div>
+    </div>
+  </DialogContent>
+</Dialog>
+
     </div>
   );
 }

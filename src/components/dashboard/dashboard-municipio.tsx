@@ -17,7 +17,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Building2, Users, TrendingUp, MapPin, Plus, BarChart3, Globe, Mail, Phone } from "lucide-react"
+import { Building2, Users, TrendingUp, MapPin, Plus, BarChart3, Globe, Mail, Phone, Play, Link, FileText, GraduationCap, Bookmark, Lightbulb, MessageSquare, BookOpen, Briefcase } from "lucide-react"
 
 interface Company {
   id: string
@@ -126,7 +126,7 @@ export function DashboardMunicipio() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 px-4">
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Dashboard Municipio </h1>
@@ -407,7 +407,7 @@ export function DashboardMunicipio() {
       </div>
 
       {/* Companies List */}
-      <div className="grid gap-6">
+      {/* <div className="grid gap-6">
         {companies.map((company) => (
           <Card key={company.id}>
             <CardHeader>
@@ -497,7 +497,98 @@ export function DashboardMunicipio() {
             </CardContent>
           </Card>
         ))}
-      </div>
+      </div> */}
+      {/* Acciones Rápidas */}
+      {/* Extra Invented Metrics Row */}
+<div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6">
+  <div className="flex items-center gap-3 p-3 bg-white rounded-lg">
+    <div className="w-10 h-10 bg-sky-100 rounded-lg flex items-center justify-center">
+      <BookOpen className="w-5 h-5 text-sky-600" />
+    </div>
+    <div>
+      <div className="text-lg font-semibold text-gray-900">14</div>
+      <p className="text-xs text-gray-600">Artículos leídos este mes</p>
+    </div>
+  </div>
+
+  <div className="flex items-center gap-3 p-3 bg-white rounded-lg">
+    <div className="w-10 h-10 bg-lime-100 rounded-lg flex items-center justify-center">
+      <Briefcase className="w-5 h-5 text-lime-600" />
+    </div>
+    <div>
+      <div className="text-lg font-semibold text-gray-900">5</div>
+      <p className="text-xs text-gray-600">Empresas seguidas</p>
+    </div>
+  </div>
+
+  <div className="flex items-center gap-3 p-3 bg-white rounded-lg">
+    <div className="w-10 h-10 bg-rose-100 rounded-lg flex items-center justify-center">
+      <Lightbulb className="w-5 h-5 text-rose-600" />
+    </div>
+    <div>
+      <div className="text-lg font-semibold text-gray-900">3</div>
+      <p className="text-xs text-gray-600">Ideas guardadas</p>
+    </div>
+  </div>
+</div>
+
+<Card className="mt-6">
+  <CardHeader>
+    <CardTitle className="flex items-center gap-2">
+      <Play className="w-5 h-5" />
+      Acciones Rápidas
+    </CardTitle>
+    <CardDescription>
+      Comienza de inmediato con las herramientas que tienes disponibles
+    </CardDescription>
+  </CardHeader>
+  <CardContent>
+    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <Button variant="secondary" className="justify-start gap-2 w-full" asChild>
+        <Link href="/cv-builder">
+          <FileText className="w-4 h-4" />
+          Crear mi CV
+        </Link>
+      </Button>
+
+      <Button variant="secondary" className="justify-start gap-2 w-full" asChild>
+        <Link href="/courses">
+          <GraduationCap className="w-4 h-4" />
+          Continuar Curso
+        </Link>
+      </Button>
+
+      <Button variant="secondary" className="justify-start gap-2 w-full" asChild>
+        <Link href="/jobs/saved">
+          <Bookmark className="w-4 h-4" />
+          Ver Postulaciones Guardadas
+        </Link>
+      </Button>
+
+      <Button variant="secondary" className="justify-start gap-2 w-full" asChild>
+        <Link href="/entrepreneurship/ideas">
+          <Lightbulb className="w-4 h-4" />
+          Mis Ideas de Negocio
+        </Link>
+      </Button>
+
+      <Button variant="secondary" className="justify-start gap-2 w-full" asChild>
+        <Link href="/mentorship">
+          <Users className="w-4 h-4" />
+          Pedir Mentoría
+        </Link>
+      </Button>
+
+      <Button variant="secondary" className="justify-start gap-2 w-full" asChild>
+        <Link href="/support">
+          <MessageSquare className="w-4 h-4" />
+          Contactar Soporte
+        </Link>
+      </Button>
+    </div>
+  </CardContent>
+</Card>
+
     </div>
   )
 }

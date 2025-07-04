@@ -6,7 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import confetti from "canvas-confetti";
 import {
   Collapsible,
   CollapsibleContent,
@@ -109,7 +112,10 @@ export default function CourseLeanPage() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [showCertificate, setShowCertificate] = useState(false);
   const [expandedModules, setExpandedModules] = useState<string[]>([]);
-
+  
+  const [showMotivationModal, setShowMotivationModal] = useState(false);
+  const [motivationMessage, setMotivationMessage] = useState("");
+  
   // Video player state
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -296,6 +302,24 @@ export default function CourseLeanPage() {
     setCurrentModuleId(mockCourse.modules[0].id);
     setCurrentLessonId(mockCourse.modules[0].lessons[0].id);
     setExpandedModules([mockCourse.modules[0].id]);
+
+    // Mostrar motivación si el progreso es bajo, medio o alto
+const progress = mockCourse.totalProgress;
+
+if (progress >= 80) {
+  setMotivationMessage("✨ ¡Estás a punto de terminar el curso, sigue así!");
+  setShowMotivationModal(true);
+} else if (progress >= 50) {
+  setMotivationMessage("🔥 ¡Muy bien! Ya pasaste la mitad del camino.");
+  setShowMotivationModal(true);
+} else if (progress >= 20) {
+  setMotivationMessage("🚀 ¡Buen arranque! No te detengas.");
+  setShowMotivationModal(true);
+} else {
+  setMotivationMessage("👣 ¡Vamos! Cada paso cuenta, continúa aprendiendo.");
+  setShowMotivationModal(true);
+}
+
   }, [courseId]);
 
   const getCurrentLesson = () => {
@@ -350,16 +374,34 @@ export default function CourseLeanPage() {
           issued: true,
           completionDate: new Date().toISOString(),
         };
-        setShowCertificate(true);
       }
+      
 
       return updated;
     });
 
     // Move to next lesson automatically
-    setTimeout(() => {
-      goToNextLesson();
-    }, 1000);
+    const allLessons = updated.modules.flatMap((m) =>
+      m.lessons.map((l) => ({ ...l, moduleId: m.id }))
+    );
+    const currentIndex = allLessons.findIndex((l) => l.id === lessonId);
+    const isLastLesson = currentIndex === allLessons.length - 1;
+    
+    if (isLastLesson) {
+      // Confeti final por terminar TODO el curso
+      confetti({
+        particleCount: 200,
+        spread: 80,
+        origin: { y: 0.6 },
+      });
+      setShowCertificate(true);
+    } else {
+      // Espera y pasa a la siguiente lección
+      setTimeout(() => {
+        goToNextLesson();
+      }, 1000);
+    }
+    
   };
 
   const goToNextLesson = () => {
@@ -435,7 +477,17 @@ export default function CourseLeanPage() {
   }
 
   return (
+    
     <div className="min-h-screen bg-gray-50">
+      <Dialog open={showMotivationModal} onOpenChange={setShowMotivationModal}>
+  <DialogContent className="text-center">
+    <DialogHeader>
+      <DialogTitle>💡 Motivación del día</DialogTitle>
+    </DialogHeader>
+    <p className="text-lg">{motivationMessage}</p>
+  </DialogContent>
+</Dialog>
+
       {/* Header */}
       <div className="bg-white border-b border-gray-200 px-6 py-4">
         <div className="flex items-center justify-between">
@@ -546,23 +598,36 @@ export default function CourseLeanPage() {
                   Lección anterior
                 </Button>
 
-                <Button
-                  onClick={goToNextLesson}
-                  disabled={
-                    course.modules
-                      .flatMap((m) =>
-                        m.lessons.map((l) => ({ ...l, moduleId: m.id }))
-                      )
-                      .find(
-                        (_, index, arr) =>
-                          arr[index]?.id === currentLessonId &&
-                          (index === arr.length - 1 || arr[index + 1]?.locked)
-                      ) !== undefined
-                  }
-                >
-                  Siguiente lección
-                  <ChevronRight className="h-4 w-4 ml-1" />
-                </Button>
+                {(() => {
+  const allLessons = course.modules.flatMap((m) =>
+    m.lessons.map((l) => ({ ...l, moduleId: m.id }))
+  );
+  const currentIndex = allLessons.findIndex((l) => l.id === currentLessonId);
+  const isLastLesson = currentIndex === allLessons.length - 1;
+
+  if (course.totalProgress === 100 || isLastLesson) {
+    return (
+      <Button
+        onClick={() => {
+          confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
+          setShowCertificate(true);
+        }}
+        className="bg-green-600 hover:bg-green-700 text-white"
+      >
+        🎉 Celebrar finalización
+      </Button>
+    );
+  }
+
+  return (
+    <Button onClick={goToNextLesson}>
+      Siguiente lección
+      <ChevronRight className="h-4 w-4 ml-1" />
+    </Button>
+  );
+})()}
+
+
               </div>
             </div>
           </div>

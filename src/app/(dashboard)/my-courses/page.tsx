@@ -455,7 +455,7 @@ const CourseCard = ({ userCourse }: { userCourse: UserCourse }) => {
           </h3>
         </Link>
 
-        <div className="flex items-center gap-2 mb-3">
+        {/* <div className="flex items-center gap-2 mb-3">
           <Avatar className="h-6 w-6">
             <AvatarImage src={course.instructor.avatar} />
             <AvatarFallback className="text-xs">
@@ -465,7 +465,7 @@ const CourseCard = ({ userCourse }: { userCourse: UserCourse }) => {
           <span className="text-sm text-muted-foreground">
             {course.instructor.name}
           </span>
-        </div>
+        </div> */}
 
         {enrollment.status !== EnrollmentStatus.ENROLLED && (
           <div className="mb-3">

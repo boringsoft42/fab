@@ -407,7 +407,7 @@ function NewsCarousel() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 px-10 py-4">
       {/* Enhanced Header */}
       <div className="text-center space-y-4">
         <div className="flex items-center justify-center gap-3 mb-4">

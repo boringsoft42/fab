@@ -309,12 +309,11 @@ export default function MunicipalProfilePage() {
       </div>
 
       <Tabs defaultValue="general" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="general">Información General</TabsTrigger>
           <TabsTrigger value="demographics">Demografía</TabsTrigger>
-          <TabsTrigger value="services">Servicios</TabsTrigger>
-          <TabsTrigger value="projects">Proyectos</TabsTrigger>
           <TabsTrigger value="settings">Configuración</TabsTrigger>
+          <TabsTrigger value="settings">Certificados</TabsTrigger>
         </TabsList>
 
         <TabsContent value="general" className="space-y-6">
@@ -697,7 +696,7 @@ export default function MunicipalProfilePage() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="services" className="space-y-6">
+        {/* <TabsContent value="services" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -770,7 +769,7 @@ export default function MunicipalProfilePage() {
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
+        </TabsContent> */}
 
         <TabsContent value="projects" className="space-y-6">
           <div className="grid gap-4">
@@ -953,6 +952,82 @@ export default function MunicipalProfilePage() {
             </CardContent>
           </Card>
         </TabsContent>
+        <TabsContent value="certificates" className="space-y-6">
+  <Card>
+    <CardHeader>
+      <CardTitle className="flex items-center gap-2">
+        <Award className="h-5 w-5" />
+        Certificado de Finalización
+      </CardTitle>
+    </CardHeader>
+    <CardContent className="space-y-4">
+      <div className="space-y-2">
+        <Label htmlFor="certificateFile">Subir Certificado (PDF)</Label>
+        <Input
+          id="certificateFile"
+          type="file"
+          accept="application/pdf"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) setCertificateFile(file);
+          }}
+        />
+        {certificateFile && (
+          <p className="text-sm text-muted-foreground">
+            Archivo seleccionado: {certificateFile.name}
+          </p>
+        )}
+      </div>
+
+      <div className="flex justify-end">
+        <Button
+          disabled={!certificateFile}
+          onClick={async () => {
+            const formDataUpload = new FormData();
+            formDataUpload.append("file", certificateFile!);
+
+            try {
+              const res = await fetch("/api/certificates/upload", {
+                method: "POST",
+                body: formDataUpload,
+              });
+
+              if (!res.ok) throw new Error("Error al subir certificado");
+
+              const result = await res.json();
+              console.log("Certificado subido:", result);
+
+              // Guarda la URL en el estado del curso (si tienes un campo para eso)
+              handleInputChange("certificateUrl", result.url);
+
+              // Limpia el estado local si deseas
+              setCertificateFile(null);
+            } catch (err) {
+              console.error("Error al subir:", err);
+            }
+          }}
+        >
+          Subir Certificado
+        </Button>
+      </div>
+
+      {formData.certificateUrl && (
+        <div className="text-sm text-green-700">
+          Certificado cargado:{" "}
+          <a
+            href={formData.certificateUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline"
+          >
+            Ver certificado
+          </a>
+        </div>
+      )}
+    </CardContent>
+  </Card>
+</TabsContent>
+
       </Tabs>
     </div>
   )

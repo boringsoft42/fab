@@ -32,6 +32,7 @@ import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
+import MapMarker from "@/components/MapMarker"
 
 interface CompanyProfile {
   id: string
@@ -188,11 +189,8 @@ export default function CompanyProfilePage() {
       </div>
 
       <Tabs defaultValue="general" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-1">
           <TabsTrigger value="general">Información General</TabsTrigger>
-          <TabsTrigger value="metrics">Métricas</TabsTrigger>
-          <TabsTrigger value="social">Redes Sociales</TabsTrigger>
-          <TabsTrigger value="settings">Configuración</TabsTrigger>
         </TabsList>
 
         <TabsContent value="general" className="space-y-6">
@@ -371,39 +369,36 @@ export default function CompanyProfilePage() {
                       <span className="text-sm">{profile.phone}</span>
                     )}
                   </div>
-                  <div className="flex items-start gap-2">
-                    <MapPin className="w-4 h-4 text-muted-foreground mt-0.5" />
-                    <div className="text-sm">
-                      {isEditing ? (
-                        <div className="space-y-2">
-                          <Input
-                            value={editedProfile.address}
-                            onChange={(e) => setEditedProfile({ ...editedProfile, address: e.target.value })}
-                            placeholder="Dirección"
-                          />
-                          <div className="grid grid-cols-2 gap-2">
-                            <Input
-                              value={editedProfile.city}
-                              onChange={(e) => setEditedProfile({ ...editedProfile, city: e.target.value })}
-                              placeholder="Ciudad"
-                            />
-                            <Input
-                              value={editedProfile.country}
-                              onChange={(e) => setEditedProfile({ ...editedProfile, country: e.target.value })}
-                              placeholder="País"
-                            />
-                          </div>
-                        </div>
-                      ) : (
-                        <div>
-                          <div>{profile.address}</div>
-                          <div className="text-muted-foreground">
-                            {profile.city}, {profile.country}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                  <div className="flex flex-col gap-2">
+  <MapPin className="w-4 h-4 text-muted-foreground" />
+  {!isEditing ? (
+    <MapMarker
+      name={profile.name}
+      position={[-16.5, -68.15]} // Coordenadas de La Paz
+    />
+  ) : (
+    <div className="space-y-2">
+      <Input
+        value={editedProfile.address}
+        onChange={(e) => setEditedProfile({ ...editedProfile, address: e.target.value })}
+        placeholder="Dirección"
+      />
+      <div className="grid grid-cols-2 gap-2">
+        <Input
+          value={editedProfile.city}
+          onChange={(e) => setEditedProfile({ ...editedProfile, city: e.target.value })}
+          placeholder="Ciudad"
+        />
+        <Input
+          value={editedProfile.country}
+          onChange={(e) => setEditedProfile({ ...editedProfile, country: e.target.value })}
+          placeholder="País"
+        />
+      </div>
+    </div>
+  )}
+</div>
+
                 </div>
               </CardContent>
             </Card>
@@ -463,6 +458,59 @@ export default function CompanyProfilePage() {
                     {value}
                   </Badge>
                 ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Redes Sociales</CardTitle>
+              <CardDescription>Conecta tus perfiles de redes sociales para mayor visibilidad</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-3">
+                <div>
+                  <Label>LinkedIn</Label>
+                  <Input
+                    value={isEditing ? editedProfile.socialMedia.linkedin : profile.socialMedia.linkedin}
+                    onChange={(e) =>
+                      setEditedProfile({
+                        ...editedProfile,
+                        socialMedia: { ...editedProfile.socialMedia, linkedin: e.target.value },
+                      })
+                    }
+                    placeholder="https://linkedin.com/company/tu-empresa"
+                    disabled={!isEditing}
+                  />
+                </div>
+                <div>
+                  <Label>Twitter</Label>
+                  <Input
+                    value={isEditing ? editedProfile.socialMedia.twitter : profile.socialMedia.twitter}
+                    onChange={(e) =>
+                      setEditedProfile({
+                        ...editedProfile,
+                        socialMedia: { ...editedProfile.socialMedia, twitter: e.target.value },
+                      })
+                    }
+                    placeholder="https://twitter.com/tu-empresa"
+                    disabled={!isEditing}
+                  />
+                </div>
+                <div>
+                  <Label>Facebook</Label>
+                  <Input
+                    value={isEditing ? editedProfile.socialMedia.facebook : profile.socialMedia.facebook}
+                    onChange={(e) =>
+                      setEditedProfile({
+                        ...editedProfile,
+                        socialMedia: { ...editedProfile.socialMedia, facebook: e.target.value },
+                      })
+                    }
+                    placeholder="https://facebook.com/tu-empresa"
+                    disabled={!isEditing}
+                  />
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -540,9 +588,62 @@ export default function CompanyProfilePage() {
               </div>
             </CardContent>
           </Card>
+          {/* <Card>
+            <CardHeader>
+              <CardTitle>Redes Sociales</CardTitle>
+              <CardDescription>Conecta tus perfiles de redes sociales para mayor visibilidad</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-3">
+                <div>
+                  <Label>LinkedIn</Label>
+                  <Input
+                    value={isEditing ? editedProfile.socialMedia.linkedin : profile.socialMedia.linkedin}
+                    onChange={(e) =>
+                      setEditedProfile({
+                        ...editedProfile,
+                        socialMedia: { ...editedProfile.socialMedia, linkedin: e.target.value },
+                      })
+                    }
+                    placeholder="https://linkedin.com/company/tu-empresa"
+                    disabled={!isEditing}
+                  />
+                </div>
+                <div>
+                  <Label>Twitter</Label>
+                  <Input
+                    value={isEditing ? editedProfile.socialMedia.twitter : profile.socialMedia.twitter}
+                    onChange={(e) =>
+                      setEditedProfile({
+                        ...editedProfile,
+                        socialMedia: { ...editedProfile.socialMedia, twitter: e.target.value },
+                      })
+                    }
+                    placeholder="https://twitter.com/tu-empresa"
+                    disabled={!isEditing}
+                  />
+                </div>
+                <div>
+                  <Label>Facebook</Label>
+                  <Input
+                    value={isEditing ? editedProfile.socialMedia.facebook : profile.socialMedia.facebook}
+                    onChange={(e) =>
+                      setEditedProfile({
+                        ...editedProfile,
+                        socialMedia: { ...editedProfile.socialMedia, facebook: e.target.value },
+                      })
+                    }
+                    placeholder="https://facebook.com/tu-empresa"
+                    disabled={!isEditing}
+                  />
+                </div>
+              </div>
+            </CardContent>
+          </Card> */}
+          
         </TabsContent>
 
-        <TabsContent value="social" className="space-y-6">
+        {/* <TabsContent value="social" className="space-y-6">
           <Card>
             <CardHeader>
               <CardTitle>Redes Sociales</CardTitle>
@@ -688,7 +789,7 @@ export default function CompanyProfilePage() {
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
+        </TabsContent> */}
       </Tabs>
     </div>
   )

@@ -346,7 +346,7 @@ export function DashboardYouth() {
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 px-10 py-4">
       {/* Welcome Section with Animation */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}

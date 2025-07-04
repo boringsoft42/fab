@@ -97,7 +97,7 @@ function SimulatedJobCard() {
 
 export function DashboardCompany() {
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 px-10 py-4">
       {/* Header */}
       <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg p-6 text-white">
         <div className="flex items-center justify-between">
@@ -148,6 +148,43 @@ export function DashboardCompany() {
             </div>
           </CardContent>
         </Card>
+
+        <Card>
+  <CardContent className="p-4">
+    <div className="flex items-center space-x-2">
+      <Briefcase className="w-5 h-5 text-gray-500" />
+      <div>
+        <p className="text-sm font-medium">Ofertas Cerradas</p>
+        <p className="text-2xl font-bold">5</p>
+      </div>
+    </div>
+  </CardContent>
+</Card>
+
+<Card>
+  <CardContent className="p-4">
+    <div className="flex items-center space-x-2">
+      <Users className="w-5 h-5 text-orange-500" />
+      <div>
+        <p className="text-sm font-medium">Candidatos por Oferta</p>
+        <p className="text-2xl font-bold">15.5</p>
+      </div>
+    </div>
+  </CardContent>
+</Card>
+
+<Card>
+  <CardContent className="p-4">
+    <div className="flex items-center space-x-2">
+      <UserCheck className="w-5 h-5 text-teal-600" />
+      <div>
+        <p className="text-sm font-medium">Tasa de Conversión</p>
+        <p className="text-2xl font-bold">12%</p>
+      </div>
+    </div>
+  </CardContent>
+</Card>
+
       </div>
 
       {/* Crear Nueva Oferta */}
@@ -195,8 +232,76 @@ export function DashboardCompany() {
         </CardContent>
       </Card>
 
+      
+
+
+      {/* Postulaciones Recientes */}
+<Card>
+  <CardHeader>
+    <CardTitle className="flex items-center gap-2">
+      <Users className="w-5 h-5" />
+      Postulaciones Recientes
+    </CardTitle>
+    <CardDescription>
+      Revisa las postulaciones enviadas recientemente por jóvenes
+    </CardDescription>
+  </CardHeader>
+  <CardContent>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {[
+        {
+          name: "Ana Martínez",
+          email: "ana.martinez@email.com",
+          phone: "+591 77777777",
+          city: "La Paz",
+          education: "Bachiller - Colegio La Salle",
+          interests: ["Tecnología", "Marketing Digital", "Diseño"],
+          cv: true,
+          cover: false,
+        },
+        {
+          name: "Carlos Rojas",
+          email: "carlosr@email.com",
+          phone: "+591 78888888",
+          city: "Cochabamba",
+          education: "Técnico Medio - INFOCAL",
+          interests: ["Redes", "Hardware", "Sistemas"],
+          cv: true,
+          cover: true,
+        },
+      ].map((user) => (
+        <Card key={user.email} className="border border-gray-200 p-4">
+          <div className="flex flex-col space-y-1 mb-2">
+            <h4 className="font-semibold text-base">{user.name}</h4>
+            <p className="text-sm text-gray-600">{user.email}</p>
+            <p className="text-sm text-gray-600">{user.phone}</p>
+            <p className="text-sm text-gray-600">{user.city}</p>
+            <p className="text-sm text-gray-600">{user.education}</p>
+          </div>
+          <div className="flex flex-wrap gap-1 mb-2">
+            {user.interests.map((tag) => (
+              <Badge key={tag} variant="secondary">
+                {tag}
+              </Badge>
+            ))}
+          </div>
+          <div className="flex items-center justify-between">
+            <Badge variant={user.cv ? "success" : "destructive"}>
+              CV {user.cv ? "Disponible" : "Faltante"}
+            </Badge>
+            <Badge variant={user.cover ? "success" : "destructive"}>
+              Carta {user.cover ? "Disponible" : "Faltante"}
+            </Badge>
+          </div>
+        </Card>
+      ))}
+    </div>
+  </CardContent>
+</Card>
+
+
       {/* Acciones rápidas */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card className="border-dashed">
           <CardContent className="p-6 text-center">
             <Users className="w-8 h-8 text-green-500 mx-auto mb-4" />
@@ -212,7 +317,7 @@ export function DashboardCompany() {
             </Button>
           </CardContent>
         </Card>
-      </div>
+      </div> */}
     </div>
   );
 }

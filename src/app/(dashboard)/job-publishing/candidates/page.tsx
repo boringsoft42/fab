@@ -67,6 +67,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
 import { JobApplication, ApplicationStatus } from "@/types/jobs";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface CandidatesData {
   candidates: JobApplication[];
@@ -94,6 +95,8 @@ export default function CandidatesPage() {
   const [candidatesData, setCandidatesData] = useState<CandidatesData | null>(
     null
   );
+  const [selectedCVs, setSelectedCVs] = useState<string[]>([]);
+
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -108,10 +111,11 @@ export default function CandidatesPage() {
   const [candidateStatus, setCandidateStatus] =
     useState<ApplicationStatus>("SENT");
   const { toast } = useToast();
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     fetchCandidates();
-  }, [searchTerm, statusFilter, jobFilter, sortBy, sortOrder]);
+  }, [searchTerm, statusFilter, jobFilter, sortBy, sortOrder, page]);
 
   const fetchCandidates = async () => {
     try {
@@ -122,8 +126,8 @@ export default function CandidatesPage() {
         jobId: jobFilter,
         sortBy,
         sortOrder,
-        limit: "20",
-        page: "1",
+          limit: "10",
+        page: page.toString(),
       });
 
       const response = await fetch(`/api/jobs/candidates?${params}`);
@@ -332,10 +336,24 @@ export default function CandidatesPage() {
             Revisa y gestiona todos los candidatos de tus ofertas de trabajo
           </p>
         </div>
-        <Button>
-          <Download className="mr-2 h-4 w-4" />
-          Exportar Candidatos
-        </Button>
+        <Button
+  disabled={selectedCVs.length === 0}
+  onClick={() => {
+    selectedCVs.forEach((url) => {
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "";
+      link.target = "_blank";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+  }}
+>
+  <Download className="mr-2 h-4 w-4" />
+  Descargar CVs Seleccionados
+</Button>
+
       </div>
 
       {/* Statistics Cards */}
@@ -490,6 +508,25 @@ export default function CandidatesPage() {
           <Table>
             <TableHeader>
               <TableRow>
+              <TableHead>
+  <div className="flex items-center gap-2">
+    <Checkbox
+      checked={selectedCVs.length === candidatesData.candidates.length}
+      onCheckedChange={(checked) => {
+        if (checked) {
+          setSelectedCVs(
+            candidatesData.candidates
+              .filter((c) => c.cvUrl)
+              .map((c) => c.cvUrl!)
+          );
+        } else {
+          setSelectedCVs([]);
+        }
+      }}
+    />
+  </div>
+</TableHead>
+
                 <TableHead>Candidato</TableHead>
                 <TableHead>Puesto</TableHead>
                 <TableHead>Estado</TableHead>
@@ -500,7 +537,24 @@ export default function CandidatesPage() {
             </TableHeader>
             <TableBody>
               {candidatesData.candidates.map((candidate) => (
+                
                 <TableRow key={candidate.id}>
+                  <TableCell>
+  <Checkbox
+    checked={selectedCVs.includes(candidate.cvUrl || "")}
+    onCheckedChange={(checked) => {
+      if (checked) {
+        setSelectedCVs([...selectedCVs, candidate.cvUrl!]);
+      } else {
+        setSelectedCVs(
+          selectedCVs.filter((url) => url !== candidate.cvUrl)
+        );
+      }
+    }}
+    disabled={!candidate.cvUrl}
+  />
+</TableCell>
+
                   <TableCell>
                     <div className="flex items-center space-x-3">
                       <Avatar>
@@ -613,6 +667,30 @@ export default function CandidatesPage() {
               ))}
             </TableBody>
           </Table>
+          <div className="flex justify-between items-center mt-4">
+  <span className="text-sm text-muted-foreground">
+    Página {candidatesData.pagination.page} de {candidatesData.pagination.totalPages}
+  </span>
+  <div className="space-x-2">
+    <Button
+      variant="outline"
+      size="sm"
+      disabled={page === 1}
+      onClick={() => setPage(page - 1)}
+    >
+      Anterior
+    </Button>
+    <Button
+      variant="outline"
+      size="sm"
+      disabled={page === candidatesData.pagination.totalPages}
+      onClick={() => setPage(page + 1)}
+    >
+      Siguiente
+    </Button>
+  </div>
+</div>
+
         </CardContent>
       </Card>
 

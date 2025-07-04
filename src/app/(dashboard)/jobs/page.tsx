@@ -207,7 +207,7 @@ export default function JobsPage() {
                       : type === "PART_TIME"
                         ? "Medio tiempo"
                         : type === "INTERNSHIP"
-                          ? "Prácticas"
+                          ? "Prácticas-Pasantías"
                           : type === "VOLUNTEER"
                             ? "Voluntariado"
                             : "Freelance"}

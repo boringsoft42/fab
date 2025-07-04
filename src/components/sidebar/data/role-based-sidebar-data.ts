@@ -71,6 +71,11 @@ export const youthSidebarData: SidebarData = {
           url: "/my-applications",
           icon: FileText,
         },
+        {
+          title: "Mis Entrevistas",
+          url: "/my-interviews",
+          icon: FileText,
+        },
       ],
     },
     {
@@ -310,16 +315,16 @@ export const companySidebarData: SidebarData = {
         },
       ],
     },
-    {
-      title: "Análisis",
-      items: [
-        {
-          title: "Reportes Empresariales",
-          url: "/company/report",
-          icon: BarChart3,
-        },
-      ],
-    },
+    // {
+    //   title: "Análisis",
+    //   items: [
+    //     {
+    //       title: "Reportes Empresariales",
+    //       url: "/company/report",
+    //       icon: BarChart3,
+    //     },
+    //   ],
+    // },
     {
       title: "Configuración",
       items: [
@@ -368,10 +373,10 @@ export const municipalGovernmentSidebarData: SidebarData = {
               title: "Gestión de Cursos",
               url: "/admin/courses",
             },
-            {
-              title: "Crear Curso",
-              url: "/admin/courses/create",
-            },
+            // {
+            //   title: "Crear Curso",
+            //   url: "/admin/courses/create",
+            // },
             {
               title: "Estudiantes",
               url: "/admin/students",

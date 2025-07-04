@@ -152,7 +152,7 @@ export const CourseCard = ({
                   </p>
 
                   {/* Instructor */}
-                  <div className="flex items-center gap-3 mb-4">
+                  {/* <div className="flex items-center gap-3 mb-4">
                     <Avatar className="h-8 w-8">
                       <AvatarImage src={course.instructor.avatar} />
                       <AvatarFallback>
@@ -167,7 +167,7 @@ export const CourseCard = ({
                         {course.instructor.title}
                       </p>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
 
                 <div className="text-right ml-4">
@@ -334,7 +334,7 @@ export const CourseCard = ({
         </p>
 
         {/* Instructor */}
-        <div className="flex items-center gap-2 mb-3">
+        {/* <div className="flex items-center gap-2 mb-3">
           <Avatar className="h-6 w-6">
             <AvatarImage src={course.instructor.avatar} />
             <AvatarFallback className="text-xs">
@@ -344,7 +344,7 @@ export const CourseCard = ({
           <span className="text-sm font-medium text-muted-foreground">
             {course.instructor.name}
           </span>
-        </div>
+        </div> */}
 
         {/* Progress Bar (if enrolled) */}
         {enrollment?.isEnrolled && enrollment.progress !== undefined && (
@@ -359,10 +359,10 @@ export const CourseCard = ({
 
         {/* Course Stats */}
         <div className="flex items-center justify-between text-xs text-muted-foreground mb-3">
-          <div className="flex items-center gap-1">
+          {/* <div className="flex items-center gap-1">
             <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
             <span>{course.rating}</span>
-          </div>
+          </div> */}
           <div className="flex items-center gap-1">
             <Users className="h-3 w-3" />
             <span>{course.studentCount}</span>
@@ -371,11 +371,11 @@ export const CourseCard = ({
             <Clock className="h-3 w-3" />
             <span>{formatDuration(course.duration)}</span>
           </div>
-          {course.certification && (
+          {/* {course.certification && (
             <div className="flex items-center gap-1">
               <Award className="h-3 w-3" />
             </div>
-          )}
+          )} */}
         </div>
 
         {/* Tags */}

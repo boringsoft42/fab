@@ -221,7 +221,7 @@ export default function CompanyNewsPage() {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 px-4">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
@@ -237,7 +237,7 @@ export default function CompanyNewsPage() {
               Crear Noticia
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-3xl">
+          <DialogContent className="max-w-3xl px-4">
             <DialogHeader>
               <DialogTitle>Crear Nueva Noticia</DialogTitle>
               <DialogDescription>
@@ -296,7 +296,7 @@ export default function CompanyNewsPage() {
                 )}
               </div>
 
-              <div className="grid gap-2">
+              <div className="grid gap-2 px-4">
                 <Label htmlFor="title">Título *</Label>
                 <Input
                   id="title"
@@ -307,7 +307,7 @@ export default function CompanyNewsPage() {
                   placeholder="Título de la noticia..."
                 />
               </div>
-              <div className="grid gap-2">
+              <div className="grid gap-2 px-4">
                 <Label htmlFor="summary">Resumen *</Label>
                 <Textarea
                   id="summary"
@@ -319,7 +319,7 @@ export default function CompanyNewsPage() {
                   rows={2}
                 />
               </div>
-              <div className="grid gap-2">
+              <div className="grid gap-2 px-4">
                 <Label htmlFor="content">Contenido *</Label>
                 <Textarea
                   id="content"
@@ -331,7 +331,7 @@ export default function CompanyNewsPage() {
                   rows={6}
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-4 px-4">
                 <div className="grid gap-2">
                   <Label htmlFor="category">Categoría</Label>
                   <Select
@@ -359,7 +359,7 @@ export default function CompanyNewsPage() {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="grid gap-2">
+                <div className="grid gap-2 px-4">
                   <Label htmlFor="priority">Prioridad</Label>
                   <Select
                     value={newNews.priority}
@@ -379,7 +379,7 @@ export default function CompanyNewsPage() {
                   </Select>
                 </div>
               </div>
-              <div className="grid gap-2">
+              <div className="grid gap-2 px-4">
                 <Label htmlFor="tags">Etiquetas</Label>
                 <Input
                   id="tags"
@@ -390,7 +390,7 @@ export default function CompanyNewsPage() {
                   placeholder="empleo, tecnología, jóvenes (separadas por comas)"
                 />
               </div>
-              <div className="flex gap-2 pt-4">
+              <div className="flex gap-2 pt-4 px-4 ">
                 <Button
                   onClick={handleCreateNews}
                   disabled={

@@ -2,6 +2,7 @@
 
 import { Inter } from "next/font/google";
 import "./globals.css";
+import 'leaflet/dist/leaflet.css';
 import { QueryProvider } from "@/lib/providers/QueryProvider";
 import { MockAuthProvider } from "@/context/mock-auth-context";
 import { ThemeProvider } from "@/context/theme-context";

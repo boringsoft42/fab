@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import dynamic from "next/dynamic";
 const MapPicker = dynamic(() => import("@/components/dashboard/MapPicker"), { ssr: false });
 import {
@@ -43,6 +44,24 @@ export default function CreateJobPage() {
   const [images, setImages] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [preview, setPreview] = useState(false);
+
+  const [showIncompleteProfileModal, setShowIncompleteProfileModal] = useState(false);
+
+  const checkProfileCompletion = (): boolean => {
+    return Math.random() > 0.5; // 50% de probabilidad
+  };
+  
+  const handlePublishClick = () => {
+    if (!checkProfileCompletion()) {
+      setShowIncompleteProfileModal(true);
+    } else {
+      setShowTermsModal(true);
+    }
+  };
+  
+
+  const [showTermsModal, setShowTermsModal] = useState(false);
+
 
   const handleFiles = (files: FileList | null) => {
     if (!files) return;
@@ -349,7 +368,70 @@ export default function CreateJobPage() {
   }
 
   return (
+
+    
+    
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <Dialog open={showIncompleteProfileModal} onOpenChange={setShowIncompleteProfileModal}>
+  <DialogContent className="z-[9999] max-w-md">
+    <DialogHeader>
+      <DialogTitle>Perfil Incompleto</DialogTitle>
+    </DialogHeader>
+    <div className="space-y-4">
+      <p className="text-gray-700 text-sm">
+        Para publicar una oferta de empleo, debes completar primero tu perfil de empresa.
+      </p>
+      <p className="text-gray-500 text-xs">
+        Asegúrate de agregar información como descripción, logo, redes sociales y más.
+      </p>
+    </div>
+    <div className="flex justify-end gap-2 mt-6">
+      <Button variant="outline" onClick={() => setShowIncompleteProfileModal(false)}>
+        Cerrar
+      </Button>
+      <Button
+        onClick={() => {
+          setShowIncompleteProfileModal(false);
+          router.push("/profile"); // Redirige a completar perfil
+        }}
+      >
+        Completar Perfil
+      </Button>
+    </div>
+  </DialogContent>
+</Dialog>
+
+      <Dialog open={showTermsModal} onOpenChange={setShowTermsModal}>
+      <DialogContent className="z-[9999] max-w-lg">
+    <DialogHeader>
+      <DialogTitle>Confirmación de publicación</DialogTitle>
+    </DialogHeader>
+
+    <div className="space-y-4">
+      <p className="text-gray-700 text-sm">
+        Al publicar esta oferta confirmas que los datos proporcionados son verídicos y que aceptas nuestros Términos y Condiciones.
+      </p>
+      <p className="text-gray-500 text-xs">
+        El contenido ofensivo, falso o que incumpla las reglas de la plataforma puede ser eliminado.
+      </p>
+    </div>
+
+    <div className="flex justify-end gap-2 mt-6">
+      <Button variant="outline" onClick={() => setShowTermsModal(false)}>
+        Cancelar
+      </Button>
+      <Button
+        onClick={() => {
+          setShowTermsModal(false);
+          handleSubmit("ACTIVE");
+        }}
+      >
+        Aceptar y Publicar
+      </Button>
+    </div>
+  </DialogContent>
+</Dialog>
+
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-4">
@@ -531,7 +613,21 @@ export default function CreateJobPage() {
   </div>
 
   <div>
-    <Label htmlFor="closingDate">Fecha de cierre</Label>
+    <Label htmlFor="closingDate">Fecha de inicial</Label>
+    <Input
+      id="closingDate"
+      type="date"
+      value={jobData.closingDate}
+      onChange={(e) =>
+        setJobData((prev) => ({
+          ...prev,
+          closingDate: e.target.value,
+        }))
+      }
+    />
+  </div>
+  <div>
+    <Label htmlFor="closingDate">Fecha termino</Label>
     <Input
       id="closingDate"
       type="date"
@@ -899,25 +995,26 @@ export default function CreateJobPage() {
   </CardContent>
 </Card>
 
-
-        <Card>
-  <CardHeader>
-    <CardTitle>Ubicación Geográfica</CardTitle>
-  </CardHeader>
-  <CardContent className="space-y-2">
-    <Label>Selecciona en el mapa la ubicación del empleo</Label>
-    <MapPicker
-      onChange={(coords) =>
-        setJobData((prev) => ({ ...prev, coordinates: coords }))
-      }
-    />
-    {jobData.coordinates && (
-      <p className="text-sm text-muted-foreground mt-2">
-        Latitud: {jobData.coordinates[0]}, Longitud: {jobData.coordinates[1]}
-      </p>
-    )}
-  </CardContent>
-</Card>
+{!showTermsModal && (
+  <Card>
+    <CardHeader>
+      <CardTitle>Ubicación Geográfica</CardTitle>
+    </CardHeader>
+    <CardContent className="space-y-2">
+      <Label>Selecciona en el mapa la ubicación del empleo</Label>
+      <MapPicker
+        onChange={(coords) =>
+          setJobData((prev) => ({ ...prev, coordinates: coords }))
+        }
+      />
+      {jobData.coordinates && (
+        <p className="text-sm text-muted-foreground mt-2">
+          Latitud: {jobData.coordinates[0]}, Longitud: {jobData.coordinates[1]}
+        </p>
+      )}
+    </CardContent>
+  </Card>
+)}
 
 <Card>
   <CardHeader>
@@ -984,9 +1081,13 @@ export default function CreateJobPage() {
             <Save className="w-4 h-4 mr-2" />
             Guardar borrador
           </Button>
-          <Button onClick={() => handleSubmit("ACTIVE")} disabled={loading}>
-            Publicar empleo
-          </Button>
+          <Button
+  onClick={handlePublishClick}
+  disabled={loading}
+>
+  Publicar empleo
+</Button>
+
         </div>
       </div>
     </div>

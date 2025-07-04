@@ -130,21 +130,21 @@ export default function PublishEntrepreneurshipPage() {
       description: "Qué ofreces y a qué precio",
       icon: <Plus className="h-5 w-5" />,
     },
-    {
-      title: "Información de Contacto",
-      description: "Cómo pueden contactarte",
-      icon: <Info className="h-5 w-5" />,
-    },
+    // {
+    //   title: "Información de Contacto",
+    //   description: "Cómo pueden contactarte",
+    //   icon: <Info className="h-5 w-5" />,
+    // },
     {
       title: "Imágenes y Videos",
       description: "Galería visual de tu emprendimiento",
       icon: <ImageIcon className="h-5 w-5" />,
     },
-    {
-      title: "Configuración de Visibilidad",
-      description: "Controla cómo aparece tu emprendimiento",
-      icon: <Eye className="h-5 w-5" />,
-    },
+    // {
+    //   title: "Configuración de Visibilidad",
+    //   description: "Controla cómo aparece tu emprendimiento",
+    //   icon: <Eye className="h-5 w-5" />,
+    // },
   ];
 
   const categories = [
@@ -299,18 +299,18 @@ export default function PublishEntrepreneurshipPage() {
         );
       case 1:
         return (
-          formData.services.services.length > 0 &&
-          formData.services.priceRange.min > 0
+          formData.services.services.length > 0 
+          // formData.services.priceRange.min > 0
         );
+      // case 2:
+      //   return (
+      //     formData.contact.contactPerson &&
+      //     formData.contact.email &&
+      //     formData.contact.phone
+      //   );
       case 2:
-        return (
-          formData.contact.contactPerson &&
-          formData.contact.email &&
-          formData.contact.phone
-        );
-      case 3:
         return true; // Media is optional
-      case 4:
+      case 3:
         return true; // Visibility settings have defaults
       default:
         return false;
@@ -641,7 +641,7 @@ export default function PublishEntrepreneurshipPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>Precio Mínimo (Bs.) *</Label>
                   <Input
@@ -674,7 +674,7 @@ export default function PublishEntrepreneurshipPage() {
                     placeholder="5000"
                   />
                 </div>
-              </div>
+              </div> */}
 
               <div className="space-y-2">
                 <Label>Detalles de Servicios</Label>
@@ -691,7 +691,7 @@ export default function PublishEntrepreneurshipPage() {
           )}
 
           {/* Step 3: Contact Information */}
-          {currentStep === 2 && (
+          {/* {currentStep === 2 && (
             <div className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
@@ -776,7 +776,7 @@ export default function PublishEntrepreneurshipPage() {
                 </div>
               </div>
             </div>
-          )}
+          )} */}
 
           {/* Step 4: Media */}
           {currentStep === 3 && (
@@ -827,7 +827,7 @@ export default function PublishEntrepreneurshipPage() {
           )}
 
           {/* Step 5: Visibility */}
-          {currentStep === 4 && (
+          {/* {currentStep === 4 && (
             <div className="space-y-6">
               <div className="space-y-4">
                 <Label>Configuración de Visibilidad</Label>
@@ -878,7 +878,7 @@ export default function PublishEntrepreneurshipPage() {
                 </div>
               </div>
             </div>
-          )}
+          )} */}
 
           {/* Navigation */}
           <div className="flex justify-between pt-6 border-t">
@@ -905,6 +905,7 @@ export default function PublishEntrepreneurshipPage() {
               {currentStep === steps.length - 1 ? (
                 <Button disabled={!isStepValid()}>
                   <Send className="h-4 w-4 mr-2" />
+                  
                   Publicar
                 </Button>
               ) : (

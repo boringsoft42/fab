@@ -66,6 +66,8 @@ export default function CompaniesManagementPage() {
   const [showEditDialog, setShowEditDialog] = useState(false)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [selectedCompany, setSelectedCompany] = useState<Company | null>(null)
+  const [successDialogOpen, setSuccessDialogOpen] = React.useState(false)
+
   const [stats, setStats] = useState({
     total: 0,
     active: 0,
@@ -265,16 +267,25 @@ export default function CompaniesManagementPage() {
         id: Date.now().toString(),
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-      } as Company
-
+      }
+  
       console.log("Creating company:", newCompany)
-      setShowCreateDialog(false)
+  
+      // Aquí iría la lógica para guardar la empresa (API o localStorage)
+      // Por ahora lo dejamos simulado
+  
+      setShowCreateDialog(false) // cierra el modal de creación
       resetForm()
       fetchCompanies()
+      setSuccessDialogOpen(true) // abre el modal de éxito
+      setTimeout(() => {
+        setShowCreateDialog(true)
+      }, 200) 
     } catch (error) {
       console.error("Error creating company:", error)
     }
   }
+  
 
   const handleEdit = (company: Company) => {
     setSelectedCompany(company)
@@ -748,8 +759,6 @@ export default function CompaniesManagementPage() {
                 <TableHead>Sector</TableHead>
                 <TableHead>Ubicación</TableHead>
                 <TableHead>Estado</TableHead>
-                <TableHead>Empleados</TableHead>
-                <TableHead>Ingresos</TableHead>
                 <TableHead>Acciones</TableHead>
               </TableRow>
             </TableHeader>
@@ -798,18 +807,18 @@ export default function CompaniesManagementPage() {
                     <TableCell>
                       <Badge className={getStatusColor(company.status)}>{getStatusText(company.status)}</Badge>
                     </TableCell>
-                    <TableCell>
+                    {/* <TableCell>
                       <div className="flex items-center gap-1">
                         <Users className="w-3 h-3" />
                         <span>{company.employees}</span>
                       </div>
-                    </TableCell>
-                    <TableCell>
+                    </TableCell> */}
+                    {/* <TableCell>
                       <div className="text-sm">
                         <div>Bs. {company.revenue.toLocaleString()}</div>
                         <div className="text-green-600">+{company.growth}%</div>
                       </div>
-                    </TableCell>
+                    </TableCell> */}
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -1098,6 +1107,23 @@ export default function CompaniesManagementPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <Dialog open={successDialogOpen} onOpenChange={setSuccessDialogOpen}>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>¡Empresa creada!</DialogTitle>
+      <DialogDescription>
+        La empresa fue registrada exitosamente en el sistema.
+      </DialogDescription>
+    </DialogHeader>
+    <div className="flex justify-end">
+      <Button onClick={() => setSuccessDialogOpen(false)}>Cerrar</Button>
     </div>
+  </DialogContent>
+</Dialog>
+
+    </div>
+
+    
   )
 }

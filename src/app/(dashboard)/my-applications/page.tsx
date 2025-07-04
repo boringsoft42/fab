@@ -248,6 +248,22 @@ export default function MyApplicationsPage() {
         </p>
       </div>
 
+      <div className="mb-8 flex justify-between items-center">
+  <div>
+    <h1 className="text-2xl font-bold text-gray-900 mb-1">
+      Mis Aplicaciones
+    </h1>
+    <p className="text-gray-600">
+      Gestiona y da seguimiento a tus postulaciones laborales
+    </p>
+  </div>
+  <Button onClick={() => router.push("/my-applications/new")}>
+  + Nueva Postulación
+</Button>
+
+</div>
+
+
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
         <Card>

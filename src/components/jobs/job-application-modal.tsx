@@ -29,6 +29,9 @@ export const JobApplicationModal = ({ job, onClose, onSuccess }: JobApplicationM
   const [coverLetter, setCoverLetter] = useState("");
   const [answers, setAnswers] = useState<JobQuestionAnswer[]>([]);
   const [useTemplate, setUseTemplate] = useState(true);
+
+  const [showTermsModal, setShowTermsModal] = useState(false);
+const [termsAccepted, setTermsAccepted] = useState(false);
   
   const { toast } = useToast();
 
@@ -137,6 +140,11 @@ Atentamente,
   };
 
   const handleSubmit = async () => {
+    if (!termsAccepted) {
+      setShowTermsModal(true);
+      return;
+    }
+  
     if (!validateStep(step)) return;
     
     setLoading(true);
@@ -147,21 +155,19 @@ Atentamente,
         companyName: job.company.name,
         companyLogo: job.company.logo,
         applicantId: "mock-user-id", // In real app, get from auth
-        applicantName: "John Doe", // In real app, get from user profile
-        applicantEmail: "john@example.com", // In real app, get from user profile
+        applicantName: "John Doe",
+        applicantEmail: "john@example.com",
         cvUrl,
         coverLetter,
         answers
       };
-
+  
       const response = await fetch(`/api/jobs/${job.id}/applications`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(applicationData),
       });
-
+  
       if (response.ok) {
         toast({
           title: "¡Aplicación enviada!",
@@ -186,7 +192,7 @@ Atentamente,
       setLoading(false);
     }
   };
-
+  
   const renderStepContent = () => {
     switch (step) {
       case 1:
@@ -463,6 +469,34 @@ Atentamente,
           )}
         </div>
       </DialogContent>
+      <Dialog open={showTermsModal} onOpenChange={setShowTermsModal}>
+  <DialogContent className="max-w-md text-center">
+    <DialogHeader>
+      <DialogTitle className="text-lg">Términos y condiciones</DialogTitle>
+    </DialogHeader>
+
+    <p className="text-sm text-gray-600 mb-4">
+      La información que compartas es confidencial y solo será visible por el empleador. 
+      Al continuar, aceptas nuestros términos y condiciones de privacidad.
+    </p>
+
+    <div className="flex justify-center gap-4 mt-6">
+      <Button variant="outline" onClick={() => setShowTermsModal(false)}>
+        Cancelar
+      </Button>
+      <Button
+        onClick={() => {
+          setTermsAccepted(true);
+          setShowTermsModal(false);
+          handleSubmit(); // Llama de nuevo para continuar ahora sí
+        }}
+      >
+        Acepto y Enviar
+      </Button>
+    </div>
+  </DialogContent>
+</Dialog>
+
     </Dialog>
   );
 }; 

@@ -109,7 +109,7 @@ export default function CertificatesPage() {
                 <div className="flex gap-2 pt-2">
                   <Button size="sm" className="flex-1">
                     <Download className="mr-2 h-4 w-4" />
-                    Descargar
+                    Descargar Pdf
                   </Button>
                   <Button size="sm" variant="outline">
                     Compartir

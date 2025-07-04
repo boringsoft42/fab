@@ -1,7 +1,7 @@
 "use client";
 
-import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
-import { useState } from "react";
+import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from "react-leaflet";
+import { useEffect, useRef, useState } from "react";
 import L from "leaflet";
 
 const markerIcon = new L.Icon({
@@ -24,6 +24,18 @@ function LocationMarker({ onChange }: { onChange: (latlng: [number, number]) => 
   return position ? <Marker position={position} icon={markerIcon} /> : null;
 }
 
+function ForceResize() {
+  const map = useMap();
+
+  useEffect(() => {
+    setTimeout(() => {
+      map.invalidateSize();
+    }, 200);
+  }, [map]);
+
+  return null;
+}
+
 export default function MapPicker({ onChange }: { onChange: (latlng: [number, number]) => void }) {
   return (
     <MapContainer
@@ -32,6 +44,7 @@ export default function MapPicker({ onChange }: { onChange: (latlng: [number, nu
       scrollWheelZoom={false}
       style={{ height: "300px", width: "100%", borderRadius: "0.5rem" }}
     >
+      <ForceResize />
       <TileLayer
         attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a>'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

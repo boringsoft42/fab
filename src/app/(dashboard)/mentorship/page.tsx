@@ -371,9 +371,8 @@ export default function MentorshipPage() {
         onValueChange={setActiveTab}
         className="space-y-6"
       >
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="mentors">Mentores</TabsTrigger>
-          <TabsTrigger value="sessions">Mis Sesiones</TabsTrigger>
           <TabsTrigger value="programs">Programas</TabsTrigger>
           <TabsTrigger value="become-mentor">Ser Mentor</TabsTrigger>
         </TabsList>
@@ -502,13 +501,28 @@ export default function MentorshipPage() {
                           {mentor.responseTime}
                         </span>
                       </div>
-                      <div className="font-semibold">
+                      <div>
+  <span className="text-muted-foreground">WhatsApp: </span>
+  <a
+    href={`https://wa.me/${mentor.whatsapp}`}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="font-medium text-green-600 hover:underline"
+  >
+    Escribir
+  </a>
+</div>
+
+                      
+                      
+                      {/* <div className="font-semibold">
                         {mentor.price.type === "free" ? (
                           <span className="text-green-600">Gratuito</span>
                         ) : (
                           <span>Bs. {mentor.price.amount}/hora</span>
                         )}
-                      </div>
+                      </div> */}
+                      
                     </div>
 
                     {mentor.achievements.length > 0 && (
@@ -534,7 +548,7 @@ export default function MentorshipPage() {
                     )}
                   </div>
 
-                  <div className="flex gap-2 mt-4 pt-4 border-t">
+                  {/* <div className="flex gap-2 mt-4 pt-4 border-t">
                     <Button variant="outline" size="sm" className="flex-1">
                       <MessageCircle className="h-3 w-3 mr-1" />
                       Mensaje
@@ -543,7 +557,7 @@ export default function MentorshipPage() {
                       <Calendar className="h-3 w-3 mr-1" />
                       Agendar
                     </Button>
-                  </div>
+                  </div> */}
                 </CardContent>
               </Card>
             ))}
