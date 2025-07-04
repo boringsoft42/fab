@@ -1,66 +1,16 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+"use client";
+
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { QueryProvider } from "@/lib/providers/QueryProvider";
-import { Toaster } from "sonner";
 import { MockAuthProvider } from "@/context/mock-auth-context";
 import { ThemeProvider } from "@/context/theme-context";
-import 'leaflet/dist/leaflet.css';
+import dynamic from "next/dynamic";
 
 const APP_NAME = "POSITIVE-NEXT";
 const APP_DESCRIPTION = "Your Mind's Best Friend";
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
-export const metadata: Metadata = {
-  metadataBase: new URL(APP_URL),
-  title: {
-    default: APP_NAME,
-    template: `%s | ${APP_NAME}`,
-  },
-  description: APP_DESCRIPTION,
-  openGraph: {
-    title: APP_NAME,
-    description: APP_DESCRIPTION,
-    url: APP_URL,
-    siteName: APP_NAME,
-    locale: "es_ES",
-    type: "website",
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
-  icons: {
-    icon: "/icon.png",
-    shortcut: "/favicon.ico",
-    apple: "/apple-icon.png",
-    other: {
-      rel: "apple-touch-icon",
-      url: "/apple-icon.png",
-    },
-  },
-  other: {
-    "Permissions-Policy":
-      "microphone=(), camera=(), geolocation=(), interest-cohort=()",
-  },
-};
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({
   children,
@@ -68,22 +18,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+    <html lang="es" suppressHydrationWarning>
+      <head>
+        <title>{APP_NAME}</title>
+        <meta name="description" content={APP_DESCRIPTION} />
+        <link
+          rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossOrigin=""
+        />
+      </head>
+      <body className={inter.className}>
         <ThemeProvider defaultTheme="system" storageKey="app-theme">
-          <MockAuthProvider>
-            <QueryProvider>
-              {children}
-              <Toaster
-                position="top-right"
-                richColors
-                closeButton
-                duration={4000}
-              />
-            </QueryProvider>
-          </MockAuthProvider>
+          <QueryProvider>
+            <MockAuthProvider>{children}</MockAuthProvider>
+          </QueryProvider>
         </ThemeProvider>
       </body>
     </html>

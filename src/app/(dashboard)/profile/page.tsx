@@ -367,53 +367,52 @@ export default function ProfilePage() {
       </Card>
 
       <Card>
-  <CardHeader>
-    <CardTitle className="text-lg flex items-center gap-2">
-      <Award className="h-5 w-5" />
-      Certificados de mis cursos
-    </CardTitle>
-    <CardDescription>
-      Visualiza y descarga tus certificados técnicos completados.
-    </CardDescription>
-  </CardHeader>
-  <CardContent className="space-y-4">
-    {[
-      {
-        nombre: "Fundamentos de Programación en JavaScript",
-        fecha: "15 de abril de 2024",
-      },
-      {
-        nombre: "Diseño Gráfico con Canva y Photoshop",
-        fecha: "2 de marzo de 2024",
-      },
-      {
-        nombre: "Manejo de Redes Sociales para Emprendimientos",
-        fecha: "20 de febrero de 2024",
-      },
-      {
-        nombre: "Microsoft Excel Básico e Intermedio",
-        fecha: "10 de enero de 2024",
-      },
-    ].map((cert, index) => (
-      <div
-        key={index}
-        className="flex items-center justify-between border rounded-lg p-3"
-      >
-        <div>
-          <p className="font-medium">{cert.nombre}</p>
-          <p className="text-sm text-muted-foreground">
-            Finalizado el {cert.fecha}
-          </p>
-        </div>
-        <Button variant="outline" size="sm">
-          <FileText className="h-4 w-4 mr-2" />
-          Descargar
-        </Button>
-      </div>
-    ))}
-  </CardContent>
-</Card>
-
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2">
+            <Award className="h-5 w-5" />
+            Certificados de mis cursos
+          </CardTitle>
+          <CardDescription>
+            Visualiza y descarga tus certificados técnicos completados.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {[
+            {
+              nombre: "Fundamentos de Programación en JavaScript",
+              fecha: "15 de abril de 2024",
+            },
+            {
+              nombre: "Diseño Gráfico con Canva y Photoshop",
+              fecha: "2 de marzo de 2024",
+            },
+            {
+              nombre: "Manejo de Redes Sociales para Emprendimientos",
+              fecha: "20 de febrero de 2024",
+            },
+            {
+              nombre: "Microsoft Excel Básico e Intermedio",
+              fecha: "10 de enero de 2024",
+            },
+          ].map((cert, index) => (
+            <div
+              key={index}
+              className="flex items-center justify-between border rounded-lg p-3"
+            >
+              <div>
+                <p className="font-medium">{cert.nombre}</p>
+                <p className="text-sm text-muted-foreground">
+                  Finalizado el {cert.fecha}
+                </p>
+              </div>
+              <Button variant="outline" size="sm">
+                <FileText className="h-4 w-4 mr-2" />
+                Descargar
+              </Button>
+            </div>
+          ))}
+        </CardContent>
+      </Card>
 
       {/* CV Dialog */}
       <Dialog open={showCVDialog} onOpenChange={setShowCVDialog}>
