@@ -68,6 +68,7 @@ interface CourseFormData {
 }
 
 export default function CreateCoursePage() {
+  const router = useRouter();
   const [certificateDialogOpen, setCertificateDialogOpen] = useState(false);
   const [certificateFile, setCertificateFile] = useState<File | null>(null);
 
@@ -108,7 +109,7 @@ export default function CreateCoursePage() {
     }));
 
     // Auto-generate slug from title
-    if (field === "title") {
+    if (field === "title" && typeof value === "string") {
       const slug = value
         .toLowerCase()
         .replace(/[^a-z0-9\s-]/g, "")

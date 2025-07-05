@@ -24,6 +24,7 @@ import {
   User,
   Building,
   Target,
+  LucideIcon,
 } from "lucide-react";
 import { useMockAuth } from "@/context/mock-auth-context";
 
@@ -33,7 +34,7 @@ interface RoleOption {
   value: UserRole;
   label: string;
   description: string;
-  icon: unknown;
+  icon: LucideIcon;
   color: string;
   examples: string[];
 }
@@ -42,7 +43,8 @@ const roleOptions: RoleOption[] = [
   {
     value: "YOUTH",
     label: "Youth",
-    description: "Para jóvenes y adolescentes que buscan empleo y oportunidades de desarrollo",
+    description:
+      "Para jóvenes y adolescentes que buscan empleo y oportunidades de desarrollo",
     icon: User,
     color: "bg-blue-500",
     examples: ["Estudiantes", "Jóvenes profesionales", "Adolescentes"],
@@ -50,7 +52,8 @@ const roleOptions: RoleOption[] = [
   {
     value: "COMPANIES",
     label: "Company",
-    description: "Para empresas que buscan talento y publican ofertas de trabajo",
+    description:
+      "Para empresas que buscan talento y publican ofertas de trabajo",
     icon: Building,
     color: "bg-purple-500",
     examples: ["Startups", "PYMEs", "Grandes empresas"],
@@ -58,7 +61,8 @@ const roleOptions: RoleOption[] = [
   {
     value: "MUNICIPAL_GOVERNMENTS",
     label: "Municipality, NGO, or Center",
-    description: "Para gobiernos municipales, ONGs, centros de capacitación y fundaciones",
+    description:
+      "Para gobiernos municipales, ONGs, centros de capacitación y fundaciones",
     icon: Target,
     color: "bg-green-500",
     examples: ["Alcaldías", "ONGs", "Centros de formación", "Fundaciones"],
@@ -66,6 +70,7 @@ const roleOptions: RoleOption[] = [
 ];
 
 export function MockLoginScreen() {
+  const router = useRouter();
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

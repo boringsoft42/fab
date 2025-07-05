@@ -99,6 +99,8 @@ interface Question {
 }
 
 export default function EditCoursePage() {
+  const params = useParams();
+  const router = useRouter();
   const courseId = params.id as string;
 
   const [activeTab, setActiveTab] = useState("content");
@@ -742,6 +744,7 @@ function LessonDialog({
   const [type, setType] = useState<"video" | "reading" | "quiz">(
     lesson?.type || "video"
   );
+  const [duration, setDuration] = useState(lesson?.duration || 0);
   const [videoUrl, setVideoUrl] = useState("");
   const [readingContent, setReadingContent] = useState("");
 

@@ -42,6 +42,7 @@ import { CourseFilters as CourseFiltersComponent } from "@/components/courses/co
 
 export default function CoursesPage() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -60,6 +61,7 @@ export default function CoursesPage() {
   const fetchCourses = async () => {
     try {
       setLoading(true);
+      const params = new URLSearchParams();
       if (searchQuery) params.append("query", searchQuery);
       if (sortBy) params.append("sortBy", sortBy);
       if (page > 1) params.append("page", page.toString());
@@ -78,7 +80,7 @@ export default function CoursesPage() {
         params.append("isMandatory", activeFilters.isMandatory.toString());
       }
 
-      const response = await fetch(`/api/courses?${params}`);
+      const response = await fetch(`/api/courses?${params.toString()}`);
       const data: CourseCatalogResponse = await response.json();
 
       setCourses(data.courses);
