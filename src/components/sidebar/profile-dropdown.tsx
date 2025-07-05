@@ -17,6 +17,12 @@ import { Button } from "@/components/ui/button";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { useMockAuth } from "@/context/mock-auth-context";
 import { Badge } from "@/components/ui/badge";
+
+interface AppUser {
+  email?: string;
+  name?: string;
+}
+
 type UserRole =
   | "YOUTH"
   | "ADOLESCENTS"
@@ -27,8 +33,11 @@ type UserRole =
   | "SUPERADMIN";
 
 export function ProfileDropdown() {
+  const router = useRouter();
   const { profile, user, isLoading } = useCurrentUser();
   const { signOut } = useMockAuth();
+  const appUser = user as AppUser;
+
   if (isLoading) {
     return (
       <Button variant="ghost" className="relative h-8 w-8 rounded-full">
@@ -37,12 +46,12 @@ export function ProfileDropdown() {
     );
   }
 
-  if (!profile || !user) return null;
+  if (!profile || !appUser) return null;
 
   const displayName =
     [profile?.firstName, profile?.lastName].filter(Boolean).join(" ") ||
-    user?.name ||
-    user?.email?.split("@")[0] ||
+    appUser?.name ||
+    appUser?.email?.split("@")[0] ||
     "Usuario";
 
   // Get initials for avatar fallback
@@ -53,14 +62,14 @@ export function ProfileDropdown() {
         .join("")
         .toUpperCase();
     }
-    if (user?.name) {
-      return user.name
+    if (appUser?.name) {
+      return appUser.name
         .split(" ")
         .map((n: string) => n[0])
         .join("")
         .toUpperCase();
     }
-    return user?.email?.[0]?.toUpperCase() || "U";
+    return appUser?.email?.[0]?.toUpperCase() || "U";
   };
 
   // Get role display name
@@ -79,7 +88,7 @@ export function ProfileDropdown() {
           <Avatar className="h-8 w-8 ring-2 ring-primary/10">
             <AvatarImage
               src={profile?.profilePicture || ""}
-              alt={displayName || user?.email || "User"}
+              alt={displayName || appUser?.email || "User"}
             />
             <AvatarFallback className="bg-primary/10">
               {getInitials()}
@@ -97,7 +106,7 @@ export function ProfileDropdown() {
               </Badge>
             </div>
             <p className="text-xs leading-none text-muted-foreground">
-              {user?.email}
+              {appUser?.email}
             </p>
           </div>
         </DropdownMenuLabel>

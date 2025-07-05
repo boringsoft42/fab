@@ -79,6 +79,7 @@ interface AnalyticsData {
 }
 
 export default function CourseAnalyticsPage() {
+  const params = useParams();
   const courseId = params.id as string;
 
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(

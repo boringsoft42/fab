@@ -102,7 +102,7 @@ export default function CompaniesManagementPage() {
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
-  const [successDialogOpen, setSuccessDialogOpen] = React.useState(false);
+  const [successDialogOpen, setSuccessDialogOpen] = useState(false);
 
   const [stats, setStats] = useState({
     total: 0,
@@ -302,9 +302,42 @@ export default function CompaniesManagementPage() {
 
   const handleCreate = async () => {
     try {
+      if (
+        !formData.name ||
+        !formData.description ||
+        !formData.industry ||
+        !formData.size ||
+        !formData.founded ||
+        !formData.website ||
+        !formData.email ||
+        !formData.phone ||
+        !formData.address ||
+        !formData.city ||
+        !formData.country ||
+        !formData.status
+      ) {
+        // Show error toast or handle incomplete data
+        return;
+      }
+
       const newCompany: Company = {
-        ...formData,
         id: Date.now().toString(),
+        name: formData.name,
+        description: formData.description,
+        logo: formData.logo || "/placeholder.svg",
+        industry: formData.industry,
+        size: formData.size,
+        founded: formData.founded,
+        website: formData.website,
+        email: formData.email,
+        phone: formData.phone,
+        address: formData.address,
+        city: formData.city,
+        country: formData.country,
+        status: formData.status,
+        employees: formData.employees || 0,
+        revenue: formData.revenue || 0,
+        growth: formData.growth || 0,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };

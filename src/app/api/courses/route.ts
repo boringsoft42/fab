@@ -1,3 +1,5 @@
+"use client";
+
 import { NextRequest, NextResponse } from "next/server";
 import {
   Course,
@@ -140,6 +142,9 @@ Con metodologías interactivas, casos prácticos y ejercicios de autorreflexión
     createdAt: new Date("2024-01-15"),
     updatedAt: new Date("2024-02-20"),
     publishedAt: new Date("2024-01-20"),
+    sections: [],
+    totalQuizzes: 0,
+    totalResources: 0,
   },
   {
     id: "basic-competencies",
@@ -195,6 +200,9 @@ Con ejercicios interactivos y aplicaciones prácticas, desarrollarás las compet
     createdAt: new Date("2024-01-10"),
     updatedAt: new Date("2024-02-15"),
     publishedAt: new Date("2024-01-15"),
+    sections: [],
+    totalQuizzes: 0,
+    totalResources: 0,
   },
   {
     id: "job-placement-skills",
@@ -253,6 +261,9 @@ Incluye casos reales, plantillas profesionales y acceso a nuestro innovador simu
     createdAt: new Date("2024-01-20"),
     updatedAt: new Date("2024-02-25"),
     publishedAt: new Date("2024-01-25"),
+    sections: [],
+    totalQuizzes: 0,
+    totalResources: 0,
   },
   {
     id: "entrepreneurship-fundamentals",
@@ -311,6 +322,9 @@ Con casos de estudio de emprendedores bolivianos exitosos y herramientas prácti
     createdAt: new Date("2024-02-01"),
     updatedAt: new Date("2024-03-01"),
     publishedAt: new Date("2024-02-05"),
+    sections: [],
+    totalQuizzes: 0,
+    totalResources: 0,
   },
   {
     id: "technical-skills-digital",
@@ -368,6 +382,9 @@ Incluye acceso a recursos externos especializados y certificaciones reconocidas 
     createdAt: new Date("2024-02-10"),
     updatedAt: new Date("2024-03-05"),
     publishedAt: new Date("2024-02-15"),
+    sections: [],
+    totalQuizzes: 0,
+    totalResources: 0,
   },
   // Additional non-mandatory courses
   {
@@ -405,6 +422,9 @@ Incluye acceso a recursos externos especializados y certificaciones reconocidas 
     createdAt: new Date("2024-02-20"),
     updatedAt: new Date("2024-03-10"),
     publishedAt: new Date("2024-02-25"),
+    sections: [],
+    totalQuizzes: 0,
+    totalResources: 0,
   },
 ];
 
@@ -416,6 +436,7 @@ export async function GET(request: NextRequest) {
     const query = searchParams.get("query") || "";
     const category = searchParams.get("category");
     const level = searchParams.get("level");
+    const durationParam = searchParams.get("duration");
     const price = searchParams.get("price");
     const rating = searchParams.get("rating");
     const isFree = searchParams.get("isFree");
@@ -454,8 +475,8 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    if (duration) {
-      const [min, max] = duration.split("-").map(Number);
+    if (durationParam) {
+      const [min, max] = durationParam.split("-").map(Number);
       filteredCourses = filteredCourses.filter(
         (course) => course.duration >= min && course.duration <= max
       );

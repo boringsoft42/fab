@@ -41,6 +41,7 @@ interface ApplicationStats {
 }
 
 export default function MyApplicationsPage() {
+  const router = useRouter();
   const [applications, setApplications] = useState<JobApplication[]>([]);
   const [filteredApplications, setFilteredApplications] = useState<
     JobApplication[]
@@ -136,9 +137,10 @@ export default function MyApplicationsPage() {
           description: "Tu aplicación ha sido retirada exitosamente",
         });
       } else {
+        const errorData = await response.json();
         toast({
           title: "Error",
-          description: error.error || "No se pudo retirar la aplicación",
+          description: errorData.error || "No se pudo retirar la aplicación",
           variant: "destructive",
         });
       }
@@ -247,20 +249,18 @@ export default function MyApplicationsPage() {
       </div>
 
       <div className="mb-8 flex justify-between items-center">
-  <div>
-    <h1 className="text-2xl font-bold text-gray-900 mb-1">
-      Mis Aplicaciones
-    </h1>
-    <p className="text-gray-600">
-      Gestiona y da seguimiento a tus postulaciones laborales
-    </p>
-  </div>
-  <Button onClick={() => router.push("/my-applications/new")}>
-  + Nueva Postulación
-</Button>
-
-</div>
-
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 mb-1">
+            Mis Aplicaciones
+          </h1>
+          <p className="text-gray-600">
+            Gestiona y da seguimiento a tus postulaciones laborales
+          </p>
+        </div>
+        <Button onClick={() => router.push("/my-applications/new")}>
+          + Nueva Postulación
+        </Button>
+      </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">

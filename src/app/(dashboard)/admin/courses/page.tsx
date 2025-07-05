@@ -84,7 +84,8 @@ export default function CourseManagementPage() {
           id: "course-1",
           title: "Habilidades Laborales Básicas",
           slug: "habilidades-laborales-basicas",
-          description: "Curso completo sobre competencias fundamentales para el trabajo",
+          description:
+            "Curso completo sobre competencias fundamentales para el trabajo",
           shortDescription:
             "Desarrolla las competencias esenciales para el éxito laboral",
           thumbnail: "/api/placeholder/400/300",
@@ -123,6 +124,17 @@ export default function CourseManagementPage() {
           createdAt: new Date("2024-01-15"),
           updatedAt: new Date("2024-02-20"),
           publishedAt: new Date("2024-01-20"),
+          sections: [
+            {
+              id: "section-1",
+              title: "Introducción a las Habilidades Laborales",
+              description: "Fundamentos y conceptos básicos",
+              order: 1,
+              resources: [],
+            },
+          ],
+          totalQuizzes: 5,
+          totalResources: 12,
         },
         {
           id: "course-2",
@@ -159,6 +171,17 @@ export default function CourseManagementPage() {
           createdAt: new Date("2024-02-01"),
           updatedAt: new Date("2024-02-25"),
           publishedAt: new Date("2024-02-05"),
+          sections: [
+            {
+              id: "section-2",
+              title: "Fundamentos del Emprendimiento Digital",
+              description: "Conceptos básicos y planificación",
+              order: 1,
+              resources: [],
+            },
+          ],
+          totalQuizzes: 8,
+          totalResources: 15,
         },
       ];
 

@@ -12,6 +12,15 @@ import { ProfileDropdown } from "./profile-dropdown";
 import { Badge } from "@/components/ui/badge";
 import { User, Users, Building2, BookOpen, Target, Shield } from "lucide-react";
 
+type UserRole =
+  | "YOUTH"
+  | "ADOLESCENTS"
+  | "COMPANIES"
+  | "MUNICIPAL_GOVERNMENTS"
+  | "TRAINING_CENTERS"
+  | "NGOS_AND_FOUNDATIONS"
+  | "SUPERADMIN";
+
 interface AdaptiveHeaderProps {
   className?: string;
   fixed?: boolean;
@@ -38,7 +47,7 @@ export function AdaptiveHeader({
   }, []);
 
   // Get role-specific breadcrumb formatting
-  const getRoleBreadcrumb = (pathname: string, role?: string) => {
+  const getRoleBreadcrumb = (pathname: string, role?: UserRole | null) => {
     const segments = pathname.split("/").filter(Boolean);
 
     if (segments.length === 0 || segments[0] === "dashboard") {
@@ -88,7 +97,7 @@ export function AdaptiveHeader({
   };
 
   // Get role-specific icon and label
-  const getRoleInfo = (role?: string) => {
+  const getRoleInfo = (role?: UserRole | null) => {
     switch (role) {
       case "YOUTH":
         return {
@@ -136,13 +145,13 @@ export function AdaptiveHeader({
   };
 
   // Check if search should be shown for this role
-  const shouldShowSearch = (role?: string) => {
+  const shouldShowSearch = (role?: UserRole | null) => {
     return ["YOUTH", "ADOLESCENTS", "COMPANIES"].includes(role || "");
   };
 
-  const formattedPath = getRoleBreadcrumb(pathname, profile?.role);
-  const roleInfo = getRoleInfo(profile?.role);
-  const showSearch = shouldShowSearch(profile?.role);
+  const formattedPath = getRoleBreadcrumb(pathname, profile?.role as UserRole);
+  const roleInfo = getRoleInfo(profile?.role as UserRole);
+  const showSearch = shouldShowSearch(profile?.role as UserRole);
 
   return (
     <header
@@ -166,7 +175,7 @@ export function AdaptiveHeader({
         {/* Role badge */}
         {!isLoading && profile && (
           <Badge className={cn("ml-2 text-xs", roleInfo.color)}>
-            <roleInfo.icon className="w-3 h-3 mr-1" />
+            {React.createElement(roleInfo.icon, { className: "w-3 h-3 mr-1" })}
             {roleInfo.label}
           </Badge>
         )}

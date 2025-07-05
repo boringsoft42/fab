@@ -108,6 +108,7 @@ interface CourseStats {
 }
 
 export default function CourseStudentsPage() {
+  const params = useParams();
   const courseId = params.id as string;
 
   const [students, setStudents] = useState<StudentEnrollment[]>([]);

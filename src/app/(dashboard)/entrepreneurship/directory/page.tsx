@@ -85,6 +85,11 @@ export interface Institution {
 
   // New fields
   coverImage?: string;
+
+  // Metrics and ratings
+  rating?: number;
+  reviewsCount?: number;
+  successStories?: number;
 }
 
 export default function InstitutionDirectoryPage() {
@@ -122,7 +127,8 @@ export default function InstitutionDirectoryPage() {
         {
           id: "incubator-1",
           name: "CEMSE Innovation Hub",
-          description: "Incubadora especializada en tecnología y emprendimientos juveniles con enfoque en innovación social",
+          description:
+            "Incubadora especializada en tecnología y emprendimientos juveniles con enfoque en innovación social",
           type: "incubator",
           category: "Tecnología",
           logo: "/api/placeholder/100/100",
@@ -171,7 +177,8 @@ export default function InstitutionDirectoryPage() {
         {
           id: "financial-1",
           name: "Banco de Desarrollo Productivo (BDP)",
-          description: "Institución financiera estatal que otorga créditos para emprendimientos productivos y empresas",
+          description:
+            "Institución financiera estatal que otorga créditos para emprendimientos productivos y empresas",
           type: "financial",
           category: "Banca de Desarrollo",
           website: "https://bdp.com.bo",
@@ -221,7 +228,8 @@ export default function InstitutionDirectoryPage() {
         {
           id: "government-1",
           name: "Programa Municipal Jóvenes Emprendedores",
-          description: "Programa gubernamental municipal para fomentar el emprendimiento juvenil en Cochabamba",
+          description:
+            "Programa gubernamental municipal para fomentar el emprendimiento juvenil en Cochabamba",
           type: "government",
           category: "Programa Municipal",
           website: "https://cochabamba.gob.bo/emprendedores",
@@ -268,7 +276,8 @@ export default function InstitutionDirectoryPage() {
         {
           id: "ngo-1",
           name: "Fundación Pro-Joven Bolivia",
-          description: "ONG dedicada al desarrollo de capacidades emprendedoras en jóvenes vulnerables",
+          description:
+            "ONG dedicada al desarrollo de capacidades emprendedoras en jóvenes vulnerables",
           type: "ngo",
           category: "Desarrollo Social",
           website: "https://projoven.org.bo",
@@ -328,7 +337,8 @@ export default function InstitutionDirectoryPage() {
         {
           id: "accelerator-1",
           name: "Startup Cochabamba Accelerator",
-          description: "Aceleradora privada enfocada en startups tech con potencial de escalamiento internacional",
+          description:
+            "Aceleradora privada enfocada en startups tech con potencial de escalamiento internacional",
           type: "accelerator",
           category: "Tecnología",
           website: "https://startupcochabamba.com",
@@ -388,7 +398,8 @@ export default function InstitutionDirectoryPage() {
         {
           id: "mentor-1",
           name: "Red de Mentores Empresariales Cochabamba",
-          description: "Red de empresarios exitosos que brindan mentoría personalizada a emprendedores",
+          description:
+            "Red de empresarios exitosos que brindan mentoría personalizada a emprendedores",
           type: "mentor",
           category: "Mentoría",
           website: "https://mentores-cbba.com",

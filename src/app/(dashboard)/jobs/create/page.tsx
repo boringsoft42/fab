@@ -1,16 +1,23 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { ArrowLeft, Save, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import dynamic from "next/dynamic";
-const MapPicker = dynamic(() => import("@/components/dashboard/MapPicker"), { ssr: false });
+const MapPicker = dynamic(() => import("@/components/dashboard/MapPicker"), {
+  ssr: false,
+});
 import {
   Select,
   SelectContent,
@@ -34,22 +41,48 @@ import {
 import { ImageIcon, Trash } from "lucide-react";
 import { useRef } from "react";
 
-
-
+interface JobFormData {
+  title: string;
+  description: string;
+  location: string;
+  contractType: ContractType;
+  workModality: WorkModality;
+  experienceLevel: ExperienceLevel;
+  salaryMin: string;
+  salaryMax: string;
+  salaryCurrency: string;
+  requiredSkills: string[];
+  desiredSkills: string[];
+  benefits: string[];
+  requirements: string[];
+  responsibilities: string[];
+  closingDate: string;
+  questions: JobQuestion[];
+  coordinates: [number, number] | null;
+  workSchedule: string;
+  website: string;
+  linkedin: string;
+  facebook: string;
+  instagram: string;
+  twitter: string;
+}
 
 export default function CreateJobPage() {
+  const router = useRouter();
+  const params = useParams();
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [images, setImages] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [preview, setPreview] = useState(false);
-
-  const [showIncompleteProfileModal, setShowIncompleteProfileModal] = useState(false);
+  const [showIncompleteProfileModal, setShowIncompleteProfileModal] =
+    useState(false);
+  const [showTermsModal, setShowTermsModal] = useState(false);
 
   const checkProfileCompletion = (): boolean => {
     return Math.random() > 0.5; // 50% de probabilidad
   };
-  
+
   const handlePublishClick = () => {
     if (!checkProfileCompletion()) {
       setShowIncompleteProfileModal(true);
@@ -57,10 +90,6 @@ export default function CreateJobPage() {
       setShowTermsModal(true);
     }
   };
-  
-
-  const [showTermsModal, setShowTermsModal] = useState(false);
-
 
   const handleFiles = (files: FileList | null) => {
     if (!files) return;
@@ -74,13 +103,13 @@ export default function CreateJobPage() {
       reader.readAsDataURL(file);
     });
   };
-  
+
   const removeImage = (index: number) => {
     setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
   // Form state
-  const [jobData, setJobData] = useState({
+  const [jobData, setJobData] = useState<JobFormData>({
     title: "",
     description: "",
     location: "Cochabamba, Bolivia",
@@ -90,15 +119,20 @@ export default function CreateJobPage() {
     salaryMin: "",
     salaryMax: "",
     salaryCurrency: "BOB",
-    requiredSkills: [] as string[],
-    desiredSkills: [] as string[],
-    benefits: [] as string[],
-    requirements: [] as string[],
-    responsibilities: [] as string[],
+    requiredSkills: [],
+    desiredSkills: [],
+    benefits: [],
+    requirements: [],
+    responsibilities: [],
     closingDate: "",
-    questions: [] as JobQuestion[],
-    coordinates: null as [number, number] | null,
+    questions: [],
+    coordinates: null,
     workSchedule: "",
+    website: "",
+    linkedin: "",
+    facebook: "",
+    instagram: "",
+    twitter: "",
   });
 
   const [skillInput, setSkillInput] = useState("");
@@ -235,6 +269,8 @@ export default function CreateJobPage() {
           location: "Cochabamba, Bolivia",
           rating: 4.5,
           reviewCount: 28,
+          website: jobData.website || "https://techcorp.bo",
+          images: images,
         },
       };
 
@@ -366,69 +402,76 @@ export default function CreateJobPage() {
   }
 
   return (
-
-    
-    
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <Dialog open={showIncompleteProfileModal} onOpenChange={setShowIncompleteProfileModal}>
-  <DialogContent className="z-[9999] max-w-md">
-    <DialogHeader>
-      <DialogTitle>Perfil Incompleto</DialogTitle>
-    </DialogHeader>
-    <div className="space-y-4">
-      <p className="text-gray-700 text-sm">
-        Para publicar una oferta de empleo, debes completar primero tu perfil de empresa.
-      </p>
-      <p className="text-gray-500 text-xs">
-        Asegúrate de agregar información como descripción, logo, redes sociales y más.
-      </p>
-    </div>
-    <div className="flex justify-end gap-2 mt-6">
-      <Button variant="outline" onClick={() => setShowIncompleteProfileModal(false)}>
-        Cerrar
-      </Button>
-      <Button
-        onClick={() => {
-          setShowIncompleteProfileModal(false);
-          router.push("/profile"); // Redirige a completar perfil
-        }}
+      <Dialog
+        open={showIncompleteProfileModal}
+        onOpenChange={setShowIncompleteProfileModal}
       >
-        Completar Perfil
-      </Button>
-    </div>
-  </DialogContent>
-</Dialog>
+        <DialogContent className="z-[9999] max-w-md">
+          <DialogHeader>
+            <DialogTitle>Perfil Incompleto</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-gray-700 text-sm">
+              Para publicar una oferta de empleo, debes completar primero tu
+              perfil de empresa.
+            </p>
+            <p className="text-gray-500 text-xs">
+              Asegúrate de agregar información como descripción, logo, redes
+              sociales y más.
+            </p>
+          </div>
+          <div className="flex justify-end gap-2 mt-6">
+            <Button
+              variant="outline"
+              onClick={() => setShowIncompleteProfileModal(false)}
+            >
+              Cerrar
+            </Button>
+            <Button
+              onClick={() => {
+                setShowIncompleteProfileModal(false);
+                router.push("/profile"); // Redirige a completar perfil
+              }}
+            >
+              Completar Perfil
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={showTermsModal} onOpenChange={setShowTermsModal}>
-      <DialogContent className="z-[9999] max-w-lg">
-    <DialogHeader>
-      <DialogTitle>Confirmación de publicación</DialogTitle>
-    </DialogHeader>
+        <DialogContent className="z-[9999] max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Confirmación de publicación</DialogTitle>
+          </DialogHeader>
 
-    <div className="space-y-4">
-      <p className="text-gray-700 text-sm">
-        Al publicar esta oferta confirmas que los datos proporcionados son verídicos y que aceptas nuestros Términos y Condiciones.
-      </p>
-      <p className="text-gray-500 text-xs">
-        El contenido ofensivo, falso o que incumpla las reglas de la plataforma puede ser eliminado.
-      </p>
-    </div>
+          <div className="space-y-4">
+            <p className="text-gray-700 text-sm">
+              Al publicar esta oferta confirmas que los datos proporcionados son
+              verídicos y que aceptas nuestros Términos y Condiciones.
+            </p>
+            <p className="text-gray-500 text-xs">
+              El contenido ofensivo, falso o que incumpla las reglas de la
+              plataforma puede ser eliminado.
+            </p>
+          </div>
 
-    <div className="flex justify-end gap-2 mt-6">
-      <Button variant="outline" onClick={() => setShowTermsModal(false)}>
-        Cancelar
-      </Button>
-      <Button
-        onClick={() => {
-          setShowTermsModal(false);
-          handleSubmit("ACTIVE");
-        }}
-      >
-        Aceptar y Publicar
-      </Button>
-    </div>
-  </DialogContent>
-</Dialog>
+          <div className="flex justify-end gap-2 mt-6">
+            <Button variant="outline" onClick={() => setShowTermsModal(false)}>
+              Cancelar
+            </Button>
+            <Button
+              onClick={() => {
+                setShowTermsModal(false);
+                handleSubmit("ACTIVE");
+              }}
+            >
+              Aceptar y Publicar
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
@@ -578,83 +621,82 @@ export default function CreateJobPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-  <div>
-    <Label htmlFor="salaryMin">Salario mínimo (BOB)</Label>
-    <Input
-      id="salaryMin"
-      type="number"
-      placeholder="3000"
-      value={jobData.salaryMin}
-      onChange={(e) =>
-        setJobData((prev) => ({
-          ...prev,
-          salaryMin: e.target.value,
-        }))
-      }
-    />
-  </div>
+              <div>
+                <Label htmlFor="salaryMin">Salario mínimo (BOB)</Label>
+                <Input
+                  id="salaryMin"
+                  type="number"
+                  placeholder="3000"
+                  value={jobData.salaryMin}
+                  onChange={(e) =>
+                    setJobData((prev) => ({
+                      ...prev,
+                      salaryMin: e.target.value,
+                    }))
+                  }
+                />
+              </div>
 
-  <div>
-    <Label htmlFor="salaryMax">Salario máximo (BOB)</Label>
-    <Input
-      id="salaryMax"
-      type="number"
-      placeholder="5000"
-      value={jobData.salaryMax}
-      onChange={(e) =>
-        setJobData((prev) => ({
-          ...prev,
-          salaryMax: e.target.value,
-        }))
-      }
-    />
-  </div>
+              <div>
+                <Label htmlFor="salaryMax">Salario máximo (BOB)</Label>
+                <Input
+                  id="salaryMax"
+                  type="number"
+                  placeholder="5000"
+                  value={jobData.salaryMax}
+                  onChange={(e) =>
+                    setJobData((prev) => ({
+                      ...prev,
+                      salaryMax: e.target.value,
+                    }))
+                  }
+                />
+              </div>
 
-  <div>
-    <Label htmlFor="closingDate">Fecha de inicial</Label>
-    <Input
-      id="closingDate"
-      type="date"
-      value={jobData.closingDate}
-      onChange={(e) =>
-        setJobData((prev) => ({
-          ...prev,
-          closingDate: e.target.value,
-        }))
-      }
-    />
-  </div>
-  <div>
-    <Label htmlFor="closingDate">Fecha termino</Label>
-    <Input
-      id="closingDate"
-      type="date"
-      value={jobData.closingDate}
-      onChange={(e) =>
-        setJobData((prev) => ({
-          ...prev,
-          closingDate: e.target.value,
-        }))
-      }
-    />
-  </div>
+              <div>
+                <Label htmlFor="closingDate">Fecha de inicial</Label>
+                <Input
+                  id="closingDate"
+                  type="date"
+                  value={jobData.closingDate}
+                  onChange={(e) =>
+                    setJobData((prev) => ({
+                      ...prev,
+                      closingDate: e.target.value,
+                    }))
+                  }
+                />
+              </div>
+              <div>
+                <Label htmlFor="closingDate">Fecha termino</Label>
+                <Input
+                  id="closingDate"
+                  type="date"
+                  value={jobData.closingDate}
+                  onChange={(e) =>
+                    setJobData((prev) => ({
+                      ...prev,
+                      closingDate: e.target.value,
+                    }))
+                  }
+                />
+              </div>
 
-  <div className="md:col-span-3">
-    <Label htmlFor="workSchedule">Horario de trabajo</Label>
-    <Input
-      id="workSchedule"
-      placeholder="Ej: Lunes a viernes, 8:00 a 17:00"
-      value={jobData.workSchedule || ""}
-      onChange={(e) =>
-        setJobData((prev) => ({
-          ...prev,
-          workSchedule: e.target.value,
-        }))
-      }
-    />
-  </div>
-</div>
-
+              <div className="md:col-span-3">
+                <Label htmlFor="workSchedule">Horario de trabajo</Label>
+                <Input
+                  id="workSchedule"
+                  placeholder="Ej: Lunes a viernes, 8:00 a 17:00"
+                  value={jobData.workSchedule || ""}
+                  onChange={(e) =>
+                    setJobData((prev) => ({
+                      ...prev,
+                      workSchedule: e.target.value,
+                    }))
+                  }
+                />
+              </div>
+            </div>
           </CardContent>
         </Card>
 
@@ -925,149 +967,157 @@ export default function CreateJobPage() {
         </Card>
 
         <Card>
-  <CardHeader>
-    <CardTitle>Redes Sociales y Sitio Web</CardTitle>
-  </CardHeader>
-  <CardContent className="space-y-4">
-    <div>
-      <Label htmlFor="website">Sitio web</Label>
-      <Input
-        id="website"
-        placeholder="https://www.tuempresa.com"
-        value={jobData.website || ""}
-        onChange={(e) =>
-          setJobData((prev) => ({ ...prev, website: e.target.value }))
-        }
-      />
-    </div>
+          <CardHeader>
+            <CardTitle>Redes Sociales y Sitio Web</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <Label htmlFor="website">Sitio web</Label>
+              <Input
+                id="website"
+                placeholder="https://www.tuempresa.com"
+                value={jobData.website || ""}
+                onChange={(e) =>
+                  setJobData((prev) => ({ ...prev, website: e.target.value }))
+                }
+              />
+            </div>
 
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div>
-        <Label htmlFor="linkedin">LinkedIn</Label>
-        <Input
-          id="linkedin"
-          placeholder="https://linkedin.com/company/tuempresa"
-          value={jobData.linkedin || ""}
-          onChange={(e) =>
-            setJobData((prev) => ({ ...prev, linkedin: e.target.value }))
-          }
-        />
-      </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="linkedin">LinkedIn</Label>
+                <Input
+                  id="linkedin"
+                  placeholder="https://linkedin.com/company/tuempresa"
+                  value={jobData.linkedin || ""}
+                  onChange={(e) =>
+                    setJobData((prev) => ({
+                      ...prev,
+                      linkedin: e.target.value,
+                    }))
+                  }
+                />
+              </div>
 
-      <div>
-        <Label htmlFor="facebook">Facebook</Label>
-        <Input
-          id="facebook"
-          placeholder="https://facebook.com/tuempresa"
-          value={jobData.facebook || ""}
-          onChange={(e) =>
-            setJobData((prev) => ({ ...prev, facebook: e.target.value }))
-          }
-        />
-      </div>
+              <div>
+                <Label htmlFor="facebook">Facebook</Label>
+                <Input
+                  id="facebook"
+                  placeholder="https://facebook.com/tuempresa"
+                  value={jobData.facebook || ""}
+                  onChange={(e) =>
+                    setJobData((prev) => ({
+                      ...prev,
+                      facebook: e.target.value,
+                    }))
+                  }
+                />
+              </div>
 
-      <div>
-        <Label htmlFor="instagram">Instagram</Label>
-        <Input
-          id="instagram"
-          placeholder="https://instagram.com/tuempresa"
-          value={jobData.instagram || ""}
-          onChange={(e) =>
-            setJobData((prev) => ({ ...prev, instagram: e.target.value }))
-          }
-        />
-      </div>
+              <div>
+                <Label htmlFor="instagram">Instagram</Label>
+                <Input
+                  id="instagram"
+                  placeholder="https://instagram.com/tuempresa"
+                  value={jobData.instagram || ""}
+                  onChange={(e) =>
+                    setJobData((prev) => ({
+                      ...prev,
+                      instagram: e.target.value,
+                    }))
+                  }
+                />
+              </div>
 
-      <div>
-        <Label htmlFor="twitter">Twitter</Label>
-        <Input
-          id="twitter"
-          placeholder="https://twitter.com/tuempresa"
-          value={jobData.twitter || ""}
-          onChange={(e) =>
-            setJobData((prev) => ({ ...prev, twitter: e.target.value }))
-          }
-        />
-      </div>
-    </div>
-  </CardContent>
-</Card>
+              <div>
+                <Label htmlFor="twitter">Twitter</Label>
+                <Input
+                  id="twitter"
+                  placeholder="https://twitter.com/tuempresa"
+                  value={jobData.twitter || ""}
+                  onChange={(e) =>
+                    setJobData((prev) => ({ ...prev, twitter: e.target.value }))
+                  }
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
-{!showTermsModal && (
-  <Card>
-    <CardHeader>
-      <CardTitle>Ubicación Geográfica</CardTitle>
-    </CardHeader>
-    <CardContent className="space-y-2">
-      <Label>Selecciona en el mapa la ubicación del empleo</Label>
-      <MapPicker
-        onChange={(coords) =>
-          setJobData((prev) => ({ ...prev, coordinates: coords }))
-        }
-      />
-      {jobData.coordinates && (
-        <p className="text-sm text-muted-foreground mt-2">
-          Latitud: {jobData.coordinates[0]}, Longitud: {jobData.coordinates[1]}
-        </p>
-      )}
-    </CardContent>
-  </Card>
-)}
+        {!showTermsModal && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Ubicación Geográfica</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <Label>Selecciona en el mapa la ubicación del empleo</Label>
+              <MapPicker
+                onChange={(coords) =>
+                  setJobData((prev) => ({ ...prev, coordinates: coords }))
+                }
+              />
+              {jobData.coordinates && (
+                <p className="text-sm text-muted-foreground mt-2">
+                  Latitud: {jobData.coordinates[0]}, Longitud:{" "}
+                  {jobData.coordinates[1]}
+                </p>
+              )}
+            </CardContent>
+          </Card>
+        )}
 
-<Card>
-  <CardHeader>
-    <CardTitle>Imágenes del Empleo</CardTitle>
-  </CardHeader>
-  <CardContent className="space-y-4">
-    <div>
-      <Label>Selecciona una o varias imágenes</Label>
-      <div className="flex items-center space-x-2 mt-2">
-        <Input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          multiple
-          className="hidden"
-          onChange={(e) => handleFiles(e.target.files)}
-        />
-        <Button
-          variant="outline"
-          onClick={() => fileInputRef.current?.click()}
-        >
-          <ImageIcon className="w-4 h-4 mr-2" />
-          Subir imágenes
-        </Button>
-      </div>
-    </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Imágenes del Empleo</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <Label>Selecciona una o varias imágenes</Label>
+              <div className="flex items-center space-x-2 mt-2">
+                <Input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  className="hidden"
+                  onChange={(e) => handleFiles(e.target.files)}
+                />
+                <Button
+                  variant="outline"
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  <ImageIcon className="w-4 h-4 mr-2" />
+                  Subir imágenes
+                </Button>
+              </div>
+            </div>
 
-    {images.length > 0 && (
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-        {images.map((src, index) => (
-          <div
-            key={index}
-            className="relative group rounded-lg overflow-hidden border"
-          >
-            <img
-              src={src}
-              alt={`imagen-${index}`}
-              className="object-cover w-full h-32"
-            />
-            <Button
-              size="icon"
-              variant="destructive"
-              className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-              onClick={() => removeImage(index)}
-            >
-              <Trash className="w-4 h-4" />
-            </Button>
-          </div>
-        ))}
-      </div>
-    )}
-  </CardContent>
-</Card>
-
-
+            {images.length > 0 && (
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {images.map((src, index) => (
+                  <div
+                    key={index}
+                    className="relative group rounded-lg overflow-hidden border"
+                  >
+                    <img
+                      src={src}
+                      alt={`imagen-${index}`}
+                      className="object-cover w-full h-32"
+                    />
+                    <Button
+                      size="icon"
+                      variant="destructive"
+                      className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                      onClick={() => removeImage(index)}
+                    >
+                      <Trash className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
 
         {/* Actions */}
         <div className="flex justify-end space-x-4 pb-8">
@@ -1079,13 +1129,9 @@ export default function CreateJobPage() {
             <Save className="w-4 h-4 mr-2" />
             Guardar borrador
           </Button>
-          <Button
-  onClick={handlePublishClick}
-  disabled={loading}
->
-  Publicar empleo
-</Button>
-
+          <Button onClick={handlePublishClick} disabled={loading}>
+            Publicar empleo
+          </Button>
         </div>
       </div>
     </div>

@@ -120,7 +120,17 @@ export default function CandidatesPage() {
   const fetchCandidates = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/jobs/candidates?${params}`);
+      const queryParams = new URLSearchParams({
+        page: page.toString(),
+        limit: "10",
+        ...(searchTerm && { search: searchTerm }),
+        ...(statusFilter !== "all" && { status: statusFilter }),
+        ...(jobFilter !== "all" && { jobId: jobFilter }),
+        sortBy,
+        sortOrder,
+      });
+
+      const response = await fetch(`/api/jobs/candidates?${queryParams}`);
       if (!response.ok) {
         throw new Error("Error al cargar candidatos");
       }
@@ -327,23 +337,22 @@ export default function CandidatesPage() {
           </p>
         </div>
         <Button
-  disabled={selectedCVs.length === 0}
-  onClick={() => {
-    selectedCVs.forEach((url) => {
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = "";
-      link.target = "_blank";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    });
-  }}
->
-  <Download className="mr-2 h-4 w-4" />
-  Descargar CVs Seleccionados
-</Button>
-
+          disabled={selectedCVs.length === 0}
+          onClick={() => {
+            selectedCVs.forEach((url) => {
+              const link = document.createElement("a");
+              link.href = url;
+              link.download = "";
+              link.target = "_blank";
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+            });
+          }}
+        >
+          <Download className="mr-2 h-4 w-4" />
+          Descargar CVs Seleccionados
+        </Button>
       </div>
 
       {/* Statistics Cards */}
@@ -498,24 +507,26 @@ export default function CandidatesPage() {
           <Table>
             <TableHeader>
               <TableRow>
-              <TableHead>
-  <div className="flex items-center gap-2">
-    <Checkbox
-      checked={selectedCVs.length === candidatesData.candidates.length}
-      onCheckedChange={(checked) => {
-        if (checked) {
-          setSelectedCVs(
-            candidatesData.candidates
-              .filter((c) => c.cvUrl)
-              .map((c) => c.cvUrl!)
-          );
-        } else {
-          setSelectedCVs([]);
-        }
-      }}
-    />
-  </div>
-</TableHead>
+                <TableHead>
+                  <div className="flex items-center gap-2">
+                    <Checkbox
+                      checked={
+                        selectedCVs.length === candidatesData.candidates.length
+                      }
+                      onCheckedChange={(checked) => {
+                        if (checked) {
+                          setSelectedCVs(
+                            candidatesData.candidates
+                              .filter((c) => c.cvUrl)
+                              .map((c) => c.cvUrl!)
+                          );
+                        } else {
+                          setSelectedCVs([]);
+                        }
+                      }}
+                    />
+                  </div>
+                </TableHead>
 
                 <TableHead>Candidato</TableHead>
                 <TableHead>Puesto</TableHead>
@@ -527,23 +538,22 @@ export default function CandidatesPage() {
             </TableHeader>
             <TableBody>
               {candidatesData.candidates.map((candidate) => (
-                
                 <TableRow key={candidate.id}>
                   <TableCell>
-  <Checkbox
-    checked={selectedCVs.includes(candidate.cvUrl || "")}
-    onCheckedChange={(checked) => {
-      if (checked) {
-        setSelectedCVs([...selectedCVs, candidate.cvUrl!]);
-      } else {
-        setSelectedCVs(
-          selectedCVs.filter((url) => url !== candidate.cvUrl)
-        );
-      }
-    }}
-    disabled={!candidate.cvUrl}
-  />
-</TableCell>
+                    <Checkbox
+                      checked={selectedCVs.includes(candidate.cvUrl || "")}
+                      onCheckedChange={(checked) => {
+                        if (checked) {
+                          setSelectedCVs([...selectedCVs, candidate.cvUrl!]);
+                        } else {
+                          setSelectedCVs(
+                            selectedCVs.filter((url) => url !== candidate.cvUrl)
+                          );
+                        }
+                      }}
+                      disabled={!candidate.cvUrl}
+                    />
+                  </TableCell>
 
                   <TableCell>
                     <div className="flex items-center space-x-3">
@@ -658,29 +668,29 @@ export default function CandidatesPage() {
             </TableBody>
           </Table>
           <div className="flex justify-between items-center mt-4">
-  <span className="text-sm text-muted-foreground">
-    Página {candidatesData.pagination.page} de {candidatesData.pagination.totalPages}
-  </span>
-  <div className="space-x-2">
-    <Button
-      variant="outline"
-      size="sm"
-      disabled={page === 1}
-      onClick={() => setPage(page - 1)}
-    >
-      Anterior
-    </Button>
-    <Button
-      variant="outline"
-      size="sm"
-      disabled={page === candidatesData.pagination.totalPages}
-      onClick={() => setPage(page + 1)}
-    >
-      Siguiente
-    </Button>
-  </div>
-</div>
-
+            <span className="text-sm text-muted-foreground">
+              Página {candidatesData.pagination.page} de{" "}
+              {candidatesData.pagination.totalPages}
+            </span>
+            <div className="space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={page === 1}
+                onClick={() => setPage(page - 1)}
+              >
+                Anterior
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={page === candidatesData.pagination.totalPages}
+                onClick={() => setPage(page + 1)}
+              >
+                Siguiente
+              </Button>
+            </div>
+          </div>
         </CardContent>
       </Card>
 
