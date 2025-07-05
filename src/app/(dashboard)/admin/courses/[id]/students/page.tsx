@@ -1,13 +1,13 @@
-"use client";
+&ldquo;use client&rdquo;;
 
-import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useState, useEffect } from &ldquo;react&rdquo;;
+import { useParams } from &ldquo;next/navigation&rdquo;;
+import { Button } from &ldquo;@/components/ui/button&rdquo;;
+import { Card, CardContent, CardHeader, CardTitle } from &ldquo;@/components/ui/card&rdquo;;
+import { Input } from &ldquo;@/components/ui/input&rdquo;;
+import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
+import { Progress } from &ldquo;@/components/ui/progress&rdquo;;
+import { Avatar, AvatarFallback, AvatarImage } from &ldquo;@/components/ui/avatar&rdquo;;
 import {
   Table,
   TableBody,
@@ -15,27 +15,27 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from &ldquo;@/components/ui/table&rdquo;;
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from &ldquo;@/components/ui/select&rdquo;;
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from &ldquo;@/components/ui/dropdown-menu&rdquo;;
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+} from &ldquo;@/components/ui/dialog&rdquo;;
+import { Tabs, TabsContent, TabsList, TabsTrigger } from &ldquo;@/components/ui/tabs&rdquo;;
 import {
   Search,
   Download,
@@ -52,7 +52,7 @@ import {
   AlertCircle,
   XCircle,
   ArrowLeft,
-} from "lucide-react";
+} from &ldquo;lucide-react&rdquo;;
 
 interface StudentEnrollment {
   id: string;
@@ -70,7 +70,7 @@ interface StudentEnrollment {
   completedLessons: number;
   totalLessons: number;
   timeSpent: number; // minutes
-  status: "active" | "completed" | "dropped" | "inactive";
+  status: &ldquo;active&rdquo; | &ldquo;completed&rdquo; | &ldquo;dropped&rdquo; | &ldquo;inactive&rdquo;;
   certificateIssued: boolean;
   finalGrade?: number;
   moduleProgress: ModuleProgress[];
@@ -112,9 +112,9 @@ export default function CourseStudentsPage() {
 
   const [students, setStudents] = useState<StudentEnrollment[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [progressFilter, setProgressFilter] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState(&ldquo;&rdquo;);
+  const [statusFilter, setStatusFilter] = useState<string>(&ldquo;all&rdquo;);
+  const [progressFilter, setProgressFilter] = useState<string>(&ldquo;all&rdquo;);
   const [selectedStudent, setSelectedStudent] =
     useState<StudentEnrollment | null>(null);
   const [showStudentDetail, setShowStudentDetail] = useState(false);
@@ -140,154 +140,154 @@ export default function CourseStudentsPage() {
       // Mock data for demonstration
       const mockStudents: StudentEnrollment[] = [
         {
-          id: "enrollment-1",
+          id: &ldquo;enrollment-1&rdquo;,
           student: {
-            id: "student-1",
-            name: "María González",
-            email: "maria.gonzalez@email.com",
-            avatar: "/api/placeholder/40/40",
+            id: &ldquo;student-1&rdquo;,
+            name: &ldquo;María González&rdquo;,
+            email: &ldquo;maria.gonzalez@email.com&rdquo;,
+            avatar: &ldquo;/api/placeholder/40/40&rdquo;,
             age: 19,
-            location: "La Paz",
+            location: &ldquo;La Paz&rdquo;,
           },
-          enrollmentDate: new Date("2024-01-15"),
-          lastAccessed: new Date("2024-02-28"),
+          enrollmentDate: new Date(&ldquo;2024-01-15&rdquo;),
+          lastAccessed: new Date(&ldquo;2024-02-28&rdquo;),
           progressPercentage: 85,
           completedLessons: 13,
           totalLessons: 15,
           timeSpent: 420, // 7 hours
-          status: "active",
+          status: &ldquo;active&rdquo;,
           certificateIssued: false,
           finalGrade: 88,
           moduleProgress: [
             {
-              moduleId: "mod-1",
-              moduleName: "Introducción",
+              moduleId: &ldquo;mod-1&rdquo;,
+              moduleName: &ldquo;Introducción&rdquo;,
               completedLessons: 3,
               totalLessons: 3,
               progressPercentage: 100,
-              lastAccessed: new Date("2024-02-20"),
+              lastAccessed: new Date(&ldquo;2024-02-20&rdquo;),
             },
             {
-              moduleId: "mod-2",
-              moduleName: "Desarrollo de Habilidades",
+              moduleId: &ldquo;mod-2&rdquo;,
+              moduleName: &ldquo;Desarrollo de Habilidades&rdquo;,
               completedLessons: 7,
               totalLessons: 8,
               progressPercentage: 87,
-              lastAccessed: new Date("2024-02-28"),
+              lastAccessed: new Date(&ldquo;2024-02-28&rdquo;),
             },
           ],
           quizResults: [
             {
-              quizId: "quiz-1",
-              quizName: "Evaluación Módulo 1",
+              quizId: &ldquo;quiz-1&rdquo;,
+              quizName: &ldquo;Evaluación Módulo 1&rdquo;,
               score: 85,
               maxScore: 100,
               attempts: 1,
-              completedAt: new Date("2024-02-20"),
+              completedAt: new Date(&ldquo;2024-02-20&rdquo;),
               passed: true,
             },
           ],
         },
         {
-          id: "enrollment-2",
+          id: &ldquo;enrollment-2&rdquo;,
           student: {
-            id: "student-2",
-            name: "Carlos Mamani",
-            email: "carlos.mamani@email.com",
+            id: &ldquo;student-2&rdquo;,
+            name: &ldquo;Carlos Mamani&rdquo;,
+            email: &ldquo;carlos.mamani@email.com&rdquo;,
             age: 22,
-            location: "El Alto",
+            location: &ldquo;El Alto&rdquo;,
           },
-          enrollmentDate: new Date("2024-01-20"),
-          lastAccessed: new Date("2024-02-25"),
+          enrollmentDate: new Date(&ldquo;2024-01-20&rdquo;),
+          lastAccessed: new Date(&ldquo;2024-02-25&rdquo;),
           progressPercentage: 60,
           completedLessons: 9,
           totalLessons: 15,
           timeSpent: 310,
-          status: "active",
+          status: &ldquo;active&rdquo;,
           certificateIssued: false,
           moduleProgress: [
             {
-              moduleId: "mod-1",
-              moduleName: "Introducción",
+              moduleId: &ldquo;mod-1&rdquo;,
+              moduleName: &ldquo;Introducción&rdquo;,
               completedLessons: 3,
               totalLessons: 3,
               progressPercentage: 100,
-              lastAccessed: new Date("2024-02-15"),
+              lastAccessed: new Date(&ldquo;2024-02-15&rdquo;),
             },
             {
-              moduleId: "mod-2",
-              moduleName: "Desarrollo de Habilidades",
+              moduleId: &ldquo;mod-2&rdquo;,
+              moduleName: &ldquo;Desarrollo de Habilidades&rdquo;,
               completedLessons: 4,
               totalLessons: 8,
               progressPercentage: 50,
-              lastAccessed: new Date("2024-02-25"),
+              lastAccessed: new Date(&ldquo;2024-02-25&rdquo;),
             },
           ],
           quizResults: [
             {
-              quizId: "quiz-1",
-              quizName: "Evaluación Módulo 1",
+              quizId: &ldquo;quiz-1&rdquo;,
+              quizName: &ldquo;Evaluación Módulo 1&rdquo;,
               score: 75,
               maxScore: 100,
               attempts: 2,
-              completedAt: new Date("2024-02-16"),
+              completedAt: new Date(&ldquo;2024-02-16&rdquo;),
               passed: true,
             },
           ],
         },
         {
-          id: "enrollment-3",
+          id: &ldquo;enrollment-3&rdquo;,
           student: {
-            id: "student-3",
-            name: "Ana Quispe",
-            email: "ana.quispe@email.com",
+            id: &ldquo;student-3&rdquo;,
+            name: &ldquo;Ana Quispe&rdquo;,
+            email: &ldquo;ana.quispe@email.com&rdquo;,
             age: 18,
-            location: "Cochabamba",
+            location: &ldquo;Cochabamba&rdquo;,
           },
-          enrollmentDate: new Date("2024-01-10"),
-          lastAccessed: new Date("2024-02-29"),
+          enrollmentDate: new Date(&ldquo;2024-01-10&rdquo;),
+          lastAccessed: new Date(&ldquo;2024-02-29&rdquo;),
           progressPercentage: 100,
           completedLessons: 15,
           totalLessons: 15,
           timeSpent: 480,
-          status: "completed",
+          status: &ldquo;completed&rdquo;,
           certificateIssued: true,
           finalGrade: 95,
           moduleProgress: [
             {
-              moduleId: "mod-1",
-              moduleName: "Introducción",
+              moduleId: &ldquo;mod-1&rdquo;,
+              moduleName: &ldquo;Introducción&rdquo;,
               completedLessons: 3,
               totalLessons: 3,
               progressPercentage: 100,
-              lastAccessed: new Date("2024-02-10"),
+              lastAccessed: new Date(&ldquo;2024-02-10&rdquo;),
             },
             {
-              moduleId: "mod-2",
-              moduleName: "Desarrollo de Habilidades",
+              moduleId: &ldquo;mod-2&rdquo;,
+              moduleName: &ldquo;Desarrollo de Habilidades&rdquo;,
               completedLessons: 8,
               totalLessons: 8,
               progressPercentage: 100,
-              lastAccessed: new Date("2024-02-29"),
+              lastAccessed: new Date(&ldquo;2024-02-29&rdquo;),
             },
           ],
           quizResults: [
             {
-              quizId: "quiz-1",
-              quizName: "Evaluación Módulo 1",
+              quizId: &ldquo;quiz-1&rdquo;,
+              quizName: &ldquo;Evaluación Módulo 1&rdquo;,
               score: 95,
               maxScore: 100,
               attempts: 1,
-              completedAt: new Date("2024-02-10"),
+              completedAt: new Date(&ldquo;2024-02-10&rdquo;),
               passed: true,
             },
             {
-              quizId: "quiz-2",
-              quizName: "Evaluación Final",
+              quizId: &ldquo;quiz-2&rdquo;,
+              quizName: &ldquo;Evaluación Final&rdquo;,
               score: 90,
               maxScore: 100,
               attempts: 1,
-              completedAt: new Date("2024-02-29"),
+              completedAt: new Date(&ldquo;2024-02-29&rdquo;),
               passed: true,
             },
           ],
@@ -299,9 +299,9 @@ export default function CourseStudentsPage() {
       // Calculate stats
       const stats: CourseStats = {
         totalEnrolled: mockStudents.length,
-        activeStudents: mockStudents.filter((s) => s.status === "active")
+        activeStudents: mockStudents.filter((s) => s.status === &ldquo;active&rdquo;)
           .length,
-        completedStudents: mockStudents.filter((s) => s.status === "completed")
+        completedStudents: mockStudents.filter((s) => s.status === &ldquo;completed&rdquo;)
           .length,
         averageProgress:
           mockStudents.reduce((acc, s) => acc + s.progressPercentage, 0) /
@@ -310,7 +310,7 @@ export default function CourseStudentsPage() {
           mockStudents.reduce((acc, s) => acc + s.timeSpent, 0) /
           mockStudents.length,
         completionRate:
-          (mockStudents.filter((s) => s.status === "completed").length /
+          (mockStudents.filter((s) => s.status === &ldquo;completed&rdquo;).length /
             mockStudents.length) *
           100,
         averageGrade:
@@ -321,7 +321,7 @@ export default function CourseStudentsPage() {
       };
       setStats(stats);
     } catch (error) {
-      console.error("Error fetching student data:", error);
+      console.error(&ldquo;Error fetching student data:&rdquo;, error);
     } finally {
       setLoading(false);
     }
@@ -337,16 +337,16 @@ export default function CourseStudentsPage() {
         .includes(searchQuery.toLowerCase());
 
     const matchesStatus =
-      statusFilter === "all" || enrollment.status === statusFilter;
+      statusFilter === &ldquo;all&rdquo; || enrollment.status === statusFilter;
 
     const matchesProgress =
-      progressFilter === "all" ||
-      (progressFilter === "not_started" &&
+      progressFilter === &ldquo;all&rdquo; ||
+      (progressFilter === &ldquo;not_started&rdquo; &&
         enrollment.progressPercentage === 0) ||
-      (progressFilter === "in_progress" &&
+      (progressFilter === &ldquo;in_progress&rdquo; &&
         enrollment.progressPercentage > 0 &&
         enrollment.progressPercentage < 100) ||
-      (progressFilter === "completed" && enrollment.progressPercentage === 100);
+      (progressFilter === &ldquo;completed&rdquo; && enrollment.progressPercentage === 100);
 
     return matchesSearch && matchesStatus && matchesProgress;
   });
@@ -354,23 +354,23 @@ export default function CourseStudentsPage() {
   const getStatusBadge = (status: string) => {
     const statusConfig = {
       active: {
-        label: "Activo",
-        variant: "default" as const,
+        label: &ldquo;Activo&rdquo;,
+        variant: &ldquo;default&rdquo; as const,
         icon: CheckCircle,
       },
       completed: {
-        label: "Completado",
-        variant: "default" as const,
+        label: &ldquo;Completado&rdquo;,
+        variant: &ldquo;default&rdquo; as const,
         icon: Award,
       },
       dropped: {
-        label: "Abandonado",
-        variant: "destructive" as const,
+        label: &ldquo;Abandonado&rdquo;,
+        variant: &ldquo;destructive&rdquo; as const,
         icon: XCircle,
       },
       inactive: {
-        label: "Inactivo",
-        variant: "secondary" as const,
+        label: &ldquo;Inactivo&rdquo;,
+        variant: &ldquo;secondary&rdquo; as const,
         icon: AlertCircle,
       },
     };
@@ -379,8 +379,8 @@ export default function CourseStudentsPage() {
     const Icon = config.icon;
 
     return (
-      <Badge variant={config.variant} className="flex items-center gap-1">
-        <Icon className="h-3 w-3" />
+      <Badge variant={config.variant} className=&ldquo;flex items-center gap-1&rdquo;>
+        <Icon className=&ldquo;h-3 w-3&rdquo; />
         {config.label}
       </Badge>
     );
@@ -392,117 +392,117 @@ export default function CourseStudentsPage() {
       Email: enrollment.student.email,
       Progreso: `${enrollment.progressPercentage}%`,
       Estado: enrollment.status,
-      "Fecha Inscripción": enrollment.enrollmentDate.toLocaleDateString(),
-      "Último Acceso": enrollment.lastAccessed.toLocaleDateString(),
-      "Tiempo Total": `${Math.floor(enrollment.timeSpent / 60)}h ${enrollment.timeSpent % 60}m`,
-      Calificación: enrollment.finalGrade || "N/A",
+      &ldquo;Fecha Inscripción&rdquo;: enrollment.enrollmentDate.toLocaleDateString(),
+      &ldquo;Último Acceso&rdquo;: enrollment.lastAccessed.toLocaleDateString(),
+      &ldquo;Tiempo Total&rdquo;: `${Math.floor(enrollment.timeSpent / 60)}h ${enrollment.timeSpent % 60}m`,
+      Calificación: enrollment.finalGrade || &ldquo;N/A&rdquo;,
     }));
 
-    console.log("Exporting data:", csvData);
+    console.log(&ldquo;Exporting data:&rdquo;, csvData);
     // Implementation for CSV export would go here
   };
 
   if (loading) {
     return (
-      <div className="container mx-auto p-6">
-        <div className="animate-pulse space-y-6">
-          <div className="h-8 bg-gray-200 rounded w-1/4" />
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className=&ldquo;container mx-auto p-6&rdquo;>
+        <div className=&ldquo;animate-pulse space-y-6&rdquo;>
+          <div className=&ldquo;h-8 bg-gray-200 rounded w-1/4&rdquo; />
+          <div className=&ldquo;grid grid-cols-1 md:grid-cols-4 gap-4&rdquo;>
             {[...Array(4)].map((_, i) => (
-              <div key={i} className="h-24 bg-gray-200 rounded" />
+              <div key={i} className=&ldquo;h-24 bg-gray-200 rounded&rdquo; />
             ))}
           </div>
-          <div className="h-96 bg-gray-200 rounded" />
+          <div className=&ldquo;h-96 bg-gray-200 rounded&rdquo; />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className=&ldquo;container mx-auto p-6 space-y-6&rdquo;>
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" onClick={() => window.history.back()}>
-            <ArrowLeft className="h-4 w-4 mr-2" />
+      <div className=&ldquo;flex items-center justify-between&rdquo;>
+        <div className=&ldquo;flex items-center gap-4&rdquo;>
+          <Button variant=&ldquo;ghost&rdquo; onClick={() => window.history.back()}>
+            <ArrowLeft className=&ldquo;h-4 w-4 mr-2&rdquo; />
             Volver
           </Button>
           <div>
-            <h1 className="text-2xl font-bold">Estudiantes del Curso</h1>
-            <p className="text-muted-foreground">
+            <h1 className=&ldquo;text-2xl font-bold&rdquo;>Estudiantes del Curso</h1>
+            <p className=&ldquo;text-muted-foreground&rdquo;>
               Gestiona y supervisa el progreso de los estudiantes
             </p>
           </div>
         </div>
 
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={exportData}>
-            <Download className="h-4 w-4 mr-2" />
+        <div className=&ldquo;flex gap-2&rdquo;>
+          <Button variant=&ldquo;outline&rdquo; onClick={exportData}>
+            <Download className=&ldquo;h-4 w-4 mr-2&rdquo; />
             Exportar Datos
           </Button>
         </div>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className=&ldquo;grid grid-cols-1 md:grid-cols-4 gap-4&rdquo;>
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
+          <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
+            <CardTitle className=&ldquo;text-sm font-medium&rdquo;>
               Total Inscritos
             </CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+            <Users className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.totalEnrolled}</div>
-            <p className="text-xs text-muted-foreground">
+            <div className=&ldquo;text-2xl font-bold&rdquo;>{stats.totalEnrolled}</div>
+            <p className=&ldquo;text-xs text-muted-foreground&rdquo;>
               {stats.activeStudents} activos
             </p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
+          <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
+            <CardTitle className=&ldquo;text-sm font-medium&rdquo;>
               Progreso Promedio
             </CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            <TrendingUp className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className=&ldquo;text-2xl font-bold&rdquo;>
               {Math.round(stats.averageProgress)}%
             </div>
-            <Progress value={stats.averageProgress} className="mt-2" />
+            <Progress value={stats.averageProgress} className=&ldquo;mt-2&rdquo; />
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
+          <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
+            <CardTitle className=&ldquo;text-sm font-medium&rdquo;>
               Tiempo Promedio
             </CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
+            <Clock className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {Math.floor(stats.averageTimeSpent / 60)}h{" "}
+            <div className=&ldquo;text-2xl font-bold&rdquo;>
+              {Math.floor(stats.averageTimeSpent / 60)}h{&ldquo; &rdquo;}
               {Math.round(stats.averageTimeSpent % 60)}m
             </div>
-            <p className="text-xs text-muted-foreground">Por estudiante</p>
+            <p className=&ldquo;text-xs text-muted-foreground&rdquo;>Por estudiante</p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
+          <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
+            <CardTitle className=&ldquo;text-sm font-medium&rdquo;>
               Tasa de Finalización
             </CardTitle>
-            <Award className="h-4 w-4 text-muted-foreground" />
+            <Award className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className=&ldquo;text-2xl font-bold&rdquo;>
               {Math.round(stats.completionRate)}%
             </div>
-            <p className="text-xs text-muted-foreground">
+            <p className=&ldquo;text-xs text-muted-foreground&rdquo;>
               {stats.certificatesIssued} certificados emitidos
             </p>
           </CardContent>
@@ -512,40 +512,40 @@ export default function CourseStudentsPage() {
       {/* Filters and Search */}
       <Card>
         <CardHeader>
-          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-            <div className="flex flex-col sm:flex-row gap-4 flex-1">
-              <div className="relative flex-1 max-w-sm">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+          <div className=&ldquo;flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between&rdquo;>
+            <div className=&ldquo;flex flex-col sm:flex-row gap-4 flex-1&rdquo;>
+              <div className=&ldquo;relative flex-1 max-w-sm&rdquo;>
+                <Search className=&ldquo;absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4&rdquo; />
                 <Input
-                  placeholder="Buscar estudiantes..."
+                  placeholder=&ldquo;Buscar estudiantes...&rdquo;
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
+                  className=&ldquo;pl-10&rdquo;
                 />
               </div>
 
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-[150px]">
-                  <SelectValue placeholder="Estado" />
+                <SelectTrigger className=&ldquo;w-[150px]&rdquo;>
+                  <SelectValue placeholder=&ldquo;Estado&rdquo; />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Todos</SelectItem>
-                  <SelectItem value="active">Activos</SelectItem>
-                  <SelectItem value="completed">Completados</SelectItem>
-                  <SelectItem value="inactive">Inactivos</SelectItem>
-                  <SelectItem value="dropped">Abandonados</SelectItem>
+                  <SelectItem value=&ldquo;all&rdquo;>Todos</SelectItem>
+                  <SelectItem value=&ldquo;active&rdquo;>Activos</SelectItem>
+                  <SelectItem value=&ldquo;completed&rdquo;>Completados</SelectItem>
+                  <SelectItem value=&ldquo;inactive&rdquo;>Inactivos</SelectItem>
+                  <SelectItem value=&ldquo;dropped&rdquo;>Abandonados</SelectItem>
                 </SelectContent>
               </Select>
 
               <Select value={progressFilter} onValueChange={setProgressFilter}>
-                <SelectTrigger className="w-[150px]">
-                  <SelectValue placeholder="Progreso" />
+                <SelectTrigger className=&ldquo;w-[150px]&rdquo;>
+                  <SelectValue placeholder=&ldquo;Progreso&rdquo; />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Todos</SelectItem>
-                  <SelectItem value="not_started">Sin iniciar</SelectItem>
-                  <SelectItem value="in_progress">En progreso</SelectItem>
-                  <SelectItem value="completed">Completado</SelectItem>
+                  <SelectItem value=&ldquo;all&rdquo;>Todos</SelectItem>
+                  <SelectItem value=&ldquo;not_started&rdquo;>Sin iniciar</SelectItem>
+                  <SelectItem value=&ldquo;in_progress&rdquo;>En progreso</SelectItem>
+                  <SelectItem value=&ldquo;completed&rdquo;>Completado</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -553,7 +553,7 @@ export default function CourseStudentsPage() {
         </CardHeader>
 
         <CardContent>
-          <div className="rounded-md border">
+          <div className=&ldquo;rounded-md border&rdquo;>
             <Table>
               <TableHeader>
                 <TableRow>
@@ -563,32 +563,32 @@ export default function CourseStudentsPage() {
                   <TableHead>Tiempo Total</TableHead>
                   <TableHead>Último Acceso</TableHead>
                   <TableHead>Calificación</TableHead>
-                  <TableHead className="text-right">Acciones</TableHead>
+                  <TableHead className=&ldquo;text-right&rdquo;>Acciones</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredStudents.map((enrollment) => (
                   <TableRow key={enrollment.id}>
                     <TableCell>
-                      <div className="flex items-center gap-3">
-                        <Avatar className="h-8 w-8">
+                      <div className=&ldquo;flex items-center gap-3&rdquo;>
+                        <Avatar className=&ldquo;h-8 w-8&rdquo;>
                           <AvatarImage src={enrollment.student.avatar} />
                           <AvatarFallback>
                             {enrollment.student.name
-                              .split(" ")
+                              .split(&ldquo; &rdquo;)
                               .map((n) => n[0])
-                              .join("")}
+                              .join(&ldquo;&rdquo;)}
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <div className="font-medium">
+                          <div className=&ldquo;font-medium&rdquo;>
                             {enrollment.student.name}
                           </div>
-                          <div className="text-sm text-muted-foreground">
+                          <div className=&ldquo;text-sm text-muted-foreground&rdquo;>
                             {enrollment.student.email}
                           </div>
-                          <div className="text-xs text-muted-foreground">
-                            {enrollment.student.age} años •{" "}
+                          <div className=&ldquo;text-xs text-muted-foreground&rdquo;>
+                            {enrollment.student.age} años •{&ldquo; &rdquo;}
                             {enrollment.student.location}
                           </div>
                         </div>
@@ -596,17 +596,17 @@ export default function CourseStudentsPage() {
                     </TableCell>
 
                     <TableCell>
-                      <div className="space-y-1">
-                        <div className="flex items-center justify-between text-sm">
+                      <div className=&ldquo;space-y-1&rdquo;>
+                        <div className=&ldquo;flex items-center justify-between text-sm&rdquo;>
                           <span>{enrollment.progressPercentage}%</span>
-                          <span className="text-muted-foreground">
+                          <span className=&ldquo;text-muted-foreground&rdquo;>
                             {enrollment.completedLessons}/
                             {enrollment.totalLessons}
                           </span>
                         </div>
                         <Progress
                           value={enrollment.progressPercentage}
-                          className="h-2"
+                          className=&ldquo;h-2&rdquo;
                         />
                       </div>
                     </TableCell>
@@ -614,9 +614,9 @@ export default function CourseStudentsPage() {
                     <TableCell>{getStatusBadge(enrollment.status)}</TableCell>
 
                     <TableCell>
-                      <div className="flex items-center gap-1">
-                        <Clock className="h-4 w-4 text-muted-foreground" />
-                        {Math.floor(enrollment.timeSpent / 60)}h{" "}
+                      <div className=&ldquo;flex items-center gap-1&rdquo;>
+                        <Clock className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
+                        {Math.floor(enrollment.timeSpent / 60)}h{&ldquo; &rdquo;}
                         {enrollment.timeSpent % 60}m
                       </div>
                     </TableCell>
@@ -630,40 +630,40 @@ export default function CourseStudentsPage() {
                         <Badge
                           variant={
                             enrollment.finalGrade >= 70
-                              ? "default"
-                              : "destructive"
+                              ? &ldquo;default&rdquo;
+                              : &ldquo;destructive&rdquo;
                           }
                         >
                           {enrollment.finalGrade}%
                         </Badge>
                       ) : (
-                        <span className="text-muted-foreground">-</span>
+                        <span className=&ldquo;text-muted-foreground&rdquo;>-</span>
                       )}
                     </TableCell>
 
-                    <TableCell className="text-right">
+                    <TableCell className=&ldquo;text-right&rdquo;>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="h-8 w-8 p-0">
-                            <MoreHorizontal className="h-4 w-4" />
+                          <Button variant=&ldquo;ghost&rdquo; className=&ldquo;h-8 w-8 p-0&rdquo;>
+                            <MoreHorizontal className=&ldquo;h-4 w-4&rdquo; />
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
+                        <DropdownMenuContent align=&ldquo;end&rdquo;>
                           <DropdownMenuItem
                             onClick={() => {
                               setSelectedStudent(enrollment);
                               setShowStudentDetail(true);
                             }}
                           >
-                            <Eye className="h-4 w-4 mr-2" />
+                            <Eye className=&ldquo;h-4 w-4 mr-2&rdquo; />
                             Ver Detalle
                           </DropdownMenuItem>
                           <DropdownMenuItem>
-                            <Mail className="h-4 w-4 mr-2" />
+                            <Mail className=&ldquo;h-4 w-4 mr-2&rdquo; />
                             Enviar Email
                           </DropdownMenuItem>
                           <DropdownMenuItem>
-                            <MessageSquare className="h-4 w-4 mr-2" />
+                            <MessageSquare className=&ldquo;h-4 w-4 mr-2&rdquo; />
                             Mensaje Directo
                           </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -676,12 +676,12 @@ export default function CourseStudentsPage() {
           </div>
 
           {filteredStudents.length === 0 && (
-            <div className="text-center py-12">
-              <Users className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">
+            <div className=&ldquo;text-center py-12&rdquo;>
+              <Users className=&ldquo;h-12 w-12 text-muted-foreground mx-auto mb-4&rdquo; />
+              <h3 className=&ldquo;text-lg font-semibold mb-2&rdquo;>
                 No se encontraron estudiantes
               </h3>
-              <p className="text-muted-foreground">
+              <p className=&ldquo;text-muted-foreground&rdquo;>
                 Intenta ajustar los filtros de búsqueda
               </p>
             </div>
@@ -691,72 +691,72 @@ export default function CourseStudentsPage() {
 
       {/* Student Detail Dialog */}
       <Dialog open={showStudentDetail} onOpenChange={setShowStudentDetail}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className=&ldquo;max-w-4xl max-h-[90vh] overflow-y-auto&rdquo;>
           {selectedStudent && (
             <>
               <DialogHeader>
-                <DialogTitle className="flex items-center gap-3">
-                  <Avatar className="h-10 w-10">
+                <DialogTitle className=&ldquo;flex items-center gap-3&rdquo;>
+                  <Avatar className=&ldquo;h-10 w-10&rdquo;>
                     <AvatarImage src={selectedStudent.student.avatar} />
                     <AvatarFallback>
                       {selectedStudent.student.name
-                        .split(" ")
+                        .split(&ldquo; &rdquo;)
                         .map((n) => n[0])
-                        .join("")}
+                        .join(&ldquo;&rdquo;)}
                     </AvatarFallback>
                   </Avatar>
                   <div>
                     <div>{selectedStudent.student.name}</div>
-                    <div className="text-sm text-muted-foreground font-normal">
+                    <div className=&ldquo;text-sm text-muted-foreground font-normal&rdquo;>
                       {selectedStudent.student.email}
                     </div>
                   </div>
                 </DialogTitle>
               </DialogHeader>
 
-              <Tabs defaultValue="progress" className="space-y-4">
+              <Tabs defaultValue=&ldquo;progress&rdquo; className=&ldquo;space-y-4&rdquo;>
                 <TabsList>
-                  <TabsTrigger value="progress">Progreso</TabsTrigger>
-                  <TabsTrigger value="quizzes">Exámenes</TabsTrigger>
-                  <TabsTrigger value="activity">Actividad</TabsTrigger>
+                  <TabsTrigger value=&ldquo;progress&rdquo;>Progreso</TabsTrigger>
+                  <TabsTrigger value=&ldquo;quizzes&rdquo;>Exámenes</TabsTrigger>
+                  <TabsTrigger value=&ldquo;activity&rdquo;>Actividad</TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="progress" className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <TabsContent value=&ldquo;progress&rdquo; className=&ldquo;space-y-4&rdquo;>
+                  <div className=&ldquo;grid grid-cols-1 md:grid-cols-3 gap-4&rdquo;>
                     <Card>
-                      <CardContent className="p-4">
-                        <div className="text-2xl font-bold">
+                      <CardContent className=&ldquo;p-4&rdquo;>
+                        <div className=&ldquo;text-2xl font-bold&rdquo;>
                           {selectedStudent.progressPercentage}%
                         </div>
-                        <p className="text-sm text-muted-foreground">
+                        <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
                           Progreso General
                         </p>
                         <Progress
                           value={selectedStudent.progressPercentage}
-                          className="mt-2"
+                          className=&ldquo;mt-2&rdquo;
                         />
                       </CardContent>
                     </Card>
 
                     <Card>
-                      <CardContent className="p-4">
-                        <div className="text-2xl font-bold">
+                      <CardContent className=&ldquo;p-4&rdquo;>
+                        <div className=&ldquo;text-2xl font-bold&rdquo;>
                           {selectedStudent.completedLessons}/
                           {selectedStudent.totalLessons}
                         </div>
-                        <p className="text-sm text-muted-foreground">
+                        <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
                           Lecciones Completadas
                         </p>
                       </CardContent>
                     </Card>
 
                     <Card>
-                      <CardContent className="p-4">
-                        <div className="text-2xl font-bold">
-                          {Math.floor(selectedStudent.timeSpent / 60)}h{" "}
+                      <CardContent className=&ldquo;p-4&rdquo;>
+                        <div className=&ldquo;text-2xl font-bold&rdquo;>
+                          {Math.floor(selectedStudent.timeSpent / 60)}h{&ldquo; &rdquo;}
                           {selectedStudent.timeSpent % 60}m
                         </div>
-                        <p className="text-sm text-muted-foreground">
+                        <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
                           Tiempo Total
                         </p>
                       </CardContent>
@@ -768,20 +768,20 @@ export default function CourseStudentsPage() {
                       <CardTitle>Progreso por Módulo</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="space-y-4">
+                      <div className=&ldquo;space-y-4&rdquo;>
                         {selectedStudent.moduleProgress.map((module) => (
-                          <div key={module.moduleId} className="space-y-2">
-                            <div className="flex items-center justify-between">
+                          <div key={module.moduleId} className=&ldquo;space-y-2&rdquo;>
+                            <div className=&ldquo;flex items-center justify-between&rdquo;>
                               <div>
-                                <h4 className="font-medium">
+                                <h4 className=&ldquo;font-medium&rdquo;>
                                   {module.moduleName}
                                 </h4>
-                                <p className="text-sm text-muted-foreground">
+                                <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
                                   {module.completedLessons}/
                                   {module.totalLessons} lecciones
                                 </p>
                               </div>
-                              <Badge variant="outline">
+                              <Badge variant=&ldquo;outline&rdquo;>
                                 {module.progressPercentage}%
                               </Badge>
                             </div>
@@ -793,38 +793,38 @@ export default function CourseStudentsPage() {
                   </Card>
                 </TabsContent>
 
-                <TabsContent value="quizzes" className="space-y-4">
+                <TabsContent value=&ldquo;quizzes&rdquo; className=&ldquo;space-y-4&rdquo;>
                   <Card>
                     <CardHeader>
                       <CardTitle>Resultados de Exámenes</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="space-y-4">
+                      <div className=&ldquo;space-y-4&rdquo;>
                         {selectedStudent.quizResults.map((quiz) => (
                           <div
                             key={quiz.quizId}
-                            className="flex items-center justify-between p-4 border rounded-lg"
+                            className=&ldquo;flex items-center justify-between p-4 border rounded-lg&rdquo;
                           >
                             <div>
-                              <h4 className="font-medium">{quiz.quizName}</h4>
-                              <p className="text-sm text-muted-foreground">
-                                Completado el{" "}
+                              <h4 className=&ldquo;font-medium&rdquo;>{quiz.quizName}</h4>
+                              <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
+                                Completado el{&ldquo; &rdquo;}
                                 {quiz.completedAt.toLocaleDateString()}
                               </p>
-                              <p className="text-sm text-muted-foreground">
+                              <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
                                 Intentos: {quiz.attempts}
                               </p>
                             </div>
-                            <div className="text-right">
-                              <div className="text-lg font-bold">
+                            <div className=&ldquo;text-right&rdquo;>
+                              <div className=&ldquo;text-lg font-bold&rdquo;>
                                 {quiz.score}/{quiz.maxScore}
                               </div>
                               <Badge
                                 variant={
-                                  quiz.passed ? "default" : "destructive"
+                                  quiz.passed ? &ldquo;default&rdquo; : &ldquo;destructive&rdquo;
                                 }
                               >
-                                {quiz.passed ? "Aprobado" : "Reprobado"}
+                                {quiz.passed ? &ldquo;Aprobado&rdquo; : &ldquo;Reprobado&rdquo;}
                               </Badge>
                             </div>
                           </div>
@@ -834,29 +834,29 @@ export default function CourseStudentsPage() {
                   </Card>
                 </TabsContent>
 
-                <TabsContent value="activity" className="space-y-4">
+                <TabsContent value=&ldquo;activity&rdquo; className=&ldquo;space-y-4&rdquo;>
                   <Card>
                     <CardHeader>
                       <CardTitle>Actividad Reciente</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="space-y-4">
-                        <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                          <BookOpen className="h-5 w-5 text-blue-600" />
+                      <div className=&ldquo;space-y-4&rdquo;>
+                        <div className=&ldquo;flex items-center gap-3 p-3 bg-gray-50 rounded-lg&rdquo;>
+                          <BookOpen className=&ldquo;h-5 w-5 text-blue-600&rdquo; />
                           <div>
-                            <p className="font-medium">Lección completada</p>
-                            <p className="text-sm text-muted-foreground">
-                              "Comunicación Efectiva" - Hace 2 días
+                            <p className=&ldquo;font-medium&rdquo;>Lección completada</p>
+                            <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
+                              &ldquo;Comunicación Efectiva&rdquo; - Hace 2 días
                             </p>
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                          <CheckCircle className="h-5 w-5 text-green-600" />
+                        <div className=&ldquo;flex items-center gap-3 p-3 bg-gray-50 rounded-lg&rdquo;>
+                          <CheckCircle className=&ldquo;h-5 w-5 text-green-600&rdquo; />
                           <div>
-                            <p className="font-medium">Examen aprobado</p>
-                            <p className="text-sm text-muted-foreground">
-                              "Evaluación Módulo 1" - Hace 1 semana
+                            <p className=&ldquo;font-medium&rdquo;>Examen aprobado</p>
+                            <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
+                              &ldquo;Evaluación Módulo 1&rdquo; - Hace 1 semana
                             </p>
                           </div>
                         </div>

@@ -1,8 +1,8 @@
-"use client"
+&ldquo;use client&rdquo;
 
-import type React from "react"
+import type React from &ldquo;react&rdquo;
 
-import { useState, useEffect } from "react"
+import { useState, useEffect } from &ldquo;react&rdquo;
 import {
   Plus,
   MoreVertical,
@@ -16,14 +16,14 @@ import {
   BarChart3,
   PieChart,
   Download,
-} from "lucide-react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+} from &ldquo;lucide-react&rdquo;
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from &ldquo;@/components/ui/card&rdquo;
+import { Button } from &ldquo;@/components/ui/button&rdquo;
+import { Badge } from &ldquo;@/components/ui/badge&rdquo;
+import { Input } from &ldquo;@/components/ui/input&rdquo;
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from &ldquo;@/components/ui/select&rdquo;
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from &ldquo;@/components/ui/dropdown-menu&rdquo;
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from &ldquo;@/components/ui/table&rdquo;
 import {
   Dialog,
   DialogContent,
@@ -31,16 +31,16 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
+} from &ldquo;@/components/ui/dialog&rdquo;
+import { Label } from &ldquo;@/components/ui/label&rdquo;
+import { Textarea } from &ldquo;@/components/ui/textarea&rdquo;
 
 interface BusinessReport {
   id: string
   title: string
   summary: string
-  status: "DRAFT" | "IN_REVIEW" | "COMPLETED" | "APPROVED"
-  priority: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL"
+  status: &ldquo;DRAFT&rdquo; | &ldquo;IN_REVIEW&rdquo; | &ldquo;COMPLETED&rdquo; | &ldquo;APPROVED&rdquo;
+  priority: &ldquo;LOW&rdquo; | &ldquo;MEDIUM&rdquo; | &ldquo;HIGH&rdquo; | &ldquo;CRITICAL&rdquo;
   createdAt: string
   period: string
   department: string
@@ -58,8 +58,8 @@ interface BusinessReport {
 export default function BusinessReportsPage() {
   const [reports, setReports] = useState<BusinessReport[]>([])
   const [loading, setLoading] = useState(true)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [statusFilter, setStatusFilter] = useState("all")
+  const [searchTerm, setSearchTerm] = useState(&ldquo;&rdquo;)
+  const [statusFilter, setStatusFilter] = useState(&ldquo;all&rdquo;)
   const [showCreateDialog, setShowCreateDialog] = useState(false)
   const [stats, setStats] = useState({
     total: 0,
@@ -71,18 +71,18 @@ export default function BusinessReportsPage() {
 
   // Report creation form state
   const [newReport, setNewReport] = useState({
-    title: "",
-    summary: "",
-    content: "",
-    reportType: "",
-    department: "",
-    period: "",
-    priority: "MEDIUM",
-    status: "DRAFT",
+    title: &ldquo;&rdquo;,
+    summary: &ldquo;&rdquo;,
+    content: &ldquo;&rdquo;,
+    reportType: &ldquo;&rdquo;,
+    department: &ldquo;&rdquo;,
+    period: &ldquo;&rdquo;,
+    priority: &ldquo;MEDIUM&rdquo;,
+    status: &ldquo;DRAFT&rdquo;,
     metrics: {
-      revenue: "",
-      growth: "",
-      efficiency: "",
+      revenue: &ldquo;&rdquo;,
+      growth: &ldquo;&rdquo;,
+      efficiency: &ldquo;&rdquo;,
     },
   })
 
@@ -98,76 +98,76 @@ export default function BusinessReportsPage() {
       // Simulated data for demo
       const mockReports: BusinessReport[] = [
         {
-          id: "1",
-          title: "Reporte Financiero Q4 2023",
-          summary: "Análisis completo de resultados financieros del cuarto trimestre",
-          status: "APPROVED",
-          priority: "HIGH",
-          createdAt: "2024-01-15",
-          period: "Q4 2023",
-          department: "Finanzas",
-          reportType: "Financiero",
+          id: &ldquo;1&rdquo;,
+          title: &ldquo;Reporte Financiero Q4 2023&rdquo;,
+          summary: &ldquo;Análisis completo de resultados financieros del cuarto trimestre&rdquo;,
+          status: &ldquo;APPROVED&rdquo;,
+          priority: &ldquo;HIGH&rdquo;,
+          createdAt: &ldquo;2024-01-15&rdquo;,
+          period: &ldquo;Q4 2023&rdquo;,
+          department: &ldquo;Finanzas&rdquo;,
+          reportType: &ldquo;Financiero&rdquo;,
           metrics: { revenue: 2500000, growth: 15, efficiency: 87 },
           attachments: 3,
-          reviewedBy: "María González",
-          approvedBy: "Carlos Mendoza",
+          reviewedBy: &ldquo;María González&rdquo;,
+          approvedBy: &ldquo;Carlos Mendoza&rdquo;,
         },
         {
-          id: "2",
-          title: "Análisis de Ventas Diciembre 2023",
-          summary: "Reporte mensual de performance de ventas y proyecciones",
-          status: "COMPLETED",
-          priority: "MEDIUM",
-          createdAt: "2024-01-10",
-          period: "Diciembre 2023",
-          department: "Ventas",
-          reportType: "Comercial",
+          id: &ldquo;2&rdquo;,
+          title: &ldquo;Análisis de Ventas Diciembre 2023&rdquo;,
+          summary: &ldquo;Reporte mensual de performance de ventas y proyecciones&rdquo;,
+          status: &ldquo;COMPLETED&rdquo;,
+          priority: &ldquo;MEDIUM&rdquo;,
+          createdAt: &ldquo;2024-01-10&rdquo;,
+          period: &ldquo;Diciembre 2023&rdquo;,
+          department: &ldquo;Ventas&rdquo;,
+          reportType: &ldquo;Comercial&rdquo;,
           metrics: { revenue: 450000, growth: 8, efficiency: 92 },
           attachments: 2,
-          reviewedBy: "Ana Pérez",
+          reviewedBy: &ldquo;Ana Pérez&rdquo;,
         },
         {
-          id: "3",
-          title: "Reporte de Recursos Humanos - Año 2023",
-          summary: "Análisis anual de gestión de talento y clima organizacional",
-          status: "IN_REVIEW",
-          priority: "MEDIUM",
-          createdAt: "2024-01-08",
-          period: "Año 2023",
-          department: "RRHH",
-          reportType: "Recursos Humanos",
+          id: &ldquo;3&rdquo;,
+          title: &ldquo;Reporte de Recursos Humanos - Año 2023&rdquo;,
+          summary: &ldquo;Análisis anual de gestión de talento y clima organizacional&rdquo;,
+          status: &ldquo;IN_REVIEW&rdquo;,
+          priority: &ldquo;MEDIUM&rdquo;,
+          createdAt: &ldquo;2024-01-08&rdquo;,
+          period: &ldquo;Año 2023&rdquo;,
+          department: &ldquo;RRHH&rdquo;,
+          reportType: &ldquo;Recursos Humanos&rdquo;,
           metrics: { efficiency: 78 },
           attachments: 5,
-          reviewedBy: "Luis Rodríguez",
+          reviewedBy: &ldquo;Luis Rodríguez&rdquo;,
         },
         {
-          id: "4",
-          title: "Análisis de Marketing Digital Q4",
-          summary: "Performance de campañas digitales y ROI del último trimestre",
-          status: "DRAFT",
-          priority: "LOW",
-          createdAt: "2024-01-05",
-          period: "Q4 2023",
-          department: "Marketing",
-          reportType: "Marketing",
+          id: &ldquo;4&rdquo;,
+          title: &ldquo;Análisis de Marketing Digital Q4&rdquo;,
+          summary: &ldquo;Performance de campañas digitales y ROI del último trimestre&rdquo;,
+          status: &ldquo;DRAFT&rdquo;,
+          priority: &ldquo;LOW&rdquo;,
+          createdAt: &ldquo;2024-01-05&rdquo;,
+          period: &ldquo;Q4 2023&rdquo;,
+          department: &ldquo;Marketing&rdquo;,
+          reportType: &ldquo;Marketing&rdquo;,
           metrics: { growth: 25, efficiency: 65 },
           attachments: 1,
         },
       ]
 
       const filteredReports =
-        statusFilter === "all" ? mockReports : mockReports.filter((r) => r.status.toLowerCase() === statusFilter)
+        statusFilter === &ldquo;all&rdquo; ? mockReports : mockReports.filter((r) => r.status.toLowerCase() === statusFilter)
 
       setReports(filteredReports)
       setStats({
         total: mockReports.length,
-        completed: mockReports.filter((r) => r.status === "COMPLETED").length,
-        draft: mockReports.filter((r) => r.status === "DRAFT").length,
-        inReview: mockReports.filter((r) => r.status === "IN_REVIEW").length,
-        approved: mockReports.filter((r) => r.status === "APPROVED").length,
+        completed: mockReports.filter((r) => r.status === &ldquo;COMPLETED&rdquo;).length,
+        draft: mockReports.filter((r) => r.status === &ldquo;DRAFT&rdquo;).length,
+        inReview: mockReports.filter((r) => r.status === &ldquo;IN_REVIEW&rdquo;).length,
+        approved: mockReports.filter((r) => r.status === &ldquo;APPROVED&rdquo;).length,
       })
     } catch (error) {
-      console.error("Error fetching reports:", error)
+      console.error(&ldquo;Error fetching reports:&rdquo;, error)
     } finally {
       setLoading(false)
     }
@@ -188,77 +188,77 @@ export default function BusinessReportsPage() {
     try {
       const reportData = {
         ...newReport,
-        companyId: "company-1",
+        companyId: &ldquo;company-1&rdquo;,
         createdAt: new Date().toISOString(),
         attachments: attachmentFile ? 1 : 0,
       }
 
       // Simulate API call
-      console.log("Creating report:", reportData)
+      console.log(&ldquo;Creating report:&rdquo;, reportData)
 
       setShowCreateDialog(false)
       setNewReport({
-        title: "",
-        summary: "",
-        content: "",
-        reportType: "",
-        department: "",
-        period: "",
-        priority: "MEDIUM",
-        status: "DRAFT",
+        title: &ldquo;&rdquo;,
+        summary: &ldquo;&rdquo;,
+        content: &ldquo;&rdquo;,
+        reportType: &ldquo;&rdquo;,
+        department: &ldquo;&rdquo;,
+        period: &ldquo;&rdquo;,
+        priority: &ldquo;MEDIUM&rdquo;,
+        status: &ldquo;DRAFT&rdquo;,
         metrics: {
-          revenue: "",
-          growth: "",
-          efficiency: "",
+          revenue: &ldquo;&rdquo;,
+          growth: &ldquo;&rdquo;,
+          efficiency: &ldquo;&rdquo;,
         },
       })
       setAttachmentFile(null)
       fetchReports()
     } catch (error) {
-      console.error("Error creating report:", error)
+      console.error(&ldquo;Error creating report:&rdquo;, error)
     }
   }
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "APPROVED":
-        return "bg-green-100 text-green-800"
-      case "COMPLETED":
-        return "bg-blue-100 text-blue-800"
-      case "IN_REVIEW":
-        return "bg-yellow-100 text-yellow-800"
-      case "DRAFT":
-        return "bg-gray-100 text-gray-800"
+      case &ldquo;APPROVED&rdquo;:
+        return &ldquo;bg-green-100 text-green-800&rdquo;
+      case &ldquo;COMPLETED&rdquo;:
+        return &ldquo;bg-blue-100 text-blue-800&rdquo;
+      case &ldquo;IN_REVIEW&rdquo;:
+        return &ldquo;bg-yellow-100 text-yellow-800&rdquo;
+      case &ldquo;DRAFT&rdquo;:
+        return &ldquo;bg-gray-100 text-gray-800&rdquo;
       default:
-        return "bg-gray-100 text-gray-800"
+        return &ldquo;bg-gray-100 text-gray-800&rdquo;
     }
   }
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case "CRITICAL":
-        return "bg-red-100 text-red-800"
-      case "HIGH":
-        return "bg-orange-100 text-orange-800"
-      case "MEDIUM":
-        return "bg-blue-100 text-blue-800"
-      case "LOW":
-        return "bg-gray-100 text-gray-800"
+      case &ldquo;CRITICAL&rdquo;:
+        return &ldquo;bg-red-100 text-red-800&rdquo;
+      case &ldquo;HIGH&rdquo;:
+        return &ldquo;bg-orange-100 text-orange-800&rdquo;
+      case &ldquo;MEDIUM&rdquo;:
+        return &ldquo;bg-blue-100 text-blue-800&rdquo;
+      case &ldquo;LOW&rdquo;:
+        return &ldquo;bg-gray-100 text-gray-800&rdquo;
       default:
-        return "bg-gray-100 text-gray-800"
+        return &ldquo;bg-gray-100 text-gray-800&rdquo;
     }
   }
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case "APPROVED":
-        return "Aprobado"
-      case "COMPLETED":
-        return "Completado"
-      case "IN_REVIEW":
-        return "En Revisión"
-      case "DRAFT":
-        return "Borrador"
+      case &ldquo;APPROVED&rdquo;:
+        return &ldquo;Aprobado&rdquo;
+      case &ldquo;COMPLETED&rdquo;:
+        return &ldquo;Completado&rdquo;
+      case &ldquo;IN_REVIEW&rdquo;:
+        return &ldquo;En Revisión&rdquo;
+      case &ldquo;DRAFT&rdquo;:
+        return &ldquo;Borrador&rdquo;
       default:
         return status
     }
@@ -266,14 +266,14 @@ export default function BusinessReportsPage() {
 
   const getPriorityText = (priority: string) => {
     switch (priority) {
-      case "CRITICAL":
-        return "Crítica"
-      case "HIGH":
-        return "Alta"
-      case "MEDIUM":
-        return "Media"
-      case "LOW":
-        return "Baja"
+      case &ldquo;CRITICAL&rdquo;:
+        return &ldquo;Crítica&rdquo;
+      case &ldquo;HIGH&rdquo;:
+        return &ldquo;Alta&rdquo;
+      case &ldquo;MEDIUM&rdquo;:
+        return &ldquo;Media&rdquo;
+      case &ldquo;LOW&rdquo;:
+        return &ldquo;Baja&rdquo;
       default:
         return priority
     }
@@ -287,135 +287,135 @@ export default function BusinessReportsPage() {
   )
 
   return (
-    <div className="space-y-6">
+    <div className=&ldquo;space-y-6&rdquo;>
       {/* Header */}
-      <div className="flex justify-between items-center">
+      <div className=&ldquo;flex justify-between items-center&rdquo;>
         <div>
-          <h1 className="text-3xl font-bold">Reportes Empresariales</h1>
-          <p className="text-muted-foreground">Gestiona y analiza todos los reportes de tu organización</p>
+          <h1 className=&ldquo;text-3xl font-bold&rdquo;>Reportes Empresariales</h1>
+          <p className=&ldquo;text-muted-foreground&rdquo;>Gestiona y analiza todos los reportes de tu organización</p>
         </div>
 
         <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
           <DialogTrigger asChild>
             <Button>
-              <Plus className="w-4 h-4 mr-2" />
+              <Plus className=&ldquo;w-4 h-4 mr-2&rdquo; />
               Crear Reporte
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-3xl">
+          <DialogContent className=&ldquo;max-w-3xl&rdquo;>
             <DialogHeader>
               <DialogTitle>Crear Nuevo Reporte</DialogTitle>
               <DialogDescription>Genera un nuevo reporte empresarial para análisis y seguimiento</DialogDescription>
             </DialogHeader>
-            <div className="grid gap-4 py-4 max-h-[70vh] overflow-y-auto">
+            <div className=&ldquo;grid gap-4 py-4 max-h-[70vh] overflow-y-auto&rdquo;>
               {/* Attachment Upload Section */}
-              <div className="grid gap-2">
+              <div className=&ldquo;grid gap-2&rdquo;>
                 <Label>Archivo Adjunto</Label>
                 {attachmentFile ? (
-                  <div className="flex items-center gap-2 p-3 border rounded-lg">
-                    <FileText className="w-4 h-4" />
-                    <span className="text-sm">{attachmentFile.name}</span>
-                    <Button size="sm" variant="ghost" onClick={removeAttachment}>
-                      <X className="w-4 h-4" />
+                  <div className=&ldquo;flex items-center gap-2 p-3 border rounded-lg&rdquo;>
+                    <FileText className=&ldquo;w-4 h-4&rdquo; />
+                    <span className=&ldquo;text-sm&rdquo;>{attachmentFile.name}</span>
+                    <Button size=&ldquo;sm&rdquo; variant=&ldquo;ghost&rdquo; onClick={removeAttachment}>
+                      <X className=&ldquo;w-4 h-4&rdquo; />
                     </Button>
                   </div>
                 ) : (
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                    <FileText className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                    <p className="text-sm text-gray-500 mb-2">Adjunta documentos de soporte (Excel, PDF, Word)</p>
+                  <div className=&ldquo;border-2 border-dashed border-gray-300 rounded-lg p-6 text-center&rdquo;>
+                    <FileText className=&ldquo;w-8 h-8 text-gray-400 mx-auto mb-2&rdquo; />
+                    <p className=&ldquo;text-sm text-gray-500 mb-2&rdquo;>Adjunta documentos de soporte (Excel, PDF, Word)</p>
                     <Input
-                      type="file"
-                      accept=".pdf,.xlsx,.xls,.docx,.doc"
+                      type=&ldquo;file&rdquo;
+                      accept=&ldquo;.pdf,.xlsx,.xls,.docx,.doc&rdquo;
                       onChange={handleAttachmentUpload}
-                      className="hidden"
-                      id="attachment-upload"
+                      className=&ldquo;hidden&rdquo;
+                      id=&ldquo;attachment-upload&rdquo;
                     />
                     <Label
-                      htmlFor="attachment-upload"
-                      className="cursor-pointer inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:bg-primary/90"
+                      htmlFor=&ldquo;attachment-upload&rdquo;
+                      className=&ldquo;cursor-pointer inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:bg-primary/90&rdquo;
                     >
-                      <Upload className="w-4 h-4 mr-2" />
+                      <Upload className=&ldquo;w-4 h-4 mr-2&rdquo; />
                       Subir Archivo
                     </Label>
                   </div>
                 )}
               </div>
 
-              <div className="grid gap-2">
-                <Label htmlFor="title">Título del Reporte *</Label>
+              <div className=&ldquo;grid gap-2&rdquo;>
+                <Label htmlFor=&ldquo;title&rdquo;>Título del Reporte *</Label>
                 <Input
-                  id="title"
+                  id=&ldquo;title&rdquo;
                   value={newReport.title}
                   onChange={(e) => setNewReport({ ...newReport, title: e.target.value })}
-                  placeholder="Ej: Reporte Financiero Q1 2024"
+                  placeholder=&ldquo;Ej: Reporte Financiero Q1 2024&rdquo;
                 />
               </div>
 
-              <div className="grid gap-2">
-                <Label htmlFor="summary">Resumen Ejecutivo *</Label>
+              <div className=&ldquo;grid gap-2&rdquo;>
+                <Label htmlFor=&ldquo;summary&rdquo;>Resumen Ejecutivo *</Label>
                 <Textarea
-                  id="summary"
+                  id=&ldquo;summary&rdquo;
                   value={newReport.summary}
                   onChange={(e) => setNewReport({ ...newReport, summary: e.target.value })}
-                  placeholder="Breve resumen de los hallazgos principales..."
+                  placeholder=&ldquo;Breve resumen de los hallazgos principales...&rdquo;
                   rows={2}
                 />
               </div>
 
-              <div className="grid gap-2">
-                <Label htmlFor="content">Contenido del Reporte *</Label>
+              <div className=&ldquo;grid gap-2&rdquo;>
+                <Label htmlFor=&ldquo;content&rdquo;>Contenido del Reporte *</Label>
                 <Textarea
-                  id="content"
+                  id=&ldquo;content&rdquo;
                   value={newReport.content}
                   onChange={(e) => setNewReport({ ...newReport, content: e.target.value })}
-                  placeholder="Análisis detallado, metodología, conclusiones..."
+                  placeholder=&ldquo;Análisis detallado, metodología, conclusiones...&rdquo;
                   rows={6}
                 />
               </div>
 
-              <div className="grid grid-cols-3 gap-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="reportType">Tipo de Reporte</Label>
+              <div className=&ldquo;grid grid-cols-3 gap-4&rdquo;>
+                <div className=&ldquo;grid gap-2&rdquo;>
+                  <Label htmlFor=&ldquo;reportType&rdquo;>Tipo de Reporte</Label>
                   <Select
                     value={newReport.reportType}
                     onValueChange={(value) => setNewReport({ ...newReport, reportType: value })}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Seleccionar tipo" />
+                      <SelectValue placeholder=&ldquo;Seleccionar tipo&rdquo; />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Financiero">Financiero</SelectItem>
-                      <SelectItem value="Comercial">Comercial</SelectItem>
-                      <SelectItem value="Operacional">Operacional</SelectItem>
-                      <SelectItem value="Recursos Humanos">Recursos Humanos</SelectItem>
-                      <SelectItem value="Marketing">Marketing</SelectItem>
-                      <SelectItem value="Estratégico">Estratégico</SelectItem>
+                      <SelectItem value=&ldquo;Financiero&rdquo;>Financiero</SelectItem>
+                      <SelectItem value=&ldquo;Comercial&rdquo;>Comercial</SelectItem>
+                      <SelectItem value=&ldquo;Operacional&rdquo;>Operacional</SelectItem>
+                      <SelectItem value=&ldquo;Recursos Humanos&rdquo;>Recursos Humanos</SelectItem>
+                      <SelectItem value=&ldquo;Marketing&rdquo;>Marketing</SelectItem>
+                      <SelectItem value=&ldquo;Estratégico&rdquo;>Estratégico</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
-                <div className="grid gap-2">
-                  <Label htmlFor="department">Departamento</Label>
+                <div className=&ldquo;grid gap-2&rdquo;>
+                  <Label htmlFor=&ldquo;department&rdquo;>Departamento</Label>
                   <Select
                     value={newReport.department}
                     onValueChange={(value) => setNewReport({ ...newReport, department: value })}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Seleccionar depto" />
+                      <SelectValue placeholder=&ldquo;Seleccionar depto&rdquo; />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Finanzas">Finanzas</SelectItem>
-                      <SelectItem value="Ventas">Ventas</SelectItem>
-                      <SelectItem value="Marketing">Marketing</SelectItem>
-                      <SelectItem value="RRHH">RRHH</SelectItem>
-                      <SelectItem value="Operaciones">Operaciones</SelectItem>
-                      <SelectItem value="TI">Tecnología</SelectItem>
+                      <SelectItem value=&ldquo;Finanzas&rdquo;>Finanzas</SelectItem>
+                      <SelectItem value=&ldquo;Ventas&rdquo;>Ventas</SelectItem>
+                      <SelectItem value=&ldquo;Marketing&rdquo;>Marketing</SelectItem>
+                      <SelectItem value=&ldquo;RRHH&rdquo;>RRHH</SelectItem>
+                      <SelectItem value=&ldquo;Operaciones&rdquo;>Operaciones</SelectItem>
+                      <SelectItem value=&ldquo;TI&rdquo;>Tecnología</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
-                <div className="grid gap-2">
-                  <Label htmlFor="priority">Prioridad</Label>
+                <div className=&ldquo;grid gap-2&rdquo;>
+                  <Label htmlFor=&ldquo;priority&rdquo;>Prioridad</Label>
                   <Select
                     value={newReport.priority}
                     onValueChange={(value) => setNewReport({ ...newReport, priority: value })}
@@ -424,31 +424,31 @@ export default function BusinessReportsPage() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="LOW">Baja</SelectItem>
-                      <SelectItem value="MEDIUM">Media</SelectItem>
-                      <SelectItem value="HIGH">Alta</SelectItem>
-                      <SelectItem value="CRITICAL">Crítica</SelectItem>
+                      <SelectItem value=&ldquo;LOW&rdquo;>Baja</SelectItem>
+                      <SelectItem value=&ldquo;MEDIUM&rdquo;>Media</SelectItem>
+                      <SelectItem value=&ldquo;HIGH&rdquo;>Alta</SelectItem>
+                      <SelectItem value=&ldquo;CRITICAL&rdquo;>Crítica</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
 
-              <div className="grid gap-2">
-                <Label htmlFor="period">Período del Reporte</Label>
+              <div className=&ldquo;grid gap-2&rdquo;>
+                <Label htmlFor=&ldquo;period&rdquo;>Período del Reporte</Label>
                 <Input
-                  id="period"
+                  id=&ldquo;period&rdquo;
                   value={newReport.period}
                   onChange={(e) => setNewReport({ ...newReport, period: e.target.value })}
-                  placeholder="Ej: Q1 2024, Enero 2024, Año 2023"
+                  placeholder=&ldquo;Ej: Q1 2024, Enero 2024, Año 2023&rdquo;
                 />
               </div>
 
-              <div className="grid grid-cols-3 gap-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="revenue">Ingresos (Bs.)</Label>
+              <div className=&ldquo;grid grid-cols-3 gap-4&rdquo;>
+                <div className=&ldquo;grid gap-2&rdquo;>
+                  <Label htmlFor=&ldquo;revenue&rdquo;>Ingresos (Bs.)</Label>
                   <Input
-                    id="revenue"
-                    type="number"
+                    id=&ldquo;revenue&rdquo;
+                    type=&ldquo;number&rdquo;
                     value={newReport.metrics.revenue}
                     onChange={(e) =>
                       setNewReport({
@@ -456,14 +456,14 @@ export default function BusinessReportsPage() {
                         metrics: { ...newReport.metrics, revenue: e.target.value },
                       })
                     }
-                    placeholder="0"
+                    placeholder=&ldquo;0&rdquo;
                   />
                 </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="growth">Crecimiento (%)</Label>
+                <div className=&ldquo;grid gap-2&rdquo;>
+                  <Label htmlFor=&ldquo;growth&rdquo;>Crecimiento (%)</Label>
                   <Input
-                    id="growth"
-                    type="number"
+                    id=&ldquo;growth&rdquo;
+                    type=&ldquo;number&rdquo;
                     value={newReport.metrics.growth}
                     onChange={(e) =>
                       setNewReport({
@@ -471,14 +471,14 @@ export default function BusinessReportsPage() {
                         metrics: { ...newReport.metrics, growth: e.target.value },
                       })
                     }
-                    placeholder="0"
+                    placeholder=&ldquo;0&rdquo;
                   />
                 </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="efficiency">Eficiencia (%)</Label>
+                <div className=&ldquo;grid gap-2&rdquo;>
+                  <Label htmlFor=&ldquo;efficiency&rdquo;>Eficiencia (%)</Label>
                   <Input
-                    id="efficiency"
-                    type="number"
+                    id=&ldquo;efficiency&rdquo;
+                    type=&ldquo;number&rdquo;
                     value={newReport.metrics.efficiency}
                     onChange={(e) =>
                       setNewReport({
@@ -486,12 +486,12 @@ export default function BusinessReportsPage() {
                         metrics: { ...newReport.metrics, efficiency: e.target.value },
                       })
                     }
-                    placeholder="0"
+                    placeholder=&ldquo;0&rdquo;
                   />
                 </div>
               </div>
 
-              <div className="flex gap-2 pt-4">
+              <div className=&ldquo;flex gap-2 pt-4&rdquo;>
                 <Button
                   onClick={handleCreateReport}
                   disabled={!newReport.title || !newReport.summary || !newReport.content}
@@ -499,9 +499,9 @@ export default function BusinessReportsPage() {
                   Crear como Borrador
                 </Button>
                 <Button
-                  variant="outline"
+                  variant=&ldquo;outline&rdquo;
                   onClick={() => {
-                    setNewReport({ ...newReport, status: "COMPLETED" })
+                    setNewReport({ ...newReport, status: &ldquo;COMPLETED&rdquo; })
                     handleCreateReport()
                   }}
                   disabled={!newReport.title || !newReport.summary || !newReport.content}
@@ -515,50 +515,50 @@ export default function BusinessReportsPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+      <div className=&ldquo;grid grid-cols-1 md:grid-cols-5 gap-4&rdquo;>
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Reportes</CardTitle>
-            <FileText className="h-4 w-4 text-muted-foreground" />
+          <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
+            <CardTitle className=&ldquo;text-sm font-medium&rdquo;>Total Reportes</CardTitle>
+            <FileText className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.total}</div>
+            <div className=&ldquo;text-2xl font-bold&rdquo;>{stats.total}</div>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Aprobados</CardTitle>
-            <BarChart3 className="h-4 w-4 text-muted-foreground" />
+          <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
+            <CardTitle className=&ldquo;text-sm font-medium&rdquo;>Aprobados</CardTitle>
+            <BarChart3 className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">{stats.approved}</div>
+            <div className=&ldquo;text-2xl font-bold text-green-600&rdquo;>{stats.approved}</div>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Completados</CardTitle>
-            <PieChart className="h-4 w-4 text-muted-foreground" />
+          <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
+            <CardTitle className=&ldquo;text-sm font-medium&rdquo;>Completados</CardTitle>
+            <PieChart className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-blue-600">{stats.completed}</div>
+            <div className=&ldquo;text-2xl font-bold text-blue-600&rdquo;>{stats.completed}</div>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">En Revisión</CardTitle>
-            <Eye className="h-4 w-4 text-muted-foreground" />
+          <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
+            <CardTitle className=&ldquo;text-sm font-medium&rdquo;>En Revisión</CardTitle>
+            <Eye className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-yellow-600">{stats.inReview}</div>
+            <div className=&ldquo;text-2xl font-bold text-yellow-600&rdquo;>{stats.inReview}</div>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Borradores</CardTitle>
-            <Edit className="h-4 w-4 text-muted-foreground" />
+          <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
+            <CardTitle className=&ldquo;text-sm font-medium&rdquo;>Borradores</CardTitle>
+            <Edit className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-gray-600">{stats.draft}</div>
+            <div className=&ldquo;text-2xl font-bold text-gray-600&rdquo;>{stats.draft}</div>
           </CardContent>
         </Card>
       </div>
@@ -569,25 +569,25 @@ export default function BusinessReportsPage() {
           <CardTitle>Filtros y Búsqueda</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex gap-4">
-            <div className="flex-1">
+          <div className=&ldquo;flex gap-4&rdquo;>
+            <div className=&ldquo;flex-1&rdquo;>
               <Input
-                placeholder="Buscar reportes..."
+                placeholder=&ldquo;Buscar reportes...&rdquo;
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="max-w-sm"
+                className=&ldquo;max-w-sm&rdquo;
               />
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Estado" />
+              <SelectTrigger className=&ldquo;w-[180px]&rdquo;>
+                <SelectValue placeholder=&ldquo;Estado&rdquo; />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Todos</SelectItem>
-                <SelectItem value="approved">Aprobados</SelectItem>
-                <SelectItem value="completed">Completados</SelectItem>
-                <SelectItem value="in_review">En Revisión</SelectItem>
-                <SelectItem value="draft">Borradores</SelectItem>
+                <SelectItem value=&ldquo;all&rdquo;>Todos</SelectItem>
+                <SelectItem value=&ldquo;approved&rdquo;>Aprobados</SelectItem>
+                <SelectItem value=&ldquo;completed&rdquo;>Completados</SelectItem>
+                <SelectItem value=&ldquo;in_review&rdquo;>En Revisión</SelectItem>
+                <SelectItem value=&ldquo;draft&rdquo;>Borradores</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -616,13 +616,13 @@ export default function BusinessReportsPage() {
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8">
+                  <TableCell colSpan={7} className=&ldquo;text-center py-8&rdquo;>
                     Cargando reportes...
                   </TableCell>
                 </TableRow>
               ) : filteredReports.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8">
+                  <TableCell colSpan={7} className=&ldquo;text-center py-8&rdquo;>
                     No se encontraron reportes
                   </TableCell>
                 </TableRow>
@@ -630,14 +630,14 @@ export default function BusinessReportsPage() {
                 filteredReports.map((report) => (
                   <TableRow key={report.id}>
                     <TableCell>
-                      <div className="flex gap-3">
-                        <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                          <FileText className="w-6 h-6 text-blue-600" />
+                      <div className=&ldquo;flex gap-3&rdquo;>
+                        <div className=&ldquo;w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center&rdquo;>
+                          <FileText className=&ldquo;w-6 h-6 text-blue-600&rdquo; />
                         </div>
                         <div>
-                          <div className="font-medium line-clamp-1">{report.title}</div>
-                          <div className="text-sm text-muted-foreground line-clamp-1">{report.summary}</div>
-                          <div className="text-xs text-muted-foreground">
+                          <div className=&ldquo;font-medium line-clamp-1&rdquo;>{report.title}</div>
+                          <div className=&ldquo;text-sm text-muted-foreground line-clamp-1&rdquo;>{report.summary}</div>
+                          <div className=&ldquo;text-xs text-muted-foreground&rdquo;>
                             {report.attachments} archivo(s) adjunto(s)
                           </div>
                         </div>
@@ -650,21 +650,21 @@ export default function BusinessReportsPage() {
                       <Badge className={getPriorityColor(report.priority)}>{getPriorityText(report.priority)}</Badge>
                     </TableCell>
                     <TableCell>
-                      <div className="flex items-center gap-1">
+                      <div className=&ldquo;flex items-center gap-1&rdquo;>
                         <span>{report.department}</span>
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className="flex items-center gap-1">
-                        <Calendar className="w-3 h-3" />
+                      <div className=&ldquo;flex items-center gap-1&rdquo;>
+                        <Calendar className=&ldquo;w-3 h-3&rdquo; />
                         {report.period}
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className="text-sm space-y-1">
+                      <div className=&ldquo;text-sm space-y-1&rdquo;>
                         {report.metrics.revenue && <div>Ingresos: Bs. {report.metrics.revenue.toLocaleString()}</div>}
                         {report.metrics.growth && (
-                          <div className="text-green-600">+{report.metrics.growth}% crecimiento</div>
+                          <div className=&ldquo;text-green-600&rdquo;>+{report.metrics.growth}% crecimiento</div>
                         )}
                         {report.metrics.efficiency && <div>{report.metrics.efficiency}% eficiencia</div>}
                       </div>
@@ -672,25 +672,25 @@ export default function BusinessReportsPage() {
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="sm">
-                            <MoreVertical className="w-4 h-4" />
+                          <Button variant=&ldquo;ghost&rdquo; size=&ldquo;sm&rdquo;>
+                            <MoreVertical className=&ldquo;w-4 h-4&rdquo; />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
                           <DropdownMenuItem>
-                            <Eye className="w-4 h-4 mr-2" />
+                            <Eye className=&ldquo;w-4 h-4 mr-2&rdquo; />
                             Ver Detalles
                           </DropdownMenuItem>
                           <DropdownMenuItem>
-                            <Download className="w-4 h-4 mr-2" />
+                            <Download className=&ldquo;w-4 h-4 mr-2&rdquo; />
                             Descargar
                           </DropdownMenuItem>
                           <DropdownMenuItem>
-                            <Edit className="w-4 h-4 mr-2" />
+                            <Edit className=&ldquo;w-4 h-4 mr-2&rdquo; />
                             Editar
                           </DropdownMenuItem>
-                          <DropdownMenuItem className="text-red-600">
-                            <Trash2 className="w-4 h-4 mr-2" />
+                          <DropdownMenuItem className=&ldquo;text-red-600&rdquo;>
+                            <Trash2 className=&ldquo;w-4 h-4 mr-2&rdquo; />
                             Eliminar
                           </DropdownMenuItem>
                         </DropdownMenuContent>

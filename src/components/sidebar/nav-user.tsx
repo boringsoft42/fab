@@ -1,6 +1,6 @@
-"use client";
+&ldquo;use client&rdquo;;
 
-import Link from "next/link";
+import Link from &ldquo;next/link&rdquo;;
 import {
   BadgeCheck,
   Bell,
@@ -8,12 +8,12 @@ import {
   CreditCard,
   LogOut,
   Sparkles,
-} from "lucide-react";
+} from &ldquo;lucide-react&rdquo;;
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@/components/ui/avatar";
+} from &ldquo;@/components/ui/avatar&rdquo;;
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,14 +22,14 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from &ldquo;@/components/ui/dropdown-menu&rdquo;;
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@/components/ui/sidebar";
-import { useAuth } from "@/providers/auth-provider";
+} from &ldquo;@/components/ui/sidebar&rdquo;;
+import { useAuth } from &ldquo;@/providers/auth-provider&rdquo;;
 
 export function NavUser() {
   const { isMobile } = useSidebar();
@@ -39,16 +39,16 @@ export function NavUser() {
 
   const displayName = [profile.firstName, profile.lastName]
     .filter(Boolean)
-    .join(" ");
+    .join(&ldquo; &rdquo;);
 
   const getInitials = () => {
     if (profile.firstName || profile.lastName) {
       return [profile.firstName?.[0], profile.lastName?.[0]]
         .filter(Boolean)
-        .join("")
+        .join(&ldquo;&rdquo;)
         .toUpperCase();
     }
-    return user.email?.[0]?.toUpperCase() || "U";
+    return user.email?.[0]?.toUpperCase() || &ldquo;U&rdquo;;
   };
 
   return (
@@ -57,49 +57,49 @@ export function NavUser() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
-              size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              size=&ldquo;lg&rdquo;
+              className=&ldquo;data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground&rdquo;
             >
-              <Avatar className="h-8 w-8 rounded-lg ring-2 ring-primary/10">
+              <Avatar className=&ldquo;h-8 w-8 rounded-lg ring-2 ring-primary/10&rdquo;>
                 <AvatarImage 
-                  src={profile.avatarUrl || ""} 
-                  alt={displayName || user.email || "User"} 
+                  src={profile.avatarUrl || &ldquo;&rdquo;} 
+                  alt={displayName || user.email || &ldquo;User&rdquo;} 
                 />
-                <AvatarFallback className="rounded-lg bg-primary/10">
+                <AvatarFallback className=&ldquo;rounded-lg bg-primary/10&rdquo;>
                   {getInitials()}
                 </AvatarFallback>
               </Avatar>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">
+              <div className=&ldquo;grid flex-1 text-left text-sm leading-tight&rdquo;>
+                <span className=&ldquo;truncate font-semibold&rdquo;>
                   {displayName || user.email}
                 </span>
-                <span className="truncate text-xs">{user.email}</span>
+                <span className=&ldquo;truncate text-xs&rdquo;>{user.email}</span>
               </div>
-              <ChevronsUpDown className="ml-auto size-4" />
+              <ChevronsUpDown className=&ldquo;ml-auto size-4&rdquo; />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-            side={isMobile ? "bottom" : "right"}
-            align="end"
+            className=&ldquo;w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg&rdquo;
+            side={isMobile ? &ldquo;bottom&rdquo; : &ldquo;right&rdquo;}
+            align=&ldquo;end&rdquo;
             sideOffset={4}
           >
-            <DropdownMenuLabel className="p-0 font-normal">
-              <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-lg ring-2 ring-primary/10">
+            <DropdownMenuLabel className=&ldquo;p-0 font-normal&rdquo;>
+              <div className=&ldquo;flex items-center gap-2 px-1 py-1.5 text-left text-sm&rdquo;>
+                <Avatar className=&ldquo;h-8 w-8 rounded-lg ring-2 ring-primary/10&rdquo;>
                   <AvatarImage 
-                    src={profile.avatarUrl || ""} 
-                    alt={displayName || user.email || "User"} 
+                    src={profile.avatarUrl || &ldquo;&rdquo;} 
+                    alt={displayName || user.email || &ldquo;User&rdquo;} 
                   />
-                  <AvatarFallback className="rounded-lg bg-primary/10">
+                  <AvatarFallback className=&ldquo;rounded-lg bg-primary/10&rdquo;>
                     {getInitials()}
                   </AvatarFallback>
                 </Avatar>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">
+                <div className=&ldquo;grid flex-1 text-left text-sm leading-tight&rdquo;>
+                  <span className=&ldquo;truncate font-semibold&rdquo;>
                     {displayName || user.email}
                   </span>
-                  <span className="truncate text-xs">{user.email}</span>
+                  <span className=&ldquo;truncate text-xs&rdquo;>{user.email}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
@@ -113,19 +113,19 @@ export function NavUser() {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem asChild>
-                <Link href="/settings/account">
+                <Link href=&ldquo;/settings/account&rdquo;>
                   <BadgeCheck />
                   Account
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/settings">
+                <Link href=&ldquo;/settings&rdquo;>
                   <CreditCard />
                   Billing
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/settings/notifications">
+                <Link href=&ldquo;/settings/notifications&rdquo;>
                   <Bell />
                   Notifications
                 </Link>

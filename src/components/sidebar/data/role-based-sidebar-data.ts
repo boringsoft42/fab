@@ -22,147 +22,147 @@ import {
   UserCheck,
   Newspaper,
   UserCircle,
-} from "lucide-react";
-import type { SidebarData, SidebarItem } from "../types";
-import type { UserRole } from "@prisma/client";
+} from &ldquo;lucide-react&rdquo;;
+import type { SidebarData, SidebarItem } from &ldquo;../types&rdquo;;
+import type { UserRole } from &ldquo;@prisma/client&rdquo;;
 
 const commonTeams = [
   {
-    name: "CEMSE Platform",
+    name: &ldquo;CEMSE Platform&rdquo;,
     logo: Command,
-    plan: "Employability & Entrepreneurship",
+    plan: &ldquo;Employability & Entrepreneurship&rdquo;,
   },
   {
-    name: "Cochabamba",
+    name: &ldquo;Cochabamba&rdquo;,
     logo: GalleryVerticalEnd,
-    plan: "Regional Hub",
+    plan: &ldquo;Regional Hub&rdquo;,
   },
   {
-    name: "Bolivia",
+    name: &ldquo;Bolivia&rdquo;,
     logo: AudioWaveform,
-    plan: "National Network",
+    plan: &ldquo;National Network&rdquo;,
   },
 ];
 
 // YOUTH navigation
 export const youthSidebarData: SidebarData = {
   user: {
-    name: "Usuario Joven",
-    email: "youth@example.com",
-    avatar: "/avatars/youth.jpg",
+    name: &ldquo;Usuario Joven&rdquo;,
+    email: &ldquo;youth@example.com&rdquo;,
+    avatar: &ldquo;/avatars/youth.jpg&rdquo;,
   },
   teams: commonTeams,
   navGroups: [
     {
-      title: "Principal",
+      title: &ldquo;Principal&rdquo;,
       items: [
         {
-          title: "Dashboard",
-          url: "/dashboard",
+          title: &ldquo;Dashboard&rdquo;,
+          url: &ldquo;/dashboard&rdquo;,
           icon: LayoutDashboard,
         },
         {
-          title: "Buscar Empleos",
-          url: "/jobs",
+          title: &ldquo;Buscar Empleos&rdquo;,
+          url: &ldquo;/jobs&rdquo;,
           icon: Search,
         },
         {
-          title: "Mis Postulaciones",
-          url: "/my-applications",
+          title: &ldquo;Mis Postulaciones&rdquo;,
+          url: &ldquo;/my-applications&rdquo;,
           icon: FileText,
         },
         {
-          title: "Mis Entrevistas",
-          url: "/my-interviews",
+          title: &ldquo;Mis Entrevistas&rdquo;,
+          url: &ldquo;/my-interviews&rdquo;,
           icon: FileText,
         },
       ],
     },
     {
-      title: "Desarrollo",
+      title: &ldquo;Desarrollo&rdquo;,
       items: [
         {
-          title: "Capacitación",
+          title: &ldquo;Capacitación&rdquo;,
           icon: GraduationCap,
           items: [
             {
-              title: "Cursos Disponibles",
-              url: "/courses",
+              title: &ldquo;Cursos Disponibles&rdquo;,
+              url: &ldquo;/courses&rdquo;,
             },
             {
-              title: "Mis Cursos",
-              url: "/my-courses",
+              title: &ldquo;Mis Cursos&rdquo;,
+              url: &ldquo;/my-courses&rdquo;,
             },
             {
-              title: "Certificados",
-              url: "/certificates",
+              title: &ldquo;Certificados&rdquo;,
+              url: &ldquo;/certificates&rdquo;,
             },
           ],
         },
         {
-          title: "Emprendimiento",
+          title: &ldquo;Emprendimiento&rdquo;,
           icon: Lightbulb,
           items: [
             {
-              title: "Hub de Emprendimiento",
-              url: "/entrepreneurship",
+              title: &ldquo;Hub de Emprendimiento&rdquo;,
+              url: &ldquo;/entrepreneurship&rdquo;,
             },
             {
-              title: "Simulador de Plan de Negocios",
-              url: "/business-plan-simulator",
+              title: &ldquo;Simulador de Plan de Negocios&rdquo;,
+              url: &ldquo;/business-plan-simulator&rdquo;,
             },
             {
-              title: "Centro de Recursos",
-              url: "/entrepreneurship/resources",
+              title: &ldquo;Centro de Recursos&rdquo;,
+              url: &ldquo;/entrepreneurship/resources&rdquo;,
             },
             {
-              title: "Publicar mi Emprendimiento",
-              url: "/publish-entrepreneurship",
+              title: &ldquo;Publicar mi Emprendimiento&rdquo;,
+              url: &ldquo;/publish-entrepreneurship&rdquo;,
             },
             {
-              title: "Mentorías",
-              url: "/mentorship",
+              title: &ldquo;Mentorías&rdquo;,
+              url: &ldquo;/mentorship&rdquo;,
             },
           ],
         },
       ],
     },
     {
-      title: "Recursos de Emprendimiento",
+      title: &ldquo;Recursos de Emprendimiento&rdquo;,
       items: [
         {
-          title: "Directorio de Instituciones",
-          url: "/entrepreneurship/directory",
+          title: &ldquo;Directorio de Instituciones&rdquo;,
+          url: &ldquo;/entrepreneurship/directory&rdquo;,
           icon: Building2,
         },
         {
-          title: "Red de Contactos",
-          url: "/entrepreneurship/network",
+          title: &ldquo;Red de Contactos&rdquo;,
+          url: &ldquo;/entrepreneurship/network&rdquo;,
           icon: Users,
         },
       ],
     },
     {
-      title: "Información",
+      title: &ldquo;Información&rdquo;,
       items: [
         {
-          title: "Noticias",
+          title: &ldquo;Noticias&rdquo;,
           icon: Newspaper,
-          url: "/news",
+          url: &ldquo;/news&rdquo;,
         },
       ],
     },
     {
-      title: "Personal",
+      title: &ldquo;Personal&rdquo;,
       items: [
         {
-          title: "Mi Perfil",
-          url: "/profile",
+          title: &ldquo;Mi Perfil&rdquo;,
+          url: &ldquo;/profile&rdquo;,
           icon: User,
         },
         // {
-        //   title: "Reportes Personales",
-        //   url: "/reports/personal",
+        //   title: &ldquo;Reportes Personales&rdquo;,
+        //   url: &ldquo;/reports/personal&rdquo;,
         //   icon: BarChart3,
         // },
       ],
@@ -174,95 +174,95 @@ export const youthSidebarData: SidebarData = {
 // ADOLESCENTS navigation (similar to youth but no reports)
 export const adolescentSidebarData: SidebarData = {
   user: {
-    name: "Usuario Adolescente",
-    email: "adolescent@example.com",
-    avatar: "/avatars/adolescent.jpg",
+    name: &ldquo;Usuario Adolescente&rdquo;,
+    email: &ldquo;adolescent@example.com&rdquo;,
+    avatar: &ldquo;/avatars/adolescent.jpg&rdquo;,
   },
   teams: commonTeams,
   navGroups: [
     {
-      title: "Principal",
+      title: &ldquo;Principal&rdquo;,
       items: [
         {
-          title: "Dashboard",
-          url: "/dashboard",
+          title: &ldquo;Dashboard&rdquo;,
+          url: &ldquo;/dashboard&rdquo;,
           icon: LayoutDashboard,
         },
         {
-          title: "Buscar Empleos",
-          url: "/jobs",
+          title: &ldquo;Buscar Empleos&rdquo;,
+          url: &ldquo;/jobs&rdquo;,
           icon: Search,
         },
         {
-          title: "Mis Postulaciones",
-          url: "/my-applications",
+          title: &ldquo;Mis Postulaciones&rdquo;,
+          url: &ldquo;/my-applications&rdquo;,
           icon: FileText,
         },
       ],
     },
     {
-      title: "Desarrollo",
+      title: &ldquo;Desarrollo&rdquo;,
       items: [
         {
-          title: "Capacitación",
+          title: &ldquo;Capacitación&rdquo;,
           icon: GraduationCap,
           items: [
             {
-              title: "Cursos Disponibles",
-              url: "/courses",
+              title: &ldquo;Cursos Disponibles&rdquo;,
+              url: &ldquo;/courses&rdquo;,
             },
             {
-              title: "Mis Cursos",
-              url: "/my-courses",
+              title: &ldquo;Mis Cursos&rdquo;,
+              url: &ldquo;/my-courses&rdquo;,
             },
             {
-              title: "Certificados",
-              url: "/certificates",
+              title: &ldquo;Certificados&rdquo;,
+              url: &ldquo;/certificates&rdquo;,
             },
           ],
         },
         {
-          title: "Emprendimiento",
+          title: &ldquo;Emprendimiento&rdquo;,
           icon: Lightbulb,
           items: [
             {
-              title: "Hub de Emprendimiento",
-              url: "/entrepreneurship",
+              title: &ldquo;Hub de Emprendimiento&rdquo;,
+              url: &ldquo;/entrepreneurship&rdquo;,
             },
             {
-              title: "Simulador de Plan de Negocios",
-              url: "/business-plan-simulator",
+              title: &ldquo;Simulador de Plan de Negocios&rdquo;,
+              url: &ldquo;/business-plan-simulator&rdquo;,
             },
             {
-              title: "Centro de Recursos",
-              url: "/entrepreneurship/resources",
-            },
-            // {
-            //   title: "Directorio de Instituciones",
-            //   url: "/entrepreneurship/directory",
-            // },
-            {
-              title: "Publicar mi Emprendimiento",
-              url: "/publish-entrepreneurship",
+              title: &ldquo;Centro de Recursos&rdquo;,
+              url: &ldquo;/entrepreneurship/resources&rdquo;,
             },
             // {
-            //   title: "Red de Contactos",
-            //   url: "/entrepreneurship/network",
+            //   title: &ldquo;Directorio de Instituciones&rdquo;,
+            //   url: &ldquo;/entrepreneurship/directory&rdquo;,
             // },
             {
-              title: "Mentorías",
-              url: "/mentorship",
+              title: &ldquo;Publicar mi Emprendimiento&rdquo;,
+              url: &ldquo;/publish-entrepreneurship&rdquo;,
+            },
+            // {
+            //   title: &ldquo;Red de Contactos&rdquo;,
+            //   url: &ldquo;/entrepreneurship/network&rdquo;,
+            // },
+            {
+              title: &ldquo;Mentorías&rdquo;,
+              url: &ldquo;/mentorship&rdquo;,
             },
           ],
         },
       ],
     },
     {
-      title: "Personal",
+      title: &ldquo;Personal&rdquo;,
       items: [
         {
-          title: "Mi Perfil",
-          url: "/profile",
+          title: &ldquo;Mi Perfil&rdquo;,
+          url: &ldquo;/profile&rdquo;,
           icon: User,
         },
         // Note: No Reports for adolescents per permission matrix
@@ -274,63 +274,63 @@ export const adolescentSidebarData: SidebarData = {
 // COMPANIES navigation
 export const companySidebarData: SidebarData = {
   user: {
-    name: "Empresa",
-    email: "company@example.com",
-    avatar: "/avatars/company.jpg",
+    name: &ldquo;Empresa&rdquo;,
+    email: &ldquo;company@example.com&rdquo;,
+    avatar: &ldquo;/avatars/company.jpg&rdquo;,
   },
   teams: commonTeams,
   navGroups: [
     {
-      title: "Principal",
+      title: &ldquo;Principal&rdquo;,
       items: [
         {
-          title: "Dashboard",
-          url: "/dashboard",
+          title: &ldquo;Dashboard&rdquo;,
+          url: &ldquo;/dashboard&rdquo;,
           icon: LayoutDashboard,
         },
         {
-          title: "Publicar Empleos",
-          url: "/jobs/create",
+          title: &ldquo;Publicar Empleos&rdquo;,
+          url: &ldquo;/jobs/create&rdquo;,
           icon: Briefcase,
         },
         {
-          title: "Mis Empleos",
-          url: "/jobs/manage",
+          title: &ldquo;Mis Empleos&rdquo;,
+          url: &ldquo;/jobs/manage&rdquo;,
           icon: Building2,
         },
         {
-          title: "Gestionar Candidatos",
-          url: "/job-publishing/candidates",
+          title: &ldquo;Gestionar Candidatos&rdquo;,
+          url: &ldquo;/job-publishing/candidates&rdquo;,
           icon: Users,
         },
       ],
     },
     {
-      title: "Comunicación",
+      title: &ldquo;Comunicación&rdquo;,
       items: [
         {
-          title: "Gestión de Noticias",
-          url: "/company/news",
+          title: &ldquo;Gestión de Noticias&rdquo;,
+          url: &ldquo;/company/news&rdquo;,
           icon: FileText,
         },
       ],
     },
     // {
-    //   title: "Análisis",
+    //   title: &ldquo;Análisis&rdquo;,
     //   items: [
     //     {
-    //       title: "Reportes Empresariales",
-    //       url: "/company/report",
+    //       title: &ldquo;Reportes Empresariales&rdquo;,
+    //       url: &ldquo;/company/report&rdquo;,
     //       icon: BarChart3,
     //     },
     //   ],
     // },
     {
-      title: "Configuración",
+      title: &ldquo;Configuración&rdquo;,
       items: [
         {
-          title: "Perfil de Empresa",
-          url: "/company/profile",
+          title: &ldquo;Perfil de Empresa&rdquo;,
+          url: &ldquo;/company/profile&rdquo;,
           icon: Building2,
         },
       ],
@@ -341,90 +341,90 @@ export const companySidebarData: SidebarData = {
 // MUNICIPAL GOVERNMENTS navigation
 export const municipalGovernmentSidebarData: SidebarData = {
   user: {
-    name: "Gobierno Municipal",
-    email: "municipality@example.com",
-    avatar: "/avatars/government.jpg",
+    name: &ldquo;Gobierno Municipal&rdquo;,
+    email: &ldquo;municipality@example.com&rdquo;,
+    avatar: &ldquo;/avatars/government.jpg&rdquo;,
   },
   teams: commonTeams,
   navGroups: [
     {
-      title: "Administración",
+      title: &ldquo;Administración&rdquo;,
       items: [
         {
-          title: "Dashboard Administrativo",
-          url: "/dashboard",
+          title: &ldquo;Dashboard Administrativo&rdquo;,
+          url: &ldquo;/dashboard&rdquo;,
           icon: LayoutDashboard,
         },
         {
-          title: "Gestión de Usuarios",
-          url: "/admin/users",
+          title: &ldquo;Gestión de Usuarios&rdquo;,
+          url: &ldquo;/admin/users&rdquo;,
           icon: UserCog,
         },
       ],
     },
     {
-      title: "Programas",
+      title: &ldquo;Programas&rdquo;,
       items: [
         {
-          title: "Capacitación",
+          title: &ldquo;Capacitación&rdquo;,
           icon: GraduationCap,
           items: [
             {
-              title: "Gestión de Cursos",
-              url: "/admin/courses",
+              title: &ldquo;Gestión de Cursos&rdquo;,
+              url: &ldquo;/admin/courses&rdquo;,
             },
             // {
-            //   title: "Crear Curso",
-            //   url: "/admin/courses/create",
+            //   title: &ldquo;Crear Curso&rdquo;,
+            //   url: &ldquo;/admin/courses/create&rdquo;,
             // },
             {
-              title: "Estudiantes",
-              url: "/admin/students",
+              title: &ldquo;Estudiantes&rdquo;,
+              url: &ldquo;/admin/students&rdquo;,
             },
           ],
         },
         {
-          title: "Contenido para Jóvenes",
+          title: &ldquo;Contenido para Jóvenes&rdquo;,
           icon: Lightbulb,
           items: [
             {
-              title: "Gestión de Contenido",
-              url: "/admin/youth-content",
+              title: &ldquo;Gestión de Contenido&rdquo;,
+              url: &ldquo;/admin/youth-content&rdquo;,
             },
             // {
-            //   title: "Gestión de Eventos",
-            //   url: "/admin/entrepreneurship/events",
+            //   title: &ldquo;Gestión de Eventos&rdquo;,
+            //   url: &ldquo;/admin/entrepreneurship/events&rdquo;,
             // },
           ],
         },
       ],
     },
     {
-      title: "Comunicación",
+      title: &ldquo;Comunicación&rdquo;,
       items: [
         {
-          title: "Gestión de Noticias",
-          url: "/admin/news",
+          title: &ldquo;Gestión de Noticias&rdquo;,
+          url: &ldquo;/admin/news&rdquo;,
           icon: FileText,
         },
       ],
     },
     {
-      title: "Análisis",
+      title: &ldquo;Análisis&rdquo;,
       items: [
         {
-          title: "Reportes Avanzados",
-          url: "/reports/admin",
+          title: &ldquo;Reportes Avanzados&rdquo;,
+          url: &ldquo;/reports/admin&rdquo;,
           icon: PieChart,
         },
       ],
     },
     {
-      title: "Sistema",
+      title: &ldquo;Sistema&rdquo;,
       items: [
         {
-          title: "Perfil",
-          url: "/admin/settings",
+          title: &ldquo;Perfil&rdquo;,
+          url: &ldquo;/admin/settings&rdquo;,
           icon: Settings,
         },
       ],
@@ -435,90 +435,90 @@ export const municipalGovernmentSidebarData: SidebarData = {
 // TRAINING CENTERS navigation
 export const trainingCenterSidebarData: SidebarData = {
   user: {
-    name: "Centro de Capacitación",
-    email: "training@example.com",
-    avatar: "/avatars/training.jpg",
+    name: &ldquo;Centro de Capacitación&rdquo;,
+    email: &ldquo;training@example.com&rdquo;,
+    avatar: &ldquo;/avatars/training.jpg&rdquo;,
   },
   teams: commonTeams,
   navGroups: [
     {
-      title: "Administración",
+      title: &ldquo;Administración&rdquo;,
       items: [
         {
-          title: "Dashboard",
-          url: "/dashboard",
+          title: &ldquo;Dashboard&rdquo;,
+          url: &ldquo;/dashboard&rdquo;,
           icon: LayoutDashboard,
         },
         {
-          title: "Gestión de Usuarios",
-          url: "/admin/users",
+          title: &ldquo;Gestión de Usuarios&rdquo;,
+          url: &ldquo;/admin/users&rdquo;,
           icon: UserCog,
         },
       ],
     },
     {
-      title: "Programas",
+      title: &ldquo;Programas&rdquo;,
       items: [
         {
-          title: "Capacitación",
+          title: &ldquo;Capacitación&rdquo;,
           icon: GraduationCap,
           items: [
             {
-              title: "Gestión de Cursos",
-              url: "/admin/courses",
+              title: &ldquo;Gestión de Cursos&rdquo;,
+              url: &ldquo;/admin/courses&rdquo;,
             },
             {
-              title: "Crear Curso",
-              url: "/admin/courses/create",
+              title: &ldquo;Crear Curso&rdquo;,
+              url: &ldquo;/admin/courses/create&rdquo;,
             },
             {
-              title: "Estudiantes",
-              url: "/admin/students",
+              title: &ldquo;Estudiantes&rdquo;,
+              url: &ldquo;/admin/students&rdquo;,
             },
           ],
         },
         {
-          title: "Contenido para Jóvenes",
+          title: &ldquo;Contenido para Jóvenes&rdquo;,
           icon: Lightbulb,
           items: [
             {
-              title: "Gestión de Contenido",
-              url: "/admin/youth-content",
+              title: &ldquo;Gestión de Contenido&rdquo;,
+              url: &ldquo;/admin/youth-content&rdquo;,
             },
             {
-              title: "Gestión de Eventos",
-              url: "/admin/entrepreneurship/events",
+              title: &ldquo;Gestión de Eventos&rdquo;,
+              url: &ldquo;/admin/entrepreneurship/events&rdquo;,
             },
           ],
         },
       ],
     },
     {
-      title: "Comunicación",
+      title: &ldquo;Comunicación&rdquo;,
       items: [
         {
-          title: "Gestión de Noticias",
-          url: "/admin/news",
+          title: &ldquo;Gestión de Noticias&rdquo;,
+          url: &ldquo;/admin/news&rdquo;,
           icon: FileText,
         },
       ],
     },
     {
-      title: "Análisis",
+      title: &ldquo;Análisis&rdquo;,
       items: [
         {
-          title: "Reportes de Capacitación",
-          url: "/reports/training",
+          title: &ldquo;Reportes de Capacitación&rdquo;,
+          url: &ldquo;/reports/training&rdquo;,
           icon: BarChart3,
         },
       ],
     },
     {
-      title: "Sistema",
+      title: &ldquo;Sistema&rdquo;,
       items: [
         {
-          title: "Configuración",
-          url: "/admin/settings",
+          title: &ldquo;Configuración&rdquo;,
+          url: &ldquo;/admin/settings&rdquo;,
           icon: Settings,
         },
       ],
@@ -529,90 +529,90 @@ export const trainingCenterSidebarData: SidebarData = {
 // NGOS AND FOUNDATIONS navigation
 export const ngoFoundationSidebarData: SidebarData = {
   user: {
-    name: "ONG/Fundación",
-    email: "ngo@example.com",
-    avatar: "/avatars/ngo.jpg",
+    name: &ldquo;ONG/Fundación&rdquo;,
+    email: &ldquo;ngo@example.com&rdquo;,
+    avatar: &ldquo;/avatars/ngo.jpg&rdquo;,
   },
   teams: commonTeams,
   navGroups: [
     {
-      title: "Administración",
+      title: &ldquo;Administración&rdquo;,
       items: [
         {
-          title: "Dashboard",
-          url: "/dashboard",
+          title: &ldquo;Dashboard&rdquo;,
+          url: &ldquo;/dashboard&rdquo;,
           icon: LayoutDashboard,
         },
         {
-          title: "Gestión de Usuarios",
-          url: "/admin/users",
+          title: &ldquo;Gestión de Usuarios&rdquo;,
+          url: &ldquo;/admin/users&rdquo;,
           icon: UserCog,
         },
       ],
     },
     {
-      title: "Programas",
+      title: &ldquo;Programas&rdquo;,
       items: [
         {
-          title: "Capacitación",
+          title: &ldquo;Capacitación&rdquo;,
           icon: GraduationCap,
           items: [
             {
-              title: "Gestión de Cursos",
-              url: "/admin/courses",
+              title: &ldquo;Gestión de Cursos&rdquo;,
+              url: &ldquo;/admin/courses&rdquo;,
             },
             {
-              title: "Crear Curso",
-              url: "/admin/courses/create",
+              title: &ldquo;Crear Curso&rdquo;,
+              url: &ldquo;/admin/courses/create&rdquo;,
             },
             {
-              title: "Estudiantes",
-              url: "/admin/students",
+              title: &ldquo;Estudiantes&rdquo;,
+              url: &ldquo;/admin/students&rdquo;,
             },
           ],
         },
         {
-          title: "Contenido para Jóvenes",
+          title: &ldquo;Contenido para Jóvenes&rdquo;,
           icon: Lightbulb,
           items: [
             {
-              title: "Gestión de Contenido",
-              url: "/admin/youth-content",
+              title: &ldquo;Gestión de Contenido&rdquo;,
+              url: &ldquo;/admin/youth-content&rdquo;,
             },
             {
-              title: "Gestión de Eventos",
-              url: "/admin/entrepreneurship/events",
+              title: &ldquo;Gestión de Eventos&rdquo;,
+              url: &ldquo;/admin/entrepreneurship/events&rdquo;,
             },
           ],
         },
       ],
     },
     {
-      title: "Comunicación",
+      title: &ldquo;Comunicación&rdquo;,
       items: [
         {
-          title: "Gestión de Noticias",
-          url: "/admin/news",
+          title: &ldquo;Gestión de Noticias&rdquo;,
+          url: &ldquo;/admin/news&rdquo;,
           icon: FileText,
         },
       ],
     },
     {
-      title: "Análisis",
+      title: &ldquo;Análisis&rdquo;,
       items: [
         {
-          title: "Reportes de Impacto Social",
-          url: "/reports/impact",
+          title: &ldquo;Reportes de Impacto Social&rdquo;,
+          url: &ldquo;/reports/impact&rdquo;,
           icon: BarChart3,
         },
       ],
     },
     {
-      title: "Sistema",
+      title: &ldquo;Sistema&rdquo;,
       items: [
         {
-          title: "Configuración",
-          url: "/admin/settings",
+          title: &ldquo;Configuración&rdquo;,
+          url: &ldquo;/admin/settings&rdquo;,
           icon: Settings,
         },
       ],
@@ -622,17 +622,17 @@ export const ngoFoundationSidebarData: SidebarData = {
 
 export function getSidebarDataByRole(role: UserRole): SidebarData {
   switch (role) {
-    case "YOUTH":
+    case &ldquo;YOUTH&rdquo;:
       return youthSidebarData;
-    case "ADOLESCENTS":
+    case &ldquo;ADOLESCENTS&rdquo;:
       return adolescentSidebarData;
-    case "COMPANIES":
+    case &ldquo;COMPANIES&rdquo;:
       return companySidebarData;
-    case "MUNICIPAL_GOVERNMENTS":
+    case &ldquo;MUNICIPAL_GOVERNMENTS&rdquo;:
       return municipalGovernmentSidebarData;
-    case "TRAINING_CENTERS":
+    case &ldquo;TRAINING_CENTERS&rdquo;:
       return trainingCenterSidebarData;
-    case "NGOS_AND_FOUNDATIONS":
+    case &ldquo;NGOS_AND_FOUNDATIONS&rdquo;:
       return ngoFoundationSidebarData;
     default:
       return youthSidebarData; // fallback
@@ -641,86 +641,86 @@ export function getSidebarDataByRole(role: UserRole): SidebarData {
 
 export const youthSidebarItems: SidebarItem[] = [
   {
-    title: "Principal",
+    title: &ldquo;Principal&rdquo;,
     items: [
       {
-        title: "Dashboard",
+        title: &ldquo;Dashboard&rdquo;,
         icon: LayoutDashboard,
-        href: "/dashboard",
+        href: &ldquo;/dashboard&rdquo;,
       },
       {
-        title: "Buscar Empleos",
+        title: &ldquo;Buscar Empleos&rdquo;,
         icon: Briefcase,
-        href: "/jobs",
+        href: &ldquo;/jobs&rdquo;,
       },
       {
-        title: "Mis Postulaciones",
+        title: &ldquo;Mis Postulaciones&rdquo;,
         icon: Briefcase,
-        href: "/my-applications",
+        href: &ldquo;/my-applications&rdquo;,
       },
     ],
   },
   {
-    title: "Desarrollo",
+    title: &ldquo;Desarrollo&rdquo;,
     items: [
       {
-        title: "Capacitación",
+        title: &ldquo;Capacitación&rdquo;,
         icon: GraduationCap,
-        href: "/courses",
+        href: &ldquo;/courses&rdquo;,
         items: [
           {
-            title: "Explorar Cursos",
-            href: "/courses",
+            title: &ldquo;Explorar Cursos&rdquo;,
+            href: &ldquo;/courses&rdquo;,
           },
           {
-            title: "Mis Cursos",
-            href: "/my-courses",
+            title: &ldquo;Mis Cursos&rdquo;,
+            href: &ldquo;/my-courses&rdquo;,
           },
         ],
       },
       {
-        title: "Emprendimiento",
+        title: &ldquo;Emprendimiento&rdquo;,
         icon: Lightbulb,
-        href: "/entrepreneurship",
+        href: &ldquo;/entrepreneurship&rdquo;,
         items: [
           {
-            title: "Recursos",
-            href: "/entrepreneurship/resources",
+            title: &ldquo;Recursos&rdquo;,
+            href: &ldquo;/entrepreneurship/resources&rdquo;,
           },
           {
-            title: "Directorio",
-            href: "/entrepreneurship/directory",
+            title: &ldquo;Directorio&rdquo;,
+            href: &ldquo;/entrepreneurship/directory&rdquo;,
           },
           {
-            title: "Red de Contactos",
-            href: "/entrepreneurship/network",
+            title: &ldquo;Red de Contactos&rdquo;,
+            href: &ldquo;/entrepreneurship/network&rdquo;,
           },
         ],
       },
     ],
   },
   {
-    title: "Información",
+    title: &ldquo;Información&rdquo;,
     items: [
       {
-        title: "Noticias",
+        title: &ldquo;Noticias&rdquo;,
         icon: Newspaper,
-        href: "/news",
+        href: &ldquo;/news&rdquo;,
       },
     ],
   },
   {
-    title: "Personal",
+    title: &ldquo;Personal&rdquo;,
     items: [
       {
-        title: "Mi Perfil",
+        title: &ldquo;Mi Perfil&rdquo;,
         icon: UserCircle,
-        href: "/profile",
+        href: &ldquo;/profile&rdquo;,
       },
       // {
-      //   title: "Reportes Personales",
+      //   title: &ldquo;Reportes Personales&rdquo;,
       //   icon: BarChart3,
-      //   href: "/reports",
+      //   href: &ldquo;/reports&rdquo;,
       // },
     ],
   },

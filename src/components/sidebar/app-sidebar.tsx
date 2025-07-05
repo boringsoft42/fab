@@ -4,16 +4,16 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
-} from "@/components/ui/sidebar";
-import { NavGroup } from "./nav-group";
-import { NavUser } from "./nav-user";
-import { TeamSwitcher } from "./team-switcher";
-import { sidebarData } from "./data/sidebar-data";
-import type { NavGroupProps } from "./types";
+} from &ldquo;@/components/ui/sidebar&rdquo;;
+import { NavGroup } from &ldquo;./nav-group&rdquo;;
+import { NavUser } from &ldquo;./nav-user&rdquo;;
+import { TeamSwitcher } from &ldquo;./team-switcher&rdquo;;
+import { sidebarData } from &ldquo;./data/sidebar-data&rdquo;;
+import type { NavGroupProps } from &ldquo;./types&rdquo;;
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="icon" variant="floating" {...props}>
+    <Sidebar collapsible=&ldquo;icon&rdquo; variant=&ldquo;floating&rdquo; {...props}>
       <SidebarHeader>
         <TeamSwitcher teams={sidebarData.teams} />
       </SidebarHeader>

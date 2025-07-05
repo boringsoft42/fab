@@ -1,6 +1,6 @@
-"use client";
+&ldquo;use client&rdquo;;
 
-import { cn } from "@/lib/utils";
+import { cn } from &ldquo;@/lib/utils&rdquo;;
 
 type TColorProp = string | string[];
 
@@ -27,7 +27,7 @@ export function ShineBorder({
   borderRadius = 8,
   borderWidth = 1,
   duration = 14,
-  color = "#000000",
+  color = &ldquo;#000000&rdquo;,
   className,
   children,
 }: ShineBorderProps) {
@@ -35,25 +35,25 @@ export function ShineBorder({
     <div
       style={
         {
-          "--border-radius": `${borderRadius}px`,
+          &ldquo;--border-radius&rdquo;: `${borderRadius}px`,
         } as React.CSSProperties
       }
       className={cn(
-        "relative min-h-[60px] w-fit min-w-[300px] place-items-center rounded-[--border-radius] p-3 bg-background border",
+        &ldquo;relative min-h-[60px] w-fit min-w-[300px] place-items-center rounded-[--border-radius] p-3 bg-background border&rdquo;,
         className,
       )}
     >
       <div
         style={
           {
-            "--border-width": `${borderWidth}px`,
-            "--border-radius": `${borderRadius}px`,
-            "--duration": `${duration}s`,
-            "--mask-linear-gradient": `linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)`,
-            "--background-radial-gradient": `radial-gradient(transparent,transparent, ${color instanceof Array ? color.join(",") : color},transparent,transparent)`,
+            &ldquo;--border-width&rdquo;: `${borderWidth}px`,
+            &ldquo;--border-radius&rdquo;: `${borderRadius}px`,
+            &ldquo;--duration&rdquo;: `${duration}s`,
+            &ldquo;--mask-linear-gradient&rdquo;: `linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)`,
+            &ldquo;--background-radial-gradient&rdquo;: `radial-gradient(transparent,transparent, ${color instanceof Array ? color.join(&ldquo;,&rdquo;) : color},transparent,transparent)`,
           } as React.CSSProperties
         }
-        className={`before:bg-shine-size pointer-events-none before:absolute before:inset-0 before:size-full before:rounded-[--border-radius] before:p-[--border-width] before:will-change-[background-position] before:content-[""] before:![-webkit-mask-composite:xor] before:![mask-composite:exclude] before:[background-image:--background-radial-gradient] before:[background-size:300%_300%] before:[mask:--mask-linear-gradient] motion-safe:before:animate-shine`}
+        className={`before:bg-shine-size pointer-events-none before:absolute before:inset-0 before:size-full before:rounded-[--border-radius] before:p-[--border-width] before:will-change-[background-position] before:content-[&ldquo;&rdquo;] before:![-webkit-mask-composite:xor] before:![mask-composite:exclude] before:[background-image:--background-radial-gradient] before:[background-size:300%_300%] before:[mask:--mask-linear-gradient] motion-safe:before:animate-shine`}
       ></div>
       {children}
     </div>

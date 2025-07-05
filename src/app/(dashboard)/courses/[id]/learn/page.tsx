@@ -1,21 +1,21 @@
-"use client";
+&ldquo;use client&rdquo;;
 
-import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useState, useEffect } from &ldquo;react&rdquo;;
+import { useParams, useRouter } from &ldquo;next/navigation&rdquo;;
+import { Button } from &ldquo;@/components/ui/button&rdquo;;
+import { Card, CardContent, CardHeader, CardTitle } from &ldquo;@/components/ui/card&rdquo;;
+import { Progress } from &ldquo;@/components/ui/progress&rdquo;;
+import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from &ldquo;@/components/ui/dialog&rdquo;;
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import confetti from "canvas-confetti";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from &ldquo;@/components/ui/tabs&rdquo;;
+import confetti from &ldquo;canvas-confetti&rdquo;;
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import { Separator } from "@/components/ui/separator";
+} from &ldquo;@/components/ui/collapsible&rdquo;;
+import { Separator } from &ldquo;@/components/ui/separator&rdquo;;
 import {
   Play,
   Pause,
@@ -40,22 +40,22 @@ import {
   Users,
   Star,
   Download,
-} from "lucide-react";
-import { QuizComponent } from "@/components/courses/quiz-component";
-import { LessonNotes } from "@/components/courses/lesson-notes";
-import { CourseSection } from "@/components/courses/course-section";
+} from &ldquo;lucide-react&rdquo;;
+import { QuizComponent } from &ldquo;@/components/courses/quiz-component&rdquo;;
+import { LessonNotes } from &ldquo;@/components/courses/lesson-notes&rdquo;;
+import { CourseSection } from &ldquo;@/components/courses/course-section&rdquo;;
 import type {
   CourseResource,
   Quiz,
   QuizQuestion,
   ResourceType,
-} from "@/types/courses";
+} from &ldquo;@/types/courses&rdquo;;
 
 interface Resource {
   id: string;
   title: string;
   description?: string;
-  type: "PDF" | "VIDEO" | "LINK" | "IMAGE";
+  type: &ldquo;PDF&rdquo; | &ldquo;VIDEO&rdquo; | &ldquo;LINK&rdquo; | &ldquo;IMAGE&rdquo;;
   url: string;
   fileSize?: string;
   duration?: string;
@@ -68,7 +68,7 @@ interface Lesson {
   title: string;
   duration: string;
   completed: boolean;
-  type: "video" | "quiz" | "reading";
+  type: &ldquo;video&rdquo; | &ldquo;quiz&rdquo; | &ldquo;reading&rdquo;;
   videoUrl?: string;
   content?: string;
   locked?: boolean;
@@ -105,14 +105,14 @@ export default function CourseLeanPage() {
   const courseId = params.id as string;
 
   const [course, setCourse] = useState<Course | null>(null);
-  const [currentModuleId, setCurrentModuleId] = useState<string>("");
-  const [currentLessonId, setCurrentLessonId] = useState<string>("");
+  const [currentModuleId, setCurrentModuleId] = useState<string>(&ldquo;&rdquo;);
+  const [currentLessonId, setCurrentLessonId] = useState<string>(&ldquo;&rdquo;);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [showCertificate, setShowCertificate] = useState(false);
   const [expandedModules, setExpandedModules] = useState<string[]>([]);
   
   const [showMotivationModal, setShowMotivationModal] = useState(false);
-  const [motivationMessage, setMotivationMessage] = useState("");
+  const [motivationMessage, setMotivationMessage] = useState(&ldquo;&rdquo;);
   
   // Video player state
   // 10 minutes for demo
@@ -120,138 +120,138 @@ export default function CourseLeanPage() {
   useEffect(() => {
     const mockCourse: Course = {
       id: courseId,
-      title: "Habilidades Laborales Básicas",
-      instructor: "Dra. Ana Pérez",
+      title: &ldquo;Habilidades Laborales Básicas&rdquo;,
+      instructor: &ldquo;Dra. Ana Pérez&rdquo;,
       description:
-        "Desarrolla las competencias fundamentales para el mundo laboral",
+        &ldquo;Desarrolla las competencias fundamentales para el mundo laboral&rdquo;,
       totalProgress: 15,
       rating: 4.8,
       studentsCount: 2847,
       certificate: {
-        id: "cert-123",
+        id: &ldquo;cert-123&rdquo;,
         issued: false,
       },
       modules: [
         {
-          id: "mod-1",
-          title: "Introducción a las Habilidades Laborales",
-          duration: "45 min",
+          id: &ldquo;mod-1&rdquo;,
+          title: &ldquo;Introducción a las Habilidades Laborales&rdquo;,
+          duration: &ldquo;45 min&rdquo;,
           completed: false,
           lessons: [
             {
-              id: "lesson-1",
-              title: "Bienvenida al curso",
-              duration: "5 min",
+              id: &ldquo;lesson-1&rdquo;,
+              title: &ldquo;Bienvenida al curso&rdquo;,
+              duration: &ldquo;5 min&rdquo;,
               completed: true,
-              type: "video",
+              type: &ldquo;video&rdquo;,
               videoUrl:
-                "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4",
+                &ldquo;https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4&rdquo;,
               resources: [
                 {
-                  id: "res-1",
-                  title: "Guía de Introducción",
-                  description: "PDF con el contenido detallado del curso",
-                  type: "PDF" as ResourceType,
-                  url: "/resources/guia-introduccion.pdf",
-                  fileSize: "2.4 MB",
+                  id: &ldquo;res-1&rdquo;,
+                  title: &ldquo;Guía de Introducción&rdquo;,
+                  description: &ldquo;PDF con el contenido detallado del curso&rdquo;,
+                  type: &ldquo;PDF&rdquo; as ResourceType,
+                  url: &ldquo;/resources/guia-introduccion.pdf&rdquo;,
+                  fileSize: &ldquo;2.4 MB&rdquo;,
                   createdAt: new Date(),
                   updatedAt: new Date(),
                 },
                 {
-                  id: "res-2",
-                  title: "Video de Bienvenida",
-                  description: "Mensaje del instructor",
-                  type: "VIDEO" as ResourceType,
-                  url: "https://sample-videos.com/welcome.mp4",
-                  duration: "3:45",
+                  id: &ldquo;res-2&rdquo;,
+                  title: &ldquo;Video de Bienvenida&rdquo;,
+                  description: &ldquo;Mensaje del instructor&rdquo;,
+                  type: &ldquo;VIDEO&rdquo; as ResourceType,
+                  url: &ldquo;https://sample-videos.com/welcome.mp4&rdquo;,
+                  duration: &ldquo;3:45&rdquo;,
                   createdAt: new Date(),
                   updatedAt: new Date(),
                 },
                 {
-                  id: "res-3",
-                  title: "Material Complementario",
-                  description: "Lecturas recomendadas y ejercicios prácticos",
-                  type: "PDF" as ResourceType,
-                  url: "/resources/material-complementario.pdf",
-                  fileSize: "1.8 MB",
+                  id: &ldquo;res-3&rdquo;,
+                  title: &ldquo;Material Complementario&rdquo;,
+                  description: &ldquo;Lecturas recomendadas y ejercicios prácticos&rdquo;,
+                  type: &ldquo;PDF&rdquo; as ResourceType,
+                  url: &ldquo;/resources/material-complementario.pdf&rdquo;,
+                  fileSize: &ldquo;1.8 MB&rdquo;,
                   createdAt: new Date(),
                   updatedAt: new Date(),
                 },
               ],
             },
             {
-              id: "lesson-2",
-              title: "¿Qué son las habilidades laborales?",
-              duration: "8 min",
+              id: &ldquo;lesson-2&rdquo;,
+              title: &ldquo;¿Qué son las habilidades laborales?&rdquo;,
+              duration: &ldquo;8 min&rdquo;,
               completed: false,
-              type: "video",
+              type: &ldquo;video&rdquo;,
               videoUrl:
-                "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4",
+                &ldquo;https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4&rdquo;,
               resources: [
                 {
-                  id: "res-4",
-                  title: "Presentación de Habilidades Laborales",
-                  description: "Slides de la presentación",
-                  type: "PDF" as ResourceType,
-                  url: "/resources/presentacion-habilidades.pdf",
-                  fileSize: "3.1 MB",
+                  id: &ldquo;res-4&rdquo;,
+                  title: &ldquo;Presentación de Habilidades Laborales&rdquo;,
+                  description: &ldquo;Slides de la presentación&rdquo;,
+                  type: &ldquo;PDF&rdquo; as ResourceType,
+                  url: &ldquo;/resources/presentacion-habilidades.pdf&rdquo;,
+                  fileSize: &ldquo;3.1 MB&rdquo;,
                   createdAt: new Date(),
                   updatedAt: new Date()
                 },
                 {
-                  id: "res-5",
-                  title: "Enlaces Útiles",
-                  description: "Recursos externos recomendados",
-                  type: "LINK" as ResourceType,
-                  url: "https://example.com/recursos",
+                  id: &ldquo;res-5&rdquo;,
+                  title: &ldquo;Enlaces Útiles&rdquo;,
+                  description: &ldquo;Recursos externos recomendados&rdquo;,
+                  type: &ldquo;LINK&rdquo; as ResourceType,
+                  url: &ldquo;https://example.com/recursos&rdquo;,
                   createdAt: new Date(),
                   updatedAt: new Date()
                 },
               ],
             },
             {
-              id: "quiz-1",
-              title: "Evaluación: Conceptos básicos",
-              duration: "10 min",
+              id: &ldquo;quiz-1&rdquo;,
+              title: &ldquo;Evaluación: Conceptos básicos&rdquo;,
+              duration: &ldquo;10 min&rdquo;,
               completed: false,
-              type: "quiz",
+              type: &ldquo;quiz&rdquo;,
               quiz: {
-                id: "quiz-1",
-                title: "Evaluación: Conceptos básicos",
+                id: &ldquo;quiz-1&rdquo;,
+                title: &ldquo;Evaluación: Conceptos básicos&rdquo;,
                 description:
-                  "Evalúa tu comprensión de los conceptos fundamentales",
+                  &ldquo;Evalúa tu comprensión de los conceptos fundamentales&rdquo;,
                 timeLimit: 10,
                 passingScore: 70,
                 attempts: 0,
                 isRequired: true,
                 questions: [
                   {
-                    id: "q1",
+                    id: &ldquo;q1&rdquo;,
                     question:
-                      "¿Cuáles son las habilidades blandas más importantes en el trabajo?",
+                      &ldquo;¿Cuáles son las habilidades blandas más importantes en el trabajo?&rdquo;,
                     options: [
-                      "Comunicación y trabajo en equipo",
-                      "Solo conocimientos técnicos",
-                      "Experiencia laboral únicamente",
-                      "Ninguna de las anteriores",
+                      &ldquo;Comunicación y trabajo en equipo&rdquo;,
+                      &ldquo;Solo conocimientos técnicos&rdquo;,
+                      &ldquo;Experiencia laboral únicamente&rdquo;,
+                      &ldquo;Ninguna de las anteriores&rdquo;,
                     ],
                     correctOption: 0,
                     explanation:
-                      "Las habilidades blandas como comunicación y trabajo en equipo son fundamentales para el éxito profesional.",
+                      &ldquo;Las habilidades blandas como comunicación y trabajo en equipo son fundamentales para el éxito profesional.&rdquo;,
                     points: 10,
                   },
                   {
-                    id: "q2",
-                    question: "¿Qué significa ser proactivo en el trabajo?",
+                    id: &ldquo;q2&rdquo;,
+                    question: &ldquo;¿Qué significa ser proactivo en el trabajo?&rdquo;,
                     options: [
-                      "Esperar instrucciones constantemente",
-                      "Tomar iniciativa y anticiparse a los problemas",
-                      "Trabajar solo cuando sea necesario",
-                      "Evitar responsabilidades adicionales",
+                      &ldquo;Esperar instrucciones constantemente&rdquo;,
+                      &ldquo;Tomar iniciativa y anticiparse a los problemas&rdquo;,
+                      &ldquo;Trabajar solo cuando sea necesario&rdquo;,
+                      &ldquo;Evitar responsabilidades adicionales&rdquo;,
                     ],
                     correctOption: 1,
                     explanation:
-                      "Ser proactivo implica tomar la iniciativa y buscar soluciones antes de que surjan problemas.",
+                      &ldquo;Ser proactivo implica tomar la iniciativa y buscar soluciones antes de que surjan problemas.&rdquo;,
                     points: 10,
                   },
                 ],
@@ -260,28 +260,28 @@ export default function CourseLeanPage() {
           ],
         },
         {
-          id: "mod-2",
-          title: "Comunicación Efectiva",
-          duration: "60 min",
+          id: &ldquo;mod-2&rdquo;,
+          title: &ldquo;Comunicación Efectiva&rdquo;,
+          duration: &ldquo;60 min&rdquo;,
           completed: false,
           lessons: [
             {
-              id: "lesson-3",
-              title: "Fundamentos de la comunicación",
-              duration: "12 min",
+              id: &ldquo;lesson-3&rdquo;,
+              title: &ldquo;Fundamentos de la comunicación&rdquo;,
+              duration: &ldquo;12 min&rdquo;,
               completed: false,
-              type: "video",
+              type: &ldquo;video&rdquo;,
               videoUrl:
-                "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4",
+                &ldquo;https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4&rdquo;,
             },
             {
-              id: "lesson-4",
-              title: "Comunicación no verbal",
-              duration: "10 min",
+              id: &ldquo;lesson-4&rdquo;,
+              title: &ldquo;Comunicación no verbal&rdquo;,
+              duration: &ldquo;10 min&rdquo;,
               completed: false,
-              type: "video",
+              type: &ldquo;video&rdquo;,
               videoUrl:
-                "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4",
+                &ldquo;https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4&rdquo;,
             },
           ],
         },
@@ -299,16 +299,16 @@ export default function CourseLeanPage() {
 const progress = mockCourse.totalProgress;
 
 if (progress >= 80) {
-  setMotivationMessage("✨ ¡Estás a punto de terminar el curso, sigue así!");
+  setMotivationMessage(&ldquo;✨ ¡Estás a punto de terminar el curso, sigue así!&rdquo;);
   setShowMotivationModal(true);
 } else if (progress >= 50) {
-  setMotivationMessage("🔥 ¡Muy bien! Ya pasaste la mitad del camino.");
+  setMotivationMessage(&ldquo;🔥 ¡Muy bien! Ya pasaste la mitad del camino.&rdquo;);
   setShowMotivationModal(true);
 } else if (progress >= 20) {
-  setMotivationMessage("🚀 ¡Buen arranque! No te detengas.");
+  setMotivationMessage(&ldquo;🚀 ¡Buen arranque! No te detengas.&rdquo;);
   setShowMotivationModal(true);
 } else {
-  setMotivationMessage("👣 ¡Vamos! Cada paso cuenta, continúa aprendiendo.");
+  setMotivationMessage(&ldquo;👣 ¡Vamos! Cada paso cuenta, continúa aprendiendo.&rdquo;);
   setShowMotivationModal(true);
 }
 
@@ -459,10 +459,10 @@ if (progress >= 80) {
 
   if (!course || !currentLesson) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-muted-foreground">Cargando curso...</p>
+      <div className=&ldquo;min-h-screen flex items-center justify-center&rdquo;>
+        <div className=&ldquo;text-center&rdquo;>
+          <div className=&ldquo;animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto&rdquo;></div>
+          <p className=&ldquo;mt-4 text-muted-foreground&rdquo;>Cargando curso...</p>
         </div>
       </div>
     );
@@ -470,64 +470,64 @@ if (progress >= 80) {
 
   return (
     
-    <div className="min-h-screen bg-gray-50">
+    <div className=&ldquo;min-h-screen bg-gray-50&rdquo;>
       <Dialog open={showMotivationModal} onOpenChange={setShowMotivationModal}>
-  <DialogContent className="text-center">
+  <DialogContent className=&ldquo;text-center&rdquo;>
     <DialogHeader>
       <DialogTitle>💡 Motivación del día</DialogTitle>
     </DialogHeader>
-    <p className="text-lg">{motivationMessage}</p>
+    <p className=&ldquo;text-lg&rdquo;>{motivationMessage}</p>
   </DialogContent>
 </Dialog>
 
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
+      <div className=&ldquo;bg-white border-b border-gray-200 px-6 py-4&rdquo;>
+        <div className=&ldquo;flex items-center justify-between&rdquo;>
+          <div className=&ldquo;flex items-center gap-4&rdquo;>
             <Button
-              variant="ghost"
-              size="sm"
+              variant=&ldquo;ghost&rdquo;
+              size=&ldquo;sm&rdquo;
               onClick={() => router.push(`/courses/${courseId}`)}
             >
-              <ChevronLeft className="h-4 w-4 mr-1" />
+              <ChevronLeft className=&ldquo;h-4 w-4 mr-1&rdquo; />
               Volver al curso
             </Button>
-            <Separator orientation="vertical" className="h-6" />
+            <Separator orientation=&ldquo;vertical&rdquo; className=&ldquo;h-6&rdquo; />
             <div>
-              <h1 className="font-semibold text-lg">{course.title}</h1>
-              <p className="text-sm text-muted-foreground">
+              <h1 className=&ldquo;font-semibold text-lg&rdquo;>{course.title}</h1>
+              <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
                 con {course.instructor}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Star className="h-4 w-4 text-yellow-500 fill-current" />
-              <span className="text-sm font-medium">{course.rating}</span>
-              <span className="text-sm text-muted-foreground">
+          <div className=&ldquo;flex items-center gap-4&rdquo;>
+            <div className=&ldquo;flex items-center gap-2&rdquo;>
+              <Star className=&ldquo;h-4 w-4 text-yellow-500 fill-current&rdquo; />
+              <span className=&ldquo;text-sm font-medium&rdquo;>{course.rating}</span>
+              <span className=&ldquo;text-sm text-muted-foreground&rdquo;>
                 ({course.studentsCount.toLocaleString()} estudiantes)
               </span>
             </div>
-            <div className="text-right">
-              <div className="text-sm font-medium">
+            <div className=&ldquo;text-right&rdquo;>
+              <div className=&ldquo;text-sm font-medium&rdquo;>
                 {course.totalProgress}% completado
               </div>
-              <Progress value={course.totalProgress} className="w-32 h-2" />
+              <Progress value={course.totalProgress} className=&ldquo;w-32 h-2&rdquo; />
             </div>
           </div>
         </div>
       </div>
 
-      <div className="flex">
+      <div className=&ldquo;flex&rdquo;>
         {/* Main Content */}
-        <div className={`flex-1 ${sidebarCollapsed ? "mr-0" : "mr-80"}`}>
+        <div className={`flex-1 ${sidebarCollapsed ? &ldquo;mr-0&rdquo; : &ldquo;mr-80&rdquo;}`}>
           {currentLesson && (
             <CourseSection
               section={{
                 id: currentLesson.id,
                 title: currentLesson.title,
-                description: currentModule?.title || "",
+                description: currentModule?.title || &ldquo;&rdquo;,
                 order: course.modules.findIndex(
                   (m) => m.id === currentModuleId
                 ),
@@ -543,32 +543,32 @@ if (progress >= 80) {
           )}
 
           {/* Lesson Info */}
-          <div className="bg-white p-6 border-t">
-            <div className="max-w-4xl mx-auto">
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex-1">
-                  <h2 className="text-xl font-semibold mb-2">
+          <div className=&ldquo;bg-white p-6 border-t&rdquo;>
+            <div className=&ldquo;max-w-4xl mx-auto&rdquo;>
+              <div className=&ldquo;flex items-start justify-between mb-4&rdquo;>
+                <div className=&ldquo;flex-1&rdquo;>
+                  <h2 className=&ldquo;text-xl font-semibold mb-2&rdquo;>
                     {currentLesson.title}
                   </h2>
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                    <div className="flex items-center gap-1">
-                      <Clock className="h-4 w-4" />
+                  <div className=&ldquo;flex items-center gap-4 text-sm text-muted-foreground&rdquo;>
+                    <div className=&ldquo;flex items-center gap-1&rdquo;>
+                      <Clock className=&ldquo;h-4 w-4&rdquo; />
                       {currentLesson.duration}
                     </div>
-                    <div className="flex items-center gap-1">
-                      <BookOpen className="h-4 w-4" />
+                    <div className=&ldquo;flex items-center gap-1&rdquo;>
+                      <BookOpen className=&ldquo;h-4 w-4&rdquo; />
                       {currentModule?.title}
                     </div>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className=&ldquo;flex items-center gap-2&rdquo;>
                   {currentLesson.completed && (
                     <Badge
-                      variant="secondary"
-                      className="bg-green-100 text-green-800"
+                      variant=&ldquo;secondary&rdquo;
+                      className=&ldquo;bg-green-100 text-green-800&rdquo;
                     >
-                      <CheckCircle2 className="h-3 w-3 mr-1" />
+                      <CheckCircle2 className=&ldquo;h-3 w-3 mr-1&rdquo; />
                       Completado
                     </Badge>
                   )}
@@ -576,9 +576,9 @@ if (progress >= 80) {
               </div>
 
               {/* Navigation */}
-              <div className="flex items-center justify-between">
+              <div className=&ldquo;flex items-center justify-between&rdquo;>
                 <Button
-                  variant="outline"
+                  variant=&ldquo;outline&rdquo;
                   onClick={goToPreviousLesson}
                   disabled={
                     course.modules
@@ -586,7 +586,7 @@ if (progress >= 80) {
                       .findIndex((l) => l.id === currentLessonId) === 0
                   }
                 >
-                  <ChevronLeft className="h-4 w-4 mr-1" />
+                  <ChevronLeft className=&ldquo;h-4 w-4 mr-1&rdquo; />
                   Lección anterior
                 </Button>
 
@@ -604,7 +604,7 @@ if (progress >= 80) {
           confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
           setShowCertificate(true);
         }}
-        className="bg-green-600 hover:bg-green-700 text-white"
+        className=&ldquo;bg-green-600 hover:bg-green-700 text-white&rdquo;
       >
         🎉 Celebrar finalización
       </Button>
@@ -614,7 +614,7 @@ if (progress >= 80) {
   return (
     <Button onClick={goToNextLesson}>
       Siguiente lección
-      <ChevronRight className="h-4 w-4 ml-1" />
+      <ChevronRight className=&ldquo;h-4 w-4 ml-1&rdquo; />
     </Button>
   );
 })()}
@@ -628,31 +628,31 @@ if (progress >= 80) {
         {/* Sidebar */}
         <div
           className={`fixed right-0 top-0 h-full bg-white border-l border-gray-200 transition-all duration-300 ${
-            sidebarCollapsed ? "w-0" : "w-80"
+            sidebarCollapsed ? &ldquo;w-0&rdquo; : &ldquo;w-80&rdquo;
           } overflow-hidden`}
         >
-          <div className="p-4 border-b">
-            <div className="flex items-center justify-between">
-              <h3 className="font-semibold">Contenido del curso</h3>
+          <div className=&ldquo;p-4 border-b&rdquo;>
+            <div className=&ldquo;flex items-center justify-between&rdquo;>
+              <h3 className=&ldquo;font-semibold&rdquo;>Contenido del curso</h3>
               <Button
-                variant="ghost"
-                size="sm"
+                variant=&ldquo;ghost&rdquo;
+                size=&ldquo;sm&rdquo;
                 onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
               >
-                <ChevronRight className="h-4 w-4" />
+                <ChevronRight className=&ldquo;h-4 w-4&rdquo; />
               </Button>
             </div>
-            <div className="mt-2 text-sm text-muted-foreground">
-              {course.modules.reduce((acc, m) => acc + m.lessons.length, 0)}{" "}
-              lecciones •{" "}
-              {course.modules.reduce((acc, m) => acc + parseInt(m.duration), 0)}{" "}
+            <div className=&ldquo;mt-2 text-sm text-muted-foreground&rdquo;>
+              {course.modules.reduce((acc, m) => acc + m.lessons.length, 0)}{&ldquo; &rdquo;}
+              lecciones •{&ldquo; &rdquo;}
+              {course.modules.reduce((acc, m) => acc + parseInt(m.duration), 0)}{&ldquo; &rdquo;}
               min
             </div>
           </div>
 
-          <div className="overflow-y-auto h-full pb-20">
+          <div className=&ldquo;overflow-y-auto h-full pb-20&rdquo;>
             {course.modules.map((module, moduleIndex) => (
-              <div key={module.id} className="border-b border-gray-100">
+              <div key={module.id} className=&ldquo;border-b border-gray-100&rdquo;>
                 <Collapsible
                   open={expandedModules.includes(module.id)}
                   onOpenChange={() => toggleModuleExpanded(module.id)}
@@ -660,93 +660,93 @@ if (progress >= 80) {
                   <CollapsibleTrigger asChild>
                     <div
                       className={`flex items-center justify-between p-4 hover:bg-gray-50 cursor-pointer ${
-                        module.locked ? "opacity-50" : ""
+                        module.locked ? &ldquo;opacity-50&rdquo; : &ldquo;&rdquo;
                       }`}
                     >
-                      <div className="flex items-center gap-3">
+                      <div className=&ldquo;flex items-center gap-3&rdquo;>
                         <div
                           className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium ${
                             module.completed
-                              ? "bg-green-100 text-green-800"
+                              ? &ldquo;bg-green-100 text-green-800&rdquo;
                               : module.locked
-                                ? "bg-gray-100 text-gray-400"
-                                : "bg-blue-100 text-blue-800"
+                                ? &ldquo;bg-gray-100 text-gray-400&rdquo;
+                                : &ldquo;bg-blue-100 text-blue-800&rdquo;
                           }`}
                         >
                           {module.completed ? (
-                            <CheckCircle2 className="h-3 w-3" />
+                            <CheckCircle2 className=&ldquo;h-3 w-3&rdquo; />
                           ) : module.locked ? (
-                            <Lock className="h-3 w-3" />
+                            <Lock className=&ldquo;h-3 w-3&rdquo; />
                           ) : (
                             moduleIndex + 1
                           )}
                         </div>
-                        <div className="flex-1">
-                          <div className="font-medium text-sm">
+                        <div className=&ldquo;flex-1&rdquo;>
+                          <div className=&ldquo;font-medium text-sm&rdquo;>
                             {module.title}
                           </div>
-                          <div className="text-xs text-muted-foreground">
+                          <div className=&ldquo;text-xs text-muted-foreground&rdquo;>
                             {module.duration}
                           </div>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <div className="text-xs text-muted-foreground">
+                      <div className=&ldquo;flex items-center gap-2&rdquo;>
+                        <div className=&ldquo;text-xs text-muted-foreground&rdquo;>
                           {module.lessons.filter((l) => l.completed).length}/
                           {module.lessons.length}
                         </div>
                         {expandedModules.includes(module.id) ? (
-                          <ChevronUp className="h-4 w-4" />
+                          <ChevronUp className=&ldquo;h-4 w-4&rdquo; />
                         ) : (
-                          <ChevronDown className="h-4 w-4" />
+                          <ChevronDown className=&ldquo;h-4 w-4&rdquo; />
                         )}
                       </div>
                     </div>
                   </CollapsibleTrigger>
 
                   <CollapsibleContent>
-                    <div className="bg-gray-50">
+                    <div className=&ldquo;bg-gray-50&rdquo;>
                       {module.lessons.map((lesson, lessonIndex) => (
                         <div
                           key={lesson.id}
                           className={`flex items-center gap-3 p-3 pl-6 cursor-pointer hover:bg-white transition-colors ${
                             lesson.id === currentLessonId
-                              ? "bg-blue-50 border-r-2 border-blue-600"
-                              : ""
-                          } ${lesson.locked ? "opacity-50 cursor-not-allowed" : ""}`}
+                              ? &ldquo;bg-blue-50 border-r-2 border-blue-600&rdquo;
+                              : &ldquo;&rdquo;
+                          } ${lesson.locked ? &ldquo;opacity-50 cursor-not-allowed&rdquo; : &ldquo;&rdquo;}`}
                           onClick={() => selectLesson(module.id, lesson.id)}
                         >
                           <div
                             className={`w-5 h-5 rounded-full flex items-center justify-center ${
                               lesson.completed
-                                ? "bg-green-600"
+                                ? &ldquo;bg-green-600&rdquo;
                                 : lesson.locked
-                                  ? "bg-gray-300"
+                                  ? &ldquo;bg-gray-300&rdquo;
                                   : lesson.id === currentLessonId
-                                    ? "bg-blue-600"
-                                    : "border-2 border-gray-300"
+                                    ? &ldquo;bg-blue-600&rdquo;
+                                    : &ldquo;border-2 border-gray-300&rdquo;
                             }`}
                           >
                             {lesson.completed ? (
-                              <CheckCircle2 className="h-3 w-3 text-white" />
-                            ) : lesson.type === "quiz" ? (
-                              <FileText className="h-3 w-3 text-white" />
+                              <CheckCircle2 className=&ldquo;h-3 w-3 text-white&rdquo; />
+                            ) : lesson.type === &ldquo;quiz&rdquo; ? (
+                              <FileText className=&ldquo;h-3 w-3 text-white&rdquo; />
                             ) : (
-                              <Play className="h-2 w-2 text-white" />
+                              <Play className=&ldquo;h-2 w-2 text-white&rdquo; />
                             )}
                           </div>
 
-                          <div className="flex-1 min-w-0">
-                            <div className="text-sm font-medium truncate">
+                          <div className=&ldquo;flex-1 min-w-0&rdquo;>
+                            <div className=&ldquo;text-sm font-medium truncate&rdquo;>
                               {lesson.title}
                             </div>
-                            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                              <Clock className="h-3 w-3" />
+                            <div className=&ldquo;flex items-center gap-2 text-xs text-muted-foreground&rdquo;>
+                              <Clock className=&ldquo;h-3 w-3&rdquo; />
                               {lesson.duration}
-                              {lesson.type === "quiz" && (
+                              {lesson.type === &ldquo;quiz&rdquo; && (
                                 <Badge
-                                  variant="outline"
-                                  className="text-xs py-0"
+                                  variant=&ldquo;outline&rdquo;
+                                  className=&ldquo;text-xs py-0&rdquo;
                                 >
                                   Quiz
                                 </Badge>
@@ -765,14 +765,14 @@ if (progress >= 80) {
 
         {/* Collapsed Sidebar Toggle */}
         {sidebarCollapsed && (
-          <div className="fixed right-0 top-1/2 -translate-y-1/2 z-10">
+          <div className=&ldquo;fixed right-0 top-1/2 -translate-y-1/2 z-10&rdquo;>
             <Button
-              variant="outline"
-              size="sm"
+              variant=&ldquo;outline&rdquo;
+              size=&ldquo;sm&rdquo;
               onClick={() => setSidebarCollapsed(false)}
-              className="rounded-l-lg rounded-r-none border-r-0 bg-white shadow-lg"
+              className=&ldquo;rounded-l-lg rounded-r-none border-r-0 bg-white shadow-lg&rdquo;
             >
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className=&ldquo;h-4 w-4&rdquo; />
             </Button>
           </div>
         )}
@@ -780,27 +780,27 @@ if (progress >= 80) {
 
       {/* Certificate Modal */}
       {showCertificate && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <Card className="max-w-md mx-4">
-            <CardHeader className="text-center">
-              <Award className="h-16 w-16 text-yellow-500 mx-auto mb-4" />
+        <div className=&ldquo;fixed inset-0 bg-black/50 flex items-center justify-center z-50&rdquo;>
+          <Card className=&ldquo;max-w-md mx-4&rdquo;>
+            <CardHeader className=&ldquo;text-center&rdquo;>
+              <Award className=&ldquo;h-16 w-16 text-yellow-500 mx-auto mb-4&rdquo; />
               <CardTitle>¡Felicitaciones!</CardTitle>
             </CardHeader>
-            <CardContent className="text-center space-y-4">
+            <CardContent className=&ldquo;text-center space-y-4&rdquo;>
               <p>
-                Has completado exitosamente el curso{" "}
+                Has completado exitosamente el curso{&ldquo; &rdquo;}
                 <strong>{course.title}</strong>
               </p>
-              <p className="text-sm text-muted-foreground">
+              <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
                 Tu certificado está listo para descargar
               </p>
-              <div className="flex gap-2">
-                <Button className="flex-1">
-                  <Download className="h-4 w-4 mr-2" />
+              <div className=&ldquo;flex gap-2&rdquo;>
+                <Button className=&ldquo;flex-1&rdquo;>
+                  <Download className=&ldquo;h-4 w-4 mr-2&rdquo; />
                   Descargar certificado
                 </Button>
                 <Button
-                  variant="outline"
+                  variant=&ldquo;outline&rdquo;
                   onClick={() => setShowCertificate(false)}
                 >
                   Cerrar

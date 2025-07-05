@@ -1,11 +1,11 @@
-"use client";
+&ldquo;use client&rdquo;;
 
-import { useEffect, useState } from "react";
-import { useRouter, usePathname } from "next/navigation";
-import { useMockAuth } from "@/context/mock-auth-context";
-import { LoadingScreen } from "@/components/ui/loading-screen";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
+import { useEffect, useState } from &ldquo;react&rdquo;;
+import { useRouter, usePathname } from &ldquo;next/navigation&rdquo;;
+import { useMockAuth } from &ldquo;@/context/mock-auth-context&rdquo;;
+import { LoadingScreen } from &ldquo;@/components/ui/loading-screen&rdquo;;
+import { Alert, AlertDescription } from &ldquo;@/components/ui/alert&rdquo;;
+import { AlertCircle } from &ldquo;lucide-react&rdquo;;
 
 interface RoleGuardProps {
   children: React.ReactNode;
@@ -23,15 +23,15 @@ export function RoleGuard({ children }: RoleGuardProps) {
     // If no user, redirect to login
     if (!user) {
       setIsRedirecting(true);
-      router.replace("/login");
+      router.replace(&ldquo;/login&rdquo;);
       return;
     }
 
     // If user has a role, ensure they're not on role selection page
     if (user && user.role) {
-      if (pathname === "/select-role") {
+      if (pathname === &ldquo;/select-role&rdquo;) {
         setIsRedirecting(true);
-        router.replace("/dashboard");
+        router.replace(&ldquo;/dashboard&rdquo;);
         return;
       }
       // User has role and is not on role selection page, stop redirecting
@@ -42,9 +42,9 @@ export function RoleGuard({ children }: RoleGuardProps) {
     // If user exists but has no role
     if (user && !user.role) {
       // Only redirect to role selection if not already there
-      if (pathname !== "/select-role") {
+      if (pathname !== &ldquo;/select-role&rdquo;) {
         setIsRedirecting(true);
-        router.replace("/select-role");
+        router.replace(&ldquo;/select-role&rdquo;);
         return;
       }
       // If already on role selection page, stop redirecting
@@ -64,9 +64,9 @@ export function RoleGuard({ children }: RoleGuardProps) {
   // Show error if failed to load user
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <Alert variant="destructive" className="max-w-md">
-          <AlertCircle className="h-4 w-4" />
+      <div className=&ldquo;min-h-screen flex items-center justify-center p-4&rdquo;>
+        <Alert variant=&ldquo;destructive&rdquo; className=&ldquo;max-w-md&rdquo;>
+          <AlertCircle className=&ldquo;h-4 w-4&rdquo; />
           <AlertDescription>
             Error al verificar el usuario: {error.message}
           </AlertDescription>
@@ -81,12 +81,12 @@ export function RoleGuard({ children }: RoleGuardProps) {
   }
 
   // If user has role but is on role selection page (should be redirecting to dashboard)
-  if (user.role && pathname === "/select-role") {
+  if (user.role && pathname === &ldquo;/select-role&rdquo;) {
     return <LoadingScreen />;
   }
 
   // If user has no role and not on role selection page (should be redirecting to role selection)
-  if (!user.role && pathname !== "/select-role") {
+  if (!user.role && pathname !== &ldquo;/select-role&rdquo;) {
     return <LoadingScreen />;
   }
 

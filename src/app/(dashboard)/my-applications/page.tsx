@@ -1,7 +1,7 @@
-"use client";
+&ldquo;use client&rdquo;;
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from &ldquo;react&rdquo;;
+import { useRouter } from &ldquo;next/navigation&rdquo;;
 import {
   Search,
   Filter,
@@ -13,23 +13,23 @@ import {
   XCircle,
   AlertCircle,
   Users,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+} from &ldquo;lucide-react&rdquo;;
+import { Button } from &ldquo;@/components/ui/button&rdquo;;
+import { Input } from &ldquo;@/components/ui/input&rdquo;;
+import { Card, CardContent, CardHeader, CardTitle } from &ldquo;@/components/ui/card&rdquo;;
+import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
+import { Avatar, AvatarFallback, AvatarImage } from &ldquo;@/components/ui/avatar&rdquo;;
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Separator } from "@/components/ui/separator";
-import { JobApplication, ApplicationStatus } from "@/types/jobs";
-import { useToast } from "@/components/ui/use-toast";
+} from &ldquo;@/components/ui/select&rdquo;;
+import { Skeleton } from &ldquo;@/components/ui/skeleton&rdquo;;
+import { Separator } from &ldquo;@/components/ui/separator&rdquo;;
+import { JobApplication, ApplicationStatus } from &ldquo;@/types/jobs&rdquo;;
+import { useToast } from &ldquo;@/components/ui/use-toast&rdquo;;
 
 interface ApplicationStats {
   total: number;
@@ -54,11 +54,11 @@ export default function MyApplicationsPage() {
     hired: 0,
   });
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<ApplicationStatus | "ALL">(
-    "ALL"
+  const [searchQuery, setSearchQuery] = useState(&ldquo;&rdquo;);
+  const [statusFilter, setStatusFilter] = useState<ApplicationStatus | &ldquo;ALL&rdquo;>(
+    &ldquo;ALL&rdquo;
   );
-  const [companyFilter, setCompanyFilter] = useState("");
+  const [companyFilter, setCompanyFilter] = useState(&ldquo;&rdquo;);
 
   const { toast } = useToast();
 
@@ -72,18 +72,18 @@ export default function MyApplicationsPage() {
 
   const fetchApplications = async () => {
     try {
-      const response = await fetch("/api/my-applications");
+      const response = await fetch(&ldquo;/api/my-applications&rdquo;);
       if (response.ok) {
         const data = await response.json();
         setApplications(data.applications || []);
         setStats(data.stats || {});
       }
     } catch (error) {
-      console.error("Error fetching applications:", error);
+      console.error(&ldquo;Error fetching applications:&rdquo;, error);
       toast({
-        title: "Error",
-        description: "No se pudieron cargar las aplicaciones",
-        variant: "destructive",
+        title: &ldquo;Error&rdquo;,
+        description: &ldquo;No se pudieron cargar las aplicaciones&rdquo;,
+        variant: &ldquo;destructive&rdquo;,
       });
     } finally {
       setLoading(false);
@@ -104,7 +104,7 @@ export default function MyApplicationsPage() {
     }
 
     // Status filter
-    if (statusFilter !== "ALL") {
+    if (statusFilter !== &ldquo;ALL&rdquo;) {
       filtered = filtered.filter((app) => app.status === statusFilter);
     }
 
@@ -123,7 +123,7 @@ export default function MyApplicationsPage() {
       const response = await fetch(
         `/api/my-applications?applicationId=${applicationId}`,
         {
-          method: "DELETE",
+          method: &ldquo;DELETE&rdquo;,
         }
       );
 
@@ -132,54 +132,54 @@ export default function MyApplicationsPage() {
           prev.filter((app) => app.id !== applicationId)
         );
         toast({
-          title: "Aplicación retirada",
-          description: "Tu aplicación ha sido retirada exitosamente",
+          title: &ldquo;Aplicación retirada&rdquo;,
+          description: &ldquo;Tu aplicación ha sido retirada exitosamente&rdquo;,
         });
       } else {
         toast({
-          title: "Error",
-          description: error.error || "No se pudo retirar la aplicación",
-          variant: "destructive",
+          title: &ldquo;Error&rdquo;,
+          description: error.error || &ldquo;No se pudo retirar la aplicación&rdquo;,
+          variant: &ldquo;destructive&rdquo;,
         });
       }
     } catch (error) {
       toast({
-        title: "Error de conexión",
-        description: "No se pudo retirar la aplicación",
-        variant: "destructive",
+        title: &ldquo;Error de conexión&rdquo;,
+        description: &ldquo;No se pudo retirar la aplicación&rdquo;,
+        variant: &ldquo;destructive&rdquo;,
       });
     }
   };
 
   const getStatusIcon = (status: ApplicationStatus) => {
     switch (status) {
-      case "SENT":
-        return <Clock className="w-4 h-4 text-blue-600" />;
-      case "UNDER_REVIEW":
-        return <Eye className="w-4 h-4 text-orange-600" />;
-      case "PRE_SELECTED":
-        return <CheckCircle className="w-4 h-4 text-green-600" />;
-      case "REJECTED":
-        return <XCircle className="w-4 h-4 text-red-600" />;
-      case "HIRED":
-        return <Users className="w-4 h-4 text-purple-600" />;
+      case &ldquo;SENT&rdquo;:
+        return <Clock className=&ldquo;w-4 h-4 text-blue-600&rdquo; />;
+      case &ldquo;UNDER_REVIEW&rdquo;:
+        return <Eye className=&ldquo;w-4 h-4 text-orange-600&rdquo; />;
+      case &ldquo;PRE_SELECTED&rdquo;:
+        return <CheckCircle className=&ldquo;w-4 h-4 text-green-600&rdquo; />;
+      case &ldquo;REJECTED&rdquo;:
+        return <XCircle className=&ldquo;w-4 h-4 text-red-600&rdquo; />;
+      case &ldquo;HIRED&rdquo;:
+        return <Users className=&ldquo;w-4 h-4 text-purple-600&rdquo; />;
       default:
-        return <AlertCircle className="w-4 h-4 text-gray-600" />;
+        return <AlertCircle className=&ldquo;w-4 h-4 text-gray-600&rdquo; />;
     }
   };
 
   const getStatusLabel = (status: ApplicationStatus) => {
     switch (status) {
-      case "SENT":
-        return "Enviada";
-      case "UNDER_REVIEW":
-        return "En revisión";
-      case "PRE_SELECTED":
-        return "Preseleccionado";
-      case "REJECTED":
-        return "Rechazada";
-      case "HIRED":
-        return "Contratado";
+      case &ldquo;SENT&rdquo;:
+        return &ldquo;Enviada&rdquo;;
+      case &ldquo;UNDER_REVIEW&rdquo;:
+        return &ldquo;En revisión&rdquo;;
+      case &ldquo;PRE_SELECTED&rdquo;:
+        return &ldquo;Preseleccionado&rdquo;;
+      case &ldquo;REJECTED&rdquo;:
+        return &ldquo;Rechazada&rdquo;;
+      case &ldquo;HIRED&rdquo;:
+        return &ldquo;Contratado&rdquo;;
       default:
         return status;
     }
@@ -187,46 +187,46 @@ export default function MyApplicationsPage() {
 
   const getStatusColor = (status: ApplicationStatus) => {
     switch (status) {
-      case "SENT":
-        return "bg-blue-100 text-blue-800";
-      case "UNDER_REVIEW":
-        return "bg-orange-100 text-orange-800";
-      case "PRE_SELECTED":
-        return "bg-green-100 text-green-800";
-      case "REJECTED":
-        return "bg-red-100 text-red-800";
-      case "HIRED":
-        return "bg-purple-100 text-purple-800";
+      case &ldquo;SENT&rdquo;:
+        return &ldquo;bg-blue-100 text-blue-800&rdquo;;
+      case &ldquo;UNDER_REVIEW&rdquo;:
+        return &ldquo;bg-orange-100 text-orange-800&rdquo;;
+      case &ldquo;PRE_SELECTED&rdquo;:
+        return &ldquo;bg-green-100 text-green-800&rdquo;;
+      case &ldquo;REJECTED&rdquo;:
+        return &ldquo;bg-red-100 text-red-800&rdquo;;
+      case &ldquo;HIRED&rdquo;:
+        return &ldquo;bg-purple-100 text-purple-800&rdquo;;
       default:
-        return "bg-gray-100 text-gray-800";
+        return &ldquo;bg-gray-100 text-gray-800&rdquo;;
     }
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("es-ES", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
+    return new Date(dateString).toLocaleDateString(&ldquo;es-ES&rdquo;, {
+      year: &ldquo;numeric&rdquo;,
+      month: &ldquo;short&rdquo;,
+      day: &ldquo;numeric&rdquo;,
     });
   };
 
   const canWithdraw = (status: ApplicationStatus) => {
-    return status === "SENT";
+    return status === &ldquo;SENT&rdquo;;
   };
 
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="space-y-6">
-          <Skeleton className="h-8 w-64" />
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className=&ldquo;max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6&rdquo;>
+        <div className=&ldquo;space-y-6&rdquo;>
+          <Skeleton className=&ldquo;h-8 w-64&rdquo; />
+          <div className=&ldquo;grid grid-cols-1 md:grid-cols-4 gap-4&rdquo;>
             {[...Array(4)].map((_, i) => (
-              <Skeleton key={i} className="h-24" />
+              <Skeleton key={i} className=&ldquo;h-24&rdquo; />
             ))}
           </div>
-          <div className="space-y-4">
+          <div className=&ldquo;space-y-4&rdquo;>
             {[...Array(5)].map((_, i) => (
-              <Skeleton key={i} className="h-32" />
+              <Skeleton key={i} className=&ldquo;h-32&rdquo; />
             ))}
           </div>
         </div>
@@ -235,27 +235,27 @@ export default function MyApplicationsPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div className=&ldquo;max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6&rdquo;>
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">
+      <div className=&ldquo;mb-8&rdquo;>
+        <h1 className=&ldquo;text-2xl font-bold text-gray-900 mb-2&rdquo;>
           Mis Aplicaciones
         </h1>
-        <p className="text-gray-600">
+        <p className=&ldquo;text-gray-600&rdquo;>
           Gestiona y da seguimiento a tus postulaciones laborales
         </p>
       </div>
 
-      <div className="mb-8 flex justify-between items-center">
+      <div className=&ldquo;mb-8 flex justify-between items-center&rdquo;>
   <div>
-    <h1 className="text-2xl font-bold text-gray-900 mb-1">
+    <h1 className=&ldquo;text-2xl font-bold text-gray-900 mb-1&rdquo;>
       Mis Aplicaciones
     </h1>
-    <p className="text-gray-600">
+    <p className=&ldquo;text-gray-600&rdquo;>
       Gestiona y da seguimiento a tus postulaciones laborales
     </p>
   </div>
-  <Button onClick={() => router.push("/my-applications/new")}>
+  <Button onClick={() => router.push(&ldquo;/my-applications/new&rdquo;)}>
   + Nueva Postulación
 </Button>
 
@@ -263,85 +263,85 @@ export default function MyApplicationsPage() {
 
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+      <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8&rdquo;>
         <Card>
-          <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-gray-900">
+          <CardContent className=&ldquo;p-4 text-center&rdquo;>
+            <div className=&ldquo;text-2xl font-bold text-gray-900&rdquo;>
               {stats.total}
             </div>
-            <div className="text-sm text-gray-600">Total</div>
+            <div className=&ldquo;text-sm text-gray-600&rdquo;>Total</div>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-blue-600">{stats.sent}</div>
-            <div className="text-sm text-gray-600">Enviadas</div>
+          <CardContent className=&ldquo;p-4 text-center&rdquo;>
+            <div className=&ldquo;text-2xl font-bold text-blue-600&rdquo;>{stats.sent}</div>
+            <div className=&ldquo;text-sm text-gray-600&rdquo;>Enviadas</div>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-orange-600">
+          <CardContent className=&ldquo;p-4 text-center&rdquo;>
+            <div className=&ldquo;text-2xl font-bold text-orange-600&rdquo;>
               {stats.underReview}
             </div>
-            <div className="text-sm text-gray-600">En revisión</div>
+            <div className=&ldquo;text-sm text-gray-600&rdquo;>En revisión</div>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-green-600">
+          <CardContent className=&ldquo;p-4 text-center&rdquo;>
+            <div className=&ldquo;text-2xl font-bold text-green-600&rdquo;>
               {stats.preSelected}
             </div>
-            <div className="text-sm text-gray-600">Preseleccionado</div>
+            <div className=&ldquo;text-sm text-gray-600&rdquo;>Preseleccionado</div>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-red-600">
+          <CardContent className=&ldquo;p-4 text-center&rdquo;>
+            <div className=&ldquo;text-2xl font-bold text-red-600&rdquo;>
               {stats.rejected}
             </div>
-            <div className="text-sm text-gray-600">Rechazadas</div>
+            <div className=&ldquo;text-sm text-gray-600&rdquo;>Rechazadas</div>
           </CardContent>
         </Card>
       </div>
 
       {/* Filters */}
-      <Card className="mb-6">
-        <CardContent className="p-6">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+      <Card className=&ldquo;mb-6&rdquo;>
+        <CardContent className=&ldquo;p-6&rdquo;>
+          <div className=&ldquo;flex flex-col md:flex-row gap-4&rdquo;>
+            <div className=&ldquo;flex-1&rdquo;>
+              <div className=&ldquo;relative&rdquo;>
+                <Search className=&ldquo;absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4&rdquo; />
                 <Input
-                  placeholder="Buscar por trabajo o empresa..."
+                  placeholder=&ldquo;Buscar por trabajo o empresa...&rdquo;
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
+                  className=&ldquo;pl-10&rdquo;
                 />
               </div>
             </div>
             <Select
               value={statusFilter}
               onValueChange={(value) =>
-                setStatusFilter(value as ApplicationStatus | "ALL")
+                setStatusFilter(value as ApplicationStatus | &ldquo;ALL&rdquo;)
               }
             >
-              <SelectTrigger className="w-full md:w-48">
-                <SelectValue placeholder="Filtrar por estado" />
+              <SelectTrigger className=&ldquo;w-full md:w-48&rdquo;>
+                <SelectValue placeholder=&ldquo;Filtrar por estado&rdquo; />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="ALL">Todos los estados</SelectItem>
-                <SelectItem value="SENT">Enviadas</SelectItem>
-                <SelectItem value="UNDER_REVIEW">En revisión</SelectItem>
-                <SelectItem value="PRE_SELECTED">Preseleccionado</SelectItem>
-                <SelectItem value="REJECTED">Rechazadas</SelectItem>
-                <SelectItem value="HIRED">Contratado</SelectItem>
+                <SelectItem value=&ldquo;ALL&rdquo;>Todos los estados</SelectItem>
+                <SelectItem value=&ldquo;SENT&rdquo;>Enviadas</SelectItem>
+                <SelectItem value=&ldquo;UNDER_REVIEW&rdquo;>En revisión</SelectItem>
+                <SelectItem value=&ldquo;PRE_SELECTED&rdquo;>Preseleccionado</SelectItem>
+                <SelectItem value=&ldquo;REJECTED&rdquo;>Rechazadas</SelectItem>
+                <SelectItem value=&ldquo;HIRED&rdquo;>Contratado</SelectItem>
               </SelectContent>
             </Select>
             <Input
-              placeholder="Filtrar por empresa..."
+              placeholder=&ldquo;Filtrar por empresa...&rdquo;
               value={companyFilter}
               onChange={(e) => setCompanyFilter(e.target.value)}
-              className="w-full md:w-48"
+              className=&ldquo;w-full md:w-48&rdquo;
             />
           </div>
         </CardContent>
@@ -349,16 +349,16 @@ export default function MyApplicationsPage() {
 
       {/* Applications List */}
       {filteredApplications.length > 0 ? (
-        <div className="space-y-4">
+        <div className=&ldquo;space-y-4&rdquo;>
           {filteredApplications.map((application) => (
             <Card
               key={application.id}
-              className="hover:shadow-md transition-shadow"
+              className=&ldquo;hover:shadow-md transition-shadow&rdquo;
             >
-              <CardContent className="p-6">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-start space-x-4 flex-1">
-                    <Avatar className="w-12 h-12">
+              <CardContent className=&ldquo;p-6&rdquo;>
+                <div className=&ldquo;flex items-start justify-between&rdquo;>
+                  <div className=&ldquo;flex items-start space-x-4 flex-1&rdquo;>
+                    <Avatar className=&ldquo;w-12 h-12&rdquo;>
                       <AvatarImage
                         src={application.companyLogo}
                         alt={application.companyName}
@@ -368,26 +368,26 @@ export default function MyApplicationsPage() {
                       </AvatarFallback>
                     </Avatar>
 
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between mb-2">
+                    <div className=&ldquo;flex-1 min-w-0&rdquo;>
+                      <div className=&ldquo;flex items-start justify-between mb-2&rdquo;>
                         <div>
                           <h3
-                            className="text-lg font-semibold text-gray-900 cursor-pointer hover:text-blue-600"
+                            className=&ldquo;text-lg font-semibold text-gray-900 cursor-pointer hover:text-blue-600&rdquo;
                             onClick={() =>
                               router.push(`/jobs/${application.jobId}`)
                             }
                           >
                             {application.jobTitle}
                           </h3>
-                          <p className="text-gray-600">
+                          <p className=&ldquo;text-gray-600&rdquo;>
                             {application.companyName}
                           </p>
                         </div>
-                        <div className="flex items-center space-x-2">
+                        <div className=&ldquo;flex items-center space-x-2&rdquo;>
                           <Badge
                             className={`${getStatusColor(application.status)} border-0`}
                           >
-                            <div className="flex items-center space-x-1">
+                            <div className=&ldquo;flex items-center space-x-1&rdquo;>
                               {getStatusIcon(application.status)}
                               <span>{getStatusLabel(application.status)}</span>
                             </div>
@@ -395,58 +395,58 @@ export default function MyApplicationsPage() {
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600 mb-4">
+                      <div className=&ldquo;grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600 mb-4&rdquo;>
                         <div>
-                          <span className="font-medium">Aplicado:</span>{" "}
+                          <span className=&ldquo;font-medium&rdquo;>Aplicado:</span>{&ldquo; &rdquo;}
                           {formatDate(application.appliedAt)}
                         </div>
                         <div>
-                          <span className="font-medium">
+                          <span className=&ldquo;font-medium&rdquo;>
                             Última actualización:
-                          </span>{" "}
+                          </span>{&ldquo; &rdquo;}
                           {formatDate(application.updatedAt)}
                         </div>
                         {application.rating && (
                           <div>
-                            <span className="font-medium">Valoración:</span>{" "}
+                            <span className=&ldquo;font-medium&rdquo;>Valoración:</span>{&ldquo; &rdquo;}
                             {application.rating}/5 ⭐
                           </div>
                         )}
                       </div>
 
                       {application.notes && (
-                        <div className="bg-gray-50 rounded-lg p-3 mb-4">
-                          <p className="text-sm text-gray-700">
-                            <span className="font-medium">
+                        <div className=&ldquo;bg-gray-50 rounded-lg p-3 mb-4&rdquo;>
+                          <p className=&ldquo;text-sm text-gray-700&rdquo;>
+                            <span className=&ldquo;font-medium&rdquo;>
                               Notas del empleador:
-                            </span>{" "}
+                            </span>{&ldquo; &rdquo;}
                             {application.notes}
                           </p>
                         </div>
                       )}
 
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-4">
+                      <div className=&ldquo;flex items-center justify-between&rdquo;>
+                        <div className=&ldquo;flex items-center space-x-4&rdquo;>
                           <Button
-                            variant="outline"
-                            size="sm"
+                            variant=&ldquo;outline&rdquo;
+                            size=&ldquo;sm&rdquo;
                             onClick={() =>
                               router.push(`/jobs/${application.jobId}`)
                             }
                           >
-                            <Eye className="w-4 h-4 mr-2" />
+                            <Eye className=&ldquo;w-4 h-4 mr-2&rdquo; />
                             Ver oferta
                           </Button>
 
                           {/* {application.cvUrl && (
                             <Button
-                              variant="outline"
-                              size="sm"
+                              variant=&ldquo;outline&rdquo;
+                              size=&ldquo;sm&rdquo;
                               onClick={() =>
-                                window.open(application.cvUrl, "_blank")
+                                window.open(application.cvUrl, &ldquo;_blank&rdquo;)
                               }
                             >
-                              <Download className="w-4 h-4 mr-2" />
+                              <Download className=&ldquo;w-4 h-4 mr-2&rdquo; />
                               Ver CV
                             </Button>
                           )} */}
@@ -454,14 +454,14 @@ export default function MyApplicationsPage() {
 
                         {canWithdraw(application.status) && (
                           <Button
-                            variant="outline"
-                            size="sm"
+                            variant=&ldquo;outline&rdquo;
+                            size=&ldquo;sm&rdquo;
                             onClick={() =>
                               handleWithdrawApplication(application.id)
                             }
-                            className="text-red-600 border-red-300 hover:bg-red-50"
+                            className=&ldquo;text-red-600 border-red-300 hover:bg-red-50&rdquo;
                           >
-                            <Trash2 className="w-4 h-4 mr-2" />
+                            <Trash2 className=&ldquo;w-4 h-4 mr-2&rdquo; />
                             Retirar
                           </Button>
                         )}
@@ -475,22 +475,22 @@ export default function MyApplicationsPage() {
         </div>
       ) : (
         <Card>
-          <CardContent className="flex flex-col items-center justify-center py-12 text-center">
-            <Search className="w-12 h-12 text-gray-400 mb-4" />
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+          <CardContent className=&ldquo;flex flex-col items-center justify-center py-12 text-center&rdquo;>
+            <Search className=&ldquo;w-12 h-12 text-gray-400 mb-4&rdquo; />
+            <h3 className=&ldquo;text-lg font-semibold text-gray-900 mb-2&rdquo;>
               {applications.length === 0
-                ? "No has aplicado a ningún empleo"
-                : "No se encontraron aplicaciones"}
+                ? &ldquo;No has aplicado a ningún empleo&rdquo;
+                : &ldquo;No se encontraron aplicaciones&rdquo;}
             </h3>
-            <p className="text-gray-600 mb-6">
+            <p className=&ldquo;text-gray-600 mb-6&rdquo;>
               {applications.length === 0
-                ? "Comienza explorando oportunidades laborales que se ajusten a tu perfil."
-                : "Intenta ajustar tus filtros de búsqueda."}
+                ? &ldquo;Comienza explorando oportunidades laborales que se ajusten a tu perfil.&rdquo;
+                : &ldquo;Intenta ajustar tus filtros de búsqueda.&rdquo;}
             </p>
-            <Button onClick={() => router.push("/jobs")}>
+            <Button onClick={() => router.push(&ldquo;/jobs&rdquo;)}>
               {applications.length === 0
-                ? "Explorar empleos"
-                : "Ver todos los empleos"}
+                ? &ldquo;Explorar empleos&rdquo;
+                : &ldquo;Ver todos los empleos&rdquo;}
             </Button>
           </CardContent>
         </Card>

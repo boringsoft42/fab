@@ -1,13 +1,13 @@
-"use client"
+&ldquo;use client&rdquo;
 
-import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useState } from &ldquo;react&rdquo;
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from &ldquo;@/components/ui/card&rdquo;
+import { Button } from &ldquo;@/components/ui/button&rdquo;
+import { Badge } from &ldquo;@/components/ui/badge&rdquo;
+import { Input } from &ldquo;@/components/ui/input&rdquo;
+import { Label } from &ldquo;@/components/ui/label&rdquo;
+import { Textarea } from &ldquo;@/components/ui/textarea&rdquo;
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from &ldquo;@/components/ui/select&rdquo;
 import {
   Dialog,
   DialogContent,
@@ -15,9 +15,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Building2, Users, TrendingUp, MapPin, Plus, BarChart3, Globe, Mail, Phone, Play, Link, FileText, GraduationCap, Bookmark, Lightbulb, MessageSquare, BookOpen, Briefcase } from "lucide-react"
+} from &ldquo;@/components/ui/dialog&rdquo;
+import { Avatar, AvatarFallback, AvatarImage } from &ldquo;@/components/ui/avatar&rdquo;
+import { Building2, Users, TrendingUp, MapPin, Plus, BarChart3, Globe, Mail, Phone, Play, Link, FileText, GraduationCap, Bookmark, Lightbulb, MessageSquare, BookOpen, Briefcase } from &ldquo;lucide-react&rdquo;
 
 interface Company {
   id: string
@@ -44,46 +44,46 @@ export function DashboardMunicipio() {
   const [showCreateDialog, setShowCreateDialog] = useState(false)
   const [companies, setCompanies] = useState<Company[]>([
     {
-      id: "1",
-      name: "Cemse Innovación",
+      id: &ldquo;1&rdquo;,
+      name: &ldquo;Cemse Innovación&rdquo;,
       description:
-        "Empresa líder en desarrollo de soluciones tecnológicas innovadoras para el sector empresarial boliviano. Nos especializamos en transformación digital y consultoría estratégica.",
-      logo: "/placeholder.svg?height=60&width=60",
-      industry: "Tecnología",
-      size: "51-200 empleados",
-      founded: "2018",
-      website: "https://cemse.com.bo",
-      email: "contacto@cemse.com.bo",
-      phone: "+591 2 2345678",
-      address: "Av. Arce 2345, Edificio Torre Empresarial, Piso 12",
-      city: "La Paz",
+        &ldquo;Empresa líder en desarrollo de soluciones tecnológicas innovadoras para el sector empresarial boliviano. Nos especializamos en transformación digital y consultoría estratégica.&rdquo;,
+      logo: &ldquo;/placeholder.svg?height=60&width=60&rdquo;,
+      industry: &ldquo;Tecnología&rdquo;,
+      size: &ldquo;51-200 empleados&rdquo;,
+      founded: &ldquo;2018&rdquo;,
+      website: &ldquo;https://cemse.com.bo&rdquo;,
+      email: &ldquo;contacto@cemse.com.bo&rdquo;,
+      phone: &ldquo;+591 2 2345678&rdquo;,
+      address: &ldquo;Av. Arce 2345, Edificio Torre Empresarial, Piso 12&rdquo;,
+      city: &ldquo;La Paz&rdquo;,
       employees: 127,
       revenue: 2500000,
       growth: 35,
       mission:
-        "Impulsar la transformación digital de las empresas bolivianas mediante soluciones tecnológicas innovadoras y consultoría especializada.",
+        &ldquo;Impulsar la transformación digital de las empresas bolivianas mediante soluciones tecnológicas innovadoras y consultoría especializada.&rdquo;,
       vision:
-        "Ser la empresa de tecnología más reconocida de Bolivia, liderando la innovación y el desarrollo empresarial en la región.",
-      values: ["Innovación", "Excelencia", "Integridad", "Colaboración", "Sostenibilidad"],
+        &ldquo;Ser la empresa de tecnología más reconocida de Bolivia, liderando la innovación y el desarrollo empresarial en la región.&rdquo;,
+      values: [&ldquo;Innovación&rdquo;, &ldquo;Excelencia&rdquo;, &ldquo;Integridad&rdquo;, &ldquo;Colaboración&rdquo;, &ldquo;Sostenibilidad&rdquo;],
     },
   ])
 
   const [newCompany, setNewCompany] = useState<Partial<Company>>({
-    name: "",
-    description: "",
-    industry: "",
-    size: "",
-    founded: "",
-    website: "",
-    email: "",
-    phone: "",
-    address: "",
-    city: "",
+    name: &ldquo;&rdquo;,
+    description: &ldquo;&rdquo;,
+    industry: &ldquo;&rdquo;,
+    size: &ldquo;&rdquo;,
+    founded: &ldquo;&rdquo;,
+    website: &ldquo;&rdquo;,
+    email: &ldquo;&rdquo;,
+    phone: &ldquo;&rdquo;,
+    address: &ldquo;&rdquo;,
+    city: &ldquo;&rdquo;,
     employees: 0,
     revenue: 0,
     growth: 0,
-    mission: "",
-    vision: "",
+    mission: &ldquo;&rdquo;,
+    vision: &ldquo;&rdquo;,
     values: [],
   })
 
@@ -99,255 +99,255 @@ export function DashboardMunicipio() {
     const company: Company = {
       ...newCompany,
       id: Date.now().toString(),
-      logo: "/placeholder.svg?height=60&width=60",
-      values: typeof newCompany.values === "string" ? newCompany.values.split(",").map((v) => v.trim()) : [],
+      logo: &ldquo;/placeholder.svg?height=60&width=60&rdquo;,
+      values: typeof newCompany.values === &ldquo;string&rdquo; ? newCompany.values.split(&ldquo;,&rdquo;).map((v) => v.trim()) : [],
     } as Company
 
     setCompanies([...companies, company])
     setNewCompany({
-      name: "",
-      description: "",
-      industry: "",
-      size: "",
-      founded: "",
-      website: "",
-      email: "",
-      phone: "",
-      address: "",
-      city: "",
+      name: &ldquo;&rdquo;,
+      description: &ldquo;&rdquo;,
+      industry: &ldquo;&rdquo;,
+      size: &ldquo;&rdquo;,
+      founded: &ldquo;&rdquo;,
+      website: &ldquo;&rdquo;,
+      email: &ldquo;&rdquo;,
+      phone: &ldquo;&rdquo;,
+      address: &ldquo;&rdquo;,
+      city: &ldquo;&rdquo;,
       employees: 0,
       revenue: 0,
       growth: 0,
-      mission: "",
-      vision: "",
+      mission: &ldquo;&rdquo;,
+      vision: &ldquo;&rdquo;,
       values: [],
     })
     setShowCreateDialog(false)
   }
 
   return (
-    <div className="space-y-6 px-4">
-      <div className="flex justify-between items-center">
+    <div className=&ldquo;space-y-6 px-4&rdquo;>
+      <div className=&ldquo;flex justify-between items-center&rdquo;>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Dashboard Municipio </h1>
-          <p className="text-muted-foreground">Gestión y análisis de empresas registradas</p>
+          <h1 className=&ldquo;text-3xl font-bold tracking-tight&rdquo;>Dashboard Municipio </h1>
+          <p className=&ldquo;text-muted-foreground&rdquo;>Gestión y análisis de empresas registradas</p>
         </div>
         <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
           <DialogTrigger asChild>
             <Button>
-              <Plus className="w-4 h-4 mr-2" />
+              <Plus className=&ldquo;w-4 h-4 mr-2&rdquo; />
               Crear Empresa
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className=&ldquo;max-w-4xl max-h-[90vh] overflow-y-auto&rdquo;>
             <DialogHeader>
               <DialogTitle>Crear Nueva Empresa</DialogTitle>
               <DialogDescription>Registra una nueva empresa en la plataforma CEMSE</DialogDescription>
             </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="name">Nombre de la Empresa *</Label>
+            <div className=&ldquo;grid gap-4 py-4&rdquo;>
+              <div className=&ldquo;grid grid-cols-2 gap-4&rdquo;>
+                <div className=&ldquo;grid gap-2&rdquo;>
+                  <Label htmlFor=&ldquo;name&rdquo;>Nombre de la Empresa *</Label>
                   <Input
-                    id="name"
+                    id=&ldquo;name&rdquo;
                     value={newCompany.name}
                     onChange={(e) => setNewCompany({ ...newCompany, name: e.target.value })}
-                    placeholder="Ej: Cemse Innovación"
+                    placeholder=&ldquo;Ej: Cemse Innovación&rdquo;
                   />
                 </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="founded">Año de Fundación</Label>
+                <div className=&ldquo;grid gap-2&rdquo;>
+                  <Label htmlFor=&ldquo;founded&rdquo;>Año de Fundación</Label>
                   <Input
-                    id="founded"
+                    id=&ldquo;founded&rdquo;
                     value={newCompany.founded}
                     onChange={(e) => setNewCompany({ ...newCompany, founded: e.target.value })}
-                    placeholder="2018"
+                    placeholder=&ldquo;2018&rdquo;
                   />
                 </div>
               </div>
 
-              <div className="grid gap-2">
-                <Label htmlFor="description">Descripción</Label>
+              <div className=&ldquo;grid gap-2&rdquo;>
+                <Label htmlFor=&ldquo;description&rdquo;>Descripción</Label>
                 <Textarea
-                  id="description"
+                  id=&ldquo;description&rdquo;
                   value={newCompany.description}
                   onChange={(e) => setNewCompany({ ...newCompany, description: e.target.value })}
-                  placeholder="Descripción de la empresa..."
+                  placeholder=&ldquo;Descripción de la empresa...&rdquo;
                   rows={3}
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="industry">Sector</Label>
+              <div className=&ldquo;grid grid-cols-2 gap-4&rdquo;>
+                <div className=&ldquo;grid gap-2&rdquo;>
+                  <Label htmlFor=&ldquo;industry&rdquo;>Sector</Label>
                   <Select
                     value={newCompany.industry}
                     onValueChange={(value) => setNewCompany({ ...newCompany, industry: value })}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Seleccionar sector" />
+                      <SelectValue placeholder=&ldquo;Seleccionar sector&rdquo; />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Tecnología">Tecnología</SelectItem>
-                      <SelectItem value="Finanzas">Finanzas</SelectItem>
-                      <SelectItem value="Salud">Salud</SelectItem>
-                      <SelectItem value="Educación">Educación</SelectItem>
-                      <SelectItem value="Manufactura">Manufactura</SelectItem>
-                      <SelectItem value="Servicios">Servicios</SelectItem>
+                      <SelectItem value=&ldquo;Tecnología&rdquo;>Tecnología</SelectItem>
+                      <SelectItem value=&ldquo;Finanzas&rdquo;>Finanzas</SelectItem>
+                      <SelectItem value=&ldquo;Salud&rdquo;>Salud</SelectItem>
+                      <SelectItem value=&ldquo;Educación&rdquo;>Educación</SelectItem>
+                      <SelectItem value=&ldquo;Manufactura&rdquo;>Manufactura</SelectItem>
+                      <SelectItem value=&ldquo;Servicios&rdquo;>Servicios</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="size">Tamaño</Label>
+                <div className=&ldquo;grid gap-2&rdquo;>
+                  <Label htmlFor=&ldquo;size&rdquo;>Tamaño</Label>
                   <Select
                     value={newCompany.size}
                     onValueChange={(value) => setNewCompany({ ...newCompany, size: value })}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Seleccionar tamaño" />
+                      <SelectValue placeholder=&ldquo;Seleccionar tamaño&rdquo; />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="1-10 empleados">1-10 empleados</SelectItem>
-                      <SelectItem value="11-50 empleados">11-50 empleados</SelectItem>
-                      <SelectItem value="51-200 empleados">51-200 empleados</SelectItem>
-                      <SelectItem value="201-500 empleados">201-500 empleados</SelectItem>
-                      <SelectItem value="500+ empleados">500+ empleados</SelectItem>
+                      <SelectItem value=&ldquo;1-10 empleados&rdquo;>1-10 empleados</SelectItem>
+                      <SelectItem value=&ldquo;11-50 empleados&rdquo;>11-50 empleados</SelectItem>
+                      <SelectItem value=&ldquo;51-200 empleados&rdquo;>51-200 empleados</SelectItem>
+                      <SelectItem value=&ldquo;201-500 empleados&rdquo;>201-500 empleados</SelectItem>
+                      <SelectItem value=&ldquo;500+ empleados&rdquo;>500+ empleados</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="website">Sitio Web</Label>
+              <div className=&ldquo;grid grid-cols-2 gap-4&rdquo;>
+                <div className=&ldquo;grid gap-2&rdquo;>
+                  <Label htmlFor=&ldquo;website&rdquo;>Sitio Web</Label>
                   <Input
-                    id="website"
+                    id=&ldquo;website&rdquo;
                     value={newCompany.website}
                     onChange={(e) => setNewCompany({ ...newCompany, website: e.target.value })}
-                    placeholder="https://empresa.com"
+                    placeholder=&ldquo;https://empresa.com&rdquo;
                   />
                 </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="email">Email</Label>
+                <div className=&ldquo;grid gap-2&rdquo;>
+                  <Label htmlFor=&ldquo;email&rdquo;>Email</Label>
                   <Input
-                    id="email"
-                    type="email"
+                    id=&ldquo;email&rdquo;
+                    type=&ldquo;email&rdquo;
                     value={newCompany.email}
                     onChange={(e) => setNewCompany({ ...newCompany, email: e.target.value })}
-                    placeholder="contacto@empresa.com"
+                    placeholder=&ldquo;contacto@empresa.com&rdquo;
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="phone">Teléfono</Label>
+              <div className=&ldquo;grid grid-cols-2 gap-4&rdquo;>
+                <div className=&ldquo;grid gap-2&rdquo;>
+                  <Label htmlFor=&ldquo;phone&rdquo;>Teléfono</Label>
                   <Input
-                    id="phone"
+                    id=&ldquo;phone&rdquo;
                     value={newCompany.phone}
                     onChange={(e) => setNewCompany({ ...newCompany, phone: e.target.value })}
-                    placeholder="+591 2 2345678"
+                    placeholder=&ldquo;+591 2 2345678&rdquo;
                   />
                 </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="city">Ciudad</Label>
+                <div className=&ldquo;grid gap-2&rdquo;>
+                  <Label htmlFor=&ldquo;city&rdquo;>Ciudad</Label>
                   <Select
                     value={newCompany.city}
                     onValueChange={(value) => setNewCompany({ ...newCompany, city: value })}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Seleccionar ciudad" />
+                      <SelectValue placeholder=&ldquo;Seleccionar ciudad&rdquo; />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="La Paz">La Paz</SelectItem>
-                      <SelectItem value="Santa Cruz">Santa Cruz</SelectItem>
-                      <SelectItem value="Cochabamba">Cochabamba</SelectItem>
-                      <SelectItem value="Sucre">Sucre</SelectItem>
-                      <SelectItem value="Potosí">Potosí</SelectItem>
-                      <SelectItem value="Oruro">Oruro</SelectItem>
-                      <SelectItem value="Tarija">Tarija</SelectItem>
+                      <SelectItem value=&ldquo;La Paz&rdquo;>La Paz</SelectItem>
+                      <SelectItem value=&ldquo;Santa Cruz&rdquo;>Santa Cruz</SelectItem>
+                      <SelectItem value=&ldquo;Cochabamba&rdquo;>Cochabamba</SelectItem>
+                      <SelectItem value=&ldquo;Sucre&rdquo;>Sucre</SelectItem>
+                      <SelectItem value=&ldquo;Potosí&rdquo;>Potosí</SelectItem>
+                      <SelectItem value=&ldquo;Oruro&rdquo;>Oruro</SelectItem>
+                      <SelectItem value=&ldquo;Tarija&rdquo;>Tarija</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
 
-              <div className="grid gap-2">
-                <Label htmlFor="address">Dirección</Label>
+              <div className=&ldquo;grid gap-2&rdquo;>
+                <Label htmlFor=&ldquo;address&rdquo;>Dirección</Label>
                 <Input
-                  id="address"
+                  id=&ldquo;address&rdquo;
                   value={newCompany.address}
                   onChange={(e) => setNewCompany({ ...newCompany, address: e.target.value })}
-                  placeholder="Av. Principal 123"
+                  placeholder=&ldquo;Av. Principal 123&rdquo;
                 />
               </div>
 
-              <div className="grid grid-cols-3 gap-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="employees">Número de Empleados</Label>
+              <div className=&ldquo;grid grid-cols-3 gap-4&rdquo;>
+                <div className=&ldquo;grid gap-2&rdquo;>
+                  <Label htmlFor=&ldquo;employees&rdquo;>Número de Empleados</Label>
                   <Input
-                    id="employees"
-                    type="number"
+                    id=&ldquo;employees&rdquo;
+                    type=&ldquo;number&rdquo;
                     value={newCompany.employees}
                     onChange={(e) => setNewCompany({ ...newCompany, employees: Number.parseInt(e.target.value) || 0 })}
-                    placeholder="0"
+                    placeholder=&ldquo;0&rdquo;
                   />
                 </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="revenue">Ingresos Anuales (Bs.)</Label>
+                <div className=&ldquo;grid gap-2&rdquo;>
+                  <Label htmlFor=&ldquo;revenue&rdquo;>Ingresos Anuales (Bs.)</Label>
                   <Input
-                    id="revenue"
-                    type="number"
+                    id=&ldquo;revenue&rdquo;
+                    type=&ldquo;number&rdquo;
                     value={newCompany.revenue}
                     onChange={(e) => setNewCompany({ ...newCompany, revenue: Number.parseInt(e.target.value) || 0 })}
-                    placeholder="0"
+                    placeholder=&ldquo;0&rdquo;
                   />
                 </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="growth">Crecimiento (%)</Label>
+                <div className=&ldquo;grid gap-2&rdquo;>
+                  <Label htmlFor=&ldquo;growth&rdquo;>Crecimiento (%)</Label>
                   <Input
-                    id="growth"
-                    type="number"
+                    id=&ldquo;growth&rdquo;
+                    type=&ldquo;number&rdquo;
                     value={newCompany.growth}
                     onChange={(e) => setNewCompany({ ...newCompany, growth: Number.parseInt(e.target.value) || 0 })}
-                    placeholder="0"
+                    placeholder=&ldquo;0&rdquo;
                   />
                 </div>
               </div>
 
-              <div className="grid gap-2">
-                <Label htmlFor="mission">Misión</Label>
+              <div className=&ldquo;grid gap-2&rdquo;>
+                <Label htmlFor=&ldquo;mission&rdquo;>Misión</Label>
                 <Textarea
-                  id="mission"
+                  id=&ldquo;mission&rdquo;
                   value={newCompany.mission}
                   onChange={(e) => setNewCompany({ ...newCompany, mission: e.target.value })}
-                  placeholder="Misión de la empresa..."
+                  placeholder=&ldquo;Misión de la empresa...&rdquo;
                   rows={2}
                 />
               </div>
 
-              <div className="grid gap-2">
-                <Label htmlFor="vision">Visión</Label>
+              <div className=&ldquo;grid gap-2&rdquo;>
+                <Label htmlFor=&ldquo;vision&rdquo;>Visión</Label>
                 <Textarea
-                  id="vision"
+                  id=&ldquo;vision&rdquo;
                   value={newCompany.vision}
                   onChange={(e) => setNewCompany({ ...newCompany, vision: e.target.value })}
-                  placeholder="Visión de la empresa..."
+                  placeholder=&ldquo;Visión de la empresa...&rdquo;
                   rows={2}
                 />
               </div>
 
-              <div className="grid gap-2">
-                <Label htmlFor="values">Valores Corporativos</Label>
+              <div className=&ldquo;grid gap-2&rdquo;>
+                <Label htmlFor=&ldquo;values&rdquo;>Valores Corporativos</Label>
                 <Input
-                  id="values"
-                  value={Array.isArray(newCompany.values) ? newCompany.values.join(", ") : newCompany.values}
+                  id=&ldquo;values&rdquo;
+                  value={Array.isArray(newCompany.values) ? newCompany.values.join(&ldquo;, &rdquo;) : newCompany.values}
                   onChange={(e) => setNewCompany({ ...newCompany, values: e.target.value })}
-                  placeholder="Innovación, Excelencia, Integridad (separados por comas)"
+                  placeholder=&ldquo;Innovación, Excelencia, Integridad (separados por comas)&rdquo;
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-4">
-                <Button variant="outline" onClick={() => setShowCreateDialog(false)}>
+              <div className=&ldquo;flex justify-end gap-2 pt-4&rdquo;>
+                <Button variant=&ldquo;outline&rdquo; onClick={() => setShowCreateDialog(false)}>
                   Cancelar
                 </Button>
                 <Button onClick={handleCreateCompany} disabled={!newCompany.name}>
@@ -360,134 +360,134 @@ export function DashboardMunicipio() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className=&ldquo;grid gap-4 md:grid-cols-2 lg:grid-cols-4&rdquo;>
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Empresas</CardTitle>
-            <Building2 className="h-4 w-4 text-muted-foreground" />
+          <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
+            <CardTitle className=&ldquo;text-sm font-medium&rdquo;>Total Empresas</CardTitle>
+            <Building2 className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{companyStats.totalCompanies}</div>
-            <p className="text-xs text-muted-foreground">registradas</p>
+            <div className=&ldquo;text-2xl font-bold&rdquo;>{companyStats.totalCompanies}</div>
+            <p className=&ldquo;text-xs text-muted-foreground&rdquo;>registradas</p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Empleados</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+          <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
+            <CardTitle className=&ldquo;text-sm font-medium&rdquo;>Total Empleados</CardTitle>
+            <Users className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{companyStats.totalEmployees.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">en todas las empresas</p>
+            <div className=&ldquo;text-2xl font-bold&rdquo;>{companyStats.totalEmployees.toLocaleString()}</div>
+            <p className=&ldquo;text-xs text-muted-foreground&rdquo;>en todas las empresas</p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Ingresos Totales</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+          <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
+            <CardTitle className=&ldquo;text-sm font-medium&rdquo;>Ingresos Totales</CardTitle>
+            <TrendingUp className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">Bs. {(companyStats.totalRevenue / 1000000).toFixed(1)}M</div>
-            <p className="text-xs text-muted-foreground">millones</p>
+            <div className=&ldquo;text-2xl font-bold&rdquo;>Bs. {(companyStats.totalRevenue / 1000000).toFixed(1)}M</div>
+            <p className=&ldquo;text-xs text-muted-foreground&rdquo;>millones</p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Crecimiento Promedio</CardTitle>
-            <BarChart3 className="h-4 w-4 text-muted-foreground" />
+          <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
+            <CardTitle className=&ldquo;text-sm font-medium&rdquo;>Crecimiento Promedio</CardTitle>
+            <BarChart3 className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">+{companyStats.averageGrowth.toFixed(1)}%</div>
-            <p className="text-xs text-muted-foreground">anual</p>
+            <div className=&ldquo;text-2xl font-bold text-green-600&rdquo;>+{companyStats.averageGrowth.toFixed(1)}%</div>
+            <p className=&ldquo;text-xs text-muted-foreground&rdquo;>anual</p>
           </CardContent>
         </Card>
       </div>
 
       {/* Companies List */}
-      {/* <div className="grid gap-6">
+      {/* <div className=&ldquo;grid gap-6&rdquo;>
         {companies.map((company) => (
           <Card key={company.id}>
             <CardHeader>
-              <div className="flex items-start gap-4">
-                <Avatar className="w-16 h-16">
-                  <AvatarImage src={company.logo || "/placeholder.svg"} alt={company.name} />
+              <div className=&ldquo;flex items-start gap-4&rdquo;>
+                <Avatar className=&ldquo;w-16 h-16&rdquo;>
+                  <AvatarImage src={company.logo || &ldquo;/placeholder.svg&rdquo;} alt={company.name} />
                   <AvatarFallback>
-                    <Building2 className="w-6 h-6" />
+                    <Building2 className=&ldquo;w-6 h-6&rdquo; />
                   </AvatarFallback>
                 </Avatar>
-                <div className="flex-1">
-                  <div className="flex justify-between items-start">
+                <div className=&ldquo;flex-1&rdquo;>
+                  <div className=&ldquo;flex justify-between items-start&rdquo;>
                     <div>
-                      <CardTitle className="text-xl">{company.name}</CardTitle>
-                      <CardDescription className="mt-1">{company.description}</CardDescription>
-                      <div className="flex gap-2 mt-2">
-                        <Badge variant="secondary">{company.industry}</Badge>
-                        <Badge variant="outline">{company.size}</Badge>
-                        <Badge variant="outline">Fundada en {company.founded}</Badge>
+                      <CardTitle className=&ldquo;text-xl&rdquo;>{company.name}</CardTitle>
+                      <CardDescription className=&ldquo;mt-1&rdquo;>{company.description}</CardDescription>
+                      <div className=&ldquo;flex gap-2 mt-2&rdquo;>
+                        <Badge variant=&ldquo;secondary&rdquo;>{company.industry}</Badge>
+                        <Badge variant=&ldquo;outline&rdquo;>{company.size}</Badge>
+                        <Badge variant=&ldquo;outline&rdquo;>Fundada en {company.founded}</Badge>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <div className="text-2xl font-bold text-green-600">+{company.growth}%</div>
-                      <p className="text-xs text-muted-foreground">crecimiento</p>
+                    <div className=&ldquo;text-right&rdquo;>
+                      <div className=&ldquo;text-2xl font-bold text-green-600&rdquo;>+{company.growth}%</div>
+                      <p className=&ldquo;text-xs text-muted-foreground&rdquo;>crecimiento</p>
                     </div>
                   </div>
                 </div>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                <div className="flex items-center gap-2">
-                  <Globe className="w-4 h-4 text-muted-foreground" />
-                  <a href={company.website} className="text-sm text-blue-600 hover:underline">
+              <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4&rdquo;>
+                <div className=&ldquo;flex items-center gap-2&rdquo;>
+                  <Globe className=&ldquo;w-4 h-4 text-muted-foreground&rdquo; />
+                  <a href={company.website} className=&ldquo;text-sm text-blue-600 hover:underline&rdquo;>
                     {company.website}
                   </a>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Mail className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm">{company.email}</span>
+                <div className=&ldquo;flex items-center gap-2&rdquo;>
+                  <Mail className=&ldquo;w-4 h-4 text-muted-foreground&rdquo; />
+                  <span className=&ldquo;text-sm&rdquo;>{company.email}</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Phone className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm">{company.phone}</span>
+                <div className=&ldquo;flex items-center gap-2&rdquo;>
+                  <Phone className=&ldquo;w-4 h-4 text-muted-foreground&rdquo; />
+                  <span className=&ldquo;text-sm&rdquo;>{company.phone}</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm">{company.city}</span>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                <div className="text-center p-3 bg-blue-50 rounded-lg">
-                  <div className="text-2xl font-bold text-blue-600">{company.employees}</div>
-                  <p className="text-xs text-muted-foreground">Empleados</p>
-                </div>
-                <div className="text-center p-3 bg-green-50 rounded-lg">
-                  <div className="text-2xl font-bold text-green-600">Bs. {company.revenue.toLocaleString()}</div>
-                  <p className="text-xs text-muted-foreground">Ingresos Anuales</p>
-                </div>
-                <div className="text-center p-3 bg-purple-50 rounded-lg">
-                  <div className="text-2xl font-bold text-purple-600">+{company.growth}%</div>
-                  <p className="text-xs text-muted-foreground">Crecimiento</p>
+                <div className=&ldquo;flex items-center gap-2&rdquo;>
+                  <MapPin className=&ldquo;w-4 h-4 text-muted-foreground&rdquo; />
+                  <span className=&ldquo;text-sm&rdquo;>{company.city}</span>
                 </div>
               </div>
 
-              <div className="space-y-3">
+              <div className=&ldquo;grid grid-cols-1 md:grid-cols-3 gap-4 mb-4&rdquo;>
+                <div className=&ldquo;text-center p-3 bg-blue-50 rounded-lg&rdquo;>
+                  <div className=&ldquo;text-2xl font-bold text-blue-600&rdquo;>{company.employees}</div>
+                  <p className=&ldquo;text-xs text-muted-foreground&rdquo;>Empleados</p>
+                </div>
+                <div className=&ldquo;text-center p-3 bg-green-50 rounded-lg&rdquo;>
+                  <div className=&ldquo;text-2xl font-bold text-green-600&rdquo;>Bs. {company.revenue.toLocaleString()}</div>
+                  <p className=&ldquo;text-xs text-muted-foreground&rdquo;>Ingresos Anuales</p>
+                </div>
+                <div className=&ldquo;text-center p-3 bg-purple-50 rounded-lg&rdquo;>
+                  <div className=&ldquo;text-2xl font-bold text-purple-600&rdquo;>+{company.growth}%</div>
+                  <p className=&ldquo;text-xs text-muted-foreground&rdquo;>Crecimiento</p>
+                </div>
+              </div>
+
+              <div className=&ldquo;space-y-3&rdquo;>
                 <div>
-                  <h4 className="font-semibold text-sm mb-1">Misión</h4>
-                  <p className="text-sm text-muted-foreground">{company.mission}</p>
+                  <h4 className=&ldquo;font-semibold text-sm mb-1&rdquo;>Misión</h4>
+                  <p className=&ldquo;text-sm text-muted-foreground&rdquo;>{company.mission}</p>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-sm mb-1">Visión</h4>
-                  <p className="text-sm text-muted-foreground">{company.vision}</p>
+                  <h4 className=&ldquo;font-semibold text-sm mb-1&rdquo;>Visión</h4>
+                  <p className=&ldquo;text-sm text-muted-foreground&rdquo;>{company.vision}</p>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-sm mb-2">Valores Corporativos</h4>
-                  <div className="flex flex-wrap gap-1">
+                  <h4 className=&ldquo;font-semibold text-sm mb-2&rdquo;>Valores Corporativos</h4>
+                  <div className=&ldquo;flex flex-wrap gap-1&rdquo;>
                     {company.values.map((value, index) => (
-                      <Badge key={index} variant="outline" className="text-xs">
+                      <Badge key={index} variant=&ldquo;outline&rdquo; className=&ldquo;text-xs&rdquo;>
                         {value}
                       </Badge>
                     ))}
@@ -500,42 +500,42 @@ export function DashboardMunicipio() {
       </div> */}
       {/* Acciones Rápidas */}
       {/* Extra Invented Metrics Row */}
-<div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6">
-  <div className="flex items-center gap-3 p-3 bg-white rounded-lg">
-    <div className="w-10 h-10 bg-sky-100 rounded-lg flex items-center justify-center">
-      <BookOpen className="w-5 h-5 text-sky-600" />
+<div className=&ldquo;grid grid-cols-2 md:grid-cols-3 gap-4 mt-6&rdquo;>
+  <div className=&ldquo;flex items-center gap-3 p-3 bg-white rounded-lg&rdquo;>
+    <div className=&ldquo;w-10 h-10 bg-sky-100 rounded-lg flex items-center justify-center&rdquo;>
+      <BookOpen className=&ldquo;w-5 h-5 text-sky-600&rdquo; />
     </div>
     <div>
-      <div className="text-lg font-semibold text-gray-900">14</div>
-      <p className="text-xs text-gray-600">Artículos leídos este mes</p>
+      <div className=&ldquo;text-lg font-semibold text-gray-900&rdquo;>14</div>
+      <p className=&ldquo;text-xs text-gray-600&rdquo;>Artículos leídos este mes</p>
     </div>
   </div>
 
-  <div className="flex items-center gap-3 p-3 bg-white rounded-lg">
-    <div className="w-10 h-10 bg-lime-100 rounded-lg flex items-center justify-center">
-      <Briefcase className="w-5 h-5 text-lime-600" />
+  <div className=&ldquo;flex items-center gap-3 p-3 bg-white rounded-lg&rdquo;>
+    <div className=&ldquo;w-10 h-10 bg-lime-100 rounded-lg flex items-center justify-center&rdquo;>
+      <Briefcase className=&ldquo;w-5 h-5 text-lime-600&rdquo; />
     </div>
     <div>
-      <div className="text-lg font-semibold text-gray-900">5</div>
-      <p className="text-xs text-gray-600">Empresas seguidas</p>
+      <div className=&ldquo;text-lg font-semibold text-gray-900&rdquo;>5</div>
+      <p className=&ldquo;text-xs text-gray-600&rdquo;>Empresas seguidas</p>
     </div>
   </div>
 
-  <div className="flex items-center gap-3 p-3 bg-white rounded-lg">
-    <div className="w-10 h-10 bg-rose-100 rounded-lg flex items-center justify-center">
-      <Lightbulb className="w-5 h-5 text-rose-600" />
+  <div className=&ldquo;flex items-center gap-3 p-3 bg-white rounded-lg&rdquo;>
+    <div className=&ldquo;w-10 h-10 bg-rose-100 rounded-lg flex items-center justify-center&rdquo;>
+      <Lightbulb className=&ldquo;w-5 h-5 text-rose-600&rdquo; />
     </div>
     <div>
-      <div className="text-lg font-semibold text-gray-900">3</div>
-      <p className="text-xs text-gray-600">Ideas guardadas</p>
+      <div className=&ldquo;text-lg font-semibold text-gray-900&rdquo;>3</div>
+      <p className=&ldquo;text-xs text-gray-600&rdquo;>Ideas guardadas</p>
     </div>
   </div>
 </div>
 
-<Card className="mt-6">
+<Card className=&ldquo;mt-6&rdquo;>
   <CardHeader>
-    <CardTitle className="flex items-center gap-2">
-      <Play className="w-5 h-5" />
+    <CardTitle className=&ldquo;flex items-center gap-2&rdquo;>
+      <Play className=&ldquo;w-5 h-5&rdquo; />
       Acciones Rápidas
     </CardTitle>
     <CardDescription>
@@ -543,45 +543,45 @@ export function DashboardMunicipio() {
     </CardDescription>
   </CardHeader>
   <CardContent>
-    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-      <Button variant="secondary" className="justify-start gap-2 w-full" asChild>
-        <Link href="/cv-builder">
-          <FileText className="w-4 h-4" />
+    <div className=&ldquo;grid grid-cols-2 md:grid-cols-3 gap-4&rdquo;>
+      <Button variant=&ldquo;secondary&rdquo; className=&ldquo;justify-start gap-2 w-full&rdquo; asChild>
+        <Link href=&ldquo;/cv-builder&rdquo;>
+          <FileText className=&ldquo;w-4 h-4&rdquo; />
           Crear mi CV
         </Link>
       </Button>
 
-      <Button variant="secondary" className="justify-start gap-2 w-full" asChild>
-        <Link href="/courses">
-          <GraduationCap className="w-4 h-4" />
+      <Button variant=&ldquo;secondary&rdquo; className=&ldquo;justify-start gap-2 w-full&rdquo; asChild>
+        <Link href=&ldquo;/courses&rdquo;>
+          <GraduationCap className=&ldquo;w-4 h-4&rdquo; />
           Continuar Curso
         </Link>
       </Button>
 
-      <Button variant="secondary" className="justify-start gap-2 w-full" asChild>
-        <Link href="/jobs/saved">
-          <Bookmark className="w-4 h-4" />
+      <Button variant=&ldquo;secondary&rdquo; className=&ldquo;justify-start gap-2 w-full&rdquo; asChild>
+        <Link href=&ldquo;/jobs/saved&rdquo;>
+          <Bookmark className=&ldquo;w-4 h-4&rdquo; />
           Ver Postulaciones Guardadas
         </Link>
       </Button>
 
-      <Button variant="secondary" className="justify-start gap-2 w-full" asChild>
-        <Link href="/entrepreneurship/ideas">
-          <Lightbulb className="w-4 h-4" />
+      <Button variant=&ldquo;secondary&rdquo; className=&ldquo;justify-start gap-2 w-full&rdquo; asChild>
+        <Link href=&ldquo;/entrepreneurship/ideas&rdquo;>
+          <Lightbulb className=&ldquo;w-4 h-4&rdquo; />
           Mis Ideas de Negocio
         </Link>
       </Button>
 
-      <Button variant="secondary" className="justify-start gap-2 w-full" asChild>
-        <Link href="/mentorship">
-          <Users className="w-4 h-4" />
+      <Button variant=&ldquo;secondary&rdquo; className=&ldquo;justify-start gap-2 w-full&rdquo; asChild>
+        <Link href=&ldquo;/mentorship&rdquo;>
+          <Users className=&ldquo;w-4 h-4&rdquo; />
           Pedir Mentoría
         </Link>
       </Button>
 
-      <Button variant="secondary" className="justify-start gap-2 w-full" asChild>
-        <Link href="/support">
-          <MessageSquare className="w-4 h-4" />
+      <Button variant=&ldquo;secondary&rdquo; className=&ldquo;justify-start gap-2 w-full&rdquo; asChild>
+        <Link href=&ldquo;/support&rdquo;>
+          <MessageSquare className=&ldquo;w-4 h-4&rdquo; />
           Contactar Soporte
         </Link>
       </Button>

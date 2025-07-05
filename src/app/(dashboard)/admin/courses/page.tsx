@@ -1,13 +1,13 @@
-"use client";
+&ldquo;use client&rdquo;;
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { Course, CourseCategory, CourseLevel } from "@/types/courses";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
+import { useState, useEffect } from &ldquo;react&rdquo;;
+import { useRouter } from &ldquo;next/navigation&rdquo;;
+import Link from &ldquo;next/link&rdquo;;
+import { Course, CourseCategory, CourseLevel } from &ldquo;@/types/courses&rdquo;;
+import { Button } from &ldquo;@/components/ui/button&rdquo;;
+import { Card, CardContent, CardHeader, CardTitle } from &ldquo;@/components/ui/card&rdquo;;
+import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
+import { Input } from &ldquo;@/components/ui/input&rdquo;;
 import {
   Table,
   TableBody,
@@ -15,20 +15,20 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from &ldquo;@/components/ui/table&rdquo;;
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from &ldquo;@/components/ui/dropdown-menu&rdquo;;
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from &ldquo;@/components/ui/select&rdquo;;
 import {
   Plus,
   Search,
@@ -44,7 +44,7 @@ import {
   TrendingUp,
   Award,
   BarChart3,
-} from "lucide-react";
+} from &ldquo;lucide-react&rdquo;;
 
 interface CourseStats {
   totalCourses: number;
@@ -58,9 +58,9 @@ interface CourseStats {
 export default function CourseManagementPage() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState(&ldquo;&rdquo;);
+  const [statusFilter, setStatusFilter] = useState<string>(&ldquo;all&rdquo;);
+  const [categoryFilter, setCategoryFilter] = useState<string>(&ldquo;all&rdquo;);
   const [stats, setStats] = useState<CourseStats>({
     totalCourses: 0,
     totalStudents: 0,
@@ -81,25 +81,25 @@ export default function CourseManagementPage() {
       // Mock data for demonstration
       const mockCourses: Course[] = [
         {
-          id: "course-1",
-          title: "Habilidades Laborales Básicas",
-          slug: "habilidades-laborales-basicas",
+          id: &ldquo;course-1&rdquo;,
+          title: &ldquo;Habilidades Laborales Básicas&rdquo;,
+          slug: &ldquo;habilidades-laborales-basicas&rdquo;,
           description:
-            "Curso completo sobre competencias fundamentales para el trabajo",
+            &ldquo;Curso completo sobre competencias fundamentales para el trabajo&rdquo;,
           shortDescription:
-            "Desarrolla las competencias esenciales para el éxito laboral",
-          thumbnail: "/api/placeholder/400/300",
+            &ldquo;Desarrolla las competencias esenciales para el éxito laboral&rdquo;,
+          thumbnail: &ldquo;/api/placeholder/400/300&rdquo;,
           instructor: {
-            id: "instructor-1",
-            name: "Dra. Ana Pérez",
-            title: "Especialista en Desarrollo Profesional",
-            avatar: "/api/placeholder/80/80",
-            bio: "Experta en desarrollo de habilidades laborales",
+            id: &ldquo;instructor-1&rdquo;,
+            name: &ldquo;Dra. Ana Pérez&rdquo;,
+            title: &ldquo;Especialista en Desarrollo Profesional&rdquo;,
+            avatar: &ldquo;/api/placeholder/80/80&rdquo;,
+            bio: &ldquo;Experta en desarrollo de habilidades laborales&rdquo;,
             rating: 4.8,
             totalStudents: 2847,
             totalCourses: 12,
           },
-          institution: "Centro de Capacitación Municipal",
+          institution: &ldquo;Centro de Capacitación Municipal&rdquo;,
           category: CourseCategory.SOFT_SKILLS,
           level: CourseLevel.BEGINNER,
           duration: 8,
@@ -110,39 +110,39 @@ export default function CourseManagementPage() {
           isMandatory: true,
           isActive: true,
           objectives: [
-            "Desarrollar comunicación efectiva",
-            "Fortalecer trabajo en equipo",
+            &ldquo;Desarrollar comunicación efectiva&rdquo;,
+            &ldquo;Fortalecer trabajo en equipo&rdquo;,
           ],
-          prerequisites: ["Ninguno"],
+          prerequisites: [&ldquo;Ninguno&rdquo;],
           includedMaterials: [
-            "Videos",
-            "Material de lectura",
-            "Ejercicios prácticos",
+            &ldquo;Videos&rdquo;,
+            &ldquo;Material de lectura&rdquo;,
+            &ldquo;Ejercicios prácticos&rdquo;,
           ],
           certification: true,
-          tags: ["habilidades", "trabajo", "comunicación"],
-          createdAt: new Date("2024-01-15"),
-          updatedAt: new Date("2024-02-20"),
-          publishedAt: new Date("2024-01-20"),
+          tags: [&ldquo;habilidades&rdquo;, &ldquo;trabajo&rdquo;, &ldquo;comunicación&rdquo;],
+          createdAt: new Date(&ldquo;2024-01-15&rdquo;),
+          updatedAt: new Date(&ldquo;2024-02-20&rdquo;),
+          publishedAt: new Date(&ldquo;2024-01-20&rdquo;),
         },
         {
-          id: "course-2",
-          title: "Emprendimiento Digital",
-          slug: "emprendimiento-digital",
-          description: "Aprende a crear y gestionar negocios digitales",
-          shortDescription: "Inicia tu camino emprendedor en el mundo digital",
-          thumbnail: "/api/placeholder/400/300",
+          id: &ldquo;course-2&rdquo;,
+          title: &ldquo;Emprendimiento Digital&rdquo;,
+          slug: &ldquo;emprendimiento-digital&rdquo;,
+          description: &ldquo;Aprende a crear y gestionar negocios digitales&rdquo;,
+          shortDescription: &ldquo;Inicia tu camino emprendedor en el mundo digital&rdquo;,
+          thumbnail: &ldquo;/api/placeholder/400/300&rdquo;,
           instructor: {
-            id: "instructor-2",
-            name: "Carlos Mendoza",
-            title: "Consultor en Emprendimiento",
-            avatar: "/api/placeholder/80/80",
-            bio: "Especialista en negocios digitales",
+            id: &ldquo;instructor-2&rdquo;,
+            name: &ldquo;Carlos Mendoza&rdquo;,
+            title: &ldquo;Consultor en Emprendimiento&rdquo;,
+            avatar: &ldquo;/api/placeholder/80/80&rdquo;,
+            bio: &ldquo;Especialista en negocios digitales&rdquo;,
             rating: 4.6,
             totalStudents: 1523,
             totalCourses: 8,
           },
-          institution: "Centro de Capacitación Municipal",
+          institution: &ldquo;Centro de Capacitación Municipal&rdquo;,
           category: CourseCategory.ENTREPRENEURSHIP,
           level: CourseLevel.INTERMEDIATE,
           duration: 12,
@@ -152,20 +152,20 @@ export default function CourseManagementPage() {
           price: 0,
           isMandatory: false,
           isActive: true,
-          objectives: ["Crear plan de negocios", "Desarrollar MVP"],
-          prerequisites: ["Conocimientos básicos de computación"],
-          includedMaterials: ["Videos", "Plantillas", "Casos de estudio"],
+          objectives: [&ldquo;Crear plan de negocios&rdquo;, &ldquo;Desarrollar MVP&rdquo;],
+          prerequisites: [&ldquo;Conocimientos básicos de computación&rdquo;],
+          includedMaterials: [&ldquo;Videos&rdquo;, &ldquo;Plantillas&rdquo;, &ldquo;Casos de estudio&rdquo;],
           certification: true,
-          tags: ["emprendimiento", "digital", "negocios"],
-          createdAt: new Date("2024-02-01"),
-          updatedAt: new Date("2024-02-25"),
-          publishedAt: new Date("2024-02-05"),
+          tags: [&ldquo;emprendimiento&rdquo;, &ldquo;digital&rdquo;, &ldquo;negocios&rdquo;],
+          createdAt: new Date(&ldquo;2024-02-01&rdquo;),
+          updatedAt: new Date(&ldquo;2024-02-25&rdquo;),
+          publishedAt: new Date(&ldquo;2024-02-05&rdquo;),
         },
       ];
 
       setCourses(mockCourses);
     } catch (error) {
-      console.error("Error fetching courses:", error);
+      console.error(&ldquo;Error fetching courses:&rdquo;, error);
     } finally {
       setLoading(false);
     }
@@ -188,17 +188,17 @@ export default function CourseManagementPage() {
       course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       course.instructor.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus =
-      statusFilter === "all" ||
-      (statusFilter === "active" && course.isActive) ||
-      (statusFilter === "inactive" && !course.isActive);
+      statusFilter === &ldquo;all&rdquo; ||
+      (statusFilter === &ldquo;active&rdquo; && course.isActive) ||
+      (statusFilter === &ldquo;inactive&rdquo; && !course.isActive);
     const matchesCategory =
-      categoryFilter === "all" || course.category === categoryFilter;
+      categoryFilter === &ldquo;all&rdquo; || course.category === categoryFilter;
 
     return matchesSearch && matchesStatus && matchesCategory;
   });
 
   const handleDeleteCourse = async (courseId: string) => {
-    if (window.confirm("¿Estás seguro de que quieres eliminar este curso?")) {
+    if (window.confirm(&ldquo;¿Estás seguro de que quieres eliminar este curso?&rdquo;)) {
       // Implementation for course deletion
       setCourses(courses.filter((c) => c.id !== courseId));
     }
@@ -224,103 +224,103 @@ export default function CourseManagementPage() {
 
   const getCategoryLabel = (category: CourseCategory) => {
     const labels = {
-      [CourseCategory.SOFT_SKILLS]: "Habilidades Blandas",
-      [CourseCategory.BASIC_COMPETENCIES]: "Competencias Básicas",
-      [CourseCategory.JOB_PLACEMENT]: "Inserción Laboral",
-      [CourseCategory.ENTREPRENEURSHIP]: "Emprendimiento",
-      [CourseCategory.TECHNICAL_SKILLS]: "Habilidades Técnicas",
-      [CourseCategory.DIGITAL_LITERACY]: "Alfabetización Digital",
-      [CourseCategory.COMMUNICATION]: "Comunicación",
-      [CourseCategory.LEADERSHIP]: "Liderazgo",
+      [CourseCategory.SOFT_SKILLS]: &ldquo;Habilidades Blandas&rdquo;,
+      [CourseCategory.BASIC_COMPETENCIES]: &ldquo;Competencias Básicas&rdquo;,
+      [CourseCategory.JOB_PLACEMENT]: &ldquo;Inserción Laboral&rdquo;,
+      [CourseCategory.ENTREPRENEURSHIP]: &ldquo;Emprendimiento&rdquo;,
+      [CourseCategory.TECHNICAL_SKILLS]: &ldquo;Habilidades Técnicas&rdquo;,
+      [CourseCategory.DIGITAL_LITERACY]: &ldquo;Alfabetización Digital&rdquo;,
+      [CourseCategory.COMMUNICATION]: &ldquo;Comunicación&rdquo;,
+      [CourseCategory.LEADERSHIP]: &ldquo;Liderazgo&rdquo;,
     };
     return labels[category] || category;
   };
 
   if (loading) {
     return (
-      <div className="container mx-auto p-6">
-        <div className="animate-pulse space-y-6">
-          <div className="h-8 bg-gray-200 rounded w-1/4" />
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className=&ldquo;container mx-auto p-6&rdquo;>
+        <div className=&ldquo;animate-pulse space-y-6&rdquo;>
+          <div className=&ldquo;h-8 bg-gray-200 rounded w-1/4&rdquo; />
+          <div className=&ldquo;grid grid-cols-1 md:grid-cols-4 gap-4&rdquo;>
             {[...Array(4)].map((_, i) => (
-              <div key={i} className="h-24 bg-gray-200 rounded" />
+              <div key={i} className=&ldquo;h-24 bg-gray-200 rounded&rdquo; />
             ))}
           </div>
-          <div className="h-96 bg-gray-200 rounded" />
+          <div className=&ldquo;h-96 bg-gray-200 rounded&rdquo; />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className=&ldquo;container mx-auto p-6 space-y-6&rdquo;>
       {/* Header */}
-      <div className="flex justify-between items-center">
+      <div className=&ldquo;flex justify-between items-center&rdquo;>
         <div>
-          <h1 className="text-3xl font-bold">Gestión de Cursos</h1>
-          <p className="text-muted-foreground">
+          <h1 className=&ldquo;text-3xl font-bold&rdquo;>Gestión de Cursos</h1>
+          <p className=&ldquo;text-muted-foreground&rdquo;>
             Administra el contenido educativo de tu institución
           </p>
         </div>
         <Button asChild>
-          <Link href="/admin/courses/create">
-            <Plus className="h-4 w-4 mr-2" />
+          <Link href=&ldquo;/admin/courses/create&rdquo;>
+            <Plus className=&ldquo;h-4 w-4 mr-2&rdquo; />
             Crear Curso
           </Link>
         </Button>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className=&ldquo;grid grid-cols-1 md:grid-cols-4 gap-4&rdquo;>
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Cursos</CardTitle>
-            <BookOpen className="h-4 w-4 text-muted-foreground" />
+          <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
+            <CardTitle className=&ldquo;text-sm font-medium&rdquo;>Total Cursos</CardTitle>
+            <BookOpen className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.totalCourses}</div>
-            <p className="text-xs text-muted-foreground">
+            <div className=&ldquo;text-2xl font-bold&rdquo;>{stats.totalCourses}</div>
+            <p className=&ldquo;text-xs text-muted-foreground&rdquo;>
               {stats.activeCourses} activos
             </p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Estudiantes</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+          <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
+            <CardTitle className=&ldquo;text-sm font-medium&rdquo;>Estudiantes</CardTitle>
+            <Users className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className=&ldquo;text-2xl font-bold&rdquo;>
               {stats.totalStudents.toLocaleString()}
             </div>
-            <p className="text-xs text-muted-foreground">Inscritos en total</p>
+            <p className=&ldquo;text-xs text-muted-foreground&rdquo;>Inscritos en total</p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
+          <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
+            <CardTitle className=&ldquo;text-sm font-medium&rdquo;>
               Horas de Contenido
             </CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
+            <Clock className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.totalHours}h</div>
-            <p className="text-xs text-muted-foreground">Material educativo</p>
+            <div className=&ldquo;text-2xl font-bold&rdquo;>{stats.totalHours}h</div>
+            <p className=&ldquo;text-xs text-muted-foreground&rdquo;>Material educativo</p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
+          <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
+            <CardTitle className=&ldquo;text-sm font-medium&rdquo;>
               Calificación Promedio
             </CardTitle>
-            <Star className="h-4 w-4 text-muted-foreground" />
+            <Star className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.averageRating}</div>
-            <p className="text-xs text-muted-foreground">De 5.0 estrellas</p>
+            <div className=&ldquo;text-2xl font-bold&rdquo;>{stats.averageRating}</div>
+            <p className=&ldquo;text-xs text-muted-foreground&rdquo;>De 5.0 estrellas</p>
           </CardContent>
         </Card>
       </div>
@@ -328,35 +328,35 @@ export default function CourseManagementPage() {
       {/* Filters and Search */}
       <Card>
         <CardHeader>
-          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-            <div className="flex flex-col sm:flex-row gap-4 flex-1">
-              <div className="relative flex-1 max-w-sm">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+          <div className=&ldquo;flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between&rdquo;>
+            <div className=&ldquo;flex flex-col sm:flex-row gap-4 flex-1&rdquo;>
+              <div className=&ldquo;relative flex-1 max-w-sm&rdquo;>
+                <Search className=&ldquo;absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4&rdquo; />
                 <Input
-                  placeholder="Buscar cursos..."
+                  placeholder=&ldquo;Buscar cursos...&rdquo;
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
+                  className=&ldquo;pl-10&rdquo;
                 />
               </div>
 
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-[150px]">
-                  <SelectValue placeholder="Estado" />
+                <SelectTrigger className=&ldquo;w-[150px]&rdquo;>
+                  <SelectValue placeholder=&ldquo;Estado&rdquo; />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Todos</SelectItem>
-                  <SelectItem value="active">Activos</SelectItem>
-                  <SelectItem value="inactive">Inactivos</SelectItem>
+                  <SelectItem value=&ldquo;all&rdquo;>Todos</SelectItem>
+                  <SelectItem value=&ldquo;active&rdquo;>Activos</SelectItem>
+                  <SelectItem value=&ldquo;inactive&rdquo;>Inactivos</SelectItem>
                 </SelectContent>
               </Select>
 
               <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Categoría" />
+                <SelectTrigger className=&ldquo;w-[180px]&rdquo;>
+                  <SelectValue placeholder=&ldquo;Categoría&rdquo; />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Todas</SelectItem>
+                  <SelectItem value=&ldquo;all&rdquo;>Todas</SelectItem>
                   <SelectItem value={CourseCategory.SOFT_SKILLS}>
                     Habilidades Blandas
                   </SelectItem>
@@ -376,7 +376,7 @@ export default function CourseManagementPage() {
         </CardHeader>
 
         <CardContent>
-          <div className="rounded-md border">
+          <div className=&ldquo;rounded-md border&rdquo;>
             <Table>
               <TableHeader>
                 <TableRow>
@@ -387,31 +387,31 @@ export default function CourseManagementPage() {
                   <TableHead>Estado</TableHead>
                   <TableHead>Calificación</TableHead>
                   <TableHead>Última actualización</TableHead>
-                  <TableHead className="text-right">Acciones</TableHead>
+                  <TableHead className=&ldquo;text-right&rdquo;>Acciones</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredCourses.map((course) => (
                   <TableRow key={course.id}>
                     <TableCell>
-                      <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
-                          <BookOpen className="h-6 w-6 text-gray-600" />
+                      <div className=&ldquo;flex items-center gap-3&rdquo;>
+                        <div className=&ldquo;w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center&rdquo;>
+                          <BookOpen className=&ldquo;h-6 w-6 text-gray-600&rdquo; />
                         </div>
                         <div>
-                          <div className="font-medium">{course.title}</div>
-                          <div className="text-sm text-muted-foreground">
+                          <div className=&ldquo;font-medium&rdquo;>{course.title}</div>
+                          <div className=&ldquo;text-sm text-muted-foreground&rdquo;>
                             {course.totalLessons} lecciones • {course.duration}h
                           </div>
-                          <div className="flex gap-1 mt-1">
+                          <div className=&ldquo;flex gap-1 mt-1&rdquo;>
                             {course.isMandatory && (
-                              <Badge variant="destructive" className="text-xs">
+                              <Badge variant=&ldquo;destructive&rdquo; className=&ldquo;text-xs&rdquo;>
                                 Obligatorio
                               </Badge>
                             )}
                             {course.certification && (
-                              <Badge variant="secondary" className="text-xs">
-                                <Award className="h-3 w-3 mr-1" />
+                              <Badge variant=&ldquo;secondary&rdquo; className=&ldquo;text-xs&rdquo;>
+                                <Award className=&ldquo;h-3 w-3 mr-1&rdquo; />
                                 Certificado
                               </Badge>
                             )}
@@ -422,39 +422,39 @@ export default function CourseManagementPage() {
 
                     <TableCell>
                       <div>
-                        <div className="font-medium">
+                        <div className=&ldquo;font-medium&rdquo;>
                           {course.instructor.name}
                         </div>
-                        <div className="text-sm text-muted-foreground">
+                        <div className=&ldquo;text-sm text-muted-foreground&rdquo;>
                           {course.instructor.title}
                         </div>
                       </div>
                     </TableCell>
 
                     <TableCell>
-                      <Badge variant="outline">
+                      <Badge variant=&ldquo;outline&rdquo;>
                         {getCategoryLabel(course.category)}
                       </Badge>
                     </TableCell>
 
                     <TableCell>
-                      <div className="flex items-center gap-1">
-                        <Users className="h-4 w-4 text-muted-foreground" />
+                      <div className=&ldquo;flex items-center gap-1&rdquo;>
+                        <Users className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
                         {course.studentCount.toLocaleString()}
                       </div>
                     </TableCell>
 
                     <TableCell>
                       <Badge
-                        variant={course.isActive ? "default" : "secondary"}
+                        variant={course.isActive ? &ldquo;default&rdquo; : &ldquo;secondary&rdquo;}
                       >
-                        {course.isActive ? "Activo" : "Inactivo"}
+                        {course.isActive ? &ldquo;Activo&rdquo; : &ldquo;Inactivo&rdquo;}
                       </Badge>
                     </TableCell>
 
                     <TableCell>
-                      <div className="flex items-center gap-1">
-                        <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                      <div className=&ldquo;flex items-center gap-1&rdquo;>
+                        <Star className=&ldquo;h-4 w-4 fill-yellow-400 text-yellow-400&rdquo; />
                         {course.rating}
                       </div>
                     </TableCell>
@@ -463,29 +463,29 @@ export default function CourseManagementPage() {
                       {course.updatedAt.toLocaleDateString()}
                     </TableCell>
 
-                    <TableCell className="text-right">
+                    <TableCell className=&ldquo;text-right&rdquo;>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="h-8 w-8 p-0">
-                            <MoreHorizontal className="h-4 w-4" />
+                          <Button variant=&ldquo;ghost&rdquo; className=&ldquo;h-8 w-8 p-0&rdquo;>
+                            <MoreHorizontal className=&ldquo;h-4 w-4&rdquo; />
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
+                        <DropdownMenuContent align=&ldquo;end&rdquo;>
                           <DropdownMenuItem asChild>
                             <Link href={`/courses/${course.id}`}>
-                              <Eye className="h-4 w-4 mr-2" />
+                              <Eye className=&ldquo;h-4 w-4 mr-2&rdquo; />
                               Ver curso
                             </Link>
                           </DropdownMenuItem>
                           <DropdownMenuItem asChild>
                             <Link href={`/admin/courses/${course.id}/edit`}>
-                              <Edit className="h-4 w-4 mr-2" />
+                              <Edit className=&ldquo;h-4 w-4 mr-2&rdquo; />
                               Editar
                             </Link>
                           </DropdownMenuItem>
                           <DropdownMenuItem asChild>
                             <Link href={`/admin/courses/${course.id}/students`}>
-                              <Users className="h-4 w-4 mr-2" />
+                              <Users className=&ldquo;h-4 w-4 mr-2&rdquo; />
                               Ver estudiantes
                             </Link>
                           </DropdownMenuItem>
@@ -493,21 +493,21 @@ export default function CourseManagementPage() {
                             <Link
                               href={`/admin/courses/${course.id}/analytics`}
                             >
-                              <BarChart3 className="h-4 w-4 mr-2" />
+                              <BarChart3 className=&ldquo;h-4 w-4 mr-2&rdquo; />
                               Analíticas
                             </Link>
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => handleDuplicateCourse(course.id)}
                           >
-                            <Copy className="h-4 w-4 mr-2" />
+                            <Copy className=&ldquo;h-4 w-4 mr-2&rdquo; />
                             Duplicar
                           </DropdownMenuItem>
                           <DropdownMenuItem
-                            className="text-red-600"
+                            className=&ldquo;text-red-600&rdquo;
                             onClick={() => handleDeleteCourse(course.id)}
                           >
-                            <Trash2 className="h-4 w-4 mr-2" />
+                            <Trash2 className=&ldquo;h-4 w-4 mr-2&rdquo; />
                             Eliminar
                           </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -520,21 +520,21 @@ export default function CourseManagementPage() {
           </div>
 
           {filteredCourses.length === 0 && (
-            <div className="text-center py-12">
-              <BookOpen className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">
+            <div className=&ldquo;text-center py-12&rdquo;>
+              <BookOpen className=&ldquo;h-12 w-12 text-muted-foreground mx-auto mb-4&rdquo; />
+              <h3 className=&ldquo;text-lg font-semibold mb-2&rdquo;>
                 No se encontraron cursos
               </h3>
-              <p className="text-muted-foreground mb-4">
+              <p className=&ldquo;text-muted-foreground mb-4&rdquo;>
                 {searchQuery ||
-                statusFilter !== "all" ||
-                categoryFilter !== "all"
-                  ? "Intenta ajustar los filtros de búsqueda"
-                  : "Comienza creando tu primer curso"}
+                statusFilter !== &ldquo;all&rdquo; ||
+                categoryFilter !== &ldquo;all&rdquo;
+                  ? &ldquo;Intenta ajustar los filtros de búsqueda&rdquo;
+                  : &ldquo;Comienza creando tu primer curso&rdquo;}
               </p>
               <Button asChild>
-                <Link href="/admin/courses/create">
-                  <Plus className="h-4 w-4 mr-2" />
+                <Link href=&ldquo;/admin/courses/create&rdquo;>
+                  <Plus className=&ldquo;h-4 w-4 mr-2&rdquo; />
                   Crear Curso
                 </Link>
               </Button>

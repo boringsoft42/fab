@@ -1,10 +1,10 @@
-"use client";
+&ldquo;use client&rdquo;;
 
-import { useParams } from "next/navigation";
-import Image from "next/image";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, Calendar, User } from "lucide-react";
+import { useParams } from &ldquo;next/navigation&rdquo;;
+import Image from &ldquo;next/image&rdquo;;
+import Link from &ldquo;next/link&rdquo;;
+import { Button } from &ldquo;@/components/ui/button&rdquo;;
+import { ArrowLeft, Calendar, User } from &ldquo;lucide-react&rdquo;;
 
 interface Post {
   id: string;
@@ -24,8 +24,8 @@ interface Post {
 export default function InstitutionPostPage() {
   // Mock data - replace with API call
   const post: Post = {
-    id: "1",
-    title: "Lanzamiento del Programa de Incubación 2024",
+    id: &ldquo;1&rdquo;,
+    title: &ldquo;Lanzamiento del Programa de Incubación 2024&rdquo;,
     content: `Nos complace anunciar el lanzamiento de nuestro programa de incubación para el año 2024. Este año, estamos buscando startups innovadoras en el sector tecnológico con impacto social.
 
 El programa está diseñado para apoyar a emprendedores jóvenes que buscan desarrollar soluciones tecnológicas con un impacto social positivo en nuestra comunidad.
@@ -44,33 +44,33 @@ El programa tiene una duración de 6 meses y está abierto a emprendedores entre
 Las postulaciones están abiertas desde el 1 de abril hasta el 30 de abril de 2024.
 
 Para más información sobre el proceso de aplicación y los requisitos, visita nuestro sitio web o contáctanos directamente.`,
-    image: "/images/institutions/posts/incubation-program.jpg",
-    date: "2024-03-15",
-    author: "Ana Rodriguez",
-    category: "Programas",
+    image: &ldquo;/images/institutions/posts/incubation-program.jpg&rdquo;,
+    date: &ldquo;2024-03-15&rdquo;,
+    author: &ldquo;Ana Rodriguez&rdquo;,
+    category: &ldquo;Programas&rdquo;,
     institution: {
-      id: "1",
-      name: "CEMSE Innovation Hub",
-      logo: "/logos/cemse.svg",
+      id: &ldquo;1&rdquo;,
+      name: &ldquo;CEMSE Innovation Hub&rdquo;,
+      logo: &ldquo;/logos/cemse.svg&rdquo;,
     },
   };
 
   return (
-    <div className="min-h-screen bg-gray-50/50">
+    <div className=&ldquo;min-h-screen bg-gray-50/50&rdquo;>
       {/* Hero Image */}
-      <div className="relative h-[400px]">
+      <div className=&ldquo;relative h-[400px]&rdquo;>
         <Image
           src={post.image}
           alt={post.title}
           fill
-          className="object-cover"
+          className=&ldquo;object-cover&rdquo;
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-transparent">
-          <div className="container mx-auto px-6 h-full flex flex-col justify-between py-8">
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" className="text-white" asChild>
+        <div className=&ldquo;absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-transparent&rdquo;>
+          <div className=&ldquo;container mx-auto px-6 h-full flex flex-col justify-between py-8&rdquo;>
+            <div className=&ldquo;flex items-center gap-2&rdquo;>
+              <Button variant=&ldquo;ghost&rdquo; className=&ldquo;text-white&rdquo; asChild>
                 <Link href={`/entrepreneurship/directory/${params.id}`}>
-                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  <ArrowLeft className=&ldquo;h-4 w-4 mr-2&rdquo; />
                   Volver a la Institución
                 </Link>
               </Button>
@@ -80,49 +80,49 @@ Para más información sobre el proceso de aplicación y los requisitos, visita 
       </div>
 
       {/* Content */}
-      <div className="container mx-auto px-6 py-8">
-        <div className="max-w-3xl mx-auto">
+      <div className=&ldquo;container mx-auto px-6 py-8&rdquo;>
+        <div className=&ldquo;max-w-3xl mx-auto&rdquo;>
           {/* Institution Info */}
-          <div className="flex items-center gap-3 mb-8">
-            <div className="relative h-12 w-12 rounded-lg overflow-hidden bg-white">
+          <div className=&ldquo;flex items-center gap-3 mb-8&rdquo;>
+            <div className=&ldquo;relative h-12 w-12 rounded-lg overflow-hidden bg-white&rdquo;>
               <Image
                 src={post.institution.logo}
                 alt={post.institution.name}
                 fill
-                className="object-contain p-2"
+                className=&ldquo;object-contain p-2&rdquo;
               />
             </div>
             <Link
               href={`/entrepreneurship/directory/${post.institution.id}`}
-              className="text-lg font-medium hover:text-blue-600"
+              className=&ldquo;text-lg font-medium hover:text-blue-600&rdquo;
             >
               {post.institution.name}
             </Link>
           </div>
 
           {/* Post Header */}
-          <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
+          <h1 className=&ldquo;text-4xl font-bold mb-4&rdquo;>{post.title}</h1>
 
           {/* Post Metadata */}
-          <div className="flex items-center gap-4 text-muted-foreground mb-8">
-            <div className="flex items-center gap-2">
-              <Calendar className="h-4 w-4" />
+          <div className=&ldquo;flex items-center gap-4 text-muted-foreground mb-8&rdquo;>
+            <div className=&ldquo;flex items-center gap-2&rdquo;>
+              <Calendar className=&ldquo;h-4 w-4&rdquo; />
               {new Date(post.date).toLocaleDateString()}
             </div>
-            <div className="flex items-center gap-2">
-              <User className="h-4 w-4" />
+            <div className=&ldquo;flex items-center gap-2&rdquo;>
+              <User className=&ldquo;h-4 w-4&rdquo; />
               {post.author}
             </div>
           </div>
 
           {/* Post Content */}
-          <div className="prose prose-lg max-w-none">
-            {post.content.split("\n\n").map((paragraph, index) => (
-              <p key={index} className="mb-4">
-                {paragraph.includes("•") ? (
-                  <ul className="list-disc pl-4">
+          <div className=&ldquo;prose prose-lg max-w-none&rdquo;>
+            {post.content.split(&ldquo;\n\n&rdquo;).map((paragraph, index) => (
+              <p key={index} className=&ldquo;mb-4&rdquo;>
+                {paragraph.includes(&ldquo;•&rdquo;) ? (
+                  <ul className=&ldquo;list-disc pl-4&rdquo;>
                     {paragraph
-                      .split("•")
+                      .split(&ldquo;•&rdquo;)
                       .map(
                         (item, i) =>
                           item.trim() && <li key={i}>{item.trim()}</li>

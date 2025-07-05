@@ -1,15 +1,15 @@
-"use client";
+&ldquo;use client&rdquo;;
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Progress } from "@/components/ui/progress";
-import { Separator } from "@/components/ui/separator";
+import { useState } from &ldquo;react&rdquo;;
+import { Button } from &ldquo;@/components/ui/button&rdquo;;
+import { Card, CardContent, CardHeader, CardTitle } from &ldquo;@/components/ui/card&rdquo;;
+import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
+import { Input } from &ldquo;@/components/ui/input&rdquo;;
+import { Textarea } from &ldquo;@/components/ui/textarea&rdquo;;
+import { Label } from &ldquo;@/components/ui/label&rdquo;;
+import { Tabs, TabsContent, TabsList, TabsTrigger } from &ldquo;@/components/ui/tabs&rdquo;;
+import { Progress } from &ldquo;@/components/ui/progress&rdquo;;
+import { Separator } from &ldquo;@/components/ui/separator&rdquo;;
 import {
   Calculator,
   FileText,
@@ -32,13 +32,13 @@ import {
   HelpCircle,
   Link,
   Video,
-} from "lucide-react";
+} from &ldquo;lucide-react&rdquo;;
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from &ldquo;@/components/ui/tooltip&rdquo;;
 
 interface BusinessPlan {
   tripleImpactAssessment: {
@@ -77,27 +77,27 @@ export default function BusinessPlanSimulatorPage() {
   const [currentStep, setCurrentStep] = useState(0);
   const [businessPlan, setBusinessPlan] = useState<BusinessPlan>({
     tripleImpactAssessment: {
-      problemSolved: "",
-      beneficiaries: "",
-      resourcesUsed: "",
-      communityInvolvement: "",
-      longTermImpact: "",
+      problemSolved: &ldquo;&rdquo;,
+      beneficiaries: &ldquo;&rdquo;,
+      resourcesUsed: &ldquo;&rdquo;,
+      communityInvolvement: &ldquo;&rdquo;,
+      longTermImpact: &ldquo;&rdquo;,
     },
-    executiveSummary: "",
-    businessDescription: "",
-    marketAnalysis: "",
-    competitiveAnalysis: "",
-    marketingPlan: "",
-    operationalPlan: "",
-    managementTeam: "",
+    executiveSummary: &ldquo;&rdquo;,
+    businessDescription: &ldquo;&rdquo;,
+    marketAnalysis: &ldquo;&rdquo;,
+    competitiveAnalysis: &ldquo;&rdquo;,
+    marketingPlan: &ldquo;&rdquo;,
+    operationalPlan: &ldquo;&rdquo;,
+    managementTeam: &ldquo;&rdquo;,
     financialProjections: {
       startupCosts: 0,
       monthlyRevenue: 0,
       monthlyExpenses: 0,
       breakEvenMonth: 0,
     },
-    riskAnalysis: "",
-    appendices: "",
+    riskAnalysis: &ldquo;&rdquo;,
+    appendices: &ldquo;&rdquo;,
   });
 
   const [financialData, setFinancialData] = useState<FinancialData>({
@@ -108,128 +108,128 @@ export default function BusinessPlanSimulatorPage() {
     projectionMonths: 12,
   });
 
-  const [activeTab, setActiveTab] = useState("wizard");
+  const [activeTab, setActiveTab] = useState(&ldquo;wizard&rdquo;);
 
   const planSteps = [
     {
-      title: "¿Tu Negocio Ayuda?",
-      description: "Cuéntanos sobre el impacto de tu negocio",
-      icon: <Leaf className="h-5 w-5" />,
-      field: "tripleImpactAssessment",
+      title: &ldquo;¿Tu Negocio Ayuda?&rdquo;,
+      description: &ldquo;Cuéntanos sobre el impacto de tu negocio&rdquo;,
+      icon: <Leaf className=&ldquo;h-5 w-5&rdquo; />,
+      field: &ldquo;tripleImpactAssessment&rdquo;,
       tooltip:
-        "Vamos a descubrir juntos si tu negocio puede ayudar a la sociedad y al medio ambiente",
+        &ldquo;Vamos a descubrir juntos si tu negocio puede ayudar a la sociedad y al medio ambiente&rdquo;,
     },
     {
-      title: "Resumen Ejecutivo",
-      description: "Una visión general de tu negocio",
-      icon: <FileText className="h-5 w-5" />,
-      field: "executiveSummary",
+      title: &ldquo;Resumen Ejecutivo&rdquo;,
+      description: &ldquo;Una visión general de tu negocio&rdquo;,
+      icon: <FileText className=&ldquo;h-5 w-5&rdquo; />,
+      field: &ldquo;executiveSummary&rdquo;,
       tooltip:
-        "Resume los puntos clave de tu plan de negocio, incluyendo la propuesta de valor y los objetivos principales",
+        &ldquo;Resume los puntos clave de tu plan de negocio, incluyendo la propuesta de valor y los objetivos principales&rdquo;,
     },
     {
-      title: "Descripción del Negocio",
-      description: "¿Qué hace tu empresa?",
-      icon: <Lightbulb className="h-5 w-5" />,
-      field: "businessDescription",
+      title: &ldquo;Descripción del Negocio&rdquo;,
+      description: &ldquo;¿Qué hace tu empresa?&rdquo;,
+      icon: <Lightbulb className=&ldquo;h-5 w-5&rdquo; />,
+      field: &ldquo;businessDescription&rdquo;,
       tooltip:
-        "Detalla el propósito de tu empresa, los productos o servicios que ofrece y el problema que resuelve",
+        &ldquo;Detalla el propósito de tu empresa, los productos o servicios que ofrece y el problema que resuelve&rdquo;,
     },
     {
-      title: "Análisis de Mercado",
-      description: "Tu mercado objetivo y oportunidades",
-      icon: <TrendingUp className="h-5 w-5" />,
-      field: "marketAnalysis",
+      title: &ldquo;Análisis de Mercado&rdquo;,
+      description: &ldquo;Tu mercado objetivo y oportunidades&rdquo;,
+      icon: <TrendingUp className=&ldquo;h-5 w-5&rdquo; />,
+      field: &ldquo;marketAnalysis&rdquo;,
       tooltip:
-        "Identifica y analiza tu mercado objetivo, tendencias del sector y oportunidades de crecimiento",
+        &ldquo;Identifica y analiza tu mercado objetivo, tendencias del sector y oportunidades de crecimiento&rdquo;,
     },
     {
-      title: "Análisis Competitivo",
-      description: "Quiénes son tus competidores",
-      icon: <Target className="h-5 w-5" />,
-      field: "competitiveAnalysis",
+      title: &ldquo;Análisis Competitivo&rdquo;,
+      description: &ldquo;Quiénes son tus competidores&rdquo;,
+      icon: <Target className=&ldquo;h-5 w-5&rdquo; />,
+      field: &ldquo;competitiveAnalysis&rdquo;,
       tooltip:
-        "Evalúa tus competidores directos e indirectos, sus fortalezas y debilidades, y tu ventaja competitiva",
+        &ldquo;Evalúa tus competidores directos e indirectos, sus fortalezas y debilidades, y tu ventaja competitiva&rdquo;,
     },
     {
-      title: "Plan de Marketing",
-      description: "Cómo vas a atraer clientes",
-      icon: <Users className="h-5 w-5" />,
-      field: "marketingPlan",
+      title: &ldquo;Plan de Marketing&rdquo;,
+      description: &ldquo;Cómo vas a atraer clientes&rdquo;,
+      icon: <Users className=&ldquo;h-5 w-5&rdquo; />,
+      field: &ldquo;marketingPlan&rdquo;,
       tooltip:
-        "Define tus estrategias de marketing, canales de distribución y tácticas para llegar a tus clientes",
+        &ldquo;Define tus estrategias de marketing, canales de distribución y tácticas para llegar a tus clientes&rdquo;,
     },
     {
-      title: "Plan Operacional",
-      description: "Cómo funcionará tu negocio",
-      icon: <Cog className="h-5 w-5" />,
-      field: "operationalPlan",
+      title: &ldquo;Plan Operacional&rdquo;,
+      description: &ldquo;Cómo funcionará tu negocio&rdquo;,
+      icon: <Cog className=&ldquo;h-5 w-5&rdquo; />,
+      field: &ldquo;operationalPlan&rdquo;,
       tooltip:
-        "Describe los procesos operativos, recursos necesarios y estructura organizacional de tu negocio",
+        &ldquo;Describe los procesos operativos, recursos necesarios y estructura organizacional de tu negocio&rdquo;,
     },
     {
-      title: "Equipo de Gestión",
-      description: "Quiénes están detrás del negocio",
-      icon: <Users className="h-5 w-5" />,
-      field: "managementTeam",
+      title: &ldquo;Equipo de Gestión&rdquo;,
+      description: &ldquo;Quiénes están detrás del negocio&rdquo;,
+      icon: <Users className=&ldquo;h-5 w-5&rdquo; />,
+      field: &ldquo;managementTeam&rdquo;,
       tooltip:
-        "Presenta al equipo directivo, sus roles, experiencia y las posiciones clave por cubrir",
+        &ldquo;Presenta al equipo directivo, sus roles, experiencia y las posiciones clave por cubrir&rdquo;,
     },
     {
-      title: "Proyecciones Financieras",
-      description: "Números y proyecciones",
-      icon: <DollarSign className="h-5 w-5" />,
-      field: "financialProjections",
+      title: &ldquo;Proyecciones Financieras&rdquo;,
+      description: &ldquo;Números y proyecciones&rdquo;,
+      icon: <DollarSign className=&ldquo;h-5 w-5&rdquo; />,
+      field: &ldquo;financialProjections&rdquo;,
       tooltip:
-        "Desarrolla proyecciones financieras realistas, incluyendo costos, ingresos y punto de equilibrio",
+        &ldquo;Desarrolla proyecciones financieras realistas, incluyendo costos, ingresos y punto de equilibrio&rdquo;,
     },
     {
-      title: "Análisis de Riesgos",
-      description: "Identificar y mitigar riesgos",
-      icon: <Shield className="h-5 w-5" />,
-      field: "riskAnalysis",
+      title: &ldquo;Análisis de Riesgos&rdquo;,
+      description: &ldquo;Identificar y mitigar riesgos&rdquo;,
+      icon: <Shield className=&ldquo;h-5 w-5&rdquo; />,
+      field: &ldquo;riskAnalysis&rdquo;,
       tooltip:
-        "Identifica los principales riesgos del negocio y las estrategias para mitigarlos",
+        &ldquo;Identifica los principales riesgos del negocio y las estrategias para mitigarlos&rdquo;,
     },
   ];
 
   const impactQuestions = [
     {
-      field: "problemSolved",
-      question: "¿Qué problema ayuda a resolver tu negocio?",
+      field: &ldquo;problemSolved&rdquo;,
+      question: &ldquo;¿Qué problema ayuda a resolver tu negocio?&rdquo;,
       placeholder:
-        "Por ejemplo: reducir la basura, dar trabajo a jóvenes, mejorar la educación...",
-      helpLink: "/courses/impact/problem-identification",
-      videoLink: "/courses/impact/video-1",
+        &ldquo;Por ejemplo: reducir la basura, dar trabajo a jóvenes, mejorar la educación...&rdquo;,
+      helpLink: &ldquo;/courses/impact/problem-identification&rdquo;,
+      videoLink: &ldquo;/courses/impact/video-1&rdquo;,
     },
     {
-      field: "beneficiaries",
-      question: "¿A quiénes beneficia tu negocio además de tus clientes?",
-      placeholder: "Por ejemplo: familias locales, estudiantes, el barrio...",
-      helpLink: "/courses/impact/beneficiaries",
-      videoLink: "/courses/impact/video-2",
+      field: &ldquo;beneficiaries&rdquo;,
+      question: &ldquo;¿A quiénes beneficia tu negocio además de tus clientes?&rdquo;,
+      placeholder: &ldquo;Por ejemplo: familias locales, estudiantes, el barrio...&rdquo;,
+      helpLink: &ldquo;/courses/impact/beneficiaries&rdquo;,
+      videoLink: &ldquo;/courses/impact/video-2&rdquo;,
     },
     {
-      field: "resourcesUsed",
-      question: "¿Qué recursos naturales usa tu negocio?",
-      placeholder: "Por ejemplo: agua, electricidad, materiales reciclados...",
-      helpLink: "/courses/impact/resources",
-      videoLink: "/courses/impact/video-3",
+      field: &ldquo;resourcesUsed&rdquo;,
+      question: &ldquo;¿Qué recursos naturales usa tu negocio?&rdquo;,
+      placeholder: &ldquo;Por ejemplo: agua, electricidad, materiales reciclados...&rdquo;,
+      helpLink: &ldquo;/courses/impact/resources&rdquo;,
+      videoLink: &ldquo;/courses/impact/video-3&rdquo;,
     },
     {
-      field: "communityInvolvement",
-      question: "¿Cómo participa la comunidad en tu negocio?",
-      placeholder: "Por ejemplo: como trabajadores, proveedores, socios...",
-      helpLink: "/courses/impact/community",
-      videoLink: "/courses/impact/video-4",
+      field: &ldquo;communityInvolvement&rdquo;,
+      question: &ldquo;¿Cómo participa la comunidad en tu negocio?&rdquo;,
+      placeholder: &ldquo;Por ejemplo: como trabajadores, proveedores, socios...&rdquo;,
+      helpLink: &ldquo;/courses/impact/community&rdquo;,
+      videoLink: &ldquo;/courses/impact/video-4&rdquo;,
     },
     {
-      field: "longTermImpact",
-      question: "¿Cómo ayudará tu negocio en el futuro?",
+      field: &ldquo;longTermImpact&rdquo;,
+      question: &ldquo;¿Cómo ayudará tu negocio en el futuro?&rdquo;,
       placeholder:
-        "Por ejemplo: crear más empleos, cuidar el medio ambiente...",
-      helpLink: "/courses/impact/long-term",
-      videoLink: "/courses/impact/video-5",
+        &ldquo;Por ejemplo: crear más empleos, cuidar el medio ambiente...&rdquo;,
+      helpLink: &ldquo;/courses/impact/long-term&rdquo;,
+      videoLink: &ldquo;/courses/impact/video-5&rdquo;,
     },
   ];
 
@@ -244,7 +244,7 @@ export default function BusinessPlanSimulatorPage() {
     const netMonthlyProfit =
       financialData.monthlyRevenue -
       (financialData.fixedCosts + financialData.variableCosts);
-    if (netMonthlyProfit <= 0) return "No alcanza punto de equilibrio";
+    if (netMonthlyProfit <= 0) return &ldquo;No alcanza punto de equilibrio&rdquo;;
     return Math.ceil(financialData.initialInvestment / netMonthlyProfit);
   };
 
@@ -279,9 +279,9 @@ export default function BusinessPlanSimulatorPage() {
   const analyzeTripleImpact = () => {
     const assessment = businessPlan.tripleImpactAssessment;
     if (
-      assessment.problemSolved.toLowerCase().includes("trabajo") ||
-      assessment.problemSolved.toLowerCase().includes("empleo") ||
-      assessment.communityInvolvement.toLowerCase().includes("trabajo")
+      assessment.problemSolved.toLowerCase().includes(&ldquo;trabajo&rdquo;) ||
+      assessment.problemSolved.toLowerCase().includes(&ldquo;empleo&rdquo;) ||
+      assessment.communityInvolvement.toLowerCase().includes(&ldquo;trabajo&rdquo;)
     ) {
       impacts.economic = true;
     }
@@ -294,9 +294,9 @@ export default function BusinessPlanSimulatorPage() {
     }
 
     if (
-      assessment.resourcesUsed.toLowerCase().includes("recicl") ||
-      assessment.problemSolved.toLowerCase().includes("ambiente") ||
-      assessment.longTermImpact.toLowerCase().includes("ambiente")
+      assessment.resourcesUsed.toLowerCase().includes(&ldquo;recicl&rdquo;) ||
+      assessment.problemSolved.toLowerCase().includes(&ldquo;ambiente&rdquo;) ||
+      assessment.longTermImpact.toLowerCase().includes(&ldquo;ambiente&rdquo;)
     ) {
       impacts.environmental = true;
     }
@@ -310,18 +310,18 @@ export default function BusinessPlanSimulatorPage() {
     if (impactCount === 0) {
       return {
         message:
-          "Tu negocio aún puede crecer en su impacto. ¡Sigue explorando!",
-        color: "text-blue-600",
+          &ldquo;Tu negocio aún puede crecer en su impacto. ¡Sigue explorando!&rdquo;,
+        color: &ldquo;text-blue-600&rdquo;,
       };
     } else if (impactCount === 3) {
       return {
-        message: "¡Excelente! Tu negocio tiene triple impacto. 🌟",
-        color: "text-green-600",
+        message: &ldquo;¡Excelente! Tu negocio tiene triple impacto. 🌟&rdquo;,
+        color: &ldquo;text-green-600&rdquo;,
       };
     } else {
       return {
         message: `Tu negocio ya genera ${impactCount} tipos de impacto. ¡Vas por buen camino!`,
-        color: "text-blue-600",
+        color: &ldquo;text-blue-600&rdquo;,
       };
     }
   };
@@ -329,12 +329,12 @@ export default function BusinessPlanSimulatorPage() {
   const progress = ((currentStep + 1) / planSteps.length) * 100;
 
   return (
-    <div className="container mx-auto p-6">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">
+    <div className=&ldquo;container mx-auto p-6&rdquo;>
+      <div className=&ldquo;mb-8&rdquo;>
+        <h1 className=&ldquo;text-3xl font-bold mb-2&rdquo;>
           Simulador de Plan de Negocios
         </h1>
-        <p className="text-muted-foreground">
+        <p className=&ldquo;text-muted-foreground&rdquo;>
           Crea tu plan de negocios paso a paso con herramientas integradas de
           cálculo financiero
         </p>
@@ -343,76 +343,76 @@ export default function BusinessPlanSimulatorPage() {
       <Tabs
         value={activeTab}
         onValueChange={setActiveTab}
-        className="space-y-6"
+        className=&ldquo;space-y-6&rdquo;
       >
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="wizard">Asistente Guiado</TabsTrigger>
-          <TabsTrigger value="canvas">Business Model Canvas</TabsTrigger>
-          <TabsTrigger value="calculator">Calculadora Financiera</TabsTrigger>
+        <TabsList className=&ldquo;grid w-full grid-cols-3&rdquo;>
+          <TabsTrigger value=&ldquo;wizard&rdquo;>Asistente Guiado</TabsTrigger>
+          <TabsTrigger value=&ldquo;canvas&rdquo;>Business Model Canvas</TabsTrigger>
+          <TabsTrigger value=&ldquo;calculator&rdquo;>Calculadora Financiera</TabsTrigger>
         </TabsList>
 
         {/* Guided Wizard */}
-        <TabsContent value="wizard" className="space-y-6">
+        <TabsContent value=&ldquo;wizard&rdquo; className=&ldquo;space-y-6&rdquo;>
           <Card>
             <CardHeader>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
+              <div className=&ldquo;flex items-center justify-between&rdquo;>
+                <div className=&ldquo;flex items-center gap-2&rdquo;>
                   <div>
-                    <CardTitle className="flex items-center gap-2">
+                    <CardTitle className=&ldquo;flex items-center gap-2&rdquo;>
                       {planSteps[currentStep].icon}
                       Paso {currentStep + 1}: {planSteps[currentStep].title}
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger>
-                            <HelpCircle className="h-4 w-4 ml-2 text-muted-foreground" />
+                            <HelpCircle className=&ldquo;h-4 w-4 ml-2 text-muted-foreground&rdquo; />
                           </TooltipTrigger>
                           <TooltipContent>
-                            <p className="max-w-xs">
+                            <p className=&ldquo;max-w-xs&rdquo;>
                               {planSteps[currentStep].tooltip}
                             </p>
                           </TooltipContent>
                         </Tooltip>
                       </TooltipProvider>
                     </CardTitle>
-                    <p className="text-muted-foreground mt-1">
+                    <p className=&ldquo;text-muted-foreground mt-1&rdquo;>
                       {planSteps[currentStep].description}
                     </p>
                   </div>
                 </div>
-                <Badge variant="outline">
+                <Badge variant=&ldquo;outline&rdquo;>
                   {currentStep + 1} de {planSteps.length}
                 </Badge>
               </div>
-              <Progress value={progress} className="mt-4" />
+              <Progress value={progress} className=&ldquo;mt-4&rdquo; />
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className=&ldquo;space-y-6&rdquo;>
               {currentStep === 0 ? (
-                <div className="max-w-6xl mx-auto">
+                <div className=&ldquo;max-w-6xl mx-auto&rdquo;>
                   {/* Impact Questions Grid */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6&rdquo;>
                     {impactQuestions.map((q, index) => (
                       <div
                         key={index}
-                        className="bg-white rounded-xl p-6 shadow-sm border-2 border-transparent hover:border-blue-100 transition-all"
+                        className=&ldquo;bg-white rounded-xl p-6 shadow-sm border-2 border-transparent hover:border-blue-100 transition-all&rdquo;
                       >
-                        <div className="space-y-4">
-                          <div className="flex items-start gap-3">
-                            <div className="bg-blue-50 rounded-full p-2 mt-1">
-                              <div className="h-6 w-6 text-blue-600">
+                        <div className=&ldquo;space-y-4&rdquo;>
+                          <div className=&ldquo;flex items-start gap-3&rdquo;>
+                            <div className=&ldquo;bg-blue-50 rounded-full p-2 mt-1&rdquo;>
+                              <div className=&ldquo;h-6 w-6 text-blue-600&rdquo;>
                                 {index === 0 ? (
-                                  <Lightbulb className="h-6 w-6" />
+                                  <Lightbulb className=&ldquo;h-6 w-6&rdquo; />
                                 ) : index === 1 ? (
-                                  <Users className="h-6 w-6" />
+                                  <Users className=&ldquo;h-6 w-6&rdquo; />
                                 ) : index === 2 ? (
-                                  <Leaf className="h-6 w-6" />
+                                  <Leaf className=&ldquo;h-6 w-6&rdquo; />
                                 ) : index === 3 ? (
-                                  <Heart className="h-6 w-6" />
+                                  <Heart className=&ldquo;h-6 w-6&rdquo; />
                                 ) : (
-                                  <Target className="h-6 w-6" />
+                                  <Target className=&ldquo;h-6 w-6&rdquo; />
                                 )}
                               </div>
                             </div>
-                            <Label className="text-lg font-medium leading-tight">
+                            <Label className=&ldquo;text-lg font-medium leading-tight&rdquo;>
                               {q.question}
                             </Label>
                           </div>
@@ -424,28 +424,28 @@ export default function BusinessPlanSimulatorPage() {
                               ]
                             }
                             onChange={(e) =>
-                              updateBusinessPlan("tripleImpactAssessment", {
+                              updateBusinessPlan(&ldquo;tripleImpactAssessment&rdquo;, {
                                 ...businessPlan.tripleImpactAssessment,
                                 [q.field]: e.target.value,
                               })
                             }
                             placeholder={q.placeholder}
-                            className="min-h-[120px] text-base resize-none bg-gray-50/50"
+                            className=&ldquo;min-h-[120px] text-base resize-none bg-gray-50/50&rdquo;
                           />
 
-                          <div className="flex gap-3 pt-2">
+                          <div className=&ldquo;flex gap-3 pt-2&rdquo;>
                             <Link
                               href={q.helpLink}
-                              className="flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700 hover:underline"
+                              className=&ldquo;flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700 hover:underline&rdquo;
                             >
-                              <FileText className="h-4 w-4" />
+                              <FileText className=&ldquo;h-4 w-4&rdquo; />
                               Ver guía
                             </Link>
                             <Link
                               href={q.videoLink}
-                              className="flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700 hover:underline"
+                              className=&ldquo;flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700 hover:underline&rdquo;
                             >
-                              <Video className="h-4 w-4" />
+                              <Video className=&ldquo;h-4 w-4&rdquo; />
                               Ver video
                             </Link>
                           </div>
@@ -458,11 +458,11 @@ export default function BusinessPlanSimulatorPage() {
                   {Object.values(businessPlan.tripleImpactAssessment).some(
                     (value) => value.length > 0
                   ) && (
-                    <div className="mt-8 bg-white rounded-xl p-6 shadow-sm border-2 border-transparent">
+                    <div className=&ldquo;mt-8 bg-white rounded-xl p-6 shadow-sm border-2 border-transparent&rdquo;>
                       <div
                         className={`text-lg font-medium ${getImpactFeedback().color} flex items-center gap-2`}
                       >
-                        <CheckCircle className="h-5 w-5" />
+                        <CheckCircle className=&ldquo;h-5 w-5&rdquo; />
                         {getImpactFeedback().message}
                       </div>
                     </div>
@@ -471,8 +471,8 @@ export default function BusinessPlanSimulatorPage() {
               ) : (
                 <>
                   {currentStep < 8 && (
-                    <div className="space-y-4">
-                      <Label className="text-lg">
+                    <div className=&ldquo;space-y-4&rdquo;>
+                      <Label className=&ldquo;text-lg&rdquo;>
                         Describe {planSteps[currentStep].title.toLowerCase()}
                       </Label>
                       <Textarea
@@ -488,28 +488,28 @@ export default function BusinessPlanSimulatorPage() {
                             e.target.value
                           )
                         }
-                        className="min-h-[200px]"
+                        className=&ldquo;min-h-[200px]&rdquo;
                       />
-                      <div className="space-y-2">
+                      <div className=&ldquo;space-y-2&rdquo;>
                         <Label>Material de Apoyo</Label>
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-2">
-                            <Link className="h-4 w-4 text-blue-600" />
+                        <div className=&ldquo;space-y-2&rdquo;>
+                          <div className=&ldquo;flex items-center gap-2&rdquo;>
+                            <Link className=&ldquo;h-4 w-4 text-blue-600&rdquo; />
                             <Input
-                              placeholder="URL de recursos adicionales..."
-                              className="flex-1"
+                              placeholder=&ldquo;URL de recursos adicionales...&rdquo;
+                              className=&ldquo;flex-1&rdquo;
                             />
                           </div>
-                          <div className="flex items-center gap-2">
-                            <Video className="h-4 w-4 text-blue-600" />
+                          <div className=&ldquo;flex items-center gap-2&rdquo;>
+                            <Video className=&ldquo;h-4 w-4 text-blue-600&rdquo; />
                             <Input
-                              placeholder="URL del video explicativo..."
-                              className="flex-1"
+                              placeholder=&ldquo;URL del video explicativo...&rdquo;
+                              className=&ldquo;flex-1&rdquo;
                             />
                           </div>
                         </div>
                       </div>
-                      <div className="text-sm text-muted-foreground">
+                      <div className=&ldquo;text-sm text-muted-foreground&rdquo;>
                         Tip: Sé específico y detallado. Esto te ayudará a
                         clarificar tu idea de negocio.
                       </div>
@@ -517,62 +517,62 @@ export default function BusinessPlanSimulatorPage() {
                   )}
 
                   {currentStep === 7 && (
-                    <div className="space-y-6">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-2">
+                    <div className=&ldquo;space-y-6&rdquo;>
+                      <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 gap-4&rdquo;>
+                        <div className=&ldquo;space-y-2&rdquo;>
                           <Label>Costos de Inicio (Bs.)</Label>
                           <Input
-                            type="number"
+                            type=&ldquo;number&rdquo;
                             value={
                               businessPlan.financialProjections.startupCosts
                             }
                             onChange={(e) =>
-                              updateBusinessPlan("financialProjections", {
+                              updateBusinessPlan(&ldquo;financialProjections&rdquo;, {
                                 ...businessPlan.financialProjections,
                                 startupCosts: Number(e.target.value),
                               })
                             }
                           />
                         </div>
-                        <div className="space-y-2">
+                        <div className=&ldquo;space-y-2&rdquo;>
                           <Label>Ingresos Mensuales Proyectados (Bs.)</Label>
                           <Input
-                            type="number"
+                            type=&ldquo;number&rdquo;
                             value={
                               businessPlan.financialProjections.monthlyRevenue
                             }
                             onChange={(e) =>
-                              updateBusinessPlan("financialProjections", {
+                              updateBusinessPlan(&ldquo;financialProjections&rdquo;, {
                                 ...businessPlan.financialProjections,
                                 monthlyRevenue: Number(e.target.value),
                               })
                             }
                           />
                         </div>
-                        <div className="space-y-2">
+                        <div className=&ldquo;space-y-2&rdquo;>
                           <Label>Gastos Mensuales (Bs.)</Label>
                           <Input
-                            type="number"
+                            type=&ldquo;number&rdquo;
                             value={
                               businessPlan.financialProjections.monthlyExpenses
                             }
                             onChange={(e) =>
-                              updateBusinessPlan("financialProjections", {
+                              updateBusinessPlan(&ldquo;financialProjections&rdquo;, {
                                 ...businessPlan.financialProjections,
                                 monthlyExpenses: Number(e.target.value),
                               })
                             }
                           />
                         </div>
-                        <div className="space-y-2">
+                        <div className=&ldquo;space-y-2&rdquo;>
                           <Label>Mes de Punto de Equilibrio</Label>
                           <Input
-                            type="number"
+                            type=&ldquo;number&rdquo;
                             value={
                               businessPlan.financialProjections.breakEvenMonth
                             }
                             onChange={(e) =>
-                              updateBusinessPlan("financialProjections", {
+                              updateBusinessPlan(&ldquo;financialProjections&rdquo;, {
                                 ...businessPlan.financialProjections,
                                 breakEvenMonth: Number(e.target.value),
                               })
@@ -583,25 +583,25 @@ export default function BusinessPlanSimulatorPage() {
                     </div>
                   )}
 
-                  <div className="flex justify-between">
+                  <div className=&ldquo;flex justify-between&rdquo;>
                     <Button
-                      variant="outline"
+                      variant=&ldquo;outline&rdquo;
                       onClick={() =>
                         setCurrentStep(Math.max(0, currentStep - 1))
                       }
                       disabled={currentStep === 0}
                     >
-                      <ChevronLeft className="h-4 w-4 mr-2" />
+                      <ChevronLeft className=&ldquo;h-4 w-4 mr-2&rdquo; />
                       Anterior
                     </Button>
-                    <div className="flex gap-2">
-                      <Button variant="outline">
-                        <Save className="h-4 w-4 mr-2" />
+                    <div className=&ldquo;flex gap-2&rdquo;>
+                      <Button variant=&ldquo;outline&rdquo;>
+                        <Save className=&ldquo;h-4 w-4 mr-2&rdquo; />
                         Guardar Borrador
                       </Button>
                       {currentStep === planSteps.length - 1 ? (
                         <Button>
-                          <CheckCircle className="h-4 w-4 mr-2" />
+                          <CheckCircle className=&ldquo;h-4 w-4 mr-2&rdquo; />
                           Finalizar Plan
                         </Button>
                       ) : (
@@ -613,7 +613,7 @@ export default function BusinessPlanSimulatorPage() {
                           }
                         >
                           Siguiente
-                          <ChevronRight className="h-4 w-4 ml-2" />
+                          <ChevronRight className=&ldquo;h-4 w-4 ml-2&rdquo; />
                         </Button>
                       )}
                     </div>
@@ -629,31 +629,31 @@ export default function BusinessPlanSimulatorPage() {
               <CardTitle>Progreso del Plan</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-3 md:grid-cols-5 gap-4">
+              <div className=&ldquo;grid grid-cols-3 md:grid-cols-5 gap-4&rdquo;>
                 {planSteps.map((step, index) => (
                   <div
                     key={index}
                     className={`text-center p-3 rounded-lg border cursor-pointer transition-colors ${
                       index <= currentStep
-                        ? "bg-green-50 border-green-200"
-                        : "bg-gray-50 border-gray-200"
+                        ? &ldquo;bg-green-50 border-green-200&rdquo;
+                        : &ldquo;bg-gray-50 border-gray-200&rdquo;
                     }`}
                     onClick={() => setCurrentStep(index)}
                   >
                     <div
                       className={`w-8 h-8 mx-auto mb-2 rounded-full flex items-center justify-center ${
                         index <= currentStep
-                          ? "bg-green-100 text-green-600"
-                          : "bg-gray-100 text-gray-400"
+                          ? &ldquo;bg-green-100 text-green-600&rdquo;
+                          : &ldquo;bg-gray-100 text-gray-400&rdquo;
                       }`}
                     >
                       {index < currentStep ? (
-                        <CheckCircle className="h-4 w-4" />
+                        <CheckCircle className=&ldquo;h-4 w-4&rdquo; />
                       ) : (
                         step.icon
                       )}
                     </div>
-                    <p className="text-xs font-medium">{step.title}</p>
+                    <p className=&ldquo;text-xs font-medium&rdquo;>{step.title}</p>
                   </div>
                 ))}
               </div>
@@ -662,159 +662,159 @@ export default function BusinessPlanSimulatorPage() {
         </TabsContent>
 
         {/* Business Model Canvas */}
-        <TabsContent value="canvas" className="space-y-6">
+        <TabsContent value=&ldquo;canvas&rdquo; className=&ldquo;space-y-6&rdquo;>
           <Card>
             <CardHeader>
               <CardTitle>Business Model Canvas</CardTitle>
-              <p className="text-muted-foreground">
+              <p className=&ldquo;text-muted-foreground&rdquo;>
                 Visualiza tu modelo de negocio de forma interactiva
               </p>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-5 gap-4 min-h-[600px]">
+              <div className=&ldquo;grid grid-cols-5 gap-4 min-h-[600px]&rdquo;>
                 {/* Key Partners */}
-                <Card className="border-2 border-blue-200">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-sm text-blue-600">
+                <Card className=&ldquo;border-2 border-blue-200&rdquo;>
+                  <CardHeader className=&ldquo;pb-3&rdquo;>
+                    <CardTitle className=&ldquo;text-sm text-blue-600&rdquo;>
                       Socios Clave
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="pt-0">
+                  <CardContent className=&ldquo;pt-0&rdquo;>
                     <Textarea
-                      placeholder="¿Quiénes son tus socios estratégicos?"
-                      className="min-h-[100px] border-none p-0 resize-none"
+                      placeholder=&ldquo;¿Quiénes son tus socios estratégicos?&rdquo;
+                      className=&ldquo;min-h-[100px] border-none p-0 resize-none&rdquo;
                     />
                   </CardContent>
                 </Card>
 
                 {/* Key Activities */}
-                <Card className="border-2 border-green-200">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-sm text-green-600">
+                <Card className=&ldquo;border-2 border-green-200&rdquo;>
+                  <CardHeader className=&ldquo;pb-3&rdquo;>
+                    <CardTitle className=&ldquo;text-sm text-green-600&rdquo;>
                       Actividades Clave
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="pt-0">
+                  <CardContent className=&ldquo;pt-0&rdquo;>
                     <Textarea
-                      placeholder="¿Qué actividades son esenciales?"
-                      className="min-h-[100px] border-none p-0 resize-none"
+                      placeholder=&ldquo;¿Qué actividades son esenciales?&rdquo;
+                      className=&ldquo;min-h-[100px] border-none p-0 resize-none&rdquo;
                     />
                   </CardContent>
                 </Card>
 
                 {/* Value Propositions */}
-                <Card className="border-2 border-red-200 row-span-2">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-sm text-red-600">
+                <Card className=&ldquo;border-2 border-red-200 row-span-2&rdquo;>
+                  <CardHeader className=&ldquo;pb-3&rdquo;>
+                    <CardTitle className=&ldquo;text-sm text-red-600&rdquo;>
                       Propuesta de Valor
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="pt-0">
+                  <CardContent className=&ldquo;pt-0&rdquo;>
                     <Textarea
-                      placeholder="¿Qué valor único ofreces?"
-                      className="min-h-[200px] border-none p-0 resize-none"
+                      placeholder=&ldquo;¿Qué valor único ofreces?&rdquo;
+                      className=&ldquo;min-h-[200px] border-none p-0 resize-none&rdquo;
                     />
                   </CardContent>
                 </Card>
 
                 {/* Customer Relationships */}
-                <Card className="border-2 border-purple-200">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-sm text-purple-600">
+                <Card className=&ldquo;border-2 border-purple-200&rdquo;>
+                  <CardHeader className=&ldquo;pb-3&rdquo;>
+                    <CardTitle className=&ldquo;text-sm text-purple-600&rdquo;>
                       Relación con Clientes
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="pt-0">
+                  <CardContent className=&ldquo;pt-0&rdquo;>
                     <Textarea
-                      placeholder="¿Cómo te relacionas con clientes?"
-                      className="min-h-[100px] border-none p-0 resize-none"
+                      placeholder=&ldquo;¿Cómo te relacionas con clientes?&rdquo;
+                      className=&ldquo;min-h-[100px] border-none p-0 resize-none&rdquo;
                     />
                   </CardContent>
                 </Card>
 
                 {/* Customer Segments */}
-                <Card className="border-2 border-orange-200 row-span-2">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-sm text-orange-600">
+                <Card className=&ldquo;border-2 border-orange-200 row-span-2&rdquo;>
+                  <CardHeader className=&ldquo;pb-3&rdquo;>
+                    <CardTitle className=&ldquo;text-sm text-orange-600&rdquo;>
                       Segmentos de Clientes
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="pt-0">
+                  <CardContent className=&ldquo;pt-0&rdquo;>
                     <Textarea
-                      placeholder="¿Quiénes son tus clientes?"
-                      className="min-h-[200px] border-none p-0 resize-none"
+                      placeholder=&ldquo;¿Quiénes son tus clientes?&rdquo;
+                      className=&ldquo;min-h-[200px] border-none p-0 resize-none&rdquo;
                     />
                   </CardContent>
                 </Card>
 
                 {/* Key Resources */}
-                <Card className="border-2 border-green-200">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-sm text-green-600">
+                <Card className=&ldquo;border-2 border-green-200&rdquo;>
+                  <CardHeader className=&ldquo;pb-3&rdquo;>
+                    <CardTitle className=&ldquo;text-sm text-green-600&rdquo;>
                       Recursos Clave
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="pt-0">
+                  <CardContent className=&ldquo;pt-0&rdquo;>
                     <Textarea
-                      placeholder="¿Qué recursos necesitas?"
-                      className="min-h-[100px] border-none p-0 resize-none"
+                      placeholder=&ldquo;¿Qué recursos necesitas?&rdquo;
+                      className=&ldquo;min-h-[100px] border-none p-0 resize-none&rdquo;
                     />
                   </CardContent>
                 </Card>
 
                 {/* Channels */}
-                <Card className="border-2 border-purple-200">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-sm text-purple-600">
+                <Card className=&ldquo;border-2 border-purple-200&rdquo;>
+                  <CardHeader className=&ldquo;pb-3&rdquo;>
+                    <CardTitle className=&ldquo;text-sm text-purple-600&rdquo;>
                       Canales
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="pt-0">
+                  <CardContent className=&ldquo;pt-0&rdquo;>
                     <Textarea
-                      placeholder="¿Cómo llegas a tus clientes?"
-                      className="min-h-[100px] border-none p-0 resize-none"
+                      placeholder=&ldquo;¿Cómo llegas a tus clientes?&rdquo;
+                      className=&ldquo;min-h-[100px] border-none p-0 resize-none&rdquo;
                     />
                   </CardContent>
                 </Card>
 
                 {/* Cost Structure */}
-                <Card className="border-2 border-yellow-200 col-span-2">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-sm text-yellow-600">
+                <Card className=&ldquo;border-2 border-yellow-200 col-span-2&rdquo;>
+                  <CardHeader className=&ldquo;pb-3&rdquo;>
+                    <CardTitle className=&ldquo;text-sm text-yellow-600&rdquo;>
                       Estructura de Costos
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="pt-0">
+                  <CardContent className=&ldquo;pt-0&rdquo;>
                     <Textarea
-                      placeholder="¿Cuáles son tus principales costos?"
-                      className="min-h-[100px] border-none p-0 resize-none"
+                      placeholder=&ldquo;¿Cuáles son tus principales costos?&rdquo;
+                      className=&ldquo;min-h-[100px] border-none p-0 resize-none&rdquo;
                     />
                   </CardContent>
                 </Card>
 
                 {/* Revenue Streams */}
-                <Card className="border-2 border-teal-200 col-span-3">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-sm text-teal-600">
+                <Card className=&ldquo;border-2 border-teal-200 col-span-3&rdquo;>
+                  <CardHeader className=&ldquo;pb-3&rdquo;>
+                    <CardTitle className=&ldquo;text-sm text-teal-600&rdquo;>
                       Fuentes de Ingresos
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="pt-0">
+                  <CardContent className=&ldquo;pt-0&rdquo;>
                     <Textarea
-                      placeholder="¿Cómo generas ingresos?"
-                      className="min-h-[100px] border-none p-0 resize-none"
+                      placeholder=&ldquo;¿Cómo generas ingresos?&rdquo;
+                      className=&ldquo;min-h-[100px] border-none p-0 resize-none&rdquo;
                     />
                   </CardContent>
                 </Card>
               </div>
 
-              <div className="flex justify-end mt-6 gap-2">
-                <Button variant="outline">
-                  <Save className="h-4 w-4 mr-2" />
+              <div className=&ldquo;flex justify-end mt-6 gap-2&rdquo;>
+                <Button variant=&ldquo;outline&rdquo;>
+                  <Save className=&ldquo;h-4 w-4 mr-2&rdquo; />
                   Guardar Canvas
                 </Button>
                 <Button>
-                  <Download className="h-4 w-4 mr-2" />
+                  <Download className=&ldquo;h-4 w-4 mr-2&rdquo; />
                   Exportar a PDF
                 </Button>
               </div>
@@ -823,21 +823,21 @@ export default function BusinessPlanSimulatorPage() {
         </TabsContent>
 
         {/* Financial Calculator */}
-        <TabsContent value="calculator" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <TabsContent value=&ldquo;calculator&rdquo; className=&ldquo;space-y-6&rdquo;>
+          <div className=&ldquo;grid grid-cols-1 lg:grid-cols-2 gap-6&rdquo;>
             {/* Input Parameters */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Calculator className="h-5 w-5" />
+                <CardTitle className=&ldquo;flex items-center gap-2&rdquo;>
+                  <Calculator className=&ldquo;h-5 w-5&rdquo; />
                   Parámetros Financieros
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
+              <CardContent className=&ldquo;space-y-4&rdquo;>
+                <div className=&ldquo;space-y-2&rdquo;>
                   <Label>Inversión Inicial (Bs.)</Label>
                   <Input
-                    type="number"
+                    type=&ldquo;number&rdquo;
                     value={financialData.initialInvestment}
                     onChange={(e) =>
                       setFinancialData((prev) => ({
@@ -847,10 +847,10 @@ export default function BusinessPlanSimulatorPage() {
                     }
                   />
                 </div>
-                <div className="space-y-2">
+                <div className=&ldquo;space-y-2&rdquo;>
                   <Label>Ingresos Mensuales (Bs.)</Label>
                   <Input
-                    type="number"
+                    type=&ldquo;number&rdquo;
                     value={financialData.monthlyRevenue}
                     onChange={(e) =>
                       setFinancialData((prev) => ({
@@ -860,10 +860,10 @@ export default function BusinessPlanSimulatorPage() {
                     }
                   />
                 </div>
-                <div className="space-y-2">
+                <div className=&ldquo;space-y-2&rdquo;>
                   <Label>Costos Fijos Mensuales (Bs.)</Label>
                   <Input
-                    type="number"
+                    type=&ldquo;number&rdquo;
                     value={financialData.fixedCosts}
                     onChange={(e) =>
                       setFinancialData((prev) => ({
@@ -873,10 +873,10 @@ export default function BusinessPlanSimulatorPage() {
                     }
                   />
                 </div>
-                <div className="space-y-2">
+                <div className=&ldquo;space-y-2&rdquo;>
                   <Label>Costos Variables Mensuales (Bs.)</Label>
                   <Input
-                    type="number"
+                    type=&ldquo;number&rdquo;
                     value={financialData.variableCosts}
                     onChange={(e) =>
                       setFinancialData((prev) => ({
@@ -886,12 +886,12 @@ export default function BusinessPlanSimulatorPage() {
                     }
                   />
                 </div>
-                <div className="space-y-2">
+                <div className=&ldquo;space-y-2&rdquo;>
                   <Label>Meses de Proyección</Label>
                   <Input
-                    type="number"
-                    min="1"
-                    max="60"
+                    type=&ldquo;number&rdquo;
+                    min=&ldquo;1&rdquo;
+                    max=&ldquo;60&rdquo;
                     value={financialData.projectionMonths}
                     onChange={(e) =>
                       setFinancialData((prev) => ({
@@ -907,26 +907,26 @@ export default function BusinessPlanSimulatorPage() {
             {/* Key Metrics */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <PieChart className="h-5 w-5" />
+                <CardTitle className=&ldquo;flex items-center gap-2&rdquo;>
+                  <PieChart className=&ldquo;h-5 w-5&rdquo; />
                   Indicadores Clave
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="text-center p-4 bg-green-50 rounded-lg">
-                    <div className="text-2xl font-bold text-green-600">
+              <CardContent className=&ldquo;space-y-4&rdquo;>
+                <div className=&ldquo;grid grid-cols-2 gap-4&rdquo;>
+                  <div className=&ldquo;text-center p-4 bg-green-50 rounded-lg&rdquo;>
+                    <div className=&ldquo;text-2xl font-bold text-green-600&rdquo;>
                       {calculateBreakEven()}
                     </div>
-                    <div className="text-sm text-muted-foreground">
+                    <div className=&ldquo;text-sm text-muted-foreground&rdquo;>
                       Punto de Equilibrio (meses)
                     </div>
                   </div>
-                  <div className="text-center p-4 bg-blue-50 rounded-lg">
-                    <div className="text-2xl font-bold text-blue-600">
+                  <div className=&ldquo;text-center p-4 bg-blue-50 rounded-lg&rdquo;>
+                    <div className=&ldquo;text-2xl font-bold text-blue-600&rdquo;>
                       {calculateROI()}%
                     </div>
-                    <div className="text-sm text-muted-foreground">
+                    <div className=&ldquo;text-sm text-muted-foreground&rdquo;>
                       ROI Anual
                     </div>
                   </div>
@@ -934,11 +934,11 @@ export default function BusinessPlanSimulatorPage() {
 
                 <Separator />
 
-                <div className="space-y-3">
-                  <div className="flex justify-between">
+                <div className=&ldquo;space-y-3&rdquo;>
+                  <div className=&ldquo;flex justify-between&rdquo;>
                     <span>Ganancia Mensual:</span>
-                    <span className="font-semibold">
-                      Bs.{" "}
+                    <span className=&ldquo;font-semibold&rdquo;>
+                      Bs.{&ldquo; &rdquo;}
                       {(
                         financialData.monthlyRevenue -
                         financialData.fixedCosts -
@@ -946,9 +946,9 @@ export default function BusinessPlanSimulatorPage() {
                       ).toLocaleString()}
                     </span>
                   </div>
-                  <div className="flex justify-between">
+                  <div className=&ldquo;flex justify-between&rdquo;>
                     <span>Margen de Ganancia:</span>
-                    <span className="font-semibold">
+                    <span className=&ldquo;font-semibold&rdquo;>
                       {(
                         ((financialData.monthlyRevenue -
                           financialData.fixedCosts -
@@ -959,10 +959,10 @@ export default function BusinessPlanSimulatorPage() {
                       %
                     </span>
                   </div>
-                  <div className="flex justify-between">
+                  <div className=&ldquo;flex justify-between&rdquo;>
                     <span>Ganancia Anual:</span>
-                    <span className="font-semibold">
-                      Bs.{" "}
+                    <span className=&ldquo;font-semibold&rdquo;>
+                      Bs.{&ldquo; &rdquo;}
                       {(
                         (financialData.monthlyRevenue -
                           financialData.fixedCosts -
@@ -982,34 +982,34 @@ export default function BusinessPlanSimulatorPage() {
               <CardTitle>Proyección de Flujo de Caja</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
+              <div className=&ldquo;overflow-x-auto&rdquo;>
+                <table className=&ldquo;w-full text-sm&rdquo;>
                   <thead>
-                    <tr className="border-b">
-                      <th className="text-left p-2">Mes</th>
-                      <th className="text-right p-2">Ingresos</th>
-                      <th className="text-right p-2">Gastos</th>
-                      <th className="text-right p-2">Ganancia</th>
-                      <th className="text-right p-2">Acumulado</th>
+                    <tr className=&ldquo;border-b&rdquo;>
+                      <th className=&ldquo;text-left p-2&rdquo;>Mes</th>
+                      <th className=&ldquo;text-right p-2&rdquo;>Ingresos</th>
+                      <th className=&ldquo;text-right p-2&rdquo;>Gastos</th>
+                      <th className=&ldquo;text-right p-2&rdquo;>Ganancia</th>
+                      <th className=&ldquo;text-right p-2&rdquo;>Acumulado</th>
                     </tr>
                   </thead>
                   <tbody>
                     {generateCashFlow().map((month) => (
-                      <tr key={month.month} className="border-b">
-                        <td className="p-2">{month.month}</td>
-                        <td className="text-right p-2">
+                      <tr key={month.month} className=&ldquo;border-b&rdquo;>
+                        <td className=&ldquo;p-2&rdquo;>{month.month}</td>
+                        <td className=&ldquo;text-right p-2&rdquo;>
                           Bs. {month.revenue.toLocaleString()}
                         </td>
-                        <td className="text-right p-2">
+                        <td className=&ldquo;text-right p-2&rdquo;>
                           Bs. {month.expenses.toLocaleString()}
                         </td>
                         <td
-                          className={`text-right p-2 ${month.profit >= 0 ? "text-green-600" : "text-red-600"}`}
+                          className={`text-right p-2 ${month.profit >= 0 ? &ldquo;text-green-600&rdquo; : &ldquo;text-red-600&rdquo;}`}
                         >
                           Bs. {month.profit.toLocaleString()}
                         </td>
                         <td
-                          className={`text-right p-2 font-semibold ${month.cumulative >= 0 ? "text-green-600" : "text-red-600"}`}
+                          className={`text-right p-2 font-semibold ${month.cumulative >= 0 ? &ldquo;text-green-600&rdquo; : &ldquo;text-red-600&rdquo;}`}
                         >
                           Bs. {month.cumulative.toLocaleString()}
                         </td>

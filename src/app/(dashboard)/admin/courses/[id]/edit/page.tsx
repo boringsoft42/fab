@@ -1,39 +1,39 @@
-"use client";
+&ldquo;use client&rdquo;;
 
-import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { CourseCategory, CourseLevel } from "@/types/courses";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
+import { useState, useEffect } from &ldquo;react&rdquo;;
+import { useParams, useRouter } from &ldquo;next/navigation&rdquo;;
+import { CourseCategory, CourseLevel } from &ldquo;@/types/courses&rdquo;;
+import { Button } from &ldquo;@/components/ui/button&rdquo;;
+import { Card, CardContent, CardHeader, CardTitle } from &ldquo;@/components/ui/card&rdquo;;
+import { Input } from &ldquo;@/components/ui/input&rdquo;;
+import { Label } from &ldquo;@/components/ui/label&rdquo;;
+import { Textarea } from &ldquo;@/components/ui/textarea&rdquo;;
+import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+} from &ldquo;@/components/ui/select&rdquo;;
+import { Tabs, TabsContent, TabsList, TabsTrigger } from &ldquo;@/components/ui/tabs&rdquo;;
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+} from &ldquo;@/components/ui/collapsible&rdquo;;
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from &ldquo;@/components/ui/dialog&rdquo;;
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from &ldquo;@/components/ui/dropdown-menu&rdquo;;
 import {
   ArrowLeft,
   Save,
@@ -53,7 +53,7 @@ import {
   Clock,
   Star,
   Award,
-} from "lucide-react";
+} from &ldquo;lucide-react&rdquo;;
 
 interface Module {
   id: string;
@@ -70,7 +70,7 @@ interface Lesson {
   moduleId: string;
   title: string;
   description: string;
-  type: "video" | "reading" | "quiz";
+  type: &ldquo;video&rdquo; | &ldquo;reading&rdquo; | &ldquo;quiz&rdquo;;
   content: Record<string, unknown>;
   duration: number;
   order: number;
@@ -90,7 +90,7 @@ interface Quiz {
 
 interface Question {
   id: string;
-  type: "multiple_choice" | "true_false" | "short_answer";
+  type: &ldquo;multiple_choice&rdquo; | &ldquo;true_false&rdquo; | &ldquo;short_answer&rdquo;;
   question: string;
   options?: string[];
   correctAnswer: string | string[];
@@ -101,7 +101,7 @@ interface Question {
 export default function EditCoursePage() {
   const courseId = params.id as string;
 
-  const [activeTab, setActiveTab] = useState("content");
+  const [activeTab, setActiveTab] = useState(&ldquo;content&rdquo;);
   const [modules, setModules] = useState<Module[]>([]);
   const [expandedModules, setExpandedModules] = useState<Set<string>>(
     new Set()
@@ -112,9 +112,9 @@ export default function EditCoursePage() {
   const [editingLesson, setEditingLesson] = useState<Lesson | null>(null);
 
   const [courseData] = useState({
-    title: "Habilidades Laborales Básicas",
+    title: &ldquo;Habilidades Laborales Básicas&rdquo;,
     description:
-      "Curso completo sobre competencias fundamentales para el trabajo",
+      &ldquo;Curso completo sobre competencias fundamentales para el trabajo&rdquo;,
     category: CourseCategory.SOFT_SKILLS,
     level: CourseLevel.BEGINNER,
     duration: 8,
@@ -132,57 +132,57 @@ export default function EditCoursePage() {
     // Mock data for demonstration
     const mockModules: Module[] = [
       {
-        id: "mod-1",
-        title: "Introducción a las Habilidades Laborales",
-        description: "Conceptos fundamentales y bienvenida al curso",
+        id: &ldquo;mod-1&rdquo;,
+        title: &ldquo;Introducción a las Habilidades Laborales&rdquo;,
+        description: &ldquo;Conceptos fundamentales y bienvenida al curso&rdquo;,
         order: 1,
         duration: 45,
         isLocked: false,
         lessons: [
           {
-            id: "lesson-1",
-            moduleId: "mod-1",
-            title: "Bienvenida al curso",
-            description: "Video de introducción y bienvenida",
-            type: "video",
-            content: { videoUrl: "https://example.com/video1.mp4" },
+            id: &ldquo;lesson-1&rdquo;,
+            moduleId: &ldquo;mod-1&rdquo;,
+            title: &ldquo;Bienvenida al curso&rdquo;,
+            description: &ldquo;Video de introducción y bienvenida&rdquo;,
+            type: &ldquo;video&rdquo;,
+            content: { videoUrl: &ldquo;https://example.com/video1.mp4&rdquo; },
             duration: 5,
             order: 1,
             isPreview: true,
           },
           {
-            id: "lesson-2",
-            moduleId: "mod-1",
-            title: "¿Qué son las habilidades laborales?",
-            description: "Conceptos básicos sobre habilidades en el trabajo",
-            type: "video",
-            content: { videoUrl: "https://example.com/video2.mp4" },
+            id: &ldquo;lesson-2&rdquo;,
+            moduleId: &ldquo;mod-1&rdquo;,
+            title: &ldquo;¿Qué son las habilidades laborales?&rdquo;,
+            description: &ldquo;Conceptos básicos sobre habilidades en el trabajo&rdquo;,
+            type: &ldquo;video&rdquo;,
+            content: { videoUrl: &ldquo;https://example.com/video2.mp4&rdquo; },
             duration: 8,
             order: 2,
             isPreview: false,
           },
           {
-            id: "quiz-1",
-            moduleId: "mod-1",
-            title: "Evaluación: Conceptos básicos",
-            description: "Quiz sobre los conceptos fundamentales",
-            type: "quiz",
+            id: &ldquo;quiz-1&rdquo;,
+            moduleId: &ldquo;mod-1&rdquo;,
+            title: &ldquo;Evaluación: Conceptos básicos&rdquo;,
+            description: &ldquo;Quiz sobre los conceptos fundamentales&rdquo;,
+            type: &ldquo;quiz&rdquo;,
             content: {
               questions: [
                 {
-                  id: "q1",
-                  type: "multiple_choice",
+                  id: &ldquo;q1&rdquo;,
+                  type: &ldquo;multiple_choice&rdquo;,
                   question:
-                    "¿Cuáles son las habilidades blandas más importantes?",
+                    &ldquo;¿Cuáles son las habilidades blandas más importantes?&rdquo;,
                   options: [
-                    "Comunicación",
-                    "Programación",
-                    "Matemáticas",
-                    "Diseño",
+                    &ldquo;Comunicación&rdquo;,
+                    &ldquo;Programación&rdquo;,
+                    &ldquo;Matemáticas&rdquo;,
+                    &ldquo;Diseño&rdquo;,
                   ],
-                  correctAnswer: "Comunicación",
+                  correctAnswer: &ldquo;Comunicación&rdquo;,
                   explanation:
-                    "La comunicación es fundamental en cualquier trabajo",
+                    &ldquo;La comunicación es fundamental en cualquier trabajo&rdquo;,
                   points: 10,
                 },
               ],
@@ -195,14 +195,14 @@ export default function EditCoursePage() {
       },
     ];
     setModules(mockModules);
-    setExpandedModules(new Set(["mod-1"]));
+    setExpandedModules(new Set([&ldquo;mod-1&rdquo;]));
   };
 
   const handleAddModule = (moduleData: Partial<Module>) => {
     const newModule: Module = {
       id: `mod-${Date.now()}`,
-      title: moduleData.title || "",
-      description: moduleData.description || "",
+      title: moduleData.title || &ldquo;&rdquo;,
+      description: moduleData.description || &ldquo;&rdquo;,
       order: modules.length + 1,
       duration: 0,
       lessons: [],
@@ -220,9 +220,9 @@ export default function EditCoursePage() {
     const newLesson: Lesson = {
       id: `lesson-${Date.now()}`,
       moduleId,
-      title: lessonData.title || "",
-      description: lessonData.description || "",
-      type: lessonData.type || "video",
+      title: lessonData.title || &ldquo;&rdquo;,
+      description: lessonData.description || &ldquo;&rdquo;,
+      type: lessonData.type || &ldquo;video&rdquo;,
       content: lessonData.content || {},
       duration: lessonData.duration || 0,
       order: module.lessons.length + 1,
@@ -240,7 +240,7 @@ export default function EditCoursePage() {
   const handleDeleteModule = (moduleId: string) => {
     if (
       window.confirm(
-        "¿Estás seguro de eliminar este módulo y todas sus lecciones?"
+        &ldquo;¿Estás seguro de eliminar este módulo y todas sus lecciones?&rdquo;
       )
     ) {
       setModules((prev) => prev.filter((m) => m.id !== moduleId));
@@ -248,7 +248,7 @@ export default function EditCoursePage() {
   };
 
   const handleDeleteLesson = (moduleId: string, lessonId: string) => {
-    if (window.confirm("¿Estás seguro de eliminar esta lección?")) {
+    if (window.confirm(&ldquo;¿Estás seguro de eliminar esta lección?&rdquo;)) {
       setModules((prev) =>
         prev.map((m) =>
           m.id === moduleId
@@ -273,14 +273,14 @@ export default function EditCoursePage() {
 
   const getLessonIcon = (type: string) => {
     switch (type) {
-      case "video":
-        return <VideoIcon className="h-4 w-4" />;
-      case "quiz":
-        return <HelpCircle className="h-4 w-4" />;
-      case "reading":
-        return <FileText className="h-4 w-4" />;
+      case &ldquo;video&rdquo;:
+        return <VideoIcon className=&ldquo;h-4 w-4&rdquo; />;
+      case &ldquo;quiz&rdquo;:
+        return <HelpCircle className=&ldquo;h-4 w-4&rdquo; />;
+      case &ldquo;reading&rdquo;:
+        return <FileText className=&ldquo;h-4 w-4&rdquo; />;
       default:
-        return <BookOpen className="h-4 w-4" />;
+        return <BookOpen className=&ldquo;h-4 w-4&rdquo; />;
     }
   };
 
@@ -301,70 +301,70 @@ export default function EditCoursePage() {
   };
 
   return (
-    <div className="container mx-auto p-6 max-w-6xl">
+    <div className=&ldquo;container mx-auto p-6 max-w-6xl&rdquo;>
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" onClick={() => router.back()}>
-            <ArrowLeft className="h-4 w-4 mr-2" />
+      <div className=&ldquo;flex items-center justify-between mb-6&rdquo;>
+        <div className=&ldquo;flex items-center gap-4&rdquo;>
+          <Button variant=&ldquo;ghost&rdquo; onClick={() => router.back()}>
+            <ArrowLeft className=&ldquo;h-4 w-4 mr-2&rdquo; />
             Volver
           </Button>
           <div>
-            <h1 className="text-2xl font-bold">{courseData.title}</h1>
-            <p className="text-muted-foreground">
+            <h1 className=&ldquo;text-2xl font-bold&rdquo;>{courseData.title}</h1>
+            <p className=&ldquo;text-muted-foreground&rdquo;>
               Gestiona el contenido y estructura del curso
             </p>
           </div>
         </div>
 
-        <div className="flex gap-2">
-          <Button variant="outline" asChild>
-            <a href={`/courses/${courseId}`} target="_blank">
-              <Eye className="h-4 w-4 mr-2" />
+        <div className=&ldquo;flex gap-2&rdquo;>
+          <Button variant=&ldquo;outline&rdquo; asChild>
+            <a href={`/courses/${courseId}`} target=&ldquo;_blank&rdquo;>
+              <Eye className=&ldquo;h-4 w-4 mr-2&rdquo; />
               Vista Previa
             </a>
           </Button>
           <Button>
-            <Save className="h-4 w-4 mr-2" />
+            <Save className=&ldquo;h-4 w-4 mr-2&rdquo; />
             Guardar Cambios
           </Button>
         </div>
       </div>
 
       {/* Course Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <div className=&ldquo;grid grid-cols-1 md:grid-cols-4 gap-4 mb-6&rdquo;>
         <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <BookOpen className="h-4 w-4 text-blue-600" />
+          <CardContent className=&ldquo;p-4&rdquo;>
+            <div className=&ldquo;flex items-center gap-2&rdquo;>
+              <BookOpen className=&ldquo;h-4 w-4 text-blue-600&rdquo; />
               <div>
-                <p className="text-sm text-muted-foreground">Módulos</p>
-                <p className="text-2xl font-bold">{modules.length}</p>
+                <p className=&ldquo;text-sm text-muted-foreground&rdquo;>Módulos</p>
+                <p className=&ldquo;text-2xl font-bold&rdquo;>{modules.length}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <PlayCircle className="h-4 w-4 text-green-600" />
+          <CardContent className=&ldquo;p-4&rdquo;>
+            <div className=&ldquo;flex items-center gap-2&rdquo;>
+              <PlayCircle className=&ldquo;h-4 w-4 text-green-600&rdquo; />
               <div>
-                <p className="text-sm text-muted-foreground">Lecciones</p>
-                <p className="text-2xl font-bold">{getTotalLessons()}</p>
+                <p className=&ldquo;text-sm text-muted-foreground&rdquo;>Lecciones</p>
+                <p className=&ldquo;text-2xl font-bold&rdquo;>{getTotalLessons()}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <Clock className="h-4 w-4 text-orange-600" />
+          <CardContent className=&ldquo;p-4&rdquo;>
+            <div className=&ldquo;flex items-center gap-2&rdquo;>
+              <Clock className=&ldquo;h-4 w-4 text-orange-600&rdquo; />
               <div>
-                <p className="text-sm text-muted-foreground">Duración</p>
-                <p className="text-2xl font-bold">
-                  {Math.floor(getTotalDuration() / 60)}h{" "}
+                <p className=&ldquo;text-sm text-muted-foreground&rdquo;>Duración</p>
+                <p className=&ldquo;text-2xl font-bold&rdquo;>
+                  {Math.floor(getTotalDuration() / 60)}h{&ldquo; &rdquo;}
                   {getTotalDuration() % 60}m
                 </p>
               </div>
@@ -373,12 +373,12 @@ export default function EditCoursePage() {
         </Card>
 
         <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <Users className="h-4 w-4 text-purple-600" />
+          <CardContent className=&ldquo;p-4&rdquo;>
+            <div className=&ldquo;flex items-center gap-2&rdquo;>
+              <Users className=&ldquo;h-4 w-4 text-purple-600&rdquo; />
               <div>
-                <p className="text-sm text-muted-foreground">Estudiantes</p>
-                <p className="text-2xl font-bold">
+                <p className=&ldquo;text-sm text-muted-foreground&rdquo;>Estudiantes</p>
+                <p className=&ldquo;text-2xl font-bold&rdquo;>
                   {courseData.studentCount.toLocaleString()}
                 </p>
               </div>
@@ -390,49 +390,49 @@ export default function EditCoursePage() {
       <Tabs
         value={activeTab}
         onValueChange={setActiveTab}
-        className="space-y-6"
+        className=&ldquo;space-y-6&rdquo;
       >
         <TabsList>
-          <TabsTrigger value="content">Contenido del Curso</TabsTrigger>
-          <TabsTrigger value="settings">Configuración</TabsTrigger>
-          <TabsTrigger value="analytics">Analíticas</TabsTrigger>
+          <TabsTrigger value=&ldquo;content&rdquo;>Contenido del Curso</TabsTrigger>
+          <TabsTrigger value=&ldquo;settings&rdquo;>Configuración</TabsTrigger>
+          <TabsTrigger value=&ldquo;analytics&rdquo;>Analíticas</TabsTrigger>
         </TabsList>
 
         {/* Content Management Tab */}
-        <TabsContent value="content" className="space-y-6">
+        <TabsContent value=&ldquo;content&rdquo; className=&ldquo;space-y-6&rdquo;>
           <Card>
             <CardHeader>
-              <div className="flex items-center justify-between">
+              <div className=&ldquo;flex items-center justify-between&rdquo;>
                 <CardTitle>Estructura del Curso</CardTitle>
                 <Button onClick={() => setShowModuleDialog(true)}>
-                  <Plus className="h-4 w-4 mr-2" />
+                  <Plus className=&ldquo;h-4 w-4 mr-2&rdquo; />
                   Agregar Módulo
                 </Button>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div className=&ldquo;space-y-4&rdquo;>
                 {modules.map((module, moduleIndex) => (
-                  <div key={module.id} className="border rounded-lg">
+                  <div key={module.id} className=&ldquo;border rounded-lg&rdquo;>
                     <Collapsible
                       open={expandedModules.has(module.id)}
                       onOpenChange={() => toggleModule(module.id)}
                     >
                       <CollapsibleTrigger asChild>
-                        <div className="flex items-center justify-between p-4 hover:bg-gray-50 cursor-pointer">
-                          <div className="flex items-center gap-3">
+                        <div className=&ldquo;flex items-center justify-between p-4 hover:bg-gray-50 cursor-pointer&rdquo;>
+                          <div className=&ldquo;flex items-center gap-3&rdquo;>
                             {expandedModules.has(module.id) ? (
-                              <ChevronDown className="h-4 w-4" />
+                              <ChevronDown className=&ldquo;h-4 w-4&rdquo; />
                             ) : (
-                              <ChevronRight className="h-4 w-4" />
+                              <ChevronRight className=&ldquo;h-4 w-4&rdquo; />
                             )}
-                            <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-sm font-medium text-blue-600">
+                            <div className=&ldquo;w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-sm font-medium text-blue-600&rdquo;>
                               {moduleIndex + 1}
                             </div>
                             <div>
-                              <h4 className="font-medium">{module.title}</h4>
-                              <p className="text-sm text-muted-foreground">
-                                {module.lessons.length} lecciones •{" "}
+                              <h4 className=&ldquo;font-medium&rdquo;>{module.title}</h4>
+                              <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
+                                {module.lessons.length} lecciones •{&ldquo; &rdquo;}
                                 {Math.floor(
                                   module.lessons.reduce(
                                     (total, lesson) => total + lesson.duration,
@@ -449,8 +449,8 @@ export default function EditCoursePage() {
                               asChild
                               onClick={(e) => e.stopPropagation()}
                             >
-                              <Button variant="ghost" size="sm">
-                                <MoreHorizontal className="h-4 w-4" />
+                              <Button variant=&ldquo;ghost&rdquo; size=&ldquo;sm&rdquo;>
+                                <MoreHorizontal className=&ldquo;h-4 w-4&rdquo; />
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
@@ -460,14 +460,14 @@ export default function EditCoursePage() {
                                   setShowModuleDialog(true);
                                 }}
                               >
-                                <Edit className="h-4 w-4 mr-2" />
+                                <Edit className=&ldquo;h-4 w-4 mr-2&rdquo; />
                                 Editar Módulo
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={() => handleDeleteModule(module.id)}
-                                className="text-red-600"
+                                className=&ldquo;text-red-600&rdquo;
                               >
-                                <Trash2 className="h-4 w-4 mr-2" />
+                                <Trash2 className=&ldquo;h-4 w-4 mr-2&rdquo; />
                                 Eliminar Módulo
                               </DropdownMenuItem>
                             </DropdownMenuContent>
@@ -476,33 +476,33 @@ export default function EditCoursePage() {
                       </CollapsibleTrigger>
 
                       <CollapsibleContent>
-                        <div className="px-4 pb-4">
-                          <div className="ml-8 space-y-2">
+                        <div className=&ldquo;px-4 pb-4&rdquo;>
+                          <div className=&ldquo;ml-8 space-y-2&rdquo;>
                             {module.lessons.map((lesson, lessonIndex) => (
                               <div
                                 key={lesson.id}
-                                className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                                className=&ldquo;flex items-center justify-between p-3 bg-gray-50 rounded-lg&rdquo;
                               >
-                                <div className="flex items-center gap-3">
-                                  <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center text-xs">
+                                <div className=&ldquo;flex items-center gap-3&rdquo;>
+                                  <div className=&ldquo;w-6 h-6 bg-white rounded-full flex items-center justify-center text-xs&rdquo;>
                                     {lessonIndex + 1}
                                   </div>
                                   {getLessonIcon(lesson.type)}
                                   <div>
-                                    <p className="font-medium text-sm">
+                                    <p className=&ldquo;font-medium text-sm&rdquo;>
                                       {lesson.title}
                                     </p>
-                                    <p className="text-xs text-muted-foreground">
-                                      {lesson.type === "video"
-                                        ? "Video"
-                                        : lesson.type === "quiz"
-                                          ? "Examen"
-                                          : "Lectura"}{" "}
+                                    <p className=&ldquo;text-xs text-muted-foreground&rdquo;>
+                                      {lesson.type === &ldquo;video&rdquo;
+                                        ? &ldquo;Video&rdquo;
+                                        : lesson.type === &ldquo;quiz&rdquo;
+                                          ? &ldquo;Examen&rdquo;
+                                          : &ldquo;Lectura&rdquo;}{&ldquo; &rdquo;}
                                       • {lesson.duration} min
                                       {lesson.isPreview && (
                                         <Badge
-                                          variant="secondary"
-                                          className="ml-2 text-xs"
+                                          variant=&ldquo;secondary&rdquo;
+                                          className=&ldquo;ml-2 text-xs&rdquo;
                                         >
                                           Vista previa
                                         </Badge>
@@ -513,8 +513,8 @@ export default function EditCoursePage() {
 
                                 <DropdownMenu>
                                   <DropdownMenuTrigger asChild>
-                                    <Button variant="ghost" size="sm">
-                                      <MoreHorizontal className="h-4 w-4" />
+                                    <Button variant=&ldquo;ghost&rdquo; size=&ldquo;sm&rdquo;>
+                                      <MoreHorizontal className=&ldquo;h-4 w-4&rdquo; />
                                     </Button>
                                   </DropdownMenuTrigger>
                                   <DropdownMenuContent>
@@ -524,16 +524,16 @@ export default function EditCoursePage() {
                                         setShowLessonDialog(true);
                                       }}
                                     >
-                                      <Edit className="h-4 w-4 mr-2" />
+                                      <Edit className=&ldquo;h-4 w-4 mr-2&rdquo; />
                                       Editar Lección
                                     </DropdownMenuItem>
                                     <DropdownMenuItem
                                       onClick={() =>
                                         handleDeleteLesson(module.id, lesson.id)
                                       }
-                                      className="text-red-600"
+                                      className=&ldquo;text-red-600&rdquo;
                                     >
-                                      <Trash2 className="h-4 w-4 mr-2" />
+                                      <Trash2 className=&ldquo;h-4 w-4 mr-2&rdquo; />
                                       Eliminar Lección
                                     </DropdownMenuItem>
                                   </DropdownMenuContent>
@@ -542,16 +542,16 @@ export default function EditCoursePage() {
                             ))}
 
                             <Button
-                              variant="outline"
+                              variant=&ldquo;outline&rdquo;
                               onClick={() => {
                                 setEditingLesson({
                                   moduleId: module.id,
                                 } as Lesson);
                                 setShowLessonDialog(true);
                               }}
-                              className="w-full mt-2"
+                              className=&ldquo;w-full mt-2&rdquo;
                             >
-                              <Plus className="h-4 w-4 mr-2" />
+                              <Plus className=&ldquo;h-4 w-4 mr-2&rdquo; />
                               Agregar Lección
                             </Button>
                           </div>
@@ -562,16 +562,16 @@ export default function EditCoursePage() {
                 ))}
 
                 {modules.length === 0 && (
-                  <div className="text-center py-12 border-2 border-dashed border-gray-300 rounded-lg">
-                    <BookOpen className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold mb-2">
+                  <div className=&ldquo;text-center py-12 border-2 border-dashed border-gray-300 rounded-lg&rdquo;>
+                    <BookOpen className=&ldquo;h-12 w-12 text-gray-400 mx-auto mb-4&rdquo; />
+                    <h3 className=&ldquo;text-lg font-semibold mb-2&rdquo;>
                       Sin contenido
                     </h3>
-                    <p className="text-muted-foreground mb-4">
+                    <p className=&ldquo;text-muted-foreground mb-4&rdquo;>
                       Comienza agregando el primer módulo de tu curso
                     </p>
                     <Button onClick={() => setShowModuleDialog(true)}>
-                      <Plus className="h-4 w-4 mr-2" />
+                      <Plus className=&ldquo;h-4 w-4 mr-2&rdquo; />
                       Agregar Primer Módulo
                     </Button>
                   </div>
@@ -582,13 +582,13 @@ export default function EditCoursePage() {
         </TabsContent>
 
         {/* Settings Tab */}
-        <TabsContent value="settings" className="space-y-6">
+        <TabsContent value=&ldquo;settings&rdquo; className=&ldquo;space-y-6&rdquo;>
           <Card>
             <CardHeader>
               <CardTitle>Configuración del Curso</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-muted-foreground">
+              <p className=&ldquo;text-muted-foreground&rdquo;>
                 Las configuraciones básicas del curso se pueden editar desde la
                 página de información general.
               </p>
@@ -597,30 +597,30 @@ export default function EditCoursePage() {
         </TabsContent>
 
         {/* Analytics Tab */}
-        <TabsContent value="analytics" className="space-y-6">
+        <TabsContent value=&ldquo;analytics&rdquo; className=&ldquo;space-y-6&rdquo;>
           <Card>
             <CardHeader>
               <CardTitle>Analíticas del Curso</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="text-center p-4 border rounded-lg">
-                  <div className="text-2xl font-bold text-blue-600">78%</div>
-                  <p className="text-sm text-muted-foreground">
+              <div className=&ldquo;grid grid-cols-1 md:grid-cols-3 gap-4&rdquo;>
+                <div className=&ldquo;text-center p-4 border rounded-lg&rdquo;>
+                  <div className=&ldquo;text-2xl font-bold text-blue-600&rdquo;>78%</div>
+                  <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
                     Tasa de Finalización
                   </p>
                 </div>
-                <div className="text-center p-4 border rounded-lg">
-                  <div className="text-2xl font-bold text-green-600">4.8</div>
-                  <p className="text-sm text-muted-foreground">
+                <div className=&ldquo;text-center p-4 border rounded-lg&rdquo;>
+                  <div className=&ldquo;text-2xl font-bold text-green-600&rdquo;>4.8</div>
+                  <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
                     Calificación Promedio
                   </p>
                 </div>
-                <div className="text-center p-4 border rounded-lg">
-                  <div className="text-2xl font-bold text-purple-600">
+                <div className=&ldquo;text-center p-4 border rounded-lg&rdquo;>
+                  <div className=&ldquo;text-2xl font-bold text-purple-600&rdquo;>
                     2,847
                   </div>
-                  <p className="text-sm text-muted-foreground">
+                  <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
                     Estudiantes Inscritos
                   </p>
                 </div>
@@ -671,15 +671,15 @@ function ModuleDialog({
   onSave: (data: Partial<Module>) => void;
   module?: Module | null;
 }) {
-  const [title, setTitle] = useState(module?.title || "");
-  const [description, setDescription] = useState(module?.description || "");
+  const [title, setTitle] = useState(module?.title || &ldquo;&rdquo;);
+  const [description, setDescription] = useState(module?.description || &ldquo;&rdquo;);
 
   const handleSave = () => {
     if (title.trim()) {
       onSave({ title, description });
       onClose();
-      setTitle("");
-      setDescription("");
+      setTitle(&ldquo;&rdquo;);
+      setDescription(&ldquo;&rdquo;);
     }
   };
 
@@ -688,35 +688,35 @@ function ModuleDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {module ? "Editar Módulo" : "Agregar Nuevo Módulo"}
+            {module ? &ldquo;Editar Módulo&rdquo; : &ldquo;Agregar Nuevo Módulo&rdquo;}
           </DialogTitle>
         </DialogHeader>
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="moduleTitle">Título del Módulo</Label>
+        <div className=&ldquo;space-y-4&rdquo;>
+          <div className=&ldquo;space-y-2&rdquo;>
+            <Label htmlFor=&ldquo;moduleTitle&rdquo;>Título del Módulo</Label>
             <Input
-              id="moduleTitle"
+              id=&ldquo;moduleTitle&rdquo;
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Ej: Introducción a las Habilidades Laborales"
+              placeholder=&ldquo;Ej: Introducción a las Habilidades Laborales&rdquo;
             />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="moduleDescription">Descripción</Label>
+          <div className=&ldquo;space-y-2&rdquo;>
+            <Label htmlFor=&ldquo;moduleDescription&rdquo;>Descripción</Label>
             <Textarea
-              id="moduleDescription"
+              id=&ldquo;moduleDescription&rdquo;
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Descripción del contenido del módulo"
+              placeholder=&ldquo;Descripción del contenido del módulo&rdquo;
               rows={3}
             />
           </div>
-          <div className="flex justify-end gap-2">
-            <Button variant="outline" onClick={onClose}>
+          <div className=&ldquo;flex justify-end gap-2&rdquo;>
+            <Button variant=&ldquo;outline&rdquo; onClick={onClose}>
               Cancelar
             </Button>
             <Button onClick={handleSave}>
-              {module ? "Actualizar" : "Crear"} Módulo
+              {module ? &ldquo;Actualizar&rdquo; : &ldquo;Crear&rdquo;} Módulo
             </Button>
           </div>
         </div>
@@ -737,20 +737,20 @@ function LessonDialog({
   onSave: (data: Partial<Lesson>) => void;
   lesson?: Lesson | null;
 }) {
-  const [title, setTitle] = useState(lesson?.title || "");
-  const [description, setDescription] = useState(lesson?.description || "");
-  const [type, setType] = useState<"video" | "reading" | "quiz">(
-    lesson?.type || "video"
+  const [title, setTitle] = useState(lesson?.title || &ldquo;&rdquo;);
+  const [description, setDescription] = useState(lesson?.description || &ldquo;&rdquo;);
+  const [type, setType] = useState<&ldquo;video&rdquo; | &ldquo;reading&rdquo; | &ldquo;quiz&rdquo;>(
+    lesson?.type || &ldquo;video&rdquo;
   );
-  const [videoUrl, setVideoUrl] = useState("");
-  const [readingContent, setReadingContent] = useState("");
+  const [videoUrl, setVideoUrl] = useState(&ldquo;&rdquo;);
+  const [readingContent, setReadingContent] = useState(&ldquo;&rdquo;);
 
   const handleSave = () => {
     if (title.trim()) {
       const content =
-        type === "video"
+        type === &ldquo;video&rdquo;
           ? { videoUrl }
-          : type === "reading"
+          : type === &ldquo;reading&rdquo;
             ? { text: readingContent }
             : { questions: [] };
 
@@ -767,28 +767,28 @@ function LessonDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className=&ldquo;max-w-2xl&rdquo;>
         <DialogHeader>
           <DialogTitle>
-            {lesson?.id ? "Editar Lección" : "Agregar Nueva Lección"}
+            {lesson?.id ? &ldquo;Editar Lección&rdquo; : &ldquo;Agregar Nueva Lección&rdquo;}
           </DialogTitle>
         </DialogHeader>
-        <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="lessonTitle">Título de la Lección</Label>
+        <div className=&ldquo;space-y-4&rdquo;>
+          <div className=&ldquo;grid grid-cols-2 gap-4&rdquo;>
+            <div className=&ldquo;space-y-2&rdquo;>
+              <Label htmlFor=&ldquo;lessonTitle&rdquo;>Título de la Lección</Label>
               <Input
-                id="lessonTitle"
+                id=&ldquo;lessonTitle&rdquo;
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="Título de la lección"
+                placeholder=&ldquo;Título de la lección&rdquo;
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="lessonType">Tipo de Lección</Label>
+            <div className=&ldquo;space-y-2&rdquo;>
+              <Label htmlFor=&ldquo;lessonType&rdquo;>Tipo de Lección</Label>
               <Select
                 value={type}
-                onValueChange={(value: "video" | "reading" | "quiz") =>
+                onValueChange={(value: &ldquo;video&rdquo; | &ldquo;reading&rdquo; | &ldquo;quiz&rdquo;) =>
                   setType(value)
                 }
               >
@@ -796,76 +796,76 @@ function LessonDialog({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="video">Video</SelectItem>
-                  <SelectItem value="reading">Lectura</SelectItem>
-                  <SelectItem value="quiz">Examen</SelectItem>
+                  <SelectItem value=&ldquo;video&rdquo;>Video</SelectItem>
+                  <SelectItem value=&ldquo;reading&rdquo;>Lectura</SelectItem>
+                  <SelectItem value=&ldquo;quiz&rdquo;>Examen</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="lessonDescription">Descripción</Label>
+          <div className=&ldquo;space-y-2&rdquo;>
+            <Label htmlFor=&ldquo;lessonDescription&rdquo;>Descripción</Label>
             <Textarea
-              id="lessonDescription"
+              id=&ldquo;lessonDescription&rdquo;
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Descripción de la lección"
+              placeholder=&ldquo;Descripción de la lección&rdquo;
               rows={2}
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="duration">Duración (minutos)</Label>
+          <div className=&ldquo;space-y-2&rdquo;>
+            <Label htmlFor=&ldquo;duration&rdquo;>Duración (minutos)</Label>
             <Input
-              id="duration"
-              type="number"
+              id=&ldquo;duration&rdquo;
+              type=&ldquo;number&rdquo;
               value={duration}
               onChange={(e) => setDuration(parseInt(e.target.value) || 0)}
-              min="1"
+              min=&ldquo;1&rdquo;
             />
           </div>
 
-          {type === "video" && (
-            <div className="space-y-2">
-              <Label htmlFor="videoUrl">URL del Video</Label>
+          {type === &ldquo;video&rdquo; && (
+            <div className=&ldquo;space-y-2&rdquo;>
+              <Label htmlFor=&ldquo;videoUrl&rdquo;>URL del Video</Label>
               <Input
-                id="videoUrl"
+                id=&ldquo;videoUrl&rdquo;
                 value={videoUrl}
                 onChange={(e) => setVideoUrl(e.target.value)}
-                placeholder="https://ejemplo.com/video.mp4"
+                placeholder=&ldquo;https://ejemplo.com/video.mp4&rdquo;
               />
             </div>
           )}
 
-          {type === "reading" && (
-            <div className="space-y-2">
-              <Label htmlFor="readingContent">Contenido de Lectura</Label>
+          {type === &ldquo;reading&rdquo; && (
+            <div className=&ldquo;space-y-2&rdquo;>
+              <Label htmlFor=&ldquo;readingContent&rdquo;>Contenido de Lectura</Label>
               <Textarea
-                id="readingContent"
+                id=&ldquo;readingContent&rdquo;
                 value={readingContent}
                 onChange={(e) => setReadingContent(e.target.value)}
-                placeholder="Contenido del material de lectura..."
+                placeholder=&ldquo;Contenido del material de lectura...&rdquo;
                 rows={4}
               />
             </div>
           )}
 
-          {type === "quiz" && (
-            <div className="p-4 bg-blue-50 rounded-lg">
-              <p className="text-sm text-blue-700">
+          {type === &ldquo;quiz&rdquo; && (
+            <div className=&ldquo;p-4 bg-blue-50 rounded-lg&rdquo;>
+              <p className=&ldquo;text-sm text-blue-700&rdquo;>
                 El constructor de exámenes se abrirá después de crear la
                 lección.
               </p>
             </div>
           )}
 
-          <div className="flex justify-end gap-2">
-            <Button variant="outline" onClick={onClose}>
+          <div className=&ldquo;flex justify-end gap-2&rdquo;>
+            <Button variant=&ldquo;outline&rdquo; onClick={onClose}>
               Cancelar
             </Button>
             <Button onClick={handleSave}>
-              {lesson?.id ? "Actualizar" : "Crear"} Lección
+              {lesson?.id ? &ldquo;Actualizar&rdquo; : &ldquo;Crear&rdquo;} Lección
             </Button>
           </div>
         </div>

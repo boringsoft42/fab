@@ -22,7 +22,7 @@ export default function SignInPage() {
               href="/sign-up"
               className="underline underline-offset-4 hover:text-primary"
             >
-              Don&apos;t have an account?
+              Don't have an account?
             </Link>
           </p>
         </div>

@@ -1,33 +1,33 @@
-import { Loader2 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Loader2 } from &ldquo;lucide-react&rdquo;;
+import { cn } from &ldquo;@/lib/utils&rdquo;;
 
 interface LoaderProps {
   className?: string;
-  size?: "sm" | "md" | "lg";
-  variant?: "default" | "secondary";
+  size?: &ldquo;sm&rdquo; | &ldquo;md&rdquo; | &ldquo;lg&rdquo;;
+  variant?: &ldquo;default&rdquo; | &ldquo;secondary&rdquo;;
 }
 
 export function Loader({
   className,
-  size = "md",
-  variant = "default",
+  size = &ldquo;md&rdquo;,
+  variant = &ldquo;default&rdquo;,
 }: LoaderProps) {
   const sizeClasses = {
-    sm: "h-4 w-4",
-    md: "h-6 w-6",
-    lg: "h-8 w-8",
+    sm: &ldquo;h-4 w-4&rdquo;,
+    md: &ldquo;h-6 w-6&rdquo;,
+    lg: &ldquo;h-8 w-8&rdquo;,
   };
 
   const variantClasses = {
-    default: "text-primary",
-    secondary: "text-muted-foreground",
+    default: &ldquo;text-primary&rdquo;,
+    secondary: &ldquo;text-muted-foreground&rdquo;,
   };
 
   return (
-    <div className={cn("flex items-center justify-center", className)}>
+    <div className={cn(&ldquo;flex items-center justify-center&rdquo;, className)}>
       <Loader2
         className={cn(
-          "animate-spin",
+          &ldquo;animate-spin&rdquo;,
           sizeClasses[size],
           variantClasses[variant]
         )}

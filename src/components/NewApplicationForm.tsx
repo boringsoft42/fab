@@ -1,9 +1,9 @@
-"use client";
+&ldquo;use client&rdquo;;
 
-import { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { useEffect, useState } from &ldquo;react&rdquo;;
+import { Card, CardContent, CardHeader, CardTitle } from &ldquo;@/components/ui/card&rdquo;;
+import { Button } from &ldquo;@/components/ui/button&rdquo;;
+import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
 import {
   CheckCircle,
   XCircle,
@@ -13,9 +13,9 @@ import {
   MapPin,
   Phone,
   GraduationCap,
-} from "lucide-react";
-import { useRouter } from "next/navigation";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+} from &ldquo;lucide-react&rdquo;;
+import { useRouter } from &ldquo;next/navigation&rdquo;;
+import { Avatar, AvatarFallback } from &ldquo;@/components/ui/avatar&rdquo;;
 
 export default function NewApplicationPage() {
   const [hasCV, setHasCV] = useState(false);
@@ -27,13 +27,13 @@ export default function NewApplicationPage() {
     // Simulación de carga de datos
     setTimeout(() => {
       setProfile({
-        name: "Ana Martínez",
-        email: "ana.martinez@email.com",
-        phone: "+591 77777777",
-        city: "La Paz",
-        country: "Bolivia",
-        education: "Bachiller - Colegio La Salle",
-        interests: ["Tecnología", "Marketing Digital", "Diseño"],
+        name: &ldquo;Ana Martínez&rdquo;,
+        email: &ldquo;ana.martinez@email.com&rdquo;,
+        phone: &ldquo;+591 77777777&rdquo;,
+        city: &ldquo;La Paz&rdquo;,
+        country: &ldquo;Bolivia&rdquo;,
+        education: &ldquo;Bachiller - Colegio La Salle&rdquo;,
+        interests: [&ldquo;Tecnología&rdquo;, &ldquo;Marketing Digital&rdquo;, &ldquo;Diseño&rdquo;],
       });
       setHasCV(true);
       setHasCoverLetter(false);
@@ -42,56 +42,56 @@ export default function NewApplicationPage() {
   }, []);
 
   const handleGenerate = () => {
-    alert("Postulación generada correctamente.");
-    router.push("/my-applications");
+    alert(&ldquo;Postulación generada correctamente.&rdquo;);
+    router.push(&ldquo;/my-applications&rdquo;);
   };
 
   if (loading) {
-    return <p className="p-6">Cargando datos del perfil...</p>;
+    return <p className=&ldquo;p-6&rdquo;>Cargando datos del perfil...</p>;
   }
 
   return (
-    <div className="max-w-3xl mx-auto py-6 space-y-6">
-      <Button variant="ghost" onClick={() => router.back()} className="mb-4">
-        <ArrowLeft className="w-4 h-4 mr-2" />
+    <div className=&ldquo;max-w-3xl mx-auto py-6 space-y-6&rdquo;>
+      <Button variant=&ldquo;ghost&rdquo; onClick={() => router.back()} className=&ldquo;mb-4&rdquo;>
+        <ArrowLeft className=&ldquo;w-4 h-4 mr-2&rdquo; />
         Volver
       </Button>
 
       {/* Perfil del Joven */}
       <Card>
-        <CardContent className="flex flex-col md:flex-row items-start justify-between p-6">
-          <div className="flex items-start space-x-4">
-            <Avatar className="w-16 h-16">
+        <CardContent className=&ldquo;flex flex-col md:flex-row items-start justify-between p-6&rdquo;>
+          <div className=&ldquo;flex items-start space-x-4&rdquo;>
+            <Avatar className=&ldquo;w-16 h-16&rdquo;>
               <AvatarFallback>
-                {profile?.name?.[0] ?? "U"}
+                {profile?.name?.[0] ?? &ldquo;U&rdquo;}
               </AvatarFallback>
             </Avatar>
             <div>
-              <h2 className="text-xl font-bold">{profile?.name}</h2>
-              <p className="text-sm text-muted-foreground">Perfil Joven</p>
+              <h2 className=&ldquo;text-xl font-bold&rdquo;>{profile?.name}</h2>
+              <p className=&ldquo;text-sm text-muted-foreground&rdquo;>Perfil Joven</p>
 
-              <div className="mt-4 space-y-1 text-sm text-gray-800">
-                <div className="flex items-center gap-2">
-                  <Mail className="w-4 h-4" /> {profile?.email}
+              <div className=&ldquo;mt-4 space-y-1 text-sm text-gray-800&rdquo;>
+                <div className=&ldquo;flex items-center gap-2&rdquo;>
+                  <Mail className=&ldquo;w-4 h-4&rdquo; /> {profile?.email}
                 </div>
-                <div className="flex items-center gap-2">
-                  <Phone className="w-4 h-4" /> {profile?.phone}
+                <div className=&ldquo;flex items-center gap-2&rdquo;>
+                  <Phone className=&ldquo;w-4 h-4&rdquo; /> {profile?.phone}
                 </div>
-                <div className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4" /> {profile?.city}, {profile?.country}
+                <div className=&ldquo;flex items-center gap-2&rdquo;>
+                  <MapPin className=&ldquo;w-4 h-4&rdquo; /> {profile?.city}, {profile?.country}
                 </div>
-                <div className="flex items-center gap-2">
-                  <GraduationCap className="w-4 h-4" /> {profile?.education}
+                <div className=&ldquo;flex items-center gap-2&rdquo;>
+                  <GraduationCap className=&ldquo;w-4 h-4&rdquo; /> {profile?.education}
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="mt-4 md:mt-0 text-sm text-right">
-            <p className="font-semibold mb-1">Intereses</p>
-            <div className="flex flex-wrap gap-2">
+          <div className=&ldquo;mt-4 md:mt-0 text-sm text-right&rdquo;>
+            <p className=&ldquo;font-semibold mb-1&rdquo;>Intereses</p>
+            <div className=&ldquo;flex flex-wrap gap-2&rdquo;>
               {profile?.interests?.map((interest: string) => (
-                <Badge key={interest} variant="secondary">
+                <Badge key={interest} variant=&ldquo;secondary&rdquo;>
                   {interest}
                 </Badge>
               ))}
@@ -103,59 +103,59 @@ export default function NewApplicationPage() {
       {/* Verificación de Documentos */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Verificación de documentos</CardTitle>
+          <CardTitle className=&ldquo;text-lg&rdquo;>Verificación de documentos</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <span className="flex items-center gap-2 text-gray-800">
-              <FileText className="w-5 h-5" />
+        <CardContent className=&ldquo;space-y-4&rdquo;>
+          <div className=&ldquo;flex items-center justify-between&rdquo;>
+            <span className=&ldquo;flex items-center gap-2 text-gray-800&rdquo;>
+              <FileText className=&ldquo;w-5 h-5&rdquo; />
               Curriculum Vitae
             </span>
             {hasCV ? (
-              <Badge className="bg-green-100 text-green-800">
-                <CheckCircle className="w-4 h-4 mr-1" />
+              <Badge className=&ldquo;bg-green-100 text-green-800&rdquo;>
+                <CheckCircle className=&ldquo;w-4 h-4 mr-1&rdquo; />
                 Disponible
               </Badge>
             ) : (
-              <Badge className="bg-red-100 text-red-800">
-                <XCircle className="w-4 h-4 mr-1" />
+              <Badge className=&ldquo;bg-red-100 text-red-800&rdquo;>
+                <XCircle className=&ldquo;w-4 h-4 mr-1&rdquo; />
                 No disponible
               </Badge>
             )}
           </div>
 
-          <div className="flex items-center justify-between">
-            <span className="flex items-center gap-2 text-gray-800">
-              <FileText className="w-5 h-5" />
+          <div className=&ldquo;flex items-center justify-between&rdquo;>
+            <span className=&ldquo;flex items-center gap-2 text-gray-800&rdquo;>
+              <FileText className=&ldquo;w-5 h-5&rdquo; />
               Carta de Presentación
             </span>
             {hasCoverLetter ? (
-              <Badge className="bg-green-100 text-green-800">
-                <CheckCircle className="w-4 h-4 mr-1" />
+              <Badge className=&ldquo;bg-green-100 text-green-800&rdquo;>
+                <CheckCircle className=&ldquo;w-4 h-4 mr-1&rdquo; />
                 Disponible
               </Badge>
             ) : (
-              <Badge className="bg-red-100 text-red-800">
-                <XCircle className="w-4 h-4 mr-1" />
+              <Badge className=&ldquo;bg-red-100 text-red-800&rdquo;>
+                <XCircle className=&ldquo;w-4 h-4 mr-1&rdquo; />
                 No disponible
               </Badge>
             )}
           </div>
 
           {!hasCV && (
-            <Button variant="outline" className="w-full">
+            <Button variant=&ldquo;outline&rdquo; className=&ldquo;w-full&rdquo;>
               Crear CV
             </Button>
           )}
           {!hasCoverLetter && (
-            <Button variant="outline" className="w-full">
+            <Button variant=&ldquo;outline&rdquo; className=&ldquo;w-full&rdquo;>
               Crear Carta de Presentación
             </Button>
           )}
         </CardContent>
       </Card>
 
-      <Button onClick={handleGenerate} className="w-full">
+      <Button onClick={handleGenerate} className=&ldquo;w-full&rdquo;>
         Generar Postulación
       </Button>
     </div>

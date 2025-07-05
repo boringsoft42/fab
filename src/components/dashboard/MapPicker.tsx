@@ -1,11 +1,11 @@
-"use client";
+&ldquo;use client&rdquo;;
 
-import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from "react-leaflet";
-import { useEffect, useRef, useState } from "react";
-import L from "leaflet";
+import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from &ldquo;react-leaflet&rdquo;;
+import { useEffect, useRef, useState } from &ldquo;react&rdquo;;
+import L from &ldquo;leaflet&rdquo;;
 
 const markerIcon = new L.Icon({
-  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+  iconUrl: &ldquo;https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png&rdquo;,
   iconSize: [25, 41],
   iconAnchor: [12, 41],
 });
@@ -42,12 +42,12 @@ export default function MapPicker({ onChange }: { onChange: (latlng: [number, nu
       center={[-17.3935, -66.1570]} // Cochabamba
       zoom={13}
       scrollWheelZoom={false}
-      style={{ height: "300px", width: "100%", borderRadius: "0.5rem" }}
+      style={{ height: &ldquo;300px&rdquo;, width: &ldquo;100%&rdquo;, borderRadius: &ldquo;0.5rem&rdquo; }}
     >
       <ForceResize />
       <TileLayer
-        attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a>'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution='&copy; <a href=&ldquo;https://osm.org/copyright&rdquo;>OpenStreetMap</a>'
+        url=&ldquo;https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png&rdquo;
       />
       <LocationMarker onChange={onChange} />
     </MapContainer>

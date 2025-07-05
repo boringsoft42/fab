@@ -1,11 +1,11 @@
-"use client";
+&ldquo;use client&rdquo;;
 
-import { useState } from "react";
-import { useParams } from "next/navigation";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useState } from &ldquo;react&rdquo;;
+import { useParams } from &ldquo;next/navigation&rdquo;;
+import Image from &ldquo;next/image&rdquo;;
+import { Button } from &ldquo;@/components/ui/button&rdquo;;
+import { Card, CardContent } from &ldquo;@/components/ui/card&rdquo;;
+import { Tabs, TabsContent, TabsList, TabsTrigger } from &ldquo;@/components/ui/tabs&rdquo;;
 import {
   Facebook,
   Instagram,
@@ -17,7 +17,7 @@ import {
   Phone,
   Calendar,
   User,
-} from "lucide-react";
+} from &ldquo;lucide-react&rdquo;;
 
 interface InstitutionPost {
   id: string;
@@ -51,31 +51,31 @@ interface Institution {
 
 // Mock data - replace with actual API call
 const mockInstitution: Institution = {
-  id: "1",
-  name: "TechCorp Academy",
-  description: "Centro de formación tecnológica líder en Bolivia",
+  id: &ldquo;1&rdquo;,
+  name: &ldquo;TechCorp Academy&rdquo;,
+  description: &ldquo;Centro de formación tecnológica líder en Bolivia&rdquo;,
   longDescription:
-    "TechCorp Academy es un centro de formación tecnológica comprometido con el desarrollo de talento digital en Bolivia. Ofrecemos programas de formación en desarrollo de software, diseño UX/UI, data science y más.",
-  location: "La Paz, Bolivia",
-  logo: "/logos/techcorp.svg",
-  coverImage: "/images/institutions/techcorp-cover.jpg",
-  website: "https://techcorp.edu.bo",
-  email: "contacto@techcorp.edu.bo",
-  phone: "+591 2 1234567",
+    &ldquo;TechCorp Academy es un centro de formación tecnológica comprometido con el desarrollo de talento digital en Bolivia. Ofrecemos programas de formación en desarrollo de software, diseño UX/UI, data science y más.&rdquo;,
+  location: &ldquo;La Paz, Bolivia&rdquo;,
+  logo: &ldquo;/logos/techcorp.svg&rdquo;,
+  coverImage: &ldquo;/images/institutions/techcorp-cover.jpg&rdquo;,
+  website: &ldquo;https://techcorp.edu.bo&rdquo;,
+  email: &ldquo;contacto@techcorp.edu.bo&rdquo;,
+  phone: &ldquo;+591 2 1234567&rdquo;,
   socialMedia: {
-    facebook: "https://facebook.com/techcorp",
-    instagram: "https://instagram.com/techcorp",
-    linkedin: "https://linkedin.com/company/techcorp",
+    facebook: &ldquo;https://facebook.com/techcorp&rdquo;,
+    instagram: &ldquo;https://instagram.com/techcorp&rdquo;,
+    linkedin: &ldquo;https://linkedin.com/company/techcorp&rdquo;,
   },
   posts: [
     {
-      id: "1",
-      title: "Nuevo programa de becas para jóvenes desarrolladores",
-      content: "Nos complace anunciar nuestro nuevo programa de becas...",
-      image: "/images/institutions/post-1.jpg",
-      date: "2024-03-15",
-      author: "María González",
-      category: "Becas",
+      id: &ldquo;1&rdquo;,
+      title: &ldquo;Nuevo programa de becas para jóvenes desarrolladores&rdquo;,
+      content: &ldquo;Nos complace anunciar nuestro nuevo programa de becas...&rdquo;,
+      image: &ldquo;/images/institutions/post-1.jpg&rdquo;,
+      date: &ldquo;2024-03-15&rdquo;,
+      author: &ldquo;María González&rdquo;,
+      category: &ldquo;Becas&rdquo;,
     },
     // Add more posts...
   ],
@@ -83,34 +83,34 @@ const mockInstitution: Institution = {
 
 export default function InstitutionProfilePage() {
   const [institution, setInstitution] = useState<Institution>(mockInstitution);
-  const [activeTab, setActiveTab] = useState("about");
+  const [activeTab, setActiveTab] = useState(&ldquo;about&rdquo;);
 
   return (
-    <div className="min-h-screen bg-gray-50/50">
+    <div className=&ldquo;min-h-screen bg-gray-50/50&rdquo;>
       {/* Hero Banner */}
-      <div className="relative h-80">
+      <div className=&ldquo;relative h-80&rdquo;>
         <Image
           src={institution.coverImage}
           alt={institution.name}
           fill
-          className="object-cover"
+          className=&ldquo;object-cover&rdquo;
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/20">
-          <div className="container mx-auto px-6 h-full flex items-end pb-8">
-            <div className="flex items-center gap-6">
-              <div className="relative h-24 w-24 rounded-xl overflow-hidden bg-white">
+        <div className=&ldquo;absolute inset-0 bg-gradient-to-b from-black/60 to-black/20&rdquo;>
+          <div className=&ldquo;container mx-auto px-6 h-full flex items-end pb-8&rdquo;>
+            <div className=&ldquo;flex items-center gap-6&rdquo;>
+              <div className=&ldquo;relative h-24 w-24 rounded-xl overflow-hidden bg-white&rdquo;>
                 <Image
                   src={institution.logo}
                   alt={`${institution.name} logo`}
                   fill
-                  className="object-contain p-2"
+                  className=&ldquo;object-contain p-2&rdquo;
                 />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-white mb-2">
+                <h1 className=&ldquo;text-3xl font-bold text-white mb-2&rdquo;>
                   {institution.name}
                 </h1>
-                <p className="text-white/90 text-lg max-w-2xl">
+                <p className=&ldquo;text-white/90 text-lg max-w-2xl&rdquo;>
                   {institution.description}
                 </p>
               </div>
@@ -120,58 +120,58 @@ export default function InstitutionProfilePage() {
       </div>
 
       {/* Social Media Bar */}
-      <div className="bg-white border-b">
-        <div className="container mx-auto px-6">
-          <div className="flex items-center justify-between py-4">
-            <div className="flex items-center gap-6">
+      <div className=&ldquo;bg-white border-b&rdquo;>
+        <div className=&ldquo;container mx-auto px-6&rdquo;>
+          <div className=&ldquo;flex items-center justify-between py-4&rdquo;>
+            <div className=&ldquo;flex items-center gap-6&rdquo;>
               {institution.socialMedia.facebook && (
                 <a
                   href={institution.socialMedia.facebook}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-600 hover:text-blue-600 transition-colors"
+                  target=&ldquo;_blank&rdquo;
+                  rel=&ldquo;noopener noreferrer&rdquo;
+                  className=&ldquo;text-gray-600 hover:text-blue-600 transition-colors&rdquo;
                 >
-                  <Facebook className="h-6 w-6" />
+                  <Facebook className=&ldquo;h-6 w-6&rdquo; />
                 </a>
               )}
               {institution.socialMedia.instagram && (
                 <a
                   href={institution.socialMedia.instagram}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-600 hover:text-pink-600 transition-colors"
+                  target=&ldquo;_blank&rdquo;
+                  rel=&ldquo;noopener noreferrer&rdquo;
+                  className=&ldquo;text-gray-600 hover:text-pink-600 transition-colors&rdquo;
                 >
-                  <Instagram className="h-6 w-6" />
+                  <Instagram className=&ldquo;h-6 w-6&rdquo; />
                 </a>
               )}
               {institution.socialMedia.linkedin && (
                 <a
                   href={institution.socialMedia.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-600 hover:text-blue-700 transition-colors"
+                  target=&ldquo;_blank&rdquo;
+                  rel=&ldquo;noopener noreferrer&rdquo;
+                  className=&ldquo;text-gray-600 hover:text-blue-700 transition-colors&rdquo;
                 >
-                  <Linkedin className="h-6 w-6" />
+                  <Linkedin className=&ldquo;h-6 w-6&rdquo; />
                 </a>
               )}
               {institution.socialMedia.twitter && (
                 <a
                   href={institution.socialMedia.twitter}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-600 hover:text-blue-400 transition-colors"
+                  target=&ldquo;_blank&rdquo;
+                  rel=&ldquo;noopener noreferrer&rdquo;
+                  className=&ldquo;text-gray-600 hover:text-blue-400 transition-colors&rdquo;
                 >
-                  <Twitter className="h-6 w-6" />
+                  <Twitter className=&ldquo;h-6 w-6&rdquo; />
                 </a>
               )}
             </div>
-            <Button variant="outline" asChild>
+            <Button variant=&ldquo;outline&rdquo; asChild>
               <a
                 href={institution.website}
-                target="_blank"
-                rel="noopener noreferrer"
+                target=&ldquo;_blank&rdquo;
+                rel=&ldquo;noopener noreferrer&rdquo;
               >
-                <Globe className="h-4 w-4 mr-2" />
+                <Globe className=&ldquo;h-4 w-4 mr-2&rdquo; />
                 Visitar sitio web
               </a>
             </Button>
@@ -180,55 +180,55 @@ export default function InstitutionProfilePage() {
       </div>
 
       {/* Main Content */}
-      <div className="container mx-auto px-6 py-8">
+      <div className=&ldquo;container mx-auto px-6 py-8&rdquo;>
         <Tabs
           value={activeTab}
           onValueChange={setActiveTab}
-          className="space-y-8"
+          className=&ldquo;space-y-8&rdquo;
         >
-          <TabsList className="bg-white">
-            <TabsTrigger value="about">Acerca de</TabsTrigger>
-            <TabsTrigger value="posts">Publicaciones</TabsTrigger>
-            <TabsTrigger value="contact">Contacto</TabsTrigger>
+          <TabsList className=&ldquo;bg-white&rdquo;>
+            <TabsTrigger value=&ldquo;about&rdquo;>Acerca de</TabsTrigger>
+            <TabsTrigger value=&ldquo;posts&rdquo;>Publicaciones</TabsTrigger>
+            <TabsTrigger value=&ldquo;contact&rdquo;>Contacto</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="about" className="space-y-6">
+          <TabsContent value=&ldquo;about&rdquo; className=&ldquo;space-y-6&rdquo;>
             <Card>
-              <CardContent className="p-6">
-                <h2 className="text-2xl font-semibold mb-4">Sobre nosotros</h2>
-                <p className="text-gray-600 leading-relaxed">
+              <CardContent className=&ldquo;p-6&rdquo;>
+                <h2 className=&ldquo;text-2xl font-semibold mb-4&rdquo;>Sobre nosotros</h2>
+                <p className=&ldquo;text-gray-600 leading-relaxed&rdquo;>
                   {institution.longDescription}
                 </p>
               </CardContent>
             </Card>
           </TabsContent>
 
-          <TabsContent value="posts" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <TabsContent value=&ldquo;posts&rdquo; className=&ldquo;space-y-6&rdquo;>
+            <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6&rdquo;>
               {institution.posts.map((post) => (
-                <Card key={post.id} className="overflow-hidden">
-                  <div className="relative h-48">
+                <Card key={post.id} className=&ldquo;overflow-hidden&rdquo;>
+                  <div className=&ldquo;relative h-48&rdquo;>
                     <Image
                       src={post.image}
                       alt={post.title}
                       fill
-                      className="object-cover"
+                      className=&ldquo;object-cover&rdquo;
                     />
                   </div>
-                  <CardContent className="p-6">
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
-                      <Calendar className="h-4 w-4" />
+                  <CardContent className=&ldquo;p-6&rdquo;>
+                    <div className=&ldquo;flex items-center gap-2 text-sm text-muted-foreground mb-3&rdquo;>
+                      <Calendar className=&ldquo;h-4 w-4&rdquo; />
                       {new Date(post.date).toLocaleDateString()}
-                      <User className="h-4 w-4 ml-2" />
+                      <User className=&ldquo;h-4 w-4 ml-2&rdquo; />
                       {post.author}
                     </div>
-                    <h3 className="text-xl font-semibold mb-2 line-clamp-2">
+                    <h3 className=&ldquo;text-xl font-semibold mb-2 line-clamp-2&rdquo;>
                       {post.title}
                     </h3>
-                    <p className="text-muted-foreground line-clamp-3">
+                    <p className=&ldquo;text-muted-foreground line-clamp-3&rdquo;>
                       {post.content}
                     </p>
-                    <Button variant="link" className="mt-4 px-0">
+                    <Button variant=&ldquo;link&rdquo; className=&ldquo;mt-4 px-0&rdquo;>
                       Leer más
                     </Button>
                   </CardContent>
@@ -237,31 +237,31 @@ export default function InstitutionProfilePage() {
             </div>
           </TabsContent>
 
-          <TabsContent value="contact" className="space-y-6">
+          <TabsContent value=&ldquo;contact&rdquo; className=&ldquo;space-y-6&rdquo;>
             <Card>
-              <CardContent className="p-6">
-                <h2 className="text-2xl font-semibold mb-6">
+              <CardContent className=&ldquo;p-6&rdquo;>
+                <h2 className=&ldquo;text-2xl font-semibold mb-6&rdquo;>
                   Información de contacto
                 </h2>
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <MapPin className="h-5 w-5 text-muted-foreground" />
+                <div className=&ldquo;space-y-4&rdquo;>
+                  <div className=&ldquo;flex items-center gap-3&rdquo;>
+                    <MapPin className=&ldquo;h-5 w-5 text-muted-foreground&rdquo; />
                     <span>{institution.location}</span>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Mail className="h-5 w-5 text-muted-foreground" />
+                  <div className=&ldquo;flex items-center gap-3&rdquo;>
+                    <Mail className=&ldquo;h-5 w-5 text-muted-foreground&rdquo; />
                     <a
                       href={`mailto:${institution.email}`}
-                      className="hover:text-blue-600"
+                      className=&ldquo;hover:text-blue-600&rdquo;
                     >
                       {institution.email}
                     </a>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Phone className="h-5 w-5 text-muted-foreground" />
+                  <div className=&ldquo;flex items-center gap-3&rdquo;>
+                    <Phone className=&ldquo;h-5 w-5 text-muted-foreground&rdquo; />
                     <a
                       href={`tel:${institution.phone}`}
-                      className="hover:text-blue-600"
+                      className=&ldquo;hover:text-blue-600&rdquo;
                     >
                       {institution.phone}
                     </a>

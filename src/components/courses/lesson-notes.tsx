@@ -1,16 +1,16 @@
-"use client";
+&ldquo;use client&rdquo;;
 
-import { useState, useEffect } from "react";
-import { StudentNote } from "@/types/courses";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Badge } from "@/components/ui/badge";
-import { Plus, Edit2, Trash2, Save, X, Clock, StickyNote } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
-import { es } from "date-fns/locale";
-import { useToast } from "@/hooks/use-toast";
+import { useState, useEffect } from &ldquo;react&rdquo;;
+import { StudentNote } from &ldquo;@/types/courses&rdquo;;
+import { Button } from &ldquo;@/components/ui/button&rdquo;;
+import { Card, CardContent, CardHeader, CardTitle } from &ldquo;@/components/ui/card&rdquo;;
+import { Textarea } from &ldquo;@/components/ui/textarea&rdquo;;
+import { ScrollArea } from &ldquo;@/components/ui/scroll-area&rdquo;;
+import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
+import { Plus, Edit2, Trash2, Save, X, Clock, StickyNote } from &ldquo;lucide-react&rdquo;;
+import { formatDistanceToNow } from &ldquo;date-fns&rdquo;;
+import { es } from &ldquo;date-fns/locale&rdquo;;
+import { useToast } from &ldquo;@/hooks/use-toast&rdquo;;
 
 interface LessonNotesProps {
   lessonId: string;
@@ -22,8 +22,8 @@ export const LessonNotes = ({ lessonId, currentTime }: LessonNotesProps) => {
   const [notes, setNotes] = useState<StudentNote[]>([]);
   const [isAddingNote, setIsAddingNote] = useState(false);
   const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
-  const [newNoteContent, setNewNoteContent] = useState("");
-  const [editNoteContent, setEditNoteContent] = useState("");
+  const [newNoteContent, setNewNoteContent] = useState(&ldquo;&rdquo;);
+  const [editNoteContent, setEditNoteContent] = useState(&ldquo;&rdquo;);
 
   useEffect(() => {
     fetchNotes();
@@ -34,29 +34,29 @@ export const LessonNotes = ({ lessonId, currentTime }: LessonNotesProps) => {
       // Mock data for now - in real app would fetch from API
       const mockNotes: StudentNote[] = [
         {
-          id: "note-1",
-          userId: "user-1",
+          id: &ldquo;note-1&rdquo;,
+          userId: &ldquo;user-1&rdquo;,
           lessonId,
           content:
-            "Punto importante sobre liderazgo: se debe mostrar ejemplo antes que dar órdenes.",
+            &ldquo;Punto importante sobre liderazgo: se debe mostrar ejemplo antes que dar órdenes.&rdquo;,
           timestamp: 120, // 2 minutes into video
-          createdAt: new Date("2024-02-20T10:30:00"),
-          updatedAt: new Date("2024-02-20T10:30:00"),
+          createdAt: new Date(&ldquo;2024-02-20T10:30:00&rdquo;),
+          updatedAt: new Date(&ldquo;2024-02-20T10:30:00&rdquo;),
         },
         {
-          id: "note-2",
-          userId: "user-1",
+          id: &ldquo;note-2&rdquo;,
+          userId: &ldquo;user-1&rdquo;,
           lessonId,
           content:
-            "Recordar: la autoestima se construye con pequeños logros diarios.",
-          createdAt: new Date("2024-02-20T10:45:00"),
-          updatedAt: new Date("2024-02-20T10:45:00"),
+            &ldquo;Recordar: la autoestima se construye con pequeños logros diarios.&rdquo;,
+          createdAt: new Date(&ldquo;2024-02-20T10:45:00&rdquo;),
+          updatedAt: new Date(&ldquo;2024-02-20T10:45:00&rdquo;),
         },
       ];
 
       setNotes(mockNotes.filter((note) => note.lessonId === lessonId));
     } catch (error) {
-      console.error("Error fetching notes:", error);
+      console.error(&ldquo;Error fetching notes:&rdquo;, error);
     }
   };
 
@@ -66,7 +66,7 @@ export const LessonNotes = ({ lessonId, currentTime }: LessonNotesProps) => {
     try {
       const newNote: StudentNote = {
         id: `note-${Date.now()}`,
-        userId: "user-1", // Replace with actual user ID
+        userId: &ldquo;user-1&rdquo;, // Replace with actual user ID
         lessonId,
         content: newNoteContent.trim(),
         timestamp: currentTime ? Math.floor(currentTime) : undefined,
@@ -75,19 +75,19 @@ export const LessonNotes = ({ lessonId, currentTime }: LessonNotesProps) => {
       };
 
       setNotes((prev) => [newNote, ...prev]);
-      setNewNoteContent("");
+      setNewNoteContent(&ldquo;&rdquo;);
       setIsAddingNote(false);
 
       toast({
-        title: "Nota guardada",
-        description: "Tu nota ha sido guardada exitosamente",
+        title: &ldquo;Nota guardada&rdquo;,
+        description: &ldquo;Tu nota ha sido guardada exitosamente&rdquo;,
       });
     } catch (error) {
-      console.error("Error saving note:", error);
+      console.error(&ldquo;Error saving note:&rdquo;, error);
       toast({
-        title: "Error",
-        description: "No se pudo guardar la nota",
-        variant: "destructive",
+        title: &ldquo;Error&rdquo;,
+        description: &ldquo;No se pudo guardar la nota&rdquo;,
+        variant: &ldquo;destructive&rdquo;,
       });
     }
   };
@@ -109,18 +109,18 @@ export const LessonNotes = ({ lessonId, currentTime }: LessonNotesProps) => {
       );
 
       setEditingNoteId(null);
-      setEditNoteContent("");
+      setEditNoteContent(&ldquo;&rdquo;);
 
       toast({
-        title: "Nota actualizada",
-        description: "Los cambios han sido guardados",
+        title: &ldquo;Nota actualizada&rdquo;,
+        description: &ldquo;Los cambios han sido guardados&rdquo;,
       });
     } catch (error) {
-      console.error("Error updating note:", error);
+      console.error(&ldquo;Error updating note:&rdquo;, error);
       toast({
-        title: "Error",
-        description: "No se pudo actualizar la nota",
-        variant: "destructive",
+        title: &ldquo;Error&rdquo;,
+        description: &ldquo;No se pudo actualizar la nota&rdquo;,
+        variant: &ldquo;destructive&rdquo;,
       });
     }
   };
@@ -130,15 +130,15 @@ export const LessonNotes = ({ lessonId, currentTime }: LessonNotesProps) => {
       setNotes((prev) => prev.filter((note) => note.id !== noteId));
 
       toast({
-        title: "Nota eliminada",
-        description: "La nota ha sido eliminada",
+        title: &ldquo;Nota eliminada&rdquo;,
+        description: &ldquo;La nota ha sido eliminada&rdquo;,
       });
     } catch (error) {
-      console.error("Error deleting note:", error);
+      console.error(&ldquo;Error deleting note:&rdquo;, error);
       toast({
-        title: "Error",
-        description: "No se pudo eliminar la nota",
-        variant: "destructive",
+        title: &ldquo;Error&rdquo;,
+        description: &ldquo;No se pudo eliminar la nota&rdquo;,
+        variant: &ldquo;destructive&rdquo;,
       });
     }
   };
@@ -150,72 +150,72 @@ export const LessonNotes = ({ lessonId, currentTime }: LessonNotesProps) => {
 
   const cancelEdit = () => {
     setEditingNoteId(null);
-    setEditNoteContent("");
+    setEditNoteContent(&ldquo;&rdquo;);
   };
 
   const formatTimestamp = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
+    return `${mins}:${secs.toString().padStart(2, &ldquo;0&rdquo;)}`;
   };
 
   return (
-    <Card className="h-full flex flex-col">
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-lg flex items-center gap-2">
-            <StickyNote className="h-5 w-5" />
+    <Card className=&ldquo;h-full flex flex-col&rdquo;>
+      <CardHeader className=&ldquo;pb-3&rdquo;>
+        <div className=&ldquo;flex items-center justify-between&rdquo;>
+          <CardTitle className=&ldquo;text-lg flex items-center gap-2&rdquo;>
+            <StickyNote className=&ldquo;h-5 w-5&rdquo; />
             Mis Notas
           </CardTitle>
           <Button
-            variant="outline"
-            size="sm"
+            variant=&ldquo;outline&rdquo;
+            size=&ldquo;sm&rdquo;
             onClick={() => setIsAddingNote(true)}
             disabled={isAddingNote}
           >
-            <Plus className="h-4 w-4 mr-2" />
+            <Plus className=&ldquo;h-4 w-4 mr-2&rdquo; />
             Nueva nota
           </Button>
         </div>
       </CardHeader>
 
-      <CardContent className="flex-1 flex flex-col p-4">
+      <CardContent className=&ldquo;flex-1 flex flex-col p-4&rdquo;>
         {/* Add Note Form */}
         {isAddingNote && (
-          <Card className="mb-4 border-blue-200">
-            <CardContent className="p-4">
-              <div className="space-y-3">
+          <Card className=&ldquo;mb-4 border-blue-200&rdquo;>
+            <CardContent className=&ldquo;p-4&rdquo;>
+              <div className=&ldquo;space-y-3&rdquo;>
                 {currentTime && (
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Clock className="h-4 w-4" />
+                  <div className=&ldquo;flex items-center gap-2 text-sm text-muted-foreground&rdquo;>
+                    <Clock className=&ldquo;h-4 w-4&rdquo; />
                     <span>Tiempo: {formatTimestamp(currentTime)}</span>
                   </div>
                 )}
                 <Textarea
-                  placeholder="Escribe tu nota aquí..."
+                  placeholder=&ldquo;Escribe tu nota aquí...&rdquo;
                   value={newNoteContent}
                   onChange={(e) => setNewNoteContent(e.target.value)}
                   rows={3}
                   autoFocus
                 />
-                <div className="flex justify-end gap-2">
+                <div className=&ldquo;flex justify-end gap-2&rdquo;>
                   <Button
-                    variant="outline"
-                    size="sm"
+                    variant=&ldquo;outline&rdquo;
+                    size=&ldquo;sm&rdquo;
                     onClick={() => {
                       setIsAddingNote(false);
-                      setNewNoteContent("");
+                      setNewNoteContent(&ldquo;&rdquo;);
                     }}
                   >
-                    <X className="h-4 w-4 mr-1" />
+                    <X className=&ldquo;h-4 w-4 mr-1&rdquo; />
                     Cancelar
                   </Button>
                   <Button
-                    size="sm"
+                    size=&ldquo;sm&rdquo;
                     onClick={saveNote}
                     disabled={!newNoteContent.trim()}
                   >
-                    <Save className="h-4 w-4 mr-1" />
+                    <Save className=&ldquo;h-4 w-4 mr-1&rdquo; />
                     Guardar
                   </Button>
                 </div>
@@ -225,103 +225,103 @@ export const LessonNotes = ({ lessonId, currentTime }: LessonNotesProps) => {
         )}
 
         {/* Notes List */}
-        <div className="flex-1">
+        <div className=&ldquo;flex-1&rdquo;>
           {notes.length === 0 ? (
-            <div className="text-center py-8">
-              <StickyNote className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
-              <h3 className="font-medium text-muted-foreground mb-2">
+            <div className=&ldquo;text-center py-8&rdquo;>
+              <StickyNote className=&ldquo;h-12 w-12 text-muted-foreground mx-auto mb-3&rdquo; />
+              <h3 className=&ldquo;font-medium text-muted-foreground mb-2&rdquo;>
                 Sin notas aún
               </h3>
-              <p className="text-sm text-muted-foreground mb-4">
+              <p className=&ldquo;text-sm text-muted-foreground mb-4&rdquo;>
                 Toma notas para recordar puntos importantes de esta lección
               </p>
               <Button
-                variant="outline"
-                size="sm"
+                variant=&ldquo;outline&rdquo;
+                size=&ldquo;sm&rdquo;
                 onClick={() => setIsAddingNote(true)}
               >
-                <Plus className="h-4 w-4 mr-2" />
+                <Plus className=&ldquo;h-4 w-4 mr-2&rdquo; />
                 Crear primera nota
               </Button>
             </div>
           ) : (
-            <ScrollArea className="h-full">
-              <div className="space-y-3">
+            <ScrollArea className=&ldquo;h-full&rdquo;>
+              <div className=&ldquo;space-y-3&rdquo;>
                 {notes.map((note) => (
-                  <Card key={note.id} className="relative">
-                    <CardContent className="p-4">
+                  <Card key={note.id} className=&ldquo;relative&rdquo;>
+                    <CardContent className=&ldquo;p-4&rdquo;>
                       {editingNoteId === note.id ? (
-                        <div className="space-y-3">
+                        <div className=&ldquo;space-y-3&rdquo;>
                           <Textarea
                             value={editNoteContent}
                             onChange={(e) => setEditNoteContent(e.target.value)}
                             rows={3}
                             autoFocus
                           />
-                          <div className="flex justify-end gap-2">
+                          <div className=&ldquo;flex justify-end gap-2&rdquo;>
                             <Button
-                              variant="outline"
-                              size="sm"
+                              variant=&ldquo;outline&rdquo;
+                              size=&ldquo;sm&rdquo;
                               onClick={cancelEdit}
                             >
-                              <X className="h-4 w-4 mr-1" />
+                              <X className=&ldquo;h-4 w-4 mr-1&rdquo; />
                               Cancelar
                             </Button>
                             <Button
-                              size="sm"
+                              size=&ldquo;sm&rdquo;
                               onClick={() => updateNote(note.id)}
                               disabled={!editNoteContent.trim()}
                             >
-                              <Save className="h-4 w-4 mr-1" />
+                              <Save className=&ldquo;h-4 w-4 mr-1&rdquo; />
                               Guardar
                             </Button>
                           </div>
                         </div>
                       ) : (
                         <div>
-                          <div className="flex items-start justify-between mb-2">
-                            <div className="flex items-center gap-2">
+                          <div className=&ldquo;flex items-start justify-between mb-2&rdquo;>
+                            <div className=&ldquo;flex items-center gap-2&rdquo;>
                               {note.timestamp && (
-                                <Badge variant="outline" className="text-xs">
-                                  <Clock className="h-3 w-3 mr-1" />
+                                <Badge variant=&ldquo;outline&rdquo; className=&ldquo;text-xs&rdquo;>
+                                  <Clock className=&ldquo;h-3 w-3 mr-1&rdquo; />
                                   {formatTimestamp(note.timestamp)}
                                 </Badge>
                               )}
-                              <span className="text-xs text-muted-foreground">
+                              <span className=&ldquo;text-xs text-muted-foreground&rdquo;>
                                 {formatDistanceToNow(new Date(note.createdAt), {
                                   addSuffix: true,
                                   locale: es,
                                 })}
                               </span>
                             </div>
-                            <div className="flex gap-1">
+                            <div className=&ldquo;flex gap-1&rdquo;>
                               <Button
-                                variant="ghost"
-                                size="sm"
+                                variant=&ldquo;ghost&rdquo;
+                                size=&ldquo;sm&rdquo;
                                 onClick={() => startEdit(note)}
-                                className="h-6 w-6 p-0"
+                                className=&ldquo;h-6 w-6 p-0&rdquo;
                               >
-                                <Edit2 className="h-3 w-3" />
+                                <Edit2 className=&ldquo;h-3 w-3&rdquo; />
                               </Button>
                               <Button
-                                variant="ghost"
-                                size="sm"
+                                variant=&ldquo;ghost&rdquo;
+                                size=&ldquo;sm&rdquo;
                                 onClick={() => deleteNote(note.id)}
-                                className="h-6 w-6 p-0 text-red-600 hover:text-red-700"
+                                className=&ldquo;h-6 w-6 p-0 text-red-600 hover:text-red-700&rdquo;
                               >
-                                <Trash2 className="h-3 w-3" />
+                                <Trash2 className=&ldquo;h-3 w-3&rdquo; />
                               </Button>
                             </div>
                           </div>
 
-                          <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                          <p className=&ldquo;text-sm leading-relaxed whitespace-pre-wrap&rdquo;>
                             {note.content}
                           </p>
 
                           {note.updatedAt.getTime() !==
                             note.createdAt.getTime() && (
-                            <p className="text-xs text-muted-foreground mt-2">
-                              Editado{" "}
+                            <p className=&ldquo;text-xs text-muted-foreground mt-2&rdquo;>
+                              Editado{&ldquo; &rdquo;}
                               {formatDistanceToNow(new Date(note.updatedAt), {
                                 addSuffix: true,
                                 locale: es,
@@ -340,9 +340,9 @@ export const LessonNotes = ({ lessonId, currentTime }: LessonNotesProps) => {
 
         {/* Quick Actions */}
         {notes.length > 0 && (
-          <div className="mt-4 pt-4 border-t">
-            <div className="text-xs text-muted-foreground text-center">
-              {notes.length} nota{notes.length !== 1 ? "s" : ""} en esta lección
+          <div className=&ldquo;mt-4 pt-4 border-t&rdquo;>
+            <div className=&ldquo;text-xs text-muted-foreground text-center&rdquo;>
+              {notes.length} nota{notes.length !== 1 ? &ldquo;s&rdquo; : &ldquo;&rdquo;} en esta lección
             </div>
           </div>
         )}

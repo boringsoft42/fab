@@ -1,4 +1,4 @@
-"use client";
+&ldquo;use client&rdquo;;
 
 import {
   AnimatePresence,
@@ -7,10 +7,10 @@ import {
   UseInViewOptions,
   Variants,
   MotionProps,
-} from "motion/react";
-import { useRef } from "react";
+} from &ldquo;motion/react&rdquo;;
+import { useRef } from &ldquo;react&rdquo;;
 
-type MarginType = UseInViewOptions["margin"];
+type MarginType = UseInViewOptions[&ldquo;margin&rdquo;];
 
 interface BlurFadeProps extends MotionProps {
   children: React.ReactNode;
@@ -22,7 +22,7 @@ interface BlurFadeProps extends MotionProps {
   duration?: number;
   delay?: number;
   offset?: number;
-  direction?: "up" | "down" | "left" | "right";
+  direction?: &ldquo;up&rdquo; | &ldquo;down&rdquo; | &ldquo;left&rdquo; | &ldquo;right&rdquo;;
   inView?: boolean;
   inViewMargin?: MarginType;
   blur?: string;
@@ -35,10 +35,10 @@ export function BlurFade({
   duration = 0.4,
   delay = 0,
   offset = 6,
-  direction = "down",
+  direction = &ldquo;down&rdquo;,
   inView = false,
-  inViewMargin = "-50px",
-  blur = "6px",
+  inViewMargin = &ldquo;-50px&rdquo;,
+  blur = &ldquo;6px&rdquo;,
   ...props
 }: BlurFadeProps) {
   const ref = useRef(null);
@@ -46,13 +46,13 @@ export function BlurFade({
   const isInView = !inView || inViewResult;
   const defaultVariants: Variants = {
     hidden: {
-      [direction === "left" || direction === "right" ? "x" : "y"]:
-        direction === "right" || direction === "down" ? -offset : offset,
+      [direction === &ldquo;left&rdquo; || direction === &ldquo;right&rdquo; ? &ldquo;x&rdquo; : &ldquo;y&rdquo;]:
+        direction === &ldquo;right&rdquo; || direction === &ldquo;down&rdquo; ? -offset : offset,
       opacity: 0,
       filter: `blur(${blur})`,
     },
     visible: {
-      [direction === "left" || direction === "right" ? "x" : "y"]: 0,
+      [direction === &ldquo;left&rdquo; || direction === &ldquo;right&rdquo; ? &ldquo;x&rdquo; : &ldquo;y&rdquo;]: 0,
       opacity: 1,
       filter: `blur(0px)`,
     },
@@ -62,14 +62,14 @@ export function BlurFade({
     <AnimatePresence>
       <motion.div
         ref={ref}
-        initial="hidden"
-        animate={isInView ? "visible" : "hidden"}
-        exit="hidden"
+        initial=&ldquo;hidden&rdquo;
+        animate={isInView ? &ldquo;visible&rdquo; : &ldquo;hidden&rdquo;}
+        exit=&ldquo;hidden&rdquo;
         variants={combinedVariants}
         transition={{
           delay: 0.04 + delay,
           duration,
-          ease: "easeOut",
+          ease: &ldquo;easeOut&rdquo;,
         }}
         className={className}
         {...props}

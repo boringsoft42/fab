@@ -1,12 +1,12 @@
-"use client";
+&ldquo;use client&rdquo;;
 
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { AlertCircle, CheckCircle, ChevronRight, Timer } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import type { Quiz as QuizType, QuizQuestion } from "@/types/courses";
+import { useState } from &ldquo;react&rdquo;;
+import { motion } from &ldquo;framer-motion&rdquo;;
+import { AlertCircle, CheckCircle, ChevronRight, Timer } from &ldquo;lucide-react&rdquo;;
+import { Button } from &ldquo;@/components/ui/button&rdquo;;
+import { Progress } from &ldquo;@/components/ui/progress&rdquo;;
+import { Alert, AlertDescription, AlertTitle } from &ldquo;@/components/ui/alert&rdquo;;
+import type { Quiz as QuizType, QuizQuestion } from &ldquo;@/types/courses&rdquo;;
 
 interface QuizProps {
   quiz: QuizType;
@@ -58,7 +58,7 @@ export function Quiz({ quiz, onComplete }: QuizProps) {
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, &ldquo;0&rdquo;)}`;
   };
 
   if (isCompleted) {
@@ -67,22 +67,22 @@ export function Quiz({ quiz, onComplete }: QuizProps) {
     const passed = score >= quiz.passingScore;
 
     return (
-      <div className="space-y-6">
-        <Alert variant={passed ? "default" : "destructive"}>
-          <AlertCircle className="h-4 w-4" />
+      <div className=&ldquo;space-y-6&rdquo;>
+        <Alert variant={passed ? &ldquo;default&rdquo; : &ldquo;destructive&rdquo;}>
+          <AlertCircle className=&ldquo;h-4 w-4&rdquo; />
           <AlertTitle>
-            {passed ? "¡Felicitaciones!" : "Sigue intentando"}
+            {passed ? &ldquo;¡Felicitaciones!&rdquo; : &ldquo;Sigue intentando&rdquo;}
           </AlertTitle>
           <AlertDescription>
             {passed
-              ? "Has aprobado el quiz exitosamente."
-              : "No alcanzaste el puntaje mínimo requerido."}
+              ? &ldquo;Has aprobado el quiz exitosamente.&rdquo;
+              : &ldquo;No alcanzaste el puntaje mínimo requerido.&rdquo;}
           </AlertDescription>
         </Alert>
 
-        <div className="text-center space-y-4">
-          <div className="text-4xl font-bold">{score.toFixed(0)}%</div>
-          <p className="text-gray-600">
+        <div className=&ldquo;text-center space-y-4&rdquo;>
+          <div className=&ldquo;text-4xl font-bold&rdquo;>{score.toFixed(0)}%</div>
+          <p className=&ldquo;text-gray-600&rdquo;>
             {correctAnswers} de {totalQuestions} respuestas correctas
           </p>
           {!passed && (
@@ -104,27 +104,27 @@ export function Quiz({ quiz, onComplete }: QuizProps) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className=&ldquo;space-y-6&rdquo;>
       {/* Progress and Timer */}
-      <div className="flex justify-between items-center">
-        <div className="flex-1 mr-4">
-          <Progress value={progress} className="h-2" />
-          <p className="text-sm text-gray-500 mt-1">
+      <div className=&ldquo;flex justify-between items-center&rdquo;>
+        <div className=&ldquo;flex-1 mr-4&rdquo;>
+          <Progress value={progress} className=&ldquo;h-2&rdquo; />
+          <p className=&ldquo;text-sm text-gray-500 mt-1&rdquo;>
             Pregunta {currentQuestion + 1} de {totalQuestions}
           </p>
         </div>
         {timeLeft !== null && (
-          <div className="flex items-center text-sm text-gray-500">
-            <Timer className="w-4 h-4 mr-1" />
+          <div className=&ldquo;flex items-center text-sm text-gray-500&rdquo;>
+            <Timer className=&ldquo;w-4 h-4 mr-1&rdquo; />
             {formatTime(timeLeft)}
           </div>
         )}
       </div>
 
       {/* Question */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-medium">{currentQuestionData.question}</h3>
-        <div className="space-y-2">
+      <div className=&ldquo;space-y-4&rdquo;>
+        <h3 className=&ldquo;text-lg font-medium&rdquo;>{currentQuestionData.question}</h3>
+        <div className=&ldquo;space-y-2&rdquo;>
           {currentQuestionData.options.map((option, index) => (
             <motion.div
               key={index}
@@ -132,23 +132,23 @@ export function Quiz({ quiz, onComplete }: QuizProps) {
               whileTap={{ scale: 0.99 }}
             >
               <Button
-                variant="outline"
+                variant=&ldquo;outline&rdquo;
                 className={`w-full justify-start p-4 h-auto ${
                   selectedOption === index
-                    ? "border-blue-500 bg-blue-50"
-                    : "hover:border-gray-400"
+                    ? &ldquo;border-blue-500 bg-blue-50&rdquo;
+                    : &ldquo;hover:border-gray-400&rdquo;
                 } ${
                   showExplanation &&
                   index === currentQuestionData.correctOption &&
-                  "border-green-500 bg-green-50"
+                  &ldquo;border-green-500 bg-green-50&rdquo;
                 }`}
                 onClick={() => handleOptionSelect(index)}
               >
-                <span className="mr-2">{String.fromCharCode(65 + index)}.</span>
+                <span className=&ldquo;mr-2&rdquo;>{String.fromCharCode(65 + index)}.</span>
                 {option}
                 {showExplanation &&
                   index === currentQuestionData.correctOption && (
-                    <CheckCircle className="w-4 h-4 ml-2 text-green-500" />
+                    <CheckCircle className=&ldquo;w-4 h-4 ml-2 text-green-500&rdquo; />
                   )}
               </Button>
             </motion.div>
@@ -158,14 +158,14 @@ export function Quiz({ quiz, onComplete }: QuizProps) {
 
       {/* Explanation */}
       {showExplanation && (
-        <Alert className="mt-4">
+        <Alert className=&ldquo;mt-4&rdquo;>
           <AlertTitle>Explicación</AlertTitle>
           <AlertDescription>{currentQuestionData.explanation}</AlertDescription>
         </Alert>
       )}
 
       {/* Actions */}
-      <div className="flex justify-end">
+      <div className=&ldquo;flex justify-end&rdquo;>
         {!showExplanation && selectedOption !== null && (
           <Button onClick={() => setShowExplanation(true)}>
             Verificar respuesta
@@ -173,8 +173,8 @@ export function Quiz({ quiz, onComplete }: QuizProps) {
         )}
         {showExplanation && (
           <Button onClick={handleNext}>
-            {currentQuestion + 1 === totalQuestions ? "Finalizar" : "Siguiente"}
-            <ChevronRight className="w-4 h-4 ml-1" />
+            {currentQuestion + 1 === totalQuestions ? &ldquo;Finalizar&rdquo; : &ldquo;Siguiente&rdquo;}
+            <ChevronRight className=&ldquo;w-4 h-4 ml-1&rdquo; />
           </Button>
         )}
       </div>

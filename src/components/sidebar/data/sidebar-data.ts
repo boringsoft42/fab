@@ -16,120 +16,120 @@ import {
   ServerCrash,
   UserX,
   Users,
-} from "lucide-react";
-import type { SidebarData } from "../types";
+} from &ldquo;lucide-react&rdquo;;
+import type { SidebarData } from &ldquo;../types&rdquo;;
 
 export const sidebarData: SidebarData = {
   user: {
-    name: "satnaing",
-    email: "satnaingdev@gmail.com",
-    avatar: "/avatars/shadcn.jpg",
+    name: &ldquo;satnaing&rdquo;,
+    email: &ldquo;satnaingdev@gmail.com&rdquo;,
+    avatar: &ldquo;/avatars/shadcn.jpg&rdquo;,
   },
   teams: [
     {
-      name: "Shadcn Admin",
+      name: &ldquo;Shadcn Admin&rdquo;,
       logo: Command,
-      plan: "Vite + ShadcnUI",
+      plan: &ldquo;Vite + ShadcnUI&rdquo;,
     },
     {
-      name: "Acme Inc",
+      name: &ldquo;Acme Inc&rdquo;,
       logo: GalleryVerticalEnd,
-      plan: "Enterprise",
+      plan: &ldquo;Enterprise&rdquo;,
     },
     {
-      name: "Acme Corp.",
+      name: &ldquo;Acme Corp.&rdquo;,
       logo: AudioWaveform,
-      plan: "Startup",
+      plan: &ldquo;Startup&rdquo;,
     },
   ],
   navGroups: [
     {
-      title: "General",
+      title: &ldquo;General&rdquo;,
       items: [
         {
-          title: "Dashboard",
-          url: "/",
+          title: &ldquo;Dashboard&rdquo;,
+          url: &ldquo;/&rdquo;,
           icon: LayoutDashboard,
         },
         {
-          title: "Tasks",
-          url: "/tasks",
+          title: &ldquo;Tasks&rdquo;,
+          url: &ldquo;/tasks&rdquo;,
           icon: CheckSquare,
         },
         {
-          title: "Apps",
-          url: "/apps",
+          title: &ldquo;Apps&rdquo;,
+          url: &ldquo;/apps&rdquo;,
           icon: AppWindow,
         },
         {
-          title: "Chats",
-          url: "/chats",
-          badge: "3",
+          title: &ldquo;Chats&rdquo;,
+          url: &ldquo;/chats&rdquo;,
+          badge: &ldquo;3&rdquo;,
           icon: MessageSquare,
         },
         {
-          title: "Users",
-          url: "/users",
+          title: &ldquo;Users&rdquo;,
+          url: &ldquo;/users&rdquo;,
           icon: Users,
         },
       ],
     },
     {
-      title: "Pages",
+      title: &ldquo;Pages&rdquo;,
       items: [
         {
-          title: "Auth",
+          title: &ldquo;Auth&rdquo;,
           icon: Lock,
           items: [
             {
-              title: "Sign In",
-              url: "/sign-in",
+              title: &ldquo;Sign In&rdquo;,
+              url: &ldquo;/sign-in&rdquo;,
             },
             {
-              title: "Sign In (2 Col)",
-              url: "/sign-in-2",
+              title: &ldquo;Sign In (2 Col)&rdquo;,
+              url: &ldquo;/sign-in-2&rdquo;,
             },
             {
-              title: "Sign Up",
-              url: "/sign-up",
+              title: &ldquo;Sign Up&rdquo;,
+              url: &ldquo;/sign-up&rdquo;,
             },
             {
-              title: "Forgot Password",
-              url: "/forgot-password",
+              title: &ldquo;Forgot Password&rdquo;,
+              url: &ldquo;/forgot-password&rdquo;,
             },
             {
-              title: "OTP",
-              url: "/otp",
+              title: &ldquo;OTP&rdquo;,
+              url: &ldquo;/otp&rdquo;,
             },
           ],
         },
         {
-          title: "Errors",
+          title: &ldquo;Errors&rdquo;,
           icon: Bug,
           items: [
             {
-              title: "Unauthorized",
-              url: "/401",
+              title: &ldquo;Unauthorized&rdquo;,
+              url: &ldquo;/401&rdquo;,
               icon: LockKeyhole,
             },
             {
-              title: "Forbidden",
-              url: "/403",
+              title: &ldquo;Forbidden&rdquo;,
+              url: &ldquo;/403&rdquo;,
               icon: UserX,
             },
             {
-              title: "Not Found",
-              url: "/404",
+              title: &ldquo;Not Found&rdquo;,
+              url: &ldquo;/404&rdquo;,
               icon: AlertCircle,
             },
             {
-              title: "Internal Server Error",
-              url: "/500",
+              title: &ldquo;Internal Server Error&rdquo;,
+              url: &ldquo;/500&rdquo;,
               icon: ServerCrash,
             },
             {
-              title: "Maintenance Error",
-              url: "/503",
+              title: &ldquo;Maintenance Error&rdquo;,
+              url: &ldquo;/503&rdquo;,
               icon: Ban,
             },
           ],
@@ -137,16 +137,16 @@ export const sidebarData: SidebarData = {
       ],
     },
     {
-      title: "Other",
+      title: &ldquo;Other&rdquo;,
       items: [
         {
-          title: "Settings",
+          title: &ldquo;Settings&rdquo;,
           icon: Settings,
-          url: "/settings",
+          url: &ldquo;/settings&rdquo;,
         },
         {
-          title: "Help Center",
-          url: "/help-center",
+          title: &ldquo;Help Center&rdquo;,
+          url: &ldquo;/help-center&rdquo;,
           icon: HelpCircle,
         },
       ],

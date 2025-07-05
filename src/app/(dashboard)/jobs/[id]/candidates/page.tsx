@@ -1,7 +1,7 @@
-"use client";
+&ldquo;use client&rdquo;;
 
-import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useState, useEffect } from &ldquo;react&rdquo;;
+import { useParams, useRouter } from &ldquo;next/navigation&rdquo;;
 import {
   ArrowLeft,
   Download,
@@ -13,11 +13,11 @@ import {
   Check,
   X,
   UserPlus,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+} from &ldquo;lucide-react&rdquo;;
+import { Button } from &ldquo;@/components/ui/button&rdquo;;
+import { Card, CardContent, CardHeader, CardTitle } from &ldquo;@/components/ui/card&rdquo;;
+import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
+import { Avatar, AvatarFallback, AvatarImage } from &ldquo;@/components/ui/avatar&rdquo;;
 import {
   Table,
   TableBody,
@@ -25,27 +25,27 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from &ldquo;@/components/ui/table&rdquo;;
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+} from &ldquo;@/components/ui/select&rdquo;;
+import { Textarea } from &ldquo;@/components/ui/textarea&rdquo;;
+import { Skeleton } from &ldquo;@/components/ui/skeleton&rdquo;;
+import { Tabs, TabsContent, TabsList, TabsTrigger } from &ldquo;@/components/ui/tabs&rdquo;;
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { JobApplication, ApplicationStatus, JobOffer } from "@/types/jobs";
-import { useToast } from "@/components/ui/use-toast";
+} from &ldquo;@/components/ui/dialog&rdquo;;
+import { Label } from &ldquo;@/components/ui/label&rdquo;;
+import { JobApplication, ApplicationStatus, JobOffer } from &ldquo;@/types/jobs&rdquo;;
+import { useToast } from &ldquo;@/components/ui/use-toast&rdquo;;
 
 interface ApplicationStats {
   sent: number;
@@ -73,12 +73,12 @@ export default function CandidatesPage() {
     hired: 0,
   });
   const [loading, setLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState<ApplicationStatus | "ALL">(
-    "ALL"
+  const [statusFilter, setStatusFilter] = useState<ApplicationStatus | &ldquo;ALL&rdquo;>(
+    &ldquo;ALL&rdquo;
   );
   const [selectedApplication, setSelectedApplication] =
     useState<JobApplication | null>(null);
-  const [updateNotes, setUpdateNotes] = useState("");
+  const [updateNotes, setUpdateNotes] = useState(&ldquo;&rdquo;);
   const [updateRating, setUpdateRating] = useState(0);
 
   useEffect(() => {
@@ -108,11 +108,11 @@ export default function CandidatesPage() {
         setStats(data.stats || {});
       }
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error(&ldquo;Error fetching data:&rdquo;, error);
       toast({
-        title: "Error",
-        description: "No se pudieron cargar los datos",
-        variant: "destructive",
+        title: &ldquo;Error&rdquo;,
+        description: &ldquo;No se pudieron cargar los datos&rdquo;,
+        variant: &ldquo;destructive&rdquo;,
       });
     } finally {
       setLoading(false);
@@ -122,7 +122,7 @@ export default function CandidatesPage() {
   const filterApplications = () => {
     let filtered = [...applications];
 
-    if (statusFilter !== "ALL") {
+    if (statusFilter !== &ldquo;ALL&rdquo;) {
       filtered = filtered.filter((app) => app.status === statusFilter);
     }
 
@@ -143,9 +143,9 @@ export default function CandidatesPage() {
   ) => {
     try {
       const response = await fetch(`/api/jobs/${jobId}/applications`, {
-        method: "PUT",
+        method: &ldquo;PUT&rdquo;,
         headers: {
-          "Content-Type": "application/json",
+          &ldquo;Content-Type&rdquo;: &ldquo;application/json&rdquo;,
         },
         body: JSON.stringify({
           applicationId,
@@ -165,7 +165,7 @@ export default function CandidatesPage() {
         );
 
         toast({
-          title: "Estado actualizado",
+          title: &ldquo;Estado actualizado&rdquo;,
           description: `La aplicación ha sido ${getStatusLabel(newStatus).toLowerCase()}`,
         });
 
@@ -173,9 +173,9 @@ export default function CandidatesPage() {
       }
     } catch (error) {
       toast({
-        title: "Error",
-        description: "No se pudo actualizar el estado",
-        variant: "destructive",
+        title: &ldquo;Error&rdquo;,
+        description: &ldquo;No se pudo actualizar el estado&rdquo;,
+        variant: &ldquo;destructive&rdquo;,
       });
     }
     return false;
@@ -200,23 +200,23 @@ export default function CandidatesPage() {
 
     if (success) {
       setSelectedApplication(null);
-      setUpdateNotes("");
+      setUpdateNotes(&ldquo;&rdquo;);
       setUpdateRating(0);
     }
   };
 
   const getStatusLabel = (status: ApplicationStatus) => {
     switch (status) {
-      case "SENT":
-        return "Enviada";
-      case "UNDER_REVIEW":
-        return "En revisión";
-      case "PRE_SELECTED":
-        return "Preseleccionado";
-      case "REJECTED":
-        return "Rechazada";
-      case "HIRED":
-        return "Contratado";
+      case &ldquo;SENT&rdquo;:
+        return &ldquo;Enviada&rdquo;;
+      case &ldquo;UNDER_REVIEW&rdquo;:
+        return &ldquo;En revisión&rdquo;;
+      case &ldquo;PRE_SELECTED&rdquo;:
+        return &ldquo;Preseleccionado&rdquo;;
+      case &ldquo;REJECTED&rdquo;:
+        return &ldquo;Rechazada&rdquo;;
+      case &ldquo;HIRED&rdquo;:
+        return &ldquo;Contratado&rdquo;;
       default:
         return status;
     }
@@ -224,26 +224,26 @@ export default function CandidatesPage() {
 
   const getStatusColor = (status: ApplicationStatus) => {
     switch (status) {
-      case "SENT":
-        return "bg-blue-100 text-blue-800";
-      case "UNDER_REVIEW":
-        return "bg-orange-100 text-orange-800";
-      case "PRE_SELECTED":
-        return "bg-green-100 text-green-800";
-      case "REJECTED":
-        return "bg-red-100 text-red-800";
-      case "HIRED":
-        return "bg-purple-100 text-purple-800";
+      case &ldquo;SENT&rdquo;:
+        return &ldquo;bg-blue-100 text-blue-800&rdquo;;
+      case &ldquo;UNDER_REVIEW&rdquo;:
+        return &ldquo;bg-orange-100 text-orange-800&rdquo;;
+      case &ldquo;PRE_SELECTED&rdquo;:
+        return &ldquo;bg-green-100 text-green-800&rdquo;;
+      case &ldquo;REJECTED&rdquo;:
+        return &ldquo;bg-red-100 text-red-800&rdquo;;
+      case &ldquo;HIRED&rdquo;:
+        return &ldquo;bg-purple-100 text-purple-800&rdquo;;
       default:
-        return "bg-gray-100 text-gray-800";
+        return &ldquo;bg-gray-100 text-gray-800&rdquo;;
     }
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("es-ES", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
+    return new Date(dateString).toLocaleDateString(&ldquo;es-ES&rdquo;, {
+      year: &ldquo;numeric&rdquo;,
+      month: &ldquo;short&rdquo;,
+      day: &ldquo;numeric&rdquo;,
     });
   };
 
@@ -252,14 +252,14 @@ export default function CandidatesPage() {
     onRatingChange?: (rating: number) => void
   ) => {
     return (
-      <div className="flex space-x-1">
+      <div className=&ldquo;flex space-x-1&rdquo;>
         {[1, 2, 3, 4, 5].map((star) => (
           <Star
             key={star}
             className={`w-4 h-4 cursor-pointer ${
               star <= rating
-                ? "text-yellow-400 fill-yellow-400"
-                : "text-gray-300"
+                ? &ldquo;text-yellow-400 fill-yellow-400&rdquo;
+                : &ldquo;text-gray-300&rdquo;
             }`}
             onClick={() => onRatingChange?.(star)}
           />
@@ -270,15 +270,15 @@ export default function CandidatesPage() {
 
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="space-y-6">
-          <Skeleton className="h-8 w-64" />
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className=&ldquo;max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6&rdquo;>
+        <div className=&ldquo;space-y-6&rdquo;>
+          <Skeleton className=&ldquo;h-8 w-64&rdquo; />
+          <div className=&ldquo;grid grid-cols-1 md:grid-cols-4 gap-4&rdquo;>
             {[...Array(4)].map((_, i) => (
-              <Skeleton key={i} className="h-24" />
+              <Skeleton key={i} className=&ldquo;h-24&rdquo; />
             ))}
           </div>
-          <Skeleton className="h-96" />
+          <Skeleton className=&ldquo;h-96&rdquo; />
         </div>
       </div>
     );
@@ -286,11 +286,11 @@ export default function CandidatesPage() {
 
   if (!job) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">
+      <div className=&ldquo;max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center&rdquo;>
+        <h1 className=&ldquo;text-2xl font-bold text-gray-900 mb-4&rdquo;>
           Empleo no encontrado
         </h1>
-        <Button onClick={() => router.push("/jobs/manage")}>
+        <Button onClick={() => router.push(&ldquo;/jobs/manage&rdquo;)}>
           Volver a mis empleos
         </Button>
       </div>
@@ -298,97 +298,97 @@ export default function CandidatesPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div className=&ldquo;max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6&rdquo;>
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center space-x-4">
-          <Button variant="ghost" onClick={() => router.push("/jobs/manage")}>
-            <ArrowLeft className="w-4 h-4 mr-2" />
+      <div className=&ldquo;flex items-center justify-between mb-6&rdquo;>
+        <div className=&ldquo;flex items-center space-x-4&rdquo;>
+          <Button variant=&ldquo;ghost&rdquo; onClick={() => router.push(&ldquo;/jobs/manage&rdquo;)}>
+            <ArrowLeft className=&ldquo;w-4 h-4 mr-2&rdquo; />
             Volver a empleos
           </Button>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">{job.title}</h1>
-            <p className="text-gray-600">Gestión de candidatos</p>
+            <h1 className=&ldquo;text-2xl font-bold text-gray-900&rdquo;>{job.title}</h1>
+            <p className=&ldquo;text-gray-600&rdquo;>Gestión de candidatos</p>
           </div>
         </div>
-        <div className="flex items-center space-x-2">
+        <div className=&ldquo;flex items-center space-x-2&rdquo;>
           <Button
-            variant="outline"
+            variant=&ldquo;outline&rdquo;
             onClick={() => router.push(`/jobs/${jobId}`)}
           >
-            <Eye className="w-4 h-4 mr-2" />
+            <Eye className=&ldquo;w-4 h-4 mr-2&rdquo; />
             Ver oferta
           </Button>
         </div>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
+      <div className=&ldquo;grid grid-cols-1 md:grid-cols-5 gap-4 mb-8&rdquo;>
         <Card>
-          <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-gray-900">
+          <CardContent className=&ldquo;p-4 text-center&rdquo;>
+            <div className=&ldquo;text-2xl font-bold text-gray-900&rdquo;>
               {applications.length}
             </div>
-            <div className="text-sm text-gray-600">Total aplicaciones</div>
+            <div className=&ldquo;text-sm text-gray-600&rdquo;>Total aplicaciones</div>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-blue-600">{stats.sent}</div>
-            <div className="text-sm text-gray-600">Nuevas</div>
+          <CardContent className=&ldquo;p-4 text-center&rdquo;>
+            <div className=&ldquo;text-2xl font-bold text-blue-600&rdquo;>{stats.sent}</div>
+            <div className=&ldquo;text-sm text-gray-600&rdquo;>Nuevas</div>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-orange-600">
+          <CardContent className=&ldquo;p-4 text-center&rdquo;>
+            <div className=&ldquo;text-2xl font-bold text-orange-600&rdquo;>
               {stats.underReview}
             </div>
-            <div className="text-sm text-gray-600">En revisión</div>
+            <div className=&ldquo;text-sm text-gray-600&rdquo;>En revisión</div>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-green-600">
+          <CardContent className=&ldquo;p-4 text-center&rdquo;>
+            <div className=&ldquo;text-2xl font-bold text-green-600&rdquo;>
               {stats.preSelected}
             </div>
-            <div className="text-sm text-gray-600">Preseleccionados</div>
+            <div className=&ldquo;text-sm text-gray-600&rdquo;>Preseleccionados</div>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-purple-600">
+          <CardContent className=&ldquo;p-4 text-center&rdquo;>
+            <div className=&ldquo;text-2xl font-bold text-purple-600&rdquo;>
               {stats.hired}
             </div>
-            <div className="text-sm text-gray-600">Contratados</div>
+            <div className=&ldquo;text-sm text-gray-600&rdquo;>Contratados</div>
           </CardContent>
         </Card>
       </div>
 
       {/* Filters */}
-      <Card className="mb-6">
-        <CardContent className="p-4">
-          <div className="flex items-center space-x-4">
-            <Filter className="w-4 h-4 text-gray-400" />
+      <Card className=&ldquo;mb-6&rdquo;>
+        <CardContent className=&ldquo;p-4&rdquo;>
+          <div className=&ldquo;flex items-center space-x-4&rdquo;>
+            <Filter className=&ldquo;w-4 h-4 text-gray-400&rdquo; />
             <Select
               value={statusFilter}
               onValueChange={(value) =>
-                setStatusFilter(value as ApplicationStatus | "ALL")
+                setStatusFilter(value as ApplicationStatus | &ldquo;ALL&rdquo;)
               }
             >
-              <SelectTrigger className="w-48">
-                <SelectValue placeholder="Filtrar por estado" />
+              <SelectTrigger className=&ldquo;w-48&rdquo;>
+                <SelectValue placeholder=&ldquo;Filtrar por estado&rdquo; />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="ALL">Todos los estados</SelectItem>
-                <SelectItem value="SENT">Nuevas</SelectItem>
-                <SelectItem value="UNDER_REVIEW">En revisión</SelectItem>
-                <SelectItem value="PRE_SELECTED">Preseleccionados</SelectItem>
-                <SelectItem value="REJECTED">Rechazadas</SelectItem>
-                <SelectItem value="HIRED">Contratados</SelectItem>
+                <SelectItem value=&ldquo;ALL&rdquo;>Todos los estados</SelectItem>
+                <SelectItem value=&ldquo;SENT&rdquo;>Nuevas</SelectItem>
+                <SelectItem value=&ldquo;UNDER_REVIEW&rdquo;>En revisión</SelectItem>
+                <SelectItem value=&ldquo;PRE_SELECTED&rdquo;>Preseleccionados</SelectItem>
+                <SelectItem value=&ldquo;REJECTED&rdquo;>Rechazadas</SelectItem>
+                <SelectItem value=&ldquo;HIRED&rdquo;>Contratados</SelectItem>
               </SelectContent>
             </Select>
-            <div className="text-sm text-gray-600">
-              Mostrando {filteredApplications.length} de {applications.length}{" "}
+            <div className=&ldquo;text-sm text-gray-600&rdquo;>
+              Mostrando {filteredApplications.length} de {applications.length}{&ldquo; &rdquo;}
               aplicaciones
             </div>
           </div>
@@ -410,27 +410,27 @@ export default function CandidatesPage() {
                   <TableHead>Valoración</TableHead>
                   <TableHead>Aplicado</TableHead>
                   <TableHead>CV</TableHead>
-                  <TableHead className="text-right">Acciones</TableHead>
+                  <TableHead className=&ldquo;text-right&rdquo;>Acciones</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredApplications.map((application) => (
                   <TableRow key={application.id}>
                     <TableCell>
-                      <div className="flex items-center space-x-3">
-                        <Avatar className="w-10 h-10">
+                      <div className=&ldquo;flex items-center space-x-3&rdquo;>
+                        <Avatar className=&ldquo;w-10 h-10&rdquo;>
                           <AvatarFallback>
                             {application.applicantName
-                              .split(" ")
+                              .split(&ldquo; &rdquo;)
                               .map((n) => n[0])
-                              .join("")}
+                              .join(&ldquo;&rdquo;)}
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <div className="font-medium">
+                          <div className=&ldquo;font-medium&rdquo;>
                             {application.applicantName}
                           </div>
-                          <div className="text-sm text-gray-600">
+                          <div className=&ldquo;text-sm text-gray-600&rdquo;>
                             {application.applicantEmail}
                           </div>
                         </div>
@@ -447,15 +447,15 @@ export default function CandidatesPage() {
                       {application.rating ? (
                         renderStarRating(application.rating)
                       ) : (
-                        <span className="text-gray-400 text-sm">
+                        <span className=&ldquo;text-gray-400 text-sm&rdquo;>
                           Sin valorar
                         </span>
                       )}
                     </TableCell>
                     <TableCell>
-                      <div className="flex items-center space-x-1">
-                        <Calendar className="w-4 h-4 text-gray-400" />
-                        <span className="text-sm">
+                      <div className=&ldquo;flex items-center space-x-1&rdquo;>
+                        <Calendar className=&ldquo;w-4 h-4 text-gray-400&rdquo; />
+                        <span className=&ldquo;text-sm&rdquo;>
                           {formatDate(application.appliedAt)}
                         </span>
                       </div>
@@ -463,111 +463,111 @@ export default function CandidatesPage() {
                     <TableCell>
                       {application.cvUrl && (
                         <Button
-                          variant="outline"
-                          size="sm"
+                          variant=&ldquo;outline&rdquo;
+                          size=&ldquo;sm&rdquo;
                           onClick={() =>
-                            window.open(application.cvUrl, "_blank")
+                            window.open(application.cvUrl, &ldquo;_blank&rdquo;)
                           }
                         >
-                          <Download className="w-4 h-4 mr-1" />
+                          <Download className=&ldquo;w-4 h-4 mr-1&rdquo; />
                           CV
                         </Button>
                       )}
                     </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex items-center justify-end space-x-1">
-                        {application.status === "SENT" && (
+                    <TableCell className=&ldquo;text-right&rdquo;>
+                      <div className=&ldquo;flex items-center justify-end space-x-1&rdquo;>
+                        {application.status === &ldquo;SENT&rdquo; && (
                           <Button
-                            size="sm"
-                            variant="outline"
+                            size=&ldquo;sm&rdquo;
+                            variant=&ldquo;outline&rdquo;
                             onClick={() =>
-                              handleQuickAction(application.id, "UNDER_REVIEW")
+                              handleQuickAction(application.id, &ldquo;UNDER_REVIEW&rdquo;)
                             }
                           >
-                            <Eye className="w-4 h-4" />
+                            <Eye className=&ldquo;w-4 h-4&rdquo; />
                           </Button>
                         )}
 
-                        {(application.status === "SENT" ||
-                          application.status === "UNDER_REVIEW") && (
+                        {(application.status === &ldquo;SENT&rdquo; ||
+                          application.status === &ldquo;UNDER_REVIEW&rdquo;) && (
                           <Button
-                            size="sm"
-                            variant="outline"
-                            className="text-green-600 border-green-300 hover:bg-green-50"
+                            size=&ldquo;sm&rdquo;
+                            variant=&ldquo;outline&rdquo;
+                            className=&ldquo;text-green-600 border-green-300 hover:bg-green-50&rdquo;
                             onClick={() =>
-                              handleQuickAction(application.id, "PRE_SELECTED")
+                              handleQuickAction(application.id, &ldquo;PRE_SELECTED&rdquo;)
                             }
                           >
-                            <Check className="w-4 h-4" />
+                            <Check className=&ldquo;w-4 h-4&rdquo; />
                           </Button>
                         )}
 
-                        {application.status === "PRE_SELECTED" && (
+                        {application.status === &ldquo;PRE_SELECTED&rdquo; && (
                           <Button
-                            size="sm"
-                            variant="outline"
-                            className="text-purple-600 border-purple-300 hover:bg-purple-50"
+                            size=&ldquo;sm&rdquo;
+                            variant=&ldquo;outline&rdquo;
+                            className=&ldquo;text-purple-600 border-purple-300 hover:bg-purple-50&rdquo;
                             onClick={() =>
-                              handleQuickAction(application.id, "HIRED")
+                              handleQuickAction(application.id, &ldquo;HIRED&rdquo;)
                             }
                           >
-                            <UserPlus className="w-4 h-4" />
+                            <UserPlus className=&ldquo;w-4 h-4&rdquo; />
                           </Button>
                         )}
 
-                        {(application.status === "SENT" ||
-                          application.status === "UNDER_REVIEW") && (
+                        {(application.status === &ldquo;SENT&rdquo; ||
+                          application.status === &ldquo;UNDER_REVIEW&rdquo;) && (
                           <Button
-                            size="sm"
-                            variant="outline"
-                            className="text-red-600 border-red-300 hover:bg-red-50"
+                            size=&ldquo;sm&rdquo;
+                            variant=&ldquo;outline&rdquo;
+                            className=&ldquo;text-red-600 border-red-300 hover:bg-red-50&rdquo;
                             onClick={() =>
-                              handleQuickAction(application.id, "REJECTED")
+                              handleQuickAction(application.id, &ldquo;REJECTED&rdquo;)
                             }
                           >
-                            <X className="w-4 h-4" />
+                            <X className=&ldquo;w-4 h-4&rdquo; />
                           </Button>
                         )}
 
                         <Dialog>
                           <DialogTrigger asChild>
                             <Button
-                              size="sm"
-                              variant="outline"
+                              size=&ldquo;sm&rdquo;
+                              variant=&ldquo;outline&rdquo;
                               onClick={() => {
                                 setSelectedApplication(application);
-                                setUpdateNotes(application.notes || "");
+                                setUpdateNotes(application.notes || &ldquo;&rdquo;);
                                 setUpdateRating(application.rating || 0);
                               }}
                             >
                               Ver detalles
                             </Button>
                           </DialogTrigger>
-                          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                          <DialogContent className=&ldquo;max-w-2xl max-h-[90vh] overflow-y-auto&rdquo;>
                             <DialogHeader>
                               <DialogTitle>Detalle de Candidato</DialogTitle>
                             </DialogHeader>
                             {selectedApplication && (
-                              <div className="space-y-6">
+                              <div className=&ldquo;space-y-6&rdquo;>
                                 {/* Candidate Info */}
-                                <div className="flex items-center space-x-4">
-                                  <Avatar className="w-16 h-16">
-                                    <AvatarFallback className="text-lg">
+                                <div className=&ldquo;flex items-center space-x-4&rdquo;>
+                                  <Avatar className=&ldquo;w-16 h-16&rdquo;>
+                                    <AvatarFallback className=&ldquo;text-lg&rdquo;>
                                       {selectedApplication.applicantName
-                                        .split(" ")
+                                        .split(&ldquo; &rdquo;)
                                         .map((n) => n[0])
-                                        .join("")}
+                                        .join(&ldquo;&rdquo;)}
                                     </AvatarFallback>
                                   </Avatar>
                                   <div>
-                                    <h3 className="text-lg font-semibold">
+                                    <h3 className=&ldquo;text-lg font-semibold&rdquo;>
                                       {selectedApplication.applicantName}
                                     </h3>
-                                    <p className="text-gray-600">
+                                    <p className=&ldquo;text-gray-600&rdquo;>
                                       {selectedApplication.applicantEmail}
                                     </p>
-                                    <p className="text-sm text-gray-500">
-                                      Aplicó el{" "}
+                                    <p className=&ldquo;text-sm text-gray-500&rdquo;>
+                                      Aplicó el{&ldquo; &rdquo;}
                                       {formatDate(
                                         selectedApplication.appliedAt
                                       )}
@@ -578,11 +578,11 @@ export default function CandidatesPage() {
                                 {/* Cover Letter */}
                                 {selectedApplication.coverLetter && (
                                   <div>
-                                    <Label className="text-base font-medium">
+                                    <Label className=&ldquo;text-base font-medium&rdquo;>
                                       Carta de presentación
                                     </Label>
-                                    <div className="mt-2 p-4 bg-gray-50 rounded-lg">
-                                      <p className="text-sm whitespace-pre-wrap">
+                                    <div className=&ldquo;mt-2 p-4 bg-gray-50 rounded-lg&rdquo;>
+                                      <p className=&ldquo;text-sm whitespace-pre-wrap&rdquo;>
                                         {selectedApplication.coverLetter}
                                       </p>
                                     </div>
@@ -593,20 +593,20 @@ export default function CandidatesPage() {
                                 {selectedApplication.answers &&
                                   selectedApplication.answers.length > 0 && (
                                     <div>
-                                      <Label className="text-base font-medium">
+                                      <Label className=&ldquo;text-base font-medium&rdquo;>
                                         Respuestas a preguntas
                                       </Label>
-                                      <div className="mt-2 space-y-3">
+                                      <div className=&ldquo;mt-2 space-y-3&rdquo;>
                                         {selectedApplication.answers.map(
                                           (answer, i) => (
                                             <div
                                               key={i}
-                                              className="p-3 border rounded-lg"
+                                              className=&ldquo;p-3 border rounded-lg&rdquo;
                                             >
-                                              <p className="font-medium text-sm mb-1">
+                                              <p className=&ldquo;font-medium text-sm mb-1&rdquo;>
                                                 {answer.question}
                                               </p>
-                                              <p className="text-sm text-gray-700">
+                                              <p className=&ldquo;text-sm text-gray-700&rdquo;>
                                                 {answer.answer}
                                               </p>
                                             </div>
@@ -618,10 +618,10 @@ export default function CandidatesPage() {
 
                                 {/* Rating */}
                                 <div>
-                                  <Label className="text-base font-medium">
+                                  <Label className=&ldquo;text-base font-medium&rdquo;>
                                     Valoración
                                   </Label>
-                                  <div className="mt-2">
+                                  <div className=&ldquo;mt-2&rdquo;>
                                     {renderStarRating(
                                       updateRating,
                                       setUpdateRating
@@ -632,25 +632,25 @@ export default function CandidatesPage() {
                                 {/* Notes */}
                                 <div>
                                   <Label
-                                    htmlFor="notes"
-                                    className="text-base font-medium"
+                                    htmlFor=&ldquo;notes&rdquo;
+                                    className=&ldquo;text-base font-medium&rdquo;
                                   >
                                     Notas internas
                                   </Label>
                                   <Textarea
-                                    id="notes"
-                                    placeholder="Agrega comentarios sobre este candidato..."
+                                    id=&ldquo;notes&rdquo;
+                                    placeholder=&ldquo;Agrega comentarios sobre este candidato...&rdquo;
                                     value={updateNotes}
                                     onChange={(e) =>
                                       setUpdateNotes(e.target.value)
                                     }
-                                    className="mt-2"
+                                    className=&ldquo;mt-2&rdquo;
                                   />
                                 </div>
 
                                 {/* Status Update */}
                                 <div>
-                                  <Label className="text-base font-medium">
+                                  <Label className=&ldquo;text-base font-medium&rdquo;>
                                     Estado de la aplicación
                                   </Label>
                                   <Select
@@ -667,23 +667,23 @@ export default function CandidatesPage() {
                                       )
                                     }
                                   >
-                                    <SelectTrigger className="mt-2">
+                                    <SelectTrigger className=&ldquo;mt-2&rdquo;>
                                       <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
-                                      <SelectItem value="SENT">
+                                      <SelectItem value=&ldquo;SENT&rdquo;>
                                         Enviada
                                       </SelectItem>
-                                      <SelectItem value="UNDER_REVIEW">
+                                      <SelectItem value=&ldquo;UNDER_REVIEW&rdquo;>
                                         En revisión
                                       </SelectItem>
-                                      <SelectItem value="PRE_SELECTED">
+                                      <SelectItem value=&ldquo;PRE_SELECTED&rdquo;>
                                         Preseleccionado
                                       </SelectItem>
-                                      <SelectItem value="REJECTED">
+                                      <SelectItem value=&ldquo;REJECTED&rdquo;>
                                         Rechazada
                                       </SelectItem>
-                                      <SelectItem value="HIRED">
+                                      <SelectItem value=&ldquo;HIRED&rdquo;>
                                         Contratado
                                       </SelectItem>
                                     </SelectContent>
@@ -691,9 +691,9 @@ export default function CandidatesPage() {
                                 </div>
 
                                 {/* Actions */}
-                                <div className="flex justify-end space-x-2 pt-4 border-t">
+                                <div className=&ldquo;flex justify-end space-x-2 pt-4 border-t&rdquo;>
                                   <Button
-                                    variant="outline"
+                                    variant=&ldquo;outline&rdquo;
                                     onClick={() => setSelectedApplication(null)}
                                   >
                                     Cancelar
@@ -713,17 +713,17 @@ export default function CandidatesPage() {
               </TableBody>
             </Table>
           ) : (
-            <div className="text-center py-12">
-              <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            <div className=&ldquo;text-center py-12&rdquo;>
+              <Users className=&ldquo;w-12 h-12 text-gray-400 mx-auto mb-4&rdquo; />
+              <h3 className=&ldquo;text-lg font-semibold text-gray-900 mb-2&rdquo;>
                 {applications.length === 0
-                  ? "No hay aplicaciones"
-                  : "No hay aplicaciones con este filtro"}
+                  ? &ldquo;No hay aplicaciones&rdquo;
+                  : &ldquo;No hay aplicaciones con este filtro&rdquo;}
               </h3>
-              <p className="text-gray-600">
+              <p className=&ldquo;text-gray-600&rdquo;>
                 {applications.length === 0
-                  ? "Aún no has recibido aplicaciones para este empleo."
-                  : "Intenta cambiar los filtros para ver más resultados."}
+                  ? &ldquo;Aún no has recibido aplicaciones para este empleo.&rdquo;
+                  : &ldquo;Intenta cambiar los filtros para ver más resultados.&rdquo;}
               </p>
             </div>
           )}

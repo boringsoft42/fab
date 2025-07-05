@@ -1,18 +1,18 @@
-"use client";
+&ldquo;use client&rdquo;;
 
-import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
+import { Progress } from &ldquo;@/components/ui/progress&rdquo;;
+import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { CheckCircle, AlertCircle, Target, ArrowRight } from "lucide-react";
-import { UserRole } from "@prisma/client";
-import type { Profile } from "@/types/profile";
+} from &ldquo;@/components/ui/card&rdquo;;
+import { Button } from &ldquo;@/components/ui/button&rdquo;;
+import { CheckCircle, AlertCircle, Target, ArrowRight } from &ldquo;lucide-react&rdquo;;
+import { UserRole } from &ldquo;@prisma/client&rdquo;;
+import type { Profile } from &ldquo;@/types/profile&rdquo;;
 
 interface ProfileSection {
   id: string;
@@ -40,166 +40,166 @@ export function ProfileCompletionIndicator({
   ): ProfileSection[] => {
     const baseSections: ProfileSection[] = [
       {
-        id: "personal",
-        title: "Información Personal",
+        id: &ldquo;personal&rdquo;,
+        title: &ldquo;Información Personal&rdquo;,
         completed: !!(profile.firstName && profile.lastName && profile.email),
         required: true,
-        description: "Nombre, email y datos básicos",
+        description: &ldquo;Nombre, email y datos básicos&rdquo;,
       },
     ];
 
     switch (role) {
-      case "YOUTH":
+      case &ldquo;YOUTH&rdquo;:
         return [
           ...baseSections,
           {
-            id: "academic",
-            title: "Educación",
+            id: &ldquo;academic&rdquo;,
+            title: &ldquo;Educación&rdquo;,
             completed: !!(profile.educationLevel && profile.currentInstitution),
             required: true,
-            description: "Nivel educativo e institución",
+            description: &ldquo;Nivel educativo e institución&rdquo;,
           },
           {
-            id: "work",
-            title: "Experiencia Laboral",
+            id: &ldquo;work&rdquo;,
+            title: &ldquo;Experiencia Laboral&rdquo;,
             completed: !!(
               profile.workExperience &&
               Object.keys(profile.workExperience).length > 0
             ),
             required: false,
-            description: "Historial de trabajos previos",
+            description: &ldquo;Historial de trabajos previos&rdquo;,
           },
           {
-            id: "skills",
-            title: "Habilidades",
+            id: &ldquo;skills&rdquo;,
+            title: &ldquo;Habilidades&rdquo;,
             completed: !!(profile.skills && profile.skills.length > 0),
             required: true,
-            description: "Competencias técnicas y blandas",
+            description: &ldquo;Competencias técnicas y blandas&rdquo;,
           },
           {
-            id: "location",
-            title: "Ubicación",
+            id: &ldquo;location&rdquo;,
+            title: &ldquo;Ubicación&rdquo;,
             completed: !!(profile.municipality && profile.department),
             required: true,
-            description: "Municipio y departamento",
+            description: &ldquo;Municipio y departamento&rdquo;,
           },
         ];
 
-      case "ADOLESCENTS":
+      case &ldquo;ADOLESCENTS&rdquo;:
         return [
           ...baseSections,
           {
-            id: "academic",
-            title: "Educación Actual",
+            id: &ldquo;academic&rdquo;,
+            title: &ldquo;Educación Actual&rdquo;,
             completed: !!(profile.educationLevel && profile.currentInstitution),
             required: true,
-            description: "Nivel educativo e institución actual",
+            description: &ldquo;Nivel educativo e institución actual&rdquo;,
           },
           {
-            id: "interests",
-            title: "Intereses",
+            id: &ldquo;interests&rdquo;,
+            title: &ldquo;Intereses&rdquo;,
             completed: !!(profile.interests && profile.interests.length > 0),
             required: true,
-            description: "Áreas de interés y aspiraciones",
+            description: &ldquo;Áreas de interés y aspiraciones&rdquo;,
           },
           {
-            id: "parental",
-            title: "Consentimiento Parental",
+            id: &ldquo;parental&rdquo;,
+            title: &ldquo;Consentimiento Parental&rdquo;,
             completed: profile.parentalConsent,
             required: true,
-            description: "Autorización de padres o tutores",
+            description: &ldquo;Autorización de padres o tutores&rdquo;,
           },
           {
-            id: "location",
-            title: "Ubicación",
+            id: &ldquo;location&rdquo;,
+            title: &ldquo;Ubicación&rdquo;,
             completed: !!(profile.municipality && profile.department),
             required: true,
-            description: "Municipio y departamento",
+            description: &ldquo;Municipio y departamento&rdquo;,
           },
         ];
 
-      case "COMPANIES":
+      case &ldquo;COMPANIES&rdquo;:
         return [
           ...baseSections,
           {
-            id: "company",
-            title: "Información Empresarial",
+            id: &ldquo;company&rdquo;,
+            title: &ldquo;Información Empresarial&rdquo;,
             completed: !!(profile.companyName && profile.businessSector),
             required: true,
-            description: "Datos de la empresa y sector",
+            description: &ldquo;Datos de la empresa y sector&rdquo;,
           },
           {
-            id: "legal",
-            title: "Datos Legales",
+            id: &ldquo;legal&rdquo;,
+            title: &ldquo;Datos Legales&rdquo;,
             completed: !!(profile.taxId && profile.legalRepresentative),
             required: true,
-            description: "NIT y representante legal",
+            description: &ldquo;NIT y representante legal&rdquo;,
           },
           {
-            id: "description",
-            title: "Descripción Empresarial",
+            id: &ldquo;description&rdquo;,
+            title: &ldquo;Descripción Empresarial&rdquo;,
             completed: !!(
               profile.companyDescription &&
               profile.companyDescription.length > 50
             ),
             required: false,
-            description: "Descripción de la empresa y cultura",
+            description: &ldquo;Descripción de la empresa y cultura&rdquo;,
           },
           {
-            id: "contact",
-            title: "Información de Contacto",
+            id: &ldquo;contact&rdquo;,
+            title: &ldquo;Información de Contacto&rdquo;,
             completed: !!(profile.phone && profile.address),
             required: true,
-            description: "Teléfono y dirección",
+            description: &ldquo;Teléfono y dirección&rdquo;,
           },
         ];
 
-      case "MUNICIPAL_GOVERNMENTS":
-      case "TRAINING_CENTERS":
-      case "NGOS_AND_FOUNDATIONS":
+      case &ldquo;MUNICIPAL_GOVERNMENTS&rdquo;:
+      case &ldquo;TRAINING_CENTERS&rdquo;:
+      case &ldquo;NGOS_AND_FOUNDATIONS&rdquo;:
         const institutionType =
-          role === "MUNICIPAL_GOVERNMENTS"
-            ? "gobierno"
-            : role === "TRAINING_CENTERS"
-              ? "centro de capacitación"
-              : "ONG/fundación";
+          role === &ldquo;MUNICIPAL_GOVERNMENTS&rdquo;
+            ? &ldquo;gobierno&rdquo;
+            : role === &ldquo;TRAINING_CENTERS&rdquo;
+              ? &ldquo;centro de capacitación&rdquo;
+              : &ldquo;ONG/fundación&rdquo;;
 
         return [
           ...baseSections,
           {
-            id: "institutional",
-            title: "Información Institucional",
+            id: &ldquo;institutional&rdquo;,
+            title: &ldquo;Información Institucional&rdquo;,
             completed: !!(profile.institutionName && profile.institutionType),
             required: true,
             description: `Datos del ${institutionType}`,
           },
           {
-            id: "services",
-            title: "Áreas de Servicio",
+            id: &ldquo;services&rdquo;,
+            title: &ldquo;Áreas de Servicio&rdquo;,
             completed: !!(
               profile.serviceArea &&
               profile.specialization &&
               profile.specialization.length > 0
             ),
             required: true,
-            description: "Servicios ofrecidos y especialización",
+            description: &ldquo;Servicios ofrecidos y especialización&rdquo;,
           },
           {
-            id: "description",
-            title: "Descripción Institucional",
+            id: &ldquo;description&rdquo;,
+            title: &ldquo;Descripción Institucional&rdquo;,
             completed: !!(
               profile.institutionDescription &&
               profile.institutionDescription.length > 50
             ),
             required: false,
-            description: "Misión, visión y descripción",
+            description: &ldquo;Misión, visión y descripción&rdquo;,
           },
           {
-            id: "contact",
-            title: "Información de Contacto",
+            id: &ldquo;contact&rdquo;,
+            title: &ldquo;Información de Contacto&rdquo;,
             completed: !!(profile.phone && profile.address),
             required: true,
-            description: "Teléfono y dirección oficial",
+            description: &ldquo;Teléfono y dirección oficial&rdquo;,
           },
         ];
 
@@ -219,84 +219,84 @@ export function ProfileCompletionIndicator({
 
   const getRoleDisplayName = (role: UserRole) => {
     switch (role) {
-      case "YOUTH":
-        return "Joven";
-      case "ADOLESCENTS":
-        return "Adolescente";
-      case "COMPANIES":
-        return "Empresa";
-      case "MUNICIPAL_GOVERNMENTS":
-        return "Gobierno Municipal";
-      case "TRAINING_CENTERS":
-        return "Centro de Capacitación";
-      case "NGOS_AND_FOUNDATIONS":
-        return "ONG/Fundación";
+      case &ldquo;YOUTH&rdquo;:
+        return &ldquo;Joven&rdquo;;
+      case &ldquo;ADOLESCENTS&rdquo;:
+        return &ldquo;Adolescente&rdquo;;
+      case &ldquo;COMPANIES&rdquo;:
+        return &ldquo;Empresa&rdquo;;
+      case &ldquo;MUNICIPAL_GOVERNMENTS&rdquo;:
+        return &ldquo;Gobierno Municipal&rdquo;;
+      case &ldquo;TRAINING_CENTERS&rdquo;:
+        return &ldquo;Centro de Capacitación&rdquo;;
+      case &ldquo;NGOS_AND_FOUNDATIONS&rdquo;:
+        return &ldquo;ONG/Fundación&rdquo;;
       default:
-        return "Usuario";
+        return &ldquo;Usuario&rdquo;;
     }
   };
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Target className="h-5 w-5" />
+        <CardTitle className=&ldquo;flex items-center gap-2&rdquo;>
+          <Target className=&ldquo;h-5 w-5&rdquo; />
           Completitud del Perfil - {getRoleDisplayName(userRole)}
         </CardTitle>
         <CardDescription>
           {completionPercentage === 100
-            ? "¡Felicitaciones! Tu perfil está completo"
-            : "Completa tu perfil para acceder a todas las funcionalidades"}
+            ? &ldquo;¡Felicitaciones! Tu perfil está completo&rdquo;
+            : &ldquo;Completa tu perfil para acceder a todas las funcionalidades&rdquo;}
         </CardDescription>
       </CardHeader>
 
-      <CardContent className="space-y-6">
+      <CardContent className=&ldquo;space-y-6&rdquo;>
         {/* Progress Overview */}
-        <div className="space-y-2">
-          <div className="flex justify-between text-sm">
+        <div className=&ldquo;space-y-2&rdquo;>
+          <div className=&ldquo;flex justify-between text-sm&rdquo;>
             <span>Progreso general</span>
-            <span className="font-medium">{completionPercentage}%</span>
+            <span className=&ldquo;font-medium&rdquo;>{completionPercentage}%</span>
           </div>
-          <Progress value={completionPercentage} className="h-3" />
-          <div className="text-xs text-muted-foreground">
+          <Progress value={completionPercentage} className=&ldquo;h-3&rdquo; />
+          <div className=&ldquo;text-xs text-muted-foreground&rdquo;>
             {completedRequired} de {totalRequired} secciones requeridas
             completadas
           </div>
         </div>
 
         {/* Section Details */}
-        <div className="space-y-3">
+        <div className=&ldquo;space-y-3&rdquo;>
           {sections.map((section) => (
             <div
               key={section.id}
               className={`flex items-center justify-between p-3 rounded-lg border transition-colors ${
-                onSectionClick ? "cursor-pointer hover:bg-muted/50" : ""
+                onSectionClick ? &ldquo;cursor-pointer hover:bg-muted/50&rdquo; : &ldquo;&rdquo;
               }`}
               onClick={() => onSectionClick?.(section.id)}
             >
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-2">
+              <div className=&ldquo;flex items-center gap-3&rdquo;>
+                <div className=&ldquo;flex items-center gap-2&rdquo;>
                   {section.completed ? (
-                    <CheckCircle className="h-4 w-4 text-green-500" />
+                    <CheckCircle className=&ldquo;h-4 w-4 text-green-500&rdquo; />
                   ) : (
                     <AlertCircle
-                      className={`h-4 w-4 ${section.required ? "text-orange-500" : "text-gray-400"}`}
+                      className={`h-4 w-4 ${section.required ? &ldquo;text-orange-500&rdquo; : &ldquo;text-gray-400&rdquo;}`}
                     />
                   )}
 
                   <div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium">
+                    <div className=&ldquo;flex items-center gap-2&rdquo;>
+                      <span className=&ldquo;text-sm font-medium&rdquo;>
                         {section.title}
                       </span>
                       {section.required && (
-                        <Badge variant="outline" className="text-xs">
+                        <Badge variant=&ldquo;outline&rdquo; className=&ldquo;text-xs&rdquo;>
                           Requerido
                         </Badge>
                       )}
                     </div>
                     {section.description && (
-                      <p className="text-xs text-muted-foreground">
+                      <p className=&ldquo;text-xs text-muted-foreground&rdquo;>
                         {section.description}
                       </p>
                     )}
@@ -304,17 +304,17 @@ export function ProfileCompletionIndicator({
                 </div>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className=&ldquo;flex items-center gap-2&rdquo;>
                 {section.completed ? (
-                  <Badge variant="secondary">Completo</Badge>
+                  <Badge variant=&ldquo;secondary&rdquo;>Completo</Badge>
                 ) : (
-                  <Badge variant={section.required ? "destructive" : "outline"}>
-                    {section.required ? "Pendiente" : "Opcional"}
+                  <Badge variant={section.required ? &ldquo;destructive&rdquo; : &ldquo;outline&rdquo;}>
+                    {section.required ? &ldquo;Pendiente&rdquo; : &ldquo;Opcional&rdquo;}
                   </Badge>
                 )}
 
                 {onSectionClick && (
-                  <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                  <ArrowRight className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
                 )}
               </div>
             </div>
@@ -324,7 +324,7 @@ export function ProfileCompletionIndicator({
         {/* Action Button */}
         {completionPercentage < 100 && (
           <Button
-            className="w-full"
+            className=&ldquo;w-full&rdquo;
             onClick={() => {
               const firstIncomplete = sections.find(
                 (s) => s.required && !s.completed
@@ -335,7 +335,7 @@ export function ProfileCompletionIndicator({
             }}
           >
             Completar Perfil
-            <ArrowRight className="w-4 h-4 ml-2" />
+            <ArrowRight className=&ldquo;w-4 h-4 ml-2&rdquo; />
           </Button>
         )}
       </CardContent>
