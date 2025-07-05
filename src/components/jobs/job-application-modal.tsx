@@ -3,7 +3,12 @@
 import { useState } from "react";
 import { X, Upload, FileText, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,7 +26,11 @@ interface JobApplicationModalProps {
   onSuccess: () => void;
 }
 
-export const JobApplicationModal = ({ job, onClose, onSuccess }: JobApplicationModalProps) => {
+export const JobApplicationModal = ({
+  job,
+  onClose,
+  onSuccess,
+}: JobApplicationModalProps) => {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [selectedCV, setSelectedCV] = useState<File | null>(null);
@@ -31,8 +40,8 @@ export const JobApplicationModal = ({ job, onClose, onSuccess }: JobApplicationM
   const [useTemplate, setUseTemplate] = useState(true);
 
   const [showTermsModal, setShowTermsModal] = useState(false);
-const [termsAccepted, setTermsAccepted] = useState(false);
-  
+  const [termsAccepted, setTermsAccepted] = useState(false);
+
   const { toast } = useToast();
 
   const coverLetterTemplate = `Estimado equipo de ${job.company.name},
@@ -52,39 +61,41 @@ Atentamente,
     const file = event.target.files?.[0];
     if (file) {
       // Validate file type
-      if (!file.type.includes('pdf') && !file.type.includes('doc')) {
+      if (!file.type.includes("pdf") && !file.type.includes("doc")) {
         toast({
           title: "Formato no válido",
           description: "Por favor sube un archivo PDF o DOC",
-          variant: "destructive"
+          variant: "destructive",
         });
         return;
       }
-      
+
       // Validate file size (5MB max)
       if (file.size > 5 * 1024 * 1024) {
         toast({
           title: "Archivo muy grande",
           description: "El archivo debe ser menor a 5MB",
-          variant: "destructive"
+          variant: "destructive",
         });
         return;
       }
-      
+
       setSelectedCV(file);
       // In real app, upload to server and get URL
       setCvUrl(`/cv/${file.name}`);
     }
   };
 
-  const handleQuestionAnswer = (questionId: string, question: string, answer: string) => {
-    setAnswers(prev => {
-      const existing = prev.find(a => a.questionId === questionId);
+  const handleQuestionAnswer = (
+    questionId: string,
+    question: string,
+    answer: string
+  ) => {
+    setAnswers((prev) => {
+      const existing = prev.find((a) => a.questionId === questionId);
       if (existing) {
-        return prev.map(a => 
-          a.questionId === questionId 
-            ? { ...a, answer }
-            : a
+        return prev.map((a) =>
+          a.questionId === questionId ? { ...a, answer } : a
         );
       }
       return [...prev, { questionId, question, answer }];
@@ -98,7 +109,7 @@ Atentamente,
           toast({
             title: "CV requerido",
             description: "Por favor sube tu CV para continuar",
-            variant: "destructive"
+            variant: "destructive",
           });
           return false;
         }
@@ -108,23 +119,24 @@ Atentamente,
           toast({
             title: "Carta de presentación requerida",
             description: "Por favor completa tu carta de presentación",
-            variant: "destructive"
+            variant: "destructive",
           });
           return false;
         }
         break;
       case 3:
         // Validate required questions
-        const requiredQuestions = job.questions?.filter(q => q.required) || [];
-        const answeredRequired = requiredQuestions.every(q => 
-          answers.some(a => a.questionId === q.id && a.answer.trim())
+        const requiredQuestions =
+          job.questions?.filter((q) => q.required) || [];
+        const answeredRequired = requiredQuestions.every((q) =>
+          answers.some((a) => a.questionId === q.id && a.answer.trim())
         );
-        
+
         if (!answeredRequired) {
           toast({
             title: "Preguntas requeridas",
             description: "Por favor responde todas las preguntas obligatorias",
-            variant: "destructive"
+            variant: "destructive",
           });
           return false;
         }
@@ -144,9 +156,9 @@ Atentamente,
       setShowTermsModal(true);
       return;
     }
-  
+
     if (!validateStep(step)) return;
-    
+
     setLoading(true);
     try {
       const applicationData = {
@@ -159,15 +171,15 @@ Atentamente,
         applicantEmail: "john@example.com",
         cvUrl,
         coverLetter,
-        answers
+        answers,
       };
-  
+
       const response = await fetch(`/api/jobs/${job.id}/applications`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(applicationData),
       });
-  
+
       if (response.ok) {
         toast({
           title: "¡Aplicación enviada!",
@@ -175,23 +187,24 @@ Atentamente,
         });
         onSuccess();
       } else {
+        const errorData = await response.json();
         toast({
           title: "Error al enviar aplicación",
-          description: error.error || "Inténtalo de nuevo",
-          variant: "destructive"
+          description: errorData.error || "Inténtalo de nuevo",
+          variant: "destructive",
         });
       }
     } catch (error) {
       toast({
         title: "Error de conexión",
         description: "No se pudo enviar la aplicación. Inténtalo de nuevo.",
-        variant: "destructive"
+        variant: "destructive",
       });
     } finally {
       setLoading(false);
     }
   };
-  
+
   const renderStepContent = () => {
     switch (step) {
       case 1:
@@ -204,7 +217,9 @@ Atentamente,
                   <div className="flex items-center justify-center space-x-2">
                     <FileText className="w-8 h-8 text-green-600" />
                     <div>
-                      <p className="font-medium text-green-600">{selectedCV.name}</p>
+                      <p className="font-medium text-green-600">
+                        {selectedCV.name}
+                      </p>
                       <p className="text-sm text-gray-500">
                         {(selectedCV.size / 1024 / 1024).toFixed(2)} MB
                       </p>
@@ -252,7 +267,9 @@ Atentamente,
         return (
           <div className="space-y-6">
             <div>
-              <h3 className="text-lg font-semibold mb-4">Carta de presentación</h3>
+              <h3 className="text-lg font-semibold mb-4">
+                Carta de presentación
+              </h3>
               <div className="space-y-4">
                 <div className="flex items-center space-x-2">
                   <Checkbox
@@ -269,16 +286,17 @@ Atentamente,
                     Usar plantilla sugerida
                   </Label>
                 </div>
-                
+
                 <Textarea
                   placeholder="Escribe tu carta de presentación aquí..."
                   value={coverLetter}
                   onChange={(e) => setCoverLetter(e.target.value)}
                   className="min-h-[300px]"
                 />
-                
+
                 <p className="text-sm text-gray-600">
-                  Personaliza tu carta para destacar por qué eres el candidato ideal para esta posición.
+                  Personaliza tu carta para destacar por qué eres el candidato
+                  ideal para esta posición.
                 </p>
               </div>
             </div>
@@ -289,53 +307,110 @@ Atentamente,
         return (
           <div className="space-y-6">
             <div>
-              <h3 className="text-lg font-semibold mb-4">Preguntas del empleador</h3>
+              <h3 className="text-lg font-semibold mb-4">
+                Preguntas del empleador
+              </h3>
               {job.questions && job.questions.length > 0 ? (
                 <div className="space-y-6">
                   {job.questions.map((question, index) => (
                     <div key={question.id} className="space-y-3">
                       <Label className="text-sm font-medium">
                         {index + 1}. {question.question}
-                        {question.required && <span className="text-red-500 ml-1">*</span>}
+                        {question.required && (
+                          <span className="text-red-500 ml-1">*</span>
+                        )}
                       </Label>
-                      
+
                       {question.type === "TEXT" && (
                         <Textarea
                           placeholder="Tu respuesta..."
-                          value={answers.find(a => a.questionId === question.id)?.answer || ""}
-                          onChange={(e) => handleQuestionAnswer(question.id, question.question, e.target.value)}
+                          value={
+                            answers.find((a) => a.questionId === question.id)
+                              ?.answer || ""
+                          }
+                          onChange={(e) =>
+                            handleQuestionAnswer(
+                              question.id,
+                              question.question,
+                              e.target.value
+                            )
+                          }
                           className="min-h-[100px]"
                         />
                       )}
-                      
-                      {question.type === "MULTIPLE_CHOICE" && question.options && (
-                        <RadioGroup
-                          value={answers.find(a => a.questionId === question.id)?.answer || ""}
-                          onValueChange={(value) => handleQuestionAnswer(question.id, question.question, value)}
-                        >
-                          {question.options.map((option, optionIndex) => (
-                            <div key={optionIndex} className="flex items-center space-x-2">
-                              <RadioGroupItem value={option} id={`${question.id}-${optionIndex}`} />
-                              <Label htmlFor={`${question.id}-${optionIndex}`} className="text-sm">
-                                {option}
-                              </Label>
-                            </div>
-                          ))}
-                        </RadioGroup>
-                      )}
-                      
+
+                      {question.type === "MULTIPLE_CHOICE" &&
+                        question.options && (
+                          <RadioGroup
+                            value={
+                              answers.find((a) => a.questionId === question.id)
+                                ?.answer || ""
+                            }
+                            onValueChange={(value) =>
+                              handleQuestionAnswer(
+                                question.id,
+                                question.question,
+                                value
+                              )
+                            }
+                          >
+                            {question.options.map((option, optionIndex) => (
+                              <div
+                                key={optionIndex}
+                                className="flex items-center space-x-2"
+                              >
+                                <RadioGroupItem
+                                  value={option}
+                                  id={`${question.id}-${optionIndex}`}
+                                />
+                                <Label
+                                  htmlFor={`${question.id}-${optionIndex}`}
+                                  className="text-sm"
+                                >
+                                  {option}
+                                </Label>
+                              </div>
+                            ))}
+                          </RadioGroup>
+                        )}
+
                       {question.type === "YES_NO" && (
                         <RadioGroup
-                          value={answers.find(a => a.questionId === question.id)?.answer || ""}
-                          onValueChange={(value) => handleQuestionAnswer(question.id, question.question, value)}
+                          value={
+                            answers.find((a) => a.questionId === question.id)
+                              ?.answer || ""
+                          }
+                          onValueChange={(value) =>
+                            handleQuestionAnswer(
+                              question.id,
+                              question.question,
+                              value
+                            )
+                          }
                         >
                           <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="Sí" id={`${question.id}-yes`} />
-                            <Label htmlFor={`${question.id}-yes`} className="text-sm">Sí</Label>
+                            <RadioGroupItem
+                              value="Sí"
+                              id={`${question.id}-yes`}
+                            />
+                            <Label
+                              htmlFor={`${question.id}-yes`}
+                              className="text-sm"
+                            >
+                              Sí
+                            </Label>
                           </div>
                           <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="No" id={`${question.id}-no`} />
-                            <Label htmlFor={`${question.id}-no`} className="text-sm">No</Label>
+                            <RadioGroupItem
+                              value="No"
+                              id={`${question.id}-no`}
+                            />
+                            <Label
+                              htmlFor={`${question.id}-no`}
+                              className="text-sm"
+                            >
+                              No
+                            </Label>
                           </div>
                         </RadioGroup>
                       )}
@@ -358,40 +433,55 @@ Atentamente,
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Check className="w-8 h-8 text-green-600" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">Revisa tu aplicación</h3>
+              <h3 className="text-lg font-semibold mb-2">
+                Revisa tu aplicación
+              </h3>
               <p className="text-gray-600">
                 Verifica que toda la información esté correcta antes de enviar
               </p>
             </div>
-            
+
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Resumen de aplicación</CardTitle>
+                <CardTitle className="text-base">
+                  Resumen de aplicación
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center space-x-3">
                   <Avatar className="w-10 h-10">
-                    <AvatarImage src={job.company.logo} alt={job.company.name} />
-                    <AvatarFallback>{job.company.name.charAt(0)}</AvatarFallback>
+                    <AvatarImage
+                      src={job.company.logo}
+                      alt={job.company.name}
+                    />
+                    <AvatarFallback>
+                      {job.company.name.charAt(0)}
+                    </AvatarFallback>
                   </Avatar>
                   <div>
                     <p className="font-medium">{job.title}</p>
                     <p className="text-sm text-gray-600">{job.company.name}</p>
                   </div>
                 </div>
-                
+
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-gray-600">CV:</span>
                     <span>{selectedCV?.name || "CV subido"}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Carta de presentación:</span>
+                    <span className="text-gray-600">
+                      Carta de presentación:
+                    </span>
                     <span>{coverLetter.length} caracteres</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Preguntas respondidas:</span>
-                    <span>{answers.length} de {job.questions?.length || 0}</span>
+                    <span className="text-gray-600">
+                      Preguntas respondidas:
+                    </span>
+                    <span>
+                      {answers.length} de {job.questions?.length || 0}
+                    </span>
                   </div>
                 </div>
               </CardContent>
@@ -443,20 +533,18 @@ Atentamente,
         </div>
 
         {/* Step Content */}
-        <div className="min-h-[400px]">
-          {renderStepContent()}
-        </div>
+        <div className="min-h-[400px]">{renderStepContent()}</div>
 
         {/* Actions */}
         <div className="flex justify-between pt-6 border-t">
           <Button
             variant="outline"
-            onClick={() => step > 1 ? setStep(step - 1) : onClose()}
+            onClick={() => (step > 1 ? setStep(step - 1) : onClose())}
             disabled={loading}
           >
             {step > 1 ? "Anterior" : "Cancelar"}
           </Button>
-          
+
           {step < maxSteps ? (
             <Button onClick={handleNext} disabled={loading}>
               Siguiente
@@ -469,33 +557,35 @@ Atentamente,
         </div>
       </DialogContent>
       <Dialog open={showTermsModal} onOpenChange={setShowTermsModal}>
-  <DialogContent className="max-w-md text-center">
-    <DialogHeader>
-      <DialogTitle className="text-lg">Términos y condiciones</DialogTitle>
-    </DialogHeader>
+        <DialogContent className="max-w-md text-center">
+          <DialogHeader>
+            <DialogTitle className="text-lg">
+              Términos y condiciones
+            </DialogTitle>
+          </DialogHeader>
 
-    <p className="text-sm text-gray-600 mb-4">
-      La información que compartas es confidencial y solo será visible por el empleador. 
-      Al continuar, aceptas nuestros términos y condiciones de privacidad.
-    </p>
+          <p className="text-sm text-gray-600 mb-4">
+            La información que compartas es confidencial y solo será visible por
+            el empleador. Al continuar, aceptas nuestros términos y condiciones
+            de privacidad.
+          </p>
 
-    <div className="flex justify-center gap-4 mt-6">
-      <Button variant="outline" onClick={() => setShowTermsModal(false)}>
-        Cancelar
-      </Button>
-      <Button
-        onClick={() => {
-          setTermsAccepted(true);
-          setShowTermsModal(false);
-          handleSubmit(); // Llama de nuevo para continuar ahora sí
-        }}
-      >
-        Acepto y Enviar
-      </Button>
-    </div>
-  </DialogContent>
-</Dialog>
-
+          <div className="flex justify-center gap-4 mt-6">
+            <Button variant="outline" onClick={() => setShowTermsModal(false)}>
+              Cancelar
+            </Button>
+            <Button
+              onClick={() => {
+                setTermsAccepted(true);
+                setShowTermsModal(false);
+                handleSubmit(); // Llama de nuevo para continuar ahora sí
+              }}
+            >
+              Acepto y Enviar
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </Dialog>
   );
-}; 
+};

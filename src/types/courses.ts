@@ -127,20 +127,28 @@ export interface Quiz {
   id: string;
   title: string;
   description: string;
-  timeLimit?: number; // in minutes
-  passingScore: number;
   questions: QuizQuestion[];
-  attempts: number;
-  isRequired: boolean;
+  timeLimit?: number;
+  passingScore: number;
+  showCorrectAnswers: boolean;
 }
 
 export interface QuizQuestion {
   id: string;
+  type: QuestionType;
   question: string;
-  options: string[];
-  correctOption: number;
-  explanation: string;
+  options?: string[];
+  correctAnswer: string | string[];
+  explanation?: string;
   points: number;
+  order: number;
+}
+
+export interface QuizAnswer {
+  questionId: string;
+  answer: string | string[];
+  isCorrect: boolean;
+  timeSpent: number;
 }
 
 export interface CourseSection {

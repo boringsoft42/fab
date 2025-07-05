@@ -2,19 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import {
-  Course,
-  CourseCatalogResponse,
-  CourseFilters,
-  CourseCategory,
-  CourseLevel,
-} from "@/types/courses";
+import { Course, CourseCatalogResponse, CourseFilters } from "@/types/courses";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { Separator } from "@/components/ui/separator";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -22,21 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Slider } from "@/components/ui/slider";
-import {
-  Search,
-  Filter,
-  Grid3X3,
-  List,
-  Star,
-  Clock,
-  Users,
-  BookOpen,
-  Award,
-  ChevronDown,
-  X,
-} from "lucide-react";
+import { Search, Filter, Grid3X3, List, X, BookOpen } from "lucide-react";
 import { CourseCard } from "@/components/courses/course-card";
 import { CourseFilters as CourseFiltersComponent } from "@/components/courses/course-filters";
 

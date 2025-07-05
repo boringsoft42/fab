@@ -15,10 +15,10 @@ interface QuizProps {
 
 export function Quiz({ quiz, onComplete }: QuizProps) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [selectedOption, setSelectedOption] = useState<number | null>(null);
+  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [showExplanation, setShowExplanation] = useState(false);
   const [answers, setAnswers] = useState<
-    { questionId: string; isCorrect: boolean }[]
+    { questionId: string; answer: string; isCorrect: boolean }[]
   >([]);
   const [timeLeft, setTimeLeft] = useState(
     quiz.timeLimit ? quiz.timeLimit * 60 : null
@@ -29,21 +29,28 @@ export function Quiz({ quiz, onComplete }: QuizProps) {
   const totalQuestions = quiz.questions.length;
   const progress = (currentQuestion / totalQuestions) * 100;
 
-  const handleOptionSelect = (optionIndex: number) => {
+  const handleOptionSelect = (option: string) => {
     if (!showExplanation) {
-      setSelectedOption(optionIndex);
+      setSelectedAnswer(option);
     }
   };
 
   const handleNext = () => {
-    if (selectedOption === null) return;
+    if (selectedAnswer === null) return;
 
-    const isCorrect = selectedOption === currentQuestionData.correctOption;
-    setAnswers([...answers, { questionId: currentQuestionData.id, isCorrect }]);
+    const isCorrect = selectedAnswer === currentQuestionData.correctAnswer;
+    setAnswers([
+      ...answers,
+      {
+        questionId: currentQuestionData.id,
+        answer: selectedAnswer,
+        isCorrect,
+      },
+    ]);
 
     if (currentQuestion + 1 < totalQuestions) {
       setCurrentQuestion(currentQuestion + 1);
-      setSelectedOption(null);
+      setSelectedAnswer(null);
       setShowExplanation(false);
     } else {
       // Quiz completed
@@ -89,7 +96,7 @@ export function Quiz({ quiz, onComplete }: QuizProps) {
             <Button
               onClick={() => {
                 setCurrentQuestion(0);
-                setSelectedOption(null);
+                setSelectedAnswer(null);
                 setShowExplanation(false);
                 setAnswers([]);
                 setIsCompleted(false);
@@ -125,7 +132,7 @@ export function Quiz({ quiz, onComplete }: QuizProps) {
       <div className="space-y-4">
         <h3 className="text-lg font-medium">{currentQuestionData.question}</h3>
         <div className="space-y-2">
-          {currentQuestionData.options.map((option, index) => (
+          {currentQuestionData.options?.map((option, index) => (
             <motion.div
               key={index}
               whileHover={{ scale: 1.01 }}
@@ -134,20 +141,20 @@ export function Quiz({ quiz, onComplete }: QuizProps) {
               <Button
                 variant="outline"
                 className={`w-full justify-start p-4 h-auto ${
-                  selectedOption === index
+                  selectedAnswer === option
                     ? "border-blue-500 bg-blue-50"
                     : "hover:border-gray-400"
                 } ${
                   showExplanation &&
-                  index === currentQuestionData.correctOption &&
+                  option === currentQuestionData.correctAnswer &&
                   "border-green-500 bg-green-50"
                 }`}
-                onClick={() => handleOptionSelect(index)}
+                onClick={() => handleOptionSelect(option)}
               >
                 <span className="mr-2">{String.fromCharCode(65 + index)}.</span>
                 {option}
                 {showExplanation &&
-                  index === currentQuestionData.correctOption && (
+                  option === currentQuestionData.correctAnswer && (
                     <CheckCircle className="w-4 h-4 ml-2 text-green-500" />
                   )}
               </Button>
@@ -166,7 +173,7 @@ export function Quiz({ quiz, onComplete }: QuizProps) {
 
       {/* Actions */}
       <div className="flex justify-end">
-        {!showExplanation && selectedOption !== null && (
+        {!showExplanation && selectedAnswer !== null && (
           <Button onClick={() => setShowExplanation(true)}>
             Verificar respuesta
           </Button>

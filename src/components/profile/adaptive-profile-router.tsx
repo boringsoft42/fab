@@ -4,10 +4,17 @@ import { useCurrentUser } from "@/hooks/use-current-user";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
+import type {
+  Profile,
+  YouthProfile,
+  AdolescentProfile,
+  CompanyProfile,
+  InstitutionProfile,
+} from "@/types/profile";
 
-// Import role-specific profile components (will create these next)
+// Import role-specific profile components
 import { YouthAdolescentProfile } from "./role-specific/youth-adolescent-profile";
-import { CompanyProfile } from "./role-specific/company-profile";
+import { CompanyProfile as CompanyProfileComponent } from "./role-specific/company-profile";
 import { InstitutionalProfile } from "./role-specific/institutional-profile";
 
 export function AdaptiveProfileRouter() {
@@ -59,16 +66,24 @@ export function AdaptiveProfileRouter() {
     case "YOUTH":
     case "ADOLESCENTS":
       return (
-        <YouthAdolescentProfile userRole={profile.role} profile={profile} />
+        <YouthAdolescentProfile
+          userRole={profile.role}
+          profile={profile as YouthProfile | AdolescentProfile}
+        />
       );
 
     case "COMPANIES":
-      return <CompanyProfile profile={profile} />;
+      return <CompanyProfileComponent profile={profile as CompanyProfile} />;
 
     case "MUNICIPAL_GOVERNMENTS":
     case "TRAINING_CENTERS":
     case "NGOS_AND_FOUNDATIONS":
-      return <InstitutionalProfile userRole={profile.role} profile={profile} />;
+      return (
+        <InstitutionalProfile
+          userRole={profile.role}
+          profile={profile as InstitutionProfile}
+        />
+      );
 
     default:
       return (

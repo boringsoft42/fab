@@ -14,6 +14,7 @@ interface RoleGuardProps {
 export function RoleGuard({ children }: RoleGuardProps) {
   const { user, isLoading, error } = useMockAuth();
   const pathname = usePathname();
+  const router = useRouter();
   const [isRedirecting, setIsRedirecting] = useState(false);
 
   useEffect(() => {

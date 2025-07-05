@@ -16,8 +16,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import {
   FileText,
@@ -25,9 +23,6 @@ import {
   MapPin,
   Phone,
   School,
-  Star,
-  User,
-  Briefcase,
   Award,
   Pencil,
   Plus,

@@ -1,44 +1,25 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import confetti from "canvas-confetti";
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import {
   Play,
-  Pause,
   ChevronRight,
-  CheckCircle2,
-  Circle,
-  Clock,
-  FileText,
-  Award,
   ChevronLeft,
   ChevronDown,
   ChevronUp,
-  BookOpen,
-  MessageSquare,
   Lock,
-  Volume2,
-  VolumeX,
-  Maximize,
-  Settings,
-  RotateCcw,
-  RotateCw,
-  Users,
-  Star,
   Download,
 } from "lucide-react";
 import { QuizComponent } from "@/components/courses/quiz-component";
@@ -50,6 +31,7 @@ import type {
   QuizQuestion,
   ResourceType,
 } from "@/types/courses";
+import { LessonPlayer } from "@/components/courses/lesson-player";
 
 interface Resource {
   id: string;
@@ -110,10 +92,10 @@ export default function CourseLeanPage() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [showCertificate, setShowCertificate] = useState(false);
   const [expandedModules, setExpandedModules] = useState<string[]>([]);
-  
+
   const [showMotivationModal, setShowMotivationModal] = useState(false);
   const [motivationMessage, setMotivationMessage] = useState("");
-  
+
   // Video player state
   // 10 minutes for demo
   // Mock course data
@@ -122,7 +104,8 @@ export default function CourseLeanPage() {
       id: courseId,
       title: "Habilidades Laborales Básicas",
       instructor: "Dra. Ana Pérez",
-      description: "Desarrolla las competencias fundamentales para el mundo laboral",
+      description:
+        "Desarrolla las competencias fundamentales para el mundo laboral",
       totalProgress: 15,
       rating: 4.8,
       studentsCount: 2847,
@@ -195,7 +178,7 @@ export default function CourseLeanPage() {
                   url: "/resources/presentacion-habilidades.pdf",
                   fileSize: "3.1 MB",
                   createdAt: new Date(),
-                  updatedAt: new Date()
+                  updatedAt: new Date(),
                 },
                 {
                   id: "res-5",
@@ -204,7 +187,7 @@ export default function CourseLeanPage() {
                   type: "LINK" as ResourceType,
                   url: "https://example.com/recursos",
                   createdAt: new Date(),
-                  updatedAt: new Date()
+                  updatedAt: new Date(),
                 },
               ],
             },
@@ -217,7 +200,8 @@ export default function CourseLeanPage() {
               quiz: {
                 id: "quiz-1",
                 title: "Evaluación: Conceptos básicos",
-                description: "Evalúa tu comprensión de los conceptos fundamentales",
+                description:
+                  "Evalúa tu comprensión de los conceptos fundamentales",
                 timeLimit: 10,
                 passingScore: 70,
                 attempts: 0,
@@ -294,22 +278,25 @@ export default function CourseLeanPage() {
     setExpandedModules([mockCourse.modules[0].id]);
 
     // Mostrar motivación si el progreso es bajo, medio o alto
-const progress = mockCourse.totalProgress;
+    const progress = mockCourse.totalProgress;
 
-if (progress >= 80) {
-  setMotivationMessage("✨ ¡Estás a punto de terminar el curso, sigue así!");
-  setShowMotivationModal(true);
-} else if (progress >= 50) {
-  setMotivationMessage("🔥 ¡Muy bien! Ya pasaste la mitad del camino.");
-  setShowMotivationModal(true);
-} else if (progress >= 20) {
-  setMotivationMessage("🚀 ¡Buen arranque! No te detengas.");
-  setShowMotivationModal(true);
-} else {
-  setMotivationMessage("👣 ¡Vamos! Cada paso cuenta, continúa aprendiendo.");
-  setShowMotivationModal(true);
-}
-
+    if (progress >= 80) {
+      setMotivationMessage(
+        "✨ ¡Estás a punto de terminar el curso, sigue así!"
+      );
+      setShowMotivationModal(true);
+    } else if (progress >= 50) {
+      setMotivationMessage("🔥 ¡Muy bien! Ya pasaste la mitad del camino.");
+      setShowMotivationModal(true);
+    } else if (progress >= 20) {
+      setMotivationMessage("🚀 ¡Buen arranque! No te detengas.");
+      setShowMotivationModal(true);
+    } else {
+      setMotivationMessage(
+        "👣 ¡Vamos! Cada paso cuenta, continúa aprendiendo."
+      );
+      setShowMotivationModal(true);
+    }
   }, [courseId]);
 
   const getCurrentLesson = () => {
@@ -365,7 +352,6 @@ if (progress >= 80) {
           completionDate: new Date().toISOString(),
         };
       }
-      
 
       return updated;
     });
@@ -376,7 +362,7 @@ if (progress >= 80) {
     );
     const currentIndex = allLessons.findIndex((l) => l.id === lessonId);
     const isLastLesson = currentIndex === allLessons.length - 1;
-    
+
     if (isLastLesson) {
       // Confeti final por terminar TODO el curso
       confetti({
@@ -391,7 +377,6 @@ if (progress >= 80) {
         goToNextLesson();
       }, 1000);
     }
-    
   };
 
   const goToNextLesson = () => {
@@ -467,16 +452,15 @@ if (progress >= 80) {
   }
 
   return (
-    
     <div className="min-h-screen bg-gray-50">
       <Dialog open={showMotivationModal} onOpenChange={setShowMotivationModal}>
-  <DialogContent className="text-center">
-    <DialogHeader>
-      <DialogTitle>💡 Motivación del día</DialogTitle>
-    </DialogHeader>
-    <p className="text-lg">{motivationMessage}</p>
-  </DialogContent>
-</Dialog>
+        <DialogContent className="text-center">
+          <DialogHeader>
+            <DialogTitle>💡 Motivación del día</DialogTitle>
+          </DialogHeader>
+          <p className="text-lg">{motivationMessage}</p>
+        </DialogContent>
+      </Dialog>
 
       {/* Header */}
       <div className="bg-white border-b border-gray-200 px-6 py-4">
@@ -589,35 +573,39 @@ if (progress >= 80) {
                 </Button>
 
                 {(() => {
-  const allLessons = course.modules.flatMap((m) =>
-    m.lessons.map((l) => ({ ...l, moduleId: m.id }))
-  );
-  const currentIndex = allLessons.findIndex((l) => l.id === currentLessonId);
-  const isLastLesson = currentIndex === allLessons.length - 1;
+                  const allLessons = course.modules.flatMap((m) =>
+                    m.lessons.map((l) => ({ ...l, moduleId: m.id }))
+                  );
+                  const currentIndex = allLessons.findIndex(
+                    (l) => l.id === currentLessonId
+                  );
+                  const isLastLesson = currentIndex === allLessons.length - 1;
 
-  if (course.totalProgress === 100 || isLastLesson) {
-    return (
-      <Button
-        onClick={() => {
-          confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
-          setShowCertificate(true);
-        }}
-        className="bg-green-600 hover:bg-green-700 text-white"
-      >
-        🎉 Celebrar finalización
-      </Button>
-    );
-  }
+                  if (course.totalProgress === 100 || isLastLesson) {
+                    return (
+                      <Button
+                        onClick={() => {
+                          confetti({
+                            particleCount: 200,
+                            spread: 80,
+                            origin: { y: 0.6 },
+                          });
+                          setShowCertificate(true);
+                        }}
+                        className="bg-green-600 hover:bg-green-700 text-white"
+                      >
+                        🎉 Celebrar finalización
+                      </Button>
+                    );
+                  }
 
-  return (
-    <Button onClick={goToNextLesson}>
-      Siguiente lección
-      <ChevronRight className="h-4 w-4 ml-1" />
-    </Button>
-  );
-})()}
-
-
+                  return (
+                    <Button onClick={goToNextLesson}>
+                      Siguiente lección
+                      <ChevronRight className="h-4 w-4 ml-1" />
+                    </Button>
+                  );
+                })()}
               </div>
             </div>
           </div>

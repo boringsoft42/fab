@@ -99,7 +99,7 @@ export function DashboardMunicipio() {
       ...newCompany,
       id: Date.now().toString(),
       logo: "/placeholder.svg?height=60&width=60",
-      values: typeof newCompany.values === "string" ? newCompany.values.split(",").map((v) => v.trim()) : [],
+      values: Array.isArray(newCompany.values) ? newCompany.values : [],
     } as Company
 
     setCompanies([...companies, company])
@@ -340,7 +340,7 @@ export function DashboardMunicipio() {
                 <Input
                   id="values"
                   value={Array.isArray(newCompany.values) ? newCompany.values.join(", ") : newCompany.values}
-                  onChange={(e) => setNewCompany({ ...newCompany, values: e.target.value })}
+                  onChange={(e) => setNewCompany({ ...newCompany, values: e.target.value.split(",").map((v) => v.trim()) })}
                   placeholder="Innovación, Excelencia, Integridad (separados por comas)"
                 />
               </div>

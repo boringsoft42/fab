@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -136,6 +136,9 @@ export function QuizBuilder({
 
   const moveQuestion = (questionId: string, direction: "up" | "down") => {
     const questions = [...quiz.questions];
+    const index = questions.findIndex((q) => q.id === questionId);
+    if (index === -1) return;
+
     if (direction === "up" && index > 0) {
       [questions[index], questions[index - 1]] = [
         questions[index - 1],
@@ -637,7 +640,7 @@ function QuestionDialog({
     points: 10,
   });
 
-  useState(() => {
+  useEffect(() => {
     if (question) {
       setQuestionData({
         type: question.type,
@@ -699,7 +702,13 @@ function QuestionDialog({
               <Label>Tipo de Pregunta</Label>
               <Select
                 value={questionData.type}
-                onValueChange={(value: unknown) => updateQuestion({ type: value })}
+                onValueChange={(
+                  value:
+                    | "multiple_choice"
+                    | "true_false"
+                    | "short_answer"
+                    | "multiple_select"
+                ) => updateQuestion({ type: value })}
               >
                 <SelectTrigger>
                   <SelectValue />

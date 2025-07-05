@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useAuth } from "@/providers/auth-provider";
 import { Button } from "@/components/ui/button";
@@ -9,8 +9,12 @@ interface DashboardButtonProps {
   className?: string;
 }
 
-export default function DashboardButton({ className }: DashboardButtonProps = {}) {
+export default function DashboardButton({
+  className,
+}: DashboardButtonProps = {}) {
+  const router = useRouter();
   const { user, isLoading } = useAuth();
+
   if (isLoading || !user) return null;
 
   return (
@@ -22,4 +26,4 @@ export default function DashboardButton({ className }: DashboardButtonProps = {}
       Go to Dashboard
     </Button>
   );
-} 
+}

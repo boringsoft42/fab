@@ -7,11 +7,6 @@ import SpeechRecognition, {
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "@/components/ui/carousel";
 import { Mic, MicOff, ArrowRight } from "lucide-react";
 
 const interviewQuestions = [

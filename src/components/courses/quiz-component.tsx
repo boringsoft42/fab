@@ -1,7 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Quiz, Question, QuestionType, QuizAnswer } from "@/types/courses";
+import {
+  Quiz,
+  QuizQuestion as Question,
+  QuestionType,
+  QuizAnswer,
+} from "@/types/courses";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -464,7 +469,7 @@ const QuestionInput = ({
     case QuestionType.TRUE_FALSE:
       return (
         <RadioGroup value={value as string} onValueChange={onChange}>
-          {question.options?.map((option) => (
+          {question.options?.map((option: string) => (
             <div key={option} className="flex items-center space-x-2">
               <RadioGroupItem value={option} id={option} />
               <label htmlFor={option} className="cursor-pointer flex-1 py-2">
@@ -478,7 +483,7 @@ const QuestionInput = ({
     case QuestionType.MULTIPLE_SELECT:
       return (
         <div className="space-y-3">
-          {question.options?.map((option) => (
+          {question.options?.map((option: string) => (
             <div key={option} className="flex items-center space-x-2">
               <Checkbox
                 id={option}

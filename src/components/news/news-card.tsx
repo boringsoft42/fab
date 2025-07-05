@@ -24,6 +24,9 @@ interface NewsCardProps {
 }
 
 export function NewsCard({ news }: NewsCardProps) {
+  const router = useRouter();
+  const [isHovered, setIsHovered] = useState(false);
+
   const handleClick = () => {
     router.push(`/news/${news.id}`);
   };

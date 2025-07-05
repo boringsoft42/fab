@@ -27,7 +27,6 @@ import {
   Filter,
   Search,
   MoreHorizontal,
-  Download,
   Share2,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -35,7 +34,11 @@ import { formatDistanceToNow } from "date-fns";
 import { es } from "date-fns/locale";
 
 interface UserCourse {
-  enrollment: Enrollment;
+  enrollment: Enrollment & {
+    progress: {
+      progress: number;
+    };
+  };
   course: {
     id: string;
     title: string;
@@ -81,6 +84,7 @@ export default function MyCoursesPage() {
   const fetchMyCourses = async () => {
     try {
       setLoading(true);
+      const params = new URLSearchParams();
       params.append("userId", "user-1"); // Replace with actual user ID
       if (filter !== "all") {
         params.append("status", filter);
@@ -470,12 +474,9 @@ const CourseCard = ({ userCourse }: { userCourse: UserCourse }) => {
           <div className="mb-3">
             <div className="flex justify-between text-sm mb-1">
               <span>Progreso</span>
-              <span>{enrollment.progress.totalProgress}%</span>
+              <span>{enrollment.progress.progress}%</span>
             </div>
-            <Progress
-              value={enrollment.progress.totalProgress}
-              className="h-2"
-            />
+            <Progress value={enrollment.progress.progress} className="h-2" />
           </div>
         )}
 
