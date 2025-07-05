@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { Lesson } from "@/types/courses";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   Play,
   Pause,
@@ -28,6 +28,13 @@ export const LessonPlayer = ({ lesson, onComplete }: LessonPlayerProps) => {
   const [playbackRate, setPlaybackRate] = useState(1);
   const [watchedPercentage, setWatchedPercentage] = useState(0);
   const [isCompleted, setIsCompleted] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [volume, setVolume] = useState(1);
+  const [isMuted, setIsMuted] = useState(false);
+  const [showControls, setShowControls] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;

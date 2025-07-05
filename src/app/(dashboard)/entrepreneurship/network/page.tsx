@@ -185,8 +185,7 @@ export default function NetworkingPage() {
         {
           id: "event-1",
           title: "Startup Pitch Night Cochabamba",
-          description:
-            "Noche de pitches para startups emergentes. Oportunidad de presentar tu idea ante inversionistas y mentores.",
+          description: "Noche de pitches para startups emergentes. Oportunidad de presentar tu idea ante inversionistas y mentores.",
           date: new Date("2024-03-15"),
           time: "19:00 - 22:00",
           location: "Centro de Convenciones Cochabamba",
@@ -202,8 +201,7 @@ export default function NetworkingPage() {
         {
           id: "event-2",
           title: "Workshop: Marketing Digital para Emprendedores",
-          description:
-            "Aprende estrategias efectivas de marketing digital para hacer crecer tu emprendimiento.",
+          description: "Aprende estrategias efectivas de marketing digital para hacer crecer tu emprendimiento.",
           date: new Date("2024-03-20"),
           time: "14:00 - 17:00",
           location: "Online - Zoom",
@@ -219,8 +217,7 @@ export default function NetworkingPage() {
         {
           id: "event-3",
           title: "Feria de Emprendimientos Sostenibles",
-          description:
-            "Exposición de emprendimientos con enfoque en sostenibilidad y responsabilidad social.",
+          description: "Exposición de emprendimientos con enfoque en sostenibilidad y responsabilidad social.",
           date: new Date("2024-03-25"),
           time: "09:00 - 18:00",
           location: "Plaza Murillo, La Paz",

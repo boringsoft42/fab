@@ -46,8 +46,7 @@ export function DashboardMunicipio() {
     {
       id: "1",
       name: "Cemse Innovación",
-      description:
-        "Empresa líder en desarrollo de soluciones tecnológicas innovadoras para el sector empresarial boliviano. Nos especializamos en transformación digital y consultoría estratégica.",
+      description: "Empresa líder en desarrollo de soluciones tecnológicas innovadoras para el sector empresarial boliviano. Nos especializamos en transformación digital y consultoría estratégica.",
       logo: "/placeholder.svg?height=60&width=60",
       industry: "Tecnología",
       size: "51-200 empleados",

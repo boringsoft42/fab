@@ -85,15 +85,13 @@ export default function ProfilePage() {
       {
         id: "1",
         title: "Primer lugar en Feria de Ciencias 2023",
-        description:
-          "Proyecto de innovación tecnológica para el cuidado del medio ambiente",
+        description: "Proyecto de innovación tecnológica para el cuidado del medio ambiente",
         date: "2023",
       },
       {
         id: "2",
         title: "Líder del Club de Emprendimiento",
-        description:
-          "Liderazgo de equipo y organización de eventos de emprendimiento",
+        description: "Liderazgo de equipo y organización de eventos de emprendimiento",
         date: "2022-2023",
       },
     ],

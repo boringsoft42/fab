@@ -75,8 +75,7 @@ export default function CompanyProfilePage() {
   const [profile, setProfile] = useState<CompanyProfile>({
     id: "company-1",
     name: "Cemse Innovación",
-    description:
-      "Empresa líder en desarrollo de soluciones tecnológicas innovadoras para el sector empresarial boliviano. Nos especializamos en transformación digital y consultoría estratégica.",
+    description: "Empresa líder en desarrollo de soluciones tecnológicas innovadoras para el sector empresarial boliviano. Nos especializamos en transformación digital y consultoría estratégica.",
     logo: "/placeholder.svg?height=100&width=100",
     coverImage: "/placeholder.svg?height=300&width=800",
     industry: "Tecnología",

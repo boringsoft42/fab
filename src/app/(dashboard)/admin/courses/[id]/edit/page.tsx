@@ -113,8 +113,7 @@ export default function EditCoursePage() {
 
   const [courseData] = useState({
     title: "Habilidades Laborales Básicas",
-    description:
-      "Curso completo sobre competencias fundamentales para el trabajo",
+    description: "Curso completo sobre competencias fundamentales para el trabajo",
     category: CourseCategory.SOFT_SKILLS,
     level: CourseLevel.BEGINNER,
     duration: 8,
@@ -214,8 +213,8 @@ export default function EditCoursePage() {
   };
 
   const handleAddLesson = (moduleId: string, lessonData: Partial<Lesson>) => {
-    const module = modules.find((m) => m.id === moduleId);
-    if (!module) return;
+    const targetModule = modules.find((m) => m.id === moduleId);
+    if (!targetModule) return;
 
     const newLesson: Lesson = {
       id: `lesson-${Date.now()}`,
@@ -225,7 +224,7 @@ export default function EditCoursePage() {
       type: lessonData.type || "video",
       content: lessonData.content || {},
       duration: lessonData.duration || 0,
-      order: module.lessons.length + 1,
+      order: targetModule.lessons.length + 1,
       isPreview: false,
       ...lessonData,
     };

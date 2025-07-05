@@ -8,43 +8,37 @@ const features = [
     id: "mental-fitness",
     icon: Brain,
     title: "Mental Fitness",
-    description:
-      "Train your mind to overcome negative thoughts and boost your mental resilience.",
+    description: "Train your mind to overcome negative thoughts and boost your mental resilience.",
   },
   {
     id: "emotional-intelligence",
     icon: Heart,
     title: "Emotional Intelligence",
-    description:
-      "Develop a deeper understanding of your emotions and learn to manage them effectively.",
+    description: "Develop a deeper understanding of your emotions and learn to manage them effectively.",
   },
   {
     id: "peak-performance",
     icon: Zap,
     title: "Peak Performance",
-    description:
-      "Unlock your full potential and achieve your goals with a positive mindset.",
+    description: "Unlock your full potential and achieve your goals with a positive mindset.",
   },
   {
     id: "goal-setting",
     icon: Target,
     title: "Goal Setting",
-    description:
-      "Learn to set and achieve meaningful goals that align with your values and aspirations.",
+    description: "Learn to set and achieve meaningful goals that align with your values and aspirations.",
   },
   {
     id: "stress-management",
     icon: Smile,
     title: "Stress Management",
-    description:
-      "Discover techniques to reduce stress and maintain a calm, focused state of mind.",
+    description: "Discover techniques to reduce stress and maintain a calm, focused state of mind.",
   },
   {
     id: "personal-growth",
     icon: TrendingUp,
     title: "Personal Growth",
-    description:
-      "Embark on a journey of continuous self-improvement and lifelong learning.",
+    description: "Embark on a journey of continuous self-improvement and lifelong learning.",
   },
 ].map((feature, index) => ({
   ...feature,

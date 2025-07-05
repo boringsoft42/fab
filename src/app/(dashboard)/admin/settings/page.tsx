@@ -108,8 +108,7 @@ export default function MunicipalProfilePage() {
   const [profile, setProfile] = useState<MunicipalProfile>({
     id: "municipality-1",
     name: "Municipio de La Paz",
-    description:
-      "Sede de gobierno de Bolivia, centro político, administrativo y cultural del país. Comprometidos con el desarrollo sostenible y la mejora de la calidad de vida de nuestros ciudadanos.",
+    description: "Sede de gobierno de Bolivia, centro político, administrativo y cultural del país. Comprometidos con el desarrollo sostenible y la mejora de la calidad de vida de nuestros ciudadanos.",
     logo: "/placeholder.svg?height=100&width=100",
     coverImage: "/placeholder.svg?height=300&width=800",
     department: "La Paz",

@@ -69,8 +69,7 @@ export default function ResourcesPage() {
         {
           id: "resource-1",
           title: "Plantilla de Plan de Negocios 2024",
-          description:
-            "Plantilla completa en Word con todas las secciones necesarias para crear un plan de negocios profesional. Incluye ejemplos y guías paso a paso.",
+          description: "Plantilla completa en Word con todas las secciones necesarias para crear un plan de negocios profesional. Incluye ejemplos y guías paso a paso.",
           type: "template",
           category: "Planificación",
           downloads: 2847,
@@ -86,8 +85,7 @@ export default function ResourcesPage() {
         {
           id: "resource-2",
           title: "Guía de Validación de Mercado",
-          description:
-            "Metodología completa para validar tu idea de negocio antes de invertir tiempo y dinero. Incluye herramientas prácticas y casos de estudio bolivianos.",
+          description: "Metodología completa para validar tu idea de negocio antes de invertir tiempo y dinero. Incluye herramientas prácticas y casos de estudio bolivianos.",
           type: "guide",
           category: "Validación",
           downloads: 1923,
@@ -108,8 +106,7 @@ export default function ResourcesPage() {
         {
           id: "resource-3",
           title: "Finanzas para Emprendedores",
-          description:
-            "Video curso completo sobre gestión financiera básica para startups. Aprende a manejar flujo de caja, proyecciones y métricas financieras clave.",
+          description: "Video curso completo sobre gestión financiera básica para startups. Aprende a manejar flujo de caja, proyecciones y métricas financieras clave.",
           type: "video",
           category: "Finanzas",
           downloads: 3456,
@@ -125,8 +122,7 @@ export default function ResourcesPage() {
         {
           id: "resource-4",
           title: "Calculadora de Proyecciones Financieras",
-          description:
-            "Herramienta Excel interactiva para calcular proyecciones financieras automáticamente. Incluye gráficos dinámicos y análisis de sensibilidad.",
+          description: "Herramienta Excel interactiva para calcular proyecciones financieras automáticamente. Incluye gráficos dinámicos y análisis de sensibilidad.",
           type: "tool",
           category: "Finanzas",
           downloads: 1567,
@@ -142,8 +138,7 @@ export default function ResourcesPage() {
         {
           id: "resource-5",
           title: "Podcast: Emprendedores Bolivianos Exitosos",
-          description:
-            "Serie de entrevistas inspiradoras con emprendedores bolivianos que han escalado sus negocios. Aprende de sus experiencias y estrategias.",
+          description: "Serie de entrevistas inspiradoras con emprendedores bolivianos que han escalado sus negocios. Aprende de sus experiencias y estrategias.",
           type: "podcast",
           category: "Inspiración",
           downloads: 892,
@@ -164,8 +159,7 @@ export default function ResourcesPage() {
         {
           id: "resource-6",
           title: "Cómo Presentar tu Startup a Inversionistas",
-          description:
-            "Masterclass completa sobre cómo crear y presentar un pitch deck efectivo. Incluye plantillas y ejemplos de presentaciones exitosas.",
+          description: "Masterclass completa sobre cómo crear y presentar un pitch deck efectivo. Incluye plantillas y ejemplos de presentaciones exitosas.",
           type: "video",
           category: "Fundraising",
           downloads: 2156,

@@ -39,8 +39,7 @@ export default function InstitutionProfilePage() {
   const institution: Institution = {
     id: "1",
     name: "CEMSE Innovation Hub",
-    description:
-      "Incubadora especializada en tecnología y emprendimientos juveniles con enfoque en innovación social",
+    description: "Incubadora especializada en tecnología y emprendimientos juveniles con enfoque en innovación social",
     type: "incubator",
     category: "Tecnología",
     logo: "/logos/cemse.svg",

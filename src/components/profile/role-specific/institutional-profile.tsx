@@ -49,8 +49,7 @@ export function InstitutionalProfile({
       case "MUNICIPAL_GOVERNMENTS":
         return {
           title: "Perfil de Gobierno Municipal",
-          description:
-            "Gestion de programas de empleabilidad y emprendimiento municipal",
+          description: "Gestion de programas de empleabilidad y emprendimiento municipal",
           badge: "Gobierno Municipal",
           icon: Building,
         };

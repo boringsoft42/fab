@@ -84,8 +84,7 @@ export default function CourseManagementPage() {
           id: "course-1",
           title: "Habilidades Laborales Básicas",
           slug: "habilidades-laborales-basicas",
-          description:
-            "Curso completo sobre competencias fundamentales para el trabajo",
+          description: "Curso completo sobre competencias fundamentales para el trabajo",
           shortDescription:
             "Desarrolla las competencias esenciales para el éxito laboral",
           thumbnail: "/api/placeholder/400/300",

@@ -122,8 +122,7 @@ export default function CourseLeanPage() {
       id: courseId,
       title: "Habilidades Laborales Básicas",
       instructor: "Dra. Ana Pérez",
-      description:
-        "Desarrolla las competencias fundamentales para el mundo laboral",
+      description: "Desarrolla las competencias fundamentales para el mundo laboral",
       totalProgress: 15,
       rating: 4.8,
       studentsCount: 2847,
@@ -218,8 +217,7 @@ export default function CourseLeanPage() {
               quiz: {
                 id: "quiz-1",
                 title: "Evaluación: Conceptos básicos",
-                description:
-                  "Evalúa tu comprensión de los conceptos fundamentales",
+                description: "Evalúa tu comprensión de los conceptos fundamentales",
                 timeLimit: 10,
                 passingScore: 70,
                 attempts: 0,
