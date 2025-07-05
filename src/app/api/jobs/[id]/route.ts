@@ -62,6 +62,7 @@ const mockJobs: JobOffer[] = [
     status: "ACTIVE",
     publishedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
     closingDate: new Date(Date.now() + 28 * 24 * 60 * 60 * 1000).toISOString(),
+    expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
     applicationCount: 15,
     viewCount: 124,
     featured: true,
@@ -141,6 +142,7 @@ const mockJobs: JobOffer[] = [
     status: "ACTIVE",
     publishedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
     closingDate: new Date(Date.now() + 21 * 24 * 60 * 60 * 1000).toISOString(),
+    expiresAt: new Date(Date.now() + 23 * 24 * 60 * 60 * 1000).toISOString(),
     applicationCount: 8,
     viewCount: 89,
     questions: [
@@ -219,6 +221,7 @@ const mockJobs: JobOffer[] = [
     status: "ACTIVE",
     publishedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
     closingDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
+    expiresAt: new Date(Date.now() + 16 * 24 * 60 * 60 * 1000).toISOString(),
     applicationCount: 23,
     viewCount: 156,
     questions: [
