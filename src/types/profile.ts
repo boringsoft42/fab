@@ -3,7 +3,7 @@ import type {
   UserStatus,
   EducationLevel,
   CompanySize,
-} from &ldquo;@prisma/client&rdquo;;
+} from "@prisma/client";
 
 export interface Profile {
   id: string;
@@ -69,7 +69,7 @@ export interface Profile {
 
 // Utility types for different user roles
 export type YouthProfile = Profile & {
-  role: &ldquo;YOUTH&rdquo;;
+  role: "YOUTH";
   educationLevel?: EducationLevel;
   skills: string[];
   interests: string[];
@@ -77,7 +77,7 @@ export type YouthProfile = Profile & {
 };
 
 export type AdolescentProfile = Profile & {
-  role: &ldquo;ADOLESCENTS&rdquo;;
+  role: "ADOLESCENTS";
   educationLevel?: EducationLevel;
   skills: string[];
   interests: string[];
@@ -86,7 +86,7 @@ export type AdolescentProfile = Profile & {
 };
 
 export type CompanyProfile = Profile & {
-  role: &ldquo;COMPANIES&rdquo;;
+  role: "COMPANIES";
   companyName: string;
   taxId?: string;
   legalRepresentative?: string;
@@ -96,7 +96,7 @@ export type CompanyProfile = Profile & {
 };
 
 export type InstitutionProfile = Profile & {
-  role: &ldquo;MUNICIPAL_GOVERNMENTS&rdquo; | &ldquo;TRAINING_CENTERS&rdquo; | &ldquo;NGOS_AND_FOUNDATIONS&rdquo;;
+  role: "MUNICIPAL_GOVERNMENTS" | "TRAINING_CENTERS" | "NGOS_AND_FOUNDATIONS";
   institutionName: string;
   institutionType?: string;
   serviceArea?: string;
@@ -127,9 +127,9 @@ export interface JobOffer {
   benefits?: string;
   salaryMin?: number;
   salaryMax?: number;
-  contractType: &ldquo;PAID&rdquo; | &ldquo;INTERNSHIP&rdquo; | &ldquo;VOLUNTEER&rdquo;;
-  workSchedule: &ldquo;FULL_TIME&rdquo; | &ldquo;PART_TIME&rdquo; | &ldquo;FLEXIBLE&rdquo;;
-  workModality: &ldquo;ON_SITE&rdquo; | &ldquo;REMOTE&rdquo; | &ldquo;HYBRID&rdquo;;
+  contractType: "PAID" | "INTERNSHIP" | "VOLUNTEER";
+  workSchedule: "FULL_TIME" | "PART_TIME" | "FLEXIBLE";
+  workModality: "ON_SITE" | "REMOTE" | "HYBRID";
   location: string;
   municipality: string;
   department: string;
@@ -152,7 +152,7 @@ export interface JobApplication {
   jobOfferId: string;
   coverLetter?: string;
   cvUrl?: string;
-  status: &ldquo;SENT&rdquo; | &ldquo;UNDER_REVIEW&rdquo; | &ldquo;PRE_SELECTED&rdquo; | &ldquo;REJECTED&rdquo; | &ldquo;HIRED&rdquo;;
+  status: "SENT" | "UNDER_REVIEW" | "PRE_SELECTED" | "REJECTED" | "HIRED";
   appliedAt: Date;
   reviewedAt?: Date;
   notes?: string;
@@ -169,7 +169,7 @@ export interface Course {
   objectives: string[];
   prerequisites: string[];
   duration: number;
-  level: &ldquo;BASIC&rdquo; | &ldquo;INTERMEDIATE&rdquo; | &ldquo;ADVANCED&rdquo;;
+  level: "BASIC" | "INTERMEDIATE" | "ADVANCED";
   category: string;
   thumbnailUrl?: string;
   isMandatory: boolean;
@@ -206,7 +206,7 @@ export interface Entrepreneurship {
   description: string;
   category: string;
   subcategory?: string;
-  businessStage: &ldquo;IDEA&rdquo; | &ldquo;STARTUP&rdquo; | &ldquo;GROWING&rdquo; | &ldquo;ESTABLISHED&rdquo;;
+  businessStage: "IDEA" | "STARTUP" | "GROWING" | "ESTABLISHED";
   logo?: string;
   images: string[];
   website?: string;

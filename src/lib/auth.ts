@@ -20,10 +20,10 @@ export async function auth(): Promise<Session | null> {
 
   // If you're implementing a real auth system, replace this with actual auth logic
   const mockUser: User = {
-    id: &ldquo;user_123&rdquo;,
-    email: &ldquo;user@example.com&rdquo;,
-    name: &ldquo;Demo User&rdquo;,
-    role: &ldquo;USER&rdquo;,
+    id: "user_123",
+    email: "user@example.com",
+    name: "Demo User",
+    role: "USER",
   };
 
   return {

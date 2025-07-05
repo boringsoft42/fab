@@ -1,12 +1,12 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import { useState } from &ldquo;react&rdquo;;
-import Image from &ldquo;next/image&rdquo;;
-import { useRouter } from &ldquo;next/navigation&rdquo;;
-import { motion } from &ldquo;framer-motion&rdquo;;
-import { Eye, Calendar } from &ldquo;lucide-react&rdquo;;
-import { Card } from &ldquo;@/components/ui/card&rdquo;;
-import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
+import { useState } from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+import { Eye, Calendar } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 interface NewsCardProps {
   news: {
@@ -29,10 +29,10 @@ export function NewsCard({ news }: NewsCardProps) {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString(&ldquo;es-ES&rdquo;, {
-      day: &ldquo;2-digit&rdquo;,
-      month: &ldquo;long&rdquo;,
-      year: &ldquo;numeric&rdquo;,
+    return new Date(dateString).toLocaleDateString("es-ES", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
     });
   };
 
@@ -44,52 +44,52 @@ export function NewsCard({ news }: NewsCardProps) {
       onHoverEnd={() => setIsHovered(false)}
     >
       <Card
-        className=&ldquo;overflow-hidden cursor-pointer group&rdquo;
+        className="overflow-hidden cursor-pointer group"
         onClick={handleClick}
       >
-        <div className=&ldquo;relative h-48&rdquo;>
+        <div className="relative h-48">
           <Image
             src={news.imageUrl}
             alt={news.title}
             fill
-            className=&ldquo;object-cover transition-transform duration-300 group-hover:scale-110&rdquo;
+            className="object-cover transition-transform duration-300 group-hover:scale-110"
           />
-          <div className=&ldquo;absolute inset-0 bg-gradient-to-t from-black/60 to-transparent&rdquo; />
-          <div className=&ldquo;absolute bottom-4 left-4 right-4&rdquo;>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+          <div className="absolute bottom-4 left-4 right-4">
             <Badge
-              variant=&ldquo;secondary&rdquo;
-              className=&ldquo;mb-2 bg-white/90 text-gray-800&rdquo;
+              variant="secondary"
+              className="mb-2 bg-white/90 text-gray-800"
             >
               {news.category}
             </Badge>
           </div>
         </div>
 
-        <div className=&ldquo;p-4 space-y-4&rdquo;>
-          <div className=&ldquo;flex items-center gap-2 mb-3&rdquo;>
+        <div className="p-4 space-y-4">
+          <div className="flex items-center gap-2 mb-3">
             <Image
               src={news.authorLogo}
               alt={news.authorName}
               width={24}
               height={24}
-              className=&ldquo;rounded-full&rdquo;
+              className="rounded-full"
             />
-            <span className=&ldquo;text-sm text-gray-600&rdquo;>{news.authorName}</span>
+            <span className="text-sm text-gray-600">{news.authorName}</span>
           </div>
 
-          <h3 className=&ldquo;font-semibold text-lg line-clamp-2 group-hover:text-blue-600 transition-colors&rdquo;>
+          <h3 className="font-semibold text-lg line-clamp-2 group-hover:text-blue-600 transition-colors">
             {news.title}
           </h3>
 
-          <p className=&ldquo;text-gray-600 text-sm line-clamp-2&rdquo;>{news.summary}</p>
+          <p className="text-gray-600 text-sm line-clamp-2">{news.summary}</p>
 
-          <div className=&ldquo;flex items-center justify-between text-sm text-gray-500 pt-2&rdquo;>
-            <div className=&ldquo;flex items-center gap-1&rdquo;>
-              <Calendar className=&ldquo;w-4 h-4&rdquo; />
+          <div className="flex items-center justify-between text-sm text-gray-500 pt-2">
+            <div className="flex items-center gap-1">
+              <Calendar className="w-4 h-4" />
               <span>{formatDate(news.publishedAt)}</span>
             </div>
-            <div className=&ldquo;flex items-center gap-1&rdquo;>
-              <Eye className=&ldquo;w-4 h-4&rdquo; />
+            <div className="flex items-center gap-1">
+              <Eye className="w-4 h-4" />
               <span>{news.viewCount}</span>
             </div>
           </div>

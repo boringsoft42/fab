@@ -1,17 +1,17 @@
-import { NextRequest, NextResponse } from &ldquo;next/server&rdquo;;
+import { NextRequest, NextResponse } from "next/server";
 
 // Mock data for demonstration - in real app this would come from Prisma/database
 const students = [
   {
-    id: &ldquo;student-1&rdquo;,
-    name: &ldquo;María González&rdquo;,
-    email: &ldquo;maria.gonzalez@email.com&rdquo;,
-    avatar: &ldquo;/api/placeholder/60/60&rdquo;,
+    id: "student-1",
+    name: "María González",
+    email: "maria.gonzalez@email.com",
+    avatar: "/api/placeholder/60/60",
     age: 22,
-    location: &ldquo;Santa Cruz, Bolivia&rdquo;,
-    phone: &ldquo;+591-3-1234567&rdquo;,
-    enrollmentDate: new Date(&ldquo;2024-01-15&rdquo;),
-    status: &ldquo;active&rdquo;,
+    location: "Santa Cruz, Bolivia",
+    phone: "+591-3-1234567",
+    enrollmentDate: new Date("2024-01-15"),
+    status: "active",
     totalCourses: 3,
     completedCourses: 1,
     inProgressCourses: 2,
@@ -19,37 +19,37 @@ const students = [
     completedHours: 32,
     overallProgress: 71,
     certificates: 1,
-    lastActivity: new Date(&ldquo;2024-02-28&rdquo;),
+    lastActivity: new Date("2024-02-28"),
     enrolledCourses: [
       {
-        courseId: &ldquo;course-1&rdquo;,
-        courseName: &ldquo;Habilidades Laborales Básicas&rdquo;,
-        instructor: &ldquo;Dr. Roberto Silva&rdquo;,
-        enrollmentDate: new Date(&ldquo;2024-01-15&rdquo;),
+        courseId: "course-1",
+        courseName: "Habilidades Laborales Básicas",
+        instructor: "Dr. Roberto Silva",
+        enrollmentDate: new Date("2024-01-15"),
         progress: 100,
-        status: &ldquo;completed&rdquo;,
+        status: "completed",
         grade: 95,
         timeSpent: 15,
         certificateIssued: true,
       },
       {
-        courseId: &ldquo;course-2&rdquo;,
-        courseName: &ldquo;Emprendimiento Digital&rdquo;,
-        instructor: &ldquo;Lic. Carmen Rodriguez&rdquo;,
-        enrollmentDate: new Date(&ldquo;2024-01-20&rdquo;),
+        courseId: "course-2",
+        courseName: "Emprendimiento Digital",
+        instructor: "Lic. Carmen Rodriguez",
+        enrollmentDate: new Date("2024-01-20"),
         progress: 65,
-        status: &ldquo;in_progress&rdquo;,
+        status: "in_progress",
         grade: null,
         timeSpent: 12,
         certificateIssued: false,
       },
       {
-        courseId: &ldquo;course-3&rdquo;,
-        courseName: &ldquo;Finanzas Personales&rdquo;,
-        instructor: &ldquo;Ing. Luis Mamani&rdquo;,
-        enrollmentDate: new Date(&ldquo;2024-02-01&rdquo;),
+        courseId: "course-3",
+        courseName: "Finanzas Personales",
+        instructor: "Ing. Luis Mamani",
+        enrollmentDate: new Date("2024-02-01"),
         progress: 30,
-        status: &ldquo;in_progress&rdquo;,
+        status: "in_progress",
         grade: null,
         timeSpent: 5,
         certificateIssued: false,
@@ -57,15 +57,15 @@ const students = [
     ],
   },
   {
-    id: &ldquo;student-2&rdquo;,
-    name: &ldquo;Carlos Mamani&rdquo;,
-    email: &ldquo;carlos.mamani@email.com&rdquo;,
-    avatar: &ldquo;/api/placeholder/60/60&rdquo;,
+    id: "student-2",
+    name: "Carlos Mamani",
+    email: "carlos.mamani@email.com",
+    avatar: "/api/placeholder/60/60",
     age: 19,
-    location: &ldquo;La Paz, Bolivia&rdquo;,
-    phone: &ldquo;+591-2-2345678&rdquo;,
-    enrollmentDate: new Date(&ldquo;2024-01-20&rdquo;),
-    status: &ldquo;active&rdquo;,
+    location: "La Paz, Bolivia",
+    phone: "+591-2-2345678",
+    enrollmentDate: new Date("2024-01-20"),
+    status: "active",
     totalCourses: 2,
     completedCourses: 0,
     inProgressCourses: 2,
@@ -73,26 +73,26 @@ const students = [
     completedHours: 18,
     overallProgress: 60,
     certificates: 0,
-    lastActivity: new Date(&ldquo;2024-02-27&rdquo;),
+    lastActivity: new Date("2024-02-27"),
     enrolledCourses: [
       {
-        courseId: &ldquo;course-1&rdquo;,
-        courseName: &ldquo;Habilidades Laborales Básicas&rdquo;,
-        instructor: &ldquo;Dr. Roberto Silva&rdquo;,
-        enrollmentDate: new Date(&ldquo;2024-01-20&rdquo;),
+        courseId: "course-1",
+        courseName: "Habilidades Laborales Básicas",
+        instructor: "Dr. Roberto Silva",
+        enrollmentDate: new Date("2024-01-20"),
         progress: 85,
-        status: &ldquo;in_progress&rdquo;,
+        status: "in_progress",
         grade: null,
         timeSpent: 13,
         certificateIssued: false,
       },
       {
-        courseId: &ldquo;course-4&rdquo;,
-        courseName: &ldquo;Tecnología para Jóvenes&rdquo;,
-        instructor: &ldquo;Ing. Ana Gutierrez&rdquo;,
-        enrollmentDate: new Date(&ldquo;2024-02-05&rdquo;),
+        courseId: "course-4",
+        courseName: "Tecnología para Jóvenes",
+        instructor: "Ing. Ana Gutierrez",
+        enrollmentDate: new Date("2024-02-05"),
         progress: 45,
-        status: &ldquo;in_progress&rdquo;,
+        status: "in_progress",
         grade: null,
         timeSpent: 8,
         certificateIssued: false,
@@ -100,15 +100,15 @@ const students = [
     ],
   },
   {
-    id: &ldquo;student-3&rdquo;,
-    name: &ldquo;Ana Gutiérrez&rdquo;,
-    email: &ldquo;ana.gutierrez@email.com&rdquo;,
-    avatar: &ldquo;/api/placeholder/60/60&rdquo;,
+    id: "student-3",
+    name: "Ana Gutiérrez",
+    email: "ana.gutierrez@email.com",
+    avatar: "/api/placeholder/60/60",
     age: 24,
-    location: &ldquo;Cochabamba, Bolivia&rdquo;,
-    phone: &ldquo;+591-4-3456789&rdquo;,
-    enrollmentDate: new Date(&ldquo;2024-01-10&rdquo;),
-    status: &ldquo;active&rdquo;,
+    location: "Cochabamba, Bolivia",
+    phone: "+591-4-3456789",
+    enrollmentDate: new Date("2024-01-10"),
+    status: "active",
     totalCourses: 4,
     completedCourses: 2,
     inProgressCourses: 2,
@@ -116,48 +116,48 @@ const students = [
     completedHours: 48,
     overallProgress: 80,
     certificates: 2,
-    lastActivity: new Date(&ldquo;2024-02-29&rdquo;),
+    lastActivity: new Date("2024-02-29"),
     enrolledCourses: [
       {
-        courseId: &ldquo;course-1&rdquo;,
-        courseName: &ldquo;Habilidades Laborales Básicas&rdquo;,
-        instructor: &ldquo;Dr. Roberto Silva&rdquo;,
-        enrollmentDate: new Date(&ldquo;2024-01-10&rdquo;),
+        courseId: "course-1",
+        courseName: "Habilidades Laborales Básicas",
+        instructor: "Dr. Roberto Silva",
+        enrollmentDate: new Date("2024-01-10"),
         progress: 100,
-        status: &ldquo;completed&rdquo;,
+        status: "completed",
         grade: 92,
         timeSpent: 15,
         certificateIssued: true,
       },
       {
-        courseId: &ldquo;course-2&rdquo;,
-        courseName: &ldquo;Emprendimiento Digital&rdquo;,
-        instructor: &ldquo;Lic. Carmen Rodriguez&rdquo;,
-        enrollmentDate: new Date(&ldquo;2024-01-15&rdquo;),
+        courseId: "course-2",
+        courseName: "Emprendimiento Digital",
+        instructor: "Lic. Carmen Rodriguez",
+        enrollmentDate: new Date("2024-01-15"),
         progress: 100,
-        status: &ldquo;completed&rdquo;,
+        status: "completed",
         grade: 88,
         timeSpent: 18,
         certificateIssued: true,
       },
       {
-        courseId: &ldquo;course-3&rdquo;,
-        courseName: &ldquo;Finanzas Personales&rdquo;,
-        instructor: &ldquo;Ing. Luis Mamani&rdquo;,
-        enrollmentDate: new Date(&ldquo;2024-02-01&rdquo;),
+        courseId: "course-3",
+        courseName: "Finanzas Personales",
+        instructor: "Ing. Luis Mamani",
+        enrollmentDate: new Date("2024-02-01"),
         progress: 55,
-        status: &ldquo;in_progress&rdquo;,
+        status: "in_progress",
         grade: null,
         timeSpent: 8,
         certificateIssued: false,
       },
       {
-        courseId: &ldquo;course-5&rdquo;,
-        courseName: &ldquo;Liderazgo Juvenil&rdquo;,
-        instructor: &ldquo;Psic. Patricia Sosa&rdquo;,
-        enrollmentDate: new Date(&ldquo;2024-02-10&rdquo;),
+        courseId: "course-5",
+        courseName: "Liderazgo Juvenil",
+        instructor: "Psic. Patricia Sosa",
+        enrollmentDate: new Date("2024-02-10"),
         progress: 25,
-        status: &ldquo;in_progress&rdquo;,
+        status: "in_progress",
         grade: null,
         timeSpent: 7,
         certificateIssued: false,
@@ -165,15 +165,15 @@ const students = [
     ],
   },
   {
-    id: &ldquo;student-4&rdquo;,
-    name: &ldquo;Luis Vargas&rdquo;,
-    email: &ldquo;luis.vargas@email.com&rdquo;,
-    avatar: &ldquo;/api/placeholder/60/60&rdquo;,
+    id: "student-4",
+    name: "Luis Vargas",
+    email: "luis.vargas@email.com",
+    avatar: "/api/placeholder/60/60",
     age: 20,
-    location: &ldquo;Tarija, Bolivia&rdquo;,
-    phone: &ldquo;+591-4-4567890&rdquo;,
-    enrollmentDate: new Date(&ldquo;2024-02-01&rdquo;),
-    status: &ldquo;active&rdquo;,
+    location: "Tarija, Bolivia",
+    phone: "+591-4-4567890",
+    enrollmentDate: new Date("2024-02-01"),
+    status: "active",
     totalCourses: 1,
     completedCourses: 0,
     inProgressCourses: 1,
@@ -181,15 +181,15 @@ const students = [
     completedHours: 3,
     overallProgress: 20,
     certificates: 0,
-    lastActivity: new Date(&ldquo;2024-02-25&rdquo;),
+    lastActivity: new Date("2024-02-25"),
     enrolledCourses: [
       {
-        courseId: &ldquo;course-1&rdquo;,
-        courseName: &ldquo;Habilidades Laborales Básicas&rdquo;,
-        instructor: &ldquo;Dr. Roberto Silva&rdquo;,
-        enrollmentDate: new Date(&ldquo;2024-02-01&rdquo;),
+        courseId: "course-1",
+        courseName: "Habilidades Laborales Básicas",
+        instructor: "Dr. Roberto Silva",
+        enrollmentDate: new Date("2024-02-01"),
         progress: 20,
-        status: &ldquo;in_progress&rdquo;,
+        status: "in_progress",
         grade: null,
         timeSpent: 3,
         certificateIssued: false,
@@ -197,15 +197,15 @@ const students = [
     ],
   },
   {
-    id: &ldquo;student-5&rdquo;,
-    name: &ldquo;Patricia Sosa&rdquo;,
-    email: &ldquo;patricia.sosa@email.com&rdquo;,
-    avatar: &ldquo;/api/placeholder/60/60&rdquo;,
+    id: "student-5",
+    name: "Patricia Sosa",
+    email: "patricia.sosa@email.com",
+    avatar: "/api/placeholder/60/60",
     age: 23,
-    location: &ldquo;Potosí, Bolivia&rdquo;,
-    phone: &ldquo;+591-2-5678901&rdquo;,
-    enrollmentDate: new Date(&ldquo;2024-01-25&rdquo;),
-    status: &ldquo;inactive&rdquo;,
+    location: "Potosí, Bolivia",
+    phone: "+591-2-5678901",
+    enrollmentDate: new Date("2024-01-25"),
+    status: "inactive",
     totalCourses: 2,
     completedCourses: 1,
     inProgressCourses: 0,
@@ -213,26 +213,26 @@ const students = [
     completedHours: 15,
     overallProgress: 50,
     certificates: 1,
-    lastActivity: new Date(&ldquo;2024-02-10&rdquo;),
+    lastActivity: new Date("2024-02-10"),
     enrolledCourses: [
       {
-        courseId: &ldquo;course-1&rdquo;,
-        courseName: &ldquo;Habilidades Laborales Básicas&rdquo;,
-        instructor: &ldquo;Dr. Roberto Silva&rdquo;,
-        enrollmentDate: new Date(&ldquo;2024-01-25&rdquo;),
+        courseId: "course-1",
+        courseName: "Habilidades Laborales Básicas",
+        instructor: "Dr. Roberto Silva",
+        enrollmentDate: new Date("2024-01-25"),
         progress: 100,
-        status: &ldquo;completed&rdquo;,
+        status: "completed",
         grade: 87,
         timeSpent: 15,
         certificateIssued: true,
       },
       {
-        courseId: &ldquo;course-2&rdquo;,
-        courseName: &ldquo;Emprendimiento Digital&rdquo;,
-        instructor: &ldquo;Lic. Carmen Rodriguez&rdquo;,
-        enrollmentDate: new Date(&ldquo;2024-02-01&rdquo;),
+        courseId: "course-2",
+        courseName: "Emprendimiento Digital",
+        instructor: "Lic. Carmen Rodriguez",
+        enrollmentDate: new Date("2024-02-01"),
         progress: 15,
-        status: &ldquo;dropped&rdquo;,
+        status: "dropped",
         grade: null,
         timeSpent: 2,
         certificateIssued: false,
@@ -245,13 +245,13 @@ const students = [
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const search = searchParams.get(&ldquo;search&rdquo;);
-    const status = searchParams.get(&ldquo;status&rdquo;);
-    const course = searchParams.get(&ldquo;course&rdquo;);
-    const sortBy = searchParams.get(&ldquo;sortBy&rdquo;) || &ldquo;name&rdquo;;
-    const sortOrder = searchParams.get(&ldquo;sortOrder&rdquo;) || &ldquo;asc&rdquo;;
-    const limit = parseInt(searchParams.get(&ldquo;limit&rdquo;) || &ldquo;10&rdquo;);
-    const page = parseInt(searchParams.get(&ldquo;page&rdquo;) || &ldquo;1&rdquo;);
+    const search = searchParams.get("search");
+    const status = searchParams.get("status");
+    const course = searchParams.get("course");
+    const sortBy = searchParams.get("sortBy") || "name";
+    const sortOrder = searchParams.get("sortOrder") || "asc";
+    const limit = parseInt(searchParams.get("limit") || "10");
+    const page = parseInt(searchParams.get("page") || "1");
 
     let filtered = [...students];
 
@@ -266,12 +266,12 @@ export async function GET(request: NextRequest) {
     }
 
     // Apply status filter
-    if (status && status !== &ldquo;all&rdquo;) {
+    if (status && status !== "all") {
       filtered = filtered.filter((student) => student.status === status);
     }
 
     // Apply course filter
-    if (course && course !== &ldquo;all&rdquo;) {
+    if (course && course !== "all") {
       filtered = filtered.filter((student) =>
         student.enrolledCourses.some(
           (enrollment) => enrollment.courseId === course
@@ -284,19 +284,19 @@ export async function GET(request: NextRequest) {
       let aValue, bValue;
 
       switch (sortBy) {
-        case &ldquo;name&rdquo;:
+        case "name":
           aValue = a.name;
           bValue = b.name;
           break;
-        case &ldquo;enrollmentDate&rdquo;:
+        case "enrollmentDate":
           aValue = new Date(a.enrollmentDate);
           bValue = new Date(b.enrollmentDate);
           break;
-        case &ldquo;progress&rdquo;:
+        case "progress":
           aValue = a.overallProgress;
           bValue = b.overallProgress;
           break;
-        case &ldquo;courses&rdquo;:
+        case "courses":
           aValue = a.totalCourses;
           bValue = b.totalCourses;
           break;
@@ -305,8 +305,8 @@ export async function GET(request: NextRequest) {
           bValue = b.name;
       }
 
-      if (aValue < bValue) return sortOrder === &ldquo;asc&rdquo; ? -1 : 1;
-      if (aValue > bValue) return sortOrder === &ldquo;asc&rdquo; ? 1 : -1;
+      if (aValue < bValue) return sortOrder === "asc" ? -1 : 1;
+      if (aValue > bValue) return sortOrder === "asc" ? 1 : -1;
       return 0;
     });
 
@@ -318,8 +318,8 @@ export async function GET(request: NextRequest) {
     // Calculate statistics
     const stats = {
       total: filtered.length,
-      active: students.filter((s) => s.status === &ldquo;active&rdquo;).length,
-      inactive: students.filter((s) => s.status === &ldquo;inactive&rdquo;).length,
+      active: students.filter((s) => s.status === "active").length,
+      inactive: students.filter((s) => s.status === "inactive").length,
       totalEnrollments: students.reduce((sum, s) => sum + s.totalCourses, 0),
       totalCertificates: students.reduce((sum, s) => sum + s.certificates, 0),
       averageProgress:
@@ -343,9 +343,9 @@ export async function GET(request: NextRequest) {
       stats,
     });
   } catch (error) {
-    console.error(&ldquo;Error fetching students:&rdquo;, error);
+    console.error("Error fetching students:", error);
     return NextResponse.json(
-      { error: &ldquo;Error al obtener estudiantes&rdquo; },
+      { error: "Error al obtener estudiantes" },
       { status: 500 }
     );
   }
@@ -357,7 +357,7 @@ export async function POST(request: NextRequest) {
     const data = await request.json();
 
     // Validate required fields
-    const requiredFields = [&ldquo;name&rdquo;, &ldquo;email&rdquo;];
+    const requiredFields = ["name", "email"];
     for (const field of requiredFields) {
       if (!data[field]) {
         return NextResponse.json(
@@ -372,7 +372,7 @@ export async function POST(request: NextRequest) {
       id: `student-${Date.now()}`,
       ...data,
       enrollmentDate: new Date(),
-      status: data.status || &ldquo;active&rdquo;,
+      status: data.status || "active",
       totalCourses: 0,
       completedCourses: 0,
       inProgressCourses: 0,
@@ -389,15 +389,15 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(
       {
-        message: &ldquo;Estudiante creado exitosamente&rdquo;,
+        message: "Estudiante creado exitosamente",
         student: newStudent,
       },
       { status: 201 }
     );
   } catch (error) {
-    console.error(&ldquo;Error creating student:&rdquo;, error);
+    console.error("Error creating student:", error);
     return NextResponse.json(
-      { error: &ldquo;Error al crear estudiante&rdquo; },
+      { error: "Error al crear estudiante" },
       { status: 500 }
     );
   }

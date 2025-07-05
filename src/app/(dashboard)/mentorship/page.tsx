@@ -1,21 +1,21 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import { useState, useEffect } from &ldquo;react&rdquo;;
-import Link from &ldquo;next/link&rdquo;;
-import { Button } from &ldquo;@/components/ui/button&rdquo;;
-import { Card, CardContent, CardHeader, CardTitle } from &ldquo;@/components/ui/card&rdquo;;
-import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
-import { Input } from &ldquo;@/components/ui/input&rdquo;;
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from &ldquo;@/components/ui/select&rdquo;;
-import { Tabs, TabsContent, TabsList, TabsTrigger } from &ldquo;@/components/ui/tabs&rdquo;;
-import { Avatar, AvatarFallback, AvatarImage } from &ldquo;@/components/ui/avatar&rdquo;;
-import { Progress } from &ldquo;@/components/ui/progress&rdquo;;
+} from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Progress } from "@/components/ui/progress";
 import {
   Search,
   Users,
@@ -31,7 +31,7 @@ import {
   Plus,
   Filter,
   Award,
-} from &ldquo;lucide-react&rdquo;;
+} from "lucide-react";
 
 interface Mentor {
   id: string;
@@ -49,7 +49,7 @@ interface Mentor {
   responseTime: string;
   languages: string[];
   price: {
-    type: &ldquo;free&rdquo; | &ldquo;paid&rdquo;;
+    type: "free" | "paid";
     amount?: number;
   };
   availability: {
@@ -68,9 +68,9 @@ interface MentorshipSession {
   mentorAvatar: string;
   date: Date;
   duration: number;
-  status: &ldquo;scheduled&rdquo; | &ldquo;completed&rdquo; | &ldquo;cancelled&rdquo;;
+  status: "scheduled" | "completed" | "cancelled";
   topic: string;
-  type: &ldquo;video&rdquo; | &ldquo;chat&rdquo; | &ldquo;presencial&rdquo;;
+  type: "video" | "chat" | "presencial";
   feedback?: {
     rating: number;
     comment: string;
@@ -82,7 +82,7 @@ interface MentorshipProgram {
   title: string;
   description: string;
   duration: string;
-  level: &ldquo;beginner&rdquo; | &ldquo;intermediate&rdquo; | &ldquo;advanced&rdquo;;
+  level: "beginner" | "intermediate" | "advanced";
   mentorId: string;
   mentorName: string;
   mentorAvatar: string;
@@ -99,10 +99,10 @@ export default function MentorshipPage() {
   const [sessions, setSessions] = useState<MentorshipSession[]>([]);
   const [programs, setPrograms] = useState<MentorshipProgram[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState(&ldquo;&rdquo;);
-  const [filterExpertise, setFilterExpertise] = useState(&ldquo;all&rdquo;);
-  const [filterPrice, setFilterPrice] = useState(&ldquo;all&rdquo;);
-  const [activeTab, setActiveTab] = useState(&ldquo;mentors&rdquo;);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterExpertise, setFilterExpertise] = useState("all");
+  const [filterPrice, setFilterPrice] = useState("all");
+  const [activeTab, setActiveTab] = useState("mentors");
 
   useEffect(() => {
     fetchMentorshipData();
@@ -115,100 +115,100 @@ export default function MentorshipPage() {
       // Mock data for demonstration
       const mockMentors: Mentor[] = [
         {
-          id: &ldquo;mentor-1&rdquo;,
-          name: &ldquo;Dr. Roberto Silva&rdquo;,
-          avatar: &ldquo;/api/placeholder/100/100&rdquo;,
-          title: &ldquo;CEO & Fundador&rdquo;,
-          company: &ldquo;TechBolivia&rdquo;,
-          location: &ldquo;La Paz, Bolivia&rdquo;,
-          bio: &ldquo;Emprendedor serial con más de 15 años de experiencia en tecnología. He fundado 3 startups exitosas y actualmente mentor jóvenes emprendedores.&rdquo;,
+          id: "mentor-1",
+          name: "Dr. Roberto Silva",
+          avatar: "/api/placeholder/100/100",
+          title: "CEO & Fundador",
+          company: "TechBolivia",
+          location: "La Paz, Bolivia",
+          bio: "Emprendedor serial con más de 15 años de experiencia en tecnología. He fundado 3 startups exitosas y actualmente mentor jóvenes emprendedores.",
           expertise: [
-            &ldquo;Tecnología&rdquo;,
-            &ldquo;Startups&rdquo;,
-            &ldquo;Liderazgo&rdquo;,
-            &ldquo;Estrategia de Negocio&rdquo;,
+            "Tecnología",
+            "Startups",
+            "Liderazgo",
+            "Estrategia de Negocio",
           ],
-          experience: &ldquo;15+ años&rdquo;,
+          experience: "15+ años",
           rating: 4.9,
           reviewCount: 89,
           mentees: 156,
-          responseTime: &ldquo;2 horas&rdquo;,
-          languages: [&ldquo;Español&rdquo;, &ldquo;Inglés&rdquo;],
-          price: { type: &ldquo;free&rdquo; },
+          responseTime: "2 horas",
+          languages: ["Español", "Inglés"],
+          price: { type: "free" },
           availability: {
-            timezone: &ldquo;GMT-4&rdquo;,
-            schedule: &ldquo;Lunes a Viernes 14:00-18:00&rdquo;,
+            timezone: "GMT-4",
+            schedule: "Lunes a Viernes 14:00-18:00",
           },
           achievements: [
-            &ldquo;Fundador Exitoso&rdquo;,
-            &ldquo;Mentor del Año 2023&rdquo;,
-            &ldquo;Experto en AI&rdquo;,
+            "Fundador Exitoso",
+            "Mentor del Año 2023",
+            "Experto en AI",
           ],
           isVerified: true,
           isOnline: true,
         },
         {
-          id: &ldquo;mentor-2&rdquo;,
-          name: &ldquo;Lic. Carmen Rodriguez&rdquo;,
-          avatar: &ldquo;/api/placeholder/100/100&rdquo;,
-          title: &ldquo;Directora de Marketing&rdquo;,
-          company: &ldquo;Grupo Boliviano&rdquo;,
-          location: &ldquo;Santa Cruz, Bolivia&rdquo;,
-          bio: &ldquo;Especialista en marketing digital y desarrollo de marcas. He ayudado a más de 100 emprendimientos a posicionarse en el mercado.&rdquo;,
+          id: "mentor-2",
+          name: "Lic. Carmen Rodriguez",
+          avatar: "/api/placeholder/100/100",
+          title: "Directora de Marketing",
+          company: "Grupo Boliviano",
+          location: "Santa Cruz, Bolivia",
+          bio: "Especialista en marketing digital y desarrollo de marcas. He ayudado a más de 100 emprendimientos a posicionarse en el mercado.",
           expertise: [
-            &ldquo;Marketing Digital&rdquo;,
-            &ldquo;Branding&rdquo;,
-            &ldquo;Redes Sociales&rdquo;,
-            &ldquo;Ventas&rdquo;,
+            "Marketing Digital",
+            "Branding",
+            "Redes Sociales",
+            "Ventas",
           ],
-          experience: &ldquo;12+ años&rdquo;,
+          experience: "12+ años",
           rating: 4.8,
           reviewCount: 67,
           mentees: 98,
-          responseTime: &ldquo;4 horas&rdquo;,
-          languages: [&ldquo;Español&rdquo;, &ldquo;Portugués&rdquo;],
-          price: { type: &ldquo;paid&rdquo;, amount: 150 },
+          responseTime: "4 horas",
+          languages: ["Español", "Portugués"],
+          price: { type: "paid", amount: 150 },
           availability: {
-            timezone: &ldquo;GMT-4&rdquo;,
-            schedule: &ldquo;Martes y Jueves 16:00-20:00&rdquo;,
+            timezone: "GMT-4",
+            schedule: "Martes y Jueves 16:00-20:00",
           },
           achievements: [
-            &ldquo;Top Marketer 2022&rdquo;,
-            &ldquo;Certificación Google&rdquo;,
-            &ldquo;Especialista en Growth&rdquo;,
+            "Top Marketer 2022",
+            "Certificación Google",
+            "Especialista en Growth",
           ],
           isVerified: true,
           isOnline: false,
         },
         {
-          id: &ldquo;mentor-3&rdquo;,
-          name: &ldquo;Ing. Luis Mamani&rdquo;,
-          avatar: &ldquo;/api/placeholder/100/100&rdquo;,
-          title: &ldquo;Consultor Financiero&rdquo;,
-          company: &ldquo;FinanzasPro&rdquo;,
-          location: &ldquo;Cochabamba, Bolivia&rdquo;,
-          bio: &ldquo;Contador público y consultor financiero especializado en startups. Ayudo a emprendedores a estructurar sus finanzas y conseguir inversión.&rdquo;,
+          id: "mentor-3",
+          name: "Ing. Luis Mamani",
+          avatar: "/api/placeholder/100/100",
+          title: "Consultor Financiero",
+          company: "FinanzasPro",
+          location: "Cochabamba, Bolivia",
+          bio: "Contador público y consultor financiero especializado en startups. Ayudo a emprendedores a estructurar sus finanzas y conseguir inversión.",
           expertise: [
-            &ldquo;Finanzas&rdquo;,
-            &ldquo;Contabilidad&rdquo;,
-            &ldquo;Inversión&rdquo;,
-            &ldquo;Planificación Financiera&rdquo;,
+            "Finanzas",
+            "Contabilidad",
+            "Inversión",
+            "Planificación Financiera",
           ],
-          experience: &ldquo;10+ años&rdquo;,
+          experience: "10+ años",
           rating: 4.7,
           reviewCount: 43,
           mentees: 72,
-          responseTime: &ldquo;6 horas&rdquo;,
-          languages: [&ldquo;Español&rdquo;, &ldquo;Inglés&rdquo;],
-          price: { type: &ldquo;paid&rdquo;, amount: 100 },
+          responseTime: "6 horas",
+          languages: ["Español", "Inglés"],
+          price: { type: "paid", amount: 100 },
           availability: {
-            timezone: &ldquo;GMT-4&rdquo;,
-            schedule: &ldquo;Miércoles a Viernes 10:00-14:00&rdquo;,
+            timezone: "GMT-4",
+            schedule: "Miércoles a Viernes 10:00-14:00",
           },
           achievements: [
-            &ldquo;CPA Certificado&rdquo;,
-            &ldquo;Especialista en Startups&rdquo;,
-            &ldquo;Mentor Fundación Emprende&rdquo;,
+            "CPA Certificado",
+            "Especialista en Startups",
+            "Mentor Fundación Emprende",
           ],
           isVerified: true,
           isOnline: true,
@@ -217,87 +217,87 @@ export default function MentorshipPage() {
 
       const mockSessions: MentorshipSession[] = [
         {
-          id: &ldquo;session-1&rdquo;,
-          mentorId: &ldquo;mentor-1&rdquo;,
-          mentorName: &ldquo;Dr. Roberto Silva&rdquo;,
-          mentorAvatar: &ldquo;/api/placeholder/50/50&rdquo;,
-          date: new Date(&ldquo;2024-03-15T15:00:00&rdquo;),
+          id: "session-1",
+          mentorId: "mentor-1",
+          mentorName: "Dr. Roberto Silva",
+          mentorAvatar: "/api/placeholder/50/50",
+          date: new Date("2024-03-15T15:00:00"),
           duration: 60,
-          status: &ldquo;scheduled&rdquo;,
-          topic: &ldquo;Estrategia de Crecimiento para Startup&rdquo;,
-          type: &ldquo;video&rdquo;,
+          status: "scheduled",
+          topic: "Estrategia de Crecimiento para Startup",
+          type: "video",
         },
         {
-          id: &ldquo;session-2&rdquo;,
-          mentorId: &ldquo;mentor-2&rdquo;,
-          mentorName: &ldquo;Lic. Carmen Rodriguez&rdquo;,
-          mentorAvatar: &ldquo;/api/placeholder/50/50&rdquo;,
-          date: new Date(&ldquo;2024-02-28T16:30:00&rdquo;),
+          id: "session-2",
+          mentorId: "mentor-2",
+          mentorName: "Lic. Carmen Rodriguez",
+          mentorAvatar: "/api/placeholder/50/50",
+          date: new Date("2024-02-28T16:30:00"),
           duration: 45,
-          status: &ldquo;completed&rdquo;,
-          topic: &ldquo;Plan de Marketing Digital&rdquo;,
-          type: &ldquo;video&rdquo;,
+          status: "completed",
+          topic: "Plan de Marketing Digital",
+          type: "video",
           feedback: {
             rating: 5,
             comment:
-              &ldquo;Excelente sesión, muy práctica y útil para mi emprendimiento.&rdquo;,
+              "Excelente sesión, muy práctica y útil para mi emprendimiento.",
           },
         },
       ];
 
       const mockPrograms: MentorshipProgram[] = [
         {
-          id: &ldquo;program-1&rdquo;,
-          title: &ldquo;Acelerador de Startups Tecnológicas&rdquo;,
+          id: "program-1",
+          title: "Acelerador de Startups Tecnológicas",
           description:
-            &ldquo;Programa intensivo de 8 semanas para acelerar el crecimiento de startups tecnológicas. Incluye mentoría personalizada, workshops y networking.&rdquo;,
-          duration: &ldquo;8 semanas&rdquo;,
-          level: &ldquo;intermediate&rdquo;,
-          mentorId: &ldquo;mentor-1&rdquo;,
-          mentorName: &ldquo;Dr. Roberto Silva&rdquo;,
-          mentorAvatar: &ldquo;/api/placeholder/50/50&rdquo;,
+            "Programa intensivo de 8 semanas para acelerar el crecimiento de startups tecnológicas. Incluye mentoría personalizada, workshops y networking.",
+          duration: "8 semanas",
+          level: "intermediate",
+          mentorId: "mentor-1",
+          mentorName: "Dr. Roberto Silva",
+          mentorAvatar: "/api/placeholder/50/50",
           participants: 12,
           maxParticipants: 15,
           price: 0,
-          startDate: new Date(&ldquo;2024-04-01&rdquo;),
+          startDate: new Date("2024-04-01"),
           topics: [
-            &ldquo;Modelo de Negocio&rdquo;,
-            &ldquo;Tecnología&rdquo;,
-            &ldquo;Fundraising&rdquo;,
-            &ldquo;Escalabilidad&rdquo;,
+            "Modelo de Negocio",
+            "Tecnología",
+            "Fundraising",
+            "Escalabilidad",
           ],
           objectives: [
-            &ldquo;Definir propuesta de valor única&rdquo;,
-            &ldquo;Desarrollar MVP funcional&rdquo;,
-            &ldquo;Preparar pitch para inversionistas&rdquo;,
-            &ldquo;Establecer métricas clave&rdquo;,
+            "Definir propuesta de valor única",
+            "Desarrollar MVP funcional",
+            "Preparar pitch para inversionistas",
+            "Establecer métricas clave",
           ],
         },
         {
-          id: &ldquo;program-2&rdquo;,
-          title: &ldquo;Marketing Digital para Emprendedores&rdquo;,
+          id: "program-2",
+          title: "Marketing Digital para Emprendedores",
           description:
-            &ldquo;Aprende a crear y ejecutar estrategias de marketing digital efectivas para hacer crecer tu emprendimiento.&rdquo;,
-          duration: &ldquo;6 semanas&rdquo;,
-          level: &ldquo;beginner&rdquo;,
-          mentorId: &ldquo;mentor-2&rdquo;,
-          mentorName: &ldquo;Lic. Carmen Rodriguez&rdquo;,
-          mentorAvatar: &ldquo;/api/placeholder/50/50&rdquo;,
+            "Aprende a crear y ejecutar estrategias de marketing digital efectivas para hacer crecer tu emprendimiento.",
+          duration: "6 semanas",
+          level: "beginner",
+          mentorId: "mentor-2",
+          mentorName: "Lic. Carmen Rodriguez",
+          mentorAvatar: "/api/placeholder/50/50",
           participants: 8,
           maxParticipants: 20,
           price: 0,
-          startDate: new Date(&ldquo;2024-03-20&rdquo;),
+          startDate: new Date("2024-03-20"),
           topics: [
-            &ldquo;Estrategia Digital&rdquo;,
-            &ldquo;Redes Sociales&rdquo;,
-            &ldquo;Content Marketing&rdquo;,
-            &ldquo;Analytics&rdquo;,
+            "Estrategia Digital",
+            "Redes Sociales",
+            "Content Marketing",
+            "Analytics",
           ],
           objectives: [
-            &ldquo;Crear plan de marketing digital&rdquo;,
-            &ldquo;Dominar redes sociales principales&rdquo;,
-            &ldquo;Medir ROI de campañas&rdquo;,
-            &ldquo;Automatizar procesos de marketing&rdquo;,
+            "Crear plan de marketing digital",
+            "Dominar redes sociales principales",
+            "Medir ROI de campañas",
+            "Automatizar procesos de marketing",
           ],
         },
       ];
@@ -306,24 +306,24 @@ export default function MentorshipPage() {
       setSessions(mockSessions);
       setPrograms(mockPrograms);
     } catch (error) {
-      console.error(&ldquo;Error fetching mentorship data:&rdquo;, error);
+      console.error("Error fetching mentorship data:", error);
     } finally {
       setLoading(false);
     }
   };
 
   const expertiseAreas = [
-    &ldquo;Tecnología&rdquo;,
-    &ldquo;Marketing Digital&rdquo;,
-    &ldquo;Finanzas&rdquo;,
-    &ldquo;Liderazgo&rdquo;,
-    &ldquo;Ventas&rdquo;,
-    &ldquo;Operaciones&rdquo;,
+    "Tecnología",
+    "Marketing Digital",
+    "Finanzas",
+    "Liderazgo",
+    "Ventas",
+    "Operaciones",
   ];
 
   const filteredMentors = mentors.filter((mentor) => {
     const matchesSearch =
-      searchQuery === &ldquo;&rdquo; ||
+      searchQuery === "" ||
       mentor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       mentor.expertise.some((exp) =>
         exp.toLowerCase().includes(searchQuery.toLowerCase())
@@ -331,23 +331,23 @@ export default function MentorshipPage() {
       mentor.bio.toLowerCase().includes(searchQuery.toLowerCase());
 
     const matchesExpertise =
-      filterExpertise === &ldquo;all&rdquo; || mentor.expertise.includes(filterExpertise);
+      filterExpertise === "all" || mentor.expertise.includes(filterExpertise);
     const matchesPrice =
-      filterPrice === &ldquo;all&rdquo; ||
-      (filterPrice === &ldquo;free&rdquo; && mentor.price.type === &ldquo;free&rdquo;) ||
-      (filterPrice === &ldquo;paid&rdquo; && mentor.price.type === &ldquo;paid&rdquo;);
+      filterPrice === "all" ||
+      (filterPrice === "free" && mentor.price.type === "free") ||
+      (filterPrice === "paid" && mentor.price.type === "paid");
 
     return matchesSearch && matchesExpertise && matchesPrice;
   });
 
   if (loading) {
     return (
-      <div className=&ldquo;container mx-auto p-6&rdquo;>
-        <div className=&ldquo;animate-pulse space-y-6&rdquo;>
-          <div className=&ldquo;h-32 bg-gray-200 rounded-lg&rdquo; />
-          <div className=&ldquo;grid grid-cols-1 md:grid-cols-3 gap-4&rdquo;>
+      <div className="container mx-auto p-6">
+        <div className="animate-pulse space-y-6">
+          <div className="h-32 bg-gray-200 rounded-lg" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {[...Array(6)].map((_, i) => (
-              <div key={i} className=&ldquo;h-64 bg-gray-200 rounded&rdquo; />
+              <div key={i} className="h-64 bg-gray-200 rounded" />
             ))}
           </div>
         </div>
@@ -356,11 +356,11 @@ export default function MentorshipPage() {
   }
 
   return (
-    <div className=&ldquo;container mx-auto p-6&rdquo;>
+    <div className="container mx-auto p-6">
       {/* Header */}
-      <div className=&ldquo;mb-8&rdquo;>
-        <h1 className=&ldquo;text-3xl font-bold mb-2&rdquo;>Plataforma de Mentorías</h1>
-        <p className=&ldquo;text-muted-foreground&rdquo;>
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold mb-2">Plataforma de Mentorías</h1>
+        <p className="text-muted-foreground">
           Conecta con mentores expertos y acelera el crecimiento de tu
           emprendimiento
         </p>
@@ -369,33 +369,33 @@ export default function MentorshipPage() {
       <Tabs
         value={activeTab}
         onValueChange={setActiveTab}
-        className=&ldquo;space-y-6&rdquo;
+        className="space-y-6"
       >
-        <TabsList className=&ldquo;grid w-full grid-cols-3&rdquo;>
-          <TabsTrigger value=&ldquo;mentors&rdquo;>Mentores</TabsTrigger>
-          <TabsTrigger value=&ldquo;programs&rdquo;>Programas</TabsTrigger>
-          <TabsTrigger value=&ldquo;become-mentor&rdquo;>Ser Mentor</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="mentors">Mentores</TabsTrigger>
+          <TabsTrigger value="programs">Programas</TabsTrigger>
+          <TabsTrigger value="become-mentor">Ser Mentor</TabsTrigger>
         </TabsList>
 
         {/* Mentors Tab */}
-        <TabsContent value=&ldquo;mentors&rdquo; className=&ldquo;space-y-6&rdquo;>
+        <TabsContent value="mentors" className="space-y-6">
           {/* Search and Filters */}
-          <div className=&ldquo;flex flex-col md:flex-row gap-4&rdquo;>
-            <div className=&ldquo;relative flex-1&rdquo;>
-              <Search className=&ldquo;absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground&rdquo; />
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder=&ldquo;Buscar mentores por nombre, expertise o empresa...&rdquo;
+                placeholder="Buscar mentores por nombre, expertise o empresa..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className=&ldquo;pl-10&rdquo;
+                className="pl-10"
               />
             </div>
             <Select value={filterExpertise} onValueChange={setFilterExpertise}>
-              <SelectTrigger className=&ldquo;w-48&rdquo;>
-                <SelectValue placeholder=&ldquo;Área de expertise&rdquo; />
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder="Área de expertise" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value=&ldquo;all&rdquo;>Todas las áreas</SelectItem>
+                <SelectItem value="all">Todas las áreas</SelectItem>
                 {expertiseAreas.map((area) => (
                   <SelectItem key={area} value={area}>
                     {area}
@@ -404,110 +404,110 @@ export default function MentorshipPage() {
               </SelectContent>
             </Select>
             <Select value={filterPrice} onValueChange={setFilterPrice}>
-              <SelectTrigger className=&ldquo;w-32&rdquo;>
-                <SelectValue placeholder=&ldquo;Precio&rdquo; />
+              <SelectTrigger className="w-32">
+                <SelectValue placeholder="Precio" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value=&ldquo;all&rdquo;>Todos</SelectItem>
-                <SelectItem value=&ldquo;free&rdquo;>Gratuito</SelectItem>
-                <SelectItem value=&ldquo;paid&rdquo;>De pago</SelectItem>
+                <SelectItem value="all">Todos</SelectItem>
+                <SelectItem value="free">Gratuito</SelectItem>
+                <SelectItem value="paid">De pago</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           {/* Mentors Grid */}
-          <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6&rdquo;>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredMentors.map((mentor) => (
               <Card
                 key={mentor.id}
-                className=&ldquo;overflow-hidden hover:shadow-lg transition-shadow&rdquo;
+                className="overflow-hidden hover:shadow-lg transition-shadow"
               >
-                <CardContent className=&ldquo;p-6&rdquo;>
-                  <div className=&ldquo;flex items-center gap-3 mb-4&rdquo;>
-                    <div className=&ldquo;relative&rdquo;>
-                      <Avatar className=&ldquo;h-16 w-16&rdquo;>
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="relative">
+                      <Avatar className="h-16 w-16">
                         <AvatarImage src={mentor.avatar} alt={mentor.name} />
                         <AvatarFallback>{mentor.name.charAt(0)}</AvatarFallback>
                       </Avatar>
                       {mentor.isOnline && (
-                        <div className=&ldquo;absolute bottom-0 right-0 w-4 h-4 bg-green-500 rounded-full border-2 border-white&rdquo; />
+                        <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 rounded-full border-2 border-white" />
                       )}
                       {mentor.isVerified && (
-                        <div className=&ldquo;absolute -top-1 -right-1 w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center&rdquo;>
-                          <CheckCircle className=&ldquo;h-3 w-3 text-white&rdquo; />
+                        <div className="absolute -top-1 -right-1 w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
+                          <CheckCircle className="h-3 w-3 text-white" />
                         </div>
                       )}
                     </div>
-                    <div className=&ldquo;flex-1&rdquo;>
-                      <h3 className=&ldquo;font-semibold text-lg&rdquo;>{mentor.name}</h3>
-                      <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-lg">{mentor.name}</h3>
+                      <p className="text-sm text-muted-foreground">
                         {mentor.title}
                       </p>
-                      <p className=&ldquo;text-xs text-muted-foreground&rdquo;>
+                      <p className="text-xs text-muted-foreground">
                         {mentor.company}
                       </p>
                     </div>
                   </div>
 
-                  <div className=&ldquo;flex items-center gap-2 mb-3&rdquo;>
-                    <div className=&ldquo;flex items-center gap-1&rdquo;>
-                      <Star className=&ldquo;h-4 w-4 fill-yellow-400 text-yellow-400&rdquo; />
-                      <span className=&ldquo;text-sm font-medium&rdquo;>
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="flex items-center gap-1">
+                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                      <span className="text-sm font-medium">
                         {mentor.rating}
                       </span>
-                      <span className=&ldquo;text-xs text-muted-foreground&rdquo;>
+                      <span className="text-xs text-muted-foreground">
                         ({mentor.reviewCount})
                       </span>
                     </div>
-                    <span className=&ldquo;text-xs text-muted-foreground&rdquo;>•</span>
-                    <span className=&ldquo;text-xs text-muted-foreground&rdquo;>
+                    <span className="text-xs text-muted-foreground">•</span>
+                    <span className="text-xs text-muted-foreground">
                       {mentor.mentees} mentees
                     </span>
                   </div>
 
-                  <p className=&ldquo;text-sm text-muted-foreground mb-4 line-clamp-3&rdquo;>
+                  <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
                     {mentor.bio}
                   </p>
 
-                  <div className=&ldquo;space-y-3&rdquo;>
+                  <div className="space-y-3">
                     <div>
-                      <p className=&ldquo;text-xs font-medium text-muted-foreground mb-1&rdquo;>
+                      <p className="text-xs font-medium text-muted-foreground mb-1">
                         Expertise
                       </p>
-                      <div className=&ldquo;flex flex-wrap gap-1&rdquo;>
+                      <div className="flex flex-wrap gap-1">
                         {mentor.expertise.slice(0, 3).map((exp) => (
                           <Badge
                             key={exp}
-                            variant=&ldquo;secondary&rdquo;
-                            className=&ldquo;text-xs&rdquo;
+                            variant="secondary"
+                            className="text-xs"
                           >
                             {exp}
                           </Badge>
                         ))}
                         {mentor.expertise.length > 3 && (
-                          <Badge variant=&ldquo;outline&rdquo; className=&ldquo;text-xs&rdquo;>
+                          <Badge variant="outline" className="text-xs">
                             +{mentor.expertise.length - 3}
                           </Badge>
                         )}
                       </div>
                     </div>
 
-                    <div className=&ldquo;flex items-center justify-between text-sm&rdquo;>
+                    <div className="flex items-center justify-between text-sm">
                       <div>
-                        <span className=&ldquo;text-muted-foreground&rdquo;>
-                          Responde en:{&ldquo; &rdquo;}
+                        <span className="text-muted-foreground">
+                          Responde en:{" "}
                         </span>
-                        <span className=&ldquo;font-medium&rdquo;>
+                        <span className="font-medium">
                           {mentor.responseTime}
                         </span>
                       </div>
                       <div>
-  <span className=&ldquo;text-muted-foreground&rdquo;>WhatsApp: </span>
+  <span className="text-muted-foreground">WhatsApp: </span>
   <a
     href={`https://wa.me/${mentor.whatsapp}`}
-    target=&ldquo;_blank&rdquo;
-    rel=&ldquo;noopener noreferrer&rdquo;
-    className=&ldquo;font-medium text-green-600 hover:underline&rdquo;
+    target="_blank"
+    rel="noopener noreferrer"
+    className="font-medium text-green-600 hover:underline"
   >
     Escribir
   </a>
@@ -515,9 +515,9 @@ export default function MentorshipPage() {
 
                       
                       
-                      {/* <div className=&ldquo;font-semibold&rdquo;>
-                        {mentor.price.type === &ldquo;free&rdquo; ? (
-                          <span className=&ldquo;text-green-600&rdquo;>Gratuito</span>
+                      {/* <div className="font-semibold">
+                        {mentor.price.type === "free" ? (
+                          <span className="text-green-600">Gratuito</span>
                         ) : (
                           <span>Bs. {mentor.price.amount}/hora</span>
                         )}
@@ -527,19 +527,19 @@ export default function MentorshipPage() {
 
                     {mentor.achievements.length > 0 && (
                       <div>
-                        <p className=&ldquo;text-xs font-medium text-muted-foreground mb-1&rdquo;>
+                        <p className="text-xs font-medium text-muted-foreground mb-1">
                           Logros
                         </p>
-                        <div className=&ldquo;flex flex-wrap gap-1&rdquo;>
+                        <div className="flex flex-wrap gap-1">
                           {mentor.achievements
                             .slice(0, 2)
                             .map((achievement) => (
                               <Badge
                                 key={achievement}
-                                variant=&ldquo;outline&rdquo;
-                                className=&ldquo;text-xs bg-yellow-50 text-yellow-700&rdquo;
+                                variant="outline"
+                                className="text-xs bg-yellow-50 text-yellow-700"
                               >
-                                <Award className=&ldquo;h-2 w-2 mr-1&rdquo; />
+                                <Award className="h-2 w-2 mr-1" />
                                 {achievement}
                               </Badge>
                             ))}
@@ -548,13 +548,13 @@ export default function MentorshipPage() {
                     )}
                   </div>
 
-                  {/* <div className=&ldquo;flex gap-2 mt-4 pt-4 border-t&rdquo;>
-                    <Button variant=&ldquo;outline&rdquo; size=&ldquo;sm&rdquo; className=&ldquo;flex-1&rdquo;>
-                      <MessageCircle className=&ldquo;h-3 w-3 mr-1&rdquo; />
+                  {/* <div className="flex gap-2 mt-4 pt-4 border-t">
+                    <Button variant="outline" size="sm" className="flex-1">
+                      <MessageCircle className="h-3 w-3 mr-1" />
                       Mensaje
                     </Button>
-                    <Button size=&ldquo;sm&rdquo; className=&ldquo;flex-1&rdquo;>
-                      <Calendar className=&ldquo;h-3 w-3 mr-1&rdquo; />
+                    <Button size="sm" className="flex-1">
+                      <Calendar className="h-3 w-3 mr-1" />
                       Agendar
                     </Button>
                   </div> */}
@@ -565,24 +565,24 @@ export default function MentorshipPage() {
         </TabsContent>
 
         {/* My Sessions Tab */}
-        <TabsContent value=&ldquo;sessions&rdquo; className=&ldquo;space-y-6&rdquo;>
-          <div className=&ldquo;flex items-center justify-between&rdquo;>
-            <h2 className=&ldquo;text-xl font-semibold&rdquo;>Mis Sesiones de Mentoría</h2>
+        <TabsContent value="sessions" className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-semibold">Mis Sesiones de Mentoría</h2>
             <Button asChild>
-              <Link href=&ldquo;#mentors&rdquo; onClick={() => setActiveTab(&ldquo;mentors&rdquo;)}>
-                <Plus className=&ldquo;h-4 w-4 mr-2&rdquo; />
+              <Link href="#mentors" onClick={() => setActiveTab("mentors")}>
+                <Plus className="h-4 w-4 mr-2" />
                 Agendar Nueva Sesión
               </Link>
             </Button>
           </div>
 
-          <div className=&ldquo;space-y-4&rdquo;>
+          <div className="space-y-4">
             {sessions.map((session) => (
               <Card key={session.id}>
-                <CardContent className=&ldquo;p-6&rdquo;>
-                  <div className=&ldquo;flex items-center justify-between&rdquo;>
-                    <div className=&ldquo;flex items-center gap-4&rdquo;>
-                      <Avatar className=&ldquo;h-12 w-12&rdquo;>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <Avatar className="h-12 w-12">
                         <AvatarImage
                           src={session.mentorAvatar}
                           alt={session.mentorName}
@@ -592,56 +592,56 @@ export default function MentorshipPage() {
                         </AvatarFallback>
                       </Avatar>
                       <div>
-                        <h3 className=&ldquo;font-semibold&rdquo;>{session.topic}</h3>
-                        <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
+                        <h3 className="font-semibold">{session.topic}</h3>
+                        <p className="text-sm text-muted-foreground">
                           Mentor: {session.mentorName}
                         </p>
-                        <div className=&ldquo;flex items-center gap-2 text-xs text-muted-foreground mt-1&rdquo;>
-                          <Calendar className=&ldquo;h-3 w-3&rdquo; />
-                          {session.date.toLocaleDateString()} -{&ldquo; &rdquo;}
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
+                          <Calendar className="h-3 w-3" />
+                          {session.date.toLocaleDateString()} -{" "}
                           {session.date.toLocaleTimeString()}
                           <span>•</span>
-                          <Clock className=&ldquo;h-3 w-3&rdquo; />
+                          <Clock className="h-3 w-3" />
                           {session.duration} minutos
                           <span>•</span>
-                          <Video className=&ldquo;h-3 w-3&rdquo; />
-                          {session.type === &ldquo;video&rdquo;
-                            ? &ldquo;Video llamada&rdquo;
-                            : session.type === &ldquo;chat&rdquo;
-                              ? &ldquo;Chat&rdquo;
-                              : &ldquo;Presencial&rdquo;}
+                          <Video className="h-3 w-3" />
+                          {session.type === "video"
+                            ? "Video llamada"
+                            : session.type === "chat"
+                              ? "Chat"
+                              : "Presencial"}
                         </div>
                       </div>
                     </div>
 
-                    <div className=&ldquo;flex items-center gap-2&rdquo;>
+                    <div className="flex items-center gap-2">
                       <Badge
                         variant={
-                          session.status === &ldquo;scheduled&rdquo;
-                            ? &ldquo;default&rdquo;
-                            : session.status === &ldquo;completed&rdquo;
-                              ? &ldquo;secondary&rdquo;
-                              : &ldquo;destructive&rdquo;
+                          session.status === "scheduled"
+                            ? "default"
+                            : session.status === "completed"
+                              ? "secondary"
+                              : "destructive"
                         }
                       >
-                        {session.status === &ldquo;scheduled&rdquo;
-                          ? &ldquo;Programada&rdquo;
-                          : session.status === &ldquo;completed&rdquo;
-                            ? &ldquo;Completada&rdquo;
-                            : &ldquo;Cancelada&rdquo;}
+                        {session.status === "scheduled"
+                          ? "Programada"
+                          : session.status === "completed"
+                            ? "Completada"
+                            : "Cancelada"}
                       </Badge>
 
-                      {session.status === &ldquo;scheduled&rdquo; && (
-                        <Button size=&ldquo;sm&rdquo;>
-                          <Video className=&ldquo;h-3 w-3 mr-1&rdquo; />
+                      {session.status === "scheduled" && (
+                        <Button size="sm">
+                          <Video className="h-3 w-3 mr-1" />
                           Unirse
                         </Button>
                       )}
 
-                      {session.status === &ldquo;completed&rdquo; && session.feedback && (
-                        <div className=&ldquo;flex items-center gap-1&rdquo;>
-                          <Star className=&ldquo;h-4 w-4 fill-yellow-400 text-yellow-400&rdquo; />
-                          <span className=&ldquo;text-sm&rdquo;>
+                      {session.status === "completed" && session.feedback && (
+                        <div className="flex items-center gap-1">
+                          <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                          <span className="text-sm">
                             {session.feedback.rating}
                           </span>
                         </div>
@@ -650,8 +650,8 @@ export default function MentorshipPage() {
                   </div>
 
                   {session.feedback && (
-                    <div className=&ldquo;mt-4 p-3 bg-gray-50 rounded-lg&rdquo;>
-                      <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
+                    <div className="mt-4 p-3 bg-gray-50 rounded-lg">
+                      <p className="text-sm text-muted-foreground">
                         <strong>Mi feedback:</strong> {session.feedback.comment}
                       </p>
                     </div>
@@ -663,38 +663,38 @@ export default function MentorshipPage() {
         </TabsContent>
 
         {/* Programs Tab */}
-        <TabsContent value=&ldquo;programs&rdquo; className=&ldquo;space-y-6&rdquo;>
-          <div className=&ldquo;flex items-center justify-between&rdquo;>
-            <h2 className=&ldquo;text-xl font-semibold&rdquo;>
+        <TabsContent value="programs" className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-semibold">
               Programas de Mentoría Grupal
             </h2>
           </div>
 
-          <div className=&ldquo;space-y-6&rdquo;>
+          <div className="space-y-6">
             {programs.map((program) => (
-              <Card key={program.id} className=&ldquo;overflow-hidden&rdquo;>
-                <CardContent className=&ldquo;p-6&rdquo;>
-                  <div className=&ldquo;flex items-start justify-between mb-4&rdquo;>
-                    <div className=&ldquo;flex-1&rdquo;>
-                      <div className=&ldquo;flex items-center gap-2 mb-2&rdquo;>
-                        <h3 className=&ldquo;text-xl font-semibold&rdquo;>
+              <Card key={program.id} className="overflow-hidden">
+                <CardContent className="p-6">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <h3 className="text-xl font-semibold">
                           {program.title}
                         </h3>
-                        <Badge variant=&ldquo;outline&rdquo;>
-                          {program.level === &ldquo;beginner&rdquo;
-                            ? &ldquo;Principiante&rdquo;
-                            : program.level === &ldquo;intermediate&rdquo;
-                              ? &ldquo;Intermedio&rdquo;
-                              : &ldquo;Avanzado&rdquo;}
+                        <Badge variant="outline">
+                          {program.level === "beginner"
+                            ? "Principiante"
+                            : program.level === "intermediate"
+                              ? "Intermedio"
+                              : "Avanzado"}
                         </Badge>
                       </div>
 
-                      <p className=&ldquo;text-muted-foreground mb-4&rdquo;>
+                      <p className="text-muted-foreground mb-4">
                         {program.description}
                       </p>
 
-                      <div className=&ldquo;flex items-center gap-4 mb-4&rdquo;>
-                        <Avatar className=&ldquo;h-8 w-8&rdquo;>
+                      <div className="flex items-center gap-4 mb-4">
+                        <Avatar className="h-8 w-8">
                           <AvatarImage
                             src={program.mentorAvatar}
                             alt={program.mentorName}
@@ -704,38 +704,38 @@ export default function MentorshipPage() {
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className=&ldquo;text-sm font-medium&rdquo;>
+                          <p className="text-sm font-medium">
                             {program.mentorName}
                           </p>
-                          <p className=&ldquo;text-xs text-muted-foreground&rdquo;>
+                          <p className="text-xs text-muted-foreground">
                             Mentor principal
                           </p>
                         </div>
                       </div>
                     </div>
 
-                    <div className=&ldquo;text-right&rdquo;>
-                      <div className=&ldquo;text-2xl font-bold mb-1&rdquo;>
+                    <div className="text-right">
+                      <div className="text-2xl font-bold mb-1">
                         Bs. {program.price}
                       </div>
-                      <div className=&ldquo;text-sm text-muted-foreground mb-2&rdquo;>
+                      <div className="text-sm text-muted-foreground mb-2">
                         {program.duration}
                       </div>
-                      <div className=&ldquo;text-sm text-muted-foreground&rdquo;>
+                      <div className="text-sm text-muted-foreground">
                         Inicia: {program.startDate.toLocaleDateString()}
                       </div>
                     </div>
                   </div>
 
-                  <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 gap-6 mb-4&rdquo;>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
                     <div>
-                      <h4 className=&ldquo;font-medium mb-2&rdquo;>Temas que se cubren:</h4>
-                      <div className=&ldquo;flex flex-wrap gap-1&rdquo;>
+                      <h4 className="font-medium mb-2">Temas que se cubren:</h4>
+                      <div className="flex flex-wrap gap-1">
                         {program.topics.map((topic) => (
                           <Badge
                             key={topic}
-                            variant=&ldquo;secondary&rdquo;
-                            className=&ldquo;text-xs&rdquo;
+                            variant="secondary"
+                            className="text-xs"
                           >
                             {topic}
                           </Badge>
@@ -744,15 +744,15 @@ export default function MentorshipPage() {
                     </div>
 
                     <div>
-                      <h4 className=&ldquo;font-medium mb-2&rdquo;>
+                      <h4 className="font-medium mb-2">
                         Objetivos del programa:
                       </h4>
-                      <ul className=&ldquo;text-sm text-muted-foreground space-y-1&rdquo;>
+                      <ul className="text-sm text-muted-foreground space-y-1">
                         {program.objectives
                           .slice(0, 3)
                           .map((objective, index) => (
-                            <li key={index} className=&ldquo;flex items-center gap-2&rdquo;>
-                              <CheckCircle className=&ldquo;h-3 w-3 text-green-500 flex-shrink-0&rdquo; />
+                            <li key={index} className="flex items-center gap-2">
+                              <CheckCircle className="h-3 w-3 text-green-500 flex-shrink-0" />
                               {objective}
                             </li>
                           ))}
@@ -760,23 +760,23 @@ export default function MentorshipPage() {
                     </div>
                   </div>
 
-                  <div className=&ldquo;flex items-center justify-between&rdquo;>
-                    <div className=&ldquo;flex items-center gap-4 text-sm text-muted-foreground&rdquo;>
-                      <div className=&ldquo;flex items-center gap-1&rdquo;>
-                        <Users className=&ldquo;h-4 w-4&rdquo; />
-                        {program.participants}/{program.maxParticipants}{&ldquo; &rdquo;}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                      <div className="flex items-center gap-1">
+                        <Users className="h-4 w-4" />
+                        {program.participants}/{program.maxParticipants}{" "}
                         participantes
                       </div>
                       <Progress
                         value={
                           (program.participants / program.maxParticipants) * 100
                         }
-                        className=&ldquo;w-24 h-2&rdquo;
+                        className="w-24 h-2"
                       />
                     </div>
 
                     <Button>
-                      <BookOpen className=&ldquo;h-4 w-4 mr-2&rdquo; />
+                      <BookOpen className="h-4 w-4 mr-2" />
                       Inscribirse al Programa
                     </Button>
                   </div>
@@ -787,24 +787,24 @@ export default function MentorshipPage() {
         </TabsContent>
 
         {/* Become Mentor Tab */}
-        <TabsContent value=&ldquo;become-mentor&rdquo; className=&ldquo;space-y-6&rdquo;>
+        <TabsContent value="become-mentor" className="space-y-6">
           <Card>
-            <CardHeader className=&ldquo;text-center&rdquo;>
-              <CardTitle className=&ldquo;text-2xl&rdquo;>Conviértete en Mentor</CardTitle>
-              <p className=&ldquo;text-muted-foreground&rdquo;>
+            <CardHeader className="text-center">
+              <CardTitle className="text-2xl">Conviértete en Mentor</CardTitle>
+              <p className="text-muted-foreground">
                 Comparte tu experiencia y ayuda a la próxima generación de
                 emprendedores
               </p>
             </CardHeader>
-            <CardContent className=&ldquo;space-y-6&rdquo;>
-              <div className=&ldquo;grid grid-cols-1 md:grid-cols-3 gap-6&rdquo;>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <Card>
-                  <CardContent className=&ldquo;p-6 text-center&rdquo;>
-                    <div className=&ldquo;w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4&rdquo;>
-                      <Users className=&ldquo;h-6 w-6 text-blue-600&rdquo; />
+                  <CardContent className="p-6 text-center">
+                    <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                      <Users className="h-6 w-6 text-blue-600" />
                     </div>
-                    <h3 className=&ldquo;font-semibold mb-2&rdquo;>Impacto Real</h3>
-                    <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
+                    <h3 className="font-semibold mb-2">Impacto Real</h3>
+                    <p className="text-sm text-muted-foreground">
                       Ayuda a emprendedores jóvenes a superar desafíos y
                       alcanzar sus metas
                     </p>
@@ -812,12 +812,12 @@ export default function MentorshipPage() {
                 </Card>
 
                 <Card>
-                  <CardContent className=&ldquo;p-6 text-center&rdquo;>
-                    <div className=&ldquo;w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-4&rdquo;>
-                      <Trophy className=&ldquo;h-6 w-6 text-green-600&rdquo; />
+                  <CardContent className="p-6 text-center">
+                    <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                      <Trophy className="h-6 w-6 text-green-600" />
                     </div>
-                    <h3 className=&ldquo;font-semibold mb-2&rdquo;>Reconocimiento</h3>
-                    <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
+                    <h3 className="font-semibold mb-2">Reconocimiento</h3>
+                    <p className="text-sm text-muted-foreground">
                       Gana reconocimiento como líder en tu industria y expande
                       tu red
                     </p>
@@ -825,12 +825,12 @@ export default function MentorshipPage() {
                 </Card>
 
                 <Card>
-                  <CardContent className=&ldquo;p-6 text-center&rdquo;>
-                    <div className=&ldquo;w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-4&rdquo;>
-                      <Target className=&ldquo;h-6 w-6 text-purple-600&rdquo; />
+                  <CardContent className="p-6 text-center">
+                    <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                      <Target className="h-6 w-6 text-purple-600" />
                     </div>
-                    <h3 className=&ldquo;font-semibold mb-2&rdquo;>Flexibilidad</h3>
-                    <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
+                    <h3 className="font-semibold mb-2">Flexibilidad</h3>
+                    <p className="text-sm text-muted-foreground">
                       Define tu horario, tarifas y el tipo de mentoría que
                       quieres ofrecer
                     </p>
@@ -838,41 +838,41 @@ export default function MentorshipPage() {
                 </Card>
               </div>
 
-              <div className=&ldquo;space-y-4&rdquo;>
-                <h3 className=&ldquo;text-lg font-semibold&rdquo;>
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold">
                   Requisitos para ser mentor:
                 </h3>
-                <ul className=&ldquo;space-y-2&rdquo;>
-                  <li className=&ldquo;flex items-center gap-2&rdquo;>
-                    <CheckCircle className=&ldquo;h-4 w-4 text-green-500&rdquo; />
-                    <span className=&ldquo;text-sm&rdquo;>
+                <ul className="space-y-2">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-green-500" />
+                    <span className="text-sm">
                       Mínimo 3 años de experiencia en tu área
                     </span>
                   </li>
-                  <li className=&ldquo;flex items-center gap-2&rdquo;>
-                    <CheckCircle className=&ldquo;h-4 w-4 text-green-500&rdquo; />
-                    <span className=&ldquo;text-sm&rdquo;>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-green-500" />
+                    <span className="text-sm">
                       Experiencia como emprendedor o en liderazgo
                     </span>
                   </li>
-                  <li className=&ldquo;flex items-center gap-2&rdquo;>
-                    <CheckCircle className=&ldquo;h-4 w-4 text-green-500&rdquo; />
-                    <span className=&ldquo;text-sm&rdquo;>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-green-500" />
+                    <span className="text-sm">
                       Pasión por ayudar a otros emprendedores
                     </span>
                   </li>
-                  <li className=&ldquo;flex items-center gap-2&rdquo;>
-                    <CheckCircle className=&ldquo;h-4 w-4 text-green-500&rdquo; />
-                    <span className=&ldquo;text-sm&rdquo;>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-green-500" />
+                    <span className="text-sm">
                       Compromiso de al menos 2 horas por semana
                     </span>
                   </li>
                 </ul>
               </div>
 
-              <div className=&ldquo;text-center&rdquo;>
-                <Button size=&ldquo;lg&rdquo; className=&ldquo;w-full md:w-auto&rdquo;>
-                  <Plus className=&ldquo;h-4 w-4 mr-2&rdquo; />
+              <div className="text-center">
+                <Button size="lg" className="w-full md:w-auto">
+                  <Plus className="h-4 w-4 mr-2" />
                   Aplicar para ser Mentor
                 </Button>
               </div>

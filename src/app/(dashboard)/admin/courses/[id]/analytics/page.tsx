@@ -1,19 +1,19 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import { useState, useEffect } from &ldquo;react&rdquo;;
-import { useParams } from &ldquo;next/navigation&rdquo;;
-import { Button } from &ldquo;@/components/ui/button&rdquo;;
-import { Card, CardContent, CardHeader, CardTitle } from &ldquo;@/components/ui/card&rdquo;;
-import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
-import { Progress } from &ldquo;@/components/ui/progress&rdquo;;
+import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from &ldquo;@/components/ui/select&rdquo;;
-import { Tabs, TabsContent, TabsList, TabsTrigger } from &ldquo;@/components/ui/tabs&rdquo;;
+} from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   BarChart3,
   TrendingUp,
@@ -26,7 +26,7 @@ import {
   ArrowLeft,
   Target,
   AlertTriangle,
-} from &ldquo;lucide-react&rdquo;;
+} from "lucide-react";
 
 interface AnalyticsData {
   overview: {
@@ -73,7 +73,7 @@ interface AnalyticsData {
     commonFeedback: {
       theme: string;
       mentions: number;
-      sentiment: &ldquo;positive&rdquo; | &ldquo;negative&rdquo; | &ldquo;neutral&rdquo;;
+      sentiment: "positive" | "negative" | "neutral";
     }[];
   };
 }
@@ -85,8 +85,8 @@ export default function CourseAnalyticsPage() {
     null
   );
   const [loading, setLoading] = useState(true);
-  const [timeRange, setTimeRange] = useState(&ldquo;30d&rdquo;);
-  const [activeTab, setActiveTab] = useState(&ldquo;overview&rdquo;);
+  const [timeRange, setTimeRange] = useState("30d");
+  const [activeTab, setActiveTab] = useState("overview");
 
   useEffect(() => {
     fetchAnalyticsData();
@@ -108,99 +108,99 @@ export default function CourseAnalyticsPage() {
         },
         engagement: {
           dailyActiveUsers: [
-            { date: &ldquo;2024-02-01&rdquo;, users: 145 },
-            { date: &ldquo;2024-02-02&rdquo;, users: 132 },
-            { date: &ldquo;2024-02-03&rdquo;, users: 156 },
-            { date: &ldquo;2024-02-04&rdquo;, users: 189 },
-            { date: &ldquo;2024-02-05&rdquo;, users: 167 },
-            { date: &ldquo;2024-02-06&rdquo;, users: 143 },
-            { date: &ldquo;2024-02-07&rdquo;, users: 178 },
+            { date: "2024-02-01", users: 145 },
+            { date: "2024-02-02", users: 132 },
+            { date: "2024-02-03", users: 156 },
+            { date: "2024-02-04", users: 189 },
+            { date: "2024-02-05", users: 167 },
+            { date: "2024-02-06", users: 143 },
+            { date: "2024-02-07", users: 178 },
           ],
           lessonCompletionRates: [
             {
-              lessonId: &ldquo;lesson-1&rdquo;,
-              title: &ldquo;Bienvenida al curso&rdquo;,
+              lessonId: "lesson-1",
+              title: "Bienvenida al curso",
               completionRate: 95.2,
             },
             {
-              lessonId: &ldquo;lesson-2&rdquo;,
-              title: &ldquo;Comunicación efectiva&rdquo;,
+              lessonId: "lesson-2",
+              title: "Comunicación efectiva",
               completionRate: 87.5,
             },
             {
-              lessonId: &ldquo;lesson-3&rdquo;,
-              title: &ldquo;Trabajo en equipo&rdquo;,
+              lessonId: "lesson-3",
+              title: "Trabajo en equipo",
               completionRate: 82.1,
             },
             {
-              lessonId: &ldquo;lesson-4&rdquo;,
-              title: &ldquo;Resolución de problemas&rdquo;,
+              lessonId: "lesson-4",
+              title: "Resolución de problemas",
               completionRate: 76.8,
             },
             {
-              lessonId: &ldquo;lesson-5&rdquo;,
-              title: &ldquo;Liderazgo básico&rdquo;,
+              lessonId: "lesson-5",
+              title: "Liderazgo básico",
               completionRate: 71.3,
             },
           ],
           dropoffPoints: [
-            { moduleId: &ldquo;mod-1&rdquo;, moduleName: &ldquo;Introducción&rdquo;, dropoffRate: 8.2 },
+            { moduleId: "mod-1", moduleName: "Introducción", dropoffRate: 8.2 },
             {
-              moduleId: &ldquo;mod-2&rdquo;,
-              moduleName: &ldquo;Habilidades Básicas&rdquo;,
+              moduleId: "mod-2",
+              moduleName: "Habilidades Básicas",
               dropoffRate: 15.7,
             },
             {
-              moduleId: &ldquo;mod-3&rdquo;,
-              moduleName: &ldquo;Desarrollo Avanzado&rdquo;,
+              moduleId: "mod-3",
+              moduleName: "Desarrollo Avanzado",
               dropoffRate: 23.4,
             },
           ],
           timeSpentDistribution: [
-            { range: &ldquo;0-1h&rdquo;, percentage: 12 },
-            { range: &ldquo;1-3h&rdquo;, percentage: 28 },
-            { range: &ldquo;3-6h&rdquo;, percentage: 35 },
-            { range: &ldquo;6-10h&rdquo;, percentage: 18 },
-            { range: &ldquo;10+h&rdquo;, percentage: 7 },
+            { range: "0-1h", percentage: 12 },
+            { range: "1-3h", percentage: 28 },
+            { range: "3-6h", percentage: 35 },
+            { range: "6-10h", percentage: 18 },
+            { range: "10+h", percentage: 7 },
           ],
         },
         performance: {
           quizResults: [
             {
-              quizId: &ldquo;quiz-1&rdquo;,
-              title: &ldquo;Evaluación Módulo 1&rdquo;,
+              quizId: "quiz-1",
+              title: "Evaluación Módulo 1",
               averageScore: 84.5,
               passRate: 91.2,
             },
             {
-              quizId: &ldquo;quiz-2&rdquo;,
-              title: &ldquo;Evaluación Módulo 2&rdquo;,
+              quizId: "quiz-2",
+              title: "Evaluación Módulo 2",
               averageScore: 78.3,
               passRate: 83.7,
             },
             {
-              quizId: &ldquo;quiz-3&rdquo;,
-              title: &ldquo;Evaluación Final&rdquo;,
+              quizId: "quiz-3",
+              title: "Evaluación Final",
               averageScore: 81.7,
               passRate: 87.9,
             },
           ],
           modulePerformance: [
             {
-              moduleId: &ldquo;mod-1&rdquo;,
-              name: &ldquo;Introducción&rdquo;,
+              moduleId: "mod-1",
+              name: "Introducción",
               averageTime: 45,
               completionRate: 92.8,
             },
             {
-              moduleId: &ldquo;mod-2&rdquo;,
-              name: &ldquo;Habilidades Básicas&rdquo;,
+              moduleId: "mod-2",
+              name: "Habilidades Básicas",
               averageTime: 120,
               completionRate: 84.3,
             },
             {
-              moduleId: &ldquo;mod-3&rdquo;,
-              name: &ldquo;Desarrollo Avanzado&rdquo;,
+              moduleId: "mod-3",
+              name: "Desarrollo Avanzado",
               averageTime: 180,
               completionRate: 76.6,
             },
@@ -219,33 +219,33 @@ export default function CourseAnalyticsPage() {
           ],
           commonFeedback: [
             {
-              theme: &ldquo;Contenido claro y útil&rdquo;,
+              theme: "Contenido claro y útil",
               mentions: 342,
-              sentiment: &ldquo;positive&rdquo;,
+              sentiment: "positive",
             },
             {
-              theme: &ldquo;Buena organización&rdquo;,
+              theme: "Buena organización",
               mentions: 278,
-              sentiment: &ldquo;positive&rdquo;,
+              sentiment: "positive",
             },
             {
-              theme: &ldquo;Videos de calidad&rdquo;,
+              theme: "Videos de calidad",
               mentions: 234,
-              sentiment: &ldquo;positive&rdquo;,
+              sentiment: "positive",
             },
             {
-              theme: &ldquo;Necesita más ejemplos prácticos&rdquo;,
+              theme: "Necesita más ejemplos prácticos",
               mentions: 156,
-              sentiment: &ldquo;negative&rdquo;,
+              sentiment: "negative",
             },
-            { theme: &ldquo;Ritmo algo lento&rdquo;, mentions: 89, sentiment: &ldquo;negative&rdquo; },
+            { theme: "Ritmo algo lento", mentions: 89, sentiment: "negative" },
           ],
         },
       };
 
       setAnalyticsData(mockData);
     } catch (error) {
-      console.error(&ldquo;Error fetching analytics:&rdquo;, error);
+      console.error("Error fetching analytics:", error);
     } finally {
       setLoading(false);
     }
@@ -253,161 +253,161 @@ export default function CourseAnalyticsPage() {
 
   const exportReport = () => {
     // Implementation for exporting analytics report
-    console.log(&ldquo;Exporting analytics report...&rdquo;);
+    console.log("Exporting analytics report...");
   };
 
   if (loading || !analyticsData) {
     return (
-      <div className=&ldquo;container mx-auto p-6&rdquo;>
-        <div className=&ldquo;animate-pulse space-y-6&rdquo;>
-          <div className=&ldquo;h-8 bg-gray-200 rounded w-1/4&rdquo; />
-          <div className=&ldquo;grid grid-cols-1 md:grid-cols-4 gap-4&rdquo;>
+      <div className="container mx-auto p-6">
+        <div className="animate-pulse space-y-6">
+          <div className="h-8 bg-gray-200 rounded w-1/4" />
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {[...Array(6)].map((_, i) => (
-              <div key={i} className=&ldquo;h-24 bg-gray-200 rounded&rdquo; />
+              <div key={i} className="h-24 bg-gray-200 rounded" />
             ))}
           </div>
-          <div className=&ldquo;h-96 bg-gray-200 rounded&rdquo; />
+          <div className="h-96 bg-gray-200 rounded" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className=&ldquo;container mx-auto p-6 space-y-6&rdquo;>
+    <div className="container mx-auto p-6 space-y-6">
       {/* Header */}
-      <div className=&ldquo;flex items-center justify-between&rdquo;>
-        <div className=&ldquo;flex items-center gap-4&rdquo;>
-          <Button variant=&ldquo;ghost&rdquo; onClick={() => window.history.back()}>
-            <ArrowLeft className=&ldquo;h-4 w-4 mr-2&rdquo; />
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <Button variant="ghost" onClick={() => window.history.back()}>
+            <ArrowLeft className="h-4 w-4 mr-2" />
             Volver
           </Button>
           <div>
-            <h1 className=&ldquo;text-2xl font-bold&rdquo;>Analíticas del Curso</h1>
-            <p className=&ldquo;text-muted-foreground&rdquo;>
+            <h1 className="text-2xl font-bold">Analíticas del Curso</h1>
+            <p className="text-muted-foreground">
               Métricas de rendimiento y engagement de estudiantes
             </p>
           </div>
         </div>
 
-        <div className=&ldquo;flex gap-2&rdquo;>
+        <div className="flex gap-2">
           <Select value={timeRange} onValueChange={setTimeRange}>
-            <SelectTrigger className=&ldquo;w-[150px]&rdquo;>
+            <SelectTrigger className="w-[150px]">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value=&ldquo;7d&rdquo;>Últimos 7 días</SelectItem>
-              <SelectItem value=&ldquo;30d&rdquo;>Últimos 30 días</SelectItem>
-              <SelectItem value=&ldquo;90d&rdquo;>Últimos 3 meses</SelectItem>
-              <SelectItem value=&ldquo;1y&rdquo;>Último año</SelectItem>
+              <SelectItem value="7d">Últimos 7 días</SelectItem>
+              <SelectItem value="30d">Últimos 30 días</SelectItem>
+              <SelectItem value="90d">Últimos 3 meses</SelectItem>
+              <SelectItem value="1y">Último año</SelectItem>
             </SelectContent>
           </Select>
 
-          <Button variant=&ldquo;outline&rdquo; onClick={exportReport}>
-            <Download className=&ldquo;h-4 w-4 mr-2&rdquo; />
+          <Button variant="outline" onClick={exportReport}>
+            <Download className="h-4 w-4 mr-2" />
             Exportar Reporte
           </Button>
         </div>
       </div>
 
       {/* Overview Stats */}
-      <div className=&ldquo;grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4&rdquo;>
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
         <Card>
-          <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
-            <CardTitle className=&ldquo;text-sm font-medium&rdquo;>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
               Total Inscritos
             </CardTitle>
-            <Users className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
+            <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className=&ldquo;text-2xl font-bold&rdquo;>
+            <div className="text-2xl font-bold">
               {analyticsData.overview.totalEnrollments.toLocaleString()}
             </div>
-            <p className=&ldquo;text-xs text-muted-foreground&rdquo;>
-              <TrendingUp className=&ldquo;h-3 w-3 inline mr-1&rdquo; />
+            <p className="text-xs text-muted-foreground">
+              <TrendingUp className="h-3 w-3 inline mr-1" />
               +12% vs mes anterior
             </p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
-            <CardTitle className=&ldquo;text-sm font-medium&rdquo;>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
               Estudiantes Activos
             </CardTitle>
-            <Eye className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
+            <Eye className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className=&ldquo;text-2xl font-bold&rdquo;>
+            <div className="text-2xl font-bold">
               {analyticsData.overview.activeStudents.toLocaleString()}
             </div>
-            <p className=&ldquo;text-xs text-muted-foreground&rdquo;>
-              <TrendingUp className=&ldquo;h-3 w-3 inline mr-1&rdquo; />
+            <p className="text-xs text-muted-foreground">
+              <TrendingUp className="h-3 w-3 inline mr-1" />
               +8% vs mes anterior
             </p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
-            <CardTitle className=&ldquo;text-sm font-medium&rdquo;>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
               Tasa de Finalización
             </CardTitle>
-            <Target className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
+            <Target className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className=&ldquo;text-2xl font-bold&rdquo;>
+            <div className="text-2xl font-bold">
               {analyticsData.overview.completionRate}%
             </div>
             <Progress
               value={analyticsData.overview.completionRate}
-              className=&ldquo;mt-2&rdquo;
+              className="mt-2"
             />
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
-            <CardTitle className=&ldquo;text-sm font-medium&rdquo;>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
               Calificación Promedio
             </CardTitle>
-            <BarChart3 className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
+            <BarChart3 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className=&ldquo;text-2xl font-bold&rdquo;>
+            <div className="text-2xl font-bold">
               {analyticsData.overview.averageRating}
             </div>
-            <div className=&ldquo;flex items-center text-xs text-muted-foreground&rdquo;>
-              <span className=&ldquo;text-yellow-500&rdquo;>★★★★★</span>
-              <span className=&ldquo;ml-1&rdquo;>de 5.0</span>
+            <div className="flex items-center text-xs text-muted-foreground">
+              <span className="text-yellow-500">★★★★★</span>
+              <span className="ml-1">de 5.0</span>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
-            <CardTitle className=&ldquo;text-sm font-medium&rdquo;>Tiempo Total</CardTitle>
-            <Clock className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Tiempo Total</CardTitle>
+            <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className=&ldquo;text-2xl font-bold&rdquo;>
+            <div className="text-2xl font-bold">
               {analyticsData.overview.totalViewTime.toLocaleString()}h
             </div>
-            <p className=&ldquo;text-xs text-muted-foreground&rdquo;>
+            <p className="text-xs text-muted-foreground">
               Tiempo de visualización
             </p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
-            <CardTitle className=&ldquo;text-sm font-medium&rdquo;>Certificados</CardTitle>
-            <Award className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Certificados</CardTitle>
+            <Award className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className=&ldquo;text-2xl font-bold&rdquo;>
+            <div className="text-2xl font-bold">
               {analyticsData.overview.certificatesIssued.toLocaleString()}
             </div>
-            <p className=&ldquo;text-xs text-muted-foreground&rdquo;>Emitidos</p>
+            <p className="text-xs text-muted-foreground">Emitidos</p>
           </CardContent>
         </Card>
       </div>
@@ -415,30 +415,30 @@ export default function CourseAnalyticsPage() {
       <Tabs
         value={activeTab}
         onValueChange={setActiveTab}
-        className=&ldquo;space-y-6&rdquo;
+        className="space-y-6"
       >
-        <TabsList className=&ldquo;grid w-full grid-cols-4&rdquo;>
-          <TabsTrigger value=&ldquo;overview&rdquo;>Resumen</TabsTrigger>
-          <TabsTrigger value=&ldquo;engagement&rdquo;>Engagement</TabsTrigger>
-          <TabsTrigger value=&ldquo;performance&rdquo;>Rendimiento</TabsTrigger>
-          <TabsTrigger value=&ldquo;feedback&rdquo;>Feedback</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="overview">Resumen</TabsTrigger>
+          <TabsTrigger value="engagement">Engagement</TabsTrigger>
+          <TabsTrigger value="performance">Rendimiento</TabsTrigger>
+          <TabsTrigger value="feedback">Feedback</TabsTrigger>
         </TabsList>
 
         {/* Overview Tab */}
-        <TabsContent value=&ldquo;overview&rdquo; className=&ldquo;space-y-6&rdquo;>
-          <div className=&ldquo;grid grid-cols-1 lg:grid-cols-2 gap-6&rdquo;>
+        <TabsContent value="overview" className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
                 <CardTitle>Progreso de Inscripciones</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className=&ldquo;space-y-4&rdquo;>
-                  <div className=&ldquo;flex items-center justify-between&rdquo;>
-                    <span className=&ldquo;text-sm&rdquo;>Meta mensual: 3,000</span>
-                    <Badge variant=&ldquo;outline&rdquo;>95% alcanzado</Badge>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm">Meta mensual: 3,000</span>
+                    <Badge variant="outline">95% alcanzado</Badge>
                   </div>
                   <Progress value={95} />
-                  <p className=&ldquo;text-xs text-muted-foreground&rdquo;>
+                  <p className="text-xs text-muted-foreground">
                     153 inscripciones restantes para alcanzar la meta
                   </p>
                 </div>
@@ -450,11 +450,11 @@ export default function CourseAnalyticsPage() {
                 <CardTitle>Distribución de Tiempo</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className=&ldquo;space-y-3&rdquo;>
+                <div className="space-y-3">
                   {analyticsData.engagement.timeSpentDistribution.map(
                     (item) => (
-                      <div key={item.range} className=&ldquo;space-y-1&rdquo;>
-                        <div className=&ldquo;flex justify-between text-sm&rdquo;>
+                      <div key={item.range} className="space-y-1">
+                        <div className="flex justify-between text-sm">
                           <span>{item.range}</span>
                           <span>{item.percentage}%</span>
                         </div>
@@ -472,30 +472,30 @@ export default function CourseAnalyticsPage() {
               <CardTitle>Rendimiento por Módulo</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className=&ldquo;space-y-4&rdquo;>
+              <div className="space-y-4">
                 {analyticsData.performance.modulePerformance.map((module) => (
                   <div
                     key={module.moduleId}
-                    className=&ldquo;flex items-center justify-between p-4 border rounded-lg&rdquo;
+                    className="flex items-center justify-between p-4 border rounded-lg"
                   >
                     <div>
-                      <h4 className=&ldquo;font-medium&rdquo;>{module.name}</h4>
-                      <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
+                      <h4 className="font-medium">{module.name}</h4>
+                      <p className="text-sm text-muted-foreground">
                         Tiempo promedio: {module.averageTime} min
                       </p>
                     </div>
-                    <div className=&ldquo;text-right&rdquo;>
-                      <div className=&ldquo;text-lg font-bold&rdquo;>
+                    <div className="text-right">
+                      <div className="text-lg font-bold">
                         {module.completionRate}%
                       </div>
                       <Badge
                         variant={
-                          module.completionRate >= 80 ? &ldquo;default&rdquo; : &ldquo;secondary&rdquo;
+                          module.completionRate >= 80 ? "default" : "secondary"
                         }
                       >
                         {module.completionRate >= 80
-                          ? &ldquo;Excelente&rdquo;
-                          : &ldquo;Mejorable&rdquo;}
+                          ? "Excelente"
+                          : "Mejorable"}
                       </Badge>
                     </div>
                   </div>
@@ -506,19 +506,19 @@ export default function CourseAnalyticsPage() {
         </TabsContent>
 
         {/* Engagement Tab */}
-        <TabsContent value=&ldquo;engagement&rdquo; className=&ldquo;space-y-6&rdquo;>
-          <div className=&ldquo;grid grid-cols-1 lg:grid-cols-2 gap-6&rdquo;>
+        <TabsContent value="engagement" className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
                 <CardTitle>Finalización por Lección</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className=&ldquo;space-y-4&rdquo;>
+                <div className="space-y-4">
                   {analyticsData.engagement.lessonCompletionRates.map(
                     (lesson) => (
-                      <div key={lesson.lessonId} className=&ldquo;space-y-2&rdquo;>
-                        <div className=&ldquo;flex justify-between text-sm&rdquo;>
-                          <span className=&ldquo;font-medium&rdquo;>{lesson.title}</span>
+                      <div key={lesson.lessonId} className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span className="font-medium">{lesson.title}</span>
                           <span>{lesson.completionRate}%</span>
                         </div>
                         <Progress value={lesson.completionRate} />
@@ -534,23 +534,23 @@ export default function CourseAnalyticsPage() {
                 <CardTitle>Puntos de Abandono</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className=&ldquo;space-y-4&rdquo;>
+                <div className="space-y-4">
                   {analyticsData.engagement.dropoffPoints.map((point) => (
                     <div
                       key={point.moduleId}
-                      className=&ldquo;flex items-center justify-between p-3 bg-red-50 rounded-lg border border-red-200&rdquo;
+                      className="flex items-center justify-between p-3 bg-red-50 rounded-lg border border-red-200"
                     >
-                      <div className=&ldquo;flex items-center gap-2&rdquo;>
-                        <AlertTriangle className=&ldquo;h-4 w-4 text-red-600&rdquo; />
-                        <span className=&ldquo;font-medium&rdquo;>{point.moduleName}</span>
+                      <div className="flex items-center gap-2">
+                        <AlertTriangle className="h-4 w-4 text-red-600" />
+                        <span className="font-medium">{point.moduleName}</span>
                       </div>
-                      <Badge variant=&ldquo;destructive&rdquo;>
+                      <Badge variant="destructive">
                         {point.dropoffRate}% abandono
                       </Badge>
                     </div>
                   ))}
                 </div>
-                <p className=&ldquo;text-xs text-muted-foreground mt-4&rdquo;>
+                <p className="text-xs text-muted-foreground mt-4">
                   Los puntos con mayor abandono requieren revisión del contenido
                 </p>
               </CardContent>
@@ -559,17 +559,17 @@ export default function CourseAnalyticsPage() {
         </TabsContent>
 
         {/* Performance Tab */}
-        <TabsContent value=&ldquo;performance&rdquo; className=&ldquo;space-y-6&rdquo;>
-          <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 gap-4 mb-6&rdquo;>
+        <TabsContent value="performance" className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <Card>
-              <CardContent className=&ldquo;p-4&rdquo;>
-                <div className=&ldquo;flex items-center gap-2&rdquo;>
-                  <AlertTriangle className=&ldquo;h-5 w-5 text-orange-600&rdquo; />
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2">
+                  <AlertTriangle className="h-5 w-5 text-orange-600" />
                   <div>
-                    <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
+                    <p className="text-sm text-muted-foreground">
                       Estudiantes con Dificultades
                     </p>
-                    <p className=&ldquo;text-2xl font-bold&rdquo;>
+                    <p className="text-2xl font-bold">
                       {analyticsData.performance.strugglingStudents}
                     </p>
                   </div>
@@ -578,14 +578,14 @@ export default function CourseAnalyticsPage() {
             </Card>
 
             <Card>
-              <CardContent className=&ldquo;p-4&rdquo;>
-                <div className=&ldquo;flex items-center gap-2&rdquo;>
-                  <Award className=&ldquo;h-5 w-5 text-green-600&rdquo; />
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2">
+                  <Award className="h-5 w-5 text-green-600" />
                   <div>
-                    <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
+                    <p className="text-sm text-muted-foreground">
                       Estudiantes Destacados
                     </p>
-                    <p className=&ldquo;text-2xl font-bold&rdquo;>
+                    <p className="text-2xl font-bold">
                       {analyticsData.performance.topPerformers}
                     </p>
                   </div>
@@ -599,21 +599,21 @@ export default function CourseAnalyticsPage() {
               <CardTitle>Resultados de Exámenes</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className=&ldquo;space-y-4&rdquo;>
+              <div className="space-y-4">
                 {analyticsData.performance.quizResults.map((quiz) => (
                   <div
                     key={quiz.quizId}
-                    className=&ldquo;flex items-center justify-between p-4 border rounded-lg&rdquo;
+                    className="flex items-center justify-between p-4 border rounded-lg"
                   >
                     <div>
-                      <h4 className=&ldquo;font-medium&rdquo;>{quiz.title}</h4>
-                      <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
+                      <h4 className="font-medium">{quiz.title}</h4>
+                      <p className="text-sm text-muted-foreground">
                         Puntuación promedio: {quiz.averageScore}%
                       </p>
                     </div>
-                    <div className=&ldquo;text-right&rdquo;>
-                      <div className=&ldquo;text-lg font-bold&rdquo;>{quiz.passRate}%</div>
-                      <p className=&ldquo;text-xs text-muted-foreground&rdquo;>
+                    <div className="text-right">
+                      <div className="text-lg font-bold">{quiz.passRate}%</div>
+                      <p className="text-xs text-muted-foreground">
                         Tasa de aprobación
                       </p>
                     </div>
@@ -625,21 +625,21 @@ export default function CourseAnalyticsPage() {
         </TabsContent>
 
         {/* Feedback Tab */}
-        <TabsContent value=&ldquo;feedback&rdquo; className=&ldquo;space-y-6&rdquo;>
-          <div className=&ldquo;grid grid-cols-1 lg:grid-cols-2 gap-6&rdquo;>
+        <TabsContent value="feedback" className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
                 <CardTitle>Distribución de Calificaciones</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className=&ldquo;space-y-3&rdquo;>
+                <div className="space-y-3">
                   {analyticsData.feedback.ratingDistribution.map((rating) => (
-                    <div key={rating.stars} className=&ldquo;flex items-center gap-3&rdquo;>
-                      <div className=&ldquo;flex items-center gap-1 w-16&rdquo;>
+                    <div key={rating.stars} className="flex items-center gap-3">
+                      <div className="flex items-center gap-1 w-16">
                         <span>{rating.stars}</span>
-                        <span className=&ldquo;text-yellow-500&rdquo;>★</span>
+                        <span className="text-yellow-500">★</span>
                       </div>
-                      <div className=&ldquo;flex-1&rdquo;>
+                      <div className="flex-1">
                         <Progress
                           value={
                             (rating.count /
@@ -651,7 +651,7 @@ export default function CourseAnalyticsPage() {
                           }
                         />
                       </div>
-                      <span className=&ldquo;text-sm text-muted-foreground w-12&rdquo;>
+                      <span className="text-sm text-muted-foreground w-12">
                         {rating.count}
                       </span>
                     </div>
@@ -665,35 +665,35 @@ export default function CourseAnalyticsPage() {
                 <CardTitle>Comentarios Frecuentes</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className=&ldquo;space-y-3&rdquo;>
+                <div className="space-y-3">
                   {analyticsData.feedback.commonFeedback.map(
                     (feedback, index) => (
                       <div
                         key={index}
-                        className=&ldquo;flex items-center justify-between p-3 border rounded-lg&rdquo;
+                        className="flex items-center justify-between p-3 border rounded-lg"
                       >
                         <div>
-                          <p className=&ldquo;font-medium text-sm&rdquo;>
+                          <p className="font-medium text-sm">
                             {feedback.theme}
                           </p>
-                          <p className=&ldquo;text-xs text-muted-foreground&rdquo;>
+                          <p className="text-xs text-muted-foreground">
                             {feedback.mentions} menciones
                           </p>
                         </div>
                         <Badge
                           variant={
-                            feedback.sentiment === &ldquo;positive&rdquo;
-                              ? &ldquo;default&rdquo;
-                              : feedback.sentiment === &ldquo;negative&rdquo;
-                                ? &ldquo;destructive&rdquo;
-                                : &ldquo;secondary&rdquo;
+                            feedback.sentiment === "positive"
+                              ? "default"
+                              : feedback.sentiment === "negative"
+                                ? "destructive"
+                                : "secondary"
                           }
                         >
-                          {feedback.sentiment === &ldquo;positive&rdquo;
-                            ? &ldquo;Positivo&rdquo;
-                            : feedback.sentiment === &ldquo;negative&rdquo;
-                              ? &ldquo;Negativo&rdquo;
-                              : &ldquo;Neutral&rdquo;}
+                          {feedback.sentiment === "positive"
+                            ? "Positivo"
+                            : feedback.sentiment === "negative"
+                              ? "Negativo"
+                              : "Neutral"}
                         </Badge>
                       </div>
                     )

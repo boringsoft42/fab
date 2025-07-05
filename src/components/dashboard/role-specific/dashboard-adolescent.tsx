@@ -1,17 +1,17 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import { useState, useEffect } from &ldquo;react&rdquo;;
+import { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from &ldquo;@/components/ui/card&rdquo;;
-import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
-import { Button } from &ldquo;@/components/ui/button&rdquo;;
-import { Progress } from &ldquo;@/components/ui/progress&rdquo;;
-import { Alert, AlertDescription } from &ldquo;@/components/ui/alert&rdquo;;
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   Search,
   FileText,
@@ -44,10 +44,10 @@ import {
   Play,
   CheckCircle,
   AlertCircle,
-} from &ldquo;lucide-react&rdquo;;
-import Link from &ldquo;next/link&rdquo;;
-import { Avatar, AvatarFallback, AvatarImage } from &ldquo;@/components/ui/avatar&rdquo;;
-import { Skeleton } from &ldquo;@/components/ui/skeleton&rdquo;;
+} from "lucide-react";
+import Link from "next/link";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // News types
 interface NewsArticle {
@@ -57,9 +57,9 @@ interface NewsArticle {
   content?: string;
   imageUrl?: string;
   authorName: string;
-  authorType: &ldquo;COMPANY&rdquo; | &ldquo;GOVERNMENT&rdquo; | &ldquo;NGO&rdquo;;
+  authorType: "COMPANY" | "GOVERNMENT" | "NGO";
   authorLogo?: string;
-  priority: &ldquo;LOW&rdquo; | &ldquo;MEDIUM&rdquo; | &ldquo;HIGH&rdquo; | &ldquo;URGENT&rdquo;;
+  priority: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
   category?: string;
   publishedAt: string;
   viewCount: number;
@@ -89,35 +89,35 @@ function NewsCarousel() {
 
       // Fetch company news
       const companyResponse = await fetch(
-        &ldquo;/api/news?type=company&featured=true&targetAudience=YOUTH&limit=6&rdquo;
+        "/api/news?type=company&featured=true&targetAudience=YOUTH&limit=6"
       );
       const companyData = await companyResponse.json();
 
       // Fetch government/NGO news
       const govResponse = await fetch(
-        &ldquo;/api/news?type=government&targetAudience=YOUTH&limit=6&rdquo;
+        "/api/news?type=government&targetAudience=YOUTH&limit=6"
       );
       const govData = await govResponse.json();
 
       const ngoResponse = await fetch(
-        &ldquo;/api/news?type=ngo&targetAudience=YOUTH&limit=6&rdquo;
+        "/api/news?type=ngo&targetAudience=YOUTH&limit=6"
       );
       const ngoData = await ngoResponse.json();
 
       setCompanyNews(companyData.news || []);
       setGovernmentNews([...(govData.news || []), ...(ngoData.news || [])]);
     } catch (error) {
-      console.error(&ldquo;Error fetching news:&rdquo;, error);
+      console.error("Error fetching news:", error);
     } finally {
       setLoading(false);
     }
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString(&ldquo;es-ES&rdquo;, {
-      day: &ldquo;2-digit&rdquo;,
-      month: &ldquo;short&rdquo;,
-      year: &ldquo;numeric&rdquo;,
+    return new Date(dateString).toLocaleDateString("es-ES", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
     });
   };
 
@@ -127,36 +127,36 @@ function NewsCarousel() {
     const diffTime = Math.abs(now.getTime() - date.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-    if (diffDays === 1) return &ldquo;Hace 1 día&rdquo;;
+    if (diffDays === 1) return "Hace 1 día";
     if (diffDays < 7) return `Hace ${diffDays} días`;
     if (diffDays < 30)
-      return `Hace ${Math.ceil(diffDays / 7)} semana${Math.ceil(diffDays / 7) > 1 ? &ldquo;s&rdquo; : &ldquo;&rdquo;}`;
+      return `Hace ${Math.ceil(diffDays / 7)} semana${Math.ceil(diffDays / 7) > 1 ? "s" : ""}`;
     return formatDate(dateString);
   };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case &ldquo;URGENT&rdquo;:
-        return &ldquo;bg-red-500 text-white&rdquo;;
-      case &ldquo;HIGH&rdquo;:
-        return &ldquo;bg-orange-500 text-white&rdquo;;
-      case &ldquo;MEDIUM&rdquo;:
-        return &ldquo;bg-blue-500 text-white&rdquo;;
-      case &ldquo;LOW&rdquo;:
-        return &ldquo;bg-gray-500 text-white&rdquo;;
+      case "URGENT":
+        return "bg-red-500 text-white";
+      case "HIGH":
+        return "bg-orange-500 text-white";
+      case "MEDIUM":
+        return "bg-blue-500 text-white";
+      case "LOW":
+        return "bg-gray-500 text-white";
       default:
-        return &ldquo;bg-gray-500 text-white&rdquo;;
+        return "bg-gray-500 text-white";
     }
   };
 
   const getPriorityIcon = (priority: string) => {
     switch (priority) {
-      case &ldquo;URGENT&rdquo;:
-        return <AlertCircle className=&ldquo;w-3 h-3&rdquo; />;
-      case &ldquo;HIGH&rdquo;:
-        return <Star className=&ldquo;w-3 h-3&rdquo; />;
+      case "URGENT":
+        return <AlertCircle className="w-3 h-3" />;
+      case "HIGH":
+        return <Star className="w-3 h-3" />;
       default:
-        return <Info className=&ldquo;w-3 h-3&rdquo; />;
+        return <Info className="w-3 h-3" />;
     }
   };
 
@@ -197,43 +197,43 @@ function NewsCarousel() {
   }) => (
     <Card
       className={`hover:shadow-xl transition-all duration-300 cursor-pointer group overflow-hidden ${
-        compact ? &ldquo;h-full&rdquo; : &ldquo;&rdquo;
-      } ${featured ? &ldquo;ring-2 ring-blue-500/20 shadow-lg&rdquo; : &ldquo;&rdquo;}`}
+        compact ? "h-full" : ""
+      } ${featured ? "ring-2 ring-blue-500/20 shadow-lg" : ""}`}
     >
-      <div className=&ldquo;relative&rdquo;>
+      <div className="relative">
         {article.imageUrl ? (
           <div
-            className={`relative ${compact ? &ldquo;h-32&rdquo; : &ldquo;h-48&rdquo;} overflow-hidden`}
+            className={`relative ${compact ? "h-32" : "h-48"} overflow-hidden`}
           >
             <img
               src={article.imageUrl}
               alt={article.title}
-              className=&ldquo;w-full h-full object-cover group-hover:scale-105 transition-transform duration-300&rdquo;
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             />
-            <div className=&ldquo;absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent&rdquo; />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
             {/* Priority Badge */}
-            <div className=&ldquo;absolute top-3 left-3&rdquo;>
+            <div className="absolute top-3 left-3">
               <Badge
                 className={`${getPriorityColor(article.priority)} border-0 flex items-center gap-1`}
               >
                 {getPriorityIcon(article.priority)}
-                {article.priority === &ldquo;URGENT&rdquo;
-                  ? &ldquo;Urgente&rdquo;
-                  : article.priority === &ldquo;HIGH&rdquo;
-                    ? &ldquo;Importante&rdquo;
-                    : article.priority === &ldquo;MEDIUM&rdquo;
-                      ? &ldquo;Medio&rdquo;
-                      : &ldquo;Información&rdquo;}
+                {article.priority === "URGENT"
+                  ? "Urgente"
+                  : article.priority === "HIGH"
+                    ? "Importante"
+                    : article.priority === "MEDIUM"
+                      ? "Medio"
+                      : "Información"}
               </Badge>
             </div>
 
             {/* Category Badge */}
             {article.category && (
-              <div className=&ldquo;absolute top-3 right-3&rdquo;>
+              <div className="absolute top-3 right-3">
                 <Badge
-                  variant=&ldquo;secondary&rdquo;
-                  className=&ldquo;bg-white/90 text-gray-700&rdquo;
+                  variant="secondary"
+                  className="bg-white/90 text-gray-700"
                 >
                   {article.category}
                 </Badge>
@@ -242,9 +242,9 @@ function NewsCarousel() {
 
             {/* Featured Badge */}
             {featured && (
-              <div className=&ldquo;absolute bottom-3 right-3&rdquo;>
-                <Badge className=&ldquo;bg-yellow-500 text-white&rdquo;>
-                  <Star className=&ldquo;w-3 h-3 mr-1&rdquo; />
+              <div className="absolute bottom-3 right-3">
+                <Badge className="bg-yellow-500 text-white">
+                  <Star className="w-3 h-3 mr-1" />
                   Destacado
                 </Badge>
               </div>
@@ -252,12 +252,12 @@ function NewsCarousel() {
 
             {/* Read Time */}
             {article.readTime && (
-              <div className=&ldquo;absolute bottom-3 left-3&rdquo;>
+              <div className="absolute bottom-3 left-3">
                 <Badge
-                  variant=&ldquo;secondary&rdquo;
-                  className=&ldquo;bg-black/50 text-white border-0&rdquo;
+                  variant="secondary"
+                  className="bg-black/50 text-white border-0"
                 >
-                  <Clock className=&ldquo;w-3 h-3 mr-1&rdquo; />
+                  <Clock className="w-3 h-3 mr-1" />
                   {article.readTime} min
                 </Badge>
               </div>
@@ -265,33 +265,33 @@ function NewsCarousel() {
           </div>
         ) : (
           <div
-            className={`${compact ? &ldquo;h-32&rdquo; : &ldquo;h-48&rdquo;} bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center`}
+            className={`${compact ? "h-32" : "h-48"} bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center`}
           >
-            <Newspaper className=&ldquo;w-8 h-8 text-gray-400&rdquo; />
+            <Newspaper className="w-8 h-8 text-gray-400" />
           </div>
         )}
       </div>
 
-      <CardContent className=&ldquo;p-4 space-y-3&rdquo;>
+      <CardContent className="p-4 space-y-3">
         {/* Author Info */}
-        <div className=&ldquo;flex items-center justify-between&rdquo;>
-          <div className=&ldquo;flex items-center gap-2&rdquo;>
-            <Avatar className=&ldquo;w-6 h-6&rdquo;>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Avatar className="w-6 h-6">
               <AvatarImage src={article.authorLogo} alt={article.authorName} />
-              <AvatarFallback className=&ldquo;text-xs&rdquo;>
-                {article.authorType === &ldquo;COMPANY&rdquo; ? (
-                  <Building2 className=&ldquo;w-3 h-3&rdquo; />
+              <AvatarFallback className="text-xs">
+                {article.authorType === "COMPANY" ? (
+                  <Building2 className="w-3 h-3" />
                 ) : (
-                  <Shield className=&ldquo;w-3 h-3&rdquo; />
+                  <Shield className="w-3 h-3" />
                 )}
               </AvatarFallback>
             </Avatar>
-            <span className=&ldquo;text-xs font-medium text-gray-600&rdquo;>
+            <span className="text-xs font-medium text-gray-600">
               {article.authorName}
             </span>
           </div>
-          <div className=&ldquo;flex items-center gap-1 text-xs text-muted-foreground&rdquo;>
-            <Calendar className=&ldquo;w-3 h-3&rdquo; />
+          <div className="flex items-center gap-1 text-xs text-muted-foreground">
+            <Calendar className="w-3 h-3" />
             {formatTimeAgo(article.publishedAt)}
           </div>
         </div>
@@ -299,7 +299,7 @@ function NewsCarousel() {
         {/* Title */}
         <h3
           className={`font-semibold leading-tight line-clamp-2 group-hover:text-blue-600 transition-colors ${
-            compact ? &ldquo;text-sm&rdquo; : &ldquo;text-base&rdquo;
+            compact ? "text-sm" : "text-base"
           }`}
         >
           {article.title}
@@ -308,27 +308,27 @@ function NewsCarousel() {
         {/* Summary */}
         <p
           className={`text-muted-foreground line-clamp-2 ${
-            compact ? &ldquo;text-xs&rdquo; : &ldquo;text-sm&rdquo;
+            compact ? "text-xs" : "text-sm"
           }`}
         >
           {article.summary}
         </p>
 
         {/* Tags */}
-        <div className=&ldquo;flex flex-wrap gap-1&rdquo;>
+        <div className="flex flex-wrap gap-1">
           {article.tags.slice(0, compact ? 2 : 3).map((tag, index) => (
             <Badge
               key={index}
-              variant=&ldquo;outline&rdquo;
-              className=&ldquo;text-xs px-2 py-0.5 border-gray-300 text-gray-600 hover:bg-gray-50&rdquo;
+              variant="outline"
+              className="text-xs px-2 py-0.5 border-gray-300 text-gray-600 hover:bg-gray-50"
             >
               {tag}
             </Badge>
           ))}
           {article.tags.length > (compact ? 2 : 3) && (
             <Badge
-              variant=&ldquo;outline&rdquo;
-              className=&ldquo;text-xs px-2 py-0.5 text-gray-500&rdquo;
+              variant="outline"
+              className="text-xs px-2 py-0.5 text-gray-500"
             >
               +{article.tags.length - (compact ? 2 : 3)}
             </Badge>
@@ -336,42 +336,42 @@ function NewsCarousel() {
         </div>
 
         {/* Engagement Stats & Actions */}
-        <div className=&ldquo;flex items-center justify-between pt-2 border-t border-gray-100&rdquo;>
-          <div className=&ldquo;flex items-center gap-4 text-xs text-muted-foreground&rdquo;>
-            <div className=&ldquo;flex items-center gap-1 hover:text-blue-600 cursor-pointer&rdquo;>
-              <Eye className=&ldquo;w-3 h-3&rdquo; />
+        <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+          <div className="flex items-center gap-4 text-xs text-muted-foreground">
+            <div className="flex items-center gap-1 hover:text-blue-600 cursor-pointer">
+              <Eye className="w-3 h-3" />
               {article.viewCount.toLocaleString()}
             </div>
-            <div className=&ldquo;flex items-center gap-1 hover:text-red-500 cursor-pointer&rdquo;>
-              <ThumbsUp className=&ldquo;w-3 h-3&rdquo; />
+            <div className="flex items-center gap-1 hover:text-red-500 cursor-pointer">
+              <ThumbsUp className="w-3 h-3" />
               {article.likeCount.toLocaleString()}
             </div>
-            <div className=&ldquo;flex items-center gap-1 hover:text-green-600 cursor-pointer&rdquo;>
-              <MessageSquare className=&ldquo;w-3 h-3&rdquo; />
+            <div className="flex items-center gap-1 hover:text-green-600 cursor-pointer">
+              <MessageSquare className="w-3 h-3" />
               {article.commentCount.toLocaleString()}
             </div>
             {article.shareCount && (
-              <div className=&ldquo;flex items-center gap-1 hover:text-purple-600 cursor-pointer&rdquo;>
-                <Share2 className=&ldquo;w-3 h-3&rdquo; />
+              <div className="flex items-center gap-1 hover:text-purple-600 cursor-pointer">
+                <Share2 className="w-3 h-3" />
                 {article.shareCount.toLocaleString()}
               </div>
             )}
           </div>
 
-          <div className=&ldquo;flex items-center gap-1&rdquo;>
+          <div className="flex items-center gap-1">
             <Button
-              variant=&ldquo;ghost&rdquo;
-              size=&ldquo;sm&rdquo;
-              className=&ldquo;h-6 px-2 hover:bg-blue-50 hover:text-blue-600&rdquo;
+              variant="ghost"
+              size="sm"
+              className="h-6 px-2 hover:bg-blue-50 hover:text-blue-600"
             >
-              <Bookmark className=&ldquo;w-3 h-3&rdquo; />
+              <Bookmark className="w-3 h-3" />
             </Button>
             <Button
-              variant=&ldquo;ghost&rdquo;
-              size=&ldquo;sm&rdquo;
-              className=&ldquo;h-6 px-2 hover:bg-blue-50 hover:text-blue-600&rdquo;
+              variant="ghost"
+              size="sm"
+              className="h-6 px-2 hover:bg-blue-50 hover:text-blue-600"
             >
-              <ExternalLink className=&ldquo;w-3 h-3&rdquo; />
+              <ExternalLink className="w-3 h-3" />
             </Button>
           </div>
         </div>
@@ -381,21 +381,21 @@ function NewsCarousel() {
 
   if (loading) {
     return (
-      <div className=&ldquo;space-y-6&rdquo;>
-        <div className=&ldquo;text-center&rdquo;>
-          <Skeleton className=&ldquo;h-8 w-64 mx-auto mb-2&rdquo; />
-          <Skeleton className=&ldquo;h-4 w-96 mx-auto&rdquo; />
+      <div className="space-y-6">
+        <div className="text-center">
+          <Skeleton className="h-8 w-64 mx-auto mb-2" />
+          <Skeleton className="h-4 w-96 mx-auto" />
         </div>
-        <div className=&ldquo;grid grid-cols-1 lg:grid-cols-2 gap-6&rdquo;>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {[...Array(2)].map((_, i) => (
-            <div key={i} className=&ldquo;space-y-4&rdquo;>
-              <Skeleton className=&ldquo;h-6 w-48&rdquo; />
-              <div className=&ldquo;grid gap-4&rdquo;>
+            <div key={i} className="space-y-4">
+              <Skeleton className="h-6 w-48" />
+              <div className="grid gap-4">
                 {[...Array(3)].map((_, j) => (
-                  <div key={j} className=&ldquo;space-y-3&rdquo;>
-                    <Skeleton className=&ldquo;h-48 w-full rounded&rdquo; />
-                    <Skeleton className=&ldquo;h-4 w-full&rdquo; />
-                    <Skeleton className=&ldquo;h-3 w-3/4&rdquo; />
+                  <div key={j} className="space-y-3">
+                    <Skeleton className="h-48 w-full rounded" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-3 w-3/4" />
                   </div>
                 ))}
               </div>
@@ -407,18 +407,18 @@ function NewsCarousel() {
   }
 
   return (
-    <div className=&ldquo;space-y-8 px-10 py-4&rdquo;>
+    <div className="space-y-8 px-10 py-4">
       {/* Enhanced Header */}
-      <div className=&ldquo;text-center space-y-4&rdquo;>
-        <div className=&ldquo;flex items-center justify-center gap-3 mb-4&rdquo;>
-          <div className=&ldquo;w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center&rdquo;>
-            <Newspaper className=&ldquo;w-6 h-6 text-white&rdquo; />
+      <div className="text-center space-y-4">
+        <div className="flex items-center justify-center gap-3 mb-4">
+          <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+            <Newspaper className="w-6 h-6 text-white" />
           </div>
-          <div className=&ldquo;text-left&rdquo;>
-            <h2 className=&ldquo;text-3xl font-bold text-gray-900&rdquo;>
+          <div className="text-left">
+            <h2 className="text-3xl font-bold text-gray-900">
               Centro de Noticias
             </h2>
-            <p className=&ldquo;text-muted-foreground&rdquo;>
+            <p className="text-muted-foreground">
               Mantente informado sobre las últimas oportunidades y anuncios
               importantes
             </p>
@@ -426,53 +426,53 @@ function NewsCarousel() {
         </div>
 
         {/* Quick Stats */}
-        <div className=&ldquo;flex items-center justify-center gap-6 text-sm text-muted-foreground&rdquo;>
-          <div className=&ldquo;flex items-center gap-1&rdquo;>
-            <Building2 className=&ldquo;w-4 h-4&rdquo; />
+        <div className="flex items-center justify-center gap-6 text-sm text-muted-foreground">
+          <div className="flex items-center gap-1">
+            <Building2 className="w-4 h-4" />
             {companyNews.length} Noticias Empresariales
           </div>
-          <div className=&ldquo;flex items-center gap-1&rdquo;>
-            <Shield className=&ldquo;w-4 h-4&rdquo; />
+          <div className="flex items-center gap-1">
+            <Shield className="w-4 h-4" />
             {governmentNews.length} Noticias Oficiales
           </div>
-          <div className=&ldquo;flex items-center gap-1&rdquo;>
-            <Clock className=&ldquo;w-4 h-4&rdquo; />
+          <div className="flex items-center gap-1">
+            <Clock className="w-4 h-4" />
             Actualizado hoy
           </div>
         </div>
       </div>
 
       {/* Enhanced News Grid */}
-      <div className=&ldquo;grid grid-cols-1 lg:grid-cols-2 gap-8&rdquo;>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Company News Column */}
-        <div className=&ldquo;space-y-6&rdquo;>
-          <div className=&ldquo;flex items-center justify-between&rdquo;>
-            <div className=&ldquo;flex items-center gap-3&rdquo;>
-              <div className=&ldquo;w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center&rdquo;>
-                <Building2 className=&ldquo;w-5 h-5 text-white&rdquo; />
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                <Building2 className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h3 className=&ldquo;text-xl font-semibold text-gray-900&rdquo;>
+                <h3 className="text-xl font-semibold text-gray-900">
                   Noticias Empresariales
                 </h3>
-                <p className=&ldquo;text-sm text-gray-600&rdquo;>
+                <p className="text-sm text-gray-600">
                   Oportunidades laborales y novedades corporativas
                 </p>
               </div>
             </div>
             {companyNews.length > 3 && (
-              <div className=&ldquo;flex gap-1&rdquo;>
-                <Button variant=&ldquo;outline&rdquo; size=&ldquo;sm&rdquo; onClick={prevCompany}>
-                  <ChevronLeft className=&ldquo;w-4 h-4&rdquo; />
+              <div className="flex gap-1">
+                <Button variant="outline" size="sm" onClick={prevCompany}>
+                  <ChevronLeft className="w-4 h-4" />
                 </Button>
-                <Button variant=&ldquo;outline&rdquo; size=&ldquo;sm&rdquo; onClick={nextCompany}>
-                  <ChevronRight className=&ldquo;w-4 h-4&rdquo; />
+                <Button variant="outline" size="sm" onClick={nextCompany}>
+                  <ChevronRight className="w-4 h-4" />
                 </Button>
               </div>
             )}
           </div>
 
-          <div className=&ldquo;space-y-4&rdquo;>
+          <div className="space-y-4">
             {companyNews.length > 0 ? (
               <>
                 {/* Featured article */}
@@ -482,7 +482,7 @@ function NewsCarousel() {
                 />
 
                 {/* Compact articles */}
-                <div className=&ldquo;grid grid-cols-1 gap-4&rdquo;>
+                <div className="grid grid-cols-1 gap-4">
                   {companyNews
                     .slice(companyIndex + 1, companyIndex + 3)
                     .map((article) => (
@@ -495,16 +495,16 @@ function NewsCarousel() {
                 </div>
               </>
             ) : (
-              <Card className=&ldquo;p-8 text-center border-dashed&rdquo;>
-                <Building2 className=&ldquo;w-16 h-16 text-gray-300 mx-auto mb-4&rdquo; />
-                <h4 className=&ldquo;font-medium text-gray-900 mb-2&rdquo;>
+              <Card className="p-8 text-center border-dashed">
+                <Building2 className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                <h4 className="font-medium text-gray-900 mb-2">
                   Sin noticias empresariales
                 </h4>
-                <p className=&ldquo;text-sm text-muted-foreground mb-4&rdquo;>
+                <p className="text-sm text-muted-foreground mb-4">
                   No hay noticias empresariales disponibles en este momento
                 </p>
-                <Button variant=&ldquo;outline&rdquo; size=&ldquo;sm&rdquo;>
-                  <Search className=&ldquo;w-4 h-4 mr-2&rdquo; />
+                <Button variant="outline" size="sm">
+                  <Search className="w-4 h-4 mr-2" />
                   Explorar Empleos
                 </Button>
               </Card>
@@ -513,34 +513,34 @@ function NewsCarousel() {
         </div>
 
         {/* Government/NGO News Column */}
-        <div className=&ldquo;space-y-6&rdquo;>
-          <div className=&ldquo;flex items-center justify-between&rdquo;>
-            <div className=&ldquo;flex items-center gap-3&rdquo;>
-              <div className=&ldquo;w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center&rdquo;>
-                <Shield className=&ldquo;w-5 h-5 text-white&rdquo; />
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
+                <Shield className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h3 className=&ldquo;text-xl font-semibold text-gray-900&rdquo;>
+                <h3 className="text-xl font-semibold text-gray-900">
                   Noticias Oficiales
                 </h3>
-                <p className=&ldquo;text-sm text-gray-600&rdquo;>
+                <p className="text-sm text-gray-600">
                   Anuncios gubernamentales y programas sociales
                 </p>
               </div>
             </div>
             {governmentNews.length > 3 && (
-              <div className=&ldquo;flex gap-1&rdquo;>
-                <Button variant=&ldquo;outline&rdquo; size=&ldquo;sm&rdquo; onClick={prevGovernment}>
-                  <ChevronLeft className=&ldquo;w-4 h-4&rdquo; />
+              <div className="flex gap-1">
+                <Button variant="outline" size="sm" onClick={prevGovernment}>
+                  <ChevronLeft className="w-4 h-4" />
                 </Button>
-                <Button variant=&ldquo;outline&rdquo; size=&ldquo;sm&rdquo; onClick={nextGovernment}>
-                  <ChevronRight className=&ldquo;w-4 h-4&rdquo; />
+                <Button variant="outline" size="sm" onClick={nextGovernment}>
+                  <ChevronRight className="w-4 h-4" />
                 </Button>
               </div>
             )}
           </div>
 
-          <div className=&ldquo;space-y-4&rdquo;>
+          <div className="space-y-4">
             {governmentNews.length > 0 ? (
               <>
                 {/* Featured article */}
@@ -550,7 +550,7 @@ function NewsCarousel() {
                 />
 
                 {/* Compact articles */}
-                <div className=&ldquo;grid grid-cols-1 gap-4&rdquo;>
+                <div className="grid grid-cols-1 gap-4">
                   {governmentNews
                     .slice(governmentIndex + 1, governmentIndex + 3)
                     .map((article) => (
@@ -563,16 +563,16 @@ function NewsCarousel() {
                 </div>
               </>
             ) : (
-              <Card className=&ldquo;p-8 text-center border-dashed&rdquo;>
-                <Shield className=&ldquo;w-16 h-16 text-gray-300 mx-auto mb-4&rdquo; />
-                <h4 className=&ldquo;font-medium text-gray-900 mb-2&rdquo;>
+              <Card className="p-8 text-center border-dashed">
+                <Shield className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                <h4 className="font-medium text-gray-900 mb-2">
                   Sin noticias oficiales
                 </h4>
-                <p className=&ldquo;text-sm text-muted-foreground mb-4&rdquo;>
+                <p className="text-sm text-muted-foreground mb-4">
                   No hay noticias gubernamentales disponibles en este momento
                 </p>
-                <Button variant=&ldquo;outline&rdquo; size=&ldquo;sm&rdquo;>
-                  <Target className=&ldquo;w-4 h-4 mr-2&rdquo; />
+                <Button variant="outline" size="sm">
+                  <Target className="w-4 h-4 mr-2" />
                   Ver Programas
                 </Button>
               </Card>
@@ -582,19 +582,19 @@ function NewsCarousel() {
       </div>
 
       {/* Enhanced View More Section */}
-      <div className=&ldquo;text-center space-y-4&rdquo;>
-        <div className=&ldquo;flex items-center justify-center gap-4&rdquo;>
-          <Button size=&ldquo;lg&rdquo; className=&ldquo;px-6&rdquo;>
-            <Newspaper className=&ldquo;w-4 h-4 mr-2&rdquo; />
+      <div className="text-center space-y-4">
+        <div className="flex items-center justify-center gap-4">
+          <Button size="lg" className="px-6">
+            <Newspaper className="w-4 h-4 mr-2" />
             Ver Todas las Noticias
           </Button>
-          <Button variant=&ldquo;outline&rdquo; size=&ldquo;lg&rdquo;>
-            <Star className=&ldquo;w-4 h-4 mr-2&rdquo; />
+          <Button variant="outline" size="lg">
+            <Star className="w-4 h-4 mr-2" />
             Noticias Destacadas
           </Button>
         </div>
-        <p className=&ldquo;text-xs text-muted-foreground&rdquo;>
-          Actualizado automáticamente cada hora • Últimas{&ldquo; &rdquo;}
+        <p className="text-xs text-muted-foreground">
+          Actualizado automáticamente cada hora • Últimas{" "}
           {companyNews.length + governmentNews.length} noticias
         </p>
       </div>
@@ -604,32 +604,32 @@ function NewsCarousel() {
 
 export function DashboardAdolescent() {
   return (
-    <div className=&ldquo;space-y-8&rdquo;>
+    <div className="space-y-8">
       {/* Welcome Section */}
-      <div className=&ldquo;bg-gradient-to-r from-green-600 to-blue-600 rounded-lg p-6 text-white&rdquo;>
-        <div className=&ldquo;flex items-center justify-between&rdquo;>
+      <div className="bg-gradient-to-r from-green-600 to-blue-600 rounded-lg p-6 text-white">
+        <div className="flex items-center justify-between">
           <div>
-            <h1 className=&ldquo;text-3xl font-bold mb-2&rdquo;>¡Bienvenido Joven!</h1>
-            <p className=&ldquo;text-green-100&rdquo;>
+            <h1 className="text-3xl font-bold mb-2">¡Bienvenido Joven!</h1>
+            <p className="text-green-100">
               Explora oportunidades, desarrolla tus habilidades y construye tu
               futuro profesional
             </p>
           </div>
-          <div className=&ldquo;hidden md:flex&rdquo;>
-            <GraduationCapIcon className=&ldquo;w-16 h-16 text-green-200&rdquo; />
+          <div className="hidden md:flex">
+            <GraduationCapIcon className="w-16 h-16 text-green-200" />
           </div>
         </div>
       </div>
 
       {/* Parental Consent Notice */}
-      <div className=&ldquo;bg-amber-50 border border-amber-200 rounded-lg p-4&rdquo;>
-        <div className=&ldquo;flex items-center gap-3&rdquo;>
-          <Shield className=&ldquo;w-5 h-5 text-amber-600&rdquo; />
+      <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+        <div className="flex items-center gap-3">
+          <Shield className="w-5 h-5 text-amber-600" />
           <div>
-            <h3 className=&ldquo;text-sm font-medium text-amber-800&rdquo;>
+            <h3 className="text-sm font-medium text-amber-800">
               Recordatorio Importante
             </h3>
-            <p className=&ldquo;text-sm text-amber-700&rdquo;>
+            <p className="text-sm text-amber-700">
               Recuerda que para ciertas actividades necesitas autorización de
               tus padres o tutores.
             </p>
@@ -641,68 +641,68 @@ export function DashboardAdolescent() {
       <NewsCarousel />
 
       {/* Quick Access Modules */}
-      <div className=&ldquo;grid grid-cols-1 md:grid-cols-3 gap-6&rdquo;>
-        <Card className=&ldquo;hover:shadow-lg transition-shadow cursor-pointer&rdquo;>
-          <CardHeader className=&ldquo;pb-3&rdquo;>
-            <div className=&ldquo;flex items-center gap-3&rdquo;>
-              <div className=&ldquo;w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center&rdquo;>
-                <Search className=&ldquo;w-5 h-5 text-white&rdquo; />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+          <CardHeader className="pb-3">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                <Search className="w-5 h-5 text-white" />
               </div>
-              <CardTitle className=&ldquo;text-lg&rdquo;>Búsqueda de Empleo</CardTitle>
+              <CardTitle className="text-lg">Búsqueda de Empleo</CardTitle>
             </div>
           </CardHeader>
           <CardContent>
-            <p className=&ldquo;text-sm text-muted-foreground mb-4&rdquo;>
+            <p className="text-sm text-muted-foreground mb-4">
               Encuentra oportunidades laborales apropiadas para jóvenes
             </p>
-            <Button asChild size=&ldquo;sm&rdquo; className=&ldquo;w-full&rdquo;>
-              <Link href=&ldquo;/jobs&rdquo;>
+            <Button asChild size="sm" className="w-full">
+              <Link href="/jobs">
                 Explorar Ofertas
-                <ArrowRight className=&ldquo;w-4 h-4 ml-2&rdquo; />
+                <ArrowRight className="w-4 h-4 ml-2" />
               </Link>
             </Button>
           </CardContent>
         </Card>
 
-        <Card className=&ldquo;hover:shadow-lg transition-shadow cursor-pointer&rdquo;>
-          <CardHeader className=&ldquo;pb-3&rdquo;>
-            <div className=&ldquo;flex items-center gap-3&rdquo;>
-              <div className=&ldquo;w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center&rdquo;>
-                <GraduationCap className=&ldquo;w-5 h-5 text-white&rdquo; />
+        <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+          <CardHeader className="pb-3">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
+                <GraduationCap className="w-5 h-5 text-white" />
               </div>
-              <CardTitle className=&ldquo;text-lg&rdquo;>Capacitación</CardTitle>
+              <CardTitle className="text-lg">Capacitación</CardTitle>
             </div>
           </CardHeader>
           <CardContent>
-            <p className=&ldquo;text-sm text-muted-foreground mb-4&rdquo;>
+            <p className="text-sm text-muted-foreground mb-4">
               Desarrolla nuevas habilidades y obtén certificaciones
             </p>
-            <Button asChild size=&ldquo;sm&rdquo; className=&ldquo;w-full&rdquo;>
-              <Link href=&ldquo;/courses&rdquo;>
+            <Button asChild size="sm" className="w-full">
+              <Link href="/courses">
                 Ver Cursos
-                <ArrowRight className=&ldquo;w-4 h-4 ml-2&rdquo; />
+                <ArrowRight className="w-4 h-4 ml-2" />
               </Link>
             </Button>
           </CardContent>
         </Card>
 
-        <Card className=&ldquo;hover:shadow-lg transition-shadow cursor-pointer&rdquo;>
-          <CardHeader className=&ldquo;pb-3&rdquo;>
-            <div className=&ldquo;flex items-center gap-3&rdquo;>
-              <div className=&ldquo;w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center&rdquo;>
-                <Target className=&ldquo;w-5 h-5 text-white&rdquo; />
+        <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+          <CardHeader className="pb-3">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center">
+                <Target className="w-5 h-5 text-white" />
               </div>
-              <CardTitle className=&ldquo;text-lg&rdquo;>Emprendimiento</CardTitle>
+              <CardTitle className="text-lg">Emprendimiento</CardTitle>
             </div>
           </CardHeader>
           <CardContent>
-            <p className=&ldquo;text-sm text-muted-foreground mb-4&rdquo;>
+            <p className="text-sm text-muted-foreground mb-4">
               Desarrolla ideas de negocio y habilidades empresariales
             </p>
-            <Button asChild size=&ldquo;sm&rdquo; className=&ldquo;w-full&rdquo;>
-              <Link href=&ldquo;/entrepreneurship&rdquo;>
+            <Button asChild size="sm" className="w-full">
+              <Link href="/entrepreneurship">
                 Explorar Ideas
-                <ArrowRight className=&ldquo;w-4 h-4 ml-2&rdquo; />
+                <ArrowRight className="w-4 h-4 ml-2" />
               </Link>
             </Button>
           </CardContent>
@@ -712,144 +712,144 @@ export function DashboardAdolescent() {
       {/* Recent Activity */}
       <Card>
         <CardHeader>
-          <CardTitle className=&ldquo;flex items-center gap-2&rdquo;>
-            <FileText className=&ldquo;w-5 h-5&rdquo; />
+          <CardTitle className="flex items-center gap-2">
+            <FileText className="w-5 h-5" />
             Actividad Reciente
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className=&ldquo;space-y-3&rdquo;>
-            <div className=&ldquo;flex items-center justify-between p-3 bg-green-50 rounded-lg&rdquo;>
-              <div className=&ldquo;flex items-center gap-3&rdquo;>
-                <CheckCircle className=&ldquo;w-4 h-4 text-green-600&rdquo; />
-                <span className=&ldquo;text-sm&rdquo;>
-                  Completaste &ldquo;Orientación Vocacional - Módulo 1&rdquo;
+          <div className="space-y-3">
+            <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+              <div className="flex items-center gap-3">
+                <CheckCircle className="w-4 h-4 text-green-600" />
+                <span className="text-sm">
+                  Completaste "Orientación Vocacional - Módulo 1"
                 </span>
               </div>
-              <Badge variant=&ldquo;secondary&rdquo;>Hace 1 día</Badge>
+              <Badge variant="secondary">Hace 1 día</Badge>
             </div>
 
-            <div className=&ldquo;flex items-center justify-between p-3 bg-purple-50 rounded-lg&rdquo;>
-              <div className=&ldquo;flex items-center gap-3&rdquo;>
-                <Target className=&ldquo;w-4 h-4 text-purple-600&rdquo; />
-                <span className=&ldquo;text-sm&rdquo;>
-                  Participaste en taller &ldquo;Educación Financiera Básica&rdquo;
+            <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
+              <div className="flex items-center gap-3">
+                <Target className="w-4 h-4 text-purple-600" />
+                <span className="text-sm">
+                  Participaste en taller "Educación Financiera Básica"
                 </span>
               </div>
-              <Badge variant=&ldquo;secondary&rdquo;>Hace 3 días</Badge>
+              <Badge variant="secondary">Hace 3 días</Badge>
             </div>
 
-            <div className=&ldquo;flex items-center justify-between p-3 bg-blue-50 rounded-lg&rdquo;>
-              <div className=&ldquo;flex items-center gap-3&rdquo;>
-                <Bookmark className=&ldquo;w-4 h-4 text-blue-600&rdquo; />
-                <span className=&ldquo;text-sm&rdquo;>
+            <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+              <div className="flex items-center gap-3">
+                <Bookmark className="w-4 h-4 text-blue-600" />
+                <span className="text-sm">
                   Guardaste oferta de trabajo de medio tiempo
                 </span>
               </div>
-              <Badge variant=&ldquo;secondary&rdquo;>Hace 5 días</Badge>
+              <Badge variant="secondary">Hace 5 días</Badge>
             </div>
           </div>
         </CardContent>
       </Card>
 
       {/* Enhanced Personal Metrics */}
-      <Card className=&ldquo;border border-blue-200 bg-gradient-to-br from-blue-50/50 to-purple-50/50&rdquo;>
+      <Card className="border border-blue-200 bg-gradient-to-br from-blue-50/50 to-purple-50/50">
         <CardHeader>
-          <div className=&ldquo;flex items-center justify-between&rdquo;>
-            <div className=&ldquo;flex items-center gap-3&rdquo;>
-              <div className=&ldquo;w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center&rdquo;>
-                <TrendingUp className=&ldquo;w-6 h-6 text-white&rdquo; />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                <TrendingUp className="w-6 h-6 text-white" />
               </div>
               <div>
-                <CardTitle className=&ldquo;text-xl&rdquo;>Progreso Personal</CardTitle>
+                <CardTitle className="text-xl">Progreso Personal</CardTitle>
                 <CardDescription>
                   Un vistazo completo a tu actividad y avances en la plataforma
                 </CardDescription>
               </div>
             </div>
-            <Button variant=&ldquo;outline&rdquo; size=&ldquo;sm&rdquo;>
-              <Eye className=&ldquo;w-4 h-4 mr-2&rdquo; />
+            <Button variant="outline" size="sm">
+              <Eye className="w-4 h-4 mr-2" />
               Ver Detalles
             </Button>
           </div>
         </CardHeader>
         <CardContent>
-          <div className=&ldquo;grid grid-cols-2 md:grid-cols-4 gap-6&rdquo;>
-            <div className=&ldquo;text-center space-y-3&rdquo;>
-              <div className=&ldquo;flex items-center justify-center w-16 h-16 bg-blue-100 rounded-xl mx-auto&rdquo;>
-                <Search className=&ldquo;w-8 h-8 text-blue-600&rdquo; />
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div className="text-center space-y-3">
+              <div className="flex items-center justify-center w-16 h-16 bg-blue-100 rounded-xl mx-auto">
+                <Search className="w-8 h-8 text-blue-600" />
               </div>
               <div>
-                <div className=&ldquo;text-3xl font-bold text-gray-900&rdquo;>3</div>
-                <p className=&ldquo;text-sm font-medium text-gray-600&rdquo;>
+                <div className="text-3xl font-bold text-gray-900">3</div>
+                <p className="text-sm font-medium text-gray-600">
                   Postulaciones Activas
                 </p>
-                <div className=&ldquo;w-full bg-blue-100 rounded-full h-2 mt-2&rdquo;>
+                <div className="w-full bg-blue-100 rounded-full h-2 mt-2">
                   <div
-                    className=&ldquo;bg-blue-500 h-2 rounded-full&rdquo;
-                    style={{ width: &ldquo;60%&rdquo; }}
+                    className="bg-blue-500 h-2 rounded-full"
+                    style={{ width: "60%" }}
                   ></div>
                 </div>
-                <p className=&ldquo;text-xs text-gray-500 mt-1&rdquo;>
+                <p className="text-xs text-gray-500 mt-1">
                   60% tasa de respuesta
                 </p>
               </div>
             </div>
 
-            <div className=&ldquo;text-center space-y-3&rdquo;>
-              <div className=&ldquo;flex items-center justify-center w-16 h-16 bg-green-100 rounded-xl mx-auto&rdquo;>
-                <GraduationCap className=&ldquo;w-8 h-8 text-green-600&rdquo; />
+            <div className="text-center space-y-3">
+              <div className="flex items-center justify-center w-16 h-16 bg-green-100 rounded-xl mx-auto">
+                <GraduationCap className="w-8 h-8 text-green-600" />
               </div>
               <div>
-                <div className=&ldquo;text-3xl font-bold text-gray-900&rdquo;>2</div>
-                <p className=&ldquo;text-sm font-medium text-gray-600&rdquo;>
+                <div className="text-3xl font-bold text-gray-900">2</div>
+                <p className="text-sm font-medium text-gray-600">
                   Cursos en Progreso
                 </p>
-                <div className=&ldquo;w-full bg-green-100 rounded-full h-2 mt-2&rdquo;>
+                <div className="w-full bg-green-100 rounded-full h-2 mt-2">
                   <div
-                    className=&ldquo;bg-green-500 h-2 rounded-full&rdquo;
-                    style={{ width: &ldquo;75%&rdquo; }}
+                    className="bg-green-500 h-2 rounded-full"
+                    style={{ width: "75%" }}
                   ></div>
                 </div>
-                <p className=&ldquo;text-xs text-gray-500 mt-1&rdquo;>75% completado</p>
+                <p className="text-xs text-gray-500 mt-1">75% completado</p>
               </div>
             </div>
 
-            <div className=&ldquo;text-center space-y-3&rdquo;>
-              <div className=&ldquo;flex items-center justify-center w-16 h-16 bg-purple-100 rounded-xl mx-auto&rdquo;>
-                <Target className=&ldquo;w-8 h-8 text-purple-600&rdquo; />
+            <div className="text-center space-y-3">
+              <div className="flex items-center justify-center w-16 h-16 bg-purple-100 rounded-xl mx-auto">
+                <Target className="w-8 h-8 text-purple-600" />
               </div>
               <div>
-                <div className=&ldquo;text-3xl font-bold text-gray-900&rdquo;>1</div>
-                <p className=&ldquo;text-sm font-medium text-gray-600&rdquo;>
+                <div className="text-3xl font-bold text-gray-900">1</div>
+                <p className="text-sm font-medium text-gray-600">
                   Proyecto Emprendimiento
                 </p>
-                <div className=&ldquo;w-full bg-purple-100 rounded-full h-2 mt-2&rdquo;>
+                <div className="w-full bg-purple-100 rounded-full h-2 mt-2">
                   <div
-                    className=&ldquo;bg-purple-500 h-2 rounded-full&rdquo;
-                    style={{ width: &ldquo;40%&rdquo; }}
+                    className="bg-purple-500 h-2 rounded-full"
+                    style={{ width: "40%" }}
                   ></div>
                 </div>
-                <p className=&ldquo;text-xs text-gray-500 mt-1&rdquo;>En desarrollo</p>
+                <p className="text-xs text-gray-500 mt-1">En desarrollo</p>
               </div>
             </div>
 
-            <div className=&ldquo;text-center space-y-3&rdquo;>
-              <div className=&ldquo;flex items-center justify-center w-16 h-16 bg-orange-100 rounded-xl mx-auto&rdquo;>
-                <Award className=&ldquo;w-8 h-8 text-orange-600&rdquo; />
+            <div className="text-center space-y-3">
+              <div className="flex items-center justify-center w-16 h-16 bg-orange-100 rounded-xl mx-auto">
+                <Award className="w-8 h-8 text-orange-600" />
               </div>
               <div>
-                <div className=&ldquo;text-3xl font-bold text-gray-900&rdquo;>4</div>
-                <p className=&ldquo;text-sm font-medium text-gray-600&rdquo;>
+                <div className="text-3xl font-bold text-gray-900">4</div>
+                <p className="text-sm font-medium text-gray-600">
                   Certificados Obtenidos
                 </p>
-                <div className=&ldquo;w-full bg-orange-100 rounded-full h-2 mt-2&rdquo;>
+                <div className="w-full bg-orange-100 rounded-full h-2 mt-2">
                   <div
-                    className=&ldquo;bg-orange-500 h-2 rounded-full&rdquo;
-                    style={{ width: &ldquo;80%&rdquo; }}
+                    className="bg-orange-500 h-2 rounded-full"
+                    style={{ width: "80%" }}
                   ></div>
                 </div>
-                <p className=&ldquo;text-xs text-gray-500 mt-1&rdquo;>
+                <p className="text-xs text-gray-500 mt-1">
                   Meta: 5 certificados
                 </p>
               </div>
@@ -857,38 +857,38 @@ export function DashboardAdolescent() {
           </div>
 
           {/* Additional Metrics Row */}
-          <div className=&ldquo;grid grid-cols-2 md:grid-cols-3 gap-4 mt-8 pt-6 border-t border-gray-200&rdquo;>
-            <div className=&ldquo;flex items-center gap-3 p-3 bg-white rounded-lg&rdquo;>
-              <div className=&ldquo;w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center&rdquo;>
-                <Clock className=&ldquo;w-5 h-5 text-yellow-600&rdquo; />
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-8 pt-6 border-t border-gray-200">
+            <div className="flex items-center gap-3 p-3 bg-white rounded-lg">
+              <div className="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
+                <Clock className="w-5 h-5 text-yellow-600" />
               </div>
               <div>
-                <div className=&ldquo;text-lg font-semibold text-gray-900&rdquo;>12h</div>
-                <p className=&ldquo;text-xs text-gray-600&rdquo;>
+                <div className="text-lg font-semibold text-gray-900">12h</div>
+                <p className="text-xs text-gray-600">
                   Tiempo de estudio esta semana
                 </p>
               </div>
             </div>
 
-            <div className=&ldquo;flex items-center gap-3 p-3 bg-white rounded-lg&rdquo;>
-              <div className=&ldquo;w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center&rdquo;>
-                <Users className=&ldquo;w-5 h-5 text-indigo-600&rdquo; />
+            <div className="flex items-center gap-3 p-3 bg-white rounded-lg">
+              <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+                <Users className="w-5 h-5 text-indigo-600" />
               </div>
               <div>
-                <div className=&ldquo;text-lg font-semibold text-gray-900&rdquo;>8</div>
-                <p className=&ldquo;text-xs text-gray-600&rdquo;>
+                <div className="text-lg font-semibold text-gray-900">8</div>
+                <p className="text-xs text-gray-600">
                   Conexiones profesionales
                 </p>
               </div>
             </div>
 
-            <div className=&ldquo;flex items-center gap-3 p-3 bg-white rounded-lg&rdquo;>
-              <div className=&ldquo;w-10 h-10 bg-pink-100 rounded-lg flex items-center justify-center&rdquo;>
-                <Star className=&ldquo;w-5 h-5 text-pink-600&rdquo; />
+            <div className="flex items-center gap-3 p-3 bg-white rounded-lg">
+              <div className="w-10 h-10 bg-pink-100 rounded-lg flex items-center justify-center">
+                <Star className="w-5 h-5 text-pink-600" />
               </div>
               <div>
-                <div className=&ldquo;text-lg font-semibold text-gray-900&rdquo;>4.8</div>
-                <p className=&ldquo;text-xs text-gray-600&rdquo;>Calificación promedio</p>
+                <div className="text-lg font-semibold text-gray-900">4.8</div>
+                <p className="text-xs text-gray-600">Calificación promedio</p>
               </div>
             </div>
           </div>
@@ -896,19 +896,19 @@ export function DashboardAdolescent() {
       </Card>
 
       {/* Support Section */}
-      <Card className=&ldquo;border-dashed&rdquo;>
-        <CardContent className=&ldquo;p-6 text-center&rdquo;>
-          <Heart className=&ldquo;w-8 h-8 text-pink-500 mx-auto mb-4&rdquo; />
-          <h3 className=&ldquo;text-lg font-medium mb-2&rdquo;>¿Necesitas ayuda?</h3>
-          <p className=&ldquo;text-gray-600 mb-4&rdquo;>
+      <Card className="border-dashed">
+        <CardContent className="p-6 text-center">
+          <Heart className="w-8 h-8 text-pink-500 mx-auto mb-4" />
+          <h3 className="text-lg font-medium mb-2">¿Necesitas ayuda?</h3>
+          <p className="text-gray-600 mb-4">
             Estamos aquí para apoyarte en tu desarrollo académico y profesional
           </p>
-          <div className=&ldquo;flex flex-col sm:flex-row gap-2 justify-center&rdquo;>
-            <Button variant=&ldquo;outline&rdquo; size=&ldquo;sm&rdquo; asChild>
-              <Link href=&ldquo;/support/academic&rdquo;>Apoyo Académico</Link>
+          <div className="flex flex-col sm:flex-row gap-2 justify-center">
+            <Button variant="outline" size="sm" asChild>
+              <Link href="/support/academic">Apoyo Académico</Link>
             </Button>
-            <Button variant=&ldquo;outline&rdquo; size=&ldquo;sm&rdquo; asChild>
-              <Link href=&ldquo;/support/career&rdquo;>Orientación Profesional</Link>
+            <Button variant="outline" size="sm" asChild>
+              <Link href="/support/career">Orientación Profesional</Link>
             </Button>
           </div>
         </CardContent>

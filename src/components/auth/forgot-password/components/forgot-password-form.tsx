@@ -1,11 +1,11 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import { useState } from &ldquo;react&rdquo;;
-import { useForm } from &ldquo;react-hook-form&rdquo;;
-import { zodResolver } from &ldquo;@hookform/resolvers/zod&rdquo;;
-import { z } from &ldquo;zod&rdquo;;
-import { cn } from &ldquo;@/lib/utils&rdquo;;
-import { Button } from &ldquo;@/components/ui/button&rdquo;;
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -13,16 +13,16 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from &ldquo;@/components/ui/form&rdquo;;
-import { Input } from &ldquo;@/components/ui/input&rdquo;;
-import { toast } from &ldquo;@/components/ui/use-toast&rdquo;;
-import { createClientComponentClient } from &ldquo;@supabase/auth-helpers-nextjs&rdquo;;
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { toast } from "@/components/ui/use-toast";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 const formSchema = z.object({
   email: z
     .string()
-    .min(1, { message: &ldquo;Please enter your email&rdquo; })
-    .email({ message: &ldquo;Invalid email address&rdquo; }),
+    .min(1, { message: "Please enter your email" })
+    .email({ message: "Invalid email address" }),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -40,7 +40,7 @@ export function ForgotPasswordForm({
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: &ldquo;&rdquo;,
+      email: "",
     },
   });
 
@@ -63,15 +63,15 @@ export function ForgotPasswordForm({
 
       setIsSuccess(true);
       toast({
-        title: &ldquo;Check your email&rdquo;,
-        description: &ldquo;We've sent you a password reset link.&rdquo;,
+        title: "Check your email",
+        description: "We've sent you a password reset link.",
       });
     } catch (error) {
-      console.error(&ldquo;Reset password error:&rdquo;, error);
+      console.error("Reset password error:", error);
       toast({
-        title: &ldquo;Error&rdquo;,
-        description: &ldquo;Something went wrong. Please try again.&rdquo;,
-        variant: &ldquo;destructive&rdquo;,
+        title: "Error",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive",
       });
     } finally {
       setIsLoading(false);
@@ -79,33 +79,33 @@ export function ForgotPasswordForm({
   }
 
   return (
-    <div className={cn(&ldquo;grid gap-6&rdquo;, className)} {...props}>
+    <div className={cn("grid gap-6", className)} {...props}>
       {isSuccess ? (
-        <div className=&ldquo;text-center&rdquo;>
-          <h3 className=&ldquo;mb-1 text-lg font-medium&rdquo;>Check your email</h3>
-          <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
+        <div className="text-center">
+          <h3 className="mb-1 text-lg font-medium">Check your email</h3>
+          <p className="text-sm text-muted-foreground">
             We&apos;ve sent a password reset link to your email. Please check
             your inbox and follow the instructions.
           </p>
         </div>
       ) : (
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className=&ldquo;space-y-4&rdquo;>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
-              name=&ldquo;email&rdquo;
+              name="email"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder=&ldquo;name@example.com&rdquo; {...field} />
+                    <Input placeholder="name@example.com" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button type=&ldquo;submit&rdquo; className=&ldquo;w-full&rdquo; disabled={isLoading}>
-              {isLoading ? &ldquo;Sending...&rdquo; : &ldquo;Send reset link&rdquo;}
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? "Sending..." : "Send reset link"}
             </Button>
           </form>
         </Form>

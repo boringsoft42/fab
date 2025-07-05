@@ -1,9 +1,9 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import { motion } from &ldquo;motion/react&rdquo;;
-import { CSSProperties, ReactElement, useEffect, useState } from &ldquo;react&rdquo;;
+import { motion } from "motion/react";
+import { CSSProperties, ReactElement, useEffect, useState } from "react";
 
-import { cn } from &ldquo;@/lib/utils&rdquo;;
+import { cn } from "@/lib/utils";
 
 interface Sparkle {
   id: string;
@@ -19,7 +19,7 @@ const Sparkle: React.FC<Sparkle> = ({ id, x, y, color, delay, scale }) => {
   return (
     <motion.svg
       key={id}
-      className=&ldquo;pointer-events-none absolute z-20&rdquo;
+      className="pointer-events-none absolute z-20"
       initial={{ opacity: 0, left: x, top: y }}
       animate={{
         opacity: [0, 1, 0],
@@ -27,12 +27,12 @@ const Sparkle: React.FC<Sparkle> = ({ id, x, y, color, delay, scale }) => {
         rotate: [75, 120, 150],
       }}
       transition={{ duration: 0.8, repeat: Infinity, delay }}
-      width=&ldquo;21&rdquo;
-      height=&ldquo;21&rdquo;
-      viewBox=&ldquo;0 0 21 21&rdquo;
+      width="21"
+      height="21"
+      viewBox="0 0 21 21"
     >
       <path
-        d=&ldquo;M9.82531 0.843845C10.0553 0.215178 10.9446 0.215178 11.1746 0.843845L11.8618 2.72026C12.4006 4.19229 12.3916 6.39157 13.5 7.5C14.6084 8.60843 16.8077 8.59935 18.2797 9.13822L20.1561 9.82534C20.7858 10.0553 20.7858 10.9447 20.1561 11.1747L18.2797 11.8618C16.8077 12.4007 14.6084 12.3916 13.5 13.5C12.3916 14.6084 12.4006 16.8077 11.8618 18.2798L11.1746 20.1562C10.9446 20.7858 10.0553 20.7858 9.82531 20.1562L9.13819 18.2798C8.59932 16.8077 8.60843 14.6084 7.5 13.5C6.39157 12.3916 4.19225 12.4007 2.72023 11.8618L0.843814 11.1747C0.215148 10.9447 0.215148 10.0553 0.843814 9.82534L2.72023 9.13822C4.19225 8.59935 6.39157 8.60843 7.5 7.5C8.60843 6.39157 8.59932 4.19229 9.13819 2.72026L9.82531 0.843845Z&rdquo;
+        d="M9.82531 0.843845C10.0553 0.215178 10.9446 0.215178 11.1746 0.843845L11.8618 2.72026C12.4006 4.19229 12.3916 6.39157 13.5 7.5C14.6084 8.60843 16.8077 8.59935 18.2797 9.13822L20.1561 9.82534C20.7858 10.0553 20.7858 10.9447 20.1561 11.1747L18.2797 11.8618C16.8077 12.4007 14.6084 12.3916 13.5 13.5C12.3916 14.6084 12.4006 16.8077 11.8618 18.2798L11.1746 20.1562C10.9446 20.7858 10.0553 20.7858 9.82531 20.1562L9.13819 18.2798C8.59932 16.8077 8.60843 14.6084 7.5 13.5C6.39157 12.3916 4.19225 12.4007 2.72023 11.8618L0.843814 11.1747C0.215148 10.9447 0.215148 10.0553 0.843814 9.82534L2.72023 9.13822C4.19225 8.59935 6.39157 8.60843 7.5 7.5C8.60843 6.39157 8.59932 4.19229 9.13819 2.72026L9.82531 0.843845Z"
         fill={color}
       />
     </motion.svg>
@@ -49,7 +49,7 @@ interface SparklesTextProps {
   as?: ReactElement;
 
   /**
-   * @default &ldquo;&rdquo;
+   * @default ""
    * @type string
    * @description
    * The className of the text
@@ -73,7 +73,7 @@ interface SparklesTextProps {
   sparklesCount?: number;
 
   /**
-   * @default &ldquo;{first: '#9E7AFF', second: '#FE8BBB'}&rdquo;
+   * @default "{first: '#9E7AFF', second: '#FE8BBB'}"
    * @type string
    * @description
    * The colors of the sparkles
@@ -86,7 +86,7 @@ interface SparklesTextProps {
 
 export const SparklesText: React.FC<SparklesTextProps> = ({
   text,
-  colors = { first: &ldquo;#9E7AFF&rdquo;, second: &ldquo;#FE8BBB&rdquo; },
+  colors = { first: "#9E7AFF", second: "#FE8BBB" },
   className,
   sparklesCount = 10,
   ...props
@@ -130,16 +130,16 @@ export const SparklesText: React.FC<SparklesTextProps> = ({
 
   return (
     <div
-      className={cn(&ldquo;text-6xl font-bold&rdquo;, className)}
+      className={cn("text-6xl font-bold", className)}
       {...props}
       style={
         {
-          &ldquo;--sparkles-first-color&rdquo;: `${colors.first}`,
-          &ldquo;--sparkles-second-color&rdquo;: `${colors.second}`,
+          "--sparkles-first-color": `${colors.first}`,
+          "--sparkles-second-color": `${colors.second}`,
         } as CSSProperties
       }
     >
-      <span className=&ldquo;relative inline-block&rdquo;>
+      <span className="relative inline-block">
         {sparkles.map((sparkle) => (
           <Sparkle key={sparkle.id} {...sparkle} />
         ))}

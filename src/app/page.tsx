@@ -1,4 +1,4 @@
-import { RootRedirect } from &ldquo;@/components/root-redirect&rdquo;;
+import { RootRedirect } from "@/components/root-redirect";
 
 export default function Home() {
   return <RootRedirect />;

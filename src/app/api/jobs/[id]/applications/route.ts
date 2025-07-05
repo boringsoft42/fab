@@ -1,96 +1,96 @@
-import { NextRequest, NextResponse } from &ldquo;next/server&rdquo;;
+import { NextRequest, NextResponse } from "next/server";
 import {
   JobApplication,
   ApplicationStatus,
   JobQuestionAnswer,
-} from &ldquo;@/types/jobs&rdquo;;
+} from "@/types/jobs";
 
 // Mock applications data
 let mockApplications: JobApplication[] = [
   {
-    id: &ldquo;app-1&rdquo;,
-    jobId: &ldquo;job-1&rdquo;,
-    jobTitle: &ldquo;Desarrollador Frontend Junior&rdquo;,
-    companyName: &ldquo;TechCorp Bolivia&rdquo;,
-    companyLogo: &ldquo;/logos/techcorp.svg&rdquo;,
-    applicantId: &ldquo;user-1&rdquo;,
-    applicantName: &ldquo;María González&rdquo;,
-    applicantEmail: &ldquo;maria.gonzalez@email.com&rdquo;,
-    cvUrl: &ldquo;/cv/maria-gonzalez.pdf&rdquo;,
+    id: "app-1",
+    jobId: "job-1",
+    jobTitle: "Desarrollador Frontend Junior",
+    companyName: "TechCorp Bolivia",
+    companyLogo: "/logos/techcorp.svg",
+    applicantId: "user-1",
+    applicantName: "María González",
+    applicantEmail: "maria.gonzalez@email.com",
+    cvUrl: "/cv/maria-gonzalez.pdf",
     coverLetter:
-      &ldquo;Estimado equipo de TechCorp, estoy muy interesada en la posición de Desarrolladora Frontend Junior. Durante mis estudios universitarios he desarrollado varios proyectos con React...&rdquo;,
+      "Estimado equipo de TechCorp, estoy muy interesada en la posición de Desarrolladora Frontend Junior. Durante mis estudios universitarios he desarrollado varios proyectos con React...",
     answers: [
       {
-        questionId: &ldquo;q1&rdquo;,
-        question: &ldquo;¿Tienes experiencia previa trabajando con React?&rdquo;,
-        answer: &ldquo;6 meses - 1 año&rdquo;,
+        questionId: "q1",
+        question: "¿Tienes experiencia previa trabajando con React?",
+        answer: "6 meses - 1 año",
       },
       {
-        questionId: &ldquo;q2&rdquo;,
+        questionId: "q2",
         question:
-          &ldquo;Describe brevemente tu proyecto más importante con JavaScript&rdquo;,
+          "Describe brevemente tu proyecto más importante con JavaScript",
         answer:
-          &ldquo;Desarrollé una aplicación web de gestión de tareas usando React, Redux y Firebase. La aplicación permite crear, editar y organizar tareas con diferentes categorías y filtros.&rdquo;,
+          "Desarrollé una aplicación web de gestión de tareas usando React, Redux y Firebase. La aplicación permite crear, editar y organizar tareas con diferentes categorías y filtros.",
       },
     ],
-    status: &ldquo;UNDER_REVIEW&rdquo;,
+    status: "UNDER_REVIEW",
     appliedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
     updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
     rating: 4,
   },
   {
-    id: &ldquo;app-2&rdquo;,
-    jobId: &ldquo;job-1&rdquo;,
-    jobTitle: &ldquo;Desarrollador Frontend Junior&rdquo;,
-    companyName: &ldquo;TechCorp Bolivia&rdquo;,
-    companyLogo: &ldquo;/logos/techcorp.svg&rdquo;,
-    applicantId: &ldquo;user-2&rdquo;,
-    applicantName: &ldquo;Carlos Mamani&rdquo;,
-    applicantEmail: &ldquo;carlos.mamani@email.com&rdquo;,
-    cvUrl: &ldquo;/cv/carlos-mamani.pdf&rdquo;,
+    id: "app-2",
+    jobId: "job-1",
+    jobTitle: "Desarrollador Frontend Junior",
+    companyName: "TechCorp Bolivia",
+    companyLogo: "/logos/techcorp.svg",
+    applicantId: "user-2",
+    applicantName: "Carlos Mamani",
+    applicantEmail: "carlos.mamani@email.com",
+    cvUrl: "/cv/carlos-mamani.pdf",
     coverLetter:
-      &ldquo;Hola equipo de TechCorp, soy un desarrollador junior con gran pasión por la tecnología frontend...&rdquo;,
+      "Hola equipo de TechCorp, soy un desarrollador junior con gran pasión por la tecnología frontend...",
     answers: [
       {
-        questionId: &ldquo;q1&rdquo;,
-        question: &ldquo;¿Tienes experiencia previa trabajando con React?&rdquo;,
-        answer: &ldquo;Menos de 6 meses&rdquo;,
+        questionId: "q1",
+        question: "¿Tienes experiencia previa trabajando con React?",
+        answer: "Menos de 6 meses",
       },
       {
-        questionId: &ldquo;q2&rdquo;,
+        questionId: "q2",
         question:
-          &ldquo;Describe brevemente tu proyecto más importante con JavaScript&rdquo;,
+          "Describe brevemente tu proyecto más importante con JavaScript",
         answer:
-          &ldquo;Creé un sitio web personal con JavaScript vanilla que incluye un portafolio interactivo y formulario de contacto.&rdquo;,
+          "Creé un sitio web personal con JavaScript vanilla que incluye un portafolio interactivo y formulario de contacto.",
       },
     ],
-    status: &ldquo;SENT&rdquo;,
+    status: "SENT",
     appliedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
     updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
-    id: &ldquo;app-3&rdquo;,
-    jobId: &ldquo;job-2&rdquo;,
-    jobTitle: &ldquo;Asistente de Marketing Digital&rdquo;,
-    companyName: &ldquo;Mindful Co.&rdquo;,
-    companyLogo: &ldquo;/logos/mindfulco.svg&rdquo;,
-    applicantId: &ldquo;user-3&rdquo;,
-    applicantName: &ldquo;Ana Quispe&rdquo;,
-    applicantEmail: &ldquo;ana.quispe@email.com&rdquo;,
-    cvUrl: &ldquo;/cv/ana-quispe.pdf&rdquo;,
+    id: "app-3",
+    jobId: "job-2",
+    jobTitle: "Asistente de Marketing Digital",
+    companyName: "Mindful Co.",
+    companyLogo: "/logos/mindfulco.svg",
+    applicantId: "user-3",
+    applicantName: "Ana Quispe",
+    applicantEmail: "ana.quispe@email.com",
+    cvUrl: "/cv/ana-quispe.pdf",
     coverLetter:
-      &ldquo;Estimado equipo de Mindful Co., estoy emocionada por la oportunidad de unirme a su equipo creativo...&rdquo;,
+      "Estimado equipo de Mindful Co., estoy emocionada por la oportunidad de unirme a su equipo creativo...",
     answers: [
       {
-        questionId: &ldquo;q1&rdquo;,
-        question: &ldquo;¿Qué redes sociales utilizas más frecuentemente?&rdquo;,
-        answer: &ldquo;Instagram&rdquo;,
+        questionId: "q1",
+        question: "¿Qué redes sociales utilizas más frecuentemente?",
+        answer: "Instagram",
       },
     ],
-    status: &ldquo;PRE_SELECTED&rdquo;,
+    status: "PRE_SELECTED",
     appliedAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
     updatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-    notes: &ldquo;Candidata muy prometedora con buen portafolio en redes sociales&rdquo;,
+    notes: "Candidata muy prometedora con buen portafolio en redes sociales",
     rating: 5,
   },
 ];
@@ -108,7 +108,7 @@ export async function GET(
     let jobApplications = mockApplications.filter((app) => app.jobId === jobId);
 
     // Apply status filter if provided
-    const statusFilter = searchParams.get(&ldquo;status&rdquo;) as ApplicationStatus;
+    const statusFilter = searchParams.get("status") as ApplicationStatus;
     if (statusFilter) {
       jobApplications = jobApplications.filter(
         (app) => app.status === statusFilter
@@ -116,7 +116,7 @@ export async function GET(
     }
 
     // Apply date filter if provided
-    const dateFrom = searchParams.get(&ldquo;dateFrom&rdquo;);
+    const dateFrom = searchParams.get("dateFrom");
     if (dateFrom) {
       jobApplications = jobApplications.filter(
         (app) => new Date(app.appliedAt) >= new Date(dateFrom)
@@ -133,22 +133,22 @@ export async function GET(
       applications: jobApplications,
       total: jobApplications.length,
       stats: {
-        sent: jobApplications.filter((app) => app.status === &ldquo;SENT&rdquo;).length,
+        sent: jobApplications.filter((app) => app.status === "SENT").length,
         underReview: jobApplications.filter(
-          (app) => app.status === &ldquo;UNDER_REVIEW&rdquo;
+          (app) => app.status === "UNDER_REVIEW"
         ).length,
         preSelected: jobApplications.filter(
-          (app) => app.status === &ldquo;PRE_SELECTED&rdquo;
+          (app) => app.status === "PRE_SELECTED"
         ).length,
-        rejected: jobApplications.filter((app) => app.status === &ldquo;REJECTED&rdquo;)
+        rejected: jobApplications.filter((app) => app.status === "REJECTED")
           .length,
-        hired: jobApplications.filter((app) => app.status === &ldquo;HIRED&rdquo;).length,
+        hired: jobApplications.filter((app) => app.status === "HIRED").length,
       },
     });
   } catch (error) {
-    console.error(&ldquo;Error fetching job applications:&rdquo;, error);
+    console.error("Error fetching job applications:", error);
     return NextResponse.json(
-      { error: &ldquo;Failed to fetch job applications&rdquo; },
+      { error: "Failed to fetch job applications" },
       { status: 500 }
     );
   }
@@ -171,7 +171,7 @@ export async function POST(
 
     if (existingApplication) {
       return NextResponse.json(
-        { error: &ldquo;Ya has aplicado a esta oferta de trabajo&rdquo; },
+        { error: "Ya has aplicado a esta oferta de trabajo" },
         { status: 409 }
       );
     }
@@ -189,7 +189,7 @@ export async function POST(
       cvUrl: applicationData.cvUrl,
       coverLetter: applicationData.coverLetter,
       answers: applicationData.answers || [],
-      status: &ldquo;SENT&rdquo;,
+      status: "SENT",
       appliedAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
@@ -198,9 +198,9 @@ export async function POST(
 
     return NextResponse.json(newApplication, { status: 201 });
   } catch (error) {
-    console.error(&ldquo;Error submitting application:&rdquo;, error);
+    console.error("Error submitting application:", error);
     return NextResponse.json(
-      { error: &ldquo;Failed to submit application&rdquo; },
+      { error: "Failed to submit application" },
       { status: 500 }
     );
   }
@@ -221,7 +221,7 @@ export async function PUT(
 
     if (applicationIndex === -1) {
       return NextResponse.json(
-        { error: &ldquo;Application not found&rdquo; },
+        { error: "Application not found" },
         { status: 404 }
       );
     }
@@ -240,9 +240,9 @@ export async function PUT(
 
     return NextResponse.json(mockApplications[applicationIndex]);
   } catch (error) {
-    console.error(&ldquo;Error updating application:&rdquo;, error);
+    console.error("Error updating application:", error);
     return NextResponse.json(
-      { error: &ldquo;Failed to update application&rdquo; },
+      { error: "Failed to update application" },
       { status: 500 }
     );
   }

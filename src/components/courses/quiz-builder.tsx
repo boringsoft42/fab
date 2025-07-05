@@ -1,34 +1,34 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import { useState } from &ldquo;react&rdquo;;
-import { Button } from &ldquo;@/components/ui/button&rdquo;;
-import { Card, CardContent, CardHeader, CardTitle } from &ldquo;@/components/ui/card&rdquo;;
-import { Input } from &ldquo;@/components/ui/input&rdquo;;
-import { Label } from &ldquo;@/components/ui/label&rdquo;;
-import { Textarea } from &ldquo;@/components/ui/textarea&rdquo;;
-import { Checkbox } from &ldquo;@/components/ui/checkbox&rdquo;;
-import { RadioGroup, RadioGroupItem } from &ldquo;@/components/ui/radio-group&rdquo;;
-import { Separator } from &ldquo;@/components/ui/separator&rdquo;;
-import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from &ldquo;@/components/ui/select&rdquo;;
+} from "@/components/ui/select";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from &ldquo;@/components/ui/dialog&rdquo;;
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from &ldquo;@/components/ui/dropdown-menu&rdquo;;
+} from "@/components/ui/dropdown-menu";
 import {
   Plus,
   MoreHorizontal,
@@ -42,11 +42,11 @@ import {
   Move,
   Timer,
   Settings,
-} from &ldquo;lucide-react&rdquo;;
+} from "lucide-react";
 
 interface Question {
   id: string;
-  type: &ldquo;multiple_choice&rdquo; | &ldquo;true_false&rdquo; | &ldquo;short_answer&rdquo; | &ldquo;multiple_select&rdquo;;
+  type: "multiple_choice" | "true_false" | "short_answer" | "multiple_select";
   question: string;
   options?: string[];
   correctAnswer: string | string[];
@@ -83,10 +83,10 @@ export function QuizBuilder({
   const [quiz, setQuiz] = useState<Quiz>(
     initialQuiz || {
       id: `quiz-${Date.now()}`,
-      title: &ldquo;&rdquo;,
-      description: &ldquo;&rdquo;,
+      title: "",
+      description: "",
       instructions:
-        &ldquo;Lee cada pregunta cuidadosamente y selecciona la mejor respuesta.&rdquo;,
+        "Lee cada pregunta cuidadosamente y selecciona la mejor respuesta.",
       questions: [],
       timeLimit: undefined,
       passingScore: 70,
@@ -98,8 +98,8 @@ export function QuizBuilder({
   );
 
   const [activeTab, setActiveTab] = useState<
-    &ldquo;setup&rdquo; | &ldquo;questions&rdquo; | &ldquo;settings&rdquo;
-  >(&ldquo;setup&rdquo;);
+    "setup" | "questions" | "settings"
+  >("setup");
   const [editingQuestion, setEditingQuestion] = useState<Question | null>(null);
   const [showQuestionDialog, setShowQuestionDialog] = useState(false);
 
@@ -107,7 +107,7 @@ export function QuizBuilder({
     setQuiz((prev) => ({ ...prev, ...updates }));
   };
 
-  const addQuestion = (questionData: Omit<Question, &ldquo;id&rdquo; | &ldquo;order&rdquo;>) => {
+  const addQuestion = (questionData: Omit<Question, "id" | "order">) => {
     const newQuestion: Question = {
       id: `question-${Date.now()}`,
       order: quiz.questions.length + 1,
@@ -127,21 +127,21 @@ export function QuizBuilder({
   };
 
   const deleteQuestion = (questionId: string) => {
-    if (window.confirm(&ldquo;¿Estás seguro de eliminar esta pregunta?&rdquo;)) {
+    if (window.confirm("¿Estás seguro de eliminar esta pregunta?")) {
       updateQuiz({
         questions: quiz.questions.filter((q) => q.id !== questionId),
       });
     }
   };
 
-  const moveQuestion = (questionId: string, direction: &ldquo;up&rdquo; | &ldquo;down&rdquo;) => {
+  const moveQuestion = (questionId: string, direction: "up" | "down") => {
     const questions = [...quiz.questions];
-    if (direction === &ldquo;up&rdquo; && index > 0) {
+    if (direction === "up" && index > 0) {
       [questions[index], questions[index - 1]] = [
         questions[index - 1],
         questions[index],
       ];
-    } else if (direction === &ldquo;down&rdquo; && index < questions.length - 1) {
+    } else if (direction === "down" && index < questions.length - 1) {
       [questions[index], questions[index + 1]] = [
         questions[index + 1],
         questions[index],
@@ -157,12 +157,12 @@ export function QuizBuilder({
     return quiz.questions.reduce((total, q) => total + q.points, 0);
   };
 
-  const getQuestionTypeLabel = (type: Question[&ldquo;type&rdquo;]) => {
+  const getQuestionTypeLabel = (type: Question["type"]) => {
     const labels = {
-      multiple_choice: &ldquo;Opción Múltiple&rdquo;,
-      true_false: &ldquo;Verdadero/Falso&rdquo;,
-      short_answer: &ldquo;Respuesta Corta&rdquo;,
-      multiple_select: &ldquo;Selección Múltiple&rdquo;,
+      multiple_choice: "Opción Múltiple",
+      true_false: "Verdadero/Falso",
+      short_answer: "Respuesta Corta",
+      multiple_select: "Selección Múltiple",
     };
     return labels[type];
   };
@@ -171,81 +171,81 @@ export function QuizBuilder({
     if (quiz.title.trim() && quiz.questions.length > 0) {
       onSave(quiz);
     } else {
-      alert(&ldquo;El quiz debe tener un título y al menos una pregunta.&rdquo;);
+      alert("El quiz debe tener un título y al menos una pregunta.");
     }
   };
 
   return (
-    <div className=&ldquo;max-w-4xl mx-auto p-6 space-y-6&rdquo;>
+    <div className="max-w-4xl mx-auto p-6 space-y-6">
       {/* Header */}
-      <div className=&ldquo;flex items-center justify-between&rdquo;>
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className=&ldquo;text-2xl font-bold&rdquo;>
-            {initialQuiz ? &ldquo;Editar Examen&rdquo; : &ldquo;Crear Nuevo Examen&rdquo;}
+          <h1 className="text-2xl font-bold">
+            {initialQuiz ? "Editar Examen" : "Crear Nuevo Examen"}
           </h1>
-          <p className=&ldquo;text-muted-foreground&rdquo;>
+          <p className="text-muted-foreground">
             Diseña evaluaciones para medir el aprendizaje de los estudiantes
           </p>
         </div>
-        <div className=&ldquo;flex gap-2&rdquo;>
-          <Button variant=&ldquo;outline&rdquo; onClick={onCancel}>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={onCancel}>
             Cancelar
           </Button>
           <Button onClick={handleSave}>
-            <Save className=&ldquo;h-4 w-4 mr-2&rdquo; />
+            <Save className="h-4 w-4 mr-2" />
             Guardar Examen
           </Button>
         </div>
       </div>
 
       {/* Stats */}
-      <div className=&ldquo;grid grid-cols-1 md:grid-cols-4 gap-4&rdquo;>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
-          <CardContent className=&ldquo;p-4&rdquo;>
-            <div className=&ldquo;text-2xl font-bold&rdquo;>{quiz.questions.length}</div>
-            <p className=&ldquo;text-sm text-muted-foreground&rdquo;>Preguntas</p>
+          <CardContent className="p-4">
+            <div className="text-2xl font-bold">{quiz.questions.length}</div>
+            <p className="text-sm text-muted-foreground">Preguntas</p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className=&ldquo;p-4&rdquo;>
-            <div className=&ldquo;text-2xl font-bold&rdquo;>{getTotalPoints()}</div>
-            <p className=&ldquo;text-sm text-muted-foreground&rdquo;>Puntos Totales</p>
+          <CardContent className="p-4">
+            <div className="text-2xl font-bold">{getTotalPoints()}</div>
+            <p className="text-sm text-muted-foreground">Puntos Totales</p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className=&ldquo;p-4&rdquo;>
-            <div className=&ldquo;text-2xl font-bold&rdquo;>
-              {quiz.timeLimit || &ldquo;Sin límite&rdquo;}
+          <CardContent className="p-4">
+            <div className="text-2xl font-bold">
+              {quiz.timeLimit || "Sin límite"}
             </div>
-            <p className=&ldquo;text-sm text-muted-foreground&rdquo;>Tiempo (min)</p>
+            <p className="text-sm text-muted-foreground">Tiempo (min)</p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className=&ldquo;p-4&rdquo;>
-            <div className=&ldquo;text-2xl font-bold&rdquo;>{quiz.passingScore}%</div>
-            <p className=&ldquo;text-sm text-muted-foreground&rdquo;>Nota Mínima</p>
+          <CardContent className="p-4">
+            <div className="text-2xl font-bold">{quiz.passingScore}%</div>
+            <p className="text-sm text-muted-foreground">Nota Mínima</p>
           </CardContent>
         </Card>
       </div>
 
       {/* Tabs */}
-      <div className=&ldquo;border-b&rdquo;>
-        <nav className=&ldquo;flex space-x-8&rdquo;>
+      <div className="border-b">
+        <nav className="flex space-x-8">
           {[
-            { id: &ldquo;setup&rdquo;, label: &ldquo;Configuración&rdquo;, icon: Settings },
-            { id: &ldquo;questions&rdquo;, label: &ldquo;Preguntas&rdquo;, icon: HelpCircle },
-            { id: &ldquo;settings&rdquo;, label: &ldquo;Opciones Avanzadas&rdquo;, icon: Timer },
+            { id: "setup", label: "Configuración", icon: Settings },
+            { id: "questions", label: "Preguntas", icon: HelpCircle },
+            { id: "settings", label: "Opciones Avanzadas", icon: Timer },
           ].map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
               className={`flex items-center gap-2 py-3 px-1 border-b-2 font-medium text-sm ${
                 activeTab === tab.id
-                  ? &ldquo;border-primary text-primary&rdquo;
-                  : &ldquo;border-transparent text-muted-foreground hover:text-foreground&rdquo;
+                  ? "border-primary text-primary"
+                  : "border-transparent text-muted-foreground hover:text-foreground"
               }`}
             >
-              <tab.icon className=&ldquo;h-4 w-4&rdquo; />
+              <tab.icon className="h-4 w-4" />
               {tab.label}
             </button>
           ))}
@@ -253,29 +253,29 @@ export function QuizBuilder({
       </div>
 
       {/* Setup Tab */}
-      {activeTab === &ldquo;setup&rdquo; && (
+      {activeTab === "setup" && (
         <Card>
           <CardHeader>
             <CardTitle>Información del Examen</CardTitle>
           </CardHeader>
-          <CardContent className=&ldquo;space-y-4&rdquo;>
-            <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 gap-4&rdquo;>
-              <div className=&ldquo;space-y-2&rdquo;>
-                <Label htmlFor=&ldquo;quizTitle&rdquo;>Título del Examen</Label>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="quizTitle">Título del Examen</Label>
                 <Input
-                  id=&ldquo;quizTitle&rdquo;
+                  id="quizTitle"
                   value={quiz.title}
                   onChange={(e) => updateQuiz({ title: e.target.value })}
-                  placeholder=&ldquo;Ej: Evaluación Módulo 1&rdquo;
+                  placeholder="Ej: Evaluación Módulo 1"
                 />
               </div>
-              <div className=&ldquo;space-y-2&rdquo;>
-                <Label htmlFor=&ldquo;passingScore&rdquo;>Nota Mínima (%)</Label>
+              <div className="space-y-2">
+                <Label htmlFor="passingScore">Nota Mínima (%)</Label>
                 <Input
-                  id=&ldquo;passingScore&rdquo;
-                  type=&ldquo;number&rdquo;
-                  min=&ldquo;0&rdquo;
-                  max=&ldquo;100&rdquo;
+                  id="passingScore"
+                  type="number"
+                  min="0"
+                  max="100"
                   value={quiz.passingScore}
                   onChange={(e) =>
                     updateQuiz({ passingScore: parseInt(e.target.value) || 70 })
@@ -284,26 +284,26 @@ export function QuizBuilder({
               </div>
             </div>
 
-            <div className=&ldquo;space-y-2&rdquo;>
-              <Label htmlFor=&ldquo;quizDescription&rdquo;>Descripción</Label>
+            <div className="space-y-2">
+              <Label htmlFor="quizDescription">Descripción</Label>
               <Textarea
-                id=&ldquo;quizDescription&rdquo;
+                id="quizDescription"
                 value={quiz.description}
                 onChange={(e) => updateQuiz({ description: e.target.value })}
-                placeholder=&ldquo;Descripción del examen y su propósito&rdquo;
+                placeholder="Descripción del examen y su propósito"
                 rows={2}
               />
             </div>
 
-            <div className=&ldquo;space-y-2&rdquo;>
-              <Label htmlFor=&ldquo;instructions&rdquo;>
+            <div className="space-y-2">
+              <Label htmlFor="instructions">
                 Instrucciones para el Estudiante
               </Label>
               <Textarea
-                id=&ldquo;instructions&rdquo;
+                id="instructions"
                 value={quiz.instructions}
                 onChange={(e) => updateQuiz({ instructions: e.target.value })}
-                placeholder=&ldquo;Instrucciones específicas para el examen&rdquo;
+                placeholder="Instrucciones específicas para el examen"
                 rows={3}
               />
             </div>
@@ -312,10 +312,10 @@ export function QuizBuilder({
       )}
 
       {/* Questions Tab */}
-      {activeTab === &ldquo;questions&rdquo; && (
-        <div className=&ldquo;space-y-4&rdquo;>
-          <div className=&ldquo;flex items-center justify-between&rdquo;>
-            <h3 className=&ldquo;text-lg font-semibold&rdquo;>
+      {activeTab === "questions" && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold">
               Preguntas ({quiz.questions.length})
             </h3>
             <Button
@@ -324,17 +324,17 @@ export function QuizBuilder({
                 setShowQuestionDialog(true);
               }}
             >
-              <Plus className=&ldquo;h-4 w-4 mr-2&rdquo; />
+              <Plus className="h-4 w-4 mr-2" />
               Agregar Pregunta
             </Button>
           </div>
 
           {quiz.questions.length === 0 ? (
             <Card>
-              <CardContent className=&ldquo;p-8 text-center&rdquo;>
-                <HelpCircle className=&ldquo;h-12 w-12 text-muted-foreground mx-auto mb-4&rdquo; />
-                <h3 className=&ldquo;text-lg font-semibold mb-2&rdquo;>Sin preguntas</h3>
-                <p className=&ldquo;text-muted-foreground mb-4&rdquo;>
+              <CardContent className="p-8 text-center">
+                <HelpCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                <h3 className="text-lg font-semibold mb-2">Sin preguntas</h3>
+                <p className="text-muted-foreground mb-4">
                   Comienza agregando la primera pregunta a tu examen
                 </p>
                 <Button
@@ -343,90 +343,90 @@ export function QuizBuilder({
                     setShowQuestionDialog(true);
                   }}
                 >
-                  <Plus className=&ldquo;h-4 w-4 mr-2&rdquo; />
+                  <Plus className="h-4 w-4 mr-2" />
                   Agregar Primera Pregunta
                 </Button>
               </CardContent>
             </Card>
           ) : (
-            <div className=&ldquo;space-y-3&rdquo;>
+            <div className="space-y-3">
               {quiz.questions
                 .sort((a, b) => a.order - b.order)
                 .map((question, index) => (
                   <Card key={question.id}>
-                    <CardContent className=&ldquo;p-4&rdquo;>
-                      <div className=&ldquo;flex items-start justify-between&rdquo;>
-                        <div className=&ldquo;flex-1&rdquo;>
-                          <div className=&ldquo;flex items-center gap-2 mb-2&rdquo;>
-                            <div className=&ldquo;w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xs font-medium&rdquo;>
+                    <CardContent className="p-4">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            <div className="w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xs font-medium">
                               {index + 1}
                             </div>
-                            <Badge variant=&ldquo;outline&rdquo;>
+                            <Badge variant="outline">
                               {getQuestionTypeLabel(question.type)}
                             </Badge>
-                            <Badge variant=&ldquo;secondary&rdquo;>
+                            <Badge variant="secondary">
                               {question.points} pts
                             </Badge>
                           </div>
 
-                          <h4 className=&ldquo;font-medium mb-2&rdquo;>
+                          <h4 className="font-medium mb-2">
                             {question.question}
                           </h4>
 
-                          {question.type === &ldquo;multiple_choice&rdquo; &&
+                          {question.type === "multiple_choice" &&
                             question.options && (
-                              <div className=&ldquo;space-y-1&rdquo;>
+                              <div className="space-y-1">
                                 {question.options.map((option, optIndex) => (
                                   <div
                                     key={optIndex}
-                                    className=&ldquo;flex items-center gap-2 text-sm&rdquo;
+                                    className="flex items-center gap-2 text-sm"
                                   >
                                     <div
                                       className={`w-2 h-2 rounded-full ${
                                         option === question.correctAnswer
-                                          ? &ldquo;bg-green-500&rdquo;
-                                          : &ldquo;bg-gray-300&rdquo;
+                                          ? "bg-green-500"
+                                          : "bg-gray-300"
                                       }`}
                                     />
                                     {option}
                                     {option === question.correctAnswer && (
-                                      <CheckCircle className=&ldquo;h-4 w-4 text-green-500&rdquo; />
+                                      <CheckCircle className="h-4 w-4 text-green-500" />
                                     )}
                                   </div>
                                 ))}
                               </div>
                             )}
 
-                          {question.type === &ldquo;true_false&rdquo; && (
-                            <div className=&ldquo;flex gap-4 text-sm&rdquo;>
+                          {question.type === "true_false" && (
+                            <div className="flex gap-4 text-sm">
                               <div
                                 className={`flex items-center gap-2 ${
-                                  question.correctAnswer === &ldquo;true&rdquo;
-                                    ? &ldquo;text-green-600 font-medium&rdquo;
-                                    : &ldquo;&rdquo;
+                                  question.correctAnswer === "true"
+                                    ? "text-green-600 font-medium"
+                                    : ""
                                 }`}
                               >
                                 <div
                                   className={`w-2 h-2 rounded-full ${
-                                    question.correctAnswer === &ldquo;true&rdquo;
-                                      ? &ldquo;bg-green-500&rdquo;
-                                      : &ldquo;bg-gray-300&rdquo;
+                                    question.correctAnswer === "true"
+                                      ? "bg-green-500"
+                                      : "bg-gray-300"
                                   }`}
                                 />
                                 Verdadero
                               </div>
                               <div
                                 className={`flex items-center gap-2 ${
-                                  question.correctAnswer === &ldquo;false&rdquo;
-                                    ? &ldquo;text-green-600 font-medium&rdquo;
-                                    : &ldquo;&rdquo;
+                                  question.correctAnswer === "false"
+                                    ? "text-green-600 font-medium"
+                                    : ""
                                 }`}
                               >
                                 <div
                                   className={`w-2 h-2 rounded-full ${
-                                    question.correctAnswer === &ldquo;false&rdquo;
-                                      ? &ldquo;bg-green-500&rdquo;
-                                      : &ldquo;bg-gray-300&rdquo;
+                                    question.correctAnswer === "false"
+                                      ? "bg-green-500"
+                                      : "bg-gray-300"
                                   }`}
                                 />
                                 Falso
@@ -435,26 +435,26 @@ export function QuizBuilder({
                           )}
 
                           {question.explanation && (
-                            <p className=&ldquo;text-sm text-muted-foreground mt-2&rdquo;>
-                              <strong>Explicación:</strong>{&ldquo; &rdquo;}
+                            <p className="text-sm text-muted-foreground mt-2">
+                              <strong>Explicación:</strong>{" "}
                               {question.explanation}
                             </p>
                           )}
                         </div>
 
-                        <div className=&ldquo;flex items-center gap-1 ml-4&rdquo;>
+                        <div className="flex items-center gap-1 ml-4">
                           <Button
-                            variant=&ldquo;ghost&rdquo;
-                            size=&ldquo;sm&rdquo;
-                            onClick={() => moveQuestion(question.id, &ldquo;up&rdquo;)}
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => moveQuestion(question.id, "up")}
                             disabled={index === 0}
                           >
                             ↑
                           </Button>
                           <Button
-                            variant=&ldquo;ghost&rdquo;
-                            size=&ldquo;sm&rdquo;
-                            onClick={() => moveQuestion(question.id, &ldquo;down&rdquo;)}
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => moveQuestion(question.id, "down")}
                             disabled={index === quiz.questions.length - 1}
                           >
                             ↓
@@ -462,8 +462,8 @@ export function QuizBuilder({
 
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                              <Button variant=&ldquo;ghost&rdquo; size=&ldquo;sm&rdquo;>
-                                <MoreHorizontal className=&ldquo;h-4 w-4&rdquo; />
+                              <Button variant="ghost" size="sm">
+                                <MoreHorizontal className="h-4 w-4" />
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
@@ -473,14 +473,14 @@ export function QuizBuilder({
                                   setShowQuestionDialog(true);
                                 }}
                               >
-                                <Edit className=&ldquo;h-4 w-4 mr-2&rdquo; />
+                                <Edit className="h-4 w-4 mr-2" />
                                 Editar
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={() => deleteQuestion(question.id)}
-                                className=&ldquo;text-red-600&rdquo;
+                                className="text-red-600"
                               >
-                                <Trash2 className=&ldquo;h-4 w-4 mr-2&rdquo; />
+                                <Trash2 className="h-4 w-4 mr-2" />
                                 Eliminar
                               </DropdownMenuItem>
                             </DropdownMenuContent>
@@ -496,21 +496,21 @@ export function QuizBuilder({
       )}
 
       {/* Settings Tab */}
-      {activeTab === &ldquo;settings&rdquo; && (
+      {activeTab === "settings" && (
         <Card>
           <CardHeader>
             <CardTitle>Configuración Avanzada</CardTitle>
           </CardHeader>
-          <CardContent className=&ldquo;space-y-6&rdquo;>
-            <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 gap-6&rdquo;>
-              <div className=&ldquo;space-y-4&rdquo;>
-                <div className=&ldquo;space-y-2&rdquo;>
-                  <Label htmlFor=&ldquo;timeLimit&rdquo;>Límite de Tiempo (minutos)</Label>
+          <CardContent className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="timeLimit">Límite de Tiempo (minutos)</Label>
                   <Input
-                    id=&ldquo;timeLimit&rdquo;
-                    type=&ldquo;number&rdquo;
-                    min=&ldquo;1&rdquo;
-                    value={quiz.timeLimit || &ldquo;&rdquo;}
+                    id="timeLimit"
+                    type="number"
+                    min="1"
+                    value={quiz.timeLimit || ""}
                     onChange={(e) =>
                       updateQuiz({
                         timeLimit: e.target.value
@@ -518,15 +518,15 @@ export function QuizBuilder({
                           : undefined,
                       })
                     }
-                    placeholder=&ldquo;Sin límite&rdquo;
+                    placeholder="Sin límite"
                   />
-                  <p className=&ldquo;text-xs text-muted-foreground&rdquo;>
+                  <p className="text-xs text-muted-foreground">
                     Deja vacío para sin límite de tiempo
                   </p>
                 </div>
 
-                <div className=&ldquo;space-y-2&rdquo;>
-                  <Label htmlFor=&ldquo;attempts&rdquo;>Intentos Permitidos</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="attempts">Intentos Permitidos</Label>
                   <Select
                     value={quiz.allowedAttempts.toString()}
                     onValueChange={(value) =>
@@ -537,52 +537,52 @@ export function QuizBuilder({
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value=&ldquo;1&rdquo;>1 intento</SelectItem>
-                      <SelectItem value=&ldquo;2&rdquo;>2 intentos</SelectItem>
-                      <SelectItem value=&ldquo;3&rdquo;>3 intentos</SelectItem>
-                      <SelectItem value=&ldquo;5&rdquo;>5 intentos</SelectItem>
-                      <SelectItem value=&ldquo;-1&rdquo;>Intentos ilimitados</SelectItem>
+                      <SelectItem value="1">1 intento</SelectItem>
+                      <SelectItem value="2">2 intentos</SelectItem>
+                      <SelectItem value="3">3 intentos</SelectItem>
+                      <SelectItem value="5">5 intentos</SelectItem>
+                      <SelectItem value="-1">Intentos ilimitados</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
 
-              <div className=&ldquo;space-y-4&rdquo;>
-                <div className=&ldquo;flex items-center space-x-2&rdquo;>
+              <div className="space-y-4">
+                <div className="flex items-center space-x-2">
                   <Checkbox
-                    id=&ldquo;showCorrectAnswers&rdquo;
+                    id="showCorrectAnswers"
                     checked={quiz.showCorrectAnswers}
                     onCheckedChange={(checked) =>
                       updateQuiz({ showCorrectAnswers: !!checked })
                     }
                   />
-                  <Label htmlFor=&ldquo;showCorrectAnswers&rdquo;>
+                  <Label htmlFor="showCorrectAnswers">
                     Mostrar respuestas correctas después del examen
                   </Label>
                 </div>
 
-                <div className=&ldquo;flex items-center space-x-2&rdquo;>
+                <div className="flex items-center space-x-2">
                   <Checkbox
-                    id=&ldquo;shuffleQuestions&rdquo;
+                    id="shuffleQuestions"
                     checked={quiz.shuffleQuestions}
                     onCheckedChange={(checked) =>
                       updateQuiz({ shuffleQuestions: !!checked })
                     }
                   />
-                  <Label htmlFor=&ldquo;shuffleQuestions&rdquo;>
+                  <Label htmlFor="shuffleQuestions">
                     Aleatorizar orden de preguntas
                   </Label>
                 </div>
 
-                <div className=&ldquo;flex items-center space-x-2&rdquo;>
+                <div className="flex items-center space-x-2">
                   <Checkbox
-                    id=&ldquo;shuffleOptions&rdquo;
+                    id="shuffleOptions"
                     checked={quiz.shuffleOptions}
                     onCheckedChange={(checked) =>
                       updateQuiz({ shuffleOptions: !!checked })
                     }
                   />
-                  <Label htmlFor=&ldquo;shuffleOptions&rdquo;>
+                  <Label htmlFor="shuffleOptions">
                     Aleatorizar opciones de respuesta
                   </Label>
                 </div>
@@ -623,17 +623,17 @@ function QuestionDialog({
 }: {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (data: Omit<Question, &ldquo;id&rdquo; | &ldquo;order&rdquo;>) => void;
+  onSave: (data: Omit<Question, "id" | "order">) => void;
   question?: Question | null;
 }) {
   const [questionData, setQuestionData] = useState<
-    Omit<Question, &ldquo;id&rdquo; | &ldquo;order&rdquo;>
+    Omit<Question, "id" | "order">
   >({
-    type: &ldquo;multiple_choice&rdquo;,
-    question: &ldquo;&rdquo;,
-    options: [&ldquo;&rdquo;, &ldquo;&rdquo;, &ldquo;&rdquo;, &ldquo;&rdquo;],
-    correctAnswer: &ldquo;&rdquo;,
-    explanation: &ldquo;&rdquo;,
+    type: "multiple_choice",
+    question: "",
+    options: ["", "", "", ""],
+    correctAnswer: "",
+    explanation: "",
     points: 10,
   });
 
@@ -644,7 +644,7 @@ function QuestionDialog({
         question: question.question,
         options: question.options || [],
         correctAnswer: question.correctAnswer,
-        explanation: question.explanation || &ldquo;&rdquo;,
+        explanation: question.explanation || "",
         points: question.points,
       });
     }
@@ -656,7 +656,7 @@ function QuestionDialog({
 
   const addOption = () => {
     updateQuestion({
-      options: [...(questionData.options || []), &ldquo;&rdquo;],
+      options: [...(questionData.options || []), ""],
     });
   };
 
@@ -676,7 +676,7 @@ function QuestionDialog({
   const handleSave = () => {
     if (
       questionData.question.trim() &&
-      (questionData.type !== &ldquo;multiple_choice&rdquo; ||
+      (questionData.type !== "multiple_choice" ||
         questionData.options?.some((o) => o.trim())) &&
       questionData.correctAnswer
     ) {
@@ -686,16 +686,16 @@ function QuestionDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className=&ldquo;max-w-2xl max-h-[90vh] overflow-y-auto&rdquo;>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
-            {question ? &ldquo;Editar Pregunta&rdquo; : &ldquo;Agregar Nueva Pregunta&rdquo;}
+            {question ? "Editar Pregunta" : "Agregar Nueva Pregunta"}
           </DialogTitle>
         </DialogHeader>
 
-        <div className=&ldquo;space-y-4&rdquo;>
-          <div className=&ldquo;grid grid-cols-2 gap-4&rdquo;>
-            <div className=&ldquo;space-y-2&rdquo;>
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
               <Label>Tipo de Pregunta</Label>
               <Select
                 value={questionData.type}
@@ -705,21 +705,21 @@ function QuestionDialog({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value=&ldquo;multiple_choice&rdquo;>
+                  <SelectItem value="multiple_choice">
                     Opción Múltiple
                   </SelectItem>
-                  <SelectItem value=&ldquo;true_false&rdquo;>Verdadero/Falso</SelectItem>
-                  <SelectItem value=&ldquo;short_answer&rdquo;>Respuesta Corta</SelectItem>
+                  <SelectItem value="true_false">Verdadero/Falso</SelectItem>
+                  <SelectItem value="short_answer">Respuesta Corta</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
-            <div className=&ldquo;space-y-2&rdquo;>
-              <Label htmlFor=&ldquo;points&rdquo;>Puntos</Label>
+            <div className="space-y-2">
+              <Label htmlFor="points">Puntos</Label>
               <Input
-                id=&ldquo;points&rdquo;
-                type=&ldquo;number&rdquo;
-                min=&ldquo;1&rdquo;
+                id="points"
+                type="number"
+                min="1"
                 value={questionData.points}
                 onChange={(e) =>
                   updateQuestion({ points: parseInt(e.target.value) || 1 })
@@ -728,23 +728,23 @@ function QuestionDialog({
             </div>
           </div>
 
-          <div className=&ldquo;space-y-2&rdquo;>
-            <Label htmlFor=&ldquo;questionText&rdquo;>Pregunta</Label>
+          <div className="space-y-2">
+            <Label htmlFor="questionText">Pregunta</Label>
             <Textarea
-              id=&ldquo;questionText&rdquo;
+              id="questionText"
               value={questionData.question}
               onChange={(e) => updateQuestion({ question: e.target.value })}
-              placeholder=&ldquo;Escribe la pregunta...&rdquo;
+              placeholder="Escribe la pregunta..."
               rows={3}
             />
           </div>
 
-          {questionData.type === &ldquo;multiple_choice&rdquo; && (
-            <div className=&ldquo;space-y-3&rdquo;>
-              <div className=&ldquo;flex items-center justify-between&rdquo;>
+          {questionData.type === "multiple_choice" && (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
                 <Label>Opciones de Respuesta</Label>
-                <Button variant=&ldquo;outline&rdquo; size=&ldquo;sm&rdquo; onClick={addOption}>
-                  <Plus className=&ldquo;h-4 w-4 mr-1&rdquo; />
+                <Button variant="outline" size="sm" onClick={addOption}>
+                  <Plus className="h-4 w-4 mr-1" />
                   Agregar Opción
                 </Button>
               </div>
@@ -756,34 +756,34 @@ function QuestionDialog({
                 }
               >
                 {questionData.options?.map((option, index) => (
-                  <div key={index} className=&ldquo;flex items-center gap-2&rdquo;>
+                  <div key={index} className="flex items-center gap-2">
                     <RadioGroupItem value={option} id={`option-${index}`} />
                     <Input
                       value={option}
                       onChange={(e) => updateOption(index, e.target.value)}
                       placeholder={`Opción ${index + 1}`}
-                      className=&ldquo;flex-1&rdquo;
+                      className="flex-1"
                     />
                     {(questionData.options?.length || 0) > 2 && (
                       <Button
-                        variant=&ldquo;ghost&rdquo;
-                        size=&ldquo;sm&rdquo;
+                        variant="ghost"
+                        size="sm"
                         onClick={() => removeOption(index)}
                       >
-                        <X className=&ldquo;h-4 w-4&rdquo; />
+                        <X className="h-4 w-4" />
                       </Button>
                     )}
                   </div>
                 ))}
               </RadioGroup>
-              <p className=&ldquo;text-xs text-muted-foreground&rdquo;>
+              <p className="text-xs text-muted-foreground">
                 Selecciona la opción correcta
               </p>
             </div>
           )}
 
-          {questionData.type === &ldquo;true_false&rdquo; && (
-            <div className=&ldquo;space-y-2&rdquo;>
+          {questionData.type === "true_false" && (
+            <div className="space-y-2">
               <Label>Respuesta Correcta</Label>
               <RadioGroup
                 value={questionData.correctAnswer as string}
@@ -791,49 +791,49 @@ function QuestionDialog({
                   updateQuestion({ correctAnswer: value })
                 }
               >
-                <div className=&ldquo;flex items-center space-x-2&rdquo;>
-                  <RadioGroupItem value=&ldquo;true&rdquo; id=&ldquo;true&rdquo; />
-                  <Label htmlFor=&ldquo;true&rdquo;>Verdadero</Label>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="true" id="true" />
+                  <Label htmlFor="true">Verdadero</Label>
                 </div>
-                <div className=&ldquo;flex items-center space-x-2&rdquo;>
-                  <RadioGroupItem value=&ldquo;false&rdquo; id=&ldquo;false&rdquo; />
-                  <Label htmlFor=&ldquo;false&rdquo;>Falso</Label>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="false" id="false" />
+                  <Label htmlFor="false">Falso</Label>
                 </div>
               </RadioGroup>
             </div>
           )}
 
-          {questionData.type === &ldquo;short_answer&rdquo; && (
-            <div className=&ldquo;space-y-2&rdquo;>
-              <Label htmlFor=&ldquo;correctAnswer&rdquo;>Respuesta Correcta</Label>
+          {questionData.type === "short_answer" && (
+            <div className="space-y-2">
+              <Label htmlFor="correctAnswer">Respuesta Correcta</Label>
               <Input
-                id=&ldquo;correctAnswer&rdquo;
+                id="correctAnswer"
                 value={questionData.correctAnswer as string}
                 onChange={(e) =>
                   updateQuestion({ correctAnswer: e.target.value })
                 }
-                placeholder=&ldquo;Respuesta esperada...&rdquo;
+                placeholder="Respuesta esperada..."
               />
             </div>
           )}
 
-          <div className=&ldquo;space-y-2&rdquo;>
-            <Label htmlFor=&ldquo;explanation&rdquo;>Explicación (Opcional)</Label>
+          <div className="space-y-2">
+            <Label htmlFor="explanation">Explicación (Opcional)</Label>
             <Textarea
-              id=&ldquo;explanation&rdquo;
+              id="explanation"
               value={questionData.explanation}
               onChange={(e) => updateQuestion({ explanation: e.target.value })}
-              placeholder=&ldquo;Explicación de por qué esta es la respuesta correcta...&rdquo;
+              placeholder="Explicación de por qué esta es la respuesta correcta..."
               rows={2}
             />
           </div>
 
-          <div className=&ldquo;flex justify-end gap-2 pt-4&rdquo;>
-            <Button variant=&ldquo;outline&rdquo; onClick={onClose}>
+          <div className="flex justify-end gap-2 pt-4">
+            <Button variant="outline" onClick={onClose}>
               Cancelar
             </Button>
             <Button onClick={handleSave}>
-              {question ? &ldquo;Actualizar&rdquo; : &ldquo;Agregar&rdquo;} Pregunta
+              {question ? "Actualizar" : "Agregar"} Pregunta
             </Button>
           </div>
         </div>

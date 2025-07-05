@@ -1,10 +1,10 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import { createContext, useContext, useEffect, useState } from &ldquo;react&rdquo;;
-import { createClientComponentClient } from &ldquo;@supabase/auth-helpers-nextjs&rdquo;;
-import type { User, Session } from &ldquo;@supabase/auth-helpers-nextjs&rdquo;;
-import { useRouter } from &ldquo;next/navigation&rdquo;;
-import type { Profile } from &ldquo;@/types/profile&rdquo;;
+import { createContext, useContext, useEffect, useState } from "react";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import type { User, Session } from "@supabase/auth-helpers-nextjs";
+import { useRouter } from "next/navigation";
+import type { Profile } from "@/types/profile";
 
 type AuthContextType = {
   user: User | null;
@@ -37,11 +37,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const fetchProfile = async (userId: string) => {
     try {
       const response = await fetch(`/api/profile/${userId}`);
-      if (!response.ok) throw new Error(&ldquo;Failed to fetch profile&rdquo;);
+      if (!response.ok) throw new Error("Failed to fetch profile");
       const data = await response.json();
       setProfile(data.profile);
     } catch (error) {
-      console.error(&ldquo;Error fetching profile:&rdquo;, error);
+      console.error("Error fetching profile:", error);
       setProfile(null);
     }
   };
@@ -71,8 +71,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       setIsLoading(false);
 
-      if (event === &ldquo;SIGNED_OUT&rdquo;) {
-        router.push(&ldquo;/sign-in&rdquo;);
+      if (event === "SIGNED_OUT") {
+        router.push("/sign-in");
       }
     });
 
@@ -90,7 +90,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (data.user) {
       await fetchProfile(data.user.id);
     }
-    router.push(&ldquo;/dashboard&rdquo;);
+    router.push("/dashboard");
   };
 
   const signUp = async (email: string, password: string) => {
@@ -105,7 +105,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
     setProfile(null);
-    router.push(&ldquo;/sign-in&rdquo;);
+    router.push("/sign-in");
   };
 
   return (

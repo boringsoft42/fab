@@ -1,20 +1,20 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import { useState, useEffect } from &ldquo;react&rdquo;;
-import { Button } from &ldquo;@/components/ui/button&rdquo;;
-import { Card, CardContent, CardHeader, CardTitle } from &ldquo;@/components/ui/card&rdquo;;
-import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
-import { Input } from &ldquo;@/components/ui/input&rdquo;;
-import { Textarea } from &ldquo;@/components/ui/textarea&rdquo;;
-import { Label } from &ldquo;@/components/ui/label&rdquo;;
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from &ldquo;@/components/ui/select&rdquo;;
-import { Tabs, TabsContent, TabsList, TabsTrigger } from &ldquo;@/components/ui/tabs&rdquo;;
+} from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Table,
   TableBody,
@@ -22,15 +22,15 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from &ldquo;@/components/ui/table&rdquo;;
+} from "@/components/ui/table";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from &ldquo;@/components/ui/dialog&rdquo;;
-import { Checkbox } from &ldquo;@/components/ui/checkbox&rdquo;;
+} from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   FileText,
   BookOpen,
@@ -53,19 +53,19 @@ import {
   Video,
   User,
   Briefcase,
-} from &ldquo;lucide-react&rdquo;;
+} from "lucide-react";
 
 // Types for different content sections
 interface Resource {
   id: string;
   title: string;
   description: string;
-  type: &ldquo;template&rdquo; | &ldquo;guide&rdquo; | &ldquo;video&rdquo; | &ldquo;podcast&rdquo; | &ldquo;tool&rdquo;;
+  type: "template" | "guide" | "video" | "podcast" | "tool";
   category: string;
   fileUrl: string;
   thumbnail: string;
   tags: string[];
-  status: &ldquo;published&rdquo; | &ldquo;draft&rdquo;;
+  status: "published" | "draft";
   featured: boolean;
   createdAt: Date;
 }
@@ -74,11 +74,11 @@ interface Institution {
   id: string;
   name: string;
   type:
-    | &ldquo;municipality&rdquo;
-    | &ldquo;ngo&rdquo;
-    | &ldquo;foundation&rdquo;
-    | &ldquo;training_center&rdquo;
-    | &ldquo;government&rdquo;;
+    | "municipality"
+    | "ngo"
+    | "foundation"
+    | "training_center"
+    | "government";
   description: string;
   location: string;
   address: string;
@@ -89,7 +89,7 @@ interface Institution {
   services: string[];
   focusAreas: string[];
   programs: string[];
-  status: &ldquo;active&rdquo; | &ldquo;inactive&rdquo;;
+  status: "active" | "inactive";
   featured: boolean;
   createdAt: Date;
 }
@@ -109,7 +109,7 @@ interface NetworkContact {
   experience: string;
   connections: number;
   isAvailable: boolean;
-  status: &ldquo;active&rdquo; | &ldquo;inactive&rdquo;;
+  status: "active" | "inactive";
   createdAt: Date;
 }
 
@@ -124,130 +124,130 @@ interface Mentor {
   experience: string;
   avatar: string;
   languages: string[];
-  price: { type: &ldquo;free&rdquo; | &ldquo;paid&rdquo;; amount?: number };
+  price: { type: "free" | "paid"; amount?: number };
   availability: string;
   achievements: string[];
   isVerified: boolean;
-  status: &ldquo;active&rdquo; | &ldquo;inactive&rdquo;;
+  status: "active" | "inactive";
   createdAt: Date;
 }
 
 export default function YouthContentManagementPage() {
-  const [activeTab, setActiveTab] = useState(&ldquo;resources&rdquo;);
+  const [activeTab, setActiveTab] = useState("resources");
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [loading, setLoading] = useState(false);
 
   // Form states for different content types
   const [resourceForm, setResourceForm] = useState({
-    title: &ldquo;&rdquo;,
-    description: &ldquo;&rdquo;,
-    type: &ldquo;template&rdquo; as const,
-    category: &ldquo;&rdquo;,
-    fileUrl: &ldquo;&rdquo;,
-    thumbnail: &ldquo;&rdquo;,
-    tags: &ldquo;&rdquo;,
+    title: "",
+    description: "",
+    type: "template" as const,
+    category: "",
+    fileUrl: "",
+    thumbnail: "",
+    tags: "",
     featured: false,
-    status: &ldquo;draft&rdquo; as const,
+    status: "draft" as const,
   });
 
   const [institutionForm, setInstitutionForm] = useState({
-    name: &ldquo;&rdquo;,
-    type: &ldquo;municipality&rdquo; as const,
-    description: &ldquo;&rdquo;,
-    location: &ldquo;&rdquo;,
-    address: &ldquo;&rdquo;,
-    phone: &ldquo;&rdquo;,
-    email: &ldquo;&rdquo;,
-    website: &ldquo;&rdquo;,
-    logo: &ldquo;&rdquo;,
-    services: &ldquo;&rdquo;,
-    focusAreas: &ldquo;&rdquo;,
-    programs: &ldquo;&rdquo;,
+    name: "",
+    type: "municipality" as const,
+    description: "",
+    location: "",
+    address: "",
+    phone: "",
+    email: "",
+    website: "",
+    logo: "",
+    services: "",
+    focusAreas: "",
+    programs: "",
     featured: false,
-    status: &ldquo;active&rdquo; as const,
+    status: "active" as const,
   });
 
   const [contactForm, setContactForm] = useState({
-    name: &ldquo;&rdquo;,
-    businessName: &ldquo;&rdquo;,
-    category: &ldquo;&rdquo;,
-    location: &ldquo;&rdquo;,
-    bio: &ldquo;&rdquo;,
-    skills: &ldquo;&rdquo;,
-    interests: &ldquo;&rdquo;,
-    avatar: &ldquo;&rdquo;,
-    lookingFor: &ldquo;&rdquo;,
-    offering: &ldquo;&rdquo;,
-    experience: &ldquo;&rdquo;,
+    name: "",
+    businessName: "",
+    category: "",
+    location: "",
+    bio: "",
+    skills: "",
+    interests: "",
+    avatar: "",
+    lookingFor: "",
+    offering: "",
+    experience: "",
     isAvailable: true,
-    status: &ldquo;active&rdquo; as const,
+    status: "active" as const,
   });
 
   const [mentorForm, setMentorForm] = useState({
-    name: &ldquo;&rdquo;,
-    title: &ldquo;&rdquo;,
-    company: &ldquo;&rdquo;,
-    location: &ldquo;&rdquo;,
-    bio: &ldquo;&rdquo;,
-    expertise: &ldquo;&rdquo;,
-    experience: &ldquo;&rdquo;,
-    avatar: &ldquo;&rdquo;,
-    languages: &ldquo;&rdquo;,
-    priceType: &ldquo;free&rdquo; as const,
+    name: "",
+    title: "",
+    company: "",
+    location: "",
+    bio: "",
+    expertise: "",
+    experience: "",
+    avatar: "",
+    languages: "",
+    priceType: "free" as const,
     priceAmount: 0,
-    availability: &ldquo;&rdquo;,
-    achievements: &ldquo;&rdquo;,
-    status: &ldquo;active&rdquo; as const,
+    availability: "",
+    achievements: "",
+    status: "active" as const,
   });
 
   const handleCreateContent = async () => {
     try {
       setLoading(true);
-      let endpoint = &ldquo;&rdquo;;
+      let endpoint = "";
       let data = {};
 
       switch (activeTab) {
-        case &ldquo;resources&rdquo;:
-          endpoint = &ldquo;/api/admin/entrepreneurship/resources&rdquo;;
+        case "resources":
+          endpoint = "/api/admin/entrepreneurship/resources";
           data = {
             ...resourceForm,
-            tags: resourceForm.tags.split(&ldquo;,&rdquo;).map((tag) => tag.trim()),
+            tags: resourceForm.tags.split(",").map((tag) => tag.trim()),
           };
           break;
-        case &ldquo;institutions&rdquo;:
-          endpoint = &ldquo;/api/admin/institutions&rdquo;;
+        case "institutions":
+          endpoint = "/api/admin/institutions";
           data = {
             ...institutionForm,
-            services: institutionForm.services.split(&ldquo;,&rdquo;).map((s) => s.trim()),
+            services: institutionForm.services.split(",").map((s) => s.trim()),
             focusAreas: institutionForm.focusAreas
-              .split(&ldquo;,&rdquo;)
+              .split(",")
               .map((f) => f.trim()),
-            programs: institutionForm.programs.split(&ldquo;,&rdquo;).map((p) => p.trim()),
+            programs: institutionForm.programs.split(",").map((p) => p.trim()),
           };
           break;
-        case &ldquo;contacts&rdquo;:
-          endpoint = &ldquo;/api/admin/youth-content/contacts&rdquo;;
+        case "contacts":
+          endpoint = "/api/admin/youth-content/contacts";
           data = {
             ...contactForm,
-            skills: contactForm.skills.split(&ldquo;,&rdquo;).map((s) => s.trim()),
-            interests: contactForm.interests.split(&ldquo;,&rdquo;).map((i) => i.trim()),
-            lookingFor: contactForm.lookingFor.split(&ldquo;,&rdquo;).map((l) => l.trim()),
-            offering: contactForm.offering.split(&ldquo;,&rdquo;).map((o) => o.trim()),
+            skills: contactForm.skills.split(",").map((s) => s.trim()),
+            interests: contactForm.interests.split(",").map((i) => i.trim()),
+            lookingFor: contactForm.lookingFor.split(",").map((l) => l.trim()),
+            offering: contactForm.offering.split(",").map((o) => o.trim()),
           };
           break;
-        case &ldquo;mentors&rdquo;:
-          endpoint = &ldquo;/api/admin/youth-content/mentors&rdquo;;
+        case "mentors":
+          endpoint = "/api/admin/youth-content/mentors";
           data = {
             ...mentorForm,
-            expertise: mentorForm.expertise.split(&ldquo;,&rdquo;).map((e) => e.trim()),
-            languages: mentorForm.languages.split(&ldquo;,&rdquo;).map((l) => l.trim()),
+            expertise: mentorForm.expertise.split(",").map((e) => e.trim()),
+            languages: mentorForm.languages.split(",").map((l) => l.trim()),
             achievements: mentorForm.achievements
-              .split(&ldquo;,&rdquo;)
+              .split(",")
               .map((a) => a.trim()),
             price: {
               type: mentorForm.priceType,
               amount:
-                mentorForm.priceType === &ldquo;paid&rdquo;
+                mentorForm.priceType === "paid"
                   ? mentorForm.priceAmount
                   : undefined,
             },
@@ -256,8 +256,8 @@ export default function YouthContentManagementPage() {
       }
 
       const response = await fetch(endpoint, {
-        method: &ldquo;POST&rdquo;,
-        headers: { &ldquo;Content-Type&rdquo;: &ldquo;application/json&rdquo; },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
 
@@ -267,7 +267,7 @@ export default function YouthContentManagementPage() {
         // Show success message or refresh data
       }
     } catch (error) {
-      console.error(&ldquo;Error creating content:&rdquo;, error);
+      console.error("Error creating content:", error);
     } finally {
       setLoading(false);
     }
@@ -275,150 +275,150 @@ export default function YouthContentManagementPage() {
 
   const resetForms = () => {
     setResourceForm({
-      title: &ldquo;&rdquo;,
-      description: &ldquo;&rdquo;,
-      type: &ldquo;template&rdquo;,
-      category: &ldquo;&rdquo;,
-      fileUrl: &ldquo;&rdquo;,
-      thumbnail: &ldquo;&rdquo;,
-      tags: &ldquo;&rdquo;,
+      title: "",
+      description: "",
+      type: "template",
+      category: "",
+      fileUrl: "",
+      thumbnail: "",
+      tags: "",
       featured: false,
-      status: &ldquo;draft&rdquo;,
+      status: "draft",
     });
     setInstitutionForm({
-      name: &ldquo;&rdquo;,
-      type: &ldquo;municipality&rdquo;,
-      description: &ldquo;&rdquo;,
-      location: &ldquo;&rdquo;,
-      address: &ldquo;&rdquo;,
-      phone: &ldquo;&rdquo;,
-      email: &ldquo;&rdquo;,
-      website: &ldquo;&rdquo;,
-      logo: &ldquo;&rdquo;,
-      services: &ldquo;&rdquo;,
-      focusAreas: &ldquo;&rdquo;,
-      programs: &ldquo;&rdquo;,
+      name: "",
+      type: "municipality",
+      description: "",
+      location: "",
+      address: "",
+      phone: "",
+      email: "",
+      website: "",
+      logo: "",
+      services: "",
+      focusAreas: "",
+      programs: "",
       featured: false,
-      status: &ldquo;active&rdquo;,
+      status: "active",
     });
     setContactForm({
-      name: &ldquo;&rdquo;,
-      businessName: &ldquo;&rdquo;,
-      category: &ldquo;&rdquo;,
-      location: &ldquo;&rdquo;,
-      bio: &ldquo;&rdquo;,
-      skills: &ldquo;&rdquo;,
-      interests: &ldquo;&rdquo;,
-      avatar: &ldquo;&rdquo;,
-      lookingFor: &ldquo;&rdquo;,
-      offering: &ldquo;&rdquo;,
-      experience: &ldquo;&rdquo;,
+      name: "",
+      businessName: "",
+      category: "",
+      location: "",
+      bio: "",
+      skills: "",
+      interests: "",
+      avatar: "",
+      lookingFor: "",
+      offering: "",
+      experience: "",
       isAvailable: true,
-      status: &ldquo;active&rdquo;,
+      status: "active",
     });
     setMentorForm({
-      name: &ldquo;&rdquo;,
-      title: &ldquo;&rdquo;,
-      company: &ldquo;&rdquo;,
-      location: &ldquo;&rdquo;,
-      bio: &ldquo;&rdquo;,
-      expertise: &ldquo;&rdquo;,
-      experience: &ldquo;&rdquo;,
-      avatar: &ldquo;&rdquo;,
-      languages: &ldquo;&rdquo;,
-      priceType: &ldquo;free&rdquo;,
+      name: "",
+      title: "",
+      company: "",
+      location: "",
+      bio: "",
+      expertise: "",
+      experience: "",
+      avatar: "",
+      languages: "",
+      priceType: "free",
       priceAmount: 0,
-      availability: &ldquo;&rdquo;,
-      achievements: &ldquo;&rdquo;,
-      status: &ldquo;active&rdquo;,
+      availability: "",
+      achievements: "",
+      status: "active",
     });
   };
 
   const getTabIcon = (tab: string) => {
     switch (tab) {
-      case &ldquo;resources&rdquo;:
-        return <FileText className=&ldquo;h-4 w-4&rdquo; />;
-      case &ldquo;institutions&rdquo;:
-        return <Building2 className=&ldquo;h-4 w-4&rdquo; />;
-      case &ldquo;contacts&rdquo;:
-        return <Users className=&ldquo;h-4 w-4&rdquo; />;
-      case &ldquo;mentors&rdquo;:
-        return <GraduationCap className=&ldquo;h-4 w-4&rdquo; />;
+      case "resources":
+        return <FileText className="h-4 w-4" />;
+      case "institutions":
+        return <Building2 className="h-4 w-4" />;
+      case "contacts":
+        return <Users className="h-4 w-4" />;
+      case "mentors":
+        return <GraduationCap className="h-4 w-4" />;
       default:
-        return <FileText className=&ldquo;h-4 w-4&rdquo; />;
+        return <FileText className="h-4 w-4" />;
     }
   };
 
   const categories = {
     resources: [
-      &ldquo;Planificación&rdquo;,
-      &ldquo;Validación&rdquo;,
-      &ldquo;Finanzas&rdquo;,
-      &ldquo;Marketing&rdquo;,
-      &ldquo;Legal&rdquo;,
-      &ldquo;Tecnología&rdquo;,
+      "Planificación",
+      "Validación",
+      "Finanzas",
+      "Marketing",
+      "Legal",
+      "Tecnología",
     ],
     contacts: [
-      &ldquo;Tecnología&rdquo;,
-      &ldquo;Marketing&rdquo;,
-      &ldquo;Finanzas&rdquo;,
-      &ldquo;E-commerce&rdquo;,
-      &ldquo;Agro&rdquo;,
-      &ldquo;Salud&rdquo;,
-      &ldquo;Educación&rdquo;,
+      "Tecnología",
+      "Marketing",
+      "Finanzas",
+      "E-commerce",
+      "Agro",
+      "Salud",
+      "Educación",
     ],
     mentors: [
-      &ldquo;Tecnología&rdquo;,
-      &ldquo;Marketing Digital&rdquo;,
-      &ldquo;Finanzas&rdquo;,
-      &ldquo;Liderazgo&rdquo;,
-      &ldquo;Startups&rdquo;,
-      &ldquo;Negocios&rdquo;,
+      "Tecnología",
+      "Marketing Digital",
+      "Finanzas",
+      "Liderazgo",
+      "Startups",
+      "Negocios",
     ],
   };
 
   return (
-    <div className=&ldquo;container mx-auto p-6 space-y-6&rdquo;>
+    <div className="container mx-auto p-6 space-y-6">
       {/* Header */}
-      <div className=&ldquo;flex items-center justify-between&rdquo;>
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className=&ldquo;text-3xl font-bold&rdquo;>
+          <h1 className="text-3xl font-bold">
             Gestión de Contenido para Jóvenes
           </h1>
-          <p className=&ldquo;text-muted-foreground&rdquo;>
+          <p className="text-muted-foreground">
             Administra todo el contenido que aparece en el perfil de jóvenes
           </p>
         </div>
         <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
           <DialogTrigger asChild>
             <Button>
-              <Plus className=&ldquo;h-4 w-4 mr-2&rdquo; />
+              <Plus className="h-4 w-4 mr-2" />
               Crear Contenido
             </Button>
           </DialogTrigger>
-          <DialogContent className=&ldquo;max-w-4xl max-h-[90vh] overflow-y-auto&rdquo;>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
-                Crear Nuevo Contenido -{&ldquo; &rdquo;}
-                {activeTab === &ldquo;resources&rdquo;
-                  ? &ldquo;Centro de Recursos&rdquo;
-                  : activeTab === &ldquo;institutions&rdquo;
-                    ? &ldquo;Directorio de Instituciones&rdquo;
-                    : activeTab === &ldquo;contacts&rdquo;
-                      ? &ldquo;Red de Contactos&rdquo;
-                      : &ldquo;Mentorías&rdquo;}
+                Crear Nuevo Contenido -{" "}
+                {activeTab === "resources"
+                  ? "Centro de Recursos"
+                  : activeTab === "institutions"
+                    ? "Directorio de Instituciones"
+                    : activeTab === "contacts"
+                      ? "Red de Contactos"
+                      : "Mentorías"}
               </DialogTitle>
             </DialogHeader>
 
-            <div className=&ldquo;space-y-4 p-1&rdquo;>
+            <div className="space-y-4 p-1">
               {/* Resource Center Form */}
-              {activeTab === &ldquo;resources&rdquo; && (
-                <div className=&ldquo;space-y-4&rdquo;>
-                  <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 gap-4&rdquo;>
-                    <div className=&ldquo;space-y-2&rdquo;>
-                      <Label htmlFor=&ldquo;title&rdquo;>Título *</Label>
+              {activeTab === "resources" && (
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="title">Título *</Label>
                       <Input
-                        id=&ldquo;title&rdquo;
+                        id="title"
                         value={resourceForm.title}
                         onChange={(e) =>
                           setResourceForm((prev) => ({
@@ -426,11 +426,11 @@ export default function YouthContentManagementPage() {
                             title: e.target.value,
                           }))
                         }
-                        placeholder=&ldquo;Título del recurso&rdquo;
+                        placeholder="Título del recurso"
                       />
                     </div>
-                    <div className=&ldquo;space-y-2&rdquo;>
-                      <Label htmlFor=&ldquo;type&rdquo;>Tipo *</Label>
+                    <div className="space-y-2">
+                      <Label htmlFor="type">Tipo *</Label>
                       <Select
                         value={resourceForm.type}
                         onValueChange={(value: unknown) =>
@@ -441,20 +441,20 @@ export default function YouthContentManagementPage() {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value=&ldquo;template&rdquo;>Plantilla</SelectItem>
-                          <SelectItem value=&ldquo;guide&rdquo;>Guía</SelectItem>
-                          <SelectItem value=&ldquo;video&rdquo;>Video</SelectItem>
-                          <SelectItem value=&ldquo;podcast&rdquo;>Podcast</SelectItem>
-                          <SelectItem value=&ldquo;tool&rdquo;>Herramienta</SelectItem>
+                          <SelectItem value="template">Plantilla</SelectItem>
+                          <SelectItem value="guide">Guía</SelectItem>
+                          <SelectItem value="video">Video</SelectItem>
+                          <SelectItem value="podcast">Podcast</SelectItem>
+                          <SelectItem value="tool">Herramienta</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                   </div>
 
-                  <div className=&ldquo;space-y-2&rdquo;>
-                    <Label htmlFor=&ldquo;description&rdquo;>Descripción *</Label>
+                  <div className="space-y-2">
+                    <Label htmlFor="description">Descripción *</Label>
                     <Textarea
-                      id=&ldquo;description&rdquo;
+                      id="description"
                       value={resourceForm.description}
                       onChange={(e) =>
                         setResourceForm((prev) => ({
@@ -462,14 +462,14 @@ export default function YouthContentManagementPage() {
                           description: e.target.value,
                         }))
                       }
-                      placeholder=&ldquo;Descripción detallada del recurso&rdquo;
+                      placeholder="Descripción detallada del recurso"
                       rows={3}
                     />
                   </div>
 
-                  <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 gap-4&rdquo;>
-                    <div className=&ldquo;space-y-2&rdquo;>
-                      <Label htmlFor=&ldquo;category&rdquo;>Categoría *</Label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="category">Categoría *</Label>
                       <Select
                         value={resourceForm.category}
                         onValueChange={(value) =>
@@ -480,7 +480,7 @@ export default function YouthContentManagementPage() {
                         }
                       >
                         <SelectTrigger>
-                          <SelectValue placeholder=&ldquo;Seleccionar categoría&rdquo; />
+                          <SelectValue placeholder="Seleccionar categoría" />
                         </SelectTrigger>
                         <SelectContent>
                           {categories.resources.map((category) => (
@@ -491,10 +491,10 @@ export default function YouthContentManagementPage() {
                         </SelectContent>
                       </Select>
                     </div>
-                    <div className=&ldquo;space-y-2&rdquo;>
-                      <Label htmlFor=&ldquo;fileUrl&rdquo;>URL del Archivo</Label>
+                    <div className="space-y-2">
+                      <Label htmlFor="fileUrl">URL del Archivo</Label>
                       <Input
-                        id=&ldquo;fileUrl&rdquo;
+                        id="fileUrl"
                         value={resourceForm.fileUrl}
                         onChange={(e) =>
                           setResourceForm((prev) => ({
@@ -502,15 +502,15 @@ export default function YouthContentManagementPage() {
                             fileUrl: e.target.value,
                           }))
                         }
-                        placeholder=&ldquo;https://... o /downloads/...&rdquo;
+                        placeholder="https://... o /downloads/..."
                       />
                     </div>
                   </div>
 
-                  <div className=&ldquo;space-y-2&rdquo;>
-                    <Label htmlFor=&ldquo;tags&rdquo;>Etiquetas</Label>
+                  <div className="space-y-2">
+                    <Label htmlFor="tags">Etiquetas</Label>
                     <Input
-                      id=&ldquo;tags&rdquo;
+                      id="tags"
                       value={resourceForm.tags}
                       onChange={(e) =>
                         setResourceForm((prev) => ({
@@ -518,13 +518,13 @@ export default function YouthContentManagementPage() {
                           tags: e.target.value,
                         }))
                       }
-                      placeholder=&ldquo;etiqueta1, etiqueta2, etiqueta3&rdquo;
+                      placeholder="etiqueta1, etiqueta2, etiqueta3"
                     />
                   </div>
 
-                  <div className=&ldquo;flex items-center space-x-2&rdquo;>
+                  <div className="flex items-center space-x-2">
                     <Checkbox
-                      id=&ldquo;featured&rdquo;
+                      id="featured"
                       checked={resourceForm.featured}
                       onCheckedChange={(checked) =>
                         setResourceForm((prev) => ({
@@ -533,19 +533,19 @@ export default function YouthContentManagementPage() {
                         }))
                       }
                     />
-                    <Label htmlFor=&ldquo;featured&rdquo;>Recurso destacado</Label>
+                    <Label htmlFor="featured">Recurso destacado</Label>
                   </div>
                 </div>
               )}
 
               {/* Directory of Institutions Form */}
-              {activeTab === &ldquo;institutions&rdquo; && (
-                <div className=&ldquo;space-y-4&rdquo;>
-                  <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 gap-4&rdquo;>
-                    <div className=&ldquo;space-y-2&rdquo;>
-                      <Label htmlFor=&ldquo;name&rdquo;>Nombre de la Institución *</Label>
+              {activeTab === "institutions" && (
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="name">Nombre de la Institución *</Label>
                       <Input
-                        id=&ldquo;name&rdquo;
+                        id="name"
                         value={institutionForm.name}
                         onChange={(e) =>
                           setInstitutionForm((prev) => ({
@@ -553,11 +553,11 @@ export default function YouthContentManagementPage() {
                             name: e.target.value,
                           }))
                         }
-                        placeholder=&ldquo;Nombre completo&rdquo;
+                        placeholder="Nombre completo"
                       />
                     </div>
-                    <div className=&ldquo;space-y-2&rdquo;>
-                      <Label htmlFor=&ldquo;type&rdquo;>Tipo de Institución *</Label>
+                    <div className="space-y-2">
+                      <Label htmlFor="type">Tipo de Institución *</Label>
                       <Select
                         value={institutionForm.type}
                         onValueChange={(value: unknown) =>
@@ -571,24 +571,24 @@ export default function YouthContentManagementPage() {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value=&ldquo;municipality&rdquo;>
+                          <SelectItem value="municipality">
                             Municipalidad
                           </SelectItem>
-                          <SelectItem value=&ldquo;ngo&rdquo;>ONG</SelectItem>
-                          <SelectItem value=&ldquo;foundation&rdquo;>Fundación</SelectItem>
-                          <SelectItem value=&ldquo;training_center&rdquo;>
+                          <SelectItem value="ngo">ONG</SelectItem>
+                          <SelectItem value="foundation">Fundación</SelectItem>
+                          <SelectItem value="training_center">
                             Centro de Capacitación
                           </SelectItem>
-                          <SelectItem value=&ldquo;government&rdquo;>Gobierno</SelectItem>
+                          <SelectItem value="government">Gobierno</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                   </div>
 
-                  <div className=&ldquo;space-y-2&rdquo;>
-                    <Label htmlFor=&ldquo;description&rdquo;>Descripción *</Label>
+                  <div className="space-y-2">
+                    <Label htmlFor="description">Descripción *</Label>
                     <Textarea
-                      id=&ldquo;description&rdquo;
+                      id="description"
                       value={institutionForm.description}
                       onChange={(e) =>
                         setInstitutionForm((prev) => ({
@@ -596,16 +596,16 @@ export default function YouthContentManagementPage() {
                           description: e.target.value,
                         }))
                       }
-                      placeholder=&ldquo;Descripción de la institución y su misión&rdquo;
+                      placeholder="Descripción de la institución y su misión"
                       rows={3}
                     />
                   </div>
 
-                  <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 gap-4&rdquo;>
-                    <div className=&ldquo;space-y-2&rdquo;>
-                      <Label htmlFor=&ldquo;location&rdquo;>Ubicación *</Label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="location">Ubicación *</Label>
                       <Input
-                        id=&ldquo;location&rdquo;
+                        id="location"
                         value={institutionForm.location}
                         onChange={(e) =>
                           setInstitutionForm((prev) => ({
@@ -613,13 +613,13 @@ export default function YouthContentManagementPage() {
                             location: e.target.value,
                           }))
                         }
-                        placeholder=&ldquo;Ciudad, País&rdquo;
+                        placeholder="Ciudad, País"
                       />
                     </div>
-                    <div className=&ldquo;space-y-2&rdquo;>
-                      <Label htmlFor=&ldquo;address&rdquo;>Dirección</Label>
+                    <div className="space-y-2">
+                      <Label htmlFor="address">Dirección</Label>
                       <Input
-                        id=&ldquo;address&rdquo;
+                        id="address"
                         value={institutionForm.address}
                         onChange={(e) =>
                           setInstitutionForm((prev) => ({
@@ -627,16 +627,16 @@ export default function YouthContentManagementPage() {
                             address: e.target.value,
                           }))
                         }
-                        placeholder=&ldquo;Dirección completa&rdquo;
+                        placeholder="Dirección completa"
                       />
                     </div>
                   </div>
 
-                  <div className=&ldquo;grid grid-cols-1 md:grid-cols-3 gap-4&rdquo;>
-                    <div className=&ldquo;space-y-2&rdquo;>
-                      <Label htmlFor=&ldquo;phone&rdquo;>Teléfono</Label>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="phone">Teléfono</Label>
                       <Input
-                        id=&ldquo;phone&rdquo;
+                        id="phone"
                         value={institutionForm.phone}
                         onChange={(e) =>
                           setInstitutionForm((prev) => ({
@@ -644,14 +644,14 @@ export default function YouthContentManagementPage() {
                             phone: e.target.value,
                           }))
                         }
-                        placeholder=&ldquo;+591-X-XXXXXXX&rdquo;
+                        placeholder="+591-X-XXXXXXX"
                       />
                     </div>
-                    <div className=&ldquo;space-y-2&rdquo;>
-                      <Label htmlFor=&ldquo;email&rdquo;>Email</Label>
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email</Label>
                       <Input
-                        id=&ldquo;email&rdquo;
-                        type=&ldquo;email&rdquo;
+                        id="email"
+                        type="email"
                         value={institutionForm.email}
                         onChange={(e) =>
                           setInstitutionForm((prev) => ({
@@ -659,13 +659,13 @@ export default function YouthContentManagementPage() {
                             email: e.target.value,
                           }))
                         }
-                        placeholder=&ldquo;contacto@institucion.com&rdquo;
+                        placeholder="contacto@institucion.com"
                       />
                     </div>
-                    <div className=&ldquo;space-y-2&rdquo;>
-                      <Label htmlFor=&ldquo;website&rdquo;>Sitio Web</Label>
+                    <div className="space-y-2">
+                      <Label htmlFor="website">Sitio Web</Label>
                       <Input
-                        id=&ldquo;website&rdquo;
+                        id="website"
                         value={institutionForm.website}
                         onChange={(e) =>
                           setInstitutionForm((prev) => ({
@@ -673,15 +673,15 @@ export default function YouthContentManagementPage() {
                             website: e.target.value,
                           }))
                         }
-                        placeholder=&ldquo;https://www.institucion.com&rdquo;
+                        placeholder="https://www.institucion.com"
                       />
                     </div>
                   </div>
 
-                  <div className=&ldquo;space-y-2&rdquo;>
-                    <Label htmlFor=&ldquo;services&rdquo;>Servicios</Label>
+                  <div className="space-y-2">
+                    <Label htmlFor="services">Servicios</Label>
                     <Textarea
-                      id=&ldquo;services&rdquo;
+                      id="services"
                       value={institutionForm.services}
                       onChange={(e) =>
                         setInstitutionForm((prev) => ({
@@ -689,15 +689,15 @@ export default function YouthContentManagementPage() {
                           services: e.target.value,
                         }))
                       }
-                      placeholder=&ldquo;servicio1, servicio2, servicio3&rdquo;
+                      placeholder="servicio1, servicio2, servicio3"
                       rows={2}
                     />
                   </div>
 
-                  <div className=&ldquo;space-y-2&rdquo;>
-                    <Label htmlFor=&ldquo;focusAreas&rdquo;>Áreas de Enfoque</Label>
+                  <div className="space-y-2">
+                    <Label htmlFor="focusAreas">Áreas de Enfoque</Label>
                     <Input
-                      id=&ldquo;focusAreas&rdquo;
+                      id="focusAreas"
                       value={institutionForm.focusAreas}
                       onChange={(e) =>
                         setInstitutionForm((prev) => ({
@@ -705,13 +705,13 @@ export default function YouthContentManagementPage() {
                           focusAreas: e.target.value,
                         }))
                       }
-                      placeholder=&ldquo;área1, área2, área3&rdquo;
+                      placeholder="área1, área2, área3"
                     />
                   </div>
 
-                  <div className=&ldquo;flex items-center space-x-2&rdquo;>
+                  <div className="flex items-center space-x-2">
                     <Checkbox
-                      id=&ldquo;institutionFeatured&rdquo;
+                      id="institutionFeatured"
                       checked={institutionForm.featured}
                       onCheckedChange={(checked) =>
                         setInstitutionForm((prev) => ({
@@ -720,7 +720,7 @@ export default function YouthContentManagementPage() {
                         }))
                       }
                     />
-                    <Label htmlFor=&ldquo;institutionFeatured&rdquo;>
+                    <Label htmlFor="institutionFeatured">
                       Institución destacada
                     </Label>
                   </div>
@@ -728,13 +728,13 @@ export default function YouthContentManagementPage() {
               )}
 
               {/* Contact Network Form */}
-              {activeTab === &ldquo;contacts&rdquo; && (
-                <div className=&ldquo;space-y-4&rdquo;>
-                  <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 gap-4&rdquo;>
-                    <div className=&ldquo;space-y-2&rdquo;>
-                      <Label htmlFor=&ldquo;contactName&rdquo;>Nombre Completo *</Label>
+              {activeTab === "contacts" && (
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="contactName">Nombre Completo *</Label>
                       <Input
-                        id=&ldquo;contactName&rdquo;
+                        id="contactName"
                         value={contactForm.name}
                         onChange={(e) =>
                           setContactForm((prev) => ({
@@ -742,13 +742,13 @@ export default function YouthContentManagementPage() {
                             name: e.target.value,
                           }))
                         }
-                        placeholder=&ldquo;Nombre y apellido&rdquo;
+                        placeholder="Nombre y apellido"
                       />
                     </div>
-                    <div className=&ldquo;space-y-2&rdquo;>
-                      <Label htmlFor=&ldquo;businessName&rdquo;>Nombre del Negocio</Label>
+                    <div className="space-y-2">
+                      <Label htmlFor="businessName">Nombre del Negocio</Label>
                       <Input
-                        id=&ldquo;businessName&rdquo;
+                        id="businessName"
                         value={contactForm.businessName}
                         onChange={(e) =>
                           setContactForm((prev) => ({
@@ -756,14 +756,14 @@ export default function YouthContentManagementPage() {
                             businessName: e.target.value,
                           }))
                         }
-                        placeholder=&ldquo;Nombre de la empresa/startup&rdquo;
+                        placeholder="Nombre de la empresa/startup"
                       />
                     </div>
                   </div>
 
-                  <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 gap-4&rdquo;>
-                    <div className=&ldquo;space-y-2&rdquo;>
-                      <Label htmlFor=&ldquo;contactCategory&rdquo;>Categoría *</Label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="contactCategory">Categoría *</Label>
                       <Select
                         value={contactForm.category}
                         onValueChange={(value) =>
@@ -774,7 +774,7 @@ export default function YouthContentManagementPage() {
                         }
                       >
                         <SelectTrigger>
-                          <SelectValue placeholder=&ldquo;Seleccionar categoría&rdquo; />
+                          <SelectValue placeholder="Seleccionar categoría" />
                         </SelectTrigger>
                         <SelectContent>
                           {categories.contacts.map((category) => (
@@ -785,10 +785,10 @@ export default function YouthContentManagementPage() {
                         </SelectContent>
                       </Select>
                     </div>
-                    <div className=&ldquo;space-y-2&rdquo;>
-                      <Label htmlFor=&ldquo;contactLocation&rdquo;>Ubicación *</Label>
+                    <div className="space-y-2">
+                      <Label htmlFor="contactLocation">Ubicación *</Label>
                       <Input
-                        id=&ldquo;contactLocation&rdquo;
+                        id="contactLocation"
                         value={contactForm.location}
                         onChange={(e) =>
                           setContactForm((prev) => ({
@@ -796,15 +796,15 @@ export default function YouthContentManagementPage() {
                             location: e.target.value,
                           }))
                         }
-                        placeholder=&ldquo;Ciudad, País&rdquo;
+                        placeholder="Ciudad, País"
                       />
                     </div>
                   </div>
 
-                  <div className=&ldquo;space-y-2&rdquo;>
-                    <Label htmlFor=&ldquo;bio&rdquo;>Biografía *</Label>
+                  <div className="space-y-2">
+                    <Label htmlFor="bio">Biografía *</Label>
                     <Textarea
-                      id=&ldquo;bio&rdquo;
+                      id="bio"
                       value={contactForm.bio}
                       onChange={(e) =>
                         setContactForm((prev) => ({
@@ -812,16 +812,16 @@ export default function YouthContentManagementPage() {
                           bio: e.target.value,
                         }))
                       }
-                      placeholder=&ldquo;Descripción profesional y experiencia&rdquo;
+                      placeholder="Descripción profesional y experiencia"
                       rows={3}
                     />
                   </div>
 
-                  <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 gap-4&rdquo;>
-                    <div className=&ldquo;space-y-2&rdquo;>
-                      <Label htmlFor=&ldquo;skills&rdquo;>Habilidades</Label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="skills">Habilidades</Label>
                       <Input
-                        id=&ldquo;skills&rdquo;
+                        id="skills"
                         value={contactForm.skills}
                         onChange={(e) =>
                           setContactForm((prev) => ({
@@ -829,13 +829,13 @@ export default function YouthContentManagementPage() {
                             skills: e.target.value,
                           }))
                         }
-                        placeholder=&ldquo;habilidad1, habilidad2, habilidad3&rdquo;
+                        placeholder="habilidad1, habilidad2, habilidad3"
                       />
                     </div>
-                    <div className=&ldquo;space-y-2&rdquo;>
-                      <Label htmlFor=&ldquo;interests&rdquo;>Intereses</Label>
+                    <div className="space-y-2">
+                      <Label htmlFor="interests">Intereses</Label>
                       <Input
-                        id=&ldquo;interests&rdquo;
+                        id="interests"
                         value={contactForm.interests}
                         onChange={(e) =>
                           setContactForm((prev) => ({
@@ -843,16 +843,16 @@ export default function YouthContentManagementPage() {
                             interests: e.target.value,
                           }))
                         }
-                        placeholder=&ldquo;interés1, interés2, interés3&rdquo;
+                        placeholder="interés1, interés2, interés3"
                       />
                     </div>
                   </div>
 
-                  <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 gap-4&rdquo;>
-                    <div className=&ldquo;space-y-2&rdquo;>
-                      <Label htmlFor=&ldquo;lookingFor&rdquo;>Busca</Label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="lookingFor">Busca</Label>
                       <Input
-                        id=&ldquo;lookingFor&rdquo;
+                        id="lookingFor"
                         value={contactForm.lookingFor}
                         onChange={(e) =>
                           setContactForm((prev) => ({
@@ -860,13 +860,13 @@ export default function YouthContentManagementPage() {
                             lookingFor: e.target.value,
                           }))
                         }
-                        placeholder=&ldquo;inversionistas, socios, mentores&rdquo;
+                        placeholder="inversionistas, socios, mentores"
                       />
                     </div>
-                    <div className=&ldquo;space-y-2&rdquo;>
-                      <Label htmlFor=&ldquo;offering&rdquo;>Ofrece</Label>
+                    <div className="space-y-2">
+                      <Label htmlFor="offering">Ofrece</Label>
                       <Input
-                        id=&ldquo;offering&rdquo;
+                        id="offering"
                         value={contactForm.offering}
                         onChange={(e) =>
                           setContactForm((prev) => ({
@@ -874,14 +874,14 @@ export default function YouthContentManagementPage() {
                             offering: e.target.value,
                           }))
                         }
-                        placeholder=&ldquo;consultoría, desarrollo, marketing&rdquo;
+                        placeholder="consultoría, desarrollo, marketing"
                       />
                     </div>
                   </div>
 
-                  <div className=&ldquo;flex items-center space-x-2&rdquo;>
+                  <div className="flex items-center space-x-2">
                     <Checkbox
-                      id=&ldquo;isAvailable&rdquo;
+                      id="isAvailable"
                       checked={contactForm.isAvailable}
                       onCheckedChange={(checked) =>
                         setContactForm((prev) => ({
@@ -890,7 +890,7 @@ export default function YouthContentManagementPage() {
                         }))
                       }
                     />
-                    <Label htmlFor=&ldquo;isAvailable&rdquo;>
+                    <Label htmlFor="isAvailable">
                       Disponible para networking
                     </Label>
                   </div>
@@ -898,13 +898,13 @@ export default function YouthContentManagementPage() {
               )}
 
               {/* Mentorship Form */}
-              {activeTab === &ldquo;mentors&rdquo; && (
-                <div className=&ldquo;space-y-4&rdquo;>
-                  <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 gap-4&rdquo;>
-                    <div className=&ldquo;space-y-2&rdquo;>
-                      <Label htmlFor=&ldquo;mentorName&rdquo;>Nombre Completo *</Label>
+              {activeTab === "mentors" && (
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="mentorName">Nombre Completo *</Label>
                       <Input
-                        id=&ldquo;mentorName&rdquo;
+                        id="mentorName"
                         value={mentorForm.name}
                         onChange={(e) =>
                           setMentorForm((prev) => ({
@@ -912,13 +912,13 @@ export default function YouthContentManagementPage() {
                             name: e.target.value,
                           }))
                         }
-                        placeholder=&ldquo;Nombre y apellido&rdquo;
+                        placeholder="Nombre y apellido"
                       />
                     </div>
-                    <div className=&ldquo;space-y-2&rdquo;>
-                      <Label htmlFor=&ldquo;mentorTitle&rdquo;>Título/Cargo *</Label>
+                    <div className="space-y-2">
+                      <Label htmlFor="mentorTitle">Título/Cargo *</Label>
                       <Input
-                        id=&ldquo;mentorTitle&rdquo;
+                        id="mentorTitle"
                         value={mentorForm.title}
                         onChange={(e) =>
                           setMentorForm((prev) => ({
@@ -926,16 +926,16 @@ export default function YouthContentManagementPage() {
                             title: e.target.value,
                           }))
                         }
-                        placeholder=&ldquo;CEO, Director, Consultor&rdquo;
+                        placeholder="CEO, Director, Consultor"
                       />
                     </div>
                   </div>
 
-                  <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 gap-4&rdquo;>
-                    <div className=&ldquo;space-y-2&rdquo;>
-                      <Label htmlFor=&ldquo;company&rdquo;>Empresa *</Label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="company">Empresa *</Label>
                       <Input
-                        id=&ldquo;company&rdquo;
+                        id="company"
                         value={mentorForm.company}
                         onChange={(e) =>
                           setMentorForm((prev) => ({
@@ -943,13 +943,13 @@ export default function YouthContentManagementPage() {
                             company: e.target.value,
                           }))
                         }
-                        placeholder=&ldquo;Nombre de la empresa&rdquo;
+                        placeholder="Nombre de la empresa"
                       />
                     </div>
-                    <div className=&ldquo;space-y-2&rdquo;>
-                      <Label htmlFor=&ldquo;mentorLocation&rdquo;>Ubicación *</Label>
+                    <div className="space-y-2">
+                      <Label htmlFor="mentorLocation">Ubicación *</Label>
                       <Input
-                        id=&ldquo;mentorLocation&rdquo;
+                        id="mentorLocation"
                         value={mentorForm.location}
                         onChange={(e) =>
                           setMentorForm((prev) => ({
@@ -957,15 +957,15 @@ export default function YouthContentManagementPage() {
                             location: e.target.value,
                           }))
                         }
-                        placeholder=&ldquo;Ciudad, País&rdquo;
+                        placeholder="Ciudad, País"
                       />
                     </div>
                   </div>
 
-                  <div className=&ldquo;space-y-2&rdquo;>
-                    <Label htmlFor=&ldquo;mentorBio&rdquo;>Biografía *</Label>
+                  <div className="space-y-2">
+                    <Label htmlFor="mentorBio">Biografía *</Label>
                     <Textarea
-                      id=&ldquo;mentorBio&rdquo;
+                      id="mentorBio"
                       value={mentorForm.bio}
                       onChange={(e) =>
                         setMentorForm((prev) => ({
@@ -973,16 +973,16 @@ export default function YouthContentManagementPage() {
                           bio: e.target.value,
                         }))
                       }
-                      placeholder=&ldquo;Experiencia profesional y logros&rdquo;
+                      placeholder="Experiencia profesional y logros"
                       rows={3}
                     />
                   </div>
 
-                  <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 gap-4&rdquo;>
-                    <div className=&ldquo;space-y-2&rdquo;>
-                      <Label htmlFor=&ldquo;expertise&rdquo;>Áreas de Expertise</Label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="expertise">Áreas de Expertise</Label>
                       <Input
-                        id=&ldquo;expertise&rdquo;
+                        id="expertise"
                         value={mentorForm.expertise}
                         onChange={(e) =>
                           setMentorForm((prev) => ({
@@ -990,13 +990,13 @@ export default function YouthContentManagementPage() {
                             expertise: e.target.value,
                           }))
                         }
-                        placeholder=&ldquo;tecnología, marketing, finanzas&rdquo;
+                        placeholder="tecnología, marketing, finanzas"
                       />
                     </div>
-                    <div className=&ldquo;space-y-2&rdquo;>
-                      <Label htmlFor=&ldquo;experience&rdquo;>Años de Experiencia</Label>
+                    <div className="space-y-2">
+                      <Label htmlFor="experience">Años de Experiencia</Label>
                       <Input
-                        id=&ldquo;experience&rdquo;
+                        id="experience"
                         value={mentorForm.experience}
                         onChange={(e) =>
                           setMentorForm((prev) => ({
@@ -1004,14 +1004,14 @@ export default function YouthContentManagementPage() {
                             experience: e.target.value,
                           }))
                         }
-                        placeholder=&ldquo;10+ años&rdquo;
+                        placeholder="10+ años"
                       />
                     </div>
                   </div>
 
-                  <div className=&ldquo;grid grid-cols-1 md:grid-cols-3 gap-4&rdquo;>
-                    <div className=&ldquo;space-y-2&rdquo;>
-                      <Label htmlFor=&ldquo;priceType&rdquo;>Tipo de Mentoría</Label>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="priceType">Tipo de Mentoría</Label>
                       <Select
                         value={mentorForm.priceType}
                         onValueChange={(value: unknown) =>
@@ -1025,17 +1025,17 @@ export default function YouthContentManagementPage() {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value=&ldquo;free&rdquo;>Gratuita</SelectItem>
-                          <SelectItem value=&ldquo;paid&rdquo;>Pagada</SelectItem>
+                          <SelectItem value="free">Gratuita</SelectItem>
+                          <SelectItem value="paid">Pagada</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
-                    {mentorForm.priceType === &ldquo;paid&rdquo; && (
-                      <div className=&ldquo;space-y-2&rdquo;>
-                        <Label htmlFor=&ldquo;priceAmount&rdquo;>Precio (Bs.)</Label>
+                    {mentorForm.priceType === "paid" && (
+                      <div className="space-y-2">
+                        <Label htmlFor="priceAmount">Precio (Bs.)</Label>
                         <Input
-                          id=&ldquo;priceAmount&rdquo;
-                          type=&ldquo;number&rdquo;
+                          id="priceAmount"
+                          type="number"
                           value={mentorForm.priceAmount}
                           onChange={(e) =>
                             setMentorForm((prev) => ({
@@ -1043,14 +1043,14 @@ export default function YouthContentManagementPage() {
                               priceAmount: parseFloat(e.target.value) || 0,
                             }))
                           }
-                          min=&ldquo;0&rdquo;
+                          min="0"
                         />
                       </div>
                     )}
-                    <div className=&ldquo;space-y-2&rdquo;>
-                      <Label htmlFor=&ldquo;languages&rdquo;>Idiomas</Label>
+                    <div className="space-y-2">
+                      <Label htmlFor="languages">Idiomas</Label>
                       <Input
-                        id=&ldquo;languages&rdquo;
+                        id="languages"
                         value={mentorForm.languages}
                         onChange={(e) =>
                           setMentorForm((prev) => ({
@@ -1058,15 +1058,15 @@ export default function YouthContentManagementPage() {
                             languages: e.target.value,
                           }))
                         }
-                        placeholder=&ldquo;español, inglés&rdquo;
+                        placeholder="español, inglés"
                       />
                     </div>
                   </div>
 
-                  <div className=&ldquo;space-y-2&rdquo;>
-                    <Label htmlFor=&ldquo;availability&rdquo;>Disponibilidad</Label>
+                  <div className="space-y-2">
+                    <Label htmlFor="availability">Disponibilidad</Label>
                     <Input
-                      id=&ldquo;availability&rdquo;
+                      id="availability"
                       value={mentorForm.availability}
                       onChange={(e) =>
                         setMentorForm((prev) => ({
@@ -1074,14 +1074,14 @@ export default function YouthContentManagementPage() {
                           availability: e.target.value,
                         }))
                       }
-                      placeholder=&ldquo;Lunes a Viernes 14:00-18:00&rdquo;
+                      placeholder="Lunes a Viernes 14:00-18:00"
                     />
                   </div>
 
-                  <div className=&ldquo;space-y-2&rdquo;>
-                    <Label htmlFor=&ldquo;achievements&rdquo;>Logros</Label>
+                  <div className="space-y-2">
+                    <Label htmlFor="achievements">Logros</Label>
                     <Input
-                      id=&ldquo;achievements&rdquo;
+                      id="achievements"
                       value={mentorForm.achievements}
                       onChange={(e) =>
                         setMentorForm((prev) => ({
@@ -1089,21 +1089,21 @@ export default function YouthContentManagementPage() {
                           achievements: e.target.value,
                         }))
                       }
-                      placeholder=&ldquo;logro1, logro2, logro3&rdquo;
+                      placeholder="logro1, logro2, logro3"
                     />
                   </div>
                 </div>
               )}
 
-              <div className=&ldquo;flex justify-end space-x-2 pt-4&rdquo;>
+              <div className="flex justify-end space-x-2 pt-4">
                 <Button
-                  variant=&ldquo;outline&rdquo;
+                  variant="outline"
                   onClick={() => setShowCreateDialog(false)}
                 >
                   Cancelar
                 </Button>
                 <Button onClick={handleCreateContent} disabled={loading}>
-                  {loading ? &ldquo;Creando...&rdquo; : &ldquo;Crear Contenido&rdquo;}
+                  {loading ? "Creando..." : "Crear Contenido"}
                 </Button>
               </div>
             </div>
@@ -1112,59 +1112,59 @@ export default function YouthContentManagementPage() {
       </div>
 
       {/* Statistics Cards */}
-      <div className=&ldquo;grid grid-cols-1 md:grid-cols-4 gap-4&rdquo;>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
-          <CardContent className=&ldquo;p-4&rdquo;>
-            <div className=&ldquo;flex items-center justify-between&rdquo;>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
               <div>
-                <p className=&ldquo;text-sm font-medium text-muted-foreground&rdquo;>
+                <p className="text-sm font-medium text-muted-foreground">
                   Recursos
                 </p>
-                <p className=&ldquo;text-2xl font-bold&rdquo;>24</p>
+                <p className="text-2xl font-bold">24</p>
               </div>
-              <FileText className=&ldquo;h-8 w-8 text-blue-600&rdquo; />
+              <FileText className="h-8 w-8 text-blue-600" />
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className=&ldquo;p-4&rdquo;>
-            <div className=&ldquo;flex items-center justify-between&rdquo;>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
               <div>
-                <p className=&ldquo;text-sm font-medium text-muted-foreground&rdquo;>
+                <p className="text-sm font-medium text-muted-foreground">
                   Instituciones
                 </p>
-                <p className=&ldquo;text-2xl font-bold&rdquo;>12</p>
+                <p className="text-2xl font-bold">12</p>
               </div>
-              <Building2 className=&ldquo;h-8 w-8 text-green-600&rdquo; />
+              <Building2 className="h-8 w-8 text-green-600" />
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className=&ldquo;p-4&rdquo;>
-            <div className=&ldquo;flex items-center justify-between&rdquo;>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
               <div>
-                <p className=&ldquo;text-sm font-medium text-muted-foreground&rdquo;>
+                <p className="text-sm font-medium text-muted-foreground">
                   Contactos
                 </p>
-                <p className=&ldquo;text-2xl font-bold&rdquo;>87</p>
+                <p className="text-2xl font-bold">87</p>
               </div>
-              <Users className=&ldquo;h-8 w-8 text-purple-600&rdquo; />
+              <Users className="h-8 w-8 text-purple-600" />
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className=&ldquo;p-4&rdquo;>
-            <div className=&ldquo;flex items-center justify-between&rdquo;>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
               <div>
-                <p className=&ldquo;text-sm font-medium text-muted-foreground&rdquo;>
+                <p className="text-sm font-medium text-muted-foreground">
                   Mentores
                 </p>
-                <p className=&ldquo;text-2xl font-bold&rdquo;>34</p>
+                <p className="text-2xl font-bold">34</p>
               </div>
-              <GraduationCap className=&ldquo;h-8 w-8 text-orange-600&rdquo; />
+              <GraduationCap className="h-8 w-8 text-orange-600" />
             </div>
           </CardContent>
         </Card>
@@ -1177,141 +1177,141 @@ export default function YouthContentManagementPage() {
         </CardHeader>
         <CardContent>
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className=&ldquo;grid w-full grid-cols-4&rdquo;>
+            <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger
-                value=&ldquo;resources&rdquo;
-                className=&ldquo;flex items-center gap-2&rdquo;
+                value="resources"
+                className="flex items-center gap-2"
               >
-                {getTabIcon(&ldquo;resources&rdquo;)}
+                {getTabIcon("resources")}
                 Centro de Recursos
               </TabsTrigger>
               
-              <TabsTrigger value=&ldquo;contacts&rdquo; className=&ldquo;flex items-center gap-2&rdquo;>
-                {getTabIcon(&ldquo;contacts&rdquo;)}
+              <TabsTrigger value="contacts" className="flex items-center gap-2">
+                {getTabIcon("contacts")}
                 Red de Contactos
               </TabsTrigger>
-              <TabsTrigger value=&ldquo;mentors&rdquo; className=&ldquo;flex items-center gap-2&rdquo;>
-                {getTabIcon(&ldquo;mentors&rdquo;)}
+              <TabsTrigger value="mentors" className="flex items-center gap-2">
+                {getTabIcon("mentors")}
                 Mentorías
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value=&ldquo;resources&rdquo; className=&ldquo;space-y-4&rdquo;>
-              <div className=&ldquo;flex items-center justify-between&rdquo;>
-                <h3 className=&ldquo;text-lg font-semibold&rdquo;>Centro de Recursos</h3>
+            <TabsContent value="resources" className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold">Centro de Recursos</h3>
                 <Button
                   onClick={() => {
-                    setActiveTab(&ldquo;resources&rdquo;);
+                    setActiveTab("resources");
                     setShowCreateDialog(true);
                   }}
-                  size=&ldquo;sm&rdquo;
+                  size="sm"
                 >
-                  <Plus className=&ldquo;h-4 w-4 mr-2&rdquo; />
+                  <Plus className="h-4 w-4 mr-2" />
                   Nuevo Recurso
                 </Button>
               </div>
-              <p className=&ldquo;text-muted-foreground&rdquo;>
+              <p className="text-muted-foreground">
                 Gestiona plantillas, guías, videos, podcasts y herramientas para
                 emprendedores
               </p>
 
               {/* Search and filters would go here */}
-              <div className=&ldquo;flex gap-4&rdquo;>
-                <div className=&ldquo;relative flex-1&rdquo;>
-                  <Search className=&ldquo;absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground&rdquo; />
-                  <Input placeholder=&ldquo;Buscar recursos...&rdquo; className=&ldquo;pl-10&rdquo; />
+              <div className="flex gap-4">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input placeholder="Buscar recursos..." className="pl-10" />
                 </div>
-                <Select defaultValue=&ldquo;all&rdquo;>
-                  <SelectTrigger className=&ldquo;w-[150px]&rdquo;>
-                    <SelectValue placeholder=&ldquo;Tipo&rdquo; />
+                <Select defaultValue="all">
+                  <SelectTrigger className="w-[150px]">
+                    <SelectValue placeholder="Tipo" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value=&ldquo;all&rdquo;>Todos</SelectItem>
-                    <SelectItem value=&ldquo;template&rdquo;>Plantillas</SelectItem>
-                    <SelectItem value=&ldquo;guide&rdquo;>Guías</SelectItem>
-                    <SelectItem value=&ldquo;video&rdquo;>Videos</SelectItem>
+                    <SelectItem value="all">Todos</SelectItem>
+                    <SelectItem value="template">Plantillas</SelectItem>
+                    <SelectItem value="guide">Guías</SelectItem>
+                    <SelectItem value="video">Videos</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
-              <div className=&ldquo;text-center py-8 text-muted-foreground&rdquo;>
+              <div className="text-center py-8 text-muted-foreground">
                 Los recursos aparecen aquí. Usa los filtros para navegar o crear
                 nuevos recursos.
               </div>
             </TabsContent>
 
-            <TabsContent value=&ldquo;institutions&rdquo; className=&ldquo;space-y-4&rdquo;>
-              <div className=&ldquo;flex items-center justify-between&rdquo;>
-                <h3 className=&ldquo;text-lg font-semibold&rdquo;>
+            <TabsContent value="institutions" className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold">
                   Directorio de Instituciones
                 </h3>
                 <Button
                   onClick={() => {
-                    setActiveTab(&ldquo;institutions&rdquo;);
+                    setActiveTab("institutions");
                     setShowCreateDialog(true);
                   }}
-                  size=&ldquo;sm&rdquo;
+                  size="sm"
                 >
-                  <Plus className=&ldquo;h-4 w-4 mr-2&rdquo; />
+                  <Plus className="h-4 w-4 mr-2" />
                   Nueva Institución
                 </Button>
               </div>
-              <p className=&ldquo;text-muted-foreground&rdquo;>
+              <p className="text-muted-foreground">
                 Gestiona el directorio de municipalidades, ONGs, fundaciones y
                 centros de capacitación
               </p>
 
-              <div className=&ldquo;text-center py-8 text-muted-foreground&rdquo;>
+              <div className="text-center py-8 text-muted-foreground">
                 Las instituciones aparecen aquí. Gestiona organizaciones que
                 aparecen en el directorio.
               </div>
             </TabsContent>
 
-            <TabsContent value=&ldquo;contacts&rdquo; className=&ldquo;space-y-4&rdquo;>
-              <div className=&ldquo;flex items-center justify-between&rdquo;>
-                <h3 className=&ldquo;text-lg font-semibold&rdquo;>Red de Contactos</h3>
+            <TabsContent value="contacts" className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold">Red de Contactos</h3>
                 <Button
                   onClick={() => {
-                    setActiveTab(&ldquo;contacts&rdquo;);
+                    setActiveTab("contacts");
                     setShowCreateDialog(true);
                   }}
-                  size=&ldquo;sm&rdquo;
+                  size="sm"
                 >
-                  <Plus className=&ldquo;h-4 w-4 mr-2&rdquo; />
+                  <Plus className="h-4 w-4 mr-2" />
                   Nuevo Contacto
                 </Button>
               </div>
-              <p className=&ldquo;text-muted-foreground&rdquo;>
+              <p className="text-muted-foreground">
                 Gestiona emprendedores y profesionales disponibles para
                 networking
               </p>
 
-              <div className=&ldquo;text-center py-8 text-muted-foreground&rdquo;>
+              <div className="text-center py-8 text-muted-foreground">
                 Los contactos de networking aparecen aquí. Agrega emprendedores
                 para la red.
               </div>
             </TabsContent>
 
-            <TabsContent value=&ldquo;mentors&rdquo; className=&ldquo;space-y-4&rdquo;>
-              <div className=&ldquo;flex items-center justify-between&rdquo;>
-                <h3 className=&ldquo;text-lg font-semibold&rdquo;>Mentorías</h3>
+            <TabsContent value="mentors" className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold">Mentorías</h3>
                 <Button
                   onClick={() => {
-                    setActiveTab(&ldquo;mentors&rdquo;);
+                    setActiveTab("mentors");
                     setShowCreateDialog(true);
                   }}
-                  size=&ldquo;sm&rdquo;
+                  size="sm"
                 >
-                  <Plus className=&ldquo;h-4 w-4 mr-2&rdquo; />
+                  <Plus className="h-4 w-4 mr-2" />
                   Nuevo Mentor
                 </Button>
               </div>
-              <p className=&ldquo;text-muted-foreground&rdquo;>
+              <p className="text-muted-foreground">
                 Gestiona mentores y programas de mentoría disponibles para
                 jóvenes
               </p>
 
-              <div className=&ldquo;text-center py-8 text-muted-foreground&rdquo;>
+              <div className="text-center py-8 text-muted-foreground">
                 Los mentores aparecen aquí. Agrega mentores y programas de
                 mentoría.
               </div>

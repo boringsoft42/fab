@@ -1,29 +1,29 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import { useState, useEffect } from &ldquo;react&rdquo;;
-import { useSearchParams, useRouter } from &ldquo;next/navigation&rdquo;;
+import { useState, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import {
   Course,
   CourseCatalogResponse,
   CourseFilters,
   CourseCategory,
   CourseLevel,
-} from &ldquo;@/types/courses&rdquo;;
-import { Button } from &ldquo;@/components/ui/button&rdquo;;
-import { Input } from &ldquo;@/components/ui/input&rdquo;;
-import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
-import { Card, CardContent, CardHeader } from &ldquo;@/components/ui/card&rdquo;;
-import { Progress } from &ldquo;@/components/ui/progress&rdquo;;
-import { Separator } from &ldquo;@/components/ui/separator&rdquo;;
+} from "@/types/courses";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { Separator } from "@/components/ui/separator";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from &ldquo;@/components/ui/select&rdquo;;
-import { Checkbox } from &ldquo;@/components/ui/checkbox&rdquo;;
-import { Slider } from &ldquo;@/components/ui/slider&rdquo;;
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Slider } from "@/components/ui/slider";
 import {
   Search,
   Filter,
@@ -36,20 +36,20 @@ import {
   Award,
   ChevronDown,
   X,
-} from &ldquo;lucide-react&rdquo;;
-import { CourseCard } from &ldquo;@/components/courses/course-card&rdquo;;
-import { CourseFilters as CourseFiltersComponent } from &ldquo;@/components/courses/course-filters&rdquo;;
+} from "lucide-react";
+import { CourseCard } from "@/components/courses/course-card";
+import { CourseFilters as CourseFiltersComponent } from "@/components/courses/course-filters";
 
 export default function CoursesPage() {
   const searchParams = useSearchParams();
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
-  const [viewMode, setViewMode] = useState<&ldquo;grid&rdquo; | &ldquo;list&rdquo;>(&ldquo;grid&rdquo;);
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [searchQuery, setSearchQuery] = useState(
-    searchParams.get(&ldquo;query&rdquo;) || &ldquo;&rdquo;
+    searchParams.get("query") || ""
   );
   const [sortBy, setSortBy] = useState(
-    searchParams.get(&ldquo;sortBy&rdquo;) || &ldquo;popularity&rdquo;
+    searchParams.get("sortBy") || "popularity"
   );
   const [showFilters, setShowFilters] = useState(false);
   const [totalCourses, setTotalCourses] = useState(0);
@@ -60,22 +60,22 @@ export default function CoursesPage() {
   const fetchCourses = async () => {
     try {
       setLoading(true);
-      if (searchQuery) params.append(&ldquo;query&rdquo;, searchQuery);
-      if (sortBy) params.append(&ldquo;sortBy&rdquo;, sortBy);
-      if (page > 1) params.append(&ldquo;page&rdquo;, page.toString());
+      if (searchQuery) params.append("query", searchQuery);
+      if (sortBy) params.append("sortBy", sortBy);
+      if (page > 1) params.append("page", page.toString());
 
       // Add filters to params
       if (activeFilters.category?.length) {
-        params.append(&ldquo;category&rdquo;, activeFilters.category.join(&ldquo;,&rdquo;));
+        params.append("category", activeFilters.category.join(","));
       }
       if (activeFilters.level?.length) {
-        params.append(&ldquo;level&rdquo;, activeFilters.level.join(&ldquo;,&rdquo;));
+        params.append("level", activeFilters.level.join(","));
       }
       if (activeFilters.isFree !== undefined) {
-        params.append(&ldquo;isFree&rdquo;, activeFilters.isFree.toString());
+        params.append("isFree", activeFilters.isFree.toString());
       }
       if (activeFilters.isMandatory !== undefined) {
-        params.append(&ldquo;isMandatory&rdquo;, activeFilters.isMandatory.toString());
+        params.append("isMandatory", activeFilters.isMandatory.toString());
       }
 
       const response = await fetch(`/api/courses?${params}`);
@@ -84,7 +84,7 @@ export default function CoursesPage() {
       setCourses(data.courses);
       setTotalCourses(data.total);
     } catch (error) {
-      console.error(&ldquo;Error fetching courses:&rdquo;, error);
+      console.error("Error fetching courses:", error);
     } finally {
       setLoading(false);
     }
@@ -119,9 +119,9 @@ export default function CoursesPage() {
 
   const clearFilters = () => {
     setActiveFilters({});
-    setSearchQuery(&ldquo;&rdquo;);
+    setSearchQuery("");
     setPage(1);
-    router.push(&ldquo;/courses&rdquo;);
+    router.push("/courses");
   };
 
   const getActiveFilterCount = () => {
@@ -135,17 +135,17 @@ export default function CoursesPage() {
 
   if (loading) {
     return (
-      <div className=&ldquo;container mx-auto p-6&rdquo;>
-        <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6&rdquo;>
+      <div className="container mx-auto p-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[...Array(6)].map((_, i) => (
-            <Card key={i} className=&ldquo;animate-pulse&rdquo;>
-              <div className=&ldquo;h-48 bg-gray-200 rounded-t-lg&rdquo; />
-              <CardContent className=&ldquo;p-4&rdquo;>
-                <div className=&ldquo;h-4 bg-gray-200 rounded mb-2&rdquo; />
-                <div className=&ldquo;h-3 bg-gray-200 rounded mb-4&rdquo; />
-                <div className=&ldquo;flex justify-between&rdquo;>
-                  <div className=&ldquo;h-3 bg-gray-200 rounded w-16&rdquo; />
-                  <div className=&ldquo;h-3 bg-gray-200 rounded w-12&rdquo; />
+            <Card key={i} className="animate-pulse">
+              <div className="h-48 bg-gray-200 rounded-t-lg" />
+              <CardContent className="p-4">
+                <div className="h-4 bg-gray-200 rounded mb-2" />
+                <div className="h-3 bg-gray-200 rounded mb-4" />
+                <div className="flex justify-between">
+                  <div className="h-3 bg-gray-200 rounded w-16" />
+                  <div className="h-3 bg-gray-200 rounded w-12" />
                 </div>
               </CardContent>
             </Card>
@@ -156,86 +156,86 @@ export default function CoursesPage() {
   }
 
   return (
-    <div className=&ldquo;container mx-auto p-6&rdquo;>
+    <div className="container mx-auto p-6">
       {/* Header */}
-      <div className=&ldquo;mb-8&rdquo;>
-        <h1 className=&ldquo;text-3xl font-bold mb-2&rdquo;>Catálogo de Cursos</h1>
-        <p className=&ldquo;text-muted-foreground&rdquo;>
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold mb-2">Catálogo de Cursos</h1>
+        <p className="text-muted-foreground">
           Desarrolla tus habilidades con nuestros cursos especializados
         </p>
       </div>
 
       {/* Search and Controls */}
-      <div className=&ldquo;mb-6 space-y-4&rdquo;>
+      <div className="mb-6 space-y-4">
         {/* Search Bar */}
-        <div className=&ldquo;relative&rdquo;>
-          <Search className=&ldquo;absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4&rdquo; />
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
           <Input
-            placeholder=&ldquo;Buscar cursos, instructores, habilidades...&rdquo;
+            placeholder="Buscar cursos, instructores, habilidades..."
             value={searchQuery}
             onChange={(e) => handleSearch(e.target.value)}
-            className=&ldquo;pl-10 pr-4&rdquo;
+            className="pl-10 pr-4"
           />
         </div>
 
         {/* Controls Row */}
-        <div className=&ldquo;flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4&rdquo;>
-          <div className=&ldquo;flex items-center gap-4&rdquo;>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div className="flex items-center gap-4">
             <Button
-              variant={showFilters ? &ldquo;default&rdquo; : &ldquo;outline&rdquo;}
+              variant={showFilters ? "default" : "outline"}
               onClick={() => setShowFilters(!showFilters)}
-              className=&ldquo;flex items-center gap-2&rdquo;
+              className="flex items-center gap-2"
             >
-              <Filter className=&ldquo;h-4 w-4&rdquo; />
+              <Filter className="h-4 w-4" />
               Filtros
               {getActiveFilterCount() > 0 && (
-                <Badge variant=&ldquo;secondary&rdquo; className=&ldquo;ml-1&rdquo;>
+                <Badge variant="secondary" className="ml-1">
                   {getActiveFilterCount()}
                 </Badge>
               )}
             </Button>
 
             {getActiveFilterCount() > 0 && (
-              <Button variant=&ldquo;ghost&rdquo; onClick={clearFilters} size=&ldquo;sm&rdquo;>
-                <X className=&ldquo;h-4 w-4 mr-1&rdquo; />
+              <Button variant="ghost" onClick={clearFilters} size="sm">
+                <X className="h-4 w-4 mr-1" />
                 Limpiar filtros
               </Button>
             )}
           </div>
 
-          <div className=&ldquo;flex items-center gap-4&rdquo;>
-            <div className=&ldquo;flex items-center gap-2&rdquo;>
-              <span className=&ldquo;text-sm text-muted-foreground&rdquo;>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">
                 Ordenar por:
               </span>
               <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className=&ldquo;w-40&rdquo;>
+                <SelectTrigger className="w-40">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value=&ldquo;popularity&rdquo;>Popularidad</SelectItem>
-                  <SelectItem value=&ldquo;rating&rdquo;>Calificación</SelectItem>
-                  <SelectItem value=&ldquo;date&rdquo;>Más recientes</SelectItem>
-                  <SelectItem value=&ldquo;title&rdquo;>Título A-Z</SelectItem>
-                  <SelectItem value=&ldquo;duration&rdquo;>Duración</SelectItem>
+                  <SelectItem value="popularity">Popularidad</SelectItem>
+                  <SelectItem value="rating">Calificación</SelectItem>
+                  <SelectItem value="date">Más recientes</SelectItem>
+                  <SelectItem value="title">Título A-Z</SelectItem>
+                  <SelectItem value="duration">Duración</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
-            <div className=&ldquo;flex border rounded-md&rdquo;>
+            <div className="flex border rounded-md">
               <Button
-                variant={viewMode === &ldquo;grid&rdquo; ? &ldquo;default&rdquo; : &ldquo;ghost&rdquo;}
-                size=&ldquo;sm&rdquo;
-                onClick={() => setViewMode(&ldquo;grid&rdquo;)}
+                variant={viewMode === "grid" ? "default" : "ghost"}
+                size="sm"
+                onClick={() => setViewMode("grid")}
               >
-                <Grid3X3 className=&ldquo;h-4 w-4&rdquo; />
+                <Grid3X3 className="h-4 w-4" />
               </Button>
               <Button
-                variant={viewMode === &ldquo;list&rdquo; ? &ldquo;default&rdquo; : &ldquo;ghost&rdquo;}
-                size=&ldquo;sm&rdquo;
-                onClick={() => setViewMode(&ldquo;list&rdquo;)}
+                variant={viewMode === "list" ? "default" : "ghost"}
+                size="sm"
+                onClick={() => setViewMode("list")}
               >
-                <List className=&ldquo;h-4 w-4&rdquo; />
+                <List className="h-4 w-4" />
               </Button>
             </div>
           </div>
@@ -243,16 +243,16 @@ export default function CoursesPage() {
 
         {/* Active Filters Display */}
         {getActiveFilterCount() > 0 && (
-          <div className=&ldquo;flex flex-wrap gap-2&rdquo;>
+          <div className="flex flex-wrap gap-2">
             {activeFilters.category?.map((category) => (
               <Badge
                 key={category}
-                variant=&ldquo;secondary&rdquo;
-                className=&ldquo;flex items-center gap-1&rdquo;
+                variant="secondary"
+                className="flex items-center gap-1"
               >
-                {category.replace(&ldquo;_&rdquo;, &ldquo; &rdquo;)}
+                {category.replace("_", " ")}
                 <X
-                  className=&ldquo;h-3 w-3 cursor-pointer&rdquo;
+                  className="h-3 w-3 cursor-pointer"
                   onClick={() => {
                     const newCategories = activeFilters.category?.filter(
                       (c) => c !== category
@@ -270,12 +270,12 @@ export default function CoursesPage() {
             {activeFilters.level?.map((level) => (
               <Badge
                 key={level}
-                variant=&ldquo;secondary&rdquo;
-                className=&ldquo;flex items-center gap-1&rdquo;
+                variant="secondary"
+                className="flex items-center gap-1"
               >
                 {level}
                 <X
-                  className=&ldquo;h-3 w-3 cursor-pointer&rdquo;
+                  className="h-3 w-3 cursor-pointer"
                   onClick={() => {
                     const newLevels = activeFilters.level?.filter(
                       (l) => l !== level
@@ -289,10 +289,10 @@ export default function CoursesPage() {
               </Badge>
             ))}
             {activeFilters.isFree && (
-              <Badge variant=&ldquo;secondary&rdquo; className=&ldquo;flex items-center gap-1&rdquo;>
+              <Badge variant="secondary" className="flex items-center gap-1">
                 Gratis
                 <X
-                  className=&ldquo;h-3 w-3 cursor-pointer&rdquo;
+                  className="h-3 w-3 cursor-pointer"
                   onClick={() =>
                     setActiveFilters({ ...activeFilters, isFree: undefined })
                   }
@@ -300,10 +300,10 @@ export default function CoursesPage() {
               </Badge>
             )}
             {activeFilters.isMandatory && (
-              <Badge variant=&ldquo;secondary&rdquo; className=&ldquo;flex items-center gap-1&rdquo;>
+              <Badge variant="secondary" className="flex items-center gap-1">
                 Obligatorio
                 <X
-                  className=&ldquo;h-3 w-3 cursor-pointer&rdquo;
+                  className="h-3 w-3 cursor-pointer"
                   onClick={() =>
                     setActiveFilters({
                       ...activeFilters,
@@ -317,10 +317,10 @@ export default function CoursesPage() {
         )}
       </div>
 
-      <div className=&ldquo;grid grid-cols-1 lg:grid-cols-4 gap-6&rdquo;>
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Filters Sidebar */}
         {showFilters && (
-          <div className=&ldquo;lg:col-span-1&rdquo;>
+          <div className="lg:col-span-1">
             <CourseFiltersComponent
               filters={activeFilters}
               onFiltersChange={handleFilterChange}
@@ -329,20 +329,20 @@ export default function CoursesPage() {
         )}
 
         {/* Course Grid */}
-        <div className={showFilters ? &ldquo;lg:col-span-3&rdquo; : &ldquo;lg:col-span-4&rdquo;}>
-          <div className=&ldquo;mb-4 flex justify-between items-center&rdquo;>
-            <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
+        <div className={showFilters ? "lg:col-span-3" : "lg:col-span-4"}>
+          <div className="mb-4 flex justify-between items-center">
+            <p className="text-sm text-muted-foreground">
               {totalCourses} cursos encontrados
             </p>
           </div>
 
           {courses.length === 0 ? (
-            <div className=&ldquo;text-center py-12&rdquo;>
-              <BookOpen className=&ldquo;h-12 w-12 text-muted-foreground mx-auto mb-4&rdquo; />
-              <h3 className=&ldquo;text-lg font-semibold mb-2&rdquo;>
+            <div className="text-center py-12">
+              <BookOpen className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+              <h3 className="text-lg font-semibold mb-2">
                 No se encontraron cursos
               </h3>
-              <p className=&ldquo;text-muted-foreground mb-4&rdquo;>
+              <p className="text-muted-foreground mb-4">
                 Intenta ajustar tus filtros o términos de búsqueda
               </p>
               <Button onClick={clearFilters}>Limpiar filtros</Button>
@@ -350,9 +350,9 @@ export default function CoursesPage() {
           ) : (
             <div
               className={
-                viewMode === &ldquo;grid&rdquo;
-                  ? &ldquo;grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6&rdquo;
-                  : &ldquo;space-y-4&rdquo;
+                viewMode === "grid"
+                  ? "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"
+                  : "space-y-4"
               }
             >
               {courses.map((course) => (
@@ -367,7 +367,7 @@ export default function CoursesPage() {
 
           {/* Load More / Pagination */}
           {courses.length > 0 && courses.length < totalCourses && (
-            <div className=&ldquo;text-center mt-8&rdquo;>
+            <div className="text-center mt-8">
               <Button onClick={() => setPage(page + 1)} disabled={loading}>
                 Cargar más cursos
               </Button>

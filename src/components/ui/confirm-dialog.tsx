@@ -1,4 +1,4 @@
-&ldquo;use client&rdquo;;
+"use client";
 
 import {
   AlertDialog,
@@ -9,7 +9,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from &ldquo;@/components/ui/alert-dialog&rdquo;;
+} from "@/components/ui/alert-dialog";
 
 interface ConfirmDialogProps {
   open: boolean;

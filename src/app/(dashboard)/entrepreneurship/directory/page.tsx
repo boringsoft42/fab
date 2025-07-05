@@ -1,19 +1,19 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import { useState, useEffect } from &ldquo;react&rdquo;;
-import Link from &ldquo;next/link&rdquo;;
-import { Button } from &ldquo;@/components/ui/button&rdquo;;
-import { Card, CardContent, CardHeader, CardTitle } from &ldquo;@/components/ui/card&rdquo;;
-import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
-import { Input } from &ldquo;@/components/ui/input&rdquo;;
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from &ldquo;@/components/ui/select&rdquo;;
-import { Tabs, TabsContent, TabsList, TabsTrigger } from &ldquo;@/components/ui/tabs&rdquo;;
+} from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Building2,
   Banknote,
@@ -32,20 +32,20 @@ import {
   Target,
   CheckCircle,
   Award,
-} from &ldquo;lucide-react&rdquo;;
-import Image from &ldquo;next/image&rdquo;;
+} from "lucide-react";
+import Image from "next/image";
 
 export interface Institution {
   id: string;
   name: string;
   description: string;
   type:
-    | &ldquo;incubator&rdquo;
-    | &ldquo;accelerator&rdquo;
-    | &ldquo;financial&rdquo;
-    | &ldquo;government&rdquo;
-    | &ldquo;ngo&rdquo;
-    | &ldquo;mentor&rdquo;;
+    | "incubator"
+    | "accelerator"
+    | "financial"
+    | "government"
+    | "ngo"
+    | "mentor";
   category: string;
   logo?: string;
   website?: string;
@@ -62,7 +62,7 @@ export interface Institution {
   eligibilityRequirements: string[];
   applicationProcess?: string;
   funding?: {
-    type: &ldquo;grants&rdquo; | &ldquo;loans&rdquo; | &ldquo;equity&rdquo; | &ldquo;mentorship&rdquo;;
+    type: "grants" | "loans" | "equity" | "mentorship";
     amount?: string;
     duration?: string;
     requirements?: string[];
@@ -93,11 +93,11 @@ export default function InstitutionDirectoryPage() {
     Institution[]
   >([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState(&ldquo;&rdquo;);
-  const [selectedType, setSelectedType] = useState<string>(&ldquo;all&rdquo;);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedType, setSelectedType] = useState<string>("all");
   const [selectedMunicipality, setSelectedMunicipality] =
-    useState<string>(&ldquo;all&rdquo;);
-  const [selectedCategory, setSelectedCategory] = useState<string>(&ldquo;all&rdquo;);
+    useState<string>("all");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
   useEffect(() => {
     fetchInstitutions();
@@ -120,204 +120,204 @@ export default function InstitutionDirectoryPage() {
       // Mock data for demonstration - replace with actual API call
       const mockInstitutions: Institution[] = [
         {
-          id: &ldquo;incubator-1&rdquo;,
-          name: &ldquo;CEMSE Innovation Hub&rdquo;,
+          id: "incubator-1",
+          name: "CEMSE Innovation Hub",
           description:
-            &ldquo;Incubadora especializada en tecnología y emprendimientos juveniles con enfoque en innovación social&rdquo;,
-          type: &ldquo;incubator&rdquo;,
-          category: &ldquo;Tecnología&rdquo;,
-          logo: &ldquo;/api/placeholder/100/100&rdquo;,
-          website: &ldquo;https://cemse.edu.bo&rdquo;,
-          email: &ldquo;incubadora@cemse.edu.bo&rdquo;,
-          phone: &ldquo;+591 4 123-4567&rdquo;,
-          address: &ldquo;Av. América E-0505&rdquo;,
-          municipality: &ldquo;Cochabamba&rdquo;,
-          department: &ldquo;Cochabamba&rdquo;,
+            "Incubadora especializada en tecnología y emprendimientos juveniles con enfoque en innovación social",
+          type: "incubator",
+          category: "Tecnología",
+          logo: "/api/placeholder/100/100",
+          website: "https://cemse.edu.bo",
+          email: "incubadora@cemse.edu.bo",
+          phone: "+591 4 123-4567",
+          address: "Av. América E-0505",
+          municipality: "Cochabamba",
+          department: "Cochabamba",
           servicesOffered: [
-            &ldquo;Incubación de startups&rdquo;,
-            &ldquo;Mentoría especializada&rdquo;,
-            &ldquo;Acceso a financiamiento&rdquo;,
-            &ldquo;Capacitación técnica&rdquo;,
-            &ldquo;Networking&rdquo;,
+            "Incubación de startups",
+            "Mentoría especializada",
+            "Acceso a financiamiento",
+            "Capacitación técnica",
+            "Networking",
           ],
           focusAreas: [
-            &ldquo;Tecnología&rdquo;,
-            &ldquo;Innovación Social&rdquo;,
-            &ldquo;Emprendimientos Juveniles&rdquo;,
+            "Tecnología",
+            "Innovación Social",
+            "Emprendimientos Juveniles",
           ],
           targetAudience: [
-            &ldquo;Jóvenes de 18-29 años&rdquo;,
-            &ldquo;Estudiantes universitarios&rdquo;,
-            &ldquo;Emprendedores primerizos&rdquo;,
+            "Jóvenes de 18-29 años",
+            "Estudiantes universitarios",
+            "Emprendedores primerizos",
           ],
           eligibilityRequirements: [
-            &ldquo;Edad entre 18-35 años&rdquo;,
-            &ldquo;Idea de negocio validada&rdquo;,
-            &ldquo;Compromiso de dedicación&rdquo;,
-            &ldquo;Residencia en Cochabamba&rdquo;,
+            "Edad entre 18-35 años",
+            "Idea de negocio validada",
+            "Compromiso de dedicación",
+            "Residencia en Cochabamba",
           ],
           applicationProcess:
-            &ldquo;Aplicación online, pitch presentation, entrevista&rdquo;,
-          contactPerson: &ldquo;Ing. Ana Rodriguez&rdquo;,
+            "Aplicación online, pitch presentation, entrevista",
+          contactPerson: "Ing. Ana Rodriguez",
           socialMedia: {
-            facebook: &ldquo;https://facebook.com/cemsehub&rdquo;,
-            linkedin: &ldquo;https://linkedin.com/company/cemse-hub&rdquo;,
+            facebook: "https://facebook.com/cemsehub",
+            linkedin: "https://linkedin.com/company/cemse-hub",
           },
           isActive: true,
           isVerified: true,
           lastUpdated: new Date(),
-          createdAt: new Date(&ldquo;2023-01-15&rdquo;),
-          coverImage: &ldquo;/images/institutions/cemse-cover.jpg&rdquo;,
+          createdAt: new Date("2023-01-15"),
+          coverImage: "/images/institutions/cemse-cover.jpg",
         },
         {
-          id: &ldquo;financial-1&rdquo;,
-          name: &ldquo;Banco de Desarrollo Productivo (BDP)&rdquo;,
+          id: "financial-1",
+          name: "Banco de Desarrollo Productivo (BDP)",
           description:
-            &ldquo;Institución financiera estatal que otorga créditos para emprendimientos productivos y empresas&rdquo;,
-          type: &ldquo;financial&rdquo;,
-          category: &ldquo;Banca de Desarrollo&rdquo;,
-          website: &ldquo;https://bdp.com.bo&rdquo;,
-          email: &ldquo;emprendedores@bdp.com.bo&rdquo;,
-          phone: &ldquo;+591 4 567-8901&rdquo;,
-          address: &ldquo;Plaza 14 de Septiembre&rdquo;,
-          municipality: &ldquo;Cochabamba&rdquo;,
-          department: &ldquo;Cochabamba&rdquo;,
+            "Institución financiera estatal que otorga créditos para emprendimientos productivos y empresas",
+          type: "financial",
+          category: "Banca de Desarrollo",
+          website: "https://bdp.com.bo",
+          email: "emprendedores@bdp.com.bo",
+          phone: "+591 4 567-8901",
+          address: "Plaza 14 de Septiembre",
+          municipality: "Cochabamba",
+          department: "Cochabamba",
           servicesOffered: [
-            &ldquo;Créditos para emprendimientos&rdquo;,
-            &ldquo;Microcréditos&rdquo;,
-            &ldquo;Capital de trabajo&rdquo;,
-            &ldquo;Asesoría financiera&rdquo;,
-            &ldquo;Capacitación empresarial&rdquo;,
+            "Créditos para emprendimientos",
+            "Microcréditos",
+            "Capital de trabajo",
+            "Asesoría financiera",
+            "Capacitación empresarial",
           ],
-          focusAreas: [&ldquo;Sector Productivo&rdquo;, &ldquo;PYMES&rdquo;, &ldquo;Microemprendimientos&rdquo;],
+          focusAreas: ["Sector Productivo", "PYMES", "Microemprendimientos"],
           targetAudience: [
-            &ldquo;Emprendedores&rdquo;,
-            &ldquo;Pequeños empresarios&rdquo;,
-            &ldquo;Cooperativas&rdquo;,
+            "Emprendedores",
+            "Pequeños empresarios",
+            "Cooperativas",
           ],
           eligibilityRequirements: [
-            &ldquo;Plan de negocios&rdquo;,
-            &ldquo;Garantías requeridas&rdquo;,
-            &ldquo;Capacidad de pago&rdquo;,
-            &ldquo;Registro empresarial&rdquo;,
+            "Plan de negocios",
+            "Garantías requeridas",
+            "Capacidad de pago",
+            "Registro empresarial",
           ],
           funding: {
-            type: &ldquo;loans&rdquo;,
-            amount: &ldquo;Bs. 10.000 - 2.000.000&rdquo;,
-            duration: &ldquo;1-5 años&rdquo;,
+            type: "loans",
+            amount: "Bs. 10.000 - 2.000.000",
+            duration: "1-5 años",
             requirements: [
-              &ldquo;Plan de negocios&rdquo;,
-              &ldquo;Garantías&rdquo;,
-              &ldquo;Estados financieros&rdquo;,
+              "Plan de negocios",
+              "Garantías",
+              "Estados financieros",
             ],
           },
-          contactPerson: &ldquo;Lic. Carlos Mendoza&rdquo;,
+          contactPerson: "Lic. Carlos Mendoza",
           rating: 4.2,
           reviewsCount: 78,
           isActive: true,
           isVerified: true,
           lastUpdated: new Date(),
-          createdAt: new Date(&ldquo;2020-03-10&rdquo;),
-          coverImage: &ldquo;/images/institutions/bdp-cover.jpg&rdquo;,
+          createdAt: new Date("2020-03-10"),
+          coverImage: "/images/institutions/bdp-cover.jpg",
         },
         {
-          id: &ldquo;government-1&rdquo;,
-          name: &ldquo;Programa Municipal Jóvenes Emprendedores&rdquo;,
+          id: "government-1",
+          name: "Programa Municipal Jóvenes Emprendedores",
           description:
-            &ldquo;Programa gubernamental municipal para fomentar el emprendimiento juvenil en Cochabamba&rdquo;,
-          type: &ldquo;government&rdquo;,
-          category: &ldquo;Programa Municipal&rdquo;,
-          website: &ldquo;https://cochabamba.gob.bo/emprendedores&rdquo;,
-          email: &ldquo;juventud@cochabamba.gob.bo&rdquo;,
-          phone: &ldquo;+591 4 234-5678&rdquo;,
-          address: &ldquo;Palacio Municipal, Plaza 14 de Septiembre&rdquo;,
-          municipality: &ldquo;Cochabamba&rdquo;,
-          department: &ldquo;Cochabamba&rdquo;,
+            "Programa gubernamental municipal para fomentar el emprendimiento juvenil en Cochabamba",
+          type: "government",
+          category: "Programa Municipal",
+          website: "https://cochabamba.gob.bo/emprendedores",
+          email: "juventud@cochabamba.gob.bo",
+          phone: "+591 4 234-5678",
+          address: "Palacio Municipal, Plaza 14 de Septiembre",
+          municipality: "Cochabamba",
+          department: "Cochabamba",
           servicesOffered: [
-            &ldquo;Subsidios para emprendimientos&rdquo;,
-            &ldquo;Capacitación gratuita&rdquo;,
-            &ldquo;Asesoría legal&rdquo;,
-            &ldquo;Espacios de coworking&rdquo;,
-            &ldquo;Ferias empresariales&rdquo;,
+            "Subsidios para emprendimientos",
+            "Capacitación gratuita",
+            "Asesoría legal",
+            "Espacios de coworking",
+            "Ferias empresariales",
           ],
           focusAreas: [
-            &ldquo;Emprendimiento Juvenil&rdquo;,
-            &ldquo;Desarrollo Local&rdquo;,
-            &ldquo;Innovación&rdquo;,
+            "Emprendimiento Juvenil",
+            "Desarrollo Local",
+            "Innovación",
           ],
-          targetAudience: [&ldquo;Jóvenes 18-30 años&rdquo;, &ldquo;Residentes de Cochabamba&rdquo;],
+          targetAudience: ["Jóvenes 18-30 años", "Residentes de Cochabamba"],
           eligibilityRequirements: [
-            &ldquo;Edad 18-30 años&rdquo;,
-            &ldquo;Residencia en Cochabamba&rdquo;,
-            &ldquo;Idea de negocio innovadora&rdquo;,
-            &ldquo;Carnet de identidad vigente&rdquo;,
+            "Edad 18-30 años",
+            "Residencia en Cochabamba",
+            "Idea de negocio innovadora",
+            "Carnet de identidad vigente",
           ],
           funding: {
-            type: &ldquo;grants&rdquo;,
-            amount: &ldquo;Bs. 5.000 - 50.000&rdquo;,
-            duration: &ldquo;6-12 meses&rdquo;,
-            requirements: [&ldquo;Postulación online&rdquo;, &ldquo;Plan básico&rdquo;, &ldquo;Entrevista&rdquo;],
+            type: "grants",
+            amount: "Bs. 5.000 - 50.000",
+            duration: "6-12 meses",
+            requirements: ["Postulación online", "Plan básico", "Entrevista"],
           },
-          contactPerson: &ldquo;Lic. María Vargas&rdquo;,
+          contactPerson: "Lic. María Vargas",
           rating: 4.5,
           reviewsCount: 156,
           successStories: 67,
           isActive: true,
           isVerified: true,
           lastUpdated: new Date(),
-          createdAt: new Date(&ldquo;2021-05-20&rdquo;),
-          coverImage: &ldquo;/images/institutions/programa-municipal-cover.jpg&rdquo;,
+          createdAt: new Date("2021-05-20"),
+          coverImage: "/images/institutions/programa-municipal-cover.jpg",
         },
         {
-          id: &ldquo;ngo-1&rdquo;,
-          name: &ldquo;Fundación Pro-Joven Bolivia&rdquo;,
+          id: "ngo-1",
+          name: "Fundación Pro-Joven Bolivia",
           description:
-            &ldquo;ONG dedicada al desarrollo de capacidades emprendedoras en jóvenes vulnerables&rdquo;,
-          type: &ldquo;ngo&rdquo;,
-          category: &ldquo;Desarrollo Social&rdquo;,
-          website: &ldquo;https://projoven.org.bo&rdquo;,
-          email: &ldquo;info@projoven.org.bo&rdquo;,
-          phone: &ldquo;+591 4 345-6789&rdquo;,
-          address: &ldquo;Av. Heroínas N-234&rdquo;,
-          municipality: &ldquo;Cochabamba&rdquo;,
-          department: &ldquo;Cochabamba&rdquo;,
+            "ONG dedicada al desarrollo de capacidades emprendedoras en jóvenes vulnerables",
+          type: "ngo",
+          category: "Desarrollo Social",
+          website: "https://projoven.org.bo",
+          email: "info@projoven.org.bo",
+          phone: "+591 4 345-6789",
+          address: "Av. Heroínas N-234",
+          municipality: "Cochabamba",
+          department: "Cochabamba",
           servicesOffered: [
-            &ldquo;Formación emprendedora&rdquo;,
-            &ldquo;Microcréditos solidarios&rdquo;,
-            &ldquo;Mentoría social&rdquo;,
-            &ldquo;Redes de apoyo&rdquo;,
-            &ldquo;Seguimiento post-incubación&rdquo;,
+            "Formación emprendedora",
+            "Microcréditos solidarios",
+            "Mentoría social",
+            "Redes de apoyo",
+            "Seguimiento post-incubación",
           ],
           focusAreas: [
-            &ldquo;Inclusión Social&rdquo;,
-            &ldquo;Emprendimiento Social&rdquo;,
-            &ldquo;Desarrollo Comunitario&rdquo;,
+            "Inclusión Social",
+            "Emprendimiento Social",
+            "Desarrollo Comunitario",
           ],
           targetAudience: [
-            &ldquo;Jóvenes en situación vulnerable&rdquo;,
-            &ldquo;Mujeres emprendedoras&rdquo;,
-            &ldquo;Comunidades rurales&rdquo;,
+            "Jóvenes en situación vulnerable",
+            "Mujeres emprendedoras",
+            "Comunidades rurales",
           ],
           eligibilityRequirements: [
-            &ldquo;Situación socioeconómica vulnerable&rdquo;,
-            &ldquo;Motivación emprendedora&rdquo;,
-            &ldquo;Participación en talleres&rdquo;,
-            &ldquo;Compromiso social&rdquo;,
+            "Situación socioeconómica vulnerable",
+            "Motivación emprendedora",
+            "Participación en talleres",
+            "Compromiso social",
           ],
           funding: {
-            type: &ldquo;grants&rdquo;,
-            amount: &ldquo;Bs. 2.000 - 15.000&rdquo;,
-            duration: &ldquo;3-9 meses&rdquo;,
+            type: "grants",
+            amount: "Bs. 2.000 - 15.000",
+            duration: "3-9 meses",
             requirements: [
-              &ldquo;Evaluación socioeconómica&rdquo;,
-              &ldquo;Plan social&rdquo;,
-              &ldquo;Compromiso comunitario&rdquo;,
+              "Evaluación socioeconómica",
+              "Plan social",
+              "Compromiso comunitario",
             ],
           },
-          contactPerson: &ldquo;Lic. Patricia Choque&rdquo;,
+          contactPerson: "Lic. Patricia Choque",
           socialMedia: {
-            facebook: &ldquo;https://facebook.com/projoven&rdquo;,
-            instagram: &ldquo;https://instagram.com/projoven&rdquo;,
+            facebook: "https://facebook.com/projoven",
+            instagram: "https://instagram.com/projoven",
           },
           rating: 4.7,
           reviewsCount: 234,
@@ -325,60 +325,60 @@ export default function InstitutionDirectoryPage() {
           isActive: true,
           isVerified: true,
           lastUpdated: new Date(),
-          createdAt: new Date(&ldquo;2018-08-12&rdquo;),
+          createdAt: new Date("2018-08-12"),
           coverImage:
-            &ldquo;/images/institutions/fundacion-pro-joven-bolivia-cover.jpg&rdquo;,
+            "/images/institutions/fundacion-pro-joven-bolivia-cover.jpg",
         },
         {
-          id: &ldquo;accelerator-1&rdquo;,
-          name: &ldquo;Startup Cochabamba Accelerator&rdquo;,
+          id: "accelerator-1",
+          name: "Startup Cochabamba Accelerator",
           description:
-            &ldquo;Aceleradora privada enfocada en startups tech con potencial de escalamiento internacional&rdquo;,
-          type: &ldquo;accelerator&rdquo;,
-          category: &ldquo;Tecnología&rdquo;,
-          website: &ldquo;https://startupcochabamba.com&rdquo;,
-          email: &ldquo;apply@startupcochabamba.com&rdquo;,
-          phone: &ldquo;+591 4 456-7890&rdquo;,
-          address: &ldquo;Zona Norte, Edificio TechHub&rdquo;,
-          municipality: &ldquo;Cochabamba&rdquo;,
-          department: &ldquo;Cochabamba&rdquo;,
+            "Aceleradora privada enfocada en startups tech con potencial de escalamiento internacional",
+          type: "accelerator",
+          category: "Tecnología",
+          website: "https://startupcochabamba.com",
+          email: "apply@startupcochabamba.com",
+          phone: "+591 4 456-7890",
+          address: "Zona Norte, Edificio TechHub",
+          municipality: "Cochabamba",
+          department: "Cochabamba",
           servicesOffered: [
-            &ldquo;Programa de aceleración&rdquo;,
-            &ldquo;Inversión semilla&rdquo;,
-            &ldquo;Mentoría internacional&rdquo;,
-            &ldquo;Demo Day&rdquo;,
-            &ldquo;Acceso a inversionistas&rdquo;,
+            "Programa de aceleración",
+            "Inversión semilla",
+            "Mentoría internacional",
+            "Demo Day",
+            "Acceso a inversionistas",
           ],
           focusAreas: [
-            &ldquo;Tecnología&rdquo;,
-            &ldquo;Escalamiento&rdquo;,
-            &ldquo;Mercados Internacionales&rdquo;,
+            "Tecnología",
+            "Escalamiento",
+            "Mercados Internacionales",
           ],
           targetAudience: [
-            &ldquo;Startups tech&rdquo;,
-            &ldquo;Equipos fundadores&rdquo;,
-            &ldquo;Empresas en crecimiento&rdquo;,
+            "Startups tech",
+            "Equipos fundadores",
+            "Empresas en crecimiento",
           ],
           eligibilityRequirements: [
-            &ldquo;Startup con tracción&rdquo;,
-            &ldquo;Equipo comprometido&rdquo;,
-            &ldquo;Producto mínimo viable&rdquo;,
-            &ldquo;Potencial de escalamiento&rdquo;,
+            "Startup con tracción",
+            "Equipo comprometido",
+            "Producto mínimo viable",
+            "Potencial de escalamiento",
           ],
           funding: {
-            type: &ldquo;equity&rdquo;,
-            amount: &ldquo;$10.000 - $50.000 USD&rdquo;,
-            duration: &ldquo;3-6 meses&rdquo;,
+            type: "equity",
+            amount: "$10.000 - $50.000 USD",
+            duration: "3-6 meses",
             requirements: [
-              &ldquo;Aplicación detallada&rdquo;,
-              &ldquo;Pitch deck&rdquo;,
-              &ldquo;Demo funcional&rdquo;,
+              "Aplicación detallada",
+              "Pitch deck",
+              "Demo funcional",
             ],
           },
-          contactPerson: &ldquo;Ing. Roberto Silva&rdquo;,
+          contactPerson: "Ing. Roberto Silva",
           socialMedia: {
-            linkedin: &ldquo;https://linkedin.com/company/startup-cbba&rdquo;,
-            twitter: &ldquo;https://twitter.com/startupcbba&rdquo;,
+            linkedin: "https://linkedin.com/company/startup-cbba",
+            twitter: "https://twitter.com/startupcbba",
           },
           rating: 4.6,
           reviewsCount: 89,
@@ -386,51 +386,51 @@ export default function InstitutionDirectoryPage() {
           isActive: true,
           isVerified: true,
           lastUpdated: new Date(),
-          createdAt: new Date(&ldquo;2022-02-28&rdquo;),
+          createdAt: new Date("2022-02-28"),
           coverImage:
-            &ldquo;/images/institutions/startup-cochabamba-accelerator-cover.jpg&rdquo;,
+            "/images/institutions/startup-cochabamba-accelerator-cover.jpg",
         },
         {
-          id: &ldquo;mentor-1&rdquo;,
-          name: &ldquo;Red de Mentores Empresariales Cochabamba&rdquo;,
+          id: "mentor-1",
+          name: "Red de Mentores Empresariales Cochabamba",
           description:
-            &ldquo;Red de empresarios exitosos que brindan mentoría personalizada a emprendedores&rdquo;,
-          type: &ldquo;mentor&rdquo;,
-          category: &ldquo;Mentoría&rdquo;,
-          website: &ldquo;https://mentores-cbba.com&rdquo;,
-          email: &ldquo;mentoria@mentores-cbba.com&rdquo;,
-          phone: &ldquo;+591 4 567-8912&rdquo;,
-          address: &ldquo;Cámara de Comercio, Av. Ballivián&rdquo;,
-          municipality: &ldquo;Cochabamba&rdquo;,
-          department: &ldquo;Cochabamba&rdquo;,
+            "Red de empresarios exitosos que brindan mentoría personalizada a emprendedores",
+          type: "mentor",
+          category: "Mentoría",
+          website: "https://mentores-cbba.com",
+          email: "mentoria@mentores-cbba.com",
+          phone: "+591 4 567-8912",
+          address: "Cámara de Comercio, Av. Ballivián",
+          municipality: "Cochabamba",
+          department: "Cochabamba",
           servicesOffered: [
-            &ldquo;Mentoría one-on-one&rdquo;,
-            &ldquo;Sesiones grupales&rdquo;,
-            &ldquo;Networking events&rdquo;,
-            &ldquo;Masterclasses&rdquo;,
-            &ldquo;Seguimiento personalizado&rdquo;,
+            "Mentoría one-on-one",
+            "Sesiones grupales",
+            "Networking events",
+            "Masterclasses",
+            "Seguimiento personalizado",
           ],
           focusAreas: [
-            &ldquo;Gestión Empresarial&rdquo;,
-            &ldquo;Ventas&rdquo;,
-            &ldquo;Marketing&rdquo;,
-            &ldquo;Finanzas&rdquo;,
+            "Gestión Empresarial",
+            "Ventas",
+            "Marketing",
+            "Finanzas",
           ],
           targetAudience: [
-            &ldquo;Emprendedores establecidos&rdquo;,
-            &ldquo;PYMES&rdquo;,
-            &ldquo;Startups en crecimiento&rdquo;,
+            "Emprendedores establecidos",
+            "PYMES",
+            "Startups en crecimiento",
           ],
           eligibilityRequirements: [
-            &ldquo;Empresa en funcionamiento&rdquo;,
-            &ldquo;Compromiso con el proceso&rdquo;,
-            &ldquo;Apertura al feedback&rdquo;,
-            &ldquo;Metas claras&rdquo;,
+            "Empresa en funcionamiento",
+            "Compromiso con el proceso",
+            "Apertura al feedback",
+            "Metas claras",
           ],
-          contactPerson: &ldquo;Lic. Fernando Rocha&rdquo;,
+          contactPerson: "Lic. Fernando Rocha",
           socialMedia: {
-            linkedin: &ldquo;https://linkedin.com/company/mentores-cbba&rdquo;,
-            facebook: &ldquo;https://facebook.com/mentores.cbba&rdquo;,
+            linkedin: "https://linkedin.com/company/mentores-cbba",
+            facebook: "https://facebook.com/mentores.cbba",
           },
           rating: 4.9,
           reviewsCount: 123,
@@ -438,15 +438,15 @@ export default function InstitutionDirectoryPage() {
           isActive: true,
           isVerified: true,
           lastUpdated: new Date(),
-          createdAt: new Date(&ldquo;2019-11-05&rdquo;),
+          createdAt: new Date("2019-11-05"),
           coverImage:
-            &ldquo;/images/institutions/red-de-mentores-empresariales-cochabamba-cover.jpg&rdquo;,
+            "/images/institutions/red-de-mentores-empresariales-cochabamba-cover.jpg",
         },
       ];
 
       setInstitutions(mockInstitutions);
     } catch (error) {
-      console.error(&ldquo;Error fetching institutions:&rdquo;, error);
+      console.error("Error fetching institutions:", error);
     } finally {
       setLoading(false);
     }
@@ -473,21 +473,21 @@ export default function InstitutionDirectoryPage() {
     }
 
     // Type filter
-    if (selectedType !== &ldquo;all&rdquo;) {
+    if (selectedType !== "all") {
       filtered = filtered.filter(
         (institution) => institution.type === selectedType
       );
     }
 
     // Municipality filter
-    if (selectedMunicipality !== &ldquo;all&rdquo;) {
+    if (selectedMunicipality !== "all") {
       filtered = filtered.filter(
         (institution) => institution.municipality === selectedMunicipality
       );
     }
 
     // Category filter
-    if (selectedCategory !== &ldquo;all&rdquo;) {
+    if (selectedCategory !== "all") {
       filtered = filtered.filter(
         (institution) => institution.category === selectedCategory
       );
@@ -498,56 +498,56 @@ export default function InstitutionDirectoryPage() {
 
   const getTypeIcon = (type: string) => {
     switch (type) {
-      case &ldquo;incubator&rdquo;:
-        return <Building2 className=&ldquo;h-5 w-5&rdquo; />;
-      case &ldquo;accelerator&rdquo;:
-        return <Target className=&ldquo;h-5 w-5&rdquo; />;
-      case &ldquo;financial&rdquo;:
-        return <Banknote className=&ldquo;h-5 w-5&rdquo; />;
-      case &ldquo;government&rdquo;:
-        return <Award className=&ldquo;h-5 w-5&rdquo; />;
-      case &ldquo;ngo&rdquo;:
-        return <Heart className=&ldquo;h-5 w-5&rdquo; />;
-      case &ldquo;mentor&rdquo;:
-        return <User className=&ldquo;h-5 w-5&rdquo; />;
+      case "incubator":
+        return <Building2 className="h-5 w-5" />;
+      case "accelerator":
+        return <Target className="h-5 w-5" />;
+      case "financial":
+        return <Banknote className="h-5 w-5" />;
+      case "government":
+        return <Award className="h-5 w-5" />;
+      case "ngo":
+        return <Heart className="h-5 w-5" />;
+      case "mentor":
+        return <User className="h-5 w-5" />;
       default:
-        return <Building2 className=&ldquo;h-5 w-5&rdquo; />;
+        return <Building2 className="h-5 w-5" />;
     }
   };
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case &ldquo;incubator&rdquo;:
-        return &ldquo;bg-blue-100 text-blue-800&rdquo;;
-      case &ldquo;accelerator&rdquo;:
-        return &ldquo;bg-green-100 text-green-800&rdquo;;
-      case &ldquo;financial&rdquo;:
-        return &ldquo;bg-yellow-100 text-yellow-800&rdquo;;
-      case &ldquo;government&rdquo;:
-        return &ldquo;bg-purple-100 text-purple-800&rdquo;;
-      case &ldquo;ngo&rdquo;:
-        return &ldquo;bg-pink-100 text-pink-800&rdquo;;
-      case &ldquo;mentor&rdquo;:
-        return &ldquo;bg-orange-100 text-orange-800&rdquo;;
+      case "incubator":
+        return "bg-blue-100 text-blue-800";
+      case "accelerator":
+        return "bg-green-100 text-green-800";
+      case "financial":
+        return "bg-yellow-100 text-yellow-800";
+      case "government":
+        return "bg-purple-100 text-purple-800";
+      case "ngo":
+        return "bg-pink-100 text-pink-800";
+      case "mentor":
+        return "bg-orange-100 text-orange-800";
       default:
-        return &ldquo;bg-gray-100 text-gray-800&rdquo;;
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const getTypeLabel = (type: string) => {
     switch (type) {
-      case &ldquo;incubator&rdquo;:
-        return &ldquo;Incubadora&rdquo;;
-      case &ldquo;accelerator&rdquo;:
-        return &ldquo;Aceleradora&rdquo;;
-      case &ldquo;financial&rdquo;:
-        return &ldquo;Institución Financiera&rdquo;;
-      case &ldquo;government&rdquo;:
-        return &ldquo;Programa Gubernamental&rdquo;;
-      case &ldquo;ngo&rdquo;:
-        return &ldquo;ONG/Fundación&rdquo;;
-      case &ldquo;mentor&rdquo;:
-        return &ldquo;Red de Mentores&rdquo;;
+      case "incubator":
+        return "Incubadora";
+      case "accelerator":
+        return "Aceleradora";
+      case "financial":
+        return "Institución Financiera";
+      case "government":
+        return "Programa Gubernamental";
+      case "ngo":
+        return "ONG/Fundación";
+      case "mentor":
+        return "Red de Mentores";
       default:
         return type;
     }
@@ -561,17 +561,17 @@ export default function InstitutionDirectoryPage() {
 
   if (loading) {
     return (
-      <div className=&ldquo;container mx-auto p-6&rdquo;>
-        <div className=&ldquo;animate-pulse space-y-6&rdquo;>
-          <div className=&ldquo;h-32 bg-gray-200 rounded-lg&rdquo; />
-          <div className=&ldquo;grid grid-cols-1 md:grid-cols-4 gap-4&rdquo;>
+      <div className="container mx-auto p-6">
+        <div className="animate-pulse space-y-6">
+          <div className="h-32 bg-gray-200 rounded-lg" />
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {[...Array(8)].map((_, i) => (
-              <div key={i} className=&ldquo;h-4 bg-gray-200 rounded&rdquo; />
+              <div key={i} className="h-4 bg-gray-200 rounded" />
             ))}
           </div>
-          <div className=&ldquo;space-y-4&rdquo;>
+          <div className="space-y-4">
             {[...Array(6)].map((_, i) => (
-              <div key={i} className=&ldquo;h-48 bg-gray-200 rounded&rdquo; />
+              <div key={i} className="h-48 bg-gray-200 rounded" />
             ))}
           </div>
         </div>
@@ -580,42 +580,42 @@ export default function InstitutionDirectoryPage() {
   }
 
   return (
-    <div className=&ldquo;container mx-auto p-6 space-y-8&rdquo;>
+    <div className="container mx-auto p-6 space-y-8">
       {/* Header */}
-      <div className=&ldquo;bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white&rdquo;>
-        <div className=&ldquo;max-w-4xl&rdquo;>
-          <h1 className=&ldquo;text-4xl font-bold mb-4&rdquo;>
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white">
+        <div className="max-w-4xl">
+          <h1 className="text-4xl font-bold mb-4">
             Directorio de Instituciones de Apoyo
           </h1>
-          <p className=&ldquo;text-xl opacity-90 mb-6&rdquo;>
+          <p className="text-xl opacity-90 mb-6">
             Encuentra incubadoras, aceleradoras, instituciones financieras,
             programas gubernamentales y organizaciones que apoyan el
             emprendimiento en Cochabamba
           </p>
-          <div className=&ldquo;grid grid-cols-2 md:grid-cols-4 gap-4 text-center&rdquo;>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
             <div>
-              <div className=&ldquo;text-2xl font-bold&rdquo;>
-                {institutions.filter((i) => i.type === &ldquo;incubator&rdquo;).length}
+              <div className="text-2xl font-bold">
+                {institutions.filter((i) => i.type === "incubator").length}
               </div>
-              <div className=&ldquo;text-sm opacity-80&rdquo;>Incubadoras</div>
+              <div className="text-sm opacity-80">Incubadoras</div>
             </div>
             <div>
-              <div className=&ldquo;text-2xl font-bold&rdquo;>
-                {institutions.filter((i) => i.type === &ldquo;financial&rdquo;).length}
+              <div className="text-2xl font-bold">
+                {institutions.filter((i) => i.type === "financial").length}
               </div>
-              <div className=&ldquo;text-sm opacity-80&rdquo;>Inst. Financieras</div>
+              <div className="text-sm opacity-80">Inst. Financieras</div>
             </div>
             <div>
-              <div className=&ldquo;text-2xl font-bold&rdquo;>
-                {institutions.filter((i) => i.type === &ldquo;government&rdquo;).length}
+              <div className="text-2xl font-bold">
+                {institutions.filter((i) => i.type === "government").length}
               </div>
-              <div className=&ldquo;text-sm opacity-80&rdquo;>Prog. Gubernamentales</div>
+              <div className="text-sm opacity-80">Prog. Gubernamentales</div>
             </div>
             <div>
-              <div className=&ldquo;text-2xl font-bold&rdquo;>
-                {institutions.filter((i) => i.type === &ldquo;ngo&rdquo;).length}
+              <div className="text-2xl font-bold">
+                {institutions.filter((i) => i.type === "ngo").length}
               </div>
-              <div className=&ldquo;text-sm opacity-80&rdquo;>ONGs y Fundaciones</div>
+              <div className="text-sm opacity-80">ONGs y Fundaciones</div>
             </div>
           </div>
         </div>
@@ -624,37 +624,37 @@ export default function InstitutionDirectoryPage() {
       {/* Filters */}
       <Card>
         <CardHeader>
-          <CardTitle className=&ldquo;flex items-center gap-2&rdquo;>
-            <Filter className=&ldquo;h-5 w-5&rdquo; />
+          <CardTitle className="flex items-center gap-2">
+            <Filter className="h-5 w-5" />
             Filtros de Búsqueda
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className=&ldquo;grid grid-cols-1 md:grid-cols-4 gap-4&rdquo;>
-            <div className=&ldquo;relative&rdquo;>
-              <Search className=&ldquo;absolute left-3 top-3 h-4 w-4 text-muted-foreground&rdquo; />
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder=&ldquo;Buscar instituciones...&rdquo;
+                placeholder="Buscar instituciones..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className=&ldquo;pl-10&rdquo;
+                className="pl-10"
               />
             </div>
 
             <Select value={selectedType} onValueChange={setSelectedType}>
               <SelectTrigger>
-                <SelectValue placeholder=&ldquo;Tipo de institución&rdquo; />
+                <SelectValue placeholder="Tipo de institución" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value=&ldquo;all&rdquo;>Todos los tipos</SelectItem>
-                <SelectItem value=&ldquo;incubator&rdquo;>Incubadoras</SelectItem>
-                <SelectItem value=&ldquo;accelerator&rdquo;>Aceleradoras</SelectItem>
-                <SelectItem value=&ldquo;financial&rdquo;>Inst. Financieras</SelectItem>
-                <SelectItem value=&ldquo;government&rdquo;>
+                <SelectItem value="all">Todos los tipos</SelectItem>
+                <SelectItem value="incubator">Incubadoras</SelectItem>
+                <SelectItem value="accelerator">Aceleradoras</SelectItem>
+                <SelectItem value="financial">Inst. Financieras</SelectItem>
+                <SelectItem value="government">
                   Prog. Gubernamentales
                 </SelectItem>
-                <SelectItem value=&ldquo;ngo&rdquo;>ONGs y Fundaciones</SelectItem>
-                <SelectItem value=&ldquo;mentor&rdquo;>Redes de Mentores</SelectItem>
+                <SelectItem value="ngo">ONGs y Fundaciones</SelectItem>
+                <SelectItem value="mentor">Redes de Mentores</SelectItem>
               </SelectContent>
             </Select>
 
@@ -663,11 +663,11 @@ export default function InstitutionDirectoryPage() {
               onValueChange={setSelectedMunicipality}
             >
               <SelectTrigger>
-                <SelectValue placeholder=&ldquo;Municipio&rdquo; />
+                <SelectValue placeholder="Municipio" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value=&ldquo;all&rdquo;>Todos los municipios</SelectItem>
-                {getUniqueValues(&ldquo;municipality&rdquo;).map((municipality) => (
+                <SelectItem value="all">Todos los municipios</SelectItem>
+                {getUniqueValues("municipality").map((municipality) => (
                   <SelectItem key={municipality} value={municipality}>
                     {municipality}
                   </SelectItem>
@@ -680,11 +680,11 @@ export default function InstitutionDirectoryPage() {
               onValueChange={setSelectedCategory}
             >
               <SelectTrigger>
-                <SelectValue placeholder=&ldquo;Categoría&rdquo; />
+                <SelectValue placeholder="Categoría" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value=&ldquo;all&rdquo;>Todas las categorías</SelectItem>
-                {getUniqueValues(&ldquo;category&rdquo;).map((category) => (
+                <SelectItem value="all">Todas las categorías</SelectItem>
+                {getUniqueValues("category").map((category) => (
                   <SelectItem key={category} value={category}>
                     {category}
                   </SelectItem>
@@ -696,63 +696,63 @@ export default function InstitutionDirectoryPage() {
       </Card>
 
       {/* Results */}
-      <div className=&ldquo;flex justify-between items-center&rdquo;>
-        <h2 className=&ldquo;text-2xl font-bold&rdquo;>
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold">
           {filteredInstitutions.length} Instituciones Encontradas
         </h2>
-        <Button asChild variant=&ldquo;outline&rdquo;>
-          <Link href=&ldquo;/entrepreneurship&rdquo;>Volver a Emprendimiento</Link>
+        <Button asChild variant="outline">
+          <Link href="/entrepreneurship">Volver a Emprendimiento</Link>
         </Button>
       </div>
 
       {/* Institution Cards Grid */}
-      <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6&rdquo;>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredInstitutions.map((institution) => (
           <Link
             href={`/entrepreneurship/directory/${institution.id}`}
             key={institution.id}
           >
-            <Card className=&ldquo;group h-full overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer&rdquo;>
+            <Card className="group h-full overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer">
               {/* Card Background Image */}
-              <div className=&ldquo;relative h-48&rdquo;>
-                <div className=&ldquo;absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-transparent z-10&rdquo; />
+              <div className="relative h-48">
+                <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-transparent z-10" />
                 <Image
                   src={
                     institution.coverImage ||
-                    &ldquo;/images/institutions/default-cover.jpg&rdquo;
+                    "/images/institutions/default-cover.jpg"
                   }
                   alt={institution.name}
                   fill
-                  className=&ldquo;object-cover group-hover:scale-105 transition-transform duration-300&rdquo;
+                  className="object-cover group-hover:scale-105 transition-transform duration-300"
                 />
-                <div className=&ldquo;absolute top-4 left-4 z-20&rdquo;>
-                  <div className=&ldquo;bg-white rounded-lg p-2 shadow-md&rdquo;>
+                <div className="absolute top-4 left-4 z-20">
+                  <div className="bg-white rounded-lg p-2 shadow-md">
                     <Image
                       src={
                         institution.logo ||
-                        &ldquo;/images/institutions/default-logo.jpg&rdquo;
+                        "/images/institutions/default-logo.jpg"
                       }
                       alt={`${institution.name} logo`}
                       width={40}
                       height={40}
-                      className=&ldquo;object-contain&rdquo;
+                      className="object-contain"
                     />
                   </div>
                 </div>
               </div>
 
-              <CardContent className=&ldquo;p-4&rdquo;>
+              <CardContent className="p-4">
                 {/* Institution Name and Description */}
-                <h3 className=&ldquo;text-lg font-semibold mb-2&rdquo;>
+                <h3 className="text-lg font-semibold mb-2">
                   {institution.name}
                 </h3>
-                <p className=&ldquo;text-muted-foreground text-sm mb-4 line-clamp-2&rdquo;>
+                <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
                   {institution.description}
                 </p>
 
                 {/* Location */}
-                <div className=&ldquo;flex items-center gap-2 text-sm text-muted-foreground&rdquo;>
-                  <MapPin className=&ldquo;h-4 w-4&rdquo; />
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <MapPin className="h-4 w-4" />
                   <span>{institution.municipality}</span>
                 </div>
               </CardContent>
@@ -763,21 +763,21 @@ export default function InstitutionDirectoryPage() {
 
       {/* No Results */}
       {filteredInstitutions.length === 0 && (
-        <div className=&ldquo;text-center py-12&rdquo;>
-          <Building2 className=&ldquo;h-24 w-24 text-muted-foreground mx-auto mb-4&rdquo; />
-          <h3 className=&ldquo;text-xl font-semibold mb-2&rdquo;>
+        <div className="text-center py-12">
+          <Building2 className="h-24 w-24 text-muted-foreground mx-auto mb-4" />
+          <h3 className="text-xl font-semibold mb-2">
             No se encontraron instituciones
           </h3>
-          <p className=&ldquo;text-muted-foreground mb-4&rdquo;>
+          <p className="text-muted-foreground mb-4">
             Intenta ajustar tus filtros de búsqueda para encontrar más
             resultados.
           </p>
           <Button
             onClick={() => {
-              setSearchQuery(&ldquo;&rdquo;);
-              setSelectedType(&ldquo;all&rdquo;);
-              setSelectedMunicipality(&ldquo;all&rdquo;);
-              setSelectedCategory(&ldquo;all&rdquo;);
+              setSearchQuery("");
+              setSelectedType("all");
+              setSelectedMunicipality("all");
+              setSelectedCategory("all");
             }}
           >
             Limpiar Filtros
@@ -786,19 +786,19 @@ export default function InstitutionDirectoryPage() {
       )}
 
       {/* Call to Action */}
-      <Card className=&ldquo;bg-gradient-to-r from-purple-600 to-blue-600 text-white&rdquo;>
-        <CardContent className=&ldquo;p-8 text-center&rdquo;>
-          <h2 className=&ldquo;text-2xl font-bold mb-4&rdquo;>
+      <Card className="bg-gradient-to-r from-purple-600 to-blue-600 text-white">
+        <CardContent className="p-8 text-center">
+          <h2 className="text-2xl font-bold mb-4">
             ¿Tu institución no está listada?
           </h2>
-          <p className=&ldquo;text-lg mb-6 opacity-90&rdquo;>
+          <p className="text-lg mb-6 opacity-90">
             Ayúdanos a expandir nuestro directorio registrando tu institución
           </p>
           <Button
-            size=&ldquo;lg&rdquo;
-            className=&ldquo;bg-white text-purple-600 hover:bg-gray-100&rdquo;
+            size="lg"
+            className="bg-white text-purple-600 hover:bg-gray-100"
           >
-            <Building2 className=&ldquo;h-5 w-5 mr-2&rdquo; />
+            <Building2 className="h-5 w-5 mr-2" />
             Registrar Institución
           </Button>
         </CardContent>

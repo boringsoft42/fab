@@ -1,23 +1,23 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import { useState } from &ldquo;react&rdquo;;
+import { useState } from "react";
 import {
   CourseFilters as CourseFiltersType,
   CourseCategory,
   CourseLevel,
-} from &ldquo;@/types/courses&rdquo;;
-import { Button } from &ldquo;@/components/ui/button&rdquo;;
-import { Card, CardContent, CardHeader, CardTitle } from &ldquo;@/components/ui/card&rdquo;;
-import { Checkbox } from &ldquo;@/components/ui/checkbox&rdquo;;
-import { Slider } from &ldquo;@/components/ui/slider&rdquo;;
-import { Separator } from &ldquo;@/components/ui/separator&rdquo;;
-import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
+} from "@/types/courses";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Slider } from "@/components/ui/slider";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from &ldquo;@/components/ui/collapsible&rdquo;;
-import { ChevronDown, X } from &ldquo;lucide-react&rdquo;;
+} from "@/components/ui/collapsible";
+import { ChevronDown, X } from "lucide-react";
 
 interface CourseFiltersProps {
   filters: CourseFiltersType;
@@ -57,7 +57,7 @@ export const CourseFilters = ({
       : [...currentCategories, category];
 
     updateFilters(
-      &ldquo;category&rdquo;,
+      "category",
       newCategories.length > 0 ? newCategories : undefined
     );
   };
@@ -68,7 +68,7 @@ export const CourseFilters = ({
       ? currentLevels.filter((l) => l !== level)
       : [...currentLevels, level];
 
-    updateFilters(&ldquo;level&rdquo;, newLevels.length > 0 ? newLevels : undefined);
+    updateFilters("level", newLevels.length > 0 ? newLevels : undefined);
   };
 
   const clearAllFilters = () => {
@@ -76,20 +76,20 @@ export const CourseFilters = ({
   };
 
   const categoryLabels: Record<CourseCategory, string> = {
-    [CourseCategory.SOFT_SKILLS]: &ldquo;Habilidades Blandas&rdquo;,
-    [CourseCategory.BASIC_COMPETENCIES]: &ldquo;Competencias Básicas&rdquo;,
-    [CourseCategory.JOB_PLACEMENT]: &ldquo;Inserción Laboral&rdquo;,
-    [CourseCategory.ENTREPRENEURSHIP]: &ldquo;Emprendimiento&rdquo;,
-    [CourseCategory.TECHNICAL_SKILLS]: &ldquo;Habilidades Técnicas&rdquo;,
-    [CourseCategory.DIGITAL_LITERACY]: &ldquo;Alfabetización Digital&rdquo;,
-    [CourseCategory.COMMUNICATION]: &ldquo;Comunicación&rdquo;,
-    [CourseCategory.LEADERSHIP]: &ldquo;Liderazgo&rdquo;,
+    [CourseCategory.SOFT_SKILLS]: "Habilidades Blandas",
+    [CourseCategory.BASIC_COMPETENCIES]: "Competencias Básicas",
+    [CourseCategory.JOB_PLACEMENT]: "Inserción Laboral",
+    [CourseCategory.ENTREPRENEURSHIP]: "Emprendimiento",
+    [CourseCategory.TECHNICAL_SKILLS]: "Habilidades Técnicas",
+    [CourseCategory.DIGITAL_LITERACY]: "Alfabetización Digital",
+    [CourseCategory.COMMUNICATION]: "Comunicación",
+    [CourseCategory.LEADERSHIP]: "Liderazgo",
   };
 
   const levelLabels: Record<CourseLevel, string> = {
-    [CourseLevel.BEGINNER]: &ldquo;Principiante&rdquo;,
-    [CourseLevel.INTERMEDIATE]: &ldquo;Intermedio&rdquo;,
-    [CourseLevel.ADVANCED]: &ldquo;Avanzado&rdquo;,
+    [CourseLevel.BEGINNER]: "Principiante",
+    [CourseLevel.INTERMEDIATE]: "Intermedio",
+    [CourseLevel.ADVANCED]: "Avanzado",
   };
 
   const getActiveFilterCount = () => {
@@ -104,49 +104,49 @@ export const CourseFilters = ({
   };
 
   return (
-    <Card className=&ldquo;sticky top-6&rdquo;>
-      <CardHeader className=&ldquo;pb-3&rdquo;>
-        <div className=&ldquo;flex items-center justify-between&rdquo;>
-          <CardTitle className=&ldquo;text-lg&rdquo;>Filtros</CardTitle>
+    <Card className="sticky top-6">
+      <CardHeader className="pb-3">
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-lg">Filtros</CardTitle>
           {getActiveFilterCount() > 0 && (
-            <div className=&ldquo;flex items-center gap-2&rdquo;>
-              <Badge variant=&ldquo;secondary&rdquo;>{getActiveFilterCount()}</Badge>
+            <div className="flex items-center gap-2">
+              <Badge variant="secondary">{getActiveFilterCount()}</Badge>
               <Button
-                variant=&ldquo;ghost&rdquo;
-                size=&ldquo;sm&rdquo;
+                variant="ghost"
+                size="sm"
                 onClick={clearAllFilters}
-                className=&ldquo;h-8 px-2&rdquo;
+                className="h-8 px-2"
               >
-                <X className=&ldquo;h-4 w-4&rdquo; />
+                <X className="h-4 w-4" />
               </Button>
             </div>
           )}
         </div>
       </CardHeader>
 
-      <CardContent className=&ldquo;space-y-4&rdquo;>
+      <CardContent className="space-y-4">
         {/* Categories */}
         <Collapsible
           open={openSections.category}
-          onOpenChange={() => toggleSection(&ldquo;category&rdquo;)}
+          onOpenChange={() => toggleSection("category")}
         >
-          <CollapsibleTrigger className=&ldquo;flex items-center justify-between w-full p-2 hover:bg-muted rounded-md&rdquo;>
-            <span className=&ldquo;font-medium&rdquo;>Categorías</span>
-            <div className=&ldquo;flex items-center gap-2&rdquo;>
+          <CollapsibleTrigger className="flex items-center justify-between w-full p-2 hover:bg-muted rounded-md">
+            <span className="font-medium">Categorías</span>
+            <div className="flex items-center gap-2">
               {filters.category?.length && (
-                <Badge variant=&ldquo;secondary&rdquo; className=&ldquo;text-xs&rdquo;>
+                <Badge variant="secondary" className="text-xs">
                   {filters.category.length}
                 </Badge>
               )}
               <ChevronDown
-                className={`h-4 w-4 transition-transform ${openSections.category ? &ldquo;rotate-180&rdquo; : &ldquo;&rdquo;}`}
+                className={`h-4 w-4 transition-transform ${openSections.category ? "rotate-180" : ""}`}
               />
             </div>
           </CollapsibleTrigger>
-          <CollapsibleContent className=&ldquo;pt-2&rdquo;>
-            <div className=&ldquo;space-y-3&rdquo;>
+          <CollapsibleContent className="pt-2">
+            <div className="space-y-3">
               {Object.entries(categoryLabels).map(([category, label]) => (
-                <div key={category} className=&ldquo;flex items-center space-x-2&rdquo;>
+                <div key={category} className="flex items-center space-x-2">
                   <Checkbox
                     id={`category-${category}`}
                     checked={filters.category?.includes(
@@ -158,7 +158,7 @@ export const CourseFilters = ({
                   />
                   <label
                     htmlFor={`category-${category}`}
-                    className=&ldquo;text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer&rdquo;
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
                   >
                     {label}
                   </label>
@@ -173,25 +173,25 @@ export const CourseFilters = ({
         {/* Levels */}
         <Collapsible
           open={openSections.level}
-          onOpenChange={() => toggleSection(&ldquo;level&rdquo;)}
+          onOpenChange={() => toggleSection("level")}
         >
-          <CollapsibleTrigger className=&ldquo;flex items-center justify-between w-full p-2 hover:bg-muted rounded-md&rdquo;>
-            <span className=&ldquo;font-medium&rdquo;>Nivel</span>
-            <div className=&ldquo;flex items-center gap-2&rdquo;>
+          <CollapsibleTrigger className="flex items-center justify-between w-full p-2 hover:bg-muted rounded-md">
+            <span className="font-medium">Nivel</span>
+            <div className="flex items-center gap-2">
               {filters.level?.length && (
-                <Badge variant=&ldquo;secondary&rdquo; className=&ldquo;text-xs&rdquo;>
+                <Badge variant="secondary" className="text-xs">
                   {filters.level.length}
                 </Badge>
               )}
               <ChevronDown
-                className={`h-4 w-4 transition-transform ${openSections.level ? &ldquo;rotate-180&rdquo; : &ldquo;&rdquo;}`}
+                className={`h-4 w-4 transition-transform ${openSections.level ? "rotate-180" : ""}`}
               />
             </div>
           </CollapsibleTrigger>
-          <CollapsibleContent className=&ldquo;pt-2&rdquo;>
-            <div className=&ldquo;space-y-3&rdquo;>
+          <CollapsibleContent className="pt-2">
+            <div className="space-y-3">
               {Object.entries(levelLabels).map(([level, label]) => (
-                <div key={level} className=&ldquo;flex items-center space-x-2&rdquo;>
+                <div key={level} className="flex items-center space-x-2">
                   <Checkbox
                     id={`level-${level}`}
                     checked={filters.level?.includes(level as CourseLevel)}
@@ -199,7 +199,7 @@ export const CourseFilters = ({
                   />
                   <label
                     htmlFor={`level-${level}`}
-                    className=&ldquo;text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer&rdquo;
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
                   >
                     {label}
                   </label>
@@ -214,25 +214,25 @@ export const CourseFilters = ({
         {/* Duration */}
         <Collapsible
           open={openSections.duration}
-          onOpenChange={() => toggleSection(&ldquo;duration&rdquo;)}
+          onOpenChange={() => toggleSection("duration")}
         >
-          <CollapsibleTrigger className=&ldquo;flex items-center justify-between w-full p-2 hover:bg-muted rounded-md&rdquo;>
-            <span className=&ldquo;font-medium&rdquo;>Duración</span>
-            <div className=&ldquo;flex items-center gap-2&rdquo;>
+          <CollapsibleTrigger className="flex items-center justify-between w-full p-2 hover:bg-muted rounded-md">
+            <span className="font-medium">Duración</span>
+            <div className="flex items-center gap-2">
               {filters.duration && (
-                <Badge variant=&ldquo;secondary&rdquo; className=&ldquo;text-xs&rdquo;>
+                <Badge variant="secondary" className="text-xs">
                   {filters.duration.min}h - {filters.duration.max}h
                 </Badge>
               )}
               <ChevronDown
-                className={`h-4 w-4 transition-transform ${openSections.duration ? &ldquo;rotate-180&rdquo; : &ldquo;&rdquo;}`}
+                className={`h-4 w-4 transition-transform ${openSections.duration ? "rotate-180" : ""}`}
               />
             </div>
           </CollapsibleTrigger>
-          <CollapsibleContent className=&ldquo;pt-2&rdquo;>
-            <div className=&ldquo;space-y-4&rdquo;>
+          <CollapsibleContent className="pt-2">
+            <div className="space-y-4">
               <div>
-                <div className=&ldquo;flex justify-between text-sm text-muted-foreground mb-2&rdquo;>
+                <div className="flex justify-between text-sm text-muted-foreground mb-2">
                   <span>{filters.duration?.min || 1} horas</span>
                   <span>{filters.duration?.max || 50} horas</span>
                 </div>
@@ -242,38 +242,38 @@ export const CourseFilters = ({
                     filters.duration?.max || 50,
                   ]}
                   onValueChange={([min, max]) =>
-                    updateFilters(&ldquo;duration&rdquo;, { min, max })
+                    updateFilters("duration", { min, max })
                   }
                   max={50}
                   min={1}
                   step={1}
-                  className=&ldquo;w-full&rdquo;
+                  className="w-full"
                 />
               </div>
-              <div className=&ldquo;flex gap-2&rdquo;>
+              <div className="flex gap-2">
                 <Button
-                  variant=&ldquo;outline&rdquo;
-                  size=&ldquo;sm&rdquo;
-                  onClick={() => updateFilters(&ldquo;duration&rdquo;, { min: 1, max: 5 })}
-                  className=&ldquo;text-xs&rdquo;
+                  variant="outline"
+                  size="sm"
+                  onClick={() => updateFilters("duration", { min: 1, max: 5 })}
+                  className="text-xs"
                 >
                   1-5h
                 </Button>
                 <Button
-                  variant=&ldquo;outline&rdquo;
-                  size=&ldquo;sm&rdquo;
-                  onClick={() => updateFilters(&ldquo;duration&rdquo;, { min: 5, max: 15 })}
-                  className=&ldquo;text-xs&rdquo;
+                  variant="outline"
+                  size="sm"
+                  onClick={() => updateFilters("duration", { min: 5, max: 15 })}
+                  className="text-xs"
                 >
                   5-15h
                 </Button>
                 <Button
-                  variant=&ldquo;outline&rdquo;
-                  size=&ldquo;sm&rdquo;
+                  variant="outline"
+                  size="sm"
                   onClick={() =>
-                    updateFilters(&ldquo;duration&rdquo;, { min: 15, max: 30 })
+                    updateFilters("duration", { min: 15, max: 30 })
                   }
-                  className=&ldquo;text-xs&rdquo;
+                  className="text-xs"
                 >
                   15-30h
                 </Button>
@@ -287,36 +287,36 @@ export const CourseFilters = ({
         {/* Price */}
         <Collapsible
           open={openSections.price}
-          onOpenChange={() => toggleSection(&ldquo;price&rdquo;)}
+          onOpenChange={() => toggleSection("price")}
         >
-          <CollapsibleTrigger className=&ldquo;flex items-center justify-between w-full p-2 hover:bg-muted rounded-md&rdquo;>
-            <span className=&ldquo;font-medium&rdquo;>Precio</span>
-            <div className=&ldquo;flex items-center gap-2&rdquo;>
+          <CollapsibleTrigger className="flex items-center justify-between w-full p-2 hover:bg-muted rounded-md">
+            <span className="font-medium">Precio</span>
+            <div className="flex items-center gap-2">
               {(filters.price || filters.isFree !== undefined) && (
-                <Badge variant=&ldquo;secondary&rdquo; className=&ldquo;text-xs&rdquo;>
+                <Badge variant="secondary" className="text-xs">
                   {filters.isFree
-                    ? &ldquo;Gratis&rdquo;
+                    ? "Gratis"
                     : `$${filters.price?.min || 0} - $${filters.price?.max || 1000}`}
                 </Badge>
               )}
               <ChevronDown
-                className={`h-4 w-4 transition-transform ${openSections.price ? &ldquo;rotate-180&rdquo; : &ldquo;&rdquo;}`}
+                className={`h-4 w-4 transition-transform ${openSections.price ? "rotate-180" : ""}`}
               />
             </div>
           </CollapsibleTrigger>
-          <CollapsibleContent className=&ldquo;pt-2&rdquo;>
-            <div className=&ldquo;space-y-4&rdquo;>
-              <div className=&ldquo;flex items-center space-x-2&rdquo;>
+          <CollapsibleContent className="pt-2">
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2">
                 <Checkbox
-                  id=&ldquo;free-courses&rdquo;
+                  id="free-courses"
                   checked={filters.isFree === true}
                   onCheckedChange={(checked) =>
-                    updateFilters(&ldquo;isFree&rdquo;, checked ? true : undefined)
+                    updateFilters("isFree", checked ? true : undefined)
                   }
                 />
                 <label
-                  htmlFor=&ldquo;free-courses&rdquo;
-                  className=&ldquo;text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer&rdquo;
+                  htmlFor="free-courses"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
                 >
                   Solo cursos gratuitos
                 </label>
@@ -324,7 +324,7 @@ export const CourseFilters = ({
 
               {!filters.isFree && (
                 <div>
-                  <div className=&ldquo;flex justify-between text-sm text-muted-foreground mb-2&rdquo;>
+                  <div className="flex justify-between text-sm text-muted-foreground mb-2">
                     <span>${filters.price?.min || 0} BOB</span>
                     <span>${filters.price?.max || 1000} BOB</span>
                   </div>
@@ -334,12 +334,12 @@ export const CourseFilters = ({
                       filters.price?.max || 1000,
                     ]}
                     onValueChange={([min, max]) =>
-                      updateFilters(&ldquo;price&rdquo;, { min, max })
+                      updateFilters("price", { min, max })
                     }
                     max={1000}
                     min={0}
                     step={50}
-                    className=&ldquo;w-full&rdquo;
+                    className="w-full"
                   />
                 </div>
               )}
@@ -352,34 +352,34 @@ export const CourseFilters = ({
         {/* Features */}
         <Collapsible
           open={openSections.features}
-          onOpenChange={() => toggleSection(&ldquo;features&rdquo;)}
+          onOpenChange={() => toggleSection("features")}
         >
-          <CollapsibleTrigger className=&ldquo;flex items-center justify-between w-full p-2 hover:bg-muted rounded-md&rdquo;>
-            <span className=&ldquo;font-medium&rdquo;>Características</span>
-            <div className=&ldquo;flex items-center gap-2&rdquo;>
+          <CollapsibleTrigger className="flex items-center justify-between w-full p-2 hover:bg-muted rounded-md">
+            <span className="font-medium">Características</span>
+            <div className="flex items-center gap-2">
               {filters.isMandatory !== undefined && (
-                <Badge variant=&ldquo;secondary&rdquo; className=&ldquo;text-xs&rdquo;>
+                <Badge variant="secondary" className="text-xs">
                   1
                 </Badge>
               )}
               <ChevronDown
-                className={`h-4 w-4 transition-transform ${openSections.features ? &ldquo;rotate-180&rdquo; : &ldquo;&rdquo;}`}
+                className={`h-4 w-4 transition-transform ${openSections.features ? "rotate-180" : ""}`}
               />
             </div>
           </CollapsibleTrigger>
-          <CollapsibleContent className=&ldquo;pt-2&rdquo;>
-            <div className=&ldquo;space-y-3&rdquo;>
-              <div className=&ldquo;flex items-center space-x-2&rdquo;>
+          <CollapsibleContent className="pt-2">
+            <div className="space-y-3">
+              <div className="flex items-center space-x-2">
                 <Checkbox
-                  id=&ldquo;mandatory-courses&rdquo;
+                  id="mandatory-courses"
                   checked={filters.isMandatory === true}
                   onCheckedChange={(checked) =>
-                    updateFilters(&ldquo;isMandatory&rdquo;, checked ? true : undefined)
+                    updateFilters("isMandatory", checked ? true : undefined)
                   }
                 />
                 <label
-                  htmlFor=&ldquo;mandatory-courses&rdquo;
-                  className=&ldquo;text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer&rdquo;
+                  htmlFor="mandatory-courses"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
                 >
                   Cursos obligatorios
                 </label>
@@ -393,9 +393,9 @@ export const CourseFilters = ({
           <>
             <Separator />
             <Button
-              variant=&ldquo;outline&rdquo;
+              variant="outline"
               onClick={clearAllFilters}
-              className=&ldquo;w-full&rdquo;
+              className="w-full"
             >
               Limpiar todos los filtros
             </Button>

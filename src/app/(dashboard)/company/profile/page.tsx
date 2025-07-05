@@ -1,8 +1,8 @@
-&ldquo;use client&rdquo;
+"use client"
 
-import type React from &ldquo;react&rdquo;
+import type React from "react"
 
-import { useState } from &ldquo;react&rdquo;
+import { useState } from "react"
 import {
   Building2,
   MapPin,
@@ -20,19 +20,19 @@ import {
   CreditCard,
   Award,
   Target,
-} from &ldquo;lucide-react&rdquo;
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from &ldquo;@/components/ui/card&rdquo;
-import { Button } from &ldquo;@/components/ui/button&rdquo;
-import { Badge } from &ldquo;@/components/ui/badge&rdquo;
-import { Input } from &ldquo;@/components/ui/input&rdquo;
-import { Label } from &ldquo;@/components/ui/label&rdquo;
-import { Textarea } from &ldquo;@/components/ui/textarea&rdquo;
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from &ldquo;@/components/ui/select&rdquo;
-import { Switch } from &ldquo;@/components/ui/switch&rdquo;
-import { Tabs, TabsContent, TabsList, TabsTrigger } from &ldquo;@/components/ui/tabs&rdquo;
-import { Avatar, AvatarFallback, AvatarImage } from &ldquo;@/components/ui/avatar&rdquo;
-import { Separator } from &ldquo;@/components/ui/separator&rdquo;
-import MapMarker from &ldquo;@/components/MapMarker&rdquo;
+} from "lucide-react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Switch } from "@/components/ui/switch"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Separator } from "@/components/ui/separator"
+import MapMarker from "@/components/MapMarker"
 
 interface CompanyProfile {
   id: string
@@ -73,26 +73,26 @@ interface CompanyProfile {
 
 export default function CompanyProfilePage() {
   const [profile, setProfile] = useState<CompanyProfile>({
-    id: &ldquo;company-1&rdquo;,
-    name: &ldquo;Cemse Innovación&rdquo;,
+    id: "company-1",
+    name: "Cemse Innovación",
     description:
-      &ldquo;Empresa líder en desarrollo de soluciones tecnológicas innovadoras para el sector empresarial boliviano. Nos especializamos en transformación digital y consultoría estratégica.&rdquo;,
-    logo: &ldquo;/placeholder.svg?height=100&width=100&rdquo;,
-    coverImage: &ldquo;/placeholder.svg?height=300&width=800&rdquo;,
-    industry: &ldquo;Tecnología&rdquo;,
-    size: &ldquo;51-200 empleados&rdquo;,
-    founded: &ldquo;2018&rdquo;,
-    website: &ldquo;https://cemse.com.bo&rdquo;,
-    email: &ldquo;contacto@cemse.com.bo&rdquo;,
-    phone: &ldquo;+591 2 2345678&rdquo;,
-    address: &ldquo;Av. Arce 2345, Edificio Torre Empresarial, Piso 12&rdquo;,
-    city: &ldquo;La Paz&rdquo;,
-    country: &ldquo;Bolivia&rdquo;,
+      "Empresa líder en desarrollo de soluciones tecnológicas innovadoras para el sector empresarial boliviano. Nos especializamos en transformación digital y consultoría estratégica.",
+    logo: "/placeholder.svg?height=100&width=100",
+    coverImage: "/placeholder.svg?height=300&width=800",
+    industry: "Tecnología",
+    size: "51-200 empleados",
+    founded: "2018",
+    website: "https://cemse.com.bo",
+    email: "contacto@cemse.com.bo",
+    phone: "+591 2 2345678",
+    address: "Av. Arce 2345, Edificio Torre Empresarial, Piso 12",
+    city: "La Paz",
+    country: "Bolivia",
     mission:
-      &ldquo;Impulsar la transformación digital de las empresas bolivianas mediante soluciones tecnológicas innovadoras y consultoría especializada.&rdquo;,
+      "Impulsar la transformación digital de las empresas bolivianas mediante soluciones tecnológicas innovadoras y consultoría especializada.",
     vision:
-      &ldquo;Ser la empresa de tecnología más reconocida de Bolivia, liderando la innovación y el desarrollo empresarial en la región.&rdquo;,
-    values: [&ldquo;Innovación&rdquo;, &ldquo;Excelencia&rdquo;, &ldquo;Integridad&rdquo;, &ldquo;Colaboración&rdquo;, &ldquo;Sostenibilidad&rdquo;],
+      "Ser la empresa de tecnología más reconocida de Bolivia, liderando la innovación y el desarrollo empresarial en la región.",
+    values: ["Innovación", "Excelencia", "Integridad", "Colaboración", "Sostenibilidad"],
     metrics: {
       employees: 127,
       revenue: 2500000,
@@ -100,9 +100,9 @@ export default function CompanyProfilePage() {
       projects: 89,
     },
     socialMedia: {
-      linkedin: &ldquo;https://linkedin.com/company/cemse&rdquo;,
-      twitter: &ldquo;https://twitter.com/cemse_bo&rdquo;,
-      facebook: &ldquo;https://facebook.com/cemse.bolivia&rdquo;,
+      linkedin: "https://linkedin.com/company/cemse",
+      twitter: "https://twitter.com/cemse_bo",
+      facebook: "https://facebook.com/cemse.bolivia",
     },
     settings: {
       publicProfile: true,
@@ -120,11 +120,11 @@ export default function CompanyProfilePage() {
   const handleSave = async () => {
     try {
       // Simulate API call
-      console.log(&ldquo;Saving profile:&rdquo;, editedProfile)
+      console.log("Saving profile:", editedProfile)
       setProfile(editedProfile)
       setIsEditing(false)
     } catch (error) {
-      console.error(&ldquo;Error saving profile:&rdquo;, error)
+      console.error("Error saving profile:", error)
     }
   }
 
@@ -160,62 +160,62 @@ export default function CompanyProfilePage() {
   }
 
   return (
-    <div className=&ldquo;space-y-6&rdquo;>
+    <div className="space-y-6">
       {/* Header */}
-      <div className=&ldquo;flex justify-between items-center&rdquo;>
+      <div className="flex justify-between items-center">
         <div>
-          <h1 className=&ldquo;text-3xl font-bold&rdquo;>Perfil de la Empresa</h1>
-          <p className=&ldquo;text-muted-foreground&rdquo;>Gestiona la información y configuración de tu empresa</p>
+          <h1 className="text-3xl font-bold">Perfil de la Empresa</h1>
+          <p className="text-muted-foreground">Gestiona la información y configuración de tu empresa</p>
         </div>
-        <div className=&ldquo;flex gap-2&rdquo;>
+        <div className="flex gap-2">
           {isEditing ? (
             <>
-              <Button variant=&ldquo;outline&rdquo; onClick={handleCancel}>
-                <X className=&ldquo;w-4 h-4 mr-2&rdquo; />
+              <Button variant="outline" onClick={handleCancel}>
+                <X className="w-4 h-4 mr-2" />
                 Cancelar
               </Button>
               <Button onClick={handleSave}>
-                <Save className=&ldquo;w-4 h-4 mr-2&rdquo; />
+                <Save className="w-4 h-4 mr-2" />
                 Guardar Cambios
               </Button>
             </>
           ) : (
             <Button onClick={() => setIsEditing(true)}>
-              <Edit className=&ldquo;w-4 h-4 mr-2&rdquo; />
+              <Edit className="w-4 h-4 mr-2" />
               Editar Perfil
             </Button>
           )}
         </div>
       </div>
 
-      <Tabs defaultValue=&ldquo;general&rdquo; className=&ldquo;space-y-6&rdquo;>
-        <TabsList className=&ldquo;grid w-full grid-cols-1&rdquo;>
-          <TabsTrigger value=&ldquo;general&rdquo;>Información General</TabsTrigger>
+      <Tabs defaultValue="general" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-1">
+          <TabsTrigger value="general">Información General</TabsTrigger>
         </TabsList>
 
-        <TabsContent value=&ldquo;general&rdquo; className=&ldquo;space-y-6&rdquo;>
+        <TabsContent value="general" className="space-y-6">
           {/* Cover Image */}
           <Card>
-            <CardContent className=&ldquo;p-0&rdquo;>
-              <div className=&ldquo;relative&rdquo;>
+            <CardContent className="p-0">
+              <div className="relative">
                 <img
-                  src={editedProfile.coverImage || &ldquo;/placeholder.svg&rdquo;}
-                  alt=&ldquo;Portada de la empresa&rdquo;
-                  className=&ldquo;w-full h-48 object-cover rounded-t-lg&rdquo;
+                  src={editedProfile.coverImage || "/placeholder.svg"}
+                  alt="Portada de la empresa"
+                  className="w-full h-48 object-cover rounded-t-lg"
                 />
                 {isEditing && (
-                  <div className=&ldquo;absolute inset-0 bg-black/50 flex items-center justify-center rounded-t-lg&rdquo;>
-                    <Label htmlFor=&ldquo;cover-upload&rdquo; className=&ldquo;cursor-pointer&rdquo;>
-                      <div className=&ldquo;flex items-center gap-2 text-white bg-black/50 px-4 py-2 rounded-lg&rdquo;>
-                        <Camera className=&ldquo;w-4 h-4&rdquo; />
+                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-t-lg">
+                    <Label htmlFor="cover-upload" className="cursor-pointer">
+                      <div className="flex items-center gap-2 text-white bg-black/50 px-4 py-2 rounded-lg">
+                        <Camera className="w-4 h-4" />
                         Cambiar Portada
                       </div>
                       <Input
-                        id=&ldquo;cover-upload&rdquo;
-                        type=&ldquo;file&rdquo;
-                        accept=&ldquo;image/*&rdquo;
+                        id="cover-upload"
+                        type="file"
+                        accept="image/*"
                         onChange={handleCoverUpload}
-                        className=&ldquo;hidden&rdquo;
+                        className="hidden"
                       />
                     </Label>
                   </div>
@@ -225,54 +225,54 @@ export default function CompanyProfilePage() {
           </Card>
 
           {/* Basic Info */}
-          <div className=&ldquo;grid grid-cols-1 lg:grid-cols-3 gap-6&rdquo;>
-            <Card className=&ldquo;lg:col-span-2&rdquo;>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <Card className="lg:col-span-2">
               <CardHeader>
                 <CardTitle>Información Básica</CardTitle>
               </CardHeader>
-              <CardContent className=&ldquo;space-y-4&rdquo;>
-                <div className=&ldquo;flex items-start gap-4&rdquo;>
-                  <div className=&ldquo;relative&rdquo;>
-                    <Avatar className=&ldquo;w-20 h-20&rdquo;>
-                      <AvatarImage src={editedProfile.logo || &ldquo;/placeholder.svg&rdquo;} alt={editedProfile.name} />
+              <CardContent className="space-y-4">
+                <div className="flex items-start gap-4">
+                  <div className="relative">
+                    <Avatar className="w-20 h-20">
+                      <AvatarImage src={editedProfile.logo || "/placeholder.svg"} alt={editedProfile.name} />
                       <AvatarFallback>
-                        <Building2 className=&ldquo;w-8 h-8&rdquo; />
+                        <Building2 className="w-8 h-8" />
                       </AvatarFallback>
                     </Avatar>
                     {isEditing && (
                       <Label
-                        htmlFor=&ldquo;logo-upload&rdquo;
-                        className=&ldquo;absolute -bottom-2 -right-2 bg-primary text-primary-foreground rounded-full p-1 cursor-pointer&rdquo;
+                        htmlFor="logo-upload"
+                        className="absolute -bottom-2 -right-2 bg-primary text-primary-foreground rounded-full p-1 cursor-pointer"
                       >
-                        <Camera className=&ldquo;w-3 h-3&rdquo; />
+                        <Camera className="w-3 h-3" />
                         <Input
-                          id=&ldquo;logo-upload&rdquo;
-                          type=&ldquo;file&rdquo;
-                          accept=&ldquo;image/*&rdquo;
+                          id="logo-upload"
+                          type="file"
+                          accept="image/*"
                           onChange={handleLogoUpload}
-                          className=&ldquo;hidden&rdquo;
+                          className="hidden"
                         />
                       </Label>
                     )}
                   </div>
-                  <div className=&ldquo;flex-1 space-y-2&rdquo;>
+                  <div className="flex-1 space-y-2">
                     {isEditing ? (
                       <Input
                         value={editedProfile.name}
                         onChange={(e) => setEditedProfile({ ...editedProfile, name: e.target.value })}
-                        className=&ldquo;text-2xl font-bold&rdquo;
+                        className="text-2xl font-bold"
                       />
                     ) : (
-                      <h2 className=&ldquo;text-2xl font-bold&rdquo;>{profile.name}</h2>
+                      <h2 className="text-2xl font-bold">{profile.name}</h2>
                     )}
-                    <div className=&ldquo;flex gap-2&rdquo;>
-                      <Badge variant=&ldquo;secondary&rdquo;>{profile.industry}</Badge>
-                      <Badge variant=&ldquo;outline&rdquo;>{profile.size}</Badge>
+                    <div className="flex gap-2">
+                      <Badge variant="secondary">{profile.industry}</Badge>
+                      <Badge variant="outline">{profile.size}</Badge>
                     </div>
                   </div>
                 </div>
 
-                <div className=&ldquo;space-y-3&rdquo;>
+                <div className="space-y-3">
                   <div>
                     <Label>Descripción</Label>
                     {isEditing ? (
@@ -282,11 +282,11 @@ export default function CompanyProfilePage() {
                         rows={3}
                       />
                     ) : (
-                      <p className=&ldquo;text-muted-foreground mt-1&rdquo;>{profile.description}</p>
+                      <p className="text-muted-foreground mt-1">{profile.description}</p>
                     )}
                   </div>
 
-                  <div className=&ldquo;grid grid-cols-2 gap-4&rdquo;>
+                  <div className="grid grid-cols-2 gap-4">
                     <div>
                       <Label>Sector</Label>
                       {isEditing ? (
@@ -298,16 +298,16 @@ export default function CompanyProfilePage() {
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value=&ldquo;Tecnología&rdquo;>Tecnología</SelectItem>
-                            <SelectItem value=&ldquo;Finanzas&rdquo;>Finanzas</SelectItem>
-                            <SelectItem value=&ldquo;Salud&rdquo;>Salud</SelectItem>
-                            <SelectItem value=&ldquo;Educación&rdquo;>Educación</SelectItem>
-                            <SelectItem value=&ldquo;Manufactura&rdquo;>Manufactura</SelectItem>
-                            <SelectItem value=&ldquo;Servicios&rdquo;>Servicios</SelectItem>
+                            <SelectItem value="Tecnología">Tecnología</SelectItem>
+                            <SelectItem value="Finanzas">Finanzas</SelectItem>
+                            <SelectItem value="Salud">Salud</SelectItem>
+                            <SelectItem value="Educación">Educación</SelectItem>
+                            <SelectItem value="Manufactura">Manufactura</SelectItem>
+                            <SelectItem value="Servicios">Servicios</SelectItem>
                           </SelectContent>
                         </Select>
                       ) : (
-                        <p className=&ldquo;text-sm text-muted-foreground mt-1&rdquo;>{profile.industry}</p>
+                        <p className="text-sm text-muted-foreground mt-1">{profile.industry}</p>
                       )}
                     </div>
                     <div>
@@ -318,7 +318,7 @@ export default function CompanyProfilePage() {
                           onChange={(e) => setEditedProfile({ ...editedProfile, founded: e.target.value })}
                         />
                       ) : (
-                        <p className=&ldquo;text-sm text-muted-foreground mt-1&rdquo;>{profile.founded}</p>
+                        <p className="text-sm text-muted-foreground mt-1">{profile.founded}</p>
                       )}
                     </div>
                   </div>
@@ -330,69 +330,69 @@ export default function CompanyProfilePage() {
               <CardHeader>
                 <CardTitle>Información de Contacto</CardTitle>
               </CardHeader>
-              <CardContent className=&ldquo;space-y-4&rdquo;>
-                <div className=&ldquo;space-y-3&rdquo;>
-                  <div className=&ldquo;flex items-center gap-2&rdquo;>
-                    <Globe className=&ldquo;w-4 h-4 text-muted-foreground&rdquo; />
+              <CardContent className="space-y-4">
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <Globe className="w-4 h-4 text-muted-foreground" />
                     {isEditing ? (
                       <Input
                         value={editedProfile.website}
                         onChange={(e) => setEditedProfile({ ...editedProfile, website: e.target.value })}
-                        placeholder=&ldquo;https://...&rdquo;
+                        placeholder="https://..."
                       />
                     ) : (
-                      <a href={profile.website} className=&ldquo;text-blue-600 hover:underline text-sm&rdquo;>
+                      <a href={profile.website} className="text-blue-600 hover:underline text-sm">
                         {profile.website}
                       </a>
                     )}
                   </div>
-                  <div className=&ldquo;flex items-center gap-2&rdquo;>
-                    <Mail className=&ldquo;w-4 h-4 text-muted-foreground&rdquo; />
+                  <div className="flex items-center gap-2">
+                    <Mail className="w-4 h-4 text-muted-foreground" />
                     {isEditing ? (
                       <Input
                         value={editedProfile.email}
                         onChange={(e) => setEditedProfile({ ...editedProfile, email: e.target.value })}
-                        type=&ldquo;email&rdquo;
+                        type="email"
                       />
                     ) : (
-                      <span className=&ldquo;text-sm&rdquo;>{profile.email}</span>
+                      <span className="text-sm">{profile.email}</span>
                     )}
                   </div>
-                  <div className=&ldquo;flex items-center gap-2&rdquo;>
-                    <Phone className=&ldquo;w-4 h-4 text-muted-foreground&rdquo; />
+                  <div className="flex items-center gap-2">
+                    <Phone className="w-4 h-4 text-muted-foreground" />
                     {isEditing ? (
                       <Input
                         value={editedProfile.phone}
                         onChange={(e) => setEditedProfile({ ...editedProfile, phone: e.target.value })}
                       />
                     ) : (
-                      <span className=&ldquo;text-sm&rdquo;>{profile.phone}</span>
+                      <span className="text-sm">{profile.phone}</span>
                     )}
                   </div>
-                  <div className=&ldquo;flex flex-col gap-2&rdquo;>
-  <MapPin className=&ldquo;w-4 h-4 text-muted-foreground&rdquo; />
+                  <div className="flex flex-col gap-2">
+  <MapPin className="w-4 h-4 text-muted-foreground" />
   {!isEditing ? (
     <MapMarker
       name={profile.name}
       position={[-16.5, -68.15]} // Coordenadas de La Paz
     />
   ) : (
-    <div className=&ldquo;space-y-2&rdquo;>
+    <div className="space-y-2">
       <Input
         value={editedProfile.address}
         onChange={(e) => setEditedProfile({ ...editedProfile, address: e.target.value })}
-        placeholder=&ldquo;Dirección&rdquo;
+        placeholder="Dirección"
       />
-      <div className=&ldquo;grid grid-cols-2 gap-2&rdquo;>
+      <div className="grid grid-cols-2 gap-2">
         <Input
           value={editedProfile.city}
           onChange={(e) => setEditedProfile({ ...editedProfile, city: e.target.value })}
-          placeholder=&ldquo;Ciudad&rdquo;
+          placeholder="Ciudad"
         />
         <Input
           value={editedProfile.country}
           onChange={(e) => setEditedProfile({ ...editedProfile, country: e.target.value })}
-          placeholder=&ldquo;País&rdquo;
+          placeholder="País"
         />
       </div>
     </div>
@@ -405,11 +405,11 @@ export default function CompanyProfilePage() {
           </div>
 
           {/* Mission, Vision, Values */}
-          <div className=&ldquo;grid grid-cols-1 lg:grid-cols-2 gap-6&rdquo;>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle className=&ldquo;flex items-center gap-2&rdquo;>
-                  <Target className=&ldquo;w-5 h-5&rdquo; />
+                <CardTitle className="flex items-center gap-2">
+                  <Target className="w-5 h-5" />
                   Misión
                 </CardTitle>
               </CardHeader>
@@ -421,15 +421,15 @@ export default function CompanyProfilePage() {
                     rows={3}
                   />
                 ) : (
-                  <p className=&ldquo;text-muted-foreground&rdquo;>{profile.mission}</p>
+                  <p className="text-muted-foreground">{profile.mission}</p>
                 )}
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader>
-                <CardTitle className=&ldquo;flex items-center gap-2&rdquo;>
-                  <Award className=&ldquo;w-5 h-5&rdquo; />
+                <CardTitle className="flex items-center gap-2">
+                  <Award className="w-5 h-5" />
                   Visión
                 </CardTitle>
               </CardHeader>
@@ -441,7 +441,7 @@ export default function CompanyProfilePage() {
                     rows={3}
                   />
                 ) : (
-                  <p className=&ldquo;text-muted-foreground&rdquo;>{profile.vision}</p>
+                  <p className="text-muted-foreground">{profile.vision}</p>
                 )}
               </CardContent>
             </Card>
@@ -452,9 +452,9 @@ export default function CompanyProfilePage() {
               <CardTitle>Valores Corporativos</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className=&ldquo;flex flex-wrap gap-2&rdquo;>
+              <div className="flex flex-wrap gap-2">
                 {profile.values.map((value, index) => (
-                  <Badge key={index} variant=&ldquo;outline&rdquo;>
+                  <Badge key={index} variant="outline">
                     {value}
                   </Badge>
                 ))}
@@ -467,8 +467,8 @@ export default function CompanyProfilePage() {
               <CardTitle>Redes Sociales</CardTitle>
               <CardDescription>Conecta tus perfiles de redes sociales para mayor visibilidad</CardDescription>
             </CardHeader>
-            <CardContent className=&ldquo;space-y-4&rdquo;>
-              <div className=&ldquo;space-y-3&rdquo;>
+            <CardContent className="space-y-4">
+              <div className="space-y-3">
                 <div>
                   <Label>LinkedIn</Label>
                   <Input
@@ -479,7 +479,7 @@ export default function CompanyProfilePage() {
                         socialMedia: { ...editedProfile.socialMedia, linkedin: e.target.value },
                       })
                     }
-                    placeholder=&ldquo;https://linkedin.com/company/tu-empresa&rdquo;
+                    placeholder="https://linkedin.com/company/tu-empresa"
                     disabled={!isEditing}
                   />
                 </div>
@@ -493,7 +493,7 @@ export default function CompanyProfilePage() {
                         socialMedia: { ...editedProfile.socialMedia, twitter: e.target.value },
                       })
                     }
-                    placeholder=&ldquo;https://twitter.com/tu-empresa&rdquo;
+                    placeholder="https://twitter.com/tu-empresa"
                     disabled={!isEditing}
                   />
                 </div>
@@ -507,7 +507,7 @@ export default function CompanyProfilePage() {
                         socialMedia: { ...editedProfile.socialMedia, facebook: e.target.value },
                       })
                     }
-                    placeholder=&ldquo;https://facebook.com/tu-empresa&rdquo;
+                    placeholder="https://facebook.com/tu-empresa"
                     disabled={!isEditing}
                   />
                 </div>
@@ -516,49 +516,49 @@ export default function CompanyProfilePage() {
           </Card>
         </TabsContent>
 
-        <TabsContent value=&ldquo;metrics&rdquo; className=&ldquo;space-y-6&rdquo;>
-          <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4&rdquo;>
+        <TabsContent value="metrics" className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <Card>
-              <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
-                <CardTitle className=&ldquo;text-sm font-medium&rdquo;>Empleados</CardTitle>
-                <Users className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Empleados</CardTitle>
+                <Users className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className=&ldquo;text-2xl font-bold&rdquo;>{profile.metrics.employees}</div>
-                <p className=&ldquo;text-xs text-muted-foreground&rdquo;>Equipo actual</p>
+                <div className="text-2xl font-bold">{profile.metrics.employees}</div>
+                <p className="text-xs text-muted-foreground">Equipo actual</p>
               </CardContent>
             </Card>
 
             <Card>
-              <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
-                <CardTitle className=&ldquo;text-sm font-medium&rdquo;>Ingresos Anuales</CardTitle>
-                <TrendingUp className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Ingresos Anuales</CardTitle>
+                <TrendingUp className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className=&ldquo;text-2xl font-bold&rdquo;>Bs. {profile.metrics.revenue.toLocaleString()}</div>
-                <p className=&ldquo;text-xs text-muted-foreground&rdquo;>Año fiscal 2023</p>
+                <div className="text-2xl font-bold">Bs. {profile.metrics.revenue.toLocaleString()}</div>
+                <p className="text-xs text-muted-foreground">Año fiscal 2023</p>
               </CardContent>
             </Card>
 
             <Card>
-              <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
-                <CardTitle className=&ldquo;text-sm font-medium&rdquo;>Crecimiento</CardTitle>
-                <TrendingUp className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Crecimiento</CardTitle>
+                <TrendingUp className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className=&ldquo;text-2xl font-bold text-green-600&rdquo;>+{profile.metrics.growth}%</div>
-                <p className=&ldquo;text-xs text-muted-foreground&rdquo;>Vs. año anterior</p>
+                <div className="text-2xl font-bold text-green-600">+{profile.metrics.growth}%</div>
+                <p className="text-xs text-muted-foreground">Vs. año anterior</p>
               </CardContent>
             </Card>
 
             <Card>
-              <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
-                <CardTitle className=&ldquo;text-sm font-medium&rdquo;>Proyectos</CardTitle>
-                <Building2 className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Proyectos</CardTitle>
+                <Building2 className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className=&ldquo;text-2xl font-bold&rdquo;>{profile.metrics.projects}</div>
-                <p className=&ldquo;text-xs text-muted-foreground&rdquo;>Completados</p>
+                <div className="text-2xl font-bold">{profile.metrics.projects}</div>
+                <p className="text-xs text-muted-foreground">Completados</p>
               </CardContent>
             </Card>
           </div>
@@ -569,10 +569,10 @@ export default function CompanyProfilePage() {
               <CardDescription>Controla qué métricas son visibles en tu perfil público</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className=&ldquo;flex items-center justify-between&rdquo;>
+              <div className="flex items-center justify-between">
                 <div>
                   <Label>Mostrar métricas públicamente</Label>
-                  <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
+                  <p className="text-sm text-muted-foreground">
                     Las métricas serán visibles para otros usuarios de la plataforma
                   </p>
                 </div>
@@ -593,8 +593,8 @@ export default function CompanyProfilePage() {
               <CardTitle>Redes Sociales</CardTitle>
               <CardDescription>Conecta tus perfiles de redes sociales para mayor visibilidad</CardDescription>
             </CardHeader>
-            <CardContent className=&ldquo;space-y-4&rdquo;>
-              <div className=&ldquo;space-y-3&rdquo;>
+            <CardContent className="space-y-4">
+              <div className="space-y-3">
                 <div>
                   <Label>LinkedIn</Label>
                   <Input
@@ -605,7 +605,7 @@ export default function CompanyProfilePage() {
                         socialMedia: { ...editedProfile.socialMedia, linkedin: e.target.value },
                       })
                     }
-                    placeholder=&ldquo;https://linkedin.com/company/tu-empresa&rdquo;
+                    placeholder="https://linkedin.com/company/tu-empresa"
                     disabled={!isEditing}
                   />
                 </div>
@@ -619,7 +619,7 @@ export default function CompanyProfilePage() {
                         socialMedia: { ...editedProfile.socialMedia, twitter: e.target.value },
                       })
                     }
-                    placeholder=&ldquo;https://twitter.com/tu-empresa&rdquo;
+                    placeholder="https://twitter.com/tu-empresa"
                     disabled={!isEditing}
                   />
                 </div>
@@ -633,7 +633,7 @@ export default function CompanyProfilePage() {
                         socialMedia: { ...editedProfile.socialMedia, facebook: e.target.value },
                       })
                     }
-                    placeholder=&ldquo;https://facebook.com/tu-empresa&rdquo;
+                    placeholder="https://facebook.com/tu-empresa"
                     disabled={!isEditing}
                   />
                 </div>
@@ -643,14 +643,14 @@ export default function CompanyProfilePage() {
           
         </TabsContent>
 
-        {/* <TabsContent value=&ldquo;social&rdquo; className=&ldquo;space-y-6&rdquo;>
+        {/* <TabsContent value="social" className="space-y-6">
           <Card>
             <CardHeader>
               <CardTitle>Redes Sociales</CardTitle>
               <CardDescription>Conecta tus perfiles de redes sociales para mayor visibilidad</CardDescription>
             </CardHeader>
-            <CardContent className=&ldquo;space-y-4&rdquo;>
-              <div className=&ldquo;space-y-3&rdquo;>
+            <CardContent className="space-y-4">
+              <div className="space-y-3">
                 <div>
                   <Label>LinkedIn</Label>
                   <Input
@@ -661,7 +661,7 @@ export default function CompanyProfilePage() {
                         socialMedia: { ...editedProfile.socialMedia, linkedin: e.target.value },
                       })
                     }
-                    placeholder=&ldquo;https://linkedin.com/company/tu-empresa&rdquo;
+                    placeholder="https://linkedin.com/company/tu-empresa"
                     disabled={!isEditing}
                   />
                 </div>
@@ -675,7 +675,7 @@ export default function CompanyProfilePage() {
                         socialMedia: { ...editedProfile.socialMedia, twitter: e.target.value },
                       })
                     }
-                    placeholder=&ldquo;https://twitter.com/tu-empresa&rdquo;
+                    placeholder="https://twitter.com/tu-empresa"
                     disabled={!isEditing}
                   />
                 </div>
@@ -689,7 +689,7 @@ export default function CompanyProfilePage() {
                         socialMedia: { ...editedProfile.socialMedia, facebook: e.target.value },
                       })
                     }
-                    placeholder=&ldquo;https://facebook.com/tu-empresa&rdquo;
+                    placeholder="https://facebook.com/tu-empresa"
                     disabled={!isEditing}
                   />
                 </div>
@@ -698,19 +698,19 @@ export default function CompanyProfilePage() {
           </Card>
         </TabsContent>
 
-        <TabsContent value=&ldquo;settings&rdquo; className=&ldquo;space-y-6&rdquo;>
+        <TabsContent value="settings" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle className=&ldquo;flex items-center gap-2&rdquo;>
-                <Shield className=&ldquo;w-5 h-5&rdquo; />
+              <CardTitle className="flex items-center gap-2">
+                <Shield className="w-5 h-5" />
                 Privacidad
               </CardTitle>
             </CardHeader>
-            <CardContent className=&ldquo;space-y-4&rdquo;>
-              <div className=&ldquo;flex items-center justify-between&rdquo;>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between">
                 <div>
                   <Label>Perfil público</Label>
-                  <p className=&ldquo;text-sm text-muted-foreground&rdquo;>Tu perfil será visible para otros usuarios</p>
+                  <p className="text-sm text-muted-foreground">Tu perfil será visible para otros usuarios</p>
                 </div>
                 <Switch
                   checked={editedProfile.settings.publicProfile}
@@ -723,10 +723,10 @@ export default function CompanyProfilePage() {
                 />
               </div>
               <Separator />
-              <div className=&ldquo;flex items-center justify-between&rdquo;>
+              <div className="flex items-center justify-between">
                 <div>
                   <Label>Permitir mensajes</Label>
-                  <p className=&ldquo;text-sm text-muted-foreground&rdquo;>Otros usuarios pueden enviarte mensajes directos</p>
+                  <p className="text-sm text-muted-foreground">Otros usuarios pueden enviarte mensajes directos</p>
                 </div>
                 <Switch
                   checked={editedProfile.settings.allowMessages}
@@ -743,16 +743,16 @@ export default function CompanyProfilePage() {
 
           <Card>
             <CardHeader>
-              <CardTitle className=&ldquo;flex items-center gap-2&rdquo;>
-                <Bell className=&ldquo;w-5 h-5&rdquo; />
+              <CardTitle className="flex items-center gap-2">
+                <Bell className="w-5 h-5" />
                 Notificaciones
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className=&ldquo;flex items-center justify-between&rdquo;>
+              <div className="flex items-center justify-between">
                 <div>
                   <Label>Notificaciones por email</Label>
-                  <p className=&ldquo;text-sm text-muted-foreground&rdquo;>Recibe actualizaciones importantes por correo</p>
+                  <p className="text-sm text-muted-foreground">Recibe actualizaciones importantes por correo</p>
                 </div>
                 <Switch
                   checked={editedProfile.settings.emailNotifications}
@@ -769,21 +769,21 @@ export default function CompanyProfilePage() {
 
           <Card>
             <CardHeader>
-              <CardTitle className=&ldquo;flex items-center gap-2&rdquo;>
-                <CreditCard className=&ldquo;w-5 h-5&rdquo; />
+              <CardTitle className="flex items-center gap-2">
+                <CreditCard className="w-5 h-5" />
                 Plan y Facturación
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className=&ldquo;space-y-4&rdquo;>
-                <div className=&ldquo;flex items-center justify-between&rdquo;>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
                   <div>
                     <Label>Plan Actual</Label>
-                    <p className=&ldquo;text-sm text-muted-foreground&rdquo;>Plan Empresarial - Renovación automática</p>
+                    <p className="text-sm text-muted-foreground">Plan Empresarial - Renovación automática</p>
                   </div>
                   <Badge>Activo</Badge>
                 </div>
-                <Button variant=&ldquo;outline&rdquo; className=&ldquo;w-full bg-transparent&rdquo;>
+                <Button variant="outline" className="w-full bg-transparent">
                   Gestionar Suscripción
                 </Button>
               </div>

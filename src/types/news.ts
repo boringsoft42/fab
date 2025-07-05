@@ -1,6 +1,6 @@
-export type NewsType = &ldquo;COMPANY&rdquo; | &ldquo;GOVERNMENT&rdquo; | &ldquo;NGO&rdquo;;
-export type NewsStatus = &ldquo;PUBLISHED&rdquo; | &ldquo;DRAFT&rdquo; | &ldquo;ARCHIVED&rdquo;;
-export type NewsPriority = &ldquo;LOW&rdquo; | &ldquo;MEDIUM&rdquo; | &ldquo;HIGH&rdquo; | &ldquo;URGENT&rdquo;;
+export type NewsType = "COMPANY" | "GOVERNMENT" | "NGO";
+export type NewsStatus = "PUBLISHED" | "DRAFT" | "ARCHIVED";
+export type NewsPriority = "LOW" | "MEDIUM" | "HIGH" | "URGENT";
 
 export interface NewsArticle {
   id: string;
@@ -25,7 +25,7 @@ export interface NewsArticle {
   likeCount: number;
   commentCount: number;
   expiresAt?: string;
-  targetAudience: string[]; // [&ldquo;YOUTH&rdquo;, &ldquo;COMPANIES&rdquo;, &ldquo;ALL&rdquo;]
+  targetAudience: string[]; // ["YOUTH", "COMPANIES", "ALL"]
   region?: string;
   relatedLinks?: Array<{
     title: string;

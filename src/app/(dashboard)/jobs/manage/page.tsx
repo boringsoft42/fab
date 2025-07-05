@@ -1,7 +1,7 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import { useState, useEffect } from &ldquo;react&rdquo;;
-import { useRouter } from &ldquo;next/navigation&rdquo;;
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
   Plus,
   Eye,
@@ -12,10 +12,10 @@ import {
   MoreHorizontal,
   Users,
   Calendar,
-} from &ldquo;lucide-react&rdquo;;
-import { Button } from &ldquo;@/components/ui/button&rdquo;;
-import { Card, CardContent, CardHeader, CardTitle } from &ldquo;@/components/ui/card&rdquo;;
-import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableBody,
@@ -23,16 +23,16 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from &ldquo;@/components/ui/table&rdquo;;
+} from "@/components/ui/table";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from &ldquo;@/components/ui/dropdown-menu&rdquo;;
-import { Skeleton } from &ldquo;@/components/ui/skeleton&rdquo;;
-import { JobOffer, JobStatus } from &ldquo;@/types/jobs&rdquo;;
-import { useToast } from &ldquo;@/components/ui/use-toast&rdquo;;
+} from "@/components/ui/dropdown-menu";
+import { Skeleton } from "@/components/ui/skeleton";
+import { JobOffer, JobStatus } from "@/types/jobs";
+import { useToast } from "@/components/ui/use-toast";
 
 interface JobStats {
   total: number;
@@ -62,7 +62,7 @@ export default function ManageJobsPage() {
   const fetchCompanyJobs = async () => {
     try {
       // In real app, this would filter by company ID
-      const response = await fetch(&ldquo;/api/jobs&rdquo;);
+      const response = await fetch("/api/jobs");
       if (response.ok) {
         const data = await response.json();
         setJobs(data.jobs || []);
@@ -71,10 +71,10 @@ export default function ManageJobsPage() {
         const jobStats = data.jobs.reduce(
           (acc: JobStats, job: JobOffer) => ({
             total: acc.total + 1,
-            active: acc.active + (job.status === &ldquo;ACTIVE&rdquo; ? 1 : 0),
-            paused: acc.paused + (job.status === &ldquo;PAUSED&rdquo; ? 1 : 0),
-            closed: acc.closed + (job.status === &ldquo;CLOSED&rdquo; ? 1 : 0),
-            draft: acc.draft + (job.status === &ldquo;DRAFT&rdquo; ? 1 : 0),
+            active: acc.active + (job.status === "ACTIVE" ? 1 : 0),
+            paused: acc.paused + (job.status === "PAUSED" ? 1 : 0),
+            closed: acc.closed + (job.status === "CLOSED" ? 1 : 0),
+            draft: acc.draft + (job.status === "DRAFT" ? 1 : 0),
           }),
           { total: 0, active: 0, paused: 0, closed: 0, draft: 0 }
         );
@@ -82,11 +82,11 @@ export default function ManageJobsPage() {
         setStats(jobStats);
       }
     } catch (error) {
-      console.error(&ldquo;Error fetching company jobs:&rdquo;, error);
+      console.error("Error fetching company jobs:", error);
       toast({
-        title: &ldquo;Error&rdquo;,
-        description: &ldquo;No se pudieron cargar los empleos&rdquo;,
-        variant: &ldquo;destructive&rdquo;,
+        title: "Error",
+        description: "No se pudieron cargar los empleos",
+        variant: "destructive",
       });
     } finally {
       setLoading(false);
@@ -96,9 +96,9 @@ export default function ManageJobsPage() {
   const handleStatusChange = async (jobId: string, newStatus: JobStatus) => {
     try {
       const response = await fetch(`/api/jobs/${jobId}`, {
-        method: &ldquo;PUT&rdquo;,
+        method: "PUT",
         headers: {
-          &ldquo;Content-Type&rdquo;: &ldquo;application/json&rdquo;,
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ status: newStatus }),
       });
@@ -111,15 +111,15 @@ export default function ManageJobsPage() {
         );
 
         toast({
-          title: &ldquo;Estado actualizado&rdquo;,
+          title: "Estado actualizado",
           description: `El empleo ha sido ${getStatusLabel(newStatus).toLowerCase()}`,
         });
       }
     } catch (error) {
       toast({
-        title: &ldquo;Error&rdquo;,
-        description: &ldquo;No se pudo actualizar el estado del empleo&rdquo;,
-        variant: &ldquo;destructive&rdquo;,
+        title: "Error",
+        description: "No se pudo actualizar el estado del empleo",
+        variant: "destructive",
       });
     }
   };
@@ -129,16 +129,16 @@ export default function ManageJobsPage() {
       const duplicatedJob = {
         ...job,
         title: `${job.title} (Copia)`,
-        status: &ldquo;DRAFT&rdquo; as JobStatus,
+        status: "DRAFT" as JobStatus,
         publishedAt: undefined,
         applicationCount: 0,
         viewCount: 0,
       };
 
-      const response = await fetch(&ldquo;/api/jobs&rdquo;, {
-        method: &ldquo;POST&rdquo;,
+      const response = await fetch("/api/jobs", {
+        method: "POST",
         headers: {
-          &ldquo;Content-Type&rdquo;: &ldquo;application/json&rdquo;,
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(duplicatedJob),
       });
@@ -148,29 +148,29 @@ export default function ManageJobsPage() {
         setJobs((prev) => [newJob, ...prev]);
 
         toast({
-          title: &ldquo;Empleo duplicado&rdquo;,
-          description: &ldquo;Se ha creado una copia del empleo como borrador&rdquo;,
+          title: "Empleo duplicado",
+          description: "Se ha creado una copia del empleo como borrador",
         });
       }
     } catch (error) {
       toast({
-        title: &ldquo;Error&rdquo;,
-        description: &ldquo;No se pudo duplicar el empleo&rdquo;,
-        variant: &ldquo;destructive&rdquo;,
+        title: "Error",
+        description: "No se pudo duplicar el empleo",
+        variant: "destructive",
       });
     }
   };
 
   const getStatusLabel = (status: JobStatus) => {
     switch (status) {
-      case &ldquo;ACTIVE&rdquo;:
-        return &ldquo;Activo&rdquo;;
-      case &ldquo;PAUSED&rdquo;:
-        return &ldquo;Pausado&rdquo;;
-      case &ldquo;CLOSED&rdquo;:
-        return &ldquo;Cerrado&rdquo;;
-      case &ldquo;DRAFT&rdquo;:
-        return &ldquo;Borrador&rdquo;;
+      case "ACTIVE":
+        return "Activo";
+      case "PAUSED":
+        return "Pausado";
+      case "CLOSED":
+        return "Cerrado";
+      case "DRAFT":
+        return "Borrador";
       default:
         return status;
     }
@@ -178,104 +178,104 @@ export default function ManageJobsPage() {
 
   const getStatusColor = (status: JobStatus) => {
     switch (status) {
-      case &ldquo;ACTIVE&rdquo;:
-        return &ldquo;bg-green-100 text-green-800&rdquo;;
-      case &ldquo;PAUSED&rdquo;:
-        return &ldquo;bg-yellow-100 text-yellow-800&rdquo;;
-      case &ldquo;CLOSED&rdquo;:
-        return &ldquo;bg-red-100 text-red-800&rdquo;;
-      case &ldquo;DRAFT&rdquo;:
-        return &ldquo;bg-gray-100 text-gray-800&rdquo;;
+      case "ACTIVE":
+        return "bg-green-100 text-green-800";
+      case "PAUSED":
+        return "bg-yellow-100 text-yellow-800";
+      case "CLOSED":
+        return "bg-red-100 text-red-800";
+      case "DRAFT":
+        return "bg-gray-100 text-gray-800";
       default:
-        return &ldquo;bg-gray-100 text-gray-800&rdquo;;
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString(&ldquo;es-ES&rdquo;, {
-      year: &ldquo;numeric&rdquo;,
-      month: &ldquo;short&rdquo;,
-      day: &ldquo;numeric&rdquo;,
+    return new Date(dateString).toLocaleDateString("es-ES", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
   if (loading) {
     return (
-      <div className=&ldquo;max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6&rdquo;>
-        <div className=&ldquo;space-y-6&rdquo;>
-          <div className=&ldquo;flex justify-between items-center&rdquo;>
-            <Skeleton className=&ldquo;h-8 w-64&rdquo; />
-            <Skeleton className=&ldquo;h-10 w-32&rdquo; />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="space-y-6">
+          <div className="flex justify-between items-center">
+            <Skeleton className="h-8 w-64" />
+            <Skeleton className="h-10 w-32" />
           </div>
-          <div className=&ldquo;grid grid-cols-1 md:grid-cols-4 gap-4&rdquo;>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {[...Array(4)].map((_, i) => (
-              <Skeleton key={i} className=&ldquo;h-24&rdquo; />
+              <Skeleton key={i} className="h-24" />
             ))}
           </div>
-          <Skeleton className=&ldquo;h-96&rdquo; />
+          <Skeleton className="h-96" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className=&ldquo;max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6&rdquo;>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       {/* Header */}
-      <div className=&ldquo;flex justify-between items-center mb-8&rdquo;>
+      <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className=&ldquo;text-2xl font-bold text-gray-900&rdquo;>
+          <h1 className="text-2xl font-bold text-gray-900">
             Gestión de Empleos
           </h1>
-          <p className=&ldquo;text-gray-600&rdquo;>
+          <p className="text-gray-600">
             Administra tus ofertas laborales y candidatos
           </p>
         </div>
-        <Button onClick={() => router.push(&ldquo;/jobs/create&rdquo;)}>
-          <Plus className=&ldquo;w-4 h-4 mr-2&rdquo; />
+        <Button onClick={() => router.push("/jobs/create")}>
+          <Plus className="w-4 h-4 mr-2" />
           Crear Empleo
         </Button>
       </div>
 
       {/* Stats Cards */}
-      <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8&rdquo;>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
         <Card>
-          <CardContent className=&ldquo;p-4 text-center&rdquo;>
-            <div className=&ldquo;text-2xl font-bold text-gray-900&rdquo;>
+          <CardContent className="p-4 text-center">
+            <div className="text-2xl font-bold text-gray-900">
               {stats.total}
             </div>
-            <div className=&ldquo;text-sm text-gray-600&rdquo;>Total</div>
+            <div className="text-sm text-gray-600">Total</div>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className=&ldquo;p-4 text-center&rdquo;>
-            <div className=&ldquo;text-2xl font-bold text-green-600&rdquo;>
+          <CardContent className="p-4 text-center">
+            <div className="text-2xl font-bold text-green-600">
               {stats.active}
             </div>
-            <div className=&ldquo;text-sm text-gray-600&rdquo;>Activos</div>
+            <div className="text-sm text-gray-600">Activos</div>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className=&ldquo;p-4 text-center&rdquo;>
-            <div className=&ldquo;text-2xl font-bold text-yellow-600&rdquo;>
+          <CardContent className="p-4 text-center">
+            <div className="text-2xl font-bold text-yellow-600">
               {stats.paused}
             </div>
-            <div className=&ldquo;text-sm text-gray-600&rdquo;>Pausados</div>
+            <div className="text-sm text-gray-600">Pausados</div>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className=&ldquo;p-4 text-center&rdquo;>
-            <div className=&ldquo;text-2xl font-bold text-red-600&rdquo;>
+          <CardContent className="p-4 text-center">
+            <div className="text-2xl font-bold text-red-600">
               {stats.closed}
             </div>
-            <div className=&ldquo;text-sm text-gray-600&rdquo;>Cerrados</div>
+            <div className="text-sm text-gray-600">Cerrados</div>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className=&ldquo;p-4 text-center&rdquo;>
-            <div className=&ldquo;text-2xl font-bold text-gray-600&rdquo;>
+          <CardContent className="p-4 text-center">
+            <div className="text-2xl font-bold text-gray-600">
               {stats.draft}
             </div>
-            <div className=&ldquo;text-sm text-gray-600&rdquo;>Borradores</div>
+            <div className="text-sm text-gray-600">Borradores</div>
           </CardContent>
         </Card>
       </div>
@@ -296,7 +296,7 @@ export default function ManageJobsPage() {
                   <TableHead>Vistas</TableHead>
                   <TableHead>Publicado</TableHead>
                   <TableHead>Cierre</TableHead>
-                  <TableHead className=&ldquo;text-right&rdquo;>Acciones</TableHead>
+                  <TableHead className="text-right">Acciones</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -304,8 +304,8 @@ export default function ManageJobsPage() {
                   <TableRow key={job.id}>
                     <TableCell>
                       <div>
-                        <div className=&ldquo;font-medium&rdquo;>{job.title}</div>
-                        <div className=&ldquo;text-sm text-gray-600&rdquo;>
+                        <div className="font-medium">{job.title}</div>
+                        <div className="text-sm text-gray-600">
                           {job.location}
                         </div>
                       </div>
@@ -318,55 +318,55 @@ export default function ManageJobsPage() {
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <div className=&ldquo;flex items-center space-x-1&rdquo;>
-                        <Users className=&ldquo;w-4 h-4 text-gray-400&rdquo; />
+                      <div className="flex items-center space-x-1">
+                        <Users className="w-4 h-4 text-gray-400" />
                         <span>{job.applicationCount}</span>
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className=&ldquo;flex items-center space-x-1&rdquo;>
-                        <Eye className=&ldquo;w-4 h-4 text-gray-400&rdquo; />
+                      <div className="flex items-center space-x-1">
+                        <Eye className="w-4 h-4 text-gray-400" />
                         <span>{job.viewCount}</span>
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className=&ldquo;flex items-center space-x-1&rdquo;>
-                        <Calendar className=&ldquo;w-4 h-4 text-gray-400&rdquo; />
-                        <span className=&ldquo;text-sm&rdquo;>
+                      <div className="flex items-center space-x-1">
+                        <Calendar className="w-4 h-4 text-gray-400" />
+                        <span className="text-sm">
                           {formatDate(job.publishedAt)}
                         </span>
                       </div>
                     </TableCell>
                     <TableCell>
                       {job.closingDate ? (
-                        <div className=&ldquo;flex items-center space-x-1&rdquo;>
-                          <Calendar className=&ldquo;w-4 h-4 text-gray-400&rdquo; />
-                          <span className=&ldquo;text-sm&rdquo;>
+                        <div className="flex items-center space-x-1">
+                          <Calendar className="w-4 h-4 text-gray-400" />
+                          <span className="text-sm">
                             {formatDate(job.closingDate)}
                           </span>
                         </div>
                       ) : (
-                        <span className=&ldquo;text-sm text-gray-400&rdquo;>Sin fecha</span>
+                        <span className="text-sm text-gray-400">Sin fecha</span>
                       )}
                     </TableCell>
-                    <TableCell className=&ldquo;text-right&rdquo;>
+                    <TableCell className="text-right">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant=&ldquo;ghost&rdquo; size=&ldquo;sm&rdquo;>
-                            <MoreHorizontal className=&ldquo;w-4 h-4&rdquo; />
+                          <Button variant="ghost" size="sm">
+                            <MoreHorizontal className="w-4 h-4" />
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align=&ldquo;end&rdquo;>
+                        <DropdownMenuContent align="end">
                           <DropdownMenuItem
                             onClick={() => router.push(`/jobs/${job.id}`)}
                           >
-                            <Eye className=&ldquo;w-4 h-4 mr-2&rdquo; />
+                            <Eye className="w-4 h-4 mr-2" />
                             Ver detalles
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => router.push(`/jobs/${job.id}/edit`)}
                           >
-                            <Edit className=&ldquo;w-4 h-4 mr-2&rdquo; />
+                            <Edit className="w-4 h-4 mr-2" />
                             Editar
                           </DropdownMenuItem>
                           <DropdownMenuItem
@@ -374,40 +374,40 @@ export default function ManageJobsPage() {
                               router.push(`/jobs/${job.id}/candidates`)
                             }
                           >
-                            <Users className=&ldquo;w-4 h-4 mr-2&rdquo; />
+                            <Users className="w-4 h-4 mr-2" />
                             Ver candidatos ({job.applicationCount})
                           </DropdownMenuItem>
 
-                          {job.status === &ldquo;ACTIVE&rdquo; && (
+                          {job.status === "ACTIVE" && (
                             <DropdownMenuItem
                               onClick={() =>
-                                handleStatusChange(job.id, &ldquo;PAUSED&rdquo;)
+                                handleStatusChange(job.id, "PAUSED")
                               }
                             >
-                              <Pause className=&ldquo;w-4 h-4 mr-2&rdquo; />
+                              <Pause className="w-4 h-4 mr-2" />
                               Pausar
                             </DropdownMenuItem>
                           )}
 
-                          {job.status === &ldquo;PAUSED&rdquo; && (
+                          {job.status === "PAUSED" && (
                             <DropdownMenuItem
                               onClick={() =>
-                                handleStatusChange(job.id, &ldquo;ACTIVE&rdquo;)
+                                handleStatusChange(job.id, "ACTIVE")
                               }
                             >
-                              <Play className=&ldquo;w-4 h-4 mr-2&rdquo; />
+                              <Play className="w-4 h-4 mr-2" />
                               Reactivar
                             </DropdownMenuItem>
                           )}
 
-                          {(job.status === &ldquo;ACTIVE&rdquo; ||
-                            job.status === &ldquo;PAUSED&rdquo;) && (
+                          {(job.status === "ACTIVE" ||
+                            job.status === "PAUSED") && (
                             <DropdownMenuItem
                               onClick={() =>
-                                handleStatusChange(job.id, &ldquo;CLOSED&rdquo;)
+                                handleStatusChange(job.id, "CLOSED")
                               }
                             >
-                              <Archive className=&ldquo;w-4 h-4 mr-2&rdquo; />
+                              <Archive className="w-4 h-4 mr-2" />
                               Cerrar
                             </DropdownMenuItem>
                           )}
@@ -415,7 +415,7 @@ export default function ManageJobsPage() {
                           <DropdownMenuItem
                             onClick={() => handleDuplicateJob(job)}
                           >
-                            <Plus className=&ldquo;w-4 h-4 mr-2&rdquo; />
+                            <Plus className="w-4 h-4 mr-2" />
                             Duplicar
                           </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -426,16 +426,16 @@ export default function ManageJobsPage() {
               </TableBody>
             </Table>
           ) : (
-            <div className=&ldquo;text-center py-12&rdquo;>
-              <Briefcase className=&ldquo;w-12 h-12 text-gray-400 mx-auto mb-4&rdquo; />
-              <h3 className=&ldquo;text-lg font-semibold text-gray-900 mb-2&rdquo;>
+            <div className="text-center py-12">
+              <Briefcase className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
                 No has publicado ningún empleo
               </h3>
-              <p className=&ldquo;text-gray-600 mb-6&rdquo;>
+              <p className="text-gray-600 mb-6">
                 Comienza creando tu primera oferta laboral para atraer talento.
               </p>
-              <Button onClick={() => router.push(&ldquo;/jobs/create&rdquo;)}>
-                <Plus className=&ldquo;w-4 h-4 mr-2&rdquo; />
+              <Button onClick={() => router.push("/jobs/create")}>
+                <Plus className="w-4 h-4 mr-2" />
                 Crear primer empleo
               </Button>
             </div>

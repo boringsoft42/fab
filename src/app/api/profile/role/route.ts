@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from &ldquo;next/server&rdquo;;
+import { NextRequest, NextResponse } from "next/server";
 
-type UserRole = &ldquo;YOUTH&rdquo; | &ldquo;COMPANIES&rdquo; | &ldquo;MUNICIPAL_GOVERNMENTS&rdquo;;
+type UserRole = "YOUTH" | "COMPANIES" | "MUNICIPAL_GOVERNMENTS";
 
 export async function PATCH(request: NextRequest) {
   try {
@@ -8,38 +8,38 @@ export async function PATCH(request: NextRequest) {
 
     // Validate role
     const validRoles: UserRole[] = [
-      &ldquo;YOUTH&rdquo;,
-      &ldquo;COMPANIES&rdquo;,
-      &ldquo;MUNICIPAL_GOVERNMENTS&rdquo;,
+      "YOUTH",
+      "COMPANIES",
+      "MUNICIPAL_GOVERNMENTS",
     ];
 
     if (!validRoles.includes(role)) {
-      return NextResponse.json({ error: &ldquo;Invalid role&rdquo; }, { status: 400 });
+      return NextResponse.json({ error: "Invalid role" }, { status: 400 });
     }
 
     // Return mock updated user data for development
     const updatedUser = {
-      id: &ldquo;mock-user-id&rdquo;,
-      email: &ldquo;john@example.com&rdquo;,
-      name: &ldquo;John Doe&rdquo;,
+      id: "mock-user-id",
+      email: "john@example.com",
+      name: "John Doe",
       role: role,
       profile: {
-        id: &ldquo;mock-profile-id&rdquo;,
-        firstName: &ldquo;John&rdquo;,
-        lastName: &ldquo;Doe&rdquo;,
+        id: "mock-profile-id",
+        firstName: "John",
+        lastName: "Doe",
         profilePicture: null,
         completionPercentage: 15,
       },
     };
 
     return NextResponse.json({
-      message: &ldquo;Role updated successfully&rdquo;,
+      message: "Role updated successfully",
       user: updatedUser,
     });
   } catch (error) {
-    console.error(&ldquo;Error updating user role:&rdquo;, error);
+    console.error("Error updating user role:", error);
     return NextResponse.json(
-      { error: &ldquo;Internal server error&rdquo; },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }

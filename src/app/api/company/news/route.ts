@@ -1,91 +1,91 @@
-import { NextRequest, NextResponse } from &ldquo;next/server&rdquo;;
-import { NewsArticle, NewsStatus, NewsPriority } from &ldquo;@/types/news&rdquo;;
+import { NextRequest, NextResponse } from "next/server";
+import { NewsArticle, NewsStatus, NewsPriority } from "@/types/news";
 
 // Mock company news data
 const mockCompanyNews: NewsArticle[] = [
   {
-    id: &ldquo;company-news-1&rdquo;,
-    title: &ldquo;TechCorp Bolivia Lanza Programa de Becas 2024&rdquo;,
+    id: "company-news-1",
+    title: "TechCorp Bolivia Lanza Programa de Becas 2024",
     content:
-      &ldquo;TechCorp Bolivia anuncia su programa anual de becas dirigido a jóvenes talentos en tecnología. El programa incluye 50 becas completas para estudios superiores en ingeniería de sistemas, desarrollo de software y ciencia de datos.\n\nLos beneficiarios recibirán:\n• Beca completa para estudios universitarios\n• Mentoring personalizado con profesionales de la empresa\n• Oportunidad de prácticas profesionales\n• Acceso a cursos especializados en tecnologías emergentes\n\nLas postulaciones están abiertas hasta el 31 de marzo. Los requisitos incluyen promedio mínimo de 80 puntos en bachillerato y demostrar pasión por la tecnología.&rdquo;,
+      "TechCorp Bolivia anuncia su programa anual de becas dirigido a jóvenes talentos en tecnología. El programa incluye 50 becas completas para estudios superiores en ingeniería de sistemas, desarrollo de software y ciencia de datos.\n\nLos beneficiarios recibirán:\n• Beca completa para estudios universitarios\n• Mentoring personalizado con profesionales de la empresa\n• Oportunidad de prácticas profesionales\n• Acceso a cursos especializados en tecnologías emergentes\n\nLas postulaciones están abiertas hasta el 31 de marzo. Los requisitos incluyen promedio mínimo de 80 puntos en bachillerato y demostrar pasión por la tecnología.",
     summary:
-      &ldquo;TechCorp Bolivia ofrece 50 becas completas para jóvenes interesados en carreras tecnológicas, incluyendo mentoring y oportunidades de prácticas.&rdquo;,
-    imageUrl: &ldquo;/api/placeholder/800/400&rdquo;,
-    authorId: &ldquo;company-1&rdquo;,
-    authorName: &ldquo;TechCorp Bolivia&rdquo;,
-    authorType: &ldquo;COMPANY&rdquo;,
-    authorLogo: &ldquo;/logos/techcorp.svg&rdquo;,
-    status: &ldquo;PUBLISHED&rdquo;,
-    priority: &ldquo;HIGH&rdquo;,
+      "TechCorp Bolivia ofrece 50 becas completas para jóvenes interesados en carreras tecnológicas, incluyendo mentoring y oportunidades de prácticas.",
+    imageUrl: "/api/placeholder/800/400",
+    authorId: "company-1",
+    authorName: "TechCorp Bolivia",
+    authorType: "COMPANY",
+    authorLogo: "/logos/techcorp.svg",
+    status: "PUBLISHED",
+    priority: "HIGH",
     featured: true,
-    tags: [&ldquo;educación&rdquo;, &ldquo;becas&rdquo;, &ldquo;tecnología&rdquo;, &ldquo;oportunidades&rdquo;],
-    category: &ldquo;Educación y Becas&rdquo;,
-    publishedAt: &ldquo;2024-02-28T09:00:00Z&rdquo;,
-    createdAt: &ldquo;2024-02-27T15:30:00Z&rdquo;,
-    updatedAt: &ldquo;2024-02-28T09:00:00Z&rdquo;,
+    tags: ["educación", "becas", "tecnología", "oportunidades"],
+    category: "Educación y Becas",
+    publishedAt: "2024-02-28T09:00:00Z",
+    createdAt: "2024-02-27T15:30:00Z",
+    updatedAt: "2024-02-28T09:00:00Z",
     viewCount: 1250,
     likeCount: 89,
     commentCount: 23,
-    targetAudience: [&ldquo;YOUTH&rdquo;],
-    region: &ldquo;Cochabamba&rdquo;,
+    targetAudience: ["YOUTH"],
+    region: "Cochabamba",
     relatedLinks: [
       {
-        title: &ldquo;Formulario de Postulación&rdquo;,
-        url: &ldquo;https://techcorp.bo/becas2024&rdquo;,
+        title: "Formulario de Postulación",
+        url: "https://techcorp.bo/becas2024",
       },
     ],
   },
   {
-    id: &ldquo;company-news-2&rdquo;,
-    title: &ldquo;Innovate Labs Busca 20 Desarrolladores Junior&rdquo;,
+    id: "company-news-2",
+    title: "Innovate Labs Busca 20 Desarrolladores Junior",
     content:
-      &ldquo;Innovate Labs, startup líder en desarrollo de aplicaciones móviles, anuncia la apertura de 20 posiciones para desarrolladores junior. La empresa ofrece un ambiente de trabajo dinámico y oportunidades de crecimiento profesional acelerado.&rdquo;,
+      "Innovate Labs, startup líder en desarrollo de aplicaciones móviles, anuncia la apertura de 20 posiciones para desarrolladores junior. La empresa ofrece un ambiente de trabajo dinámico y oportunidades de crecimiento profesional acelerado.",
     summary:
-      &ldquo;Innovate Labs ofrece 20 empleos para desarrolladores junior con salarios competitivos y ambiente de startup.&rdquo;,
-    imageUrl: &ldquo;/api/placeholder/800/400&rdquo;,
-    authorId: &ldquo;company-2&rdquo;,
-    authorName: &ldquo;Innovate Labs&rdquo;,
-    authorType: &ldquo;COMPANY&rdquo;,
-    authorLogo: &ldquo;/logos/innovatelabs.svg&rdquo;,
-    status: &ldquo;PUBLISHED&rdquo;,
-    priority: &ldquo;MEDIUM&rdquo;,
+      "Innovate Labs ofrece 20 empleos para desarrolladores junior con salarios competitivos y ambiente de startup.",
+    imageUrl: "/api/placeholder/800/400",
+    authorId: "company-2",
+    authorName: "Innovate Labs",
+    authorType: "COMPANY",
+    authorLogo: "/logos/innovatelabs.svg",
+    status: "PUBLISHED",
+    priority: "MEDIUM",
     featured: false,
-    tags: [&ldquo;empleo&rdquo;, &ldquo;desarrollo&rdquo;, &ldquo;tecnología&rdquo;, &ldquo;startup&rdquo;],
-    category: &ldquo;Ofertas de Empleo&rdquo;,
-    publishedAt: &ldquo;2024-02-26T16:30:00Z&rdquo;,
-    createdAt: &ldquo;2024-02-25T11:45:00Z&rdquo;,
-    updatedAt: &ldquo;2024-02-26T16:30:00Z&rdquo;,
+    tags: ["empleo", "desarrollo", "tecnología", "startup"],
+    category: "Ofertas de Empleo",
+    publishedAt: "2024-02-26T16:30:00Z",
+    createdAt: "2024-02-25T11:45:00Z",
+    updatedAt: "2024-02-26T16:30:00Z",
     viewCount: 890,
     likeCount: 67,
     commentCount: 12,
-    targetAudience: [&ldquo;YOUTH&rdquo;],
-    region: &ldquo;Santa Cruz&rdquo;,
+    targetAudience: ["YOUTH"],
+    region: "Santa Cruz",
   },
   {
-    id: &ldquo;company-news-3&rdquo;,
-    title: &ldquo;FutureWorks Implementa Programa de Diversidad e Inclusión&rdquo;,
+    id: "company-news-3",
+    title: "FutureWorks Implementa Programa de Diversidad e Inclusión",
     content:
-      &ldquo;FutureWorks anuncia la implementación de su programa de diversidad e inclusión con enfoque especial en la contratación de jóvenes talentos de comunidades rurales.&rdquo;,
+      "FutureWorks anuncia la implementación de su programa de diversidad e inclusión con enfoque especial en la contratación de jóvenes talentos de comunidades rurales.",
     summary:
-      &ldquo;FutureWorks lanza programa de inclusión con becas y empleos especiales para jóvenes de comunidades rurales.&rdquo;,
-    imageUrl: &ldquo;/api/placeholder/800/400&rdquo;,
-    authorId: &ldquo;company-3&rdquo;,
-    authorName: &ldquo;FutureWorks&rdquo;,
-    authorType: &ldquo;COMPANY&rdquo;,
-    authorLogo: &ldquo;/logos/futureworks.svg&rdquo;,
-    status: &ldquo;DRAFT&rdquo;,
-    priority: &ldquo;MEDIUM&rdquo;,
+      "FutureWorks lanza programa de inclusión con becas y empleos especiales para jóvenes de comunidades rurales.",
+    imageUrl: "/api/placeholder/800/400",
+    authorId: "company-3",
+    authorName: "FutureWorks",
+    authorType: "COMPANY",
+    authorLogo: "/logos/futureworks.svg",
+    status: "DRAFT",
+    priority: "MEDIUM",
     featured: false,
-    tags: [&ldquo;diversidad&rdquo;, &ldquo;inclusión&rdquo;, &ldquo;empleo rural&rdquo;, &ldquo;oportunidades&rdquo;],
-    category: &ldquo;Responsabilidad Social&rdquo;,
-    publishedAt: &ldquo;&rdquo;,
-    createdAt: &ldquo;2024-02-22T16:00:00Z&rdquo;,
-    updatedAt: &ldquo;2024-02-23T13:15:00Z&rdquo;,
+    tags: ["diversidad", "inclusión", "empleo rural", "oportunidades"],
+    category: "Responsabilidad Social",
+    publishedAt: "",
+    createdAt: "2024-02-22T16:00:00Z",
+    updatedAt: "2024-02-23T13:15:00Z",
     viewCount: 0,
     likeCount: 0,
     commentCount: 0,
-    targetAudience: [&ldquo;YOUTH&rdquo;],
-    region: &ldquo;Cochabamba&rdquo;,
+    targetAudience: ["YOUTH"],
+    region: "Cochabamba",
   },
 ];
 
@@ -93,10 +93,10 @@ const mockCompanyNews: NewsArticle[] = [
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const companyId = searchParams.get(&ldquo;companyId&rdquo;);
-    const status = searchParams.get(&ldquo;status&rdquo;);
-    const limit = parseInt(searchParams.get(&ldquo;limit&rdquo;) || &ldquo;10&rdquo;);
-    const page = parseInt(searchParams.get(&ldquo;page&rdquo;) || &ldquo;1&rdquo;);
+    const companyId = searchParams.get("companyId");
+    const status = searchParams.get("status");
+    const limit = parseInt(searchParams.get("limit") || "10");
+    const page = parseInt(searchParams.get("page") || "1");
 
     let filtered = mockCompanyNews;
 
@@ -106,7 +106,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Filter by status if specified
-    if (status && status !== &ldquo;all&rdquo;) {
+    if (status && status !== "all") {
       filtered = filtered.filter(
         (news) => news.status === status.toUpperCase()
       );
@@ -126,9 +126,9 @@ export async function GET(request: NextRequest) {
     // Calculate stats
     const stats = {
       total: filtered.length,
-      published: mockCompanyNews.filter((n) => n.status === &ldquo;PUBLISHED&rdquo;).length,
-      draft: mockCompanyNews.filter((n) => n.status === &ldquo;DRAFT&rdquo;).length,
-      archived: mockCompanyNews.filter((n) => n.status === &ldquo;ARCHIVED&rdquo;).length,
+      published: mockCompanyNews.filter((n) => n.status === "PUBLISHED").length,
+      draft: mockCompanyNews.filter((n) => n.status === "DRAFT").length,
+      archived: mockCompanyNews.filter((n) => n.status === "ARCHIVED").length,
       totalViews: mockCompanyNews.reduce((sum, n) => sum + n.viewCount, 0),
       totalLikes: mockCompanyNews.reduce((sum, n) => sum + n.likeCount, 0),
       totalComments: mockCompanyNews.reduce(
@@ -148,9 +148,9 @@ export async function GET(request: NextRequest) {
       stats,
     });
   } catch (error) {
-    console.error(&ldquo;Error fetching company news:&rdquo;, error);
+    console.error("Error fetching company news:", error);
     return NextResponse.json(
-      { error: &ldquo;Error al obtener noticias de la empresa&rdquo; },
+      { error: "Error al obtener noticias de la empresa" },
       { status: 500 }
     );
   }
@@ -163,11 +163,11 @@ export async function POST(request: NextRequest) {
 
     // Validate required fields
     const requiredFields = [
-      &ldquo;title&rdquo;,
-      &ldquo;content&rdquo;,
-      &ldquo;summary&rdquo;,
-      &ldquo;companyId&rdquo;,
-      &ldquo;companyName&rdquo;,
+      "title",
+      "content",
+      "summary",
+      "companyId",
+      "companyName",
     ];
     for (const field of requiredFields) {
       if (!newsData[field]) {
@@ -187,21 +187,21 @@ export async function POST(request: NextRequest) {
       videoUrl: newsData.videoUrl,
       authorId: newsData.companyId,
       authorName: newsData.companyName,
-      authorType: &ldquo;COMPANY&rdquo;,
+      authorType: "COMPANY",
       authorLogo: newsData.companyLogo,
-      status: newsData.status || &ldquo;DRAFT&rdquo;,
-      priority: newsData.priority || &ldquo;MEDIUM&rdquo;,
+      status: newsData.status || "DRAFT",
+      priority: newsData.priority || "MEDIUM",
       featured: newsData.featured || false,
       tags: newsData.tags || [],
-      category: newsData.category || &ldquo;General&rdquo;,
+      category: newsData.category || "General",
       publishedAt:
-        newsData.status === &ldquo;PUBLISHED&rdquo; ? new Date().toISOString() : &ldquo;&rdquo;,
+        newsData.status === "PUBLISHED" ? new Date().toISOString() : "",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       viewCount: 0,
       likeCount: 0,
       commentCount: 0,
-      targetAudience: newsData.targetAudience || [&ldquo;YOUTH&rdquo;],
+      targetAudience: newsData.targetAudience || ["YOUTH"],
       region: newsData.region,
       relatedLinks: newsData.relatedLinks || [],
     };
@@ -211,15 +211,15 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(
       {
-        message: &ldquo;Noticia creada exitosamente&rdquo;,
+        message: "Noticia creada exitosamente",
         news: newNews,
       },
       { status: 201 }
     );
   } catch (error) {
-    console.error(&ldquo;Error creating company news:&rdquo;, error);
+    console.error("Error creating company news:", error);
     return NextResponse.json(
-      { error: &ldquo;Error al crear noticia&rdquo; },
+      { error: "Error al crear noticia" },
       { status: 500 }
     );
   }
@@ -233,7 +233,7 @@ export async function PUT(request: NextRequest) {
 
     if (!id) {
       return NextResponse.json(
-        { error: &ldquo;ID de noticia es requerido&rdquo; },
+        { error: "ID de noticia es requerido" },
         { status: 400 }
       );
     }
@@ -241,7 +241,7 @@ export async function PUT(request: NextRequest) {
     const newsIndex = mockCompanyNews.findIndex((news) => news.id === id);
     if (newsIndex === -1) {
       return NextResponse.json(
-        { error: &ldquo;Noticia no encontrada&rdquo; },
+        { error: "Noticia no encontrada" },
         { status: 404 }
       );
     }
@@ -252,7 +252,7 @@ export async function PUT(request: NextRequest) {
       ...newsData,
       updatedAt: new Date().toISOString(),
       publishedAt:
-        newsData.status === &ldquo;PUBLISHED&rdquo; &&
+        newsData.status === "PUBLISHED" &&
         !mockCompanyNews[newsIndex].publishedAt
           ? new Date().toISOString()
           : mockCompanyNews[newsIndex].publishedAt,
@@ -261,13 +261,13 @@ export async function PUT(request: NextRequest) {
     mockCompanyNews[newsIndex] = updatedNews;
 
     return NextResponse.json({
-      message: &ldquo;Noticia actualizada exitosamente&rdquo;,
+      message: "Noticia actualizada exitosamente",
       news: updatedNews,
     });
   } catch (error) {
-    console.error(&ldquo;Error updating company news:&rdquo;, error);
+    console.error("Error updating company news:", error);
     return NextResponse.json(
-      { error: &ldquo;Error al actualizar noticia&rdquo; },
+      { error: "Error al actualizar noticia" },
       { status: 500 }
     );
   }
@@ -277,11 +277,11 @@ export async function PUT(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const id = searchParams.get(&ldquo;id&rdquo;);
+    const id = searchParams.get("id");
 
     if (!id) {
       return NextResponse.json(
-        { error: &ldquo;ID de noticia es requerido&rdquo; },
+        { error: "ID de noticia es requerido" },
         { status: 400 }
       );
     }
@@ -289,7 +289,7 @@ export async function DELETE(request: NextRequest) {
     const newsIndex = mockCompanyNews.findIndex((news) => news.id === id);
     if (newsIndex === -1) {
       return NextResponse.json(
-        { error: &ldquo;Noticia no encontrada&rdquo; },
+        { error: "Noticia no encontrada" },
         { status: 404 }
       );
     }
@@ -298,12 +298,12 @@ export async function DELETE(request: NextRequest) {
     mockCompanyNews.splice(newsIndex, 1);
 
     return NextResponse.json({
-      message: &ldquo;Noticia eliminada exitosamente&rdquo;,
+      message: "Noticia eliminada exitosamente",
     });
   } catch (error) {
-    console.error(&ldquo;Error deleting company news:&rdquo;, error);
+    console.error("Error deleting company news:", error);
     return NextResponse.json(
-      { error: &ldquo;Error al eliminar noticia&rdquo; },
+      { error: "Error al eliminar noticia" },
       { status: 500 }
     );
   }

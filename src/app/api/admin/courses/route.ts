@@ -1,28 +1,28 @@
-import { NextRequest, NextResponse } from &ldquo;next/server&rdquo;;
-import { CourseCategory, CourseLevel } from &ldquo;@/types/courses&rdquo;;
+import { NextRequest, NextResponse } from "next/server";
+import { CourseCategory, CourseLevel } from "@/types/courses";
 
 // Mock data for demonstration
 const mockCourses = [
   {
-    id: &ldquo;course-1&rdquo;,
-    title: &ldquo;Habilidades Laborales Básicas&rdquo;,
-    slug: &ldquo;habilidades-laborales-basicas&rdquo;,
+    id: "course-1",
+    title: "Habilidades Laborales Básicas",
+    slug: "habilidades-laborales-basicas",
     description:
-      &ldquo;Curso completo sobre competencias fundamentales para el trabajo&rdquo;,
+      "Curso completo sobre competencias fundamentales para el trabajo",
     shortDescription:
-      &ldquo;Desarrolla las competencias esenciales para el éxito laboral&rdquo;,
-    thumbnail: &ldquo;/api/placeholder/400/300&rdquo;,
+      "Desarrolla las competencias esenciales para el éxito laboral",
+    thumbnail: "/api/placeholder/400/300",
     instructor: {
-      id: &ldquo;instructor-1&rdquo;,
-      name: &ldquo;Dra. Ana Pérez&rdquo;,
-      title: &ldquo;Especialista en Desarrollo Profesional&rdquo;,
-      avatar: &ldquo;/api/placeholder/80/80&rdquo;,
-      bio: &ldquo;Experta en desarrollo de habilidades laborales&rdquo;,
+      id: "instructor-1",
+      name: "Dra. Ana Pérez",
+      title: "Especialista en Desarrollo Profesional",
+      avatar: "/api/placeholder/80/80",
+      bio: "Experta en desarrollo de habilidades laborales",
       rating: 4.8,
       totalStudents: 2847,
       totalCourses: 12,
     },
-    institution: &ldquo;Centro de Capacitación Municipal&rdquo;,
+    institution: "Centro de Capacitación Municipal",
     category: CourseCategory.SOFT_SKILLS,
     level: CourseLevel.BEGINNER,
     duration: 8,
@@ -33,39 +33,39 @@ const mockCourses = [
     isMandatory: true,
     isActive: true,
     objectives: [
-      &ldquo;Desarrollar comunicación efectiva&rdquo;,
-      &ldquo;Fortalecer trabajo en equipo&rdquo;,
+      "Desarrollar comunicación efectiva",
+      "Fortalecer trabajo en equipo",
     ],
-    prerequisites: [&ldquo;Ninguno&rdquo;],
+    prerequisites: ["Ninguno"],
     includedMaterials: [
-      &ldquo;Videos&rdquo;,
-      &ldquo;Material de lectura&rdquo;,
-      &ldquo;Ejercicios prácticos&rdquo;,
+      "Videos",
+      "Material de lectura",
+      "Ejercicios prácticos",
     ],
     certification: true,
-    tags: [&ldquo;habilidades&rdquo;, &ldquo;trabajo&rdquo;, &ldquo;comunicación&rdquo;],
-    createdAt: new Date(&ldquo;2024-01-15&rdquo;),
-    updatedAt: new Date(&ldquo;2024-02-20&rdquo;),
-    publishedAt: new Date(&ldquo;2024-01-20&rdquo;),
+    tags: ["habilidades", "trabajo", "comunicación"],
+    createdAt: new Date("2024-01-15"),
+    updatedAt: new Date("2024-02-20"),
+    publishedAt: new Date("2024-01-20"),
   },
   {
-    id: &ldquo;course-2&rdquo;,
-    title: &ldquo;Emprendimiento Digital&rdquo;,
-    slug: &ldquo;emprendimiento-digital&rdquo;,
-    description: &ldquo;Aprende a crear y gestionar negocios digitales&rdquo;,
-    shortDescription: &ldquo;Inicia tu camino emprendedor en el mundo digital&rdquo;,
-    thumbnail: &ldquo;/api/placeholder/400/300&rdquo;,
+    id: "course-2",
+    title: "Emprendimiento Digital",
+    slug: "emprendimiento-digital",
+    description: "Aprende a crear y gestionar negocios digitales",
+    shortDescription: "Inicia tu camino emprendedor en el mundo digital",
+    thumbnail: "/api/placeholder/400/300",
     instructor: {
-      id: &ldquo;instructor-2&rdquo;,
-      name: &ldquo;Carlos Mendoza&rdquo;,
-      title: &ldquo;Consultor en Emprendimiento&rdquo;,
-      avatar: &ldquo;/api/placeholder/80/80&rdquo;,
-      bio: &ldquo;Especialista en negocios digitales&rdquo;,
+      id: "instructor-2",
+      name: "Carlos Mendoza",
+      title: "Consultor en Emprendimiento",
+      avatar: "/api/placeholder/80/80",
+      bio: "Especialista en negocios digitales",
       rating: 4.6,
       totalStudents: 1523,
       totalCourses: 8,
     },
-    institution: &ldquo;Centro de Capacitación Municipal&rdquo;,
+    institution: "Centro de Capacitación Municipal",
     category: CourseCategory.ENTREPRENEURSHIP,
     level: CourseLevel.INTERMEDIATE,
     duration: 12,
@@ -75,33 +75,33 @@ const mockCourses = [
     price: 0,
     isMandatory: false,
     isActive: true,
-    objectives: [&ldquo;Crear plan de negocios&rdquo;, &ldquo;Desarrollar MVP&rdquo;],
-    prerequisites: [&ldquo;Conocimientos básicos de computación&rdquo;],
-    includedMaterials: [&ldquo;Videos&rdquo;, &ldquo;Plantillas&rdquo;, &ldquo;Casos de estudio&rdquo;],
+    objectives: ["Crear plan de negocios", "Desarrollar MVP"],
+    prerequisites: ["Conocimientos básicos de computación"],
+    includedMaterials: ["Videos", "Plantillas", "Casos de estudio"],
     certification: true,
-    tags: [&ldquo;emprendimiento&rdquo;, &ldquo;digital&rdquo;, &ldquo;negocios&rdquo;],
-    createdAt: new Date(&ldquo;2024-02-01&rdquo;),
-    updatedAt: new Date(&ldquo;2024-02-25&rdquo;),
-    publishedAt: new Date(&ldquo;2024-02-05&rdquo;),
+    tags: ["emprendimiento", "digital", "negocios"],
+    createdAt: new Date("2024-02-01"),
+    updatedAt: new Date("2024-02-25"),
+    publishedAt: new Date("2024-02-05"),
   },
   {
-    id: &ldquo;course-3&rdquo;,
-    title: &ldquo;Alfabetización Digital Básica&rdquo;,
-    slug: &ldquo;alfabetizacion-digital-basica&rdquo;,
-    description: &ldquo;Competencias digitales fundamentales para el siglo XXI&rdquo;,
-    shortDescription: &ldquo;Aprende las herramientas digitales esenciales&rdquo;,
-    thumbnail: &ldquo;/api/placeholder/400/300&rdquo;,
+    id: "course-3",
+    title: "Alfabetización Digital Básica",
+    slug: "alfabetizacion-digital-basica",
+    description: "Competencias digitales fundamentales para el siglo XXI",
+    shortDescription: "Aprende las herramientas digitales esenciales",
+    thumbnail: "/api/placeholder/400/300",
     instructor: {
-      id: &ldquo;instructor-3&rdquo;,
-      name: &ldquo;Ing. María Rodríguez&rdquo;,
-      title: &ldquo;Especialista en Tecnología Educativa&rdquo;,
-      avatar: &ldquo;/api/placeholder/80/80&rdquo;,
-      bio: &ldquo;Experta en alfabetización digital&rdquo;,
+      id: "instructor-3",
+      name: "Ing. María Rodríguez",
+      title: "Especialista en Tecnología Educativa",
+      avatar: "/api/placeholder/80/80",
+      bio: "Experta en alfabetización digital",
       rating: 4.9,
       totalStudents: 3254,
       totalCourses: 15,
     },
-    institution: &ldquo;Centro de Capacitación Municipal&rdquo;,
+    institution: "Centro de Capacitación Municipal",
     category: CourseCategory.DIGITAL_LITERACY,
     level: CourseLevel.BEGINNER,
     duration: 6,
@@ -112,32 +112,32 @@ const mockCourses = [
     isMandatory: true,
     isActive: true,
     objectives: [
-      &ldquo;Usar herramientas de oficina&rdquo;,
-      &ldquo;Navegar internet de forma segura&rdquo;,
+      "Usar herramientas de oficina",
+      "Navegar internet de forma segura",
     ],
-    prerequisites: [&ldquo;Conocimientos básicos de computación&rdquo;],
+    prerequisites: ["Conocimientos básicos de computación"],
     includedMaterials: [
-      &ldquo;Videos tutoriales&rdquo;,
-      &ldquo;Ejercicios prácticos&rdquo;,
-      &ldquo;Recursos digitales&rdquo;,
+      "Videos tutoriales",
+      "Ejercicios prácticos",
+      "Recursos digitales",
     ],
     certification: true,
-    tags: [&ldquo;digital&rdquo;, &ldquo;tecnología&rdquo;, &ldquo;básico&rdquo;],
-    createdAt: new Date(&ldquo;2024-01-10&rdquo;),
-    updatedAt: new Date(&ldquo;2024-02-15&rdquo;),
-    publishedAt: new Date(&ldquo;2024-01-15&rdquo;),
+    tags: ["digital", "tecnología", "básico"],
+    createdAt: new Date("2024-01-10"),
+    updatedAt: new Date("2024-02-15"),
+    publishedAt: new Date("2024-01-15"),
   },
 ];
 
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
-    const query = searchParams.get(&ldquo;query&rdquo;);
-    const category = searchParams.get(&ldquo;category&rdquo;);
-    const level = searchParams.get(&ldquo;level&rdquo;);
-    const status = searchParams.get(&ldquo;status&rdquo;);
-    const page = parseInt(searchParams.get(&ldquo;page&rdquo;) || &ldquo;1&rdquo;);
-    const limit = parseInt(searchParams.get(&ldquo;limit&rdquo;) || &ldquo;10&rdquo;);
+    const query = searchParams.get("query");
+    const category = searchParams.get("category");
+    const level = searchParams.get("level");
+    const status = searchParams.get("status");
+    const page = parseInt(searchParams.get("page") || "1");
+    const limit = parseInt(searchParams.get("limit") || "10");
 
     let filteredCourses = [...mockCourses];
 
@@ -151,22 +151,22 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    if (category && category !== &ldquo;all&rdquo;) {
+    if (category && category !== "all") {
       filteredCourses = filteredCourses.filter(
         (course) => course.category === category
       );
     }
 
-    if (level && level !== &ldquo;all&rdquo;) {
+    if (level && level !== "all") {
       filteredCourses = filteredCourses.filter(
         (course) => course.level === level
       );
     }
 
-    if (status && status !== &ldquo;all&rdquo;) {
+    if (status && status !== "all") {
       filteredCourses = filteredCourses.filter((course) => {
-        if (status === &ldquo;active&rdquo;) return course.isActive;
-        if (status === &ldquo;inactive&rdquo;) return !course.isActive;
+        if (status === "active") return course.isActive;
+        if (status === "inactive") return !course.isActive;
         return true;
       });
     }
@@ -184,9 +184,9 @@ export async function GET(request: NextRequest) {
       totalPages: Math.ceil(filteredCourses.length / limit),
     });
   } catch (error) {
-    console.error(&ldquo;Error fetching courses:&rdquo;, error);
+    console.error("Error fetching courses:", error);
     return NextResponse.json(
-      { error: &ldquo;Error interno del servidor&rdquo; },
+      { error: "Error interno del servidor" },
       { status: 500 }
     );
   }
@@ -199,7 +199,7 @@ export async function POST(request: NextRequest) {
     // Validate required fields
     if (!courseData.title || !courseData.category || !courseData.level) {
       return NextResponse.json(
-        { error: &ldquo;Faltan campos requeridos&rdquo; },
+        { error: "Faltan campos requeridos" },
         { status: 400 }
       );
     }
@@ -209,9 +209,9 @@ export async function POST(request: NextRequest) {
       id: `course-${Date.now()}`,
       slug: courseData.title
         .toLowerCase()
-        .replace(/[^a-z0-9\s-]/g, &ldquo;&rdquo;)
-        .replace(/\s+/g, &ldquo;-&rdquo;)
-        .replace(/-+/g, &ldquo;-&rdquo;)
+        .replace(/[^a-z0-9\s-]/g, "")
+        .replace(/\s+/g, "-")
+        .replace(/-+/g, "-")
         .trim(),
       rating: 0,
       studentCount: 0,
@@ -226,9 +226,9 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(newCourse, { status: 201 });
   } catch (error) {
-    console.error(&ldquo;Error creating course:&rdquo;, error);
+    console.error("Error creating course:", error);
     return NextResponse.json(
-      { error: &ldquo;Error interno del servidor&rdquo; },
+      { error: "Error interno del servidor" },
       { status: 500 }
     );
   }

@@ -1,10 +1,10 @@
 // components/LocationMap.tsx
-import React from &ldquo;react&rdquo;;
-import Map, { Marker } from &ldquo;react-map-gl&rdquo;;
-import &ldquo;mapbox-gl/dist/mapbox-gl.css&rdquo;;
-import { MapPin } from &ldquo;lucide-react&rdquo;;
+import React from "react";
+import Map, { Marker } from "react-map-gl";
+import "mapbox-gl/dist/mapbox-gl.css";
+import { MapPin } from "lucide-react";
 
-const MAPBOX_TOKEN = &ldquo;pk.eyJ1IjoiZHJvOTciLCJhIjoiY21jb3dpMGM3MDA1YTJpbjd1c2M4N3h1dyJ9.jPt50SudX3bf9KDOl4oS-A&rdquo;;
+const MAPBOX_TOKEN = "pk.eyJ1IjoiZHJvOTciLCJhIjoiY21jb3dpMGM3MDA1YTJpbjd1c2M4N3h1dyJ9.jPt50SudX3bf9KDOl4oS-A";
 
 type Location = {
   latitude: number;
@@ -17,19 +17,19 @@ interface LocationMapProps {
 
 export const LocationMap: React.FC<LocationMapProps> = ({ location }) => {
   return (
-    <div className=&ldquo;rounded-xl overflow-hidden border border-gray-200&rdquo; style={{ height: &ldquo;300px&rdquo; }}>
+    <div className="rounded-xl overflow-hidden border border-gray-200" style={{ height: "300px" }}>
       <Map
         initialViewState={{
           longitude: location.longitude,
           latitude: location.latitude,
           zoom: 12,
         }}
-        style={{ width: &ldquo;100%&rdquo;, height: &ldquo;100%&rdquo; }}
-        mapStyle=&ldquo;mapbox://styles/mapbox/streets-v11&rdquo;
+        style={{ width: "100%", height: "100%" }}
+        mapStyle="mapbox://styles/mapbox/streets-v11"
         mapboxAccessToken={MAPBOX_TOKEN}
       >
-        <Marker longitude={location.longitude} latitude={location.latitude} anchor=&ldquo;bottom&rdquo;>
-          <MapPin className=&ldquo;text-red-600 w-6 h-6&rdquo; />
+        <Marker longitude={location.longitude} latitude={location.latitude} anchor="bottom">
+          <MapPin className="text-red-600 w-6 h-6" />
         </Marker>
       </Map>
     </div>

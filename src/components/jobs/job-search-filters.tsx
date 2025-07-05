@@ -1,26 +1,26 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import { useState } from &ldquo;react&rdquo;;
-import { X, ChevronDown, ChevronUp } from &ldquo;lucide-react&rdquo;;
-import { Button } from &ldquo;@/components/ui/button&rdquo;;
-import { Card, CardContent, CardHeader, CardTitle } from &ldquo;@/components/ui/card&rdquo;;
-import { Checkbox } from &ldquo;@/components/ui/checkbox&rdquo;;
-import { Label } from &ldquo;@/components/ui/label&rdquo;;
+import { useState } from "react";
+import { X, ChevronDown, ChevronUp } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from &ldquo;@/components/ui/select&rdquo;;
-import { Slider } from &ldquo;@/components/ui/slider&rdquo;;
-import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
+} from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import { Badge } from "@/components/ui/badge";
 import {
   JobSearchFilters as JobFilters,
   ContractType,
   WorkModality,
   ExperienceLevel,
-} from &ldquo;@/types/jobs&rdquo;;
+} from "@/types/jobs";
 
 interface JobSearchFiltersProps {
   filters: JobFilters;
@@ -117,56 +117,56 @@ export const JobSearchFilters = ({
   };
 
   const contractTypeOptions = [
-    { value: &ldquo;FULL_TIME&rdquo; as ContractType, label: &ldquo;Tiempo completo&rdquo; },
-    { value: &ldquo;PART_TIME&rdquo; as ContractType, label: &ldquo;Medio tiempo&rdquo; },
-    { value: &ldquo;INTERNSHIP&rdquo; as ContractType, label: &ldquo;Prácticas&rdquo; },
-    { value: &ldquo;VOLUNTEER&rdquo; as ContractType, label: &ldquo;Voluntariado&rdquo; },
-    { value: &ldquo;FREELANCE&rdquo; as ContractType, label: &ldquo;Freelance&rdquo; },
+    { value: "FULL_TIME" as ContractType, label: "Tiempo completo" },
+    { value: "PART_TIME" as ContractType, label: "Medio tiempo" },
+    { value: "INTERNSHIP" as ContractType, label: "Prácticas" },
+    { value: "VOLUNTEER" as ContractType, label: "Voluntariado" },
+    { value: "FREELANCE" as ContractType, label: "Freelance" },
   ];
 
   const workModalityOptions = [
-    { value: &ldquo;ON_SITE&rdquo; as WorkModality, label: &ldquo;Presencial&rdquo; },
-    { value: &ldquo;REMOTE&rdquo; as WorkModality, label: &ldquo;Remoto&rdquo; },
-    { value: &ldquo;HYBRID&rdquo; as WorkModality, label: &ldquo;Híbrido&rdquo; },
+    { value: "ON_SITE" as WorkModality, label: "Presencial" },
+    { value: "REMOTE" as WorkModality, label: "Remoto" },
+    { value: "HYBRID" as WorkModality, label: "Híbrido" },
   ];
 
   const experienceLevelOptions = [
-    { value: &ldquo;NO_EXPERIENCE&rdquo; as ExperienceLevel, label: &ldquo;Sin experiencia&rdquo; },
-    { value: &ldquo;ENTRY_LEVEL&rdquo; as ExperienceLevel, label: &ldquo;Principiante&rdquo; },
-    { value: &ldquo;MID_LEVEL&rdquo; as ExperienceLevel, label: &ldquo;Intermedio&rdquo; },
-    { value: &ldquo;SENIOR_LEVEL&rdquo; as ExperienceLevel, label: &ldquo;Senior&rdquo; },
+    { value: "NO_EXPERIENCE" as ExperienceLevel, label: "Sin experiencia" },
+    { value: "ENTRY_LEVEL" as ExperienceLevel, label: "Principiante" },
+    { value: "MID_LEVEL" as ExperienceLevel, label: "Intermedio" },
+    { value: "SENIOR_LEVEL" as ExperienceLevel, label: "Senior" },
   ];
 
   const locationOptions = [
-    &ldquo;Cochabamba&rdquo;,
-    &ldquo;La Paz&rdquo;,
-    &ldquo;Santa Cruz&rdquo;,
-    &ldquo;Sucre&rdquo;,
-    &ldquo;Potosí&rdquo;,
-    &ldquo;Oruro&rdquo;,
-    &ldquo;Tarija&rdquo;,
-    &ldquo;Beni&rdquo;,
-    &ldquo;Pando&rdquo;,
+    "Cochabamba",
+    "La Paz",
+    "Santa Cruz",
+    "Sucre",
+    "Potosí",
+    "Oruro",
+    "Tarija",
+    "Beni",
+    "Pando",
   ];
 
   const sectorOptions = [
-    &ldquo;Tecnología&rdquo;,
-    &ldquo;Marketing&rdquo;,
-    &ldquo;Salud&rdquo;,
-    &ldquo;Educación&rdquo;,
-    &ldquo;Finanzas&rdquo;,
-    &ldquo;Retail&rdquo;,
-    &ldquo;Turismo&rdquo;,
-    &ldquo;Construcción&rdquo;,
-    &ldquo;Agricultura&rdquo;,
-    &ldquo;Otros&rdquo;,
+    "Tecnología",
+    "Marketing",
+    "Salud",
+    "Educación",
+    "Finanzas",
+    "Retail",
+    "Turismo",
+    "Construcción",
+    "Agricultura",
+    "Otros",
   ];
 
   const datePostedOptions = [
-    { value: 1, label: &ldquo;Último día&rdquo; },
-    { value: 7, label: &ldquo;Última semana&rdquo; },
-    { value: 30, label: &ldquo;Último mes&rdquo; },
-    { value: 90, label: &ldquo;Últimos 3 meses&rdquo; },
+    { value: 1, label: "Último día" },
+    { value: 7, label: "Última semana" },
+    { value: 30, label: "Último mes" },
+    { value: 90, label: "Últimos 3 meses" },
   ];
 
   const FilterSection = ({
@@ -180,18 +180,18 @@ export const JobSearchFilters = ({
     onToggle: () => void;
     children: React.ReactNode;
   }) => (
-    <Card className=&ldquo;mb-4&rdquo;>
-      <CardHeader className=&ldquo;cursor-pointer pb-3&rdquo; onClick={onToggle}>
-        <CardTitle className=&ldquo;flex items-center justify-between text-sm font-medium&rdquo;>
+    <Card className="mb-4">
+      <CardHeader className="cursor-pointer pb-3" onClick={onToggle}>
+        <CardTitle className="flex items-center justify-between text-sm font-medium">
           {title}
           {isExpanded ? (
-            <ChevronUp className=&ldquo;w-4 h-4&rdquo; />
+            <ChevronUp className="w-4 h-4" />
           ) : (
-            <ChevronDown className=&ldquo;w-4 h-4&rdquo; />
+            <ChevronDown className="w-4 h-4" />
           )}
         </CardTitle>
       </CardHeader>
-      {isExpanded && <CardContent className=&ldquo;pt-0&rdquo;>{children}</CardContent>}
+      {isExpanded && <CardContent className="pt-0">{children}</CardContent>}
     </Card>
   );
 
@@ -206,22 +206,22 @@ export const JobSearchFilters = ({
   ].reduce((a, b) => a + b, 0);
 
   return (
-    <div className=&ldquo;space-y-4&rdquo;>
+    <div className="space-y-4">
       {/* Header */}
-      <div className=&ldquo;flex items-center justify-between&rdquo;>
-        <h3 className=&ldquo;text-lg font-semibold text-gray-900&rdquo;>Filtros</h3>
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-semibold text-gray-900">Filtros</h3>
         {activeFiltersCount > 0 && (
-          <div className=&ldquo;flex items-center space-x-2&rdquo;>
-            <Badge variant=&ldquo;secondary&rdquo; className=&ldquo;text-xs&rdquo;>
+          <div className="flex items-center space-x-2">
+            <Badge variant="secondary" className="text-xs">
               {activeFiltersCount} filtros
             </Badge>
             <Button
-              variant=&ldquo;ghost&rdquo;
-              size=&ldquo;sm&rdquo;
+              variant="ghost"
+              size="sm"
               onClick={onClearFilters}
-              className=&ldquo;text-xs&rdquo;
+              className="text-xs"
             >
-              <X className=&ldquo;w-3 h-3 mr-1&rdquo; />
+              <X className="w-3 h-3 mr-1" />
               Limpiar
             </Button>
           </div>
@@ -230,13 +230,13 @@ export const JobSearchFilters = ({
 
       {/* Location */}
       <FilterSection
-        title=&ldquo;Ubicación&rdquo;
+        title="Ubicación"
         isExpanded={expandedSections.location}
-        onToggle={() => toggleSection(&ldquo;location&rdquo;)}
+        onToggle={() => toggleSection("location")}
       >
-        <div className=&ldquo;space-y-2&rdquo;>
+        <div className="space-y-2">
           {locationOptions.map((location) => (
-            <div key={location} className=&ldquo;flex items-center space-x-2&rdquo;>
+            <div key={location} className="flex items-center space-x-2">
               <Checkbox
                 id={`location-${location}`}
                 checked={filters.location?.includes(location) || false}
@@ -244,7 +244,7 @@ export const JobSearchFilters = ({
                   handleLocationChange(location, checked as boolean)
                 }
               />
-              <Label htmlFor={`location-${location}`} className=&ldquo;text-sm&rdquo;>
+              <Label htmlFor={`location-${location}`} className="text-sm">
                 {location}
               </Label>
             </div>
@@ -254,13 +254,13 @@ export const JobSearchFilters = ({
 
       {/* Contract Type */}
       <FilterSection
-        title=&ldquo;Tipo de contrato&rdquo;
+        title="Tipo de contrato"
         isExpanded={expandedSections.contractType}
-        onToggle={() => toggleSection(&ldquo;contractType&rdquo;)}
+        onToggle={() => toggleSection("contractType")}
       >
-        <div className=&ldquo;space-y-2&rdquo;>
+        <div className="space-y-2">
           {contractTypeOptions.map((option) => (
-            <div key={option.value} className=&ldquo;flex items-center space-x-2&rdquo;>
+            <div key={option.value} className="flex items-center space-x-2">
               <Checkbox
                 id={`contract-${option.value}`}
                 checked={filters.contractType?.includes(option.value) || false}
@@ -268,7 +268,7 @@ export const JobSearchFilters = ({
                   handleContractTypeChange(option.value, checked as boolean)
                 }
               />
-              <Label htmlFor={`contract-${option.value}`} className=&ldquo;text-sm&rdquo;>
+              <Label htmlFor={`contract-${option.value}`} className="text-sm">
                 {option.label}
               </Label>
             </div>
@@ -278,13 +278,13 @@ export const JobSearchFilters = ({
 
       {/* Work Modality */}
       <FilterSection
-        title=&ldquo;Modalidad de trabajo&rdquo;
+        title="Modalidad de trabajo"
         isExpanded={expandedSections.workModality}
-        onToggle={() => toggleSection(&ldquo;workModality&rdquo;)}
+        onToggle={() => toggleSection("workModality")}
       >
-        <div className=&ldquo;space-y-2&rdquo;>
+        <div className="space-y-2">
           {workModalityOptions.map((option) => (
-            <div key={option.value} className=&ldquo;flex items-center space-x-2&rdquo;>
+            <div key={option.value} className="flex items-center space-x-2">
               <Checkbox
                 id={`modality-${option.value}`}
                 checked={filters.workModality?.includes(option.value) || false}
@@ -292,7 +292,7 @@ export const JobSearchFilters = ({
                   handleWorkModalityChange(option.value, checked as boolean)
                 }
               />
-              <Label htmlFor={`modality-${option.value}`} className=&ldquo;text-sm&rdquo;>
+              <Label htmlFor={`modality-${option.value}`} className="text-sm">
                 {option.label}
               </Label>
             </div>
@@ -302,13 +302,13 @@ export const JobSearchFilters = ({
 
       {/* Experience Level */}
       <FilterSection
-        title=&ldquo;Nivel de experiencia&rdquo;
+        title="Nivel de experiencia"
         isExpanded={expandedSections.experienceLevel}
-        onToggle={() => toggleSection(&ldquo;experienceLevel&rdquo;)}
+        onToggle={() => toggleSection("experienceLevel")}
       >
-        <div className=&ldquo;space-y-2&rdquo;>
+        <div className="space-y-2">
           {experienceLevelOptions.map((option) => (
-            <div key={option.value} className=&ldquo;flex items-center space-x-2&rdquo;>
+            <div key={option.value} className="flex items-center space-x-2">
               <Checkbox
                 id={`experience-${option.value}`}
                 checked={
@@ -318,7 +318,7 @@ export const JobSearchFilters = ({
                   handleExperienceLevelChange(option.value, checked as boolean)
                 }
               />
-              <Label htmlFor={`experience-${option.value}`} className=&ldquo;text-sm&rdquo;>
+              <Label htmlFor={`experience-${option.value}`} className="text-sm">
                 {option.label}
               </Label>
             </div>
@@ -328,22 +328,22 @@ export const JobSearchFilters = ({
 
       {/* Salary Range */}
       <FilterSection
-        title=&ldquo;Rango salarial&rdquo;
+        title="Rango salarial"
         isExpanded={expandedSections.salary}
-        onToggle={() => toggleSection(&ldquo;salary&rdquo;)}
+        onToggle={() => toggleSection("salary")}
       >
-        <div className=&ldquo;space-y-4&rdquo;>
-          <div className=&ldquo;px-2&rdquo;>
+        <div className="space-y-4">
+          <div className="px-2">
             <Slider
               value={[filters.salaryMin || 1000, filters.salaryMax || 10000]}
               onValueChange={handleSalaryChange}
               min={1000}
               max={20000}
               step={500}
-              className=&ldquo;w-full&rdquo;
+              className="w-full"
             />
           </div>
-          <div className=&ldquo;flex justify-between text-sm text-gray-600&rdquo;>
+          <div className="flex justify-between text-sm text-gray-600">
             <span>Bs. {filters.salaryMin || 1000}</span>
             <span>Bs. {filters.salaryMax || 10000}</span>
           </div>
@@ -352,13 +352,13 @@ export const JobSearchFilters = ({
 
       {/* Date Posted */}
       <FilterSection
-        title=&ldquo;Fecha de publicación&rdquo;
+        title="Fecha de publicación"
         isExpanded={expandedSections.datePosted}
-        onToggle={() => toggleSection(&ldquo;datePosted&rdquo;)}
+        onToggle={() => toggleSection("datePosted")}
       >
-        <div className=&ldquo;space-y-2&rdquo;>
+        <div className="space-y-2">
           {datePostedOptions.map((option) => (
-            <div key={option.value} className=&ldquo;flex items-center space-x-2&rdquo;>
+            <div key={option.value} className="flex items-center space-x-2">
               <Checkbox
                 id={`date-${option.value}`}
                 checked={filters.publishedInDays === option.value}
@@ -370,7 +370,7 @@ export const JobSearchFilters = ({
                   }
                 }}
               />
-              <Label htmlFor={`date-${option.value}`} className=&ldquo;text-sm&rdquo;>
+              <Label htmlFor={`date-${option.value}`} className="text-sm">
                 {option.label}
               </Label>
             </div>
@@ -380,13 +380,13 @@ export const JobSearchFilters = ({
 
       {/* Sector */}
       <FilterSection
-        title=&ldquo;Sector&rdquo;
+        title="Sector"
         isExpanded={expandedSections.sector}
-        onToggle={() => toggleSection(&ldquo;sector&rdquo;)}
+        onToggle={() => toggleSection("sector")}
       >
-        <div className=&ldquo;space-y-2&rdquo;>
+        <div className="space-y-2">
           {sectorOptions.map((sector) => (
-            <div key={sector} className=&ldquo;flex items-center space-x-2&rdquo;>
+            <div key={sector} className="flex items-center space-x-2">
               <Checkbox
                 id={`sector-${sector}`}
                 checked={filters.sector?.includes(sector) || false}
@@ -394,7 +394,7 @@ export const JobSearchFilters = ({
                   handleSectorChange(sector, checked as boolean)
                 }
               />
-              <Label htmlFor={`sector-${sector}`} className=&ldquo;text-sm&rdquo;>
+              <Label htmlFor={`sector-${sector}`} className="text-sm">
                 {sector}
               </Label>
             </div>

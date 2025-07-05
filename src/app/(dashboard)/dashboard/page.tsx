@@ -1,4 +1,4 @@
-import { AdaptiveDashboard } from &ldquo;@/components/dashboard/adaptive-dashboard&rdquo;;
+import { AdaptiveDashboard } from "@/components/dashboard/adaptive-dashboard";
 
 export default function DashboardPage() {
   return <AdaptiveDashboard />;

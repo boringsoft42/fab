@@ -1,8 +1,8 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import type React from &ldquo;react&rdquo;;
+import type React from "react";
 
-import { useState } from &ldquo;react&rdquo;;
+import { useState } from "react";
 import {
   Building2,
   MapPin,
@@ -21,24 +21,24 @@ import {
   Calendar,
   Briefcase,
   Home,
-} from &ldquo;lucide-react&rdquo;;
+} from "lucide-react";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from &ldquo;@/components/ui/card&rdquo;;
-import { Button } from &ldquo;@/components/ui/button&rdquo;;
-import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
-import { Input } from &ldquo;@/components/ui/input&rdquo;;
-import { Label } from &ldquo;@/components/ui/label&rdquo;;
-import { Textarea } from &ldquo;@/components/ui/textarea&rdquo;;
-import { Switch } from &ldquo;@/components/ui/switch&rdquo;;
-import { Tabs, TabsContent, TabsList, TabsTrigger } from &ldquo;@/components/ui/tabs&rdquo;;
-import { Avatar, AvatarFallback, AvatarImage } from &ldquo;@/components/ui/avatar&rdquo;;
-import { Separator } from &ldquo;@/components/ui/separator&rdquo;;
-import { Progress } from &ldquo;@/components/ui/progress&rdquo;;
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Separator } from "@/components/ui/separator";
+import { Progress } from "@/components/ui/progress";
 
 interface MunicipalProfile {
   id: string;
@@ -87,7 +87,7 @@ interface MunicipalProfile {
     name: string;
     description: string;
     budget: number;
-    status: &ldquo;PLANNING&rdquo; | &ldquo;IN_PROGRESS&rdquo; | &ldquo;COMPLETED&rdquo;;
+    status: "PLANNING" | "IN_PROGRESS" | "COMPLETED";
     progress: number;
   }>;
   socialMedia: {
@@ -106,28 +106,28 @@ interface MunicipalProfile {
 
 export default function MunicipalProfilePage() {
   const [profile, setProfile] = useState<MunicipalProfile>({
-    id: &ldquo;municipality-1&rdquo;,
-    name: &ldquo;Municipio de La Paz&rdquo;,
+    id: "municipality-1",
+    name: "Municipio de La Paz",
     description:
-      &ldquo;Sede de gobierno de Bolivia, centro político, administrativo y cultural del país. Comprometidos con el desarrollo sostenible y la mejora de la calidad de vida de nuestros ciudadanos.&rdquo;,
-    logo: &ldquo;/placeholder.svg?height=100&width=100&rdquo;,
-    coverImage: &ldquo;/placeholder.svg?height=300&width=800&rdquo;,
-    department: &ldquo;La Paz&rdquo;,
-    province: &ldquo;Pedro Domingo Murillo&rdquo;,
-    region: &ldquo;Altiplano&rdquo;,
-    founded: &ldquo;1548&rdquo;,
-    website: &ldquo;https://www.lapaz.bo&rdquo;,
-    email: &ldquo;contacto@lapaz.bo&rdquo;,
-    phone: &ldquo;+591 2 2650000&rdquo;,
-    address: &ldquo;Plaza Murillo s/n, La Paz, Bolivia&rdquo;,
+      "Sede de gobierno de Bolivia, centro político, administrativo y cultural del país. Comprometidos con el desarrollo sostenible y la mejora de la calidad de vida de nuestros ciudadanos.",
+    logo: "/placeholder.svg?height=100&width=100",
+    coverImage: "/placeholder.svg?height=300&width=800",
+    department: "La Paz",
+    province: "Pedro Domingo Murillo",
+    region: "Altiplano",
+    founded: "1548",
+    website: "https://www.lapaz.bo",
+    email: "contacto@lapaz.bo",
+    phone: "+591 2 2650000",
+    address: "Plaza Murillo s/n, La Paz, Bolivia",
     mayor: {
-      name: &ldquo;Iván Arias Durán&rdquo;,
-      photo: &ldquo;/placeholder.svg?height=120&width=120&rdquo;,
-      party: &ldquo;Partido Demócrata Cristiano&rdquo;,
-      startDate: &ldquo;2021-05-03&rdquo;,
-      endDate: &ldquo;2026-05-03&rdquo;,
-      email: &ldquo;alcalde@lapaz.bo&rdquo;,
-      phone: &ldquo;+591 2 2650001&rdquo;,
+      name: "Iván Arias Durán",
+      photo: "/placeholder.svg?height=120&width=120",
+      party: "Partido Demócrata Cristiano",
+      startDate: "2021-05-03",
+      endDate: "2026-05-03",
+      email: "alcalde@lapaz.bo",
+      phone: "+591 2 2650001",
     },
     demographics: {
       population: 835361,
@@ -139,11 +139,11 @@ export default function MunicipalProfilePage() {
     economy: {
       budget: 2800000000,
       mainActivities: [
-        &ldquo;Servicios&rdquo;,
-        &ldquo;Comercio&rdquo;,
-        &ldquo;Industria&rdquo;,
-        &ldquo;Turismo&rdquo;,
-        &ldquo;Administración Pública&rdquo;,
+        "Servicios",
+        "Comercio",
+        "Industria",
+        "Turismo",
+        "Administración Pública",
       ],
       unemployment: 4.2,
       poverty: 18.5,
@@ -157,39 +157,39 @@ export default function MunicipalProfilePage() {
     },
     projects: [
       {
-        name: &ldquo;Mi Teleférico - Línea Dorada&rdquo;,
-        description: &ldquo;Ampliación del sistema de transporte por cable&rdquo;,
+        name: "Mi Teleférico - Línea Dorada",
+        description: "Ampliación del sistema de transporte por cable",
         budget: 450000000,
-        status: &ldquo;IN_PROGRESS&rdquo;,
+        status: "IN_PROGRESS",
         progress: 65,
       },
       {
-        name: &ldquo;Parque Urbano Central&rdquo;,
-        description: &ldquo;Creación de espacios verdes en el centro de la ciudad&rdquo;,
+        name: "Parque Urbano Central",
+        description: "Creación de espacios verdes en el centro de la ciudad",
         budget: 85000000,
-        status: &ldquo;PLANNING&rdquo;,
+        status: "PLANNING",
         progress: 15,
       },
       {
-        name: &ldquo;Modernización del Mercado Rodríguez&rdquo;,
-        description: &ldquo;Renovación integral del mercado tradicional&rdquo;,
+        name: "Modernización del Mercado Rodríguez",
+        description: "Renovación integral del mercado tradicional",
         budget: 120000000,
-        status: &ldquo;COMPLETED&rdquo;,
+        status: "COMPLETED",
         progress: 100,
       },
       {
-        name: &ldquo;Red de Ciclovías Metropolitanas&rdquo;,
-        description: &ldquo;Implementación de rutas seguras para ciclistas&rdquo;,
+        name: "Red de Ciclovías Metropolitanas",
+        description: "Implementación de rutas seguras para ciclistas",
         budget: 35000000,
-        status: &ldquo;IN_PROGRESS&rdquo;,
+        status: "IN_PROGRESS",
         progress: 40,
       },
     ],
     socialMedia: {
-      facebook: &ldquo;https://facebook.com/AlcaldiaLaPaz&rdquo;,
-      twitter: &ldquo;https://twitter.com/AlcaldiaLaPaz&rdquo;,
-      instagram: &ldquo;https://instagram.com/alcaldialapaz&rdquo;,
-      youtube: &ldquo;https://youtube.com/AlcaldiaLaPazOficial&rdquo;,
+      facebook: "https://facebook.com/AlcaldiaLaPaz",
+      twitter: "https://twitter.com/AlcaldiaLaPaz",
+      instagram: "https://instagram.com/alcaldialapaz",
+      youtube: "https://youtube.com/AlcaldiaLaPazOficial",
     },
     settings: {
       publicProfile: true,
@@ -204,11 +204,11 @@ export default function MunicipalProfilePage() {
 
   const handleSave = async () => {
     try {
-      console.log(&ldquo;Saving municipal profile:&rdquo;, editedProfile);
+      console.log("Saving municipal profile:", editedProfile);
       setProfile(editedProfile);
       setIsEditing(false);
     } catch (error) {
-      console.error(&ldquo;Error saving profile:&rdquo;, error);
+      console.error("Error saving profile:", error);
     }
   };
 
@@ -266,95 +266,95 @@ export default function MunicipalProfilePage() {
 
   const getProjectStatusColor = (status: string) => {
     switch (status) {
-      case &ldquo;COMPLETED&rdquo;:
-        return &ldquo;bg-green-100 text-green-800&rdquo;;
-      case &ldquo;IN_PROGRESS&rdquo;:
-        return &ldquo;bg-blue-100 text-blue-800&rdquo;;
-      case &ldquo;PLANNING&rdquo;:
-        return &ldquo;bg-yellow-100 text-yellow-800&rdquo;;
+      case "COMPLETED":
+        return "bg-green-100 text-green-800";
+      case "IN_PROGRESS":
+        return "bg-blue-100 text-blue-800";
+      case "PLANNING":
+        return "bg-yellow-100 text-yellow-800";
       default:
-        return &ldquo;bg-gray-100 text-gray-800&rdquo;;
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const getProjectStatusText = (status: string) => {
     switch (status) {
-      case &ldquo;COMPLETED&rdquo;:
-        return &ldquo;Completado&rdquo;;
-      case &ldquo;IN_PROGRESS&rdquo;:
-        return &ldquo;En Progreso&rdquo;;
-      case &ldquo;PLANNING&rdquo;:
-        return &ldquo;Planificación&rdquo;;
+      case "COMPLETED":
+        return "Completado";
+      case "IN_PROGRESS":
+        return "En Progreso";
+      case "PLANNING":
+        return "Planificación";
       default:
         return status;
     }
   };
 
   return (
-    <div className=&ldquo;space-y-6&rdquo;>
+    <div className="space-y-6">
       {/* Header */}
-      <div className=&ldquo;flex justify-between items-center&rdquo;>
+      <div className="flex justify-between items-center">
         <div>
-          <h1 className=&ldquo;text-3xl font-bold&rdquo;>Perfil Municipal</h1>
-          <p className=&ldquo;text-muted-foreground&rdquo;>
+          <h1 className="text-3xl font-bold">Perfil Municipal</h1>
+          <p className="text-muted-foreground">
             Información oficial del municipio y administración local
           </p>
         </div>
-        <div className=&ldquo;flex gap-2&rdquo;>
+        <div className="flex gap-2">
           {isEditing ? (
             <>
-              <Button variant=&ldquo;outline&rdquo; onClick={handleCancel}>
-                <X className=&ldquo;w-4 h-4 mr-2&rdquo; />
+              <Button variant="outline" onClick={handleCancel}>
+                <X className="w-4 h-4 mr-2" />
                 Cancelar
               </Button>
               <Button onClick={handleSave}>
-                <Save className=&ldquo;w-4 h-4 mr-2&rdquo; />
+                <Save className="w-4 h-4 mr-2" />
                 Guardar Cambios
               </Button>
             </>
           ) : (
             <Button onClick={() => setIsEditing(true)}>
-              <Edit className=&ldquo;w-4 h-4 mr-2&rdquo; />
+              <Edit className="w-4 h-4 mr-2" />
               Editar Perfil
             </Button>
           )}
         </div>
       </div>
 
-      <Tabs defaultValue=&ldquo;general&rdquo; className=&ldquo;space-y-6&rdquo;>
-        <TabsList className=&ldquo;grid w-full grid-cols-4&rdquo;>
-          <TabsTrigger value=&ldquo;general&rdquo;>Información General</TabsTrigger>
-          <TabsTrigger value=&ldquo;demographics&rdquo;>Demografía</TabsTrigger>
-          <TabsTrigger value=&ldquo;settings&rdquo;>Configuración</TabsTrigger>
-          <TabsTrigger value=&ldquo;settings&rdquo;>Certificados</TabsTrigger>
+      <Tabs defaultValue="general" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="general">Información General</TabsTrigger>
+          <TabsTrigger value="demographics">Demografía</TabsTrigger>
+          <TabsTrigger value="settings">Configuración</TabsTrigger>
+          <TabsTrigger value="settings">Certificados</TabsTrigger>
         </TabsList>
 
-        <TabsContent value=&ldquo;general&rdquo; className=&ldquo;space-y-6&rdquo;>
+        <TabsContent value="general" className="space-y-6">
           {/* Cover Image */}
           <Card>
-            <CardContent className=&ldquo;p-0&rdquo;>
-              <div className=&ldquo;relative&rdquo;>
+            <CardContent className="p-0">
+              <div className="relative">
                 <div
                   style={{
-                    backgroundImage: `url(${editedProfile.coverImage || &ldquo;/placeholder.svg&rdquo;})`,
-                    backgroundSize: &ldquo;cover&rdquo;,
-                    backgroundPosition: &ldquo;center&rdquo;,
+                    backgroundImage: `url(${editedProfile.coverImage || "/placeholder.svg"})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
                   }}
-                  className=&ldquo;w-full h-48 rounded-t-lg&rdquo;
+                  className="w-full h-48 rounded-t-lg"
                 />
                 {isEditing && (
-                  <div className=&ldquo;absolute inset-0 bg-black/50 flex items-center justify-center rounded-t-lg&rdquo;>
-                    <Label htmlFor=&ldquo;cover-upload&rdquo; className=&ldquo;cursor-pointer&rdquo;>
-                      <div className=&ldquo;flex items-center gap-2 text-white bg-black/50 px-4 py-2 rounded-lg&rdquo;>
-                        <Camera className=&ldquo;w-4 h-4&rdquo; />
+                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-t-lg">
+                    <Label htmlFor="cover-upload" className="cursor-pointer">
+                      <div className="flex items-center gap-2 text-white bg-black/50 px-4 py-2 rounded-lg">
+                        <Camera className="w-4 h-4" />
                         Cambiar Imagen
                       </div>
                       <Input
-                        id=&ldquo;cover-upload&rdquo;
-                        type=&ldquo;file&rdquo;
-                        accept=&ldquo;image/*&rdquo;
+                        id="cover-upload"
+                        type="file"
+                        accept="image/*"
                         onChange={handleCoverUpload}
-                        className=&ldquo;hidden&rdquo;
+                        className="hidden"
                       />
                     </Label>
                   </div>
@@ -364,40 +364,40 @@ export default function MunicipalProfilePage() {
           </Card>
 
           {/* Basic Info */}
-          <div className=&ldquo;grid grid-cols-1 lg:grid-cols-3 gap-6&rdquo;>
-            <Card className=&ldquo;lg:col-span-2&rdquo;>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <Card className="lg:col-span-2">
               <CardHeader>
                 <CardTitle>Información Municipal</CardTitle>
               </CardHeader>
-              <CardContent className=&ldquo;space-y-4&rdquo;>
-                <div className=&ldquo;flex items-start gap-4&rdquo;>
-                  <div className=&ldquo;relative&rdquo;>
-                    <Avatar className=&ldquo;w-20 h-20&rdquo;>
+              <CardContent className="space-y-4">
+                <div className="flex items-start gap-4">
+                  <div className="relative">
+                    <Avatar className="w-20 h-20">
                       <AvatarImage
-                        src={editedProfile.logo || &ldquo;/placeholder.svg&rdquo;}
+                        src={editedProfile.logo || "/placeholder.svg"}
                         alt={editedProfile.name}
                       />
                       <AvatarFallback>
-                        <Building2 className=&ldquo;w-8 h-8&rdquo; />
+                        <Building2 className="w-8 h-8" />
                       </AvatarFallback>
                     </Avatar>
                     {isEditing && (
                       <Label
-                        htmlFor=&ldquo;logo-upload&rdquo;
-                        className=&ldquo;absolute -bottom-2 -right-2 bg-primary text-primary-foreground rounded-full p-1 cursor-pointer&rdquo;
+                        htmlFor="logo-upload"
+                        className="absolute -bottom-2 -right-2 bg-primary text-primary-foreground rounded-full p-1 cursor-pointer"
                       >
-                        <Camera className=&ldquo;w-3 h-3&rdquo; />
+                        <Camera className="w-3 h-3" />
                         <Input
-                          id=&ldquo;logo-upload&rdquo;
-                          type=&ldquo;file&rdquo;
-                          accept=&ldquo;image/*&rdquo;
+                          id="logo-upload"
+                          type="file"
+                          accept="image/*"
                           onChange={handleLogoUpload}
-                          className=&ldquo;hidden&rdquo;
+                          className="hidden"
                         />
                       </Label>
                     )}
                   </div>
-                  <div className=&ldquo;flex-1 space-y-2&rdquo;>
+                  <div className="flex-1 space-y-2">
                     {isEditing ? (
                       <Input
                         value={editedProfile.name}
@@ -407,19 +407,19 @@ export default function MunicipalProfilePage() {
                             name: e.target.value,
                           })
                         }
-                        className=&ldquo;text-2xl font-bold&rdquo;
+                        className="text-2xl font-bold"
                       />
                     ) : (
-                      <h2 className=&ldquo;text-2xl font-bold&rdquo;>{profile.name}</h2>
+                      <h2 className="text-2xl font-bold">{profile.name}</h2>
                     )}
-                    <div className=&ldquo;flex gap-2&rdquo;>
-                      <Badge variant=&ldquo;secondary&rdquo;>{profile.department}</Badge>
-                      <Badge variant=&ldquo;outline&rdquo;>{profile.province}</Badge>
+                    <div className="flex gap-2">
+                      <Badge variant="secondary">{profile.department}</Badge>
+                      <Badge variant="outline">{profile.province}</Badge>
                     </div>
                   </div>
                 </div>
 
-                <div className=&ldquo;space-y-3&rdquo;>
+                <div className="space-y-3">
                   <div>
                     <Label>Descripción</Label>
                     {isEditing ? (
@@ -434,13 +434,13 @@ export default function MunicipalProfilePage() {
                         rows={3}
                       />
                     ) : (
-                      <p className=&ldquo;text-muted-foreground mt-1&rdquo;>
+                      <p className="text-muted-foreground mt-1">
                         {profile.description}
                       </p>
                     )}
                   </div>
 
-                  <div className=&ldquo;grid grid-cols-2 gap-4&rdquo;>
+                  <div className="grid grid-cols-2 gap-4">
                     <div>
                       <Label>Región</Label>
                       {isEditing ? (
@@ -454,7 +454,7 @@ export default function MunicipalProfilePage() {
                           }
                         />
                       ) : (
-                        <p className=&ldquo;text-sm text-muted-foreground mt-1&rdquo;>
+                        <p className="text-sm text-muted-foreground mt-1">
                           {profile.region}
                         </p>
                       )}
@@ -472,7 +472,7 @@ export default function MunicipalProfilePage() {
                           }
                         />
                       ) : (
-                        <p className=&ldquo;text-sm text-muted-foreground mt-1&rdquo;>
+                        <p className="text-sm text-muted-foreground mt-1">
                           {profile.founded}
                         </p>
                       )}
@@ -486,10 +486,10 @@ export default function MunicipalProfilePage() {
               <CardHeader>
                 <CardTitle>Información de Contacto</CardTitle>
               </CardHeader>
-              <CardContent className=&ldquo;space-y-4&rdquo;>
-                <div className=&ldquo;space-y-3&rdquo;>
-                  <div className=&ldquo;flex items-center gap-2&rdquo;>
-                    <Globe className=&ldquo;w-4 h-4 text-muted-foreground&rdquo; />
+              <CardContent className="space-y-4">
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <Globe className="w-4 h-4 text-muted-foreground" />
                     {isEditing ? (
                       <Input
                         value={editedProfile.website}
@@ -499,19 +499,19 @@ export default function MunicipalProfilePage() {
                             website: e.target.value,
                           })
                         }
-                        placeholder=&ldquo;https://...&rdquo;
+                        placeholder="https://..."
                       />
                     ) : (
                       <a
                         href={profile.website}
-                        className=&ldquo;text-blue-600 hover:underline text-sm&rdquo;
+                        className="text-blue-600 hover:underline text-sm"
                       >
                         {profile.website}
                       </a>
                     )}
                   </div>
-                  <div className=&ldquo;flex items-center gap-2&rdquo;>
-                    <Mail className=&ldquo;w-4 h-4 text-muted-foreground&rdquo; />
+                  <div className="flex items-center gap-2">
+                    <Mail className="w-4 h-4 text-muted-foreground" />
                     {isEditing ? (
                       <Input
                         value={editedProfile.email}
@@ -521,14 +521,14 @@ export default function MunicipalProfilePage() {
                             email: e.target.value,
                           })
                         }
-                        type=&ldquo;email&rdquo;
+                        type="email"
                       />
                     ) : (
-                      <span className=&ldquo;text-sm&rdquo;>{profile.email}</span>
+                      <span className="text-sm">{profile.email}</span>
                     )}
                   </div>
-                  <div className=&ldquo;flex items-center gap-2&rdquo;>
-                    <Phone className=&ldquo;w-4 h-4 text-muted-foreground&rdquo; />
+                  <div className="flex items-center gap-2">
+                    <Phone className="w-4 h-4 text-muted-foreground" />
                     {isEditing ? (
                       <Input
                         value={editedProfile.phone}
@@ -540,12 +540,12 @@ export default function MunicipalProfilePage() {
                         }
                       />
                     ) : (
-                      <span className=&ldquo;text-sm&rdquo;>{profile.phone}</span>
+                      <span className="text-sm">{profile.phone}</span>
                     )}
                   </div>
-                  <div className=&ldquo;flex items-start gap-2&rdquo;>
-                    <MapPin className=&ldquo;w-4 h-4 text-muted-foreground mt-0.5&rdquo; />
-                    <div className=&ldquo;text-sm&rdquo;>
+                  <div className="flex items-start gap-2">
+                    <MapPin className="w-4 h-4 text-muted-foreground mt-0.5" />
+                    <div className="text-sm">
                       {isEditing ? (
                         <Input
                           value={editedProfile.address}
@@ -555,7 +555,7 @@ export default function MunicipalProfilePage() {
                               address: e.target.value,
                             })
                           }
-                          placeholder=&ldquo;Dirección&rdquo;
+                          placeholder="Dirección"
                         />
                       ) : (
                         <div>{profile.address}</div>
@@ -570,42 +570,42 @@ export default function MunicipalProfilePage() {
           {/* Mayor Information */}
           <Card>
             <CardHeader>
-              <CardTitle className=&ldquo;flex items-center gap-2&rdquo;>
-                <Briefcase className=&ldquo;w-5 h-5&rdquo; />
+              <CardTitle className="flex items-center gap-2">
+                <Briefcase className="w-5 h-5" />
                 Alcalde Municipal
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className=&ldquo;flex items-start gap-4&rdquo;>
-                <div className=&ldquo;relative&rdquo;>
-                  <Avatar className=&ldquo;w-24 h-24&rdquo;>
+              <div className="flex items-start gap-4">
+                <div className="relative">
+                  <Avatar className="w-24 h-24">
                     <AvatarImage
-                      src={editedProfile.mayor.photo || &ldquo;/placeholder.svg&rdquo;}
+                      src={editedProfile.mayor.photo || "/placeholder.svg"}
                       alt={editedProfile.mayor.name}
                     />
                     <AvatarFallback>
-                      <Users className=&ldquo;w-8 h-8&rdquo; />
+                      <Users className="w-8 h-8" />
                     </AvatarFallback>
                   </Avatar>
                   {isEditing && (
                     <Label
-                      htmlFor=&ldquo;mayor-photo-upload&rdquo;
-                      className=&ldquo;absolute -bottom-2 -right-2 bg-primary text-primary-foreground rounded-full p-1 cursor-pointer&rdquo;
+                      htmlFor="mayor-photo-upload"
+                      className="absolute -bottom-2 -right-2 bg-primary text-primary-foreground rounded-full p-1 cursor-pointer"
                     >
-                      <Camera className=&ldquo;w-3 h-3&rdquo; />
+                      <Camera className="w-3 h-3" />
                       <Input
-                        id=&ldquo;mayor-photo-upload&rdquo;
-                        type=&ldquo;file&rdquo;
-                        accept=&ldquo;image/*&rdquo;
+                        id="mayor-photo-upload"
+                        type="file"
+                        accept="image/*"
                         onChange={handleMayorPhotoUpload}
-                        className=&ldquo;hidden&rdquo;
+                        className="hidden"
                       />
                     </Label>
                   )}
                 </div>
-                <div className=&ldquo;flex-1 space-y-2&rdquo;>
+                <div className="flex-1 space-y-2">
                   {isEditing ? (
-                    <div className=&ldquo;space-y-2&rdquo;>
+                    <div className="space-y-2">
                       <Input
                         value={editedProfile.mayor.name}
                         onChange={(e) =>
@@ -617,7 +617,7 @@ export default function MunicipalProfilePage() {
                             },
                           })
                         }
-                        placeholder=&ldquo;Nombre del alcalde&rdquo;
+                        placeholder="Nombre del alcalde"
                       />
                       <Input
                         value={editedProfile.mayor.party}
@@ -630,36 +630,36 @@ export default function MunicipalProfilePage() {
                             },
                           })
                         }
-                        placeholder=&ldquo;Partido político&rdquo;
+                        placeholder="Partido político"
                       />
                     </div>
                   ) : (
                     <>
-                      <h3 className=&ldquo;text-xl font-semibold&rdquo;>
+                      <h3 className="text-xl font-semibold">
                         {profile.mayor.name}
                       </h3>
-                      <p className=&ldquo;text-muted-foreground&rdquo;>
+                      <p className="text-muted-foreground">
                         {profile.mayor.party}
                       </p>
                     </>
                   )}
-                  <div className=&ldquo;flex items-center gap-4 text-sm text-muted-foreground&rdquo;>
-                    <div className=&ldquo;flex items-center gap-1&rdquo;>
-                      <Calendar className=&ldquo;w-3 h-3&rdquo; />
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-1">
+                      <Calendar className="w-3 h-3" />
                       <span>
-                        Período:{&ldquo; &rdquo;}
-                        {new Date(profile.mayor.startDate).getFullYear()} -{&ldquo; &rdquo;}
+                        Período:{" "}
+                        {new Date(profile.mayor.startDate).getFullYear()} -{" "}
                         {new Date(profile.mayor.endDate).getFullYear()}
                       </span>
                     </div>
                   </div>
-                  <div className=&ldquo;flex gap-4 text-sm&rdquo;>
-                    <div className=&ldquo;flex items-center gap-1&rdquo;>
-                      <Mail className=&ldquo;w-3 h-3&rdquo; />
+                  <div className="flex gap-4 text-sm">
+                    <div className="flex items-center gap-1">
+                      <Mail className="w-3 h-3" />
                       <span>{profile.mayor.email}</span>
                     </div>
-                    <div className=&ldquo;flex items-center gap-1&rdquo;>
-                      <Phone className=&ldquo;w-3 h-3&rdquo; />
+                    <div className="flex items-center gap-1">
+                      <Phone className="w-3 h-3" />
                       <span>{profile.mayor.phone}</span>
                     </div>
                   </div>
@@ -669,91 +669,91 @@ export default function MunicipalProfilePage() {
           </Card>
         </TabsContent>
 
-        <TabsContent value=&ldquo;demographics&rdquo; className=&ldquo;space-y-6&rdquo;>
-          <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4&rdquo;>
+        <TabsContent value="demographics" className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <Card>
-              <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
-                <CardTitle className=&ldquo;text-sm font-medium&rdquo;>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
                   Población Total
                 </CardTitle>
-                <Users className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
+                <Users className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className=&ldquo;text-2xl font-bold&rdquo;>
+                <div className="text-2xl font-bold">
                   {profile.demographics.population.toLocaleString()}
                 </div>
-                <p className=&ldquo;text-xs text-muted-foreground&rdquo;>habitantes</p>
+                <p className="text-xs text-muted-foreground">habitantes</p>
               </CardContent>
             </Card>
 
             <Card>
-              <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
-                <CardTitle className=&ldquo;text-sm font-medium&rdquo;>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
                   Área Total
                 </CardTitle>
-                <MapPin className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
+                <MapPin className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className=&ldquo;text-2xl font-bold&rdquo;>
+                <div className="text-2xl font-bold">
                   {profile.demographics.area.toLocaleString()}
                 </div>
-                <p className=&ldquo;text-xs text-muted-foreground&rdquo;>km²</p>
+                <p className="text-xs text-muted-foreground">km²</p>
               </CardContent>
             </Card>
 
             <Card>
-              <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
-                <CardTitle className=&ldquo;text-sm font-medium&rdquo;>Densidad</CardTitle>
-                <Home className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Densidad</CardTitle>
+                <Home className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className=&ldquo;text-2xl font-bold&rdquo;>
+                <div className="text-2xl font-bold">
                   {profile.demographics.density}
                 </div>
-                <p className=&ldquo;text-xs text-muted-foreground&rdquo;>hab/km²</p>
+                <p className="text-xs text-muted-foreground">hab/km²</p>
               </CardContent>
             </Card>
 
             <Card>
-              <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
-                <CardTitle className=&ldquo;text-sm font-medium&rdquo;>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
                   Presupuesto
                 </CardTitle>
-                <TrendingUp className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
+                <TrendingUp className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className=&ldquo;text-2xl font-bold&rdquo;>
+                <div className="text-2xl font-bold">
                   Bs. {(profile.economy.budget / 1000000).toFixed(0)}M
                 </div>
-                <p className=&ldquo;text-xs text-muted-foreground&rdquo;>millones</p>
+                <p className="text-xs text-muted-foreground">millones</p>
               </CardContent>
             </Card>
           </div>
 
-          <div className=&ldquo;grid grid-cols-1 lg:grid-cols-2 gap-6&rdquo;>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
                 <CardTitle>Distribución Poblacional</CardTitle>
               </CardHeader>
-              <CardContent className=&ldquo;space-y-4&rdquo;>
+              <CardContent className="space-y-4">
                 <div>
-                  <div className=&ldquo;flex justify-between text-sm mb-1&rdquo;>
+                  <div className="flex justify-between text-sm mb-1">
                     <span>Población Urbana</span>
                     <span>{profile.demographics.urbanPopulation}%</span>
                   </div>
                   <Progress
                     value={profile.demographics.urbanPopulation}
-                    className=&ldquo;h-2&rdquo;
+                    className="h-2"
                   />
                 </div>
                 <div>
-                  <div className=&ldquo;flex justify-between text-sm mb-1&rdquo;>
+                  <div className="flex justify-between text-sm mb-1">
                     <span>Población Rural</span>
                     <span>{profile.demographics.ruralPopulation}%</span>
                   </div>
                   <Progress
                     value={profile.demographics.ruralPopulation}
-                    className=&ldquo;h-2&rdquo;
+                    className="h-2"
                   />
                 </div>
               </CardContent>
@@ -763,23 +763,23 @@ export default function MunicipalProfilePage() {
               <CardHeader>
                 <CardTitle>Indicadores Económicos</CardTitle>
               </CardHeader>
-              <CardContent className=&ldquo;space-y-4&rdquo;>
+              <CardContent className="space-y-4">
                 <div>
-                  <div className=&ldquo;flex justify-between text-sm mb-1&rdquo;>
+                  <div className="flex justify-between text-sm mb-1">
                     <span>Desempleo</span>
                     <span>{profile.economy.unemployment}%</span>
                   </div>
                   <Progress
                     value={profile.economy.unemployment}
-                    className=&ldquo;h-2&rdquo;
+                    className="h-2"
                   />
                 </div>
                 <div>
-                  <div className=&ldquo;flex justify-between text-sm mb-1&rdquo;>
+                  <div className="flex justify-between text-sm mb-1">
                     <span>Pobreza</span>
                     <span>{profile.economy.poverty}%</span>
                   </div>
-                  <Progress value={profile.economy.poverty} className=&ldquo;h-2&rdquo; />
+                  <Progress value={profile.economy.poverty} className="h-2" />
                 </div>
               </CardContent>
             </Card>
@@ -790,9 +790,9 @@ export default function MunicipalProfilePage() {
               <CardTitle>Principales Actividades Económicas</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className=&ldquo;flex flex-wrap gap-2&rdquo;>
+              <div className="flex flex-wrap gap-2">
                 {profile.economy.mainActivities.map((activity, index) => (
-                  <Badge key={index} variant=&ldquo;outline&rdquo;>
+                  <Badge key={index} variant="outline">
                     {activity}
                   </Badge>
                 ))}
@@ -801,60 +801,60 @@ export default function MunicipalProfilePage() {
           </Card>
         </TabsContent>
 
-        {/* <TabsContent value=&ldquo;services&rdquo; className=&ldquo;space-y-6&rdquo;>
-          <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4&rdquo;>
+        {/* <TabsContent value="services" className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             <Card>
-              <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
-                <CardTitle className=&ldquo;text-sm font-medium&rdquo;>Educación</CardTitle>
-                <GraduationCap className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Educación</CardTitle>
+                <GraduationCap className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className=&ldquo;text-2xl font-bold&rdquo;>{profile.services.education}%</div>
-                <Progress value={profile.services.education} className=&ldquo;h-2 mt-2&rdquo; />
+                <div className="text-2xl font-bold">{profile.services.education}%</div>
+                <Progress value={profile.services.education} className="h-2 mt-2" />
               </CardContent>
             </Card>
 
             <Card>
-              <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
-                <CardTitle className=&ldquo;text-sm font-medium&rdquo;>Salud</CardTitle>
-                <Heart className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Salud</CardTitle>
+                <Heart className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className=&ldquo;text-2xl font-bold&rdquo;>{profile.services.health}%</div>
-                <Progress value={profile.services.health} className=&ldquo;h-2 mt-2&rdquo; />
+                <div className="text-2xl font-bold">{profile.services.health}%</div>
+                <Progress value={profile.services.health} className="h-2 mt-2" />
               </CardContent>
             </Card>
 
             <Card>
-              <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
-                <CardTitle className=&ldquo;text-sm font-medium&rdquo;>Agua Potable</CardTitle>
-                <TreePine className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Agua Potable</CardTitle>
+                <TreePine className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className=&ldquo;text-2xl font-bold&rdquo;>{profile.services.water}%</div>
-                <Progress value={profile.services.water} className=&ldquo;h-2 mt-2&rdquo; />
+                <div className="text-2xl font-bold">{profile.services.water}%</div>
+                <Progress value={profile.services.water} className="h-2 mt-2" />
               </CardContent>
             </Card>
 
             <Card>
-              <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
-                <CardTitle className=&ldquo;text-sm font-medium&rdquo;>Electricidad</CardTitle>
-                <Award className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Electricidad</CardTitle>
+                <Award className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className=&ldquo;text-2xl font-bold&rdquo;>{profile.services.electricity}%</div>
-                <Progress value={profile.services.electricity} className=&ldquo;h-2 mt-2&rdquo; />
+                <div className="text-2xl font-bold">{profile.services.electricity}%</div>
+                <Progress value={profile.services.electricity} className="h-2 mt-2" />
               </CardContent>
             </Card>
 
             <Card>
-              <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
-                <CardTitle className=&ldquo;text-sm font-medium&rdquo;>Internet</CardTitle>
-                <Globe className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Internet</CardTitle>
+                <Globe className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className=&ldquo;text-2xl font-bold&rdquo;>{profile.services.internet}%</div>
-                <Progress value={profile.services.internet} className=&ldquo;h-2 mt-2&rdquo; />
+                <div className="text-2xl font-bold">{profile.services.internet}%</div>
+                <Progress value={profile.services.internet} className="h-2 mt-2" />
               </CardContent>
             </Card>
           </div>
@@ -865,8 +865,8 @@ export default function MunicipalProfilePage() {
               <CardDescription>Porcentaje de población con acceso a servicios esenciales</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className=&ldquo;space-y-4&rdquo;>
-                <div className=&ldquo;text-sm text-muted-foreground&rdquo;>
+              <div className="space-y-4">
+                <div className="text-sm text-muted-foreground">
                   Los indicadores muestran el porcentaje de la población que tiene acceso a cada servicio básico. El
                   municipio trabaja continuamente para mejorar estos índices y garantizar el bienestar de todos los
                   ciudadanos.
@@ -876,14 +876,14 @@ export default function MunicipalProfilePage() {
           </Card>
         </TabsContent> */}
 
-        <TabsContent value=&ldquo;projects&rdquo; className=&ldquo;space-y-6&rdquo;>
-          <div className=&ldquo;grid gap-4&rdquo;>
+        <TabsContent value="projects" className="space-y-6">
+          <div className="grid gap-4">
             {profile.projects.map((project, index) => (
               <Card key={index}>
                 <CardHeader>
-                  <div className=&ldquo;flex justify-between items-start&rdquo;>
+                  <div className="flex justify-between items-start">
                     <div>
-                      <CardTitle className=&ldquo;text-lg&rdquo;>{project.name}</CardTitle>
+                      <CardTitle className="text-lg">{project.name}</CardTitle>
                       <CardDescription>{project.description}</CardDescription>
                     </div>
                     <Badge className={getProjectStatusColor(project.status)}>
@@ -892,14 +892,14 @@ export default function MunicipalProfilePage() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className=&ldquo;space-y-3&rdquo;>
-                    <div className=&ldquo;flex justify-between items-center text-sm&rdquo;>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center text-sm">
                       <span>
                         Presupuesto: Bs. {project.budget.toLocaleString()}
                       </span>
                       <span>Progreso: {project.progress}%</span>
                     </div>
-                    <Progress value={project.progress} className=&ldquo;h-2&rdquo; />
+                    <Progress value={project.progress} className="h-2" />
                   </div>
                 </CardContent>
               </Card>
@@ -907,19 +907,19 @@ export default function MunicipalProfilePage() {
           </div>
         </TabsContent>
 
-        <TabsContent value=&ldquo;settings&rdquo; className=&ldquo;space-y-6&rdquo;>
+        <TabsContent value="settings" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle className=&ldquo;flex items-center gap-2&rdquo;>
-                <Shield className=&ldquo;w-5 h-5&rdquo; />
+              <CardTitle className="flex items-center gap-2">
+                <Shield className="w-5 h-5" />
                 Configuración de Privacidad
               </CardTitle>
             </CardHeader>
-            <CardContent className=&ldquo;space-y-4&rdquo;>
-              <div className=&ldquo;flex items-center justify-between&rdquo;>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between">
                 <div>
                   <Label>Perfil público</Label>
-                  <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
+                  <p className="text-sm text-muted-foreground">
                     La información municipal será visible públicamente
                   </p>
                 </div>
@@ -937,10 +937,10 @@ export default function MunicipalProfilePage() {
                 />
               </div>
               <Separator />
-              <div className=&ldquo;flex items-center justify-between&rdquo;>
+              <div className="flex items-center justify-between">
                 <div>
                   <Label>Mostrar presupuesto</Label>
-                  <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
+                  <p className="text-sm text-muted-foreground">
                     Información presupuestaria visible al público
                   </p>
                 </div>
@@ -958,10 +958,10 @@ export default function MunicipalProfilePage() {
                 />
               </div>
               <Separator />
-              <div className=&ldquo;flex items-center justify-between&rdquo;>
+              <div className="flex items-center justify-between">
                 <div>
                   <Label>Permitir mensajes</Label>
-                  <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
+                  <p className="text-sm text-muted-foreground">
                     Los ciudadanos pueden enviar mensajes directos
                   </p>
                 </div>
@@ -983,16 +983,16 @@ export default function MunicipalProfilePage() {
 
           <Card>
             <CardHeader>
-              <CardTitle className=&ldquo;flex items-center gap-2&rdquo;>
-                <Bell className=&ldquo;w-5 h-5&rdquo; />
+              <CardTitle className="flex items-center gap-2">
+                <Bell className="w-5 h-5" />
                 Notificaciones
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className=&ldquo;flex items-center justify-between&rdquo;>
+              <div className="flex items-center justify-between">
                 <div>
                   <Label>Notificaciones por email</Label>
-                  <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
+                  <p className="text-sm text-muted-foreground">
                     Recibe actualizaciones importantes por correo
                   </p>
                 </div>
@@ -1019,8 +1019,8 @@ export default function MunicipalProfilePage() {
                 Enlaces a perfiles oficiales del municipio
               </CardDescription>
             </CardHeader>
-            <CardContent className=&ldquo;space-y-4&rdquo;>
-              <div className=&ldquo;space-y-3&rdquo;>
+            <CardContent className="space-y-4">
+              <div className="space-y-3">
                 <div>
                   <Label>Facebook</Label>
                   <Input
@@ -1038,7 +1038,7 @@ export default function MunicipalProfilePage() {
                         },
                       })
                     }
-                    placeholder=&ldquo;https://facebook.com/municipio&rdquo;
+                    placeholder="https://facebook.com/municipio"
                     disabled={!isEditing}
                   />
                 </div>
@@ -1059,7 +1059,7 @@ export default function MunicipalProfilePage() {
                         },
                       })
                     }
-                    placeholder=&ldquo;https://twitter.com/municipio&rdquo;
+                    placeholder="https://twitter.com/municipio"
                     disabled={!isEditing}
                   />
                 </div>
@@ -1080,7 +1080,7 @@ export default function MunicipalProfilePage() {
                         },
                       })
                     }
-                    placeholder=&ldquo;https://instagram.com/municipio&rdquo;
+                    placeholder="https://instagram.com/municipio"
                     disabled={!isEditing}
                   />
                 </div>
@@ -1101,7 +1101,7 @@ export default function MunicipalProfilePage() {
                         },
                       })
                     }
-                    placeholder=&ldquo;https://youtube.com/municipio&rdquo;
+                    placeholder="https://youtube.com/municipio"
                     disabled={!isEditing}
                   />
                 </div>
@@ -1109,59 +1109,59 @@ export default function MunicipalProfilePage() {
             </CardContent>
           </Card>
         </TabsContent>
-        <TabsContent value=&ldquo;certificates&rdquo; className=&ldquo;space-y-6&rdquo;>
+        <TabsContent value="certificates" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle className=&ldquo;flex items-center gap-2&rdquo;>
-                <Award className=&ldquo;h-5 w-5&rdquo; />
+              <CardTitle className="flex items-center gap-2">
+                <Award className="h-5 w-5" />
                 Certificado de Finalización
               </CardTitle>
             </CardHeader>
-            <CardContent className=&ldquo;space-y-4&rdquo;>
-              <div className=&ldquo;space-y-2&rdquo;>
-                <Label htmlFor=&ldquo;certificateFile&rdquo;>Subir Certificado (PDF)</Label>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="certificateFile">Subir Certificado (PDF)</Label>
                 <Input
-                  id=&ldquo;certificateFile&rdquo;
-                  type=&ldquo;file&rdquo;
-                  accept=&ldquo;application/pdf&rdquo;
+                  id="certificateFile"
+                  type="file"
+                  accept="application/pdf"
                   onChange={(e) => {
                     const file = e.target.files?.[0];
                     if (file) setCertificateFile(file);
                   }}
                 />
                 {certificateFile && (
-                  <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
+                  <p className="text-sm text-muted-foreground">
                     Archivo seleccionado: {certificateFile.name}
                   </p>
                 )}
               </div>
 
-              <div className=&ldquo;flex justify-end&rdquo;>
+              <div className="flex justify-end">
                 <Button
                   disabled={!certificateFile}
                   onClick={async () => {
                     const formDataUpload = new FormData();
-                    formDataUpload.append(&ldquo;file&rdquo;, certificateFile!);
+                    formDataUpload.append("file", certificateFile!);
 
                     try {
-                      const res = await fetch(&ldquo;/api/certificates/upload&rdquo;, {
-                        method: &ldquo;POST&rdquo;,
+                      const res = await fetch("/api/certificates/upload", {
+                        method: "POST",
                         body: formDataUpload,
                       });
 
                       if (!res.ok)
-                        throw new Error(&ldquo;Error al subir certificado&rdquo;);
+                        throw new Error("Error al subir certificado");
 
                       const result = await res.json();
-                      console.log(&ldquo;Certificado subido:&rdquo;, result);
+                      console.log("Certificado subido:", result);
 
                       // Guarda la URL en el estado del curso (si tienes un campo para eso)
-                      handleInputChange(&ldquo;certificateUrl&rdquo;, result.url);
+                      handleInputChange("certificateUrl", result.url);
 
                       // Limpia el estado local si deseas
                       setCertificateFile(null);
                     } catch (err) {
-                      console.error(&ldquo;Error al subir:&rdquo;, err);
+                      console.error("Error al subir:", err);
                     }
                   }}
                 >
@@ -1170,13 +1170,13 @@ export default function MunicipalProfilePage() {
               </div>
 
               {formData.certificateUrl && (
-                <div className=&ldquo;text-sm text-green-700&rdquo;>
-                  Certificado cargado:{&ldquo; &rdquo;}
+                <div className="text-sm text-green-700">
+                  Certificado cargado:{" "}
                   <a
                     href={formData.certificateUrl}
-                    target=&ldquo;_blank&rdquo;
-                    rel=&ldquo;noopener noreferrer&rdquo;
-                    className=&ldquo;underline&rdquo;
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline"
                   >
                     Ver certificado
                   </a>

@@ -1,30 +1,30 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import { useState } from &ldquo;react&rdquo;;
-import { useRouter } from &ldquo;next/navigation&rdquo;;
-import { CourseCategory, CourseLevel } from &ldquo;@/types/courses&rdquo;;
-import { Button } from &ldquo;@/components/ui/button&rdquo;;
-import { Card, CardContent, CardHeader, CardTitle } from &ldquo;@/components/ui/card&rdquo;;
-import { Input } from &ldquo;@/components/ui/input&rdquo;;
-import { Label } from &ldquo;@/components/ui/label&rdquo;;
-import { Textarea } from &ldquo;@/components/ui/textarea&rdquo;;
-import { Checkbox } from &ldquo;@/components/ui/checkbox&rdquo;;
-import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
-import { Separator } from &ldquo;@/components/ui/separator&rdquo;;
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { CourseCategory, CourseLevel } from "@/types/courses";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from &ldquo;@/components/ui/dialog&rdquo;;
+} from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from &ldquo;@/components/ui/select&rdquo;;
-import { Tabs, TabsContent, TabsList, TabsTrigger } from &ldquo;@/components/ui/tabs&rdquo;;
+} from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   ArrowLeft,
   Save,
@@ -39,15 +39,15 @@ import {
   Award,
   Users,
   Target,
-} from &ldquo;lucide-react&rdquo;;
+} from "lucide-react";
 
 interface CourseFormData {
   title: string;
   slug: string;
   shortDescription: string;
   description: string;
-  category: CourseCategory | &ldquo;&rdquo;;
-  level: CourseLevel | &ldquo;&rdquo;;
+  category: CourseCategory | "" | undefined;
+  level: CourseLevel | "" | undefined;
   duration: number;
   price: number;
   isMandatory: boolean;
@@ -71,30 +71,30 @@ export default function CreateCoursePage() {
   const [certificateDialogOpen, setCertificateDialogOpen] = useState(false);
   const [certificateFile, setCertificateFile] = useState<File | null>(null);
 
-  const [activeTab, setActiveTab] = useState(&ldquo;basic&rdquo;);
+  const [activeTab, setActiveTab] = useState("basic");
   const [formData, setFormData] = useState<CourseFormData>({
-    title: &ldquo;&rdquo;,
-    slug: &ldquo;&rdquo;,
-    shortDescription: &ldquo;&rdquo;,
-    description: &ldquo;&rdquo;,
-    category: &ldquo;&rdquo;,
-    level: &ldquo;&rdquo;,
+    title: "",
+    slug: "",
+    shortDescription: "",
+    description: "",
+    category: "",
+    level: "",
     duration: 0,
     price: 0,
     isMandatory: false,
     isActive: false,
     certification: true,
-    objectives: [&ldquo;&rdquo;],
-    prerequisites: [&ldquo;&rdquo;],
-    includedMaterials: [&ldquo;&rdquo;],
+    objectives: [""],
+    prerequisites: [""],
+    includedMaterials: [""],
     tags: [],
-    thumbnail: &ldquo;&rdquo;,
-    videoPreview: &ldquo;&rdquo;,
+    thumbnail: "",
+    videoPreview: "",
     instructor: {
-      name: &ldquo;&rdquo;,
-      title: &ldquo;&rdquo;,
-      bio: &ldquo;&rdquo;,
-      avatar: &ldquo;&rdquo;,
+      name: "",
+      title: "",
+      bio: "",
+      avatar: "",
     },
   });
 
@@ -108,12 +108,12 @@ export default function CreateCoursePage() {
     }));
 
     // Auto-generate slug from title
-    if (field === &ldquo;title&rdquo;) {
+    if (field === "title") {
       const slug = value
         .toLowerCase()
-        .replace(/[^a-z0-9\s-]/g, &ldquo;&rdquo;)
-        .replace(/\s+/g, &ldquo;-&rdquo;)
-        .replace(/-+/g, &ldquo;-&rdquo;)
+        .replace(/[^a-z0-9\s-]/g, "")
+        .replace(/\s+/g, "-")
+        .replace(/-+/g, "-")
         .trim();
       setFormData((prev) => ({
         ...prev,
@@ -123,7 +123,7 @@ export default function CreateCoursePage() {
   };
 
   const handleInstructorChange = (
-    field: keyof CourseFormData[&ldquo;instructor&rdquo;],
+    field: keyof CourseFormData["instructor"],
     value: string
   ) => {
     setFormData((prev) => ({
@@ -151,7 +151,7 @@ export default function CreateCoursePage() {
   const addArrayItem = (field: keyof CourseFormData) => {
     setFormData((prev) => ({
       ...prev,
-      [field]: [...(prev[field] as string[]), &ldquo;&rdquo;],
+      [field]: [...(prev[field] as string[]), ""],
     }));
   };
 
@@ -189,55 +189,55 @@ export default function CreateCoursePage() {
         publishedAt: isDraft ? null : new Date(),
       };
 
-      console.log(&ldquo;Saving course:&rdquo;, courseData);
+      console.log("Saving course:", courseData);
 
       // Here you would make an API call to save the course
       // await fetch('/api/admin/courses', { method: 'POST', body: JSON.stringify(courseData) });
 
-      router.push(&ldquo;/admin/courses&rdquo;);
+      router.push("/admin/courses");
     } catch (error) {
-      console.error(&ldquo;Error saving course:&rdquo;, error);
+      console.error("Error saving course:", error);
     }
   };
 
   const getCategoryLabel = (category: CourseCategory) => {
     const labels = {
-      [CourseCategory.SOFT_SKILLS]: &ldquo;Habilidades Blandas&rdquo;,
-      [CourseCategory.BASIC_COMPETENCIES]: &ldquo;Competencias Básicas&rdquo;,
-      [CourseCategory.JOB_PLACEMENT]: &ldquo;Inserción Laboral&rdquo;,
-      [CourseCategory.ENTREPRENEURSHIP]: &ldquo;Emprendimiento&rdquo;,
-      [CourseCategory.TECHNICAL_SKILLS]: &ldquo;Habilidades Técnicas&rdquo;,
-      [CourseCategory.DIGITAL_LITERACY]: &ldquo;Alfabetización Digital&rdquo;,
-      [CourseCategory.COMMUNICATION]: &ldquo;Comunicación&rdquo;,
-      [CourseCategory.LEADERSHIP]: &ldquo;Liderazgo&rdquo;,
+      [CourseCategory.SOFT_SKILLS]: "Habilidades Blandas",
+      [CourseCategory.BASIC_COMPETENCIES]: "Competencias Básicas",
+      [CourseCategory.JOB_PLACEMENT]: "Inserción Laboral",
+      [CourseCategory.ENTREPRENEURSHIP]: "Emprendimiento",
+      [CourseCategory.TECHNICAL_SKILLS]: "Habilidades Técnicas",
+      [CourseCategory.DIGITAL_LITERACY]: "Alfabetización Digital",
+      [CourseCategory.COMMUNICATION]: "Comunicación",
+      [CourseCategory.LEADERSHIP]: "Liderazgo",
     };
     return labels[category] || category;
   };
 
   return (
-    <div className=&ldquo;container mx-auto p-6 max-w-4xl&rdquo;>
+    <div className="container mx-auto p-6 max-w-4xl">
       {/* Header */}
-      <div className=&ldquo;flex items-center justify-between mb-6&rdquo;>
-        <div className=&ldquo;flex items-center gap-4&rdquo;>
-          <Button variant=&ldquo;ghost&rdquo; onClick={() => router.back()}>
-            <ArrowLeft className=&ldquo;h-4 w-4 mr-2&rdquo; />
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-4">
+          <Button variant="ghost" onClick={() => router.back()}>
+            <ArrowLeft className="h-4 w-4 mr-2" />
             Volver
           </Button>
           <div>
-            <h1 className=&ldquo;text-2xl font-bold&rdquo;>Crear Nuevo Curso</h1>
-            <p className=&ldquo;text-muted-foreground&rdquo;>
+            <h1 className="text-2xl font-bold">Crear Nuevo Curso</h1>
+            <p className="text-muted-foreground">
               Configure el contenido educativo para sus estudiantes
             </p>
           </div>
         </div>
 
-        <div className=&ldquo;flex gap-2&rdquo;>
-          <Button variant=&ldquo;outline&rdquo; onClick={() => handleSubmit(true)}>
-            <Save className=&ldquo;h-4 w-4 mr-2&rdquo; />
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => handleSubmit(true)}>
+            <Save className="h-4 w-4 mr-2" />
             Guardar Borrador
           </Button>
           <Button onClick={() => handleSubmit(false)}>
-            <Eye className=&ldquo;h-4 w-4 mr-2&rdquo; />
+            <Eye className="h-4 w-4 mr-2" />
             Publicar Curso
           </Button>
         </div>
@@ -246,90 +246,87 @@ export default function CreateCoursePage() {
       <Tabs
         value={activeTab}
         onValueChange={setActiveTab}
-        className=&ldquo;space-y-6&rdquo;
+        className="space-y-6"
       >
-        <TabsList className=&ldquo;grid w-full grid-cols-4&rdquo;>
-          <TabsTrigger value=&ldquo;basic&rdquo;>Información Básica</TabsTrigger>
-          <TabsTrigger value=&ldquo;content&rdquo;>Contenido</TabsTrigger>
-          <TabsTrigger value=&ldquo;instructor&rdquo;>Instructor</TabsTrigger>
-          <TabsTrigger value=&ldquo;settings&rdquo;>Configuración</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="basic">Información Básica</TabsTrigger>
+          <TabsTrigger value="content">Contenido</TabsTrigger>
+          <TabsTrigger value="instructor">Instructor</TabsTrigger>
+          <TabsTrigger value="settings">Configuración</TabsTrigger>
         </TabsList>
 
         {/* Basic Information Tab */}
-        <TabsContent value=&ldquo;basic&rdquo; className=&ldquo;space-y-6&rdquo;>
+        <TabsContent value="basic" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle className=&ldquo;flex items-center gap-2&rdquo;>
-                <BookOpen className=&ldquo;h-5 w-5&rdquo; />
+              <CardTitle className="flex items-center gap-2">
+                <BookOpen className="h-5 w-5" />
                 Información del Curso
               </CardTitle>
             </CardHeader>
-            <CardContent className=&ldquo;space-y-4&rdquo;>
-              <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 gap-4&rdquo;>
-                <div className=&ldquo;space-y-2&rdquo;>
-            <CardContent className=&ldquo;space-y-4&rdquo;>
-              <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 gap-4&rdquo;>
-                <div className=&ldquo;space-y-2&rdquo;>
-                  <Label htmlFor=&ldquo;title&rdquo;>Título del Curso *</Label>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="title">Título del Curso *</Label>
                   <Input
-                    id=&ldquo;title&rdquo;
+                    id="title"
                     value={formData.title}
-                    onChange={(e) => handleInputChange(&ldquo;title&rdquo;, e.target.value)}
-                    placeholder=&ldquo;Ej: Habilidades Laborales Básicas&rdquo;
+                    onChange={(e) => handleInputChange("title", e.target.value)}
+                    placeholder="Ej: Habilidades Laborales Básicas"
                   />
                 </div>
 
-                <div className=&ldquo;space-y-2&rdquo;>
-                  <Label htmlFor=&ldquo;slug&rdquo;>URL del Curso</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="slug">URL del Curso</Label>
                   <Input
-                    id=&ldquo;slug&rdquo;
+                    id="slug"
                     value={formData.slug}
-                    onChange={(e) => handleInputChange(&ldquo;slug&rdquo;, e.target.value)}
-                    placeholder=&ldquo;habilidades-laborales-basicas&rdquo;
+                    onChange={(e) => handleInputChange("slug", e.target.value)}
+                    placeholder="habilidades-laborales-basicas"
                   />
                 </div>
               </div>
 
-              <div className=&ldquo;space-y-2&rdquo;>
-                <Label htmlFor=&ldquo;shortDescription&rdquo;>Descripción Corta *</Label>
+              <div className="space-y-2">
+                <Label htmlFor="shortDescription">Descripción Corta *</Label>
                 <Input
-                  id=&ldquo;shortDescription&rdquo;
+                  id="shortDescription"
                   value={formData.shortDescription}
                   onChange={(e) =>
-                    handleInputChange(&ldquo;shortDescription&rdquo;, e.target.value)
+                    handleInputChange("shortDescription", e.target.value)
                   }
-                  placeholder=&ldquo;Descripción que aparece en las tarjetas del curso&rdquo;
+                  placeholder="Descripción que aparece en las tarjetas del curso"
                   maxLength={120}
                 />
-                <p className=&ldquo;text-xs text-muted-foreground&rdquo;>
+                <p className="text-xs text-muted-foreground">
                   {formData.shortDescription.length}/120 caracteres
                 </p>
               </div>
 
-              <div className=&ldquo;space-y-2&rdquo;>
-                <Label htmlFor=&ldquo;description&rdquo;>Descripción Completa *</Label>
+              <div className="space-y-2">
+                <Label htmlFor="description">Descripción Completa *</Label>
                 <Textarea
-                  id=&ldquo;description&rdquo;
+                  id="description"
                   value={formData.description}
                   onChange={(e) =>
-                    handleInputChange(&ldquo;description&rdquo;, e.target.value)
+                    handleInputChange("description", e.target.value)
                   }
-                  placeholder=&ldquo;Descripción detallada del curso, objetivos, metodología...&rdquo;
+                  placeholder="Descripción detallada del curso, objetivos, metodología..."
                   rows={4}
                 />
               </div>
 
-              <div className=&ldquo;grid grid-cols-1 md:grid-cols-3 gap-4&rdquo;>
-                <div className=&ldquo;space-y-2&rdquo;>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-2">
                   <Label>Categoría *</Label>
                   <Select
                     value={formData.category}
                     onValueChange={(value) =>
-                      handleInputChange(&ldquo;category&rdquo;, value as CourseCategory)
+                      handleInputChange("category", value as CourseCategory)
                     }
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder=&ldquo;Seleccionar categoría&rdquo; />
+                      <SelectValue placeholder="Seleccionar categoría" />
                     </SelectTrigger>
                     <SelectContent>
                       {Object.values(CourseCategory).map((category) => (
@@ -341,16 +338,16 @@ export default function CreateCoursePage() {
                   </Select>
                 </div>
 
-                <div className=&ldquo;space-y-2&rdquo;>
+                <div className="space-y-2">
                   <Label>Nivel *</Label>
                   <Select
                     value={formData.level}
                     onValueChange={(value) =>
-                      handleInputChange(&ldquo;level&rdquo;, value as CourseLevel)
+                      handleInputChange("level", value as CourseLevel)
                     }
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder=&ldquo;Nivel del curso&rdquo; />
+                      <SelectValue placeholder="Nivel del curso" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value={CourseLevel.BEGINNER}>
@@ -366,20 +363,20 @@ export default function CreateCoursePage() {
                   </Select>
                 </div>
 
-                <div className=&ldquo;space-y-2&rdquo;>
-                  <Label htmlFor=&ldquo;duration&rdquo;>Duración (horas) *</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="duration">Duración (horas) *</Label>
                   <Input
-                    id=&ldquo;duration&rdquo;
-                    type=&ldquo;number&rdquo;
+                    id="duration"
+                    type="number"
                     value={formData.duration}
                     onChange={(e) =>
                       handleInputChange(
-                        &ldquo;duration&rdquo;,
+                        "duration",
                         parseInt(e.target.value) || 0
                       )
                     }
-                    min=&ldquo;1&rdquo;
-                    max=&ldquo;100&rdquo;
+                    min="1"
+                    max="100"
                   />
                 </div>
               </div>
@@ -390,31 +387,31 @@ export default function CreateCoursePage() {
             <CardHeader>
               <CardTitle>Recursos Multimedia</CardTitle>
             </CardHeader>
-            <CardContent className=&ldquo;space-y-4&rdquo;>
-              <div className=&ldquo;space-y-2&rdquo;>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
                 <Label>Imagen de Portada</Label>
-                <div className=&ldquo;border-2 border-dashed border-gray-300 rounded-lg p-6 text-center&rdquo;>
-                  <Upload className=&ldquo;h-8 w-8 mx-auto text-gray-400 mb-2&rdquo; />
-                  <p className=&ldquo;text-sm text-gray-600&rdquo;>
-                    Arrastra una imagen aquí o{&ldquo; &rdquo;}
-                    <span className=&ldquo;text-blue-600 cursor-pointer&rdquo;>
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                  <Upload className="h-8 w-8 mx-auto text-gray-400 mb-2" />
+                  <p className="text-sm text-gray-600">
+                    Arrastra una imagen aquí o{" "}
+                    <span className="text-blue-600 cursor-pointer">
                       buscar archivo
                     </span>
                   </p>
-                  <p className=&ldquo;text-xs text-gray-500&rdquo;>
+                  <p className="text-xs text-gray-500">
                     Recomendado: 1280x720px, JPG o PNG
                   </p>
                 </div>
               </div>
 
-              <div className=&ldquo;space-y-2&rdquo;>
+              <div className="space-y-2">
                 <Label>Video de Presentación (Opcional)</Label>
                 <Input
                   value={formData.videoPreview}
                   onChange={(e) =>
-                    handleInputChange(&ldquo;videoPreview&rdquo;, e.target.value)
+                    handleInputChange("videoPreview", e.target.value)
                   }
-                  placeholder=&ldquo;URL del video de presentación&rdquo;
+                  placeholder="URL del video de presentación"
                 />
               </div>
             </CardContent>
@@ -422,41 +419,41 @@ export default function CreateCoursePage() {
         </TabsContent>
 
         {/* Content Tab */}
-        <TabsContent value=&ldquo;content&rdquo; className=&ldquo;space-y-6&rdquo;>
+        <TabsContent value="content" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle className=&ldquo;flex items-center gap-2&rdquo;>
-                <Target className=&ldquo;h-5 w-5&rdquo; />
+              <CardTitle className="flex items-center gap-2">
+                <Target className="h-5 w-5" />
                 Objetivos de Aprendizaje
               </CardTitle>
             </CardHeader>
-            <CardContent className=&ldquo;space-y-4&rdquo;>
+            <CardContent className="space-y-4">
               {formData.objectives.map((objective, index) => (
-                <div key={index} className=&ldquo;flex gap-2&rdquo;>
+                <div key={index} className="flex gap-2">
                   <Input
                     value={objective}
                     onChange={(e) =>
-                      handleArrayChange(&ldquo;objectives&rdquo;, index, e.target.value)
+                      handleArrayChange("objectives", index, e.target.value)
                     }
                     placeholder={`Objetivo ${index + 1}`}
                   />
                   {formData.objectives.length > 1 && (
                     <Button
-                      variant=&ldquo;outline&rdquo;
-                      size=&ldquo;icon&rdquo;
-                      onClick={() => removeArrayItem(&ldquo;objectives&rdquo;, index)}
+                      variant="outline"
+                      size="icon"
+                      onClick={() => removeArrayItem("objectives", index)}
                     >
-                      <X className=&ldquo;h-4 w-4&rdquo; />
+                      <X className="h-4 w-4" />
                     </Button>
                   )}
                 </div>
               ))}
               <Button
-                variant=&ldquo;outline&rdquo;
-                onClick={() => addArrayItem(&ldquo;objectives&rdquo;)}
-                className=&ldquo;w-full&rdquo;
+                variant="outline"
+                onClick={() => addArrayItem("objectives")}
+                className="w-full"
               >
-                <Plus className=&ldquo;h-4 w-4 mr-2&rdquo; />
+                <Plus className="h-4 w-4 mr-2" />
                 Agregar Objetivo
               </Button>
             </CardContent>
@@ -466,33 +463,33 @@ export default function CreateCoursePage() {
             <CardHeader>
               <CardTitle>Prerrequisitos</CardTitle>
             </CardHeader>
-            <CardContent className=&ldquo;space-y-4&rdquo;>
+            <CardContent className="space-y-4">
               {formData.prerequisites.map((prerequisite, index) => (
-                <div key={index} className=&ldquo;flex gap-2&rdquo;>
+                <div key={index} className="flex gap-2">
                   <Input
                     value={prerequisite}
                     onChange={(e) =>
-                      handleArrayChange(&ldquo;prerequisites&rdquo;, index, e.target.value)
+                      handleArrayChange("prerequisites", index, e.target.value)
                     }
                     placeholder={`Prerrequisito ${index + 1}`}
                   />
                   {formData.prerequisites.length > 1 && (
                     <Button
-                      variant=&ldquo;outline&rdquo;
-                      size=&ldquo;icon&rdquo;
-                      onClick={() => removeArrayItem(&ldquo;prerequisites&rdquo;, index)}
+                      variant="outline"
+                      size="icon"
+                      onClick={() => removeArrayItem("prerequisites", index)}
                     >
-                      <X className=&ldquo;h-4 w-4&rdquo; />
+                      <X className="h-4 w-4" />
                     </Button>
                   )}
                 </div>
               ))}
               <Button
-                variant=&ldquo;outline&rdquo;
-                onClick={() => addArrayItem(&ldquo;prerequisites&rdquo;)}
-                className=&ldquo;w-full&rdquo;
+                variant="outline"
+                onClick={() => addArrayItem("prerequisites")}
+                className="w-full"
               >
-                <Plus className=&ldquo;h-4 w-4 mr-2&rdquo; />
+                <Plus className="h-4 w-4 mr-2" />
                 Agregar Prerrequisito
               </Button>
             </CardContent>
@@ -502,14 +499,14 @@ export default function CreateCoursePage() {
             <CardHeader>
               <CardTitle>Materiales Incluidos</CardTitle>
             </CardHeader>
-            <CardContent className=&ldquo;space-y-4&rdquo;>
+            <CardContent className="space-y-4">
               {formData.includedMaterials.map((material, index) => (
-                <div key={index} className=&ldquo;flex gap-2&rdquo;>
+                <div key={index} className="flex gap-2">
                   <Input
                     value={material}
                     onChange={(e) =>
                       handleArrayChange(
-                        &ldquo;includedMaterials&rdquo;,
+                        "includedMaterials",
                         index,
                         e.target.value
                       )
@@ -518,23 +515,23 @@ export default function CreateCoursePage() {
                   />
                   {formData.includedMaterials.length > 1 && (
                     <Button
-                      variant=&ldquo;outline&rdquo;
-                      size=&ldquo;icon&rdquo;
+                      variant="outline"
+                      size="icon"
                       onClick={() =>
-                        removeArrayItem(&ldquo;includedMaterials&rdquo;, index)
+                        removeArrayItem("includedMaterials", index)
                       }
                     >
-                      <X className=&ldquo;h-4 w-4&rdquo; />
+                      <X className="h-4 w-4" />
                     </Button>
                   )}
                 </div>
               ))}
               <Button
-                variant=&ldquo;outline&rdquo;
-                onClick={() => addArrayItem(&ldquo;includedMaterials&rdquo;)}
-                className=&ldquo;w-full&rdquo;
+                variant="outline"
+                onClick={() => addArrayItem("includedMaterials")}
+                className="w-full"
               >
-                <Plus className=&ldquo;h-4 w-4 mr-2&rdquo; />
+                <Plus className="h-4 w-4 mr-2" />
                 Agregar Material
               </Button>
             </CardContent>
@@ -544,41 +541,41 @@ export default function CreateCoursePage() {
             <CardHeader>
               <CardTitle>Etiquetas</CardTitle>
             </CardHeader>
-            <CardContent className=&ldquo;space-y-4&rdquo;>
-              <div className=&ldquo;flex flex-wrap gap-2&rdquo;>
+            <CardContent className="space-y-4">
+              <div className="flex flex-wrap gap-2">
                 {formData.tags.map((tag) => (
                   <Badge
                     key={tag}
-                    variant=&ldquo;secondary&rdquo;
-                    className=&ldquo;flex items-center gap-1&rdquo;
+                    variant="secondary"
+                    className="flex items-center gap-1"
                   >
                     {tag}
                     <X
-                      className=&ldquo;h-3 w-3 cursor-pointer&rdquo;
+                      className="h-3 w-3 cursor-pointer"
                       onClick={() => handleTagRemove(tag)}
                     />
                   </Badge>
                 ))}
               </div>
-              <div className=&ldquo;flex gap-2&rdquo;>
+              <div className="flex gap-2">
                 <Input
-                  placeholder=&ldquo;Agregar etiqueta&rdquo;
+                  placeholder="Agregar etiqueta"
                   onKeyPress={(e) => {
-                    if (e.key === &ldquo;Enter&rdquo;) {
+                    if (e.key === "Enter") {
                       e.preventDefault();
                       const target = e.target as HTMLInputElement;
                       handleTagAdd(target.value);
-                      target.value = &ldquo;&rdquo;;
+                      target.value = "";
                     }
                   }}
                 />
                 <Button
-                  variant=&ldquo;outline&rdquo;
+                  variant="outline"
                   onClick={(e) => {
                     const input = (e.target as HTMLElement)
                       .previousElementSibling as HTMLInputElement;
                     handleTagAdd(input.value);
-                    input.value = &ldquo;&rdquo;;
+                    input.value = "";
                   }}
                 >
                   Agregar
@@ -589,64 +586,64 @@ export default function CreateCoursePage() {
         </TabsContent>
 
         {/* Instructor Tab */}
-        <TabsContent value=&ldquo;instructor&rdquo; className=&ldquo;space-y-6&rdquo;>
+        <TabsContent value="instructor" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle className=&ldquo;flex items-center gap-2&rdquo;>
-                <Users className=&ldquo;h-5 w-5&rdquo; />
+              <CardTitle className="flex items-center gap-2">
+                <Users className="h-5 w-5" />
                 Información del Instructor
               </CardTitle>
             </CardHeader>
-            <CardContent className=&ldquo;space-y-4&rdquo;>
-              <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 gap-4&rdquo;>
-                <div className=&ldquo;space-y-2&rdquo;>
-                  <Label htmlFor=&ldquo;instructorName&rdquo;>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="instructorName">
                     Nombre del Instructor *
                   </Label>
                   <Input
-                    id=&ldquo;instructorName&rdquo;
+                    id="instructorName"
                     value={formData.instructor.name}
                     onChange={(e) =>
-                      handleInstructorChange(&ldquo;name&rdquo;, e.target.value)
+                      handleInstructorChange("name", e.target.value)
                     }
-                    placeholder=&ldquo;Nombre completo&rdquo;
+                    placeholder="Nombre completo"
                   />
                 </div>
 
-                <div className=&ldquo;space-y-2&rdquo;>
-                  <Label htmlFor=&ldquo;instructorTitle&rdquo;>Título Profesional *</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="instructorTitle">Título Profesional *</Label>
                   <Input
-                    id=&ldquo;instructorTitle&rdquo;
+                    id="instructorTitle"
                     value={formData.instructor.title}
                     onChange={(e) =>
-                      handleInstructorChange(&ldquo;title&rdquo;, e.target.value)
+                      handleInstructorChange("title", e.target.value)
                     }
-                    placeholder=&ldquo;Ej: Especialista en Desarrollo Profesional&rdquo;
+                    placeholder="Ej: Especialista en Desarrollo Profesional"
                   />
                 </div>
               </div>
 
-              <div className=&ldquo;space-y-2&rdquo;>
-                <Label htmlFor=&ldquo;instructorBio&rdquo;>Biografía del Instructor</Label>
+              <div className="space-y-2">
+                <Label htmlFor="instructorBio">Biografía del Instructor</Label>
                 <Textarea
-                  id=&ldquo;instructorBio&rdquo;
+                  id="instructorBio"
                   value={formData.instructor.bio}
                   onChange={(e) =>
-                    handleInstructorChange(&ldquo;bio&rdquo;, e.target.value)
+                    handleInstructorChange("bio", e.target.value)
                   }
-                  placeholder=&ldquo;Experiencia, credenciales, especialidades...&rdquo;
+                  placeholder="Experiencia, credenciales, especialidades..."
                   rows={3}
                 />
               </div>
 
-              <div className=&ldquo;space-y-2&rdquo;>
+              <div className="space-y-2">
                 <Label>Foto del Instructor</Label>
-                <div className=&ldquo;border-2 border-dashed border-gray-300 rounded-lg p-6 text-center&rdquo;>
-                  <Upload className=&ldquo;h-8 w-8 mx-auto text-gray-400 mb-2&rdquo; />
-                  <p className=&ldquo;text-sm text-gray-600&rdquo;>
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                  <Upload className="h-8 w-8 mx-auto text-gray-400 mb-2" />
+                  <p className="text-sm text-gray-600">
                     Subir foto del instructor
                   </p>
-                  <p className=&ldquo;text-xs text-gray-500&rdquo;>
+                  <p className="text-xs text-gray-500">
                     Recomendado: 400x400px, formato cuadrado
                   </p>
                 </div>
@@ -656,64 +653,64 @@ export default function CreateCoursePage() {
         </TabsContent>
 
         {/* Settings Tab */}
-        <TabsContent value=&ldquo;settings&rdquo; className=&ldquo;space-y-6&rdquo;>
+        <TabsContent value="settings" className="space-y-6">
           <Card>
             <CardHeader>
               <CardTitle>Configuración del Curso</CardTitle>
             </CardHeader>
-            <CardContent className=&ldquo;space-y-6&rdquo;>
-              <div className=&ldquo;space-y-4&rdquo;>
-                <div className=&ldquo;flex items-center space-x-2&rdquo;>
+            <CardContent className="space-y-6">
+              <div className="space-y-4">
+                <div className="flex items-center space-x-2">
                   <Checkbox
-                    id=&ldquo;isMandatory&rdquo;
+                    id="isMandatory"
                     checked={formData.isMandatory}
                     onCheckedChange={(checked) =>
-                      handleInputChange(&ldquo;isMandatory&rdquo;, checked)
+                      handleInputChange("isMandatory", checked)
                     }
                   />
-                  <Label htmlFor=&ldquo;isMandatory&rdquo; className=&ldquo;text-sm font-medium&rdquo;>
+                  <Label htmlFor="isMandatory" className="text-sm font-medium">
                     Curso Obligatorio
                   </Label>
-                  <HelpCircle className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
+                  <HelpCircle className="h-4 w-4 text-muted-foreground" />
                 </div>
 
-                <div className=&ldquo;flex items-center space-x-2&rdquo;>
+                <div className="flex items-center space-x-2">
                   <Checkbox
-                    id=&ldquo;certification&rdquo;
+                    id="certification"
                     checked={formData.certification}
                     onCheckedChange={(checked) =>
-                      handleInputChange(&ldquo;certification&rdquo;, checked)
+                      handleInputChange("certification", checked)
                     }
                   />
 
                   <Label
-                    htmlFor=&ldquo;certification&rdquo;
-                    className=&ldquo;text-sm font-medium&rdquo;
+                    htmlFor="certification"
+                    className="text-sm font-medium"
                   >
                     Incluir Certificado de Finalización
                   </Label>
                   {formData.certification && (
                     <Button
-                      variant=&ldquo;outline&rdquo;
-                      className=&ldquo;mt-2&rdquo;
+                      variant="outline"
+                      className="mt-2"
                       onClick={() => setCertificateDialogOpen(true)}
                     >
                       Subir Certificado Personalizado
                     </Button>
                   )}
 
-                  <Award className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
+                  <Award className="h-4 w-4 text-muted-foreground" />
                 </div>
 
-                <div className=&ldquo;flex items-center space-x-2&rdquo;>
+                <div className="flex items-center space-x-2">
                   <Checkbox
-                    id=&ldquo;isActive&rdquo;
+                    id="isActive"
                     checked={formData.isActive}
                     onCheckedChange={(checked) =>
-                      handleInputChange(&ldquo;isActive&rdquo;, checked)
+                      handleInputChange("isActive", checked)
                     }
                   />
-                  <Label htmlFor=&ldquo;isActive&rdquo; className=&ldquo;text-sm font-medium&rdquo;>
+                  <Label htmlFor="isActive" className="text-sm font-medium">
                     Publicar Inmediatamente
                   </Label>
                 </div>
@@ -721,23 +718,23 @@ export default function CreateCoursePage() {
 
               <Separator />
 
-              <div className=&ldquo;space-y-4&rdquo;>
-                <div className=&ldquo;space-y-2&rdquo;>
-                  <Label htmlFor=&ldquo;price&rdquo;>Precio (BOB)</Label>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="price">Precio (BOB)</Label>
                   <Input
-                    id=&ldquo;price&rdquo;
-                    type=&ldquo;number&rdquo;
+                    id="price"
+                    type="number"
                     value={formData.price}
                     onChange={(e) =>
                       handleInputChange(
-                        &ldquo;price&rdquo;,
+                        "price",
                         parseFloat(e.target.value) || 0
                       )
                     }
-                    min=&ldquo;0&rdquo;
-                    step=&ldquo;0.01&rdquo;
+                    min="0"
+                    step="0.01"
                   />
-                  <p className=&ldquo;text-xs text-muted-foreground&rdquo;>
+                  <p className="text-xs text-muted-foreground">
                     Establecer en 0 para curso gratuito
                   </p>
                 </div>
@@ -750,27 +747,27 @@ export default function CreateCoursePage() {
               <CardTitle>Próximos Pasos</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className=&ldquo;space-y-4 text-sm&rdquo;>
-                <div className=&ldquo;flex items-start gap-3 p-3 bg-blue-50 rounded-lg&rdquo;>
-                  <VideoIcon className=&ldquo;h-5 w-5 text-blue-600 mt-0.5&rdquo; />
+              <div className="space-y-4 text-sm">
+                <div className="flex items-start gap-3 p-3 bg-blue-50 rounded-lg">
+                  <VideoIcon className="h-5 w-5 text-blue-600 mt-0.5" />
                   <div>
-                    <p className=&ldquo;font-medium text-blue-900&rdquo;>
+                    <p className="font-medium text-blue-900">
                       Después de crear el curso
                     </p>
-                    <p className=&ldquo;text-blue-700&rdquo;>
+                    <p className="text-blue-700">
                       Podrás agregar módulos, lecciones, videos y exámenes desde
                       el panel de gestión del curso.
                     </p>
                   </div>
                 </div>
 
-                <div className=&ldquo;flex items-start gap-3 p-3 bg-green-50 rounded-lg&rdquo;>
-                  <FileText className=&ldquo;h-5 w-5 text-green-600 mt-0.5&rdquo; />
+                <div className="flex items-start gap-3 p-3 bg-green-50 rounded-lg">
+                  <FileText className="h-5 w-5 text-green-600 mt-0.5" />
                   <div>
-                    <p className=&ldquo;font-medium text-green-900&rdquo;>
+                    <p className="font-medium text-green-900">
                       Contenido del curso
                     </p>
-                    <p className=&ldquo;text-green-700&rdquo;>
+                    <p className="text-green-700">
                       Estructura tu curso en módulos y lecciones. Cada lección
                       puede ser un video, material de lectura o examen.
                     </p>
@@ -790,10 +787,10 @@ export default function CreateCoursePage() {
             <DialogTitle>Subir Certificado Personalizado</DialogTitle>
           </DialogHeader>
 
-          <div className=&ldquo;space-y-4&rdquo;>
+          <div className="space-y-4">
             <Input
-              type=&ldquo;file&rdquo;
-              accept=&ldquo;.pdf&rdquo;
+              type="file"
+              accept=".pdf"
               onChange={(e) => {
                 const file = e.target.files?.[0];
                 if (file) {
@@ -803,14 +800,14 @@ export default function CreateCoursePage() {
             />
 
             {certificateFile && (
-              <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
+              <p className="text-sm text-muted-foreground">
                 Archivo seleccionado: {certificateFile.name}
               </p>
             )}
 
-            <div className=&ldquo;flex justify-end gap-2&rdquo;>
+            <div className="flex justify-end gap-2">
               <Button
-                variant=&ldquo;outline&rdquo;
+                variant="outline"
                 onClick={() => setCertificateDialogOpen(false)}
               >
                 Cancelar
@@ -818,7 +815,7 @@ export default function CreateCoursePage() {
               <Button
                 disabled={!certificateFile}
                 onClick={() => {
-                  console.log(&ldquo;Subiendo certificado:&rdquo;, certificateFile);
+                  console.log("Subiendo certificado:", certificateFile);
                   // Aquí podrías hacer tu fetch a una API
                   setCertificateDialogOpen(false);
                 }}

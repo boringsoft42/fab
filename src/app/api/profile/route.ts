@@ -1,15 +1,15 @@
-import { NextRequest, NextResponse } from &ldquo;next/server&rdquo;;
+import { NextRequest, NextResponse } from "next/server";
 
 // GET: Fetch mock profile data since we're using mock authentication
 export async function GET() {
   try {
     // Return mock profile data for development
     const mockProfile = {
-      id: &ldquo;mock-profile-id&rdquo;,
-      userId: &ldquo;mock-user-id&rdquo;,
-      firstName: &ldquo;John&rdquo;,
-      lastName: &ldquo;Doe&rdquo;,
-      role: &ldquo;YOUTH&rdquo;,
+      id: "mock-profile-id",
+      userId: "mock-user-id",
+      firstName: "John",
+      lastName: "Doe",
+      role: "YOUTH",
       avatarUrl: null,
       active: true,
       createdAt: new Date().toISOString(),
@@ -19,9 +19,9 @@ export async function GET() {
 
     return NextResponse.json(mockProfile);
   } catch (error) {
-    console.error(&ldquo;Error fetching profile:&rdquo;, error);
+    console.error("Error fetching profile:", error);
     return NextResponse.json(
-      { error: &ldquo;Failed to fetch profile&rdquo; },
+      { error: "Failed to fetch profile" },
       { status: 500 }
     );
   }
@@ -35,11 +35,11 @@ export async function PUT(request: NextRequest) {
 
     // Return mock updated profile data for development
     const updatedProfile = {
-      id: &ldquo;mock-profile-id&rdquo;,
-      userId: &ldquo;mock-user-id&rdquo;,
-      firstName: firstName || &ldquo;John&rdquo;,
-      lastName: lastName || &ldquo;Doe&rdquo;,
-      role: &ldquo;YOUTH&rdquo;,
+      id: "mock-profile-id",
+      userId: "mock-user-id",
+      firstName: firstName || "John",
+      lastName: lastName || "Doe",
+      role: "YOUTH",
       avatarUrl: avatarUrl || null,
       active: active !== undefined ? active : true,
       createdAt: new Date().toISOString(),
@@ -49,9 +49,9 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json(updatedProfile);
   } catch (error) {
-    console.error(&ldquo;Error updating profile:&rdquo;, error);
+    console.error("Error updating profile:", error);
     return NextResponse.json(
-      { error: &ldquo;Failed to update profile&rdquo; },
+      { error: "Failed to update profile" },
       { status: 500 }
     );
   }
@@ -65,11 +65,11 @@ export async function POST(request: NextRequest) {
 
     // Return mock new profile data for development
     const newProfile = {
-      id: &ldquo;mock-profile-id&rdquo;,
-      userId: userId || &ldquo;mock-user-id&rdquo;,
-      firstName: firstName || &ldquo;John&rdquo;,
-      lastName: lastName || &ldquo;Doe&rdquo;,
-      role: &ldquo;YOUTH&rdquo;,
+      id: "mock-profile-id",
+      userId: userId || "mock-user-id",
+      firstName: firstName || "John",
+      lastName: lastName || "Doe",
+      role: "YOUTH",
       avatarUrl: avatarUrl || null,
       active: true,
       createdAt: new Date().toISOString(),
@@ -79,9 +79,9 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(newProfile, { status: 201 });
   } catch (error) {
-    console.error(&ldquo;Error creating profile:&rdquo;, error);
+    console.error("Error creating profile:", error);
     return NextResponse.json(
-      { error: &ldquo;Failed to create profile&rdquo; },
+      { error: "Failed to create profile" },
       { status: 500 }
     );
   }

@@ -1,5 +1,5 @@
-import type { UserRole } from &ldquo;@prisma/client&rdquo;;
-import type { UserPermissions } from &ldquo;@/types/profile&rdquo;;
+import type { UserRole } from "@prisma/client";
+import type { UserPermissions } from "@/types/profile";
 
 /**
  * CORRECTED PERMISSIONS MATRIX FROM TASKS.MD
@@ -122,70 +122,70 @@ export function hasPermission(
  * Check if user can access job search functionality
  */
 export function canSearchJobs(role: UserRole): boolean {
-  return hasPermission(role, &ldquo;canSearchJobs&rdquo;);
+  return hasPermission(role, "canSearchJobs");
 }
 
 /**
  * Check if user can publish job offers
  */
 export function canPublishJobs(role: UserRole): boolean {
-  return hasPermission(role, &ldquo;canPublishJobs&rdquo;);
+  return hasPermission(role, "canPublishJobs");
 }
 
 /**
  * Check if user can access training/courses
  */
 export function canAccessTraining(role: UserRole): boolean {
-  return hasPermission(role, &ldquo;canAccessTraining&rdquo;);
+  return hasPermission(role, "canAccessTraining");
 }
 
 /**
  * Check if user can manage training content (create/edit courses)
  */
 export function canManageTraining(role: UserRole): boolean {
-  return hasPermission(role, &ldquo;canManageTraining&rdquo;);
+  return hasPermission(role, "canManageTraining");
 }
 
 /**
  * Check if user can access entrepreneurship tools
  */
 export function canAccessEntrepreneurship(role: UserRole): boolean {
-  return hasPermission(role, &ldquo;canAccessEntrepreneurship&rdquo;);
+  return hasPermission(role, "canAccessEntrepreneurship");
 }
 
 /**
  * Check if user can manage entrepreneurship content
  */
 export function canManageEntrepreneurship(role: UserRole): boolean {
-  return hasPermission(role, &ldquo;canManageEntrepreneurship&rdquo;);
+  return hasPermission(role, "canManageEntrepreneurship");
 }
 
 /**
  * Check if user can view personal/basic reports
  */
 export function canViewReports(role: UserRole): boolean {
-  return hasPermission(role, &ldquo;canViewReports&rdquo;);
+  return hasPermission(role, "canViewReports");
 }
 
 /**
  * Check if user can view advanced/administrative reports
  */
 export function canViewAdvancedReports(role: UserRole): boolean {
-  return hasPermission(role, &ldquo;canViewAdvancedReports&rdquo;);
+  return hasPermission(role, "canViewAdvancedReports");
 }
 
 /**
  * Check if user can manage other users
  */
 export function canManageUsers(role: UserRole): boolean {
-  return hasPermission(role, &ldquo;canManageUsers&rdquo;);
+  return hasPermission(role, "canManageUsers");
 }
 
 /**
  * Check if user requires parental consent
  */
 export function requiresParentalConsent(role: UserRole): boolean {
-  return hasPermission(role, &ldquo;requiresParentalConsent&rdquo;);
+  return hasPermission(role, "requiresParentalConsent");
 }
 
 /**
@@ -193,13 +193,13 @@ export function requiresParentalConsent(role: UserRole): boolean {
  */
 export function getUserTypeDisplayName(role: UserRole): string {
   const displayNames: Record<UserRole, string> = {
-    YOUTH: &ldquo;Joven&rdquo;,
-    ADOLESCENTS: &ldquo;Adolescente&rdquo;,
-    COMPANIES: &ldquo;Empresa&rdquo;,
-    MUNICIPAL_GOVERNMENTS: &ldquo;Gobierno Municipal&rdquo;,
-    TRAINING_CENTERS: &ldquo;Centro de Formación&rdquo;,
-    NGOS_AND_FOUNDATIONS: &ldquo;ONG y Fundaciones&rdquo;,
-    SUPERADMIN: &ldquo;Super Administrador&rdquo;,
+    YOUTH: "Joven",
+    ADOLESCENTS: "Adolescente",
+    COMPANIES: "Empresa",
+    MUNICIPAL_GOVERNMENTS: "Gobierno Municipal",
+    TRAINING_CENTERS: "Centro de Formación",
+    NGOS_AND_FOUNDATIONS: "ONG y Fundaciones",
+    SUPERADMIN: "Super Administrador",
   };
 
   return displayNames[role];
@@ -210,13 +210,13 @@ export function getUserTypeDisplayName(role: UserRole): string {
  */
 export function getDefaultDashboardRoute(role: UserRole): string {
   const dashboardRoutes: Record<UserRole, string> = {
-    YOUTH: &ldquo;/dashboard&rdquo;,
-    ADOLESCENTS: &ldquo;/dashboard&rdquo;,
-    COMPANIES: &ldquo;/dashboard/company&rdquo;,
-    MUNICIPAL_GOVERNMENTS: &ldquo;/dashboard/admin&rdquo;,
-    TRAINING_CENTERS: &ldquo;/dashboard/training-center&rdquo;,
-    NGOS_AND_FOUNDATIONS: &ldquo;/dashboard/ngo&rdquo;,
-    SUPERADMIN: &ldquo;/dashboard/admin&rdquo;,
+    YOUTH: "/dashboard",
+    ADOLESCENTS: "/dashboard",
+    COMPANIES: "/dashboard/company",
+    MUNICIPAL_GOVERNMENTS: "/dashboard/admin",
+    TRAINING_CENTERS: "/dashboard/training-center",
+    NGOS_AND_FOUNDATIONS: "/dashboard/ngo",
+    SUPERADMIN: "/dashboard/admin",
   };
 
   return dashboardRoutes[role];
@@ -231,23 +231,23 @@ export function getNavigationItems(role: UserRole) {
 
   // Dashboard (always available)
   items.push({
-    title: &ldquo;Dashboard&rdquo;,
+    title: "Dashboard",
     href: getDefaultDashboardRoute(role),
-    icon: &ldquo;LayoutDashboard&rdquo;,
+    icon: "LayoutDashboard",
   });
 
   // Job Search (YOUTH, ADOLESCENTS)
   if (permissions.canSearchJobs) {
     items.push(
       {
-        title: &ldquo;Buscar Empleos&rdquo;,
-        href: &ldquo;/jobs&rdquo;,
-        icon: &ldquo;Search&rdquo;,
+        title: "Buscar Empleos",
+        href: "/jobs",
+        icon: "Search",
       },
       {
-        title: &ldquo;Mis Postulaciones&rdquo;,
-        href: &ldquo;/my-applications&rdquo;,
-        icon: &ldquo;FileText&rdquo;,
+        title: "Mis Postulaciones",
+        href: "/my-applications",
+        icon: "FileText",
       }
     );
   }
@@ -256,19 +256,19 @@ export function getNavigationItems(role: UserRole) {
   if (permissions.canPublishJobs) {
     items.push(
       {
-        title: &ldquo;Publicar Empleo&rdquo;,
-        href: &ldquo;/jobs/create&rdquo;,
-        icon: &ldquo;Plus&rdquo;,
+        title: "Publicar Empleo",
+        href: "/jobs/create",
+        icon: "Plus",
       },
       {
-        title: &ldquo;Mis Empleos&rdquo;,
-        href: &ldquo;/my-jobs&rdquo;,
-        icon: &ldquo;Briefcase&rdquo;,
+        title: "Mis Empleos",
+        href: "/my-jobs",
+        icon: "Briefcase",
       },
       {
-        title: &ldquo;Candidatos&rdquo;,
-        href: &ldquo;/candidates&rdquo;,
-        icon: &ldquo;Users&rdquo;,
+        title: "Candidatos",
+        href: "/candidates",
+        icon: "Users",
       }
     );
   }
@@ -276,16 +276,16 @@ export function getNavigationItems(role: UserRole) {
   // Training (All except COMPANIES)
   if (permissions.canAccessTraining) {
     items.push({
-      title: permissions.canManageTraining ? &ldquo;Gestión de Cursos&rdquo; : &ldquo;Cursos&rdquo;,
-      href: &ldquo;/courses&rdquo;,
-      icon: &ldquo;BookOpen&rdquo;,
+      title: permissions.canManageTraining ? "Gestión de Cursos" : "Cursos",
+      href: "/courses",
+      icon: "BookOpen",
     });
 
     if (!permissions.canManageTraining) {
       items.push({
-        title: &ldquo;Mis Cursos&rdquo;,
-        href: &ldquo;/my-courses&rdquo;,
-        icon: &ldquo;GraduationCap&rdquo;,
+        title: "Mis Cursos",
+        href: "/my-courses",
+        icon: "GraduationCap",
       });
     }
   }
@@ -294,19 +294,19 @@ export function getNavigationItems(role: UserRole) {
   if (permissions.canAccessEntrepreneurship) {
     items.push(
       {
-        title: &ldquo;Emprendimiento&rdquo;,
-        href: &ldquo;/entrepreneurship&rdquo;,
-        icon: &ldquo;Lightbulb&rdquo;,
+        title: "Emprendimiento",
+        href: "/entrepreneurship",
+        icon: "Lightbulb",
       },
       {
-        title: &ldquo;Simulador de Plan de Negocio&rdquo;,
-        href: &ldquo;/business-plan-simulator&rdquo;,
-        icon: &ldquo;Calculator&rdquo;,
+        title: "Simulador de Plan de Negocio",
+        href: "/business-plan-simulator",
+        icon: "Calculator",
       },
       {
-        title: &ldquo;Escaparate Virtual&rdquo;,
-        href: &ldquo;/marketplace&rdquo;,
-        icon: &ldquo;Store&rdquo;,
+        title: "Escaparate Virtual",
+        href: "/marketplace",
+        icon: "Store",
       }
     );
   }
@@ -315,27 +315,27 @@ export function getNavigationItems(role: UserRole) {
   if (permissions.canViewReports) {
     items.push({
       title: permissions.canViewAdvancedReports
-        ? &ldquo;Reportes Avanzados&rdquo;
-        : &ldquo;Mis Reportes&rdquo;,
-      href: &ldquo;/reports&rdquo;,
-      icon: &ldquo;BarChart3&rdquo;,
+        ? "Reportes Avanzados"
+        : "Mis Reportes",
+      href: "/reports",
+      icon: "BarChart3",
     });
   }
 
   // User Management (MUNICIPAL_GOVERNMENTS, SUPERADMIN)
   if (permissions.canManageUsers) {
     items.push({
-      title: &ldquo;Gestión de Usuarios&rdquo;,
-      href: &ldquo;/admin/users&rdquo;,
-      icon: &ldquo;UserCog&rdquo;,
+      title: "Gestión de Usuarios",
+      href: "/admin/users",
+      icon: "UserCog",
     });
   }
 
   // Profile and Settings (always available)
   items.push({
-    title: &ldquo;Mi Perfil&rdquo;,
-    href: &ldquo;/profile&rdquo;,
-    icon: &ldquo;User&rdquo;,
+    title: "Mi Perfil",
+    href: "/profile",
+    icon: "User",
   });
 
   return items;
@@ -366,38 +366,38 @@ export function shouldCompleteProfile(
  * Get required profile fields based on user role
  */
 export function getRequiredProfileFields(role: UserRole): string[] {
-  const baseFields = [&ldquo;firstName&rdquo;, &ldquo;lastName&rdquo;, &ldquo;email&rdquo;, &ldquo;municipality&rdquo;];
+  const baseFields = ["firstName", "lastName", "email", "municipality"];
 
   switch (role) {
-    case &ldquo;YOUTH&rdquo;:
-    case &ldquo;ADOLESCENTS&rdquo;:
+    case "YOUTH":
+    case "ADOLESCENTS":
       return [
         ...baseFields,
-        &ldquo;birthDate&rdquo;,
-        &ldquo;educationLevel&rdquo;,
-        &ldquo;skills&rdquo;,
-        &ldquo;interests&rdquo;,
-        ...(role === &ldquo;ADOLESCENTS&rdquo; ? [&ldquo;parentEmail&rdquo;] : []),
+        "birthDate",
+        "educationLevel",
+        "skills",
+        "interests",
+        ...(role === "ADOLESCENTS" ? ["parentEmail"] : []),
       ];
 
-    case &ldquo;COMPANIES&rdquo;:
+    case "COMPANIES":
       return [
         ...baseFields,
-        &ldquo;companyName&rdquo;,
-        &ldquo;businessSector&rdquo;,
-        &ldquo;companyDescription&rdquo;,
-        &ldquo;legalRepresentative&rdquo;,
+        "companyName",
+        "businessSector",
+        "companyDescription",
+        "legalRepresentative",
       ];
 
-    case &ldquo;MUNICIPAL_GOVERNMENTS&rdquo;:
-    case &ldquo;TRAINING_CENTERS&rdquo;:
-    case &ldquo;NGOS_AND_FOUNDATIONS&rdquo;:
+    case "MUNICIPAL_GOVERNMENTS":
+    case "TRAINING_CENTERS":
+    case "NGOS_AND_FOUNDATIONS":
       return [
         ...baseFields,
-        &ldquo;institutionName&rdquo;,
-        &ldquo;institutionType&rdquo;,
-        &ldquo;serviceArea&rdquo;,
-        &ldquo;institutionDescription&rdquo;,
+        "institutionName",
+        "institutionType",
+        "serviceArea",
+        "institutionDescription",
       ];
 
     default:

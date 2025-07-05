@@ -1,16 +1,16 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import { Loader2 } from &ldquo;lucide-react&rdquo;;
-import { Skeleton } from &ldquo;@/components/ui/skeleton&rdquo;;
-import { Progress } from &ldquo;@/components/ui/progress&rdquo;;
-import { useEffect, useState } from &ldquo;react&rdquo;;
+import { Loader2 } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Progress } from "@/components/ui/progress";
+import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
-} from &ldquo;@/components/ui/card&rdquo;;
-import { Tabs, TabsContent, TabsList, TabsTrigger } from &ldquo;@/components/ui/tabs&rdquo;;
+} from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export function SettingsLoader() {
   const [progress, setProgress] = useState(0);
@@ -36,35 +36,35 @@ export function SettingsLoader() {
   }, []);
 
   return (
-    <div className=&ldquo;space-y-6 animate-in fade-in-50 duration-300&rdquo;>
-      <div className=&ldquo;space-y-2&rdquo;>
-        <Skeleton className=&ldquo;h-8 w-64&rdquo; />
-        <Skeleton className=&ldquo;h-4 w-96&rdquo; />
+    <div className="space-y-6 animate-in fade-in-50 duration-300">
+      <div className="space-y-2">
+        <Skeleton className="h-8 w-64" />
+        <Skeleton className="h-4 w-96" />
       </div>
 
-      <Tabs defaultValue=&ldquo;profile&rdquo; className=&ldquo;space-y-6&rdquo;>
-        <TabsList className=&ldquo;grid w-full grid-cols-2&rdquo;>
-          <TabsTrigger value=&ldquo;profile&rdquo; disabled>
+      <Tabs defaultValue="profile" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="profile" disabled>
             Perfil
           </TabsTrigger>
-          <TabsTrigger value=&ldquo;security&rdquo; disabled>
+          <TabsTrigger value="security" disabled>
             Seguridad
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value=&ldquo;profile&rdquo; className=&ldquo;space-y-6&rdquo;>
+        <TabsContent value="profile" className="space-y-6">
           {/* Account Section Skeleton */}
           <Card>
             <CardHeader>
-              <Skeleton className=&ldquo;h-6 w-48&rdquo; />
-              <Skeleton className=&ldquo;h-4 w-64&rdquo; />
+              <Skeleton className="h-6 w-48" />
+              <Skeleton className="h-4 w-64" />
             </CardHeader>
             <CardContent>
-              <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 gap-4&rdquo;>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className=&ldquo;space-y-2&rdquo;>
-                    <Skeleton className=&ldquo;h-4 w-24&rdquo; />
-                    <Skeleton className=&ldquo;h-4 w-32&rdquo; />
+                  <div key={i} className="space-y-2">
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="h-4 w-32" />
                   </div>
                 ))}
               </div>
@@ -74,36 +74,36 @@ export function SettingsLoader() {
           {/* Settings Form Skeleton */}
           <Card>
             <CardHeader>
-              <Skeleton className=&ldquo;h-6 w-48&rdquo; />
-              <Skeleton className=&ldquo;h-4 w-64&rdquo; />
+              <Skeleton className="h-6 w-48" />
+              <Skeleton className="h-4 w-64" />
             </CardHeader>
             <CardContent>
-              <div className=&ldquo;space-y-4&rdquo;>
-                <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 gap-4&rdquo;>
-                  <div className=&ldquo;space-y-2&rdquo;>
-                    <Skeleton className=&ldquo;h-4 w-24&rdquo; />
-                    <Skeleton className=&ldquo;h-10 w-full&rdquo; />
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="h-10 w-full" />
                   </div>
-                  <div className=&ldquo;space-y-2&rdquo;>
-                    <Skeleton className=&ldquo;h-4 w-24&rdquo; />
-                    <Skeleton className=&ldquo;h-10 w-full&rdquo; />
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="h-10 w-full" />
                   </div>
                 </div>
-                <Skeleton className=&ldquo;h-24 w-full rounded-full&rdquo; />
+                <Skeleton className="h-24 w-full rounded-full" />
               </div>
             </CardContent>
             <CardFooter>
-              <Skeleton className=&ldquo;h-10 w-32&rdquo; />
+              <Skeleton className="h-10 w-32" />
             </CardFooter>
           </Card>
         </TabsContent>
       </Tabs>
 
-      <div className=&ldquo;fixed inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-50 pointer-events-none&rdquo;>
-        <div className=&ldquo;flex flex-col items-center gap-4 w-full max-w-sm p-6&rdquo;>
-          <Loader2 className=&ldquo;h-10 w-10 animate-spin text-primary&rdquo; />
-          <p className=&ldquo;text-base font-medium&rdquo;>Cargando configuración...</p>
-          <Progress value={progress} className=&ldquo;w-full h-2&rdquo; />
+      <div className="fixed inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-50 pointer-events-none">
+        <div className="flex flex-col items-center gap-4 w-full max-w-sm p-6">
+          <Loader2 className="h-10 w-10 animate-spin text-primary" />
+          <p className="text-base font-medium">Cargando configuración...</p>
+          <Progress value={progress} className="w-full h-2" />
         </div>
       </div>
     </div>

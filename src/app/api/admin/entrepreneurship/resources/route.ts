@@ -1,62 +1,62 @@
-import { NextRequest, NextResponse } from &ldquo;next/server&rdquo;;
+import { NextRequest, NextResponse } from "next/server";
 
 // Mock data for demonstration - in real app this would come from Prisma/database
 const resources = [
   {
-    id: &ldquo;resource-1&rdquo;,
-    title: &ldquo;Plantilla de Plan de Negocios&rdquo;,
+    id: "resource-1",
+    title: "Plantilla de Plan de Negocios",
     description:
-      &ldquo;Plantilla completa en Word para crear tu plan de negocios paso a paso&rdquo;,
-    type: &ldquo;template&rdquo;,
-    thumbnail: &ldquo;/api/placeholder/300/200&rdquo;,
-    category: &ldquo;Planificación&rdquo;,
+      "Plantilla completa en Word para crear tu plan de negocios paso a paso",
+    type: "template",
+    thumbnail: "/api/placeholder/300/200",
+    category: "Planificación",
     downloads: 2847,
     rating: 4.8,
-    author: &ldquo;Gobierno Municipal&rdquo;,
-    fileUrl: &ldquo;/downloads/plantilla-plan-negocios.docx&rdquo;,
-    fileSize: &ldquo;2.5 MB&rdquo;,
-    tags: [&ldquo;plan de negocios&rdquo;, &ldquo;emprendimiento&rdquo;, &ldquo;plantilla&rdquo;],
-    status: &ldquo;published&rdquo;,
+    author: "Gobierno Municipal",
+    fileUrl: "/downloads/plantilla-plan-negocios.docx",
+    fileSize: "2.5 MB",
+    tags: ["plan de negocios", "emprendimiento", "plantilla"],
+    status: "published",
     featured: true,
-    createdAt: new Date(&ldquo;2024-01-15&rdquo;),
-    updatedAt: new Date(&ldquo;2024-02-20&rdquo;),
+    createdAt: new Date("2024-01-15"),
+    updatedAt: new Date("2024-02-20"),
   },
   {
-    id: &ldquo;resource-2&rdquo;,
-    title: &ldquo;Cómo Validar tu Idea de Negocio&rdquo;,
+    id: "resource-2",
+    title: "Cómo Validar tu Idea de Negocio",
     description:
-      &ldquo;Guía práctica para validar tu idea antes de invertir tiempo y dinero&rdquo;,
-    type: &ldquo;guide&rdquo;,
-    thumbnail: &ldquo;/api/placeholder/300/200&rdquo;,
-    category: &ldquo;Validación&rdquo;,
+      "Guía práctica para validar tu idea antes de invertir tiempo y dinero",
+    type: "guide",
+    thumbnail: "/api/placeholder/300/200",
+    category: "Validación",
     downloads: 1923,
     rating: 4.6,
-    author: &ldquo;Fundación Pro-Joven&rdquo;,
-    fileUrl: &ldquo;/downloads/validacion-idea-negocio.pdf&rdquo;,
-    fileSize: &ldquo;1.8 MB&rdquo;,
-    tags: [&ldquo;validación&rdquo;, &ldquo;idea de negocio&rdquo;, &ldquo;metodología&rdquo;],
-    status: &ldquo;published&rdquo;,
+    author: "Fundación Pro-Joven",
+    fileUrl: "/downloads/validacion-idea-negocio.pdf",
+    fileSize: "1.8 MB",
+    tags: ["validación", "idea de negocio", "metodología"],
+    status: "published",
     featured: false,
-    createdAt: new Date(&ldquo;2024-01-20&rdquo;),
-    updatedAt: new Date(&ldquo;2024-02-18&rdquo;),
+    createdAt: new Date("2024-01-20"),
+    updatedAt: new Date("2024-02-18"),
   },
   {
-    id: &ldquo;resource-3&rdquo;,
-    title: &ldquo;Finanzas para Emprendedores&rdquo;,
-    description: &ldquo;Video curso sobre gestión financiera básica para startups&rdquo;,
-    type: &ldquo;video&rdquo;,
-    thumbnail: &ldquo;/api/placeholder/300/200&rdquo;,
-    category: &ldquo;Finanzas&rdquo;,
+    id: "resource-3",
+    title: "Finanzas para Emprendedores",
+    description: "Video curso sobre gestión financiera básica para startups",
+    type: "video",
+    thumbnail: "/api/placeholder/300/200",
+    category: "Finanzas",
     downloads: 3456,
     rating: 4.9,
-    author: &ldquo;Centro CEPYME&rdquo;,
-    fileUrl: &ldquo;https://youtube.com/watch?v=example&rdquo;,
-    fileSize: &ldquo;25 MB&rdquo;,
-    tags: [&ldquo;finanzas&rdquo;, &ldquo;contabilidad&rdquo;, &ldquo;startups&rdquo;],
-    status: &ldquo;published&rdquo;,
+    author: "Centro CEPYME",
+    fileUrl: "https://youtube.com/watch?v=example",
+    fileSize: "25 MB",
+    tags: ["finanzas", "contabilidad", "startups"],
+    status: "published",
     featured: true,
-    createdAt: new Date(&ldquo;2024-01-10&rdquo;),
-    updatedAt: new Date(&ldquo;2024-02-15&rdquo;),
+    createdAt: new Date("2024-01-10"),
+    updatedAt: new Date("2024-02-15"),
   },
 ];
 
@@ -64,12 +64,12 @@ const resources = [
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const search = searchParams.get(&ldquo;search&rdquo;);
-    const type = searchParams.get(&ldquo;type&rdquo;);
-    const category = searchParams.get(&ldquo;category&rdquo;);
-    const status = searchParams.get(&ldquo;status&rdquo;);
-    const limit = parseInt(searchParams.get(&ldquo;limit&rdquo;) || &ldquo;10&rdquo;);
-    const page = parseInt(searchParams.get(&ldquo;page&rdquo;) || &ldquo;1&rdquo;);
+    const search = searchParams.get("search");
+    const type = searchParams.get("type");
+    const category = searchParams.get("category");
+    const status = searchParams.get("status");
+    const limit = parseInt(searchParams.get("limit") || "10");
+    const page = parseInt(searchParams.get("page") || "1");
 
     let filtered = [...resources];
 
@@ -86,17 +86,17 @@ export async function GET(request: NextRequest) {
     }
 
     // Apply type filter
-    if (type && type !== &ldquo;all&rdquo;) {
+    if (type && type !== "all") {
       filtered = filtered.filter((resource) => resource.type === type);
     }
 
     // Apply category filter
-    if (category && category !== &ldquo;all&rdquo;) {
+    if (category && category !== "all") {
       filtered = filtered.filter((resource) => resource.category === category);
     }
 
     // Apply status filter
-    if (status && status !== &ldquo;all&rdquo;) {
+    if (status && status !== "all") {
       filtered = filtered.filter((resource) => resource.status === status);
     }
 
@@ -109,16 +109,16 @@ export async function GET(request: NextRequest) {
     const stats = {
       total: filtered.length,
       byType: {
-        template: resources.filter((r) => r.type === &ldquo;template&rdquo;).length,
-        guide: resources.filter((r) => r.type === &ldquo;guide&rdquo;).length,
-        video: resources.filter((r) => r.type === &ldquo;video&rdquo;).length,
-        podcast: resources.filter((r) => r.type === &ldquo;podcast&rdquo;).length,
-        tool: resources.filter((r) => r.type === &ldquo;tool&rdquo;).length,
+        template: resources.filter((r) => r.type === "template").length,
+        guide: resources.filter((r) => r.type === "guide").length,
+        video: resources.filter((r) => r.type === "video").length,
+        podcast: resources.filter((r) => r.type === "podcast").length,
+        tool: resources.filter((r) => r.type === "tool").length,
       },
       byStatus: {
-        published: resources.filter((r) => r.status === &ldquo;published&rdquo;).length,
-        draft: resources.filter((r) => r.status === &ldquo;draft&rdquo;).length,
-        archived: resources.filter((r) => r.status === &ldquo;archived&rdquo;).length,
+        published: resources.filter((r) => r.status === "published").length,
+        draft: resources.filter((r) => r.status === "draft").length,
+        archived: resources.filter((r) => r.status === "archived").length,
       },
       totalDownloads: resources.reduce((sum, r) => sum + r.downloads, 0),
       averageRating:
@@ -137,9 +137,9 @@ export async function GET(request: NextRequest) {
       stats,
     });
   } catch (error) {
-    console.error(&ldquo;Error fetching resources:&rdquo;, error);
+    console.error("Error fetching resources:", error);
     return NextResponse.json(
-      { error: &ldquo;Error al obtener recursos&rdquo; },
+      { error: "Error al obtener recursos" },
       { status: 500 }
     );
   }
@@ -151,7 +151,7 @@ export async function POST(request: NextRequest) {
     const data = await request.json();
 
     // Validate required fields
-    const requiredFields = [&ldquo;title&rdquo;, &ldquo;description&rdquo;, &ldquo;type&rdquo;, &ldquo;category&rdquo;];
+    const requiredFields = ["title", "description", "type", "category"];
     for (const field of requiredFields) {
       if (!data[field]) {
         return NextResponse.json(
@@ -167,7 +167,7 @@ export async function POST(request: NextRequest) {
       ...data,
       downloads: 0,
       rating: 0,
-      status: data.status || &ldquo;draft&rdquo;,
+      status: data.status || "draft",
       featured: data.featured || false,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -178,15 +178,15 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(
       {
-        message: &ldquo;Recurso creado exitosamente&rdquo;,
+        message: "Recurso creado exitosamente",
         resource: newResource,
       },
       { status: 201 }
     );
   } catch (error) {
-    console.error(&ldquo;Error creating resource:&rdquo;, error);
+    console.error("Error creating resource:", error);
     return NextResponse.json(
-      { error: &ldquo;Error al crear recurso&rdquo; },
+      { error: "Error al crear recurso" },
       { status: 500 }
     );
   }

@@ -1,3 +1,3 @@
-export { DashboardYouth } from &ldquo;./dashboard-youth&rdquo;;
-export { DashboardAdolescent } from &ldquo;./dashboard-adolescent&rdquo;;
-export { DashboardCompany } from &ldquo;./dashboard-company&rdquo;;
+export { DashboardYouth } from "./dashboard-youth";
+export { DashboardAdolescent } from "./dashboard-adolescent";
+export { DashboardCompany } from "./dashboard-company";

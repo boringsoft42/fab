@@ -1,19 +1,19 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import { useState } from &ldquo;react&rdquo;;
-import { useRouter } from &ldquo;next/navigation&rdquo;;
-import { Button } from &ldquo;@/components/ui/button&rdquo;;
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from &ldquo;@/components/ui/card&rdquo;;
-import { Input } from &ldquo;@/components/ui/input&rdquo;;
-import { Label } from &ldquo;@/components/ui/label&rdquo;;
-import { Alert, AlertDescription } from &ldquo;@/components/ui/alert&rdquo;;
-import { RadioGroup, RadioGroupItem } from &ldquo;@/components/ui/radio-group&rdquo;;
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Loader2,
   Mail,
@@ -24,10 +24,10 @@ import {
   User,
   Building,
   Target,
-} from &ldquo;lucide-react&rdquo;;
-import { useMockAuth } from &ldquo;@/context/mock-auth-context&rdquo;;
+} from "lucide-react";
+import { useMockAuth } from "@/context/mock-auth-context";
 
-type UserRole = &ldquo;YOUTH&rdquo; | &ldquo;COMPANIES&rdquo; | &ldquo;MUNICIPAL_GOVERNMENTS&rdquo;;
+type UserRole = "YOUTH" | "COMPANIES" | "MUNICIPAL_GOVERNMENTS";
 
 interface RoleOption {
   value: UserRole;
@@ -40,40 +40,40 @@ interface RoleOption {
 
 const roleOptions: RoleOption[] = [
   {
-    value: &ldquo;YOUTH&rdquo;,
-    label: &ldquo;Youth&rdquo;,
+    value: "YOUTH",
+    label: "Youth",
     description:
-      &ldquo;Para jóvenes y adolescentes que buscan empleo y oportunidades de desarrollo&rdquo;,
+      "Para jóvenes y adolescentes que buscan empleo y oportunidades de desarrollo",
     icon: User,
-    color: &ldquo;bg-blue-500&rdquo;,
-    examples: [&ldquo;Estudiantes&rdquo;, &ldquo;Jóvenes profesionales&rdquo;, &ldquo;Adolescentes&rdquo;],
+    color: "bg-blue-500",
+    examples: ["Estudiantes", "Jóvenes profesionales", "Adolescentes"],
   },
   {
-    value: &ldquo;COMPANIES&rdquo;,
-    label: &ldquo;Company&rdquo;,
+    value: "COMPANIES",
+    label: "Company",
     description:
-      &ldquo;Para empresas que buscan talento y publican ofertas de trabajo&rdquo;,
+      "Para empresas que buscan talento y publican ofertas de trabajo",
     icon: Building,
-    color: &ldquo;bg-purple-500&rdquo;,
-    examples: [&ldquo;Startups&rdquo;, &ldquo;PYMEs&rdquo;, &ldquo;Grandes empresas&rdquo;],
+    color: "bg-purple-500",
+    examples: ["Startups", "PYMEs", "Grandes empresas"],
   },
   {
-    value: &ldquo;MUNICIPAL_GOVERNMENTS&rdquo;,
-    label: &ldquo;Municipality, NGO, or Center&rdquo;,
+    value: "MUNICIPAL_GOVERNMENTS",
+    label: "Municipality, NGO, or Center",
     description:
-      &ldquo;Para gobiernos municipales, ONGs, centros de capacitación y fundaciones&rdquo;,
+      "Para gobiernos municipales, ONGs, centros de capacitación y fundaciones",
     icon: Target,
-    color: &ldquo;bg-green-500&rdquo;,
-    examples: [&ldquo;Alcaldías&rdquo;, &ldquo;ONGs&rdquo;, &ldquo;Centros de formación&rdquo;, &ldquo;Fundaciones&rdquo;],
+    color: "bg-green-500",
+    examples: ["Alcaldías", "ONGs", "Centros de formación", "Fundaciones"],
   },
 ];
 
 export function MockLoginScreen() {
   const [isSignUp, setIsSignUp] = useState(false);
-  const [email, setEmail] = useState(&ldquo;&rdquo;);
-  const [password, setPassword] = useState(&ldquo;&rdquo;);
-  const [name, setName] = useState(&ldquo;&rdquo;);
-  const [selectedRole, setSelectedRole] = useState<UserRole>(&ldquo;YOUTH&rdquo;);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [selectedRole, setSelectedRole] = useState<UserRole>("YOUTH");
   const { signIn, signUp, updateUserRole, isLoading, error } = useMockAuth();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -86,82 +86,82 @@ export function MockLoginScreen() {
       }
 
       // Redirect to dashboard (role is already set during sign-in)
-      router.replace(&ldquo;/dashboard&rdquo;);
+      router.replace("/dashboard");
     } catch (err) {
       // Error is handled by the context
     }
   };
 
   const demoUsers = [
-    { email: &ldquo;youth@demo.com&rdquo;, role: &ldquo;YOUTH&rdquo; as UserRole, label: &ldquo;Demo Youth&rdquo; },
+    { email: "youth@demo.com", role: "YOUTH" as UserRole, label: "Demo Youth" },
     {
-      email: &ldquo;company@demo.com&rdquo;,
-      role: &ldquo;COMPANIES&rdquo; as UserRole,
-      label: &ldquo;Demo Company&rdquo;,
+      email: "company@demo.com",
+      role: "COMPANIES" as UserRole,
+      label: "Demo Company",
     },
     {
-      email: &ldquo;municipality@demo.com&rdquo;,
-      role: &ldquo;MUNICIPAL_GOVERNMENTS&rdquo; as UserRole,
-      label: &ldquo;Demo Municipality&rdquo;,
+      email: "municipality@demo.com",
+      role: "MUNICIPAL_GOVERNMENTS" as UserRole,
+      label: "Demo Municipality",
     },
   ];
 
   const handleDemoLogin = async (demoEmail: string, demoRole: UserRole) => {
     setEmail(demoEmail);
-    setPassword(&ldquo;demo123&rdquo;);
+    setPassword("demo123");
     setSelectedRole(demoRole);
 
     try {
-      await signIn(demoEmail, &ldquo;demo123&rdquo;, demoRole);
-      router.replace(&ldquo;/dashboard&rdquo;);
+      await signIn(demoEmail, "demo123", demoRole);
+      router.replace("/dashboard");
     } catch (err) {
       // Error handled by context
     }
   };
 
   return (
-    <div className=&ldquo;min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4&rdquo;>
-      <div className=&ldquo;max-w-lg w-full space-y-6&rdquo;>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+      <div className="max-w-lg w-full space-y-6">
         {/* Header */}
-        <div className=&ldquo;text-center space-y-2&rdquo;>
-          <h1 className=&ldquo;text-3xl font-bold text-gray-900&rdquo;>CEMSE</h1>
-          <p className=&ldquo;text-gray-600&rdquo;>
+        <div className="text-center space-y-2">
+          <h1 className="text-3xl font-bold text-gray-900">CEMSE</h1>
+          <p className="text-gray-600">
             Centro de Empleabilidad y Emprendimiento
           </p>
         </div>
 
         {/* Login Form */}
         <Card>
-          <CardHeader className=&ldquo;text-center&rdquo;>
-            <CardTitle className=&ldquo;flex items-center justify-center gap-2&rdquo;>
-              <LogIn className=&ldquo;w-5 h-5&rdquo; />
-              {isSignUp ? &ldquo;Crear Cuenta&rdquo; : &ldquo;Iniciar Sesión&rdquo;}
+          <CardHeader className="text-center">
+            <CardTitle className="flex items-center justify-center gap-2">
+              <LogIn className="w-5 h-5" />
+              {isSignUp ? "Crear Cuenta" : "Iniciar Sesión"}
             </CardTitle>
             <CardDescription>
               {isSignUp
-                ? &ldquo;Crea tu cuenta y selecciona tu tipo de usuario&rdquo;
-                : &ldquo;Accede a tu cuenta y selecciona tu tipo de usuario&rdquo;}
+                ? "Crea tu cuenta y selecciona tu tipo de usuario"
+                : "Accede a tu cuenta y selecciona tu tipo de usuario"}
             </CardDescription>
           </CardHeader>
 
-          <CardContent className=&ldquo;space-y-6&rdquo;>
+          <CardContent className="space-y-6">
             {error && (
-              <Alert variant=&ldquo;destructive&rdquo;>
-                <AlertCircle className=&ldquo;h-4 w-4&rdquo; />
+              <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
                 <AlertDescription>{error.message}</AlertDescription>
               </Alert>
             )}
 
-            <form onSubmit={handleSubmit} className=&ldquo;space-y-6&rdquo;>
+            <form onSubmit={handleSubmit} className="space-y-6">
               {/* Personal Information */}
-              <div className=&ldquo;space-y-4&rdquo;>
+              <div className="space-y-4">
                 {isSignUp && (
-                  <div className=&ldquo;space-y-2&rdquo;>
-                    <Label htmlFor=&ldquo;name&rdquo;>Nombre Completo</Label>
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Nombre Completo</Label>
                     <Input
-                      id=&ldquo;name&rdquo;
-                      type=&ldquo;text&rdquo;
-                      placeholder=&ldquo;Tu nombre completo&rdquo;
+                      id="name"
+                      type="text"
+                      placeholder="Tu nombre completo"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       required={isSignUp}
@@ -170,34 +170,34 @@ export function MockLoginScreen() {
                   </div>
                 )}
 
-                <div className=&ldquo;space-y-2&rdquo;>
-                  <Label htmlFor=&ldquo;email&rdquo;>Correo Electrónico</Label>
-                  <div className=&ldquo;relative&rdquo;>
-                    <Mail className=&ldquo;absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4&rdquo; />
+                <div className="space-y-2">
+                  <Label htmlFor="email">Correo Electrónico</Label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                     <Input
-                      id=&ldquo;email&rdquo;
-                      type=&ldquo;email&rdquo;
-                      placeholder=&ldquo;tu@correo.com&rdquo;
+                      id="email"
+                      type="email"
+                      placeholder="tu@correo.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className=&ldquo;pl-10&rdquo;
+                      className="pl-10"
                       required
                       disabled={isLoading}
                     />
                   </div>
                 </div>
 
-                <div className=&ldquo;space-y-2&rdquo;>
-                  <Label htmlFor=&ldquo;password&rdquo;>Contraseña</Label>
-                  <div className=&ldquo;relative&rdquo;>
-                    <Lock className=&ldquo;absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4&rdquo; />
+                <div className="space-y-2">
+                  <Label htmlFor="password">Contraseña</Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                     <Input
-                      id=&ldquo;password&rdquo;
-                      type=&ldquo;password&rdquo;
-                      placeholder=&ldquo;Tu contraseña&rdquo;
+                      id="password"
+                      type="password"
+                      placeholder="Tu contraseña"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className=&ldquo;pl-10&rdquo;
+                      className="pl-10"
                       required
                       disabled={isLoading}
                     />
@@ -206,12 +206,12 @@ export function MockLoginScreen() {
               </div>
 
               {/* Role Selection */}
-              <div className=&ldquo;space-y-4&rdquo;>
+              <div className="space-y-4">
                 <div>
-                  <Label className=&ldquo;text-base font-medium&rdquo;>
+                  <Label className="text-base font-medium">
                     Tipo de Usuario
                   </Label>
-                  <p className=&ldquo;text-sm text-gray-600 mt-1&rdquo;>
+                  <p className="text-sm text-gray-600 mt-1">
                     Selecciona el tipo que mejor te describe
                   </p>
                 </div>
@@ -219,36 +219,36 @@ export function MockLoginScreen() {
                 <RadioGroup
                   value={selectedRole}
                   onValueChange={(value) => setSelectedRole(value as UserRole)}
-                  className=&ldquo;space-y-3&rdquo;
+                  className="space-y-3"
                   disabled={isLoading}
                 >
                   {roleOptions.map((option) => {
                     const Icon = option.icon;
                     return (
-                      <div key={option.value} className=&ldquo;relative&rdquo;>
+                      <div key={option.value} className="relative">
                         <RadioGroupItem
                           value={option.value}
                           id={option.value}
-                          className=&ldquo;peer sr-only&rdquo;
+                          className="peer sr-only"
                         />
                         <Label
                           htmlFor={option.value}
-                          className=&ldquo;flex items-start gap-4 p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all&rdquo;
+                          className="flex items-start gap-4 p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all"
                         >
                           <div
                             className={`w-10 h-10 ${option.color} rounded-full flex items-center justify-center flex-shrink-0 mt-1`}
                           >
-                            <Icon className=&ldquo;w-5 h-5 text-white&rdquo; />
+                            <Icon className="w-5 h-5 text-white" />
                           </div>
-                          <div className=&ldquo;flex-1 min-w-0&rdquo;>
-                            <div className=&ldquo;font-medium text-gray-900&rdquo;>
+                          <div className="flex-1 min-w-0">
+                            <div className="font-medium text-gray-900">
                               {option.label}
                             </div>
-                            <div className=&ldquo;text-sm text-gray-600 mt-1&rdquo;>
+                            <div className="text-sm text-gray-600 mt-1">
                               {option.description}
                             </div>
-                            <div className=&ldquo;text-xs text-gray-500 mt-2&rdquo;>
-                              Ejemplos: {option.examples.join(&ldquo;, &rdquo;)}
+                            <div className="text-xs text-gray-500 mt-2">
+                              Ejemplos: {option.examples.join(", ")}
                             </div>
                           </div>
                         </Label>
@@ -258,28 +258,28 @@ export function MockLoginScreen() {
                 </RadioGroup>
               </div>
 
-              <Button type=&ldquo;submit&rdquo; className=&ldquo;w-full&rdquo; disabled={isLoading}>
+              <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? (
                   <>
-                    <Loader2 className=&ldquo;w-4 h-4 mr-2 animate-spin&rdquo; />
-                    {isSignUp ? &ldquo;Creando cuenta...&rdquo; : &ldquo;Iniciando sesión...&rdquo;}
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    {isSignUp ? "Creando cuenta..." : "Iniciando sesión..."}
                   </>
                 ) : (
-                  <>{isSignUp ? &ldquo;Crear Cuenta&rdquo; : &ldquo;Iniciar Sesión&rdquo;}</>
+                  <>{isSignUp ? "Crear Cuenta" : "Iniciar Sesión"}</>
                 )}
               </Button>
             </form>
 
-            <div className=&ldquo;text-center&rdquo;>
+            <div className="text-center">
               <Button
-                variant=&ldquo;link&rdquo;
+                variant="link"
                 onClick={() => setIsSignUp(!isSignUp)}
                 disabled={isLoading}
-                className=&ldquo;text-sm&rdquo;
+                className="text-sm"
               >
                 {isSignUp
-                  ? &ldquo;¿Ya tienes cuenta? Inicia sesión&rdquo;
-                  : &ldquo;¿No tienes cuenta? Regístrate&rdquo;}
+                  ? "¿Ya tienes cuenta? Inicia sesión"
+                  : "¿No tienes cuenta? Regístrate"}
               </Button>
             </div>
           </CardContent>
@@ -288,28 +288,28 @@ export function MockLoginScreen() {
         {/* Demo Users */}
         <Card>
           <CardHeader>
-            <CardTitle className=&ldquo;flex items-center gap-2 text-sm&rdquo;>
-              <Users className=&ldquo;w-4 h-4&rdquo; />
+            <CardTitle className="flex items-center gap-2 text-sm">
+              <Users className="w-4 h-4" />
               Usuarios Demo
             </CardTitle>
-            <CardDescription className=&ldquo;text-xs&rdquo;>
+            <CardDescription className="text-xs">
               Haz clic para probar diferentes tipos de usuario
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className=&ldquo;grid grid-cols-1 gap-2&rdquo;>
+            <div className="grid grid-cols-1 gap-2">
               {demoUsers.map((demo) => (
                 <Button
                   key={demo.email}
-                  variant=&ldquo;outline&rdquo;
-                  size=&ldquo;sm&rdquo;
+                  variant="outline"
+                  size="sm"
                   onClick={() => handleDemoLogin(demo.email, demo.role)}
                   disabled={isLoading}
-                  className=&ldquo;justify-start h-auto py-2&rdquo;
+                  className="justify-start h-auto py-2"
                 >
-                  <div className=&ldquo;text-left&rdquo;>
-                    <div className=&ldquo;font-medium text-xs&rdquo;>{demo.label}</div>
-                    <div className=&ldquo;text-xs text-gray-600&rdquo;>{demo.email}</div>
+                  <div className="text-left">
+                    <div className="font-medium text-xs">{demo.label}</div>
+                    <div className="text-xs text-gray-600">{demo.email}</div>
                   </div>
                 </Button>
               ))}

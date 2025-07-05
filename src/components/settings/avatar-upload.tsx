@@ -1,11 +1,11 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import { useState } from &ldquo;react&rdquo;;
-import Image from &ldquo;next/image&rdquo;;
-import { UploadCloud } from &ldquo;lucide-react&rdquo;;
-import { Button } from &ldquo;@/components/ui/button&rdquo;;
-import { useToast } from &ldquo;@/components/ui/use-toast&rdquo;;
-import { uploadAvatar } from &ldquo;@/lib/supabase/upload-avatar&rdquo;;
+import { useState } from "react";
+import Image from "next/image";
+import { UploadCloud } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
+import { uploadAvatar } from "@/lib/supabase/upload-avatar";
 
 interface AvatarUploadProps {
   userId: string;
@@ -42,15 +42,15 @@ export function AvatarUpload({
       const avatarUrl = await uploadAvatar(file, userId);
       onUploadComplete(avatarUrl);
       toast({
-        title: &ldquo;Avatar actualizado&rdquo;,
-        description: &ldquo;Tu foto de perfil ha sido actualizada correctamente.&rdquo;,
+        title: "Avatar actualizado",
+        description: "Tu foto de perfil ha sido actualizada correctamente.",
       });
     } catch (error) {
-      console.error(&ldquo;Error uploading avatar:&rdquo;, error);
+      console.error("Error uploading avatar:", error);
       onUploadError(
         error instanceof Error
           ? error
-          : new Error(&ldquo;Error al subir la imagen de perfil&rdquo;)
+          : new Error("Error al subir la imagen de perfil")
       );
     } finally {
       setIsUploading(false);
@@ -58,40 +58,40 @@ export function AvatarUpload({
   };
 
   return (
-    <div className=&ldquo;flex flex-col items-center gap-4&rdquo;>
-      <div className=&ldquo;relative h-24 w-24&rdquo;>
+    <div className="flex flex-col items-center gap-4">
+      <div className="relative h-24 w-24">
         {previewUrl || currentAvatarUrl ? (
           <Image
-            src={previewUrl || currentAvatarUrl || &ldquo;&rdquo;}
-            alt=&ldquo;Avatar preview&rdquo;
+            src={previewUrl || currentAvatarUrl || ""}
+            alt="Avatar preview"
             fill
-            className=&ldquo;rounded-full object-cover&rdquo;
+            className="rounded-full object-cover"
           />
         ) : (
-          <div className=&ldquo;flex h-24 w-24 items-center justify-center rounded-full bg-muted&rdquo;>
-            <UploadCloud className=&ldquo;h-8 w-8 text-muted-foreground&rdquo; />
+          <div className="flex h-24 w-24 items-center justify-center rounded-full bg-muted">
+            <UploadCloud className="h-8 w-8 text-muted-foreground" />
           </div>
         )}
       </div>
-      <div className=&ldquo;flex flex-col items-center gap-2&rdquo;>
-        <Button variant=&ldquo;outline&rdquo; className=&ldquo;relative&rdquo; disabled={isUploading}>
+      <div className="flex flex-col items-center gap-2">
+        <Button variant="outline" className="relative" disabled={isUploading}>
           {isUploading ? (
             <>
-              <span className=&ldquo;mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-opacity-20 border-t-current&rdquo;></span>
+              <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-opacity-20 border-t-current"></span>
               Subiendo...
             </>
           ) : (
-            &ldquo;Cambiar foto&rdquo;
+            "Cambiar foto"
           )}
           <input
-            type=&ldquo;file&rdquo;
-            accept=&ldquo;image/*&rdquo;
+            type="file"
+            accept="image/*"
             onChange={handleFileChange}
-            className=&ldquo;absolute inset-0 w-full h-full opacity-0 cursor-pointer&rdquo;
+            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
             disabled={isUploading}
           />
         </Button>
-        <p className=&ldquo;text-xs text-muted-foreground&rdquo;>
+        <p className="text-xs text-muted-foreground">
           PNG, JPG o GIF. Máximo 2MB.
         </p>
       </div>

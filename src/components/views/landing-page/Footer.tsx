@@ -1,45 +1,45 @@
-import Link from &ldquo;next/link&rdquo;;
-import { FacebookIcon, TwitterIcon, InstagramIcon, Brain } from &ldquo;lucide-react&rdquo;;
+import Link from "next/link";
+import { FacebookIcon, TwitterIcon, InstagramIcon, Brain } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className=&ldquo;bg-secondary text-foreground py-12&rdquo;>
-      <div className=&ldquo;container mx-auto px-4 sm:px-6 lg:px-8&rdquo;>
-        <div className=&ldquo;grid grid-cols-1 md:grid-cols-4 gap-8&rdquo;>
+    <footer className="bg-secondary text-foreground py-12">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <div className=&ldquo;flex items-center space-x-2 mb-4&rdquo;>
-              <Brain className=&ldquo;h-8 w-8 text-primary&rdquo; />
-              <span className=&ldquo;text-2xl font-bold text-primary&rdquo;>
+            <div className="flex items-center space-x-2 mb-4">
+              <Brain className="h-8 w-8 text-primary" />
+              <span className="text-2xl font-bold text-primary">
                 POSITIVE-Next
               </span>
             </div>
-            <p className=&ldquo;text-muted-foreground&rdquo;>
+            <p className="text-muted-foreground">
               Empowering minds for a better tomorrow.
             </p>
           </div>
           <div>
-            <h4 className=&ldquo;text-lg font-semibold mb-4&rdquo;>Quick Links</h4>
-            <ul className=&ldquo;space-y-2&rdquo;>
+            <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
+            <ul className="space-y-2">
               <li>
                 <Link
-                  href=&ldquo;/#features&rdquo;
-                  className=&ldquo;text-muted-foreground hover:text-primary transition-colors&rdquo;
+                  href="/#features"
+                  className="text-muted-foreground hover:text-primary transition-colors"
                 >
                   Features
                 </Link>
               </li>
               <li>
                 <Link
-                  href=&ldquo;/#about&rdquo;
-                  className=&ldquo;text-muted-foreground hover:text-primary transition-colors&rdquo;
+                  href="/#about"
+                  className="text-muted-foreground hover:text-primary transition-colors"
                 >
                   About
                 </Link>
               </li>
               <li>
                 <Link
-                  href=&ldquo;/#testimonials&rdquo;
-                  className=&ldquo;text-muted-foreground hover:text-primary transition-colors&rdquo;
+                  href="/#testimonials"
+                  className="text-muted-foreground hover:text-primary transition-colors"
                 >
                   Testimonials
                 </Link>
@@ -47,20 +47,20 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <h4 className=&ldquo;text-lg font-semibold mb-4&rdquo;>Legal</h4>
-            <ul className=&ldquo;space-y-2&rdquo;>
+            <h4 className="text-lg font-semibold mb-4">Legal</h4>
+            <ul className="space-y-2">
               <li>
                 <Link
-                  href=&ldquo;/terms&rdquo;
-                  className=&ldquo;text-muted-foreground hover:text-primary transition-colors&rdquo;
+                  href="/terms"
+                  className="text-muted-foreground hover:text-primary transition-colors"
                 >
                   Terms of Service
                 </Link>
               </li>
               <li>
                 <Link
-                  href=&ldquo;/privacy&rdquo;
-                  className=&ldquo;text-muted-foreground hover:text-primary transition-colors&rdquo;
+                  href="/privacy"
+                  className="text-muted-foreground hover:text-primary transition-colors"
                 >
                   Privacy Policy
                 </Link>
@@ -68,37 +68,37 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <h4 className=&ldquo;text-lg font-semibold mb-4&rdquo;>Connect</h4>
-            <div className=&ldquo;flex space-x-4&rdquo;>
+            <h4 className="text-lg font-semibold mb-4">Connect</h4>
+            <div className="flex space-x-4">
               <a
-                href=&ldquo;https://facebook.com/positivenext&rdquo;
-                target=&ldquo;_blank&rdquo;
-                rel=&ldquo;noopener noreferrer&rdquo;
-                className=&ldquo;text-muted-foreground hover:text-primary transition-colors&rdquo;
+                href="https://facebook.com/positivenext"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-primary transition-colors"
               >
                 <FacebookIcon size={24} />
               </a>
               <a
-                href=&ldquo;https://twitter.com/positivenext&rdquo;
-                target=&ldquo;_blank&rdquo;
-                rel=&ldquo;noopener noreferrer&rdquo;
-                className=&ldquo;text-muted-foreground hover:text-primary transition-colors&rdquo;
+                href="https://twitter.com/positivenext"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-primary transition-colors"
               >
                 <TwitterIcon size={24} />
               </a>
               <a
-                href=&ldquo;https://instagram.com/positivenext&rdquo;
-                target=&ldquo;_blank&rdquo;
-                rel=&ldquo;noopener noreferrer&rdquo;
-                className=&ldquo;text-muted-foreground hover:text-primary transition-colors&rdquo;
+                href="https://instagram.com/positivenext"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-primary transition-colors"
               >
                 <InstagramIcon size={24} />
               </a>
             </div>
           </div>
         </div>
-        <div className=&ldquo;mt-8 pt-8 border-t border-border text-center&rdquo;>
-          <p className=&ldquo;text-muted-foreground&rdquo;>
+        <div className="mt-8 pt-8 border-t border-border text-center">
+          <p className="text-muted-foreground">
             &copy; {new Date().getFullYear()} POSITIVE-Next. All rights
             reserved.
           </p>

@@ -1,4 +1,4 @@
-import { SupabaseClient } from &ldquo;@supabase/supabase-js&rdquo;;
+import { SupabaseClient } from "@supabase/supabase-js";
 
 /**
  * This middleware extension allows the Supabase client to work with
@@ -16,14 +16,14 @@ export const applyPasswordHashMiddleware = (supabase: SupabaseClient) => {
     // Only modify Supabase auth endpoints for password-related operations
     const url = input instanceof Request ? input.url : input.toString();
     const isSupabaseAuthEndpoint =
-      url.includes(&ldquo;/auth/v1&rdquo;) &&
-      (url.includes(&ldquo;/signup&rdquo;) ||
-        url.includes(&ldquo;/token&rdquo;) ||
-        url.includes(&ldquo;/user&rdquo;));
+      url.includes("/auth/v1") &&
+      (url.includes("/signup") ||
+        url.includes("/token") ||
+        url.includes("/user"));
 
     // Check if this is a password-related operation
     const body = init?.body ? JSON.parse(init.body.toString()) : null;
-    const hasPassword = body && &ldquo;password&rdquo; in body;
+    const hasPassword = body && "password" in body;
 
     if (isSupabaseAuthEndpoint && hasPassword) {
       // Add the custom header to indicate password is pre-hashed
@@ -31,7 +31,7 @@ export const applyPasswordHashMiddleware = (supabase: SupabaseClient) => {
         ...init,
         headers: {
           ...(init?.headers || {}),
-          &ldquo;x-password-hashed&rdquo;: &ldquo;true&rdquo;,
+          "x-password-hashed": "true",
         },
       };
     }

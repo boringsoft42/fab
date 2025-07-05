@@ -1,5 +1,5 @@
-import { NextResponse } from &ldquo;next/server&rdquo;;
-import type { NextRequest } from &ldquo;next/server&rdquo;;
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
 export async function middleware(req: NextRequest) {
   // For now, just pass through all requests since we're using mock auth
@@ -8,5 +8,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: [&ldquo;/dashboard/:path*&rdquo;, &ldquo;/sign-in&rdquo;, &ldquo;/sign-up&rdquo;, &ldquo;/auth/callback&rdquo;],
+  matcher: ["/dashboard/:path*", "/sign-in", "/sign-up", "/auth/callback"],
 };
