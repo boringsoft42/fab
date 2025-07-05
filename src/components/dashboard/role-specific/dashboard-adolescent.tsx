@@ -723,7 +723,7 @@ export function DashboardAdolescent() {
               <div className="flex items-center gap-3">
                 <CheckCircle className="w-4 h-4 text-green-600" />
                 <span className="text-sm">
-                  Completaste "Orientación Vocacional - Módulo 1"
+                  Completaste &quot;Orientación Vocacional - Módulo 1&quot;
                 </span>
               </div>
               <Badge variant="secondary">Hace 1 día</Badge>
@@ -733,7 +733,7 @@ export function DashboardAdolescent() {
               <div className="flex items-center gap-3">
                 <Target className="w-4 h-4 text-purple-600" />
                 <span className="text-sm">
-                  Participaste en taller "Educación Financiera Básica"
+                  Participaste en taller &quot;Educación Financiera Básica&quot;
                 </span>
               </div>
               <Badge variant="secondary">Hace 3 días</Badge>

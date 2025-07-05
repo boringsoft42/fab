@@ -846,7 +846,7 @@ export default function CourseStudentsPage() {
                           <div>
                             <p className="font-medium">Lección completada</p>
                             <p className="text-sm text-muted-foreground">
-                              "Comunicación Efectiva" - Hace 2 días
+                              &quot;Comunicación Efectiva&quot; - Hace 2 días
                             </p>
                           </div>
                         </div>
@@ -856,7 +856,7 @@ export default function CourseStudentsPage() {
                           <div>
                             <p className="font-medium">Examen aprobado</p>
                             <p className="text-sm text-muted-foreground">
-                              "Evaluación Módulo 1" - Hace 1 semana
+                              &quot;Evaluación Módulo 1&quot; - Hace 1 semana
                             </p>
                           </div>
                         </div>

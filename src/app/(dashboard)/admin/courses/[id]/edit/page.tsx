@@ -113,7 +113,8 @@ export default function EditCoursePage() {
 
   const [courseData] = useState({
     title: "Habilidades Laborales Básicas",
-    description: "Curso completo sobre competencias fundamentales para el trabajo",
+    description:
+      "Curso completo sobre competencias fundamentales para el trabajo",
     category: CourseCategory.SOFT_SKILLS,
     level: CourseLevel.BEGINNER,
     duration: 8,
@@ -663,15 +664,15 @@ function ModuleDialog({
   isOpen,
   onClose,
   onSave,
-  module,
+  module: moduleData,
 }: {
   isOpen: boolean;
   onClose: () => void;
   onSave: (data: Partial<Module>) => void;
   module?: Module | null;
 }) {
-  const [title, setTitle] = useState(module?.title || "");
-  const [description, setDescription] = useState(module?.description || "");
+  const [title, setTitle] = useState(moduleData?.title || "");
+  const [description, setDescription] = useState(moduleData?.description || "");
 
   const handleSave = () => {
     if (title.trim()) {
@@ -687,7 +688,7 @@ function ModuleDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {module ? "Editar Módulo" : "Agregar Nuevo Módulo"}
+            {moduleData ? "Editar Módulo" : "Agregar Nuevo Módulo"}
           </DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
@@ -715,7 +716,7 @@ function ModuleDialog({
               Cancelar
             </Button>
             <Button onClick={handleSave}>
-              {module ? "Actualizar" : "Crear"} Módulo
+              {moduleData ? "Actualizar" : "Crear"} Módulo
             </Button>
           </div>
         </div>

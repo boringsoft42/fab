@@ -87,8 +87,8 @@ export function CoverLetterTemplate() {
                 placeholder="Ej: Estimada Sra. García / Estimado Equipo de Recursos Humanos"
               />
               <p className="text-sm text-muted-foreground">
-                Tip: Si no conoces el nombre del destinatario, usa "Estimado
-                Equipo de Recursos Humanos"
+                Tip: Si no conoces el nombre del destinatario, usa
+                &quot;Estimado Equipo de Recursos Humanos&quot;
               </p>
             </div>
 
