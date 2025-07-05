@@ -1,9 +1,9 @@
-import { ComponentPropsWithoutRef, CSSProperties, FC } from &ldquo;react&rdquo;;
+import { ComponentPropsWithoutRef, CSSProperties, FC } from "react";
 
-import { cn } from &ldquo;@/lib/utils&rdquo;;
+import { cn } from "@/lib/utils";
 
 export interface AnimatedShinyTextProps
-  extends ComponentPropsWithoutRef<&ldquo;span&rdquo;> {
+  extends ComponentPropsWithoutRef<"span"> {
   shimmerWidth?: number;
 }
 
@@ -17,17 +17,17 @@ export const AnimatedShinyText: FC<AnimatedShinyTextProps> = ({
     <span
       style={
         {
-          &ldquo;--shiny-width&rdquo;: `${shimmerWidth}px`,
+          "--shiny-width": `${shimmerWidth}px`,
         } as CSSProperties
       }
       className={cn(
-        &ldquo;mx-auto max-w-md text-neutral-600/70 dark:text-neutral-400/70&rdquo;,
+        "mx-auto max-w-md text-neutral-600/70 dark:text-neutral-400/70",
 
         // Shine effect
-        &ldquo;animate-shiny-text bg-clip-text bg-no-repeat [background-position:0_0] [background-size:var(--shiny-width)_100%] [transition:background-position_1s_cubic-bezier(.6,.6,0,1)_infinite]&rdquo;,
+        "animate-shiny-text bg-clip-text bg-no-repeat [background-position:0_0] [background-size:var(--shiny-width)_100%] [transition:background-position_1s_cubic-bezier(.6,.6,0,1)_infinite]",
 
         // Shine gradient
-        &ldquo;bg-gradient-to-r from-transparent via-black/80 via-50% to-transparent  dark:via-white/80&rdquo;,
+        "bg-gradient-to-r from-transparent via-black/80 via-50% to-transparent  dark:via-white/80",
 
         className,
       )}

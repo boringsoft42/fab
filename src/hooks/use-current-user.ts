@@ -1,7 +1,7 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import { useMockAuth } from &ldquo;@/context/mock-auth-context&rdquo;;
-import type { UserRole } from &ldquo;@prisma/client&rdquo;;
+import { useMockAuth } from "@/context/mock-auth-context";
+import type { UserRole } from "@prisma/client";
 
 type Profile = {
   id: string;
@@ -28,8 +28,8 @@ export function useCurrentUser(): CurrentUserData {
     ? {
         id: user.id,
         role: user.role,
-        firstName: user.profile?.firstName || user.name.split(&ldquo; &rdquo;)[0],
-        lastName: user.profile?.lastName || user.name.split(&ldquo; &rdquo;)[1] || &ldquo;&rdquo;,
+        firstName: user.profile?.firstName || user.name.split(" ")[0],
+        lastName: user.profile?.lastName || user.name.split(" ")[1] || "",
         profilePicture: user.profile?.profilePicture || null,
         completionPercentage: user.profile?.completionPercentage || 0,
       }

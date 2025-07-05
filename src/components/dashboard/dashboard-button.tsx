@@ -1,9 +1,9 @@
 'use client';
 
-import { useAuth } from &ldquo;@/providers/auth-provider&rdquo;;
-import { Button } from &ldquo;@/components/ui/button&rdquo;;
-import { LayoutDashboard } from &ldquo;lucide-react&rdquo;;
-import { useRouter } from &ldquo;next/navigation&rdquo;;
+import { useAuth } from "@/providers/auth-provider";
+import { Button } from "@/components/ui/button";
+import { LayoutDashboard } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface DashboardButtonProps {
   className?: string;
@@ -15,10 +15,10 @@ export default function DashboardButton({ className }: DashboardButtonProps = {}
 
   return (
     <Button
-      onClick={() => router.push(&ldquo;/dashboard&rdquo;)}
+      onClick={() => router.push("/dashboard")}
       className={`flex items-center gap-2 shadow-lg ${className}`}
     >
-      <LayoutDashboard className=&ldquo;h-4 w-4&rdquo; />
+      <LayoutDashboard className="h-4 w-4" />
       Go to Dashboard
     </Button>
   );

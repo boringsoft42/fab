@@ -1,64 +1,59 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import React, { useState } from &ldquo;react&rdquo;;
+import React, { useState } from "react";
 import SpeechRecognition, {
   useSpeechRecognition,
-} from &ldquo;react-speech-recognition&rdquo;;
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-} from &ldquo;@/components/ui/card&rdquo;;
-import { Textarea } from &ldquo;@/components/ui/textarea&rdquo;;
-import { Button } from &ldquo;@/components/ui/button&rdquo;;
+} from "react-speech-recognition";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
-} from &ldquo;@/components/ui/carousel&rdquo;;
-import { Mic, MicOff, ArrowRight } from &ldquo;lucide-react&rdquo;;
+} from "@/components/ui/carousel";
+import { Mic, MicOff, ArrowRight } from "lucide-react";
 
 const interviewQuestions = [
-  &ldquo;Cuéntame sobre ti.&rdquo;,
-  &ldquo;¿Por qué estás interesado en esta posición?&rdquo;,
-  &ldquo;¿Qué sabes sobre nuestra empresa?&rdquo;,
-  &ldquo;¿Cuál ha sido tu mayor reto y cómo lo superaste?&rdquo;,
-  &ldquo;¿Dónde te ves en 5 años?&rdquo;,
-  &ldquo;¿Cuál es tu mayor fortaleza?&rdquo;,
-  &ldquo;¿Cuál es tu mayor debilidad?&rdquo;,
-  &ldquo;¿Cómo manejas el trabajo bajo presión?&rdquo;,
-  &ldquo;Háblame de un conflicto laboral y cómo lo resolviste.&rdquo;,
-  &ldquo;¿Qué te motiva a trabajar cada día?&rdquo;,
-  &ldquo;¿Prefieres trabajar solo o en equipo?&rdquo;,
-  &ldquo;¿Cómo te mantienes organizado?&rdquo;,
-  &ldquo;¿Qué harías si no estás de acuerdo con tu jefe?&rdquo;,
-  &ldquo;¿Cómo manejas los errores?&rdquo;,
-  &ldquo;¿Qué logros laborales te enorgullecen más?&rdquo;,
-  &ldquo;¿Tienes experiencia liderando equipos?&rdquo;,
-  &ldquo;¿Qué esperas de tu próximo trabajo?&rdquo;,
-  &ldquo;¿Estás dispuesto/a a aprender nuevas habilidades?&rdquo;,
-  &ldquo;¿Tienes alguna pregunta para nosotros?&rdquo;,
-  &ldquo;¿Por qué deberíamos contratarte?&rdquo;,
+  "Cuéntame sobre ti.",
+  "¿Por qué estás interesado en esta posición?",
+  "¿Qué sabes sobre nuestra empresa?",
+  "¿Cuál ha sido tu mayor reto y cómo lo superaste?",
+  "¿Dónde te ves en 5 años?",
+  "¿Cuál es tu mayor fortaleza?",
+  "¿Cuál es tu mayor debilidad?",
+  "¿Cómo manejas el trabajo bajo presión?",
+  "Háblame de un conflicto laboral y cómo lo resolviste.",
+  "¿Qué te motiva a trabajar cada día?",
+  "¿Prefieres trabajar solo o en equipo?",
+  "¿Cómo te mantienes organizado?",
+  "¿Qué harías si no estás de acuerdo con tu jefe?",
+  "¿Cómo manejas los errores?",
+  "¿Qué logros laborales te enorgullecen más?",
+  "¿Tienes experiencia liderando equipos?",
+  "¿Qué esperas de tu próximo trabajo?",
+  "¿Estás dispuesto/a a aprender nuevas habilidades?",
+  "¿Tienes alguna pregunta para nosotros?",
+  "¿Por qué deberíamos contratarte?",
 ];
 
 const tips = [
-  &ldquo;Habla con claridad y confianza.&rdquo;,
-  &ldquo;Toma una pausa antes de responder.&rdquo;,
-  &ldquo;Sé honesto, pero enfocado.&rdquo;,
-  &ldquo;No hables demasiado, sé conciso.&rdquo;,
-  &ldquo;Practica con anticipación.&rdquo;,
-  &ldquo;Escucha bien la pregunta antes de responder.&rdquo;,
-  &ldquo;Haz contacto visual (si aplica).&rdquo;,
-  &ldquo;Evita palabras de relleno como 'eh', 'este'.&rdquo;,
-  &ldquo;Sonríe naturalmente.&rdquo;,
-  &ldquo;No memorices, comprende.&rdquo;,
+  "Habla con claridad y confianza.",
+  "Toma una pausa antes de responder.",
+  "Sé honesto, pero enfocado.",
+  "No hables demasiado, sé conciso.",
+  "Practica con anticipación.",
+  "Escucha bien la pregunta antes de responder.",
+  "Haz contacto visual (si aplica).",
+  "Evita palabras de relleno como 'eh', 'este'.",
+  "Sonríe naturalmente.",
+  "No memorices, comprende.",
 ];
 
 export default function InterviewSimulation() {
   const [step, setStep] = useState(0);
   const [responses, setResponses] = useState<string[]>([]);
-  const [currentText, setCurrentText] = useState(&ldquo;&rdquo;);
+  const [currentText, setCurrentText] = useState("");
 
   const {
     transcript,
@@ -72,117 +67,180 @@ export default function InterviewSimulation() {
   }
 
   const handleNext = () => {
-    const answer = transcript || currentText;
-    if (!answer.trim()) return;
-
-    const updated = [...responses];
-    updated[step] = answer;
-    setResponses(updated);
-
-    resetTranscript();
-    setCurrentText(&ldquo;&rdquo;);
-    setStep((prev) => prev + 1);
+    if (currentText.trim()) {
+      setResponses([...responses, currentText]);
+      setCurrentText("");
+      resetTranscript();
+      setStep(step + 1);
+    }
   };
 
-  const handleStart = () => {
-    resetTranscript();
-    SpeechRecognition.startListening({ continuous: true, language: &ldquo;es-ES&rdquo; });
+  const handleStartListening = () => {
+    SpeechRecognition.startListening({ continuous: true, language: "es-ES" });
   };
 
-  const handleStop = () => {
+  const handleStopListening = () => {
     SpeechRecognition.stopListening();
     setCurrentText(transcript);
   };
 
-  const finished = step >= interviewQuestions.length;
+  const handleReset = () => {
+    setStep(0);
+    setResponses([]);
+    setCurrentText("");
+    resetTranscript();
+  };
+
+  const currentQuestion = interviewQuestions[step];
+  const currentTip = tips[step % tips.length];
 
   return (
-    <div className=&ldquo;min-h-screen flex flex-col items-center justify-center px-4 py-12&rdquo;>
-      <div className=&ldquo;w-full max-w-4xl space-y-8&rdquo;>
-        <Card className=&ldquo;shadow-xl&rdquo;>
-          <CardHeader>
-            <CardTitle className=&ldquo;text-xl md:text-2xl font-bold&rdquo;>
-              {finished
-                ? &ldquo;🎉 Entrevista completada&rdquo;
-                : `Paso ${step + 1} de ${interviewQuestions.length}: ${interviewQuestions[step]}`}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className=&ldquo;space-y-4&rdquo;>
-            {finished ? (
-              <div className=&ldquo;space-y-4&rdquo;>
-                <p className=&ldquo;text-muted-foreground text-sm&rdquo;>
-                  Aquí tienes un resumen de tus respuestas:
-                </p>
-                <ul className=&ldquo;space-y-2&rdquo;>
-                  {interviewQuestions.map((q, i) => (
-                    <li key={i}>
-                      <strong>{i + 1}. {q}</strong>
-                      <p className=&ldquo;text-muted-foreground&rdquo;>
-                        {responses[i] || &ldquo;Sin respuesta&rdquo;}
-                      </p>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ) : (
-              <>
-                <Textarea
-                  placeholder=&ldquo;Tu respuesta aparecerá aquí...&rdquo;
-                  value={listening ? transcript : currentText}
-                  onChange={(e) => setCurrentText(e.target.value)}
-                  rows={6}
-                  className=&ldquo;text-base&rdquo;
-                />
-                <div className=&ldquo;flex gap-3 justify-between flex-wrap&rdquo;>
-                  {listening ? (
-                    <Button
-                      variant=&ldquo;destructive&rdquo;
-                      onClick={handleStop}
-                      className=&ldquo;flex gap-2&rdquo;
-                    >
-                      <MicOff size={16} />
-                      Detener
-                    </Button>
-                  ) : (
-                    <Button onClick={handleStart} className=&ldquo;flex gap-2&rdquo;>
-                      <Mic size={16} />
-                      Empezar a hablar
-                    </Button>
-                  )}
-                  <Button
-                    onClick={handleNext}
-                    disabled={step >= interviewQuestions.length}
-                    className=&ldquo;flex gap-2 ml-auto&rdquo;
-                  >
-                    Siguiente <ArrowRight size={16} />
-                  </Button>
-                </div>
-              </>
-            )}
-          </CardContent>
-        </Card>
+    <div className="container mx-auto p-6 max-w-4xl">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold mb-2">Simulador de Entrevista</h1>
+        <p className="text-muted-foreground">
+          Practica tus habilidades de entrevista con reconocimiento de voz
+        </p>
+      </div>
 
-        {/* Carrusel de tips */}
-        <div className=&ldquo;space-y-2&rdquo;>
-          <h2 className=&ldquo;text-lg font-semibold text-center&rdquo;>
-            Tips para la entrevista
-          </h2>
-          <Carousel className=&ldquo;w-full&rdquo;>
-            <CarouselContent>
-              {tips.map((tip, index) => (
-                <CarouselItem
-                  key={index}
-                  className=&ldquo;basis-full md:basis-1/3 p-2&rdquo;
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Question Section */}
+        <div className="lg:col-span-2">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                <span>
+                  Pregunta {step + 1} de {interviewQuestions.length}
+                </span>
+                <div className="flex items-center gap-2">
+                  {listening ? (
+                    <div className="flex items-center gap-2 text-red-600">
+                      <div className="w-2 h-2 bg-red-600 rounded-full animate-pulse"></div>
+                      Grabando...
+                    </div>
+                  ) : null}
+                </div>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="p-4 bg-muted rounded-lg">
+                <p className="text-lg font-medium">{currentQuestion}</p>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Tu respuesta:</label>
+                <Textarea
+                  value={currentText}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                    setCurrentText(e.target.value)
+                  }
+                  placeholder="Escribe tu respuesta o usa el micrófono..."
+                  rows={4}
+                />
+              </div>
+
+              <div className="flex gap-2">
+                <Button
+                  onClick={
+                    listening ? handleStopListening : handleStartListening
+                  }
+                  variant={listening ? "destructive" : "default"}
                 >
-                  <Card className=&ldquo;h-full flex items-center justify-center p-6 text-sm text-center shadow-sm&rdquo;>
-                    {tip}
-                  </Card>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-          </Carousel>
+                  {listening ? (
+                    <>
+                      <MicOff className="w-4 h-4 mr-2" />
+                      Detener Grabación
+                    </>
+                  ) : (
+                    <>
+                      <Mic className="w-4 h-4 mr-2" />
+                      Grabar Respuesta
+                    </>
+                  )}
+                </Button>
+                <Button
+                  onClick={handleNext}
+                  disabled={
+                    !currentText.trim() || step >= interviewQuestions.length - 1
+                  }
+                >
+                  Siguiente Pregunta
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Tips Section */}
+        <div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Consejo del Día</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground">{currentTip}</p>
+            </CardContent>
+          </Card>
+
+          {/* Progress */}
+          <Card className="mt-4">
+            <CardHeader>
+              <CardTitle>Progreso</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>Preguntas respondidas</span>
+                  <span>
+                    {responses.length} / {interviewQuestions.length}
+                  </span>
+                </div>
+                <div className="w-full bg-muted rounded-full h-2">
+                  <div
+                    className="bg-primary h-2 rounded-full transition-all duration-300"
+                    style={{
+                      width: `${(responses.length / interviewQuestions.length) * 100}%`,
+                    }}
+                  ></div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Reset Button */}
+          <Button
+            onClick={handleReset}
+            variant="outline"
+            className="w-full mt-4"
+          >
+            Reiniciar Simulación
+          </Button>
         </div>
       </div>
+
+      {/* Previous Responses */}
+      {responses.length > 0 && (
+        <div className="mt-8">
+          <Card>
+            <CardHeader>
+              <CardTitle>Respuestas Anteriores</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {responses.map((response, index) => (
+                  <div key={index} className="border-l-4 border-primary pl-4">
+                    <p className="font-medium text-sm mb-1">
+                      Pregunta {index + 1}: {interviewQuestions[index]}
+                    </p>
+                    <p className="text-sm text-muted-foreground">{response}</p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }

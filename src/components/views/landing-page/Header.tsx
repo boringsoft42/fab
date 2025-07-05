@@ -1,51 +1,51 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import { useState } from &ldquo;react&rdquo;;
-import Link from &ldquo;next/link&rdquo;;
-import { Menu, X, Brain } from &ldquo;lucide-react&rdquo;;
-import { AuthHeader } from &ldquo;./auth-header&rdquo;;
+import { useState } from "react";
+import Link from "next/link";
+import { Menu, X, Brain } from "lucide-react";
+import { AuthHeader } from "./auth-header";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className=&ldquo;sticky top-0 z-50 bg-background border-b border-border&rdquo;>
-      <div className=&ldquo;container mx-auto px-4 sm:px-6 lg:px-8&rdquo;>
-        <div className=&ldquo;flex justify-between items-center py-4&rdquo;>
-          <div className=&ldquo;flex items-center space-x-2&rdquo;>
-            <Brain className=&ldquo;h-8 w-8 text-primary&rdquo; />
-            <Link href=&ldquo;/&rdquo; className=&ldquo;text-2xl font-bold text-primary&rdquo;>
+    <header className="sticky top-0 z-50 bg-background border-b border-border">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center py-4">
+          <div className="flex items-center space-x-2">
+            <Brain className="h-8 w-8 text-primary" />
+            <Link href="/" className="text-2xl font-bold text-primary">
               POSITIVE-Next
             </Link>
           </div>
-          <nav className=&ldquo;hidden md:flex space-x-8&rdquo;>
+          <nav className="hidden md:flex space-x-8">
             <Link
-              href=&ldquo;/#features&rdquo;
-              className=&ldquo;text-foreground hover:text-primary transition-colors&rdquo;
+              href="/#features"
+              className="text-foreground hover:text-primary transition-colors"
             >
               Features
             </Link>
             <Link
-              href=&ldquo;/#about&rdquo;
-              className=&ldquo;text-foreground hover:text-primary transition-colors&rdquo;
+              href="/#about"
+              className="text-foreground hover:text-primary transition-colors"
             >
               About
             </Link>
             <Link
-              href=&ldquo;/#testimonials&rdquo;
-              className=&ldquo;text-foreground hover:text-primary transition-colors&rdquo;
+              href="/#testimonials"
+              className="text-foreground hover:text-primary transition-colors"
             >
               Testimonials
             </Link>
           </nav>
-          <div className=&ldquo;hidden md:flex&rdquo;>
+          <div className="hidden md:flex">
             <AuthHeader />
           </div>
-          <div className=&ldquo;md:hidden&rdquo;>
+          <div className="md:hidden">
             <button
-              type=&ldquo;button&rdquo;
+              type="button"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className=&ldquo;text-foreground&rdquo;
+              className="text-foreground"
             >
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -53,27 +53,27 @@ export default function Header() {
         </div>
       </div>
       {isMenuOpen && (
-        <div className=&ldquo;md:hidden bg-background&rdquo;>
-          <div className=&ldquo;px-2 pt-2 pb-3 space-y-1 sm:px-3&rdquo;>
+        <div className="md:hidden bg-background">
+          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             <Link
-              href=&ldquo;/#features&rdquo;
-              className=&ldquo;block px-3 py-2 text-foreground hover:text-primary transition-colors&rdquo;
+              href="/#features"
+              className="block px-3 py-2 text-foreground hover:text-primary transition-colors"
             >
               Features
             </Link>
             <Link
-              href=&ldquo;/#about&rdquo;
-              className=&ldquo;block px-3 py-2 text-foreground hover:text-primary transition-colors&rdquo;
+              href="/#about"
+              className="block px-3 py-2 text-foreground hover:text-primary transition-colors"
             >
               About
             </Link>
             <Link
-              href=&ldquo;/#testimonials&rdquo;
-              className=&ldquo;block px-3 py-2 text-foreground hover:text-primary transition-colors&rdquo;
+              href="/#testimonials"
+              className="block px-3 py-2 text-foreground hover:text-primary transition-colors"
             >
               Testimonials
             </Link>
-            <div className=&ldquo;px-3 py-2&rdquo;>
+            <div className="px-3 py-2">
               <AuthHeader />
             </div>
           </div>

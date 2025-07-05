@@ -1,5 +1,5 @@
 // src/app/my-applications/layout.tsx
-import React from &ldquo;react&rdquo;;
+import React from "react";
 
 export default function MyApplicationsLayout({
   children,

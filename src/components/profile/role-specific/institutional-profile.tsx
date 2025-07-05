@@ -1,17 +1,17 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import { useState } from &ldquo;react&rdquo;;
-import { UserRole } from &ldquo;@prisma/client&rdquo;;
-import type { Profile } from &ldquo;@/types/profile&rdquo;;
-import { Button } from &ldquo;@/components/ui/button&rdquo;;
+import { useState } from "react";
+import { UserRole } from "@prisma/client";
+import type { Profile } from "@/types/profile";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from &ldquo;@/components/ui/card&rdquo;;
-import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import {
   Building,
   Target,
@@ -20,17 +20,17 @@ import {
   MapPin,
   Globe,
   Camera,
-} from &ldquo;lucide-react&rdquo;;
+} from "lucide-react";
 
-import { ProfileCompletionIndicator } from &ldquo;../shared/profile-completion-indicator&rdquo;;
-import { ImageUpload } from &ldquo;../shared/image-upload&rdquo;;
-import { LocationSelector } from &ldquo;../shared/location-selector&rdquo;;
+import { ProfileCompletionIndicator } from "../shared/profile-completion-indicator";
+import { ImageUpload } from "../shared/image-upload";
+import { LocationSelector } from "../shared/location-selector";
 
 interface InstitutionalProfileProps {
   userRole:
-    | &ldquo;MUNICIPAL_GOVERNMENTS&rdquo;
-    | &ldquo;TRAINING_CENTERS&rdquo;
-    | &ldquo;NGOS_AND_FOUNDATIONS&rdquo;;
+    | "MUNICIPAL_GOVERNMENTS"
+    | "TRAINING_CENTERS"
+    | "NGOS_AND_FOUNDATIONS";
   profile: Profile;
 }
 
@@ -38,7 +38,7 @@ export function InstitutionalProfile({
   userRole,
   profile,
 }: InstitutionalProfileProps) {
-  const [activeSection, setActiveSection] = useState(&ldquo;overview&rdquo;);
+  const [activeSection, setActiveSection] = useState("overview");
 
   const handleSectionClick = (sectionId: string) => {
     setActiveSection(sectionId);
@@ -46,33 +46,33 @@ export function InstitutionalProfile({
 
   const getRoleInfo = () => {
     switch (userRole) {
-      case &ldquo;MUNICIPAL_GOVERNMENTS&rdquo;:
+      case "MUNICIPAL_GOVERNMENTS":
         return {
-          title: &ldquo;Perfil de Gobierno Municipal&rdquo;,
+          title: "Perfil de Gobierno Municipal",
           description:
-            &ldquo;Gestion de programas de empleabilidad y emprendimiento municipal&rdquo;,
-          badge: &ldquo;Gobierno Municipal&rdquo;,
+            "Gestion de programas de empleabilidad y emprendimiento municipal",
+          badge: "Gobierno Municipal",
           icon: Building,
         };
-      case &ldquo;TRAINING_CENTERS&rdquo;:
+      case "TRAINING_CENTERS":
         return {
-          title: &ldquo;Perfil de Centro de Capacitacion&rdquo;,
-          description: &ldquo;Administracion de programas educativos y de formacion&rdquo;,
-          badge: &ldquo;Centro de Capacitacion&rdquo;,
+          title: "Perfil de Centro de Capacitacion",
+          description: "Administracion de programas educativos y de formacion",
+          badge: "Centro de Capacitacion",
           icon: Award,
         };
-      case &ldquo;NGOS_AND_FOUNDATIONS&rdquo;:
+      case "NGOS_AND_FOUNDATIONS":
         return {
-          title: &ldquo;Perfil de ONG/Fundacion&rdquo;,
-          description: &ldquo;Gestion de programas sociales y de desarrollo&rdquo;,
-          badge: &ldquo;ONG/Fundacion&rdquo;,
+          title: "Perfil de ONG/Fundacion",
+          description: "Gestion de programas sociales y de desarrollo",
+          badge: "ONG/Fundacion",
           icon: Target,
         };
       default:
         return {
-          title: &ldquo;Perfil Institucional&rdquo;,
-          description: &ldquo;Gestion institucional&rdquo;,
-          badge: &ldquo;Institucion&rdquo;,
+          title: "Perfil Institucional",
+          description: "Gestion institucional",
+          badge: "Institucion",
           icon: Building,
         };
     }
@@ -80,15 +80,15 @@ export function InstitutionalProfile({
 
   const getAvailableSections = () => {
     return [
-      { id: &ldquo;overview&rdquo;, label: &ldquo;Resumen Institucional&rdquo;, icon: Building },
+      { id: "overview", label: "Resumen Institucional", icon: Building },
       {
-        id: &ldquo;institutional&rdquo;,
-        label: &ldquo;Informacion Institucional&rdquo;,
+        id: "institutional",
+        label: "Informacion Institucional",
         icon: Building,
       },
-      { id: &ldquo;services&rdquo;, label: &ldquo;Areas de Servicio&rdquo;, icon: Target },
-      { id: &ldquo;contact&rdquo;, label: &ldquo;Informacion de Contacto&rdquo;, icon: Phone },
-      { id: &ldquo;description&rdquo;, label: &ldquo;Descripcion Institucional&rdquo;, icon: Globe },
+      { id: "services", label: "Areas de Servicio", icon: Target },
+      { id: "contact", label: "Informacion de Contacto", icon: Phone },
+      { id: "description", label: "Descripcion Institucional", icon: Globe },
     ];
   };
 
@@ -96,18 +96,18 @@ export function InstitutionalProfile({
   const roleInfo = getRoleInfo();
 
   return (
-    <div className=&ldquo;max-w-7xl mx-auto p-6 space-y-6&rdquo;>
-      <div className=&ldquo;flex items-center justify-between&rdquo;>
-        <div className=&ldquo;space-y-1&rdquo;>
-          <h1 className=&ldquo;text-3xl font-bold&rdquo;>{roleInfo.title}</h1>
-          <p className=&ldquo;text-muted-foreground&rdquo;>{roleInfo.description}</p>
+    <div className="max-w-7xl mx-auto p-6 space-y-6">
+      <div className="flex items-center justify-between">
+        <div className="space-y-1">
+          <h1 className="text-3xl font-bold">{roleInfo.title}</h1>
+          <p className="text-muted-foreground">{roleInfo.description}</p>
         </div>
 
-        <div className=&ldquo;flex items-center gap-2&rdquo;>
-          <Badge variant=&ldquo;default&rdquo;>{roleInfo.badge}</Badge>
+        <div className="flex items-center gap-2">
+          <Badge variant="default">{roleInfo.badge}</Badge>
           {profile.profileCompletion !== undefined && (
             <Badge
-              variant={profile.profileCompletion >= 80 ? &ldquo;default&rdquo; : &ldquo;outline&rdquo;}
+              variant={profile.profileCompletion >= 80 ? "default" : "outline"}
             >
               {profile.profileCompletion}% Completo
             </Badge>
@@ -115,14 +115,14 @@ export function InstitutionalProfile({
         </div>
       </div>
 
-      <div className=&ldquo;grid grid-cols-1 lg:grid-cols-4 gap-6&rdquo;>
-        <div className=&ldquo;lg:col-span-1&rdquo;>
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div className="lg:col-span-1">
           <Card>
             <CardHeader>
-              <CardTitle className=&ldquo;text-sm&rdquo;>Secciones del Perfil</CardTitle>
+              <CardTitle className="text-sm">Secciones del Perfil</CardTitle>
             </CardHeader>
-            <CardContent className=&ldquo;p-0&rdquo;>
-              <nav className=&ldquo;space-y-1&rdquo;>
+            <CardContent className="p-0">
+              <nav className="space-y-1">
                 {sections.map((section) => {
                   const Icon = section.icon;
                   const isActive = activeSection === section.id;
@@ -130,12 +130,12 @@ export function InstitutionalProfile({
                   return (
                     <Button
                       key={section.id}
-                      variant={isActive ? &ldquo;secondary&rdquo; : &ldquo;ghost&rdquo;}
-                      className=&ldquo;w-full justify-start text-left h-auto p-3&rdquo;
+                      variant={isActive ? "secondary" : "ghost"}
+                      className="w-full justify-start text-left h-auto p-3"
                       onClick={() => setActiveSection(section.id)}
                     >
-                      <Icon className=&ldquo;h-4 w-4 mr-3 flex-shrink-0&rdquo; />
-                      <span className=&ldquo;truncate&rdquo;>{section.label}</span>
+                      <Icon className="h-4 w-4 mr-3 flex-shrink-0" />
+                      <span className="truncate">{section.label}</span>
                     </Button>
                   );
                 })}
@@ -143,10 +143,10 @@ export function InstitutionalProfile({
             </CardContent>
           </Card>
 
-          <Card className=&ldquo;mt-4&rdquo;>
+          <Card className="mt-4">
             <CardHeader>
-              <CardTitle className=&ldquo;text-sm flex items-center gap-2&rdquo;>
-                <Camera className=&ldquo;h-4 w-4&rdquo; />
+              <CardTitle className="text-sm flex items-center gap-2">
+                <Camera className="h-4 w-4" />
                 Logo Institucional
               </CardTitle>
             </CardHeader>
@@ -154,37 +154,37 @@ export function InstitutionalProfile({
               <ImageUpload
                 currentImage={profile.avatarUrl}
                 onImageChange={(url) => {
-                  console.log(&ldquo;Logo updated:&rdquo;, url);
+                  console.log("Logo updated:", url);
                 }}
-                type=&ldquo;logo&rdquo;
+                type="logo"
                 maxSize={5}
-                placeholder=&ldquo;Logo de la institucion&rdquo;
+                placeholder="Logo de la institucion"
               />
             </CardContent>
           </Card>
         </div>
 
-        <div className=&ldquo;lg:col-span-3&rdquo;>
-          <div className=&ldquo;space-y-6&rdquo;>
-            {activeSection === &ldquo;overview&rdquo; && (
-              <div className=&ldquo;space-y-6&rdquo;>
+        <div className="lg:col-span-3">
+          <div className="space-y-6">
+            {activeSection === "overview" && (
+              <div className="space-y-6">
                 <ProfileCompletionIndicator
                   profile={profile}
                   userRole={userRole}
                   onSectionClick={handleSectionClick}
                 />
 
-                <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 gap-4&rdquo;>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Card>
-                    <CardContent className=&ldquo;p-4&rdquo;>
-                      <div className=&ldquo;flex items-center gap-2&rdquo;>
-                        <Building className=&ldquo;h-5 w-5 text-blue-500&rdquo; />
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-2">
+                        <Building className="h-5 w-5 text-blue-500" />
                         <div>
-                          <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
+                          <p className="text-sm text-muted-foreground">
                             Institucion
                           </p>
-                          <p className=&ldquo;font-medium&rdquo;>
-                            {profile.institutionName || &ldquo;Nombre no registrado&rdquo;}
+                          <p className="font-medium">
+                            {profile.institutionName || "Nombre no registrado"}
                           </p>
                         </div>
                       </div>
@@ -192,15 +192,15 @@ export function InstitutionalProfile({
                   </Card>
 
                   <Card>
-                    <CardContent className=&ldquo;p-4&rdquo;>
-                      <div className=&ldquo;flex items-center gap-2&rdquo;>
-                        <Target className=&ldquo;h-5 w-5 text-green-500&rdquo; />
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-2">
+                        <Target className="h-5 w-5 text-green-500" />
                         <div>
-                          <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
+                          <p className="text-sm text-muted-foreground">
                             Area de Servicio
                           </p>
-                          <p className=&ldquo;font-medium&rdquo;>
-                            {profile.serviceArea || &ldquo;No especificado&rdquo;}
+                          <p className="font-medium">
+                            {profile.serviceArea || "No especificado"}
                           </p>
                         </div>
                       </div>
@@ -210,7 +210,7 @@ export function InstitutionalProfile({
               </div>
             )}
 
-            {activeSection === &ldquo;institutional&rdquo; && (
+            {activeSection === "institutional" && (
               <Card>
                 <CardHeader>
                   <CardTitle>Informacion Institucional</CardTitle>
@@ -219,14 +219,14 @@ export function InstitutionalProfile({
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p className=&ldquo;text-muted-foreground&rdquo;>
+                  <p className="text-muted-foreground">
                     Formulario institucional en desarrollo...
                   </p>
                 </CardContent>
               </Card>
             )}
 
-            {activeSection === &ldquo;services&rdquo; && (
+            {activeSection === "services" && (
               <Card>
                 <CardHeader>
                   <CardTitle>Areas de Servicio</CardTitle>
@@ -235,15 +235,15 @@ export function InstitutionalProfile({
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p className=&ldquo;text-muted-foreground&rdquo;>
+                  <p className="text-muted-foreground">
                     Editor de servicios en desarrollo...
                   </p>
                 </CardContent>
               </Card>
             )}
 
-            {activeSection === &ldquo;contact&rdquo; && (
-              <div className=&ldquo;space-y-6&rdquo;>
+            {activeSection === "contact" && (
+              <div className="space-y-6">
                 <Card>
                   <CardHeader>
                     <CardTitle>Informacion de Contacto</CardTitle>
@@ -252,17 +252,17 @@ export function InstitutionalProfile({
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <p className=&ldquo;text-muted-foreground&rdquo;>
+                    <p className="text-muted-foreground">
                       Formulario de contacto en desarrollo...
                     </p>
                   </CardContent>
                 </Card>
 
                 <LocationSelector
-                  selectedDepartment={profile.department || &ldquo;&rdquo;}
-                  selectedMunicipality={profile.municipality || &ldquo;&rdquo;}
+                  selectedDepartment={profile.department || ""}
+                  selectedMunicipality={profile.municipality || ""}
                   onLocationChange={(department, municipality) => {
-                    console.log(&ldquo;Location updated:&rdquo;, {
+                    console.log("Location updated:", {
                       department,
                       municipality,
                     });
@@ -272,7 +272,7 @@ export function InstitutionalProfile({
               </div>
             )}
 
-            {activeSection === &ldquo;description&rdquo; && (
+            {activeSection === "description" && (
               <Card>
                 <CardHeader>
                   <CardTitle>Descripcion Institucional</CardTitle>
@@ -281,7 +281,7 @@ export function InstitutionalProfile({
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p className=&ldquo;text-muted-foreground&rdquo;>
+                  <p className="text-muted-foreground">
                     Editor de descripcion institucional en desarrollo...
                   </p>
                 </CardContent>

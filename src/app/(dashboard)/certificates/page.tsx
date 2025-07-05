@@ -1,51 +1,51 @@
-import { Metadata } from &ldquo;next&rdquo;;
-import { Card, CardContent, CardHeader, CardTitle } from &ldquo;@/components/ui/card&rdquo;;
-import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
-import { Button } from &ldquo;@/components/ui/button&rdquo;;
-import { Award, Download, Calendar, CheckCircle } from &ldquo;lucide-react&rdquo;;
+import { Metadata } from "next";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Award, Download, Calendar, CheckCircle } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: &ldquo;Mis Certificados&rdquo;,
-  description: &ldquo;Certificados obtenidos de cursos completados&rdquo;,
+  title: "Mis Certificados",
+  description: "Certificados obtenidos de cursos completados",
 };
 
 export default function CertificatesPage() {
   // Mock certificates data
   const certificates = [
     {
-      id: &ldquo;1&rdquo;,
-      courseName: &ldquo;Habilidades Laborales Básicas&rdquo;,
-      instructor: &ldquo;Dra. Ana Pérez&rdquo;,
-      completedDate: &ldquo;2024-12-15&rdquo;,
-      certificateUrl: &ldquo;/certificates/cert-1.pdf&rdquo;,
-      grade: &ldquo;90%&rdquo;,
-      credentialId: &ldquo;CEMSE-2024-001&rdquo;,
+      id: "1",
+      courseName: "Habilidades Laborales Básicas",
+      instructor: "Dra. Ana Pérez",
+      completedDate: "2024-12-15",
+      certificateUrl: "/certificates/cert-1.pdf",
+      grade: "90%",
+      credentialId: "CEMSE-2024-001",
     },
     {
-      id: &ldquo;2&rdquo;,
-      courseName: &ldquo;Comunicación Efectiva&rdquo;,
-      instructor: &ldquo;Lic. Carlos López&rdquo;,
-      completedDate: &ldquo;2024-11-28&rdquo;,
-      certificateUrl: &ldquo;/certificates/cert-2.pdf&rdquo;,
-      grade: &ldquo;85%&rdquo;,
-      credentialId: &ldquo;CEMSE-2024-002&rdquo;,
+      id: "2",
+      courseName: "Comunicación Efectiva",
+      instructor: "Lic. Carlos López",
+      completedDate: "2024-11-28",
+      certificateUrl: "/certificates/cert-2.pdf",
+      grade: "85%",
+      credentialId: "CEMSE-2024-002",
     },
   ];
 
   return (
-    <div className=&ldquo;space-y-6&rdquo;>
-      <div className=&ldquo;flex items-center justify-between&rdquo;>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className=&ldquo;text-3xl font-bold tracking-tight&rdquo;>
+          <h1 className="text-3xl font-bold tracking-tight">
             Mis Certificados
           </h1>
-          <p className=&ldquo;text-muted-foreground&rdquo;>
+          <p className="text-muted-foreground">
             Certificados obtenidos de cursos completados exitosamente
           </p>
         </div>
-        <div className=&ldquo;flex gap-4&rdquo;>
-          <Badge variant=&ldquo;secondary&rdquo; className=&ldquo;text-lg px-3 py-1&rdquo;>
-            <Award className=&ldquo;mr-2 h-4 w-4&rdquo; />
+        <div className="flex gap-4">
+          <Badge variant="secondary" className="text-lg px-3 py-1">
+            <Award className="mr-2 h-4 w-4" />
             {certificates.length} Certificados
           </Badge>
         </div>
@@ -53,12 +53,12 @@ export default function CertificatesPage() {
 
       {certificates.length === 0 ? (
         <Card>
-          <CardContent className=&ldquo;flex flex-col items-center justify-center py-12&rdquo;>
-            <Award className=&ldquo;h-12 w-12 text-muted-foreground mb-4&rdquo; />
-            <h3 className=&ldquo;text-lg font-semibold mb-2&rdquo;>
+          <CardContent className="flex flex-col items-center justify-center py-12">
+            <Award className="h-12 w-12 text-muted-foreground mb-4" />
+            <h3 className="text-lg font-semibold mb-2">
               No tienes certificados aún
             </h3>
-            <p className=&ldquo;text-muted-foreground text-center mb-4&rdquo;>
+            <p className="text-muted-foreground text-center mb-4">
               Completa cursos para obtener certificados y validar tus
               habilidades
             </p>
@@ -66,52 +66,47 @@ export default function CertificatesPage() {
           </CardContent>
         </Card>
       ) : (
-        <div className=&ldquo;grid gap-6 md:grid-cols-2 lg:grid-cols-3&rdquo;>
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {certificates.map((certificate) => (
-            <Card key={certificate.id} className=&ldquo;relative overflow-hidden&rdquo;>
-              <div className=&ldquo;absolute top-2 right-2&rdquo;>
+            <Card key={certificate.id} className="relative overflow-hidden">
+              <div className="absolute top-2 right-2">
                 <Badge
-                  variant=&ldquo;secondary&rdquo;
-                  className=&ldquo;bg-green-100 text-green-800 border-green-200&rdquo;
+                  variant="secondary"
+                  className="bg-green-100 text-green-800 border-green-200"
                 >
-                  <CheckCircle className=&ldquo;mr-1 h-3 w-3&rdquo; />
+                  <CheckCircle className="mr-1 h-3 w-3" />
                   Completado
                 </Badge>
               </div>
 
-              <CardHeader className=&ldquo;pb-3&rdquo;>
-                <CardTitle className=&ldquo;text-lg leading-tight pr-20&rdquo;>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg leading-tight pr-20">
                   {certificate.courseName}
                 </CardTitle>
               </CardHeader>
 
-              <CardContent className=&ldquo;space-y-4&rdquo;>
-                <div className=&ldquo;space-y-2 text-sm text-muted-foreground&rdquo;>
-                  <div className=&ldquo;flex items-center gap-2&rdquo;>
-                    <Calendar className=&ldquo;h-4 w-4&rdquo; />
-                    Completado:{&ldquo; &rdquo;}
+              <CardContent className="space-y-4">
+                <div className="space-y-2 text-sm text-muted-foreground">
+                  <div className="flex items-center gap-2">
+                    <Calendar className="h-4 w-4" />
+                    Completado:{" "}
                     {new Date(certificate.completedDate).toLocaleDateString(
-                      &ldquo;es-ES&rdquo;
+                      "es-ES"
                     )}
                   </div>
                   <div>Instructor: {certificate.instructor}</div>
-                  <div>
-                    Calificación:{&ldquo; &rdquo;}
-                    <span className=&ldquo;font-semibold text-foreground&rdquo;>
-                      {certificate.grade}
-                    </span>
-                  </div>
-                  <div className=&ldquo;text-xs&rdquo;>
+                  <div>Calificación: {certificate.grade}</div>
+                  <div className="text-xs">
                     ID Credencial: {certificate.credentialId}
                   </div>
                 </div>
 
-                <div className=&ldquo;flex gap-2 pt-2&rdquo;>
-                  <Button size=&ldquo;sm&rdquo; className=&ldquo;flex-1&rdquo;>
-                    <Download className=&ldquo;mr-2 h-4 w-4&rdquo; />
+                <div className="flex gap-2 pt-2">
+                  <Button size="sm" className="flex-1">
+                    <Download className="mr-2 h-4 w-4" />
                     Descargar Pdf
                   </Button>
-                  <Button size=&ldquo;sm&rdquo; variant=&ldquo;outline&rdquo;>
+                  <Button size="sm" variant="outline">
                     Compartir
                   </Button>
                 </div>
@@ -122,11 +117,11 @@ export default function CertificatesPage() {
       )}
 
       {certificates.length > 0 && (
-        <div className=&ldquo;mt-8 p-6 bg-muted/50 rounded-lg&rdquo;>
-          <h3 className=&ldquo;font-semibold mb-2&rdquo;>
+        <div className="mt-8 p-6 bg-muted/50 rounded-lg">
+          <h3 className="font-semibold mb-2">
             💡 Consejos para tus certificados
           </h3>
-          <ul className=&ldquo;text-sm text-muted-foreground space-y-1&rdquo;>
+          <ul className="text-sm text-muted-foreground space-y-1">
             <li>• Agrega estos certificados a tu perfil profesional</li>
             <li>• Compártelos en redes sociales profesionales</li>
             <li>• Incluye el ID de credencial en tu CV</li>

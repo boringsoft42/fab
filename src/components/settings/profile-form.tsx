@@ -1,9 +1,9 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import { useForm } from &ldquo;react-hook-form&rdquo;;
-import { zodResolver } from &ldquo;@hookform/resolvers/zod&rdquo;;
-import { useAuth } from &ldquo;@/providers/auth-provider&rdquo;;
-import { Button } from &ldquo;@/components/ui/button&rdquo;;
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useAuth } from "@/providers/auth-provider";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -12,11 +12,11 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from &ldquo;@/components/ui/form&rdquo;;
-import { Input } from &ldquo;@/components/ui/input&rdquo;;
-import { toast } from &ldquo;@/components/ui/use-toast&rdquo;;
-import { profileFormSchema } from &ldquo;@/lib/validations/profile&rdquo;;
-import type { ProfileFormValues } from &ldquo;@/lib/validations/profile&rdquo;;
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { toast } from "@/components/ui/use-toast";
+import { profileFormSchema } from "@/lib/validations/profile";
+import type { ProfileFormValues } from "@/lib/validations/profile";
 
 export function ProfileForm() {
   const { profile } = useAuth();
@@ -24,49 +24,49 @@ export function ProfileForm() {
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
-      firstName: profile?.firstName || &ldquo;&rdquo;,
-      lastName: profile?.lastName || &ldquo;&rdquo;,
+      firstName: profile?.firstName || "",
+      lastName: profile?.lastName || "",
     },
   });
 
   async function onSubmit(data: ProfileFormValues) {
     try {
       const response = await fetch(`/api/profile/${profile?.userId}`, {
-        method: &ldquo;PATCH&rdquo;,
-        headers: { &ldquo;Content-Type&rdquo;: &ldquo;application/json&rdquo; },
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
 
       if (!response.ok) {
-        throw new Error(error.message || &ldquo;Failed to update profile&rdquo;);
+        throw new Error(error.message || "Failed to update profile");
       }
 
       await response.json(); // Wait for response to be fully read
 
       toast({
-        title: &ldquo;Profile updated&rdquo;,
-        description: &ldquo;Your profile has been updated successfully.&rdquo;,
+        title: "Profile updated",
+        description: "Your profile has been updated successfully.",
       });
     } catch (error) {
       toast({
-        title: &ldquo;Error&rdquo;,
-        description: error instanceof Error ? error.message : &ldquo;Failed to update profile. Please try again.&rdquo;,
-        variant: &ldquo;destructive&rdquo;,
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to update profile. Please try again.",
+        variant: "destructive",
       });
     }
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className=&ldquo;space-y-8&rdquo;>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
-          name=&ldquo;firstName&rdquo;
+          name="firstName"
           render={({ field }) => (
             <FormItem>
               <FormLabel>First Name</FormLabel>
               <FormControl>
-                <Input placeholder=&ldquo;shadcn&rdquo; {...field} value={field.value ?? &ldquo;&rdquo;} />
+                <Input placeholder="shadcn" {...field} value={field.value ?? ""} />
               </FormControl>
               <FormDescription>
                 This is your public display name. It can be your real name or a pseudonym.
@@ -78,20 +78,20 @@ export function ProfileForm() {
 
         <FormField
           control={form.control}
-          name=&ldquo;lastName&rdquo;
+          name="lastName"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Last Name</FormLabel>
               <FormControl>
-                <Input placeholder=&ldquo;John Doe&rdquo; {...field} value={field.value ?? &ldquo;&rdquo;} />
+                <Input placeholder="John Doe" {...field} value={field.value ?? ""} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <div className=&ldquo;flex items-center gap-4&rdquo;>
-          <Button type=&ldquo;submit&rdquo;>Update profile</Button>
-          <Button type=&ldquo;button&rdquo; variant=&ldquo;outline&rdquo; onClick={() => form.reset()}>
+        <div className="flex items-center gap-4">
+          <Button type="submit">Update profile</Button>
+          <Button type="button" variant="outline" onClick={() => form.reset()}>
             Cancel
           </Button>
         </div>

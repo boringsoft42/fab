@@ -1,19 +1,19 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import { useState } from &ldquo;react&rdquo;;
-import { X, Upload, FileText, Check } from &ldquo;lucide-react&rdquo;;
-import { Button } from &ldquo;@/components/ui/button&rdquo;;
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from &ldquo;@/components/ui/dialog&rdquo;;
-import { Card, CardContent, CardHeader, CardTitle } from &ldquo;@/components/ui/card&rdquo;;
-import { Input } from &ldquo;@/components/ui/input&rdquo;;
-import { Label } from &ldquo;@/components/ui/label&rdquo;;
-import { Textarea } from &ldquo;@/components/ui/textarea&rdquo;;
-import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
-import { Avatar, AvatarFallback, AvatarImage } from &ldquo;@/components/ui/avatar&rdquo;;
-import { RadioGroup, RadioGroupItem } from &ldquo;@/components/ui/radio-group&rdquo;;
-import { Checkbox } from &ldquo;@/components/ui/checkbox&rdquo;;
-import { useToast } from &ldquo;@/components/ui/use-toast&rdquo;;
-import { JobOffer, JobQuestionAnswer } from &ldquo;@/types/jobs&rdquo;;
+import { useState } from "react";
+import { X, Upload, FileText, Check } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useToast } from "@/components/ui/use-toast";
+import { JobOffer, JobQuestionAnswer } from "@/types/jobs";
 
 interface JobApplicationModalProps {
   job: JobOffer;
@@ -25,8 +25,8 @@ export const JobApplicationModal = ({ job, onClose, onSuccess }: JobApplicationM
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [selectedCV, setSelectedCV] = useState<File | null>(null);
-  const [cvUrl, setCvUrl] = useState(&ldquo;&rdquo;);
-  const [coverLetter, setCoverLetter] = useState(&ldquo;&rdquo;);
+  const [cvUrl, setCvUrl] = useState("");
+  const [coverLetter, setCoverLetter] = useState("");
   const [answers, setAnswers] = useState<JobQuestionAnswer[]>([]);
   const [useTemplate, setUseTemplate] = useState(true);
 
@@ -54,9 +54,9 @@ Atentamente,
       // Validate file type
       if (!file.type.includes('pdf') && !file.type.includes('doc')) {
         toast({
-          title: &ldquo;Formato no válido&rdquo;,
-          description: &ldquo;Por favor sube un archivo PDF o DOC&rdquo;,
-          variant: &ldquo;destructive&rdquo;
+          title: "Formato no válido",
+          description: "Por favor sube un archivo PDF o DOC",
+          variant: "destructive"
         });
         return;
       }
@@ -64,9 +64,9 @@ Atentamente,
       // Validate file size (5MB max)
       if (file.size > 5 * 1024 * 1024) {
         toast({
-          title: &ldquo;Archivo muy grande&rdquo;,
-          description: &ldquo;El archivo debe ser menor a 5MB&rdquo;,
-          variant: &ldquo;destructive&rdquo;
+          title: "Archivo muy grande",
+          description: "El archivo debe ser menor a 5MB",
+          variant: "destructive"
         });
         return;
       }
@@ -96,9 +96,9 @@ Atentamente,
       case 1:
         if (!selectedCV && !cvUrl) {
           toast({
-            title: &ldquo;CV requerido&rdquo;,
-            description: &ldquo;Por favor sube tu CV para continuar&rdquo;,
-            variant: &ldquo;destructive&rdquo;
+            title: "CV requerido",
+            description: "Por favor sube tu CV para continuar",
+            variant: "destructive"
           });
           return false;
         }
@@ -106,9 +106,9 @@ Atentamente,
       case 2:
         if (!coverLetter.trim()) {
           toast({
-            title: &ldquo;Carta de presentación requerida&rdquo;,
-            description: &ldquo;Por favor completa tu carta de presentación&rdquo;,
-            variant: &ldquo;destructive&rdquo;
+            title: "Carta de presentación requerida",
+            description: "Por favor completa tu carta de presentación",
+            variant: "destructive"
           });
           return false;
         }
@@ -122,9 +122,9 @@ Atentamente,
         
         if (!answeredRequired) {
           toast({
-            title: &ldquo;Preguntas requeridas&rdquo;,
-            description: &ldquo;Por favor responde todas las preguntas obligatorias&rdquo;,
-            variant: &ldquo;destructive&rdquo;
+            title: "Preguntas requeridas",
+            description: "Por favor responde todas las preguntas obligatorias",
+            variant: "destructive"
           });
           return false;
         }
@@ -154,38 +154,38 @@ Atentamente,
         jobTitle: job.title,
         companyName: job.company.name,
         companyLogo: job.company.logo,
-        applicantId: &ldquo;mock-user-id&rdquo;, // In real app, get from auth
-        applicantName: &ldquo;John Doe&rdquo;,
-        applicantEmail: &ldquo;john@example.com&rdquo;,
+        applicantId: "mock-user-id", // In real app, get from auth
+        applicantName: "John Doe",
+        applicantEmail: "john@example.com",
         cvUrl,
         coverLetter,
         answers
       };
   
       const response = await fetch(`/api/jobs/${job.id}/applications`, {
-        method: &ldquo;POST&rdquo;,
-        headers: { &ldquo;Content-Type&rdquo;: &ldquo;application/json&rdquo; },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(applicationData),
       });
   
       if (response.ok) {
         toast({
-          title: &ldquo;¡Aplicación enviada!&rdquo;,
-          description: &ldquo;Tu aplicación ha sido enviada exitosamente&rdquo;,
+          title: "¡Aplicación enviada!",
+          description: "Tu aplicación ha sido enviada exitosamente",
         });
         onSuccess();
       } else {
         toast({
-          title: &ldquo;Error al enviar aplicación&rdquo;,
-          description: error.error || &ldquo;Inténtalo de nuevo&rdquo;,
-          variant: &ldquo;destructive&rdquo;
+          title: "Error al enviar aplicación",
+          description: error.error || "Inténtalo de nuevo",
+          variant: "destructive"
         });
       }
     } catch (error) {
       toast({
-        title: &ldquo;Error de conexión&rdquo;,
-        description: &ldquo;No se pudo enviar la aplicación. Inténtalo de nuevo.&rdquo;,
-        variant: &ldquo;destructive&rdquo;
+        title: "Error de conexión",
+        description: "No se pudo enviar la aplicación. Inténtalo de nuevo.",
+        variant: "destructive"
       });
     } finally {
       setLoading(false);
@@ -196,22 +196,22 @@ Atentamente,
     switch (step) {
       case 1:
         return (
-          <div className=&ldquo;space-y-6&rdquo;>
+          <div className="space-y-6">
             <div>
-              <h3 className=&ldquo;text-lg font-semibold mb-4&rdquo;>Sube tu CV</h3>
-              <div className=&ldquo;border-2 border-dashed border-gray-300 rounded-lg p-8 text-center&rdquo;>
+              <h3 className="text-lg font-semibold mb-4">Sube tu CV</h3>
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
                 {selectedCV ? (
-                  <div className=&ldquo;flex items-center justify-center space-x-2&rdquo;>
-                    <FileText className=&ldquo;w-8 h-8 text-green-600&rdquo; />
+                  <div className="flex items-center justify-center space-x-2">
+                    <FileText className="w-8 h-8 text-green-600" />
                     <div>
-                      <p className=&ldquo;font-medium text-green-600&rdquo;>{selectedCV.name}</p>
-                      <p className=&ldquo;text-sm text-gray-500&rdquo;>
+                      <p className="font-medium text-green-600">{selectedCV.name}</p>
+                      <p className="text-sm text-gray-500">
                         {(selectedCV.size / 1024 / 1024).toFixed(2)} MB
                       </p>
                     </div>
                     <Button
-                      variant=&ldquo;outline&rdquo;
-                      size=&ldquo;sm&rdquo;
+                      variant="outline"
+                      size="sm"
                       onClick={() => setSelectedCV(null)}
                     >
                       Cambiar
@@ -219,29 +219,29 @@ Atentamente,
                   </div>
                 ) : (
                   <div>
-                    <Upload className=&ldquo;w-12 h-12 text-gray-400 mx-auto mb-4&rdquo; />
-                    <p className=&ldquo;text-lg font-medium text-gray-900 mb-2&rdquo;>
+                    <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                    <p className="text-lg font-medium text-gray-900 mb-2">
                       Sube tu CV
                     </p>
-                    <p className=&ldquo;text-gray-600 mb-4&rdquo;>
+                    <p className="text-gray-600 mb-4">
                       Formatos soportados: PDF, DOC, DOCX (máx. 5MB)
                     </p>
                     <input
-                      type=&ldquo;file&rdquo;
-                      accept=&ldquo;.pdf,.doc,.docx&rdquo;
+                      type="file"
+                      accept=".pdf,.doc,.docx"
                       onChange={handleCVUpload}
-                      className=&ldquo;hidden&rdquo;
-                      id=&ldquo;cv-upload&rdquo;
+                      className="hidden"
+                      id="cv-upload"
                     />
                     <Button asChild>
-                      <label htmlFor=&ldquo;cv-upload&rdquo; className=&ldquo;cursor-pointer&rdquo;>
+                      <label htmlFor="cv-upload" className="cursor-pointer">
                         Seleccionar archivo
                       </label>
                     </Button>
                   </div>
                 )}
               </div>
-              <p className=&ldquo;text-sm text-gray-600 mt-2&rdquo;>
+              <p className="text-sm text-gray-600 mt-2">
                 Tu CV debe estar actualizado y ser relevante para esta posición.
               </p>
             </div>
@@ -250,13 +250,13 @@ Atentamente,
 
       case 2:
         return (
-          <div className=&ldquo;space-y-6&rdquo;>
+          <div className="space-y-6">
             <div>
-              <h3 className=&ldquo;text-lg font-semibold mb-4&rdquo;>Carta de presentación</h3>
-              <div className=&ldquo;space-y-4&rdquo;>
-                <div className=&ldquo;flex items-center space-x-2&rdquo;>
+              <h3 className="text-lg font-semibold mb-4">Carta de presentación</h3>
+              <div className="space-y-4">
+                <div className="flex items-center space-x-2">
                   <Checkbox
-                    id=&ldquo;use-template&rdquo;
+                    id="use-template"
                     checked={useTemplate}
                     onCheckedChange={(checked) => {
                       setUseTemplate(checked as boolean);
@@ -265,19 +265,19 @@ Atentamente,
                       }
                     }}
                   />
-                  <Label htmlFor=&ldquo;use-template&rdquo; className=&ldquo;text-sm&rdquo;>
+                  <Label htmlFor="use-template" className="text-sm">
                     Usar plantilla sugerida
                   </Label>
                 </div>
                 
                 <Textarea
-                  placeholder=&ldquo;Escribe tu carta de presentación aquí...&rdquo;
+                  placeholder="Escribe tu carta de presentación aquí..."
                   value={coverLetter}
                   onChange={(e) => setCoverLetter(e.target.value)}
-                  className=&ldquo;min-h-[300px]&rdquo;
+                  className="min-h-[300px]"
                 />
                 
-                <p className=&ldquo;text-sm text-gray-600&rdquo;>
+                <p className="text-sm text-gray-600">
                   Personaliza tu carta para destacar por qué eres el candidato ideal para esta posición.
                 </p>
               </div>
@@ -287,36 +287,36 @@ Atentamente,
 
       case 3:
         return (
-          <div className=&ldquo;space-y-6&rdquo;>
+          <div className="space-y-6">
             <div>
-              <h3 className=&ldquo;text-lg font-semibold mb-4&rdquo;>Preguntas del empleador</h3>
+              <h3 className="text-lg font-semibold mb-4">Preguntas del empleador</h3>
               {job.questions && job.questions.length > 0 ? (
-                <div className=&ldquo;space-y-6&rdquo;>
+                <div className="space-y-6">
                   {job.questions.map((question, index) => (
-                    <div key={question.id} className=&ldquo;space-y-3&rdquo;>
-                      <Label className=&ldquo;text-sm font-medium&rdquo;>
+                    <div key={question.id} className="space-y-3">
+                      <Label className="text-sm font-medium">
                         {index + 1}. {question.question}
-                        {question.required && <span className=&ldquo;text-red-500 ml-1&rdquo;>*</span>}
+                        {question.required && <span className="text-red-500 ml-1">*</span>}
                       </Label>
                       
-                      {question.type === &ldquo;TEXT&rdquo; && (
+                      {question.type === "TEXT" && (
                         <Textarea
-                          placeholder=&ldquo;Tu respuesta...&rdquo;
-                          value={answers.find(a => a.questionId === question.id)?.answer || &ldquo;&rdquo;}
+                          placeholder="Tu respuesta..."
+                          value={answers.find(a => a.questionId === question.id)?.answer || ""}
                           onChange={(e) => handleQuestionAnswer(question.id, question.question, e.target.value)}
-                          className=&ldquo;min-h-[100px]&rdquo;
+                          className="min-h-[100px]"
                         />
                       )}
                       
-                      {question.type === &ldquo;MULTIPLE_CHOICE&rdquo; && question.options && (
+                      {question.type === "MULTIPLE_CHOICE" && question.options && (
                         <RadioGroup
-                          value={answers.find(a => a.questionId === question.id)?.answer || &ldquo;&rdquo;}
+                          value={answers.find(a => a.questionId === question.id)?.answer || ""}
                           onValueChange={(value) => handleQuestionAnswer(question.id, question.question, value)}
                         >
                           {question.options.map((option, optionIndex) => (
-                            <div key={optionIndex} className=&ldquo;flex items-center space-x-2&rdquo;>
+                            <div key={optionIndex} className="flex items-center space-x-2">
                               <RadioGroupItem value={option} id={`${question.id}-${optionIndex}`} />
-                              <Label htmlFor={`${question.id}-${optionIndex}`} className=&ldquo;text-sm&rdquo;>
+                              <Label htmlFor={`${question.id}-${optionIndex}`} className="text-sm">
                                 {option}
                               </Label>
                             </div>
@@ -324,18 +324,18 @@ Atentamente,
                         </RadioGroup>
                       )}
                       
-                      {question.type === &ldquo;YES_NO&rdquo; && (
+                      {question.type === "YES_NO" && (
                         <RadioGroup
-                          value={answers.find(a => a.questionId === question.id)?.answer || &ldquo;&rdquo;}
+                          value={answers.find(a => a.questionId === question.id)?.answer || ""}
                           onValueChange={(value) => handleQuestionAnswer(question.id, question.question, value)}
                         >
-                          <div className=&ldquo;flex items-center space-x-2&rdquo;>
-                            <RadioGroupItem value=&ldquo;Sí&rdquo; id={`${question.id}-yes`} />
-                            <Label htmlFor={`${question.id}-yes`} className=&ldquo;text-sm&rdquo;>Sí</Label>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="Sí" id={`${question.id}-yes`} />
+                            <Label htmlFor={`${question.id}-yes`} className="text-sm">Sí</Label>
                           </div>
-                          <div className=&ldquo;flex items-center space-x-2&rdquo;>
-                            <RadioGroupItem value=&ldquo;No&rdquo; id={`${question.id}-no`} />
-                            <Label htmlFor={`${question.id}-no`} className=&ldquo;text-sm&rdquo;>No</Label>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="No" id={`${question.id}-no`} />
+                            <Label htmlFor={`${question.id}-no`} className="text-sm">No</Label>
                           </div>
                         </RadioGroup>
                       )}
@@ -343,7 +343,7 @@ Atentamente,
                   ))}
                 </div>
               ) : (
-                <p className=&ldquo;text-gray-600 text-center py-8&rdquo;>
+                <p className="text-gray-600 text-center py-8">
                   No hay preguntas adicionales para esta posición.
                 </p>
               )}
@@ -353,44 +353,44 @@ Atentamente,
 
       case 4:
         return (
-          <div className=&ldquo;space-y-6&rdquo;>
-            <div className=&ldquo;text-center&rdquo;>
-              <div className=&ldquo;w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4&rdquo;>
-                <Check className=&ldquo;w-8 h-8 text-green-600&rdquo; />
+          <div className="space-y-6">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Check className="w-8 h-8 text-green-600" />
               </div>
-              <h3 className=&ldquo;text-lg font-semibold mb-2&rdquo;>Revisa tu aplicación</h3>
-              <p className=&ldquo;text-gray-600&rdquo;>
+              <h3 className="text-lg font-semibold mb-2">Revisa tu aplicación</h3>
+              <p className="text-gray-600">
                 Verifica que toda la información esté correcta antes de enviar
               </p>
             </div>
             
             <Card>
               <CardHeader>
-                <CardTitle className=&ldquo;text-base&rdquo;>Resumen de aplicación</CardTitle>
+                <CardTitle className="text-base">Resumen de aplicación</CardTitle>
               </CardHeader>
-              <CardContent className=&ldquo;space-y-4&rdquo;>
-                <div className=&ldquo;flex items-center space-x-3&rdquo;>
-                  <Avatar className=&ldquo;w-10 h-10&rdquo;>
+              <CardContent className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <Avatar className="w-10 h-10">
                     <AvatarImage src={job.company.logo} alt={job.company.name} />
                     <AvatarFallback>{job.company.name.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className=&ldquo;font-medium&rdquo;>{job.title}</p>
-                    <p className=&ldquo;text-sm text-gray-600&rdquo;>{job.company.name}</p>
+                    <p className="font-medium">{job.title}</p>
+                    <p className="text-sm text-gray-600">{job.company.name}</p>
                   </div>
                 </div>
                 
-                <div className=&ldquo;space-y-2 text-sm&rdquo;>
-                  <div className=&ldquo;flex justify-between&rdquo;>
-                    <span className=&ldquo;text-gray-600&rdquo;>CV:</span>
-                    <span>{selectedCV?.name || &ldquo;CV subido&rdquo;}</span>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">CV:</span>
+                    <span>{selectedCV?.name || "CV subido"}</span>
                   </div>
-                  <div className=&ldquo;flex justify-between&rdquo;>
-                    <span className=&ldquo;text-gray-600&rdquo;>Carta de presentación:</span>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Carta de presentación:</span>
                     <span>{coverLetter.length} caracteres</span>
                   </div>
-                  <div className=&ldquo;flex justify-between&rdquo;>
-                    <span className=&ldquo;text-gray-600&rdquo;>Preguntas respondidas:</span>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Preguntas respondidas:</span>
                     <span>{answers.length} de {job.questions?.length || 0}</span>
                   </div>
                 </div>
@@ -408,25 +408,25 @@ Atentamente,
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className=&ldquo;max-w-2xl max-h-[90vh] overflow-y-auto&rdquo;>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className=&ldquo;flex items-center justify-between&rdquo;>
+          <DialogTitle className="flex items-center justify-between">
             <span>Aplicar a {job.title}</span>
-            <Button variant=&ldquo;ghost&rdquo; size=&ldquo;sm&rdquo; onClick={onClose}>
-              <X className=&ldquo;w-4 h-4&rdquo; />
+            <Button variant="ghost" size="sm" onClick={onClose}>
+              <X className="w-4 h-4" />
             </Button>
           </DialogTitle>
         </DialogHeader>
 
         {/* Progress Bar */}
-        <div className=&ldquo;flex items-center space-x-2 mb-6&rdquo;>
+        <div className="flex items-center space-x-2 mb-6">
           {Array.from({ length: maxSteps }, (_, i) => (
-            <div key={i} className=&ldquo;flex items-center&rdquo;>
+            <div key={i} className="flex items-center">
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
                   i + 1 <= step
-                    ? &ldquo;bg-blue-600 text-white&rdquo;
-                    : &ldquo;bg-gray-200 text-gray-600&rdquo;
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-200 text-gray-600"
                 }`}
               >
                 {i + 1}
@@ -434,7 +434,7 @@ Atentamente,
               {i < maxSteps - 1 && (
                 <div
                   className={`w-8 h-1 ${
-                    i + 1 < step ? &ldquo;bg-blue-600&rdquo; : &ldquo;bg-gray-200&rdquo;
+                    i + 1 < step ? "bg-blue-600" : "bg-gray-200"
                   }`}
                 />
               )}
@@ -443,18 +443,18 @@ Atentamente,
         </div>
 
         {/* Step Content */}
-        <div className=&ldquo;min-h-[400px]&rdquo;>
+        <div className="min-h-[400px]">
           {renderStepContent()}
         </div>
 
         {/* Actions */}
-        <div className=&ldquo;flex justify-between pt-6 border-t&rdquo;>
+        <div className="flex justify-between pt-6 border-t">
           <Button
-            variant=&ldquo;outline&rdquo;
+            variant="outline"
             onClick={() => step > 1 ? setStep(step - 1) : onClose()}
             disabled={loading}
           >
-            {step > 1 ? &ldquo;Anterior&rdquo; : &ldquo;Cancelar&rdquo;}
+            {step > 1 ? "Anterior" : "Cancelar"}
           </Button>
           
           {step < maxSteps ? (
@@ -463,24 +463,24 @@ Atentamente,
             </Button>
           ) : (
             <Button onClick={handleSubmit} disabled={loading}>
-              {loading ? &ldquo;Enviando...&rdquo; : &ldquo;Enviar aplicación&rdquo;}
+              {loading ? "Enviando..." : "Enviar aplicación"}
             </Button>
           )}
         </div>
       </DialogContent>
       <Dialog open={showTermsModal} onOpenChange={setShowTermsModal}>
-  <DialogContent className=&ldquo;max-w-md text-center&rdquo;>
+  <DialogContent className="max-w-md text-center">
     <DialogHeader>
-      <DialogTitle className=&ldquo;text-lg&rdquo;>Términos y condiciones</DialogTitle>
+      <DialogTitle className="text-lg">Términos y condiciones</DialogTitle>
     </DialogHeader>
 
-    <p className=&ldquo;text-sm text-gray-600 mb-4&rdquo;>
+    <p className="text-sm text-gray-600 mb-4">
       La información que compartas es confidencial y solo será visible por el empleador. 
       Al continuar, aceptas nuestros términos y condiciones de privacidad.
     </p>
 
-    <div className=&ldquo;flex justify-center gap-4 mt-6&rdquo;>
-      <Button variant=&ldquo;outline&rdquo; onClick={() => setShowTermsModal(false)}>
+    <div className="flex justify-center gap-4 mt-6">
+      <Button variant="outline" onClick={() => setShowTermsModal(false)}>
         Cancelar
       </Button>
       <Button

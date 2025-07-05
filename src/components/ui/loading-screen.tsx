@@ -1,23 +1,23 @@
-import { Loader } from &ldquo;./loader&rdquo;;
+import { Loader } from "./loader";
 
 interface LoadingScreenProps {
   message?: string;
-  variant?: &ldquo;default&rdquo; | &ldquo;overlay&rdquo;;
+  variant?: "default" | "overlay";
   className?: string;
 }
 
 export function LoadingScreen({
-  message = &ldquo;Cargando...&rdquo;,
-  variant = &ldquo;default&rdquo;,
+  message = "Cargando...",
+  variant = "default",
   className,
 }: LoadingScreenProps) {
-  if (variant === &ldquo;overlay&rdquo;) {
+  if (variant === "overlay") {
     return (
-      <div className=&ldquo;fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm&rdquo;>
-        <div className=&ldquo;flex flex-col items-center gap-4&rdquo;>
-          <Loader size=&ldquo;lg&rdquo; />
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
+        <div className="flex flex-col items-center gap-4">
+          <Loader size="lg" />
           {message && (
-            <p className=&ldquo;text-sm text-muted-foreground&rdquo;>{message}</p>
+            <p className="text-sm text-muted-foreground">{message}</p>
           )}
         </div>
       </div>
@@ -26,9 +26,9 @@ export function LoadingScreen({
 
   return (
     <div className={className}>
-      <div className=&ldquo;flex flex-col items-center justify-center gap-4 py-8&rdquo;>
-        <Loader size=&ldquo;lg&rdquo; />
-        {message && <p className=&ldquo;text-sm text-muted-foreground&rdquo;>{message}</p>}
+      <div className="flex flex-col items-center justify-center gap-4 py-8">
+        <Loader size="lg" />
+        {message && <p className="text-sm text-muted-foreground">{message}</p>}
       </div>
     </div>
   );

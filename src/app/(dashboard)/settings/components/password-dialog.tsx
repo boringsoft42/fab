@@ -1,10 +1,10 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import React, { useState } from &ldquo;react&rdquo;;
-import { zodResolver } from &ldquo;@hookform/resolvers/zod&rdquo;;
-import { useForm } from &ldquo;react-hook-form&rdquo;;
-import * as z from &ldquo;zod&rdquo;;
-import { Button } from &ldquo;@/components/ui/button&rdquo;;
+import React, { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -13,7 +13,7 @@ import {
   DialogTitle,
   DialogFooter,
   DialogClose,
-} from &ldquo;@/components/ui/dialog&rdquo;;
+} from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -21,32 +21,32 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from &ldquo;@/components/ui/form&rdquo;;
-import { useToast } from &ldquo;@/components/ui/use-toast&rdquo;;
-import { PasswordInput } from &ldquo;@/components/utils/password-input&rdquo;;
-import { PasswordStrengthIndicator } from &ldquo;@/components/utils/password-strength-indicator&rdquo;;
-import { AlertCircle, CheckCircle2, Loader2 } from &ldquo;lucide-react&rdquo;;
-import { hashPassword } from &ldquo;@/lib/auth/password-crypto&rdquo;;
+} from "@/components/ui/form";
+import { useToast } from "@/components/ui/use-toast";
+import { PasswordInput } from "@/components/utils/password-input";
+import { PasswordStrengthIndicator } from "@/components/utils/password-strength-indicator";
+import { AlertCircle, CheckCircle2, Loader2 } from "lucide-react";
+import { hashPassword } from "@/lib/auth/password-crypto";
 
 // Password validation schema
 const passwordFormSchema = z
   .object({
-    currentPassword: z.string().min(1, &ldquo;La contraseña actual es requerida&rdquo;),
+    currentPassword: z.string().min(1, "La contraseña actual es requerida"),
     newPassword: z
       .string()
-      .min(8, &ldquo;La contraseña debe tener al menos 8 caracteres&rdquo;)
-      .regex(/[A-Z]/, &ldquo;La contraseña debe contener al menos una mayúscula&rdquo;)
-      .regex(/[a-z]/, &ldquo;La contraseña debe contener al menos una minúscula&rdquo;)
-      .regex(/[0-9]/, &ldquo;La contraseña debe contener al menos un número&rdquo;)
+      .min(8, "La contraseña debe tener al menos 8 caracteres")
+      .regex(/[A-Z]/, "La contraseña debe contener al menos una mayúscula")
+      .regex(/[a-z]/, "La contraseña debe contener al menos una minúscula")
+      .regex(/[0-9]/, "La contraseña debe contener al menos un número")
       .regex(
         /[^A-Za-z0-9]/,
-        &ldquo;La contraseña debe contener al menos un carácter especial&rdquo;
+        "La contraseña debe contener al menos un carácter especial"
       ),
     confirmPassword: z.string(),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
-    message: &ldquo;Las contraseñas no coinciden&rdquo;,
-    path: [&ldquo;confirmPassword&rdquo;],
+    message: "Las contraseñas no coinciden",
+    path: ["confirmPassword"],
   });
 
 type PasswordFormValues = z.infer<typeof passwordFormSchema>;
@@ -57,22 +57,22 @@ interface PasswordDialogProps {
 }
 
 export function PasswordDialog({ open, onOpenChange }: PasswordDialogProps) {
-  const [password, setPassword] = useState(&ldquo;&rdquo;);
+  const [password, setPassword] = useState("");
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<PasswordFormValues>({
     resolver: zodResolver(passwordFormSchema),
     defaultValues: {
-      currentPassword: &ldquo;&rdquo;,
-      newPassword: &ldquo;&rdquo;,
-      confirmPassword: &ldquo;&rdquo;,
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
     },
   });
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
-    form.setValue(&ldquo;newPassword&rdquo;, e.target.value);
+    form.setValue("newPassword", e.target.value);
   };
 
   async function onSubmit(data: PasswordFormValues) {
@@ -84,10 +84,10 @@ export function PasswordDialog({ open, onOpenChange }: PasswordDialogProps) {
       const hashedNewPassword = await hashPassword(data.newPassword);
 
       // Call API to update password
-      const response = await fetch(&ldquo;/api/user/password&rdquo;, {
-        method: &ldquo;PUT&rdquo;,
+      const response = await fetch("/api/user/password", {
+        method: "PUT",
         headers: {
-          &ldquo;Content-Type&rdquo;: &ldquo;application/json&rdquo;,
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           currentPassword: hashedCurrentPassword,
@@ -98,14 +98,14 @@ export function PasswordDialog({ open, onOpenChange }: PasswordDialogProps) {
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.error || &ldquo;Error al cambiar la contraseña&rdquo;);
+        throw new Error(result.error || "Error al cambiar la contraseña");
       }
 
       toast({
-        title: &ldquo;Contraseña actualizada&rdquo;,
+        title: "Contraseña actualizada",
         description: (
-          <div className=&ldquo;flex items-center&rdquo;>
-            <CheckCircle2 className=&ldquo;h-4 w-4 text-green-500 mr-2&rdquo; />
+          <div className="flex items-center">
+            <CheckCircle2 className="h-4 w-4 text-green-500 mr-2" />
             <span>Tu contraseña ha sido actualizada correctamente.</span>
           </div>
         ),
@@ -113,32 +113,32 @@ export function PasswordDialog({ open, onOpenChange }: PasswordDialogProps) {
 
       // Reset form and close dialog
       form.reset();
-      setPassword(&ldquo;&rdquo;);
+      setPassword("");
       onOpenChange(false);
     } catch (error: unknown) {
-      console.error(&ldquo;Error updating password:&rdquo;, error);
+      console.error("Error updating password:", error);
 
       let errorMessage =
-        &ldquo;No se pudo actualizar la contraseña. Por favor, intenta de nuevo.&rdquo;;
+        "No se pudo actualizar la contraseña. Por favor, intenta de nuevo.";
 
       // Handle specific errors
       if (error instanceof Error) {
-        if (error.message.includes(&ldquo;incorrect&rdquo;)) {
-          errorMessage = &ldquo;La contraseña actual es incorrecta.&rdquo;;
-        } else if (error.message.includes(&ldquo;weak&rdquo;)) {
-          errorMessage = &ldquo;La nueva contraseña es demasiado débil.&rdquo;;
+        if (error.message.includes("incorrect")) {
+          errorMessage = "La contraseña actual es incorrecta.";
+        } else if (error.message.includes("weak")) {
+          errorMessage = "La nueva contraseña es demasiado débil.";
         }
       }
 
       toast({
-        title: &ldquo;Error&rdquo;,
+        title: "Error",
         description: (
-          <div className=&ldquo;flex items-center&rdquo;>
-            <AlertCircle className=&ldquo;h-4 w-4 text-destructive mr-2&rdquo; />
+          <div className="flex items-center">
+            <AlertCircle className="h-4 w-4 text-destructive mr-2" />
             <span>{errorMessage}</span>
           </div>
         ),
-        variant: &ldquo;destructive&rdquo;,
+        variant: "destructive",
       });
     } finally {
       setIsSubmitting(false);
@@ -149,14 +149,14 @@ export function PasswordDialog({ open, onOpenChange }: PasswordDialogProps) {
     if (!value) {
       // Reset the form when dialog is closed
       form.reset();
-      setPassword(&ldquo;&rdquo;);
+      setPassword("");
     }
     onOpenChange(value);
   };
 
   return (
     <Dialog open={open} onOpenChange={handleDialogOpenChange}>
-      <DialogContent className=&ldquo;sm:max-w-[425px]&rdquo;>
+      <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Cambiar Contraseña</DialogTitle>
           <DialogDescription>
@@ -164,15 +164,15 @@ export function PasswordDialog({ open, onOpenChange }: PasswordDialogProps) {
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className=&ldquo;space-y-6&rdquo;>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
               control={form.control}
-              name=&ldquo;currentPassword&rdquo;
+              name="currentPassword"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Contraseña Actual</FormLabel>
                   <FormControl>
-                    <PasswordInput placeholder=&ldquo;••••••••&rdquo; {...field} />
+                    <PasswordInput placeholder="••••••••" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -181,13 +181,13 @@ export function PasswordDialog({ open, onOpenChange }: PasswordDialogProps) {
 
             <FormField
               control={form.control}
-              name=&ldquo;newPassword&rdquo;
+              name="newPassword"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Nueva Contraseña</FormLabel>
                   <FormControl>
                     <PasswordInput
-                      placeholder=&ldquo;••••••••&rdquo;
+                      placeholder="••••••••"
                       {...field}
                       onChange={handlePasswordChange}
                     />
@@ -200,32 +200,32 @@ export function PasswordDialog({ open, onOpenChange }: PasswordDialogProps) {
 
             <FormField
               control={form.control}
-              name=&ldquo;confirmPassword&rdquo;
+              name="confirmPassword"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Confirmar Nueva Contraseña</FormLabel>
                   <FormControl>
-                    <PasswordInput placeholder=&ldquo;••••••••&rdquo; {...field} />
+                    <PasswordInput placeholder="••••••••" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            <DialogFooter className=&ldquo;gap-2 sm:gap-0&rdquo;>
+            <DialogFooter className="gap-2 sm:gap-0">
               <DialogClose asChild>
-                <Button type=&ldquo;button&rdquo; variant=&ldquo;outline&rdquo;>
+                <Button type="button" variant="outline">
                   Cancelar
                 </Button>
               </DialogClose>
-              <Button type=&ldquo;submit&rdquo; disabled={isSubmitting}>
+              <Button type="submit" disabled={isSubmitting}>
                 {isSubmitting ? (
                   <>
-                    <Loader2 className=&ldquo;mr-2 h-4 w-4 animate-spin&rdquo; />
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Actualizando...
                   </>
                 ) : (
-                  &ldquo;Actualizar Contraseña&rdquo;
+                  "Actualizar Contraseña"
                 )}
               </Button>
             </DialogFooter>

@@ -1,14 +1,14 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import { useCurrentUser } from &ldquo;@/hooks/use-current-user&rdquo;;
-import { Skeleton } from &ldquo;@/components/ui/skeleton&rdquo;;
-import { Alert, AlertDescription } from &ldquo;@/components/ui/alert&rdquo;;
-import { AlertCircle } from &ldquo;lucide-react&rdquo;;
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 // Import role-specific profile components (will create these next)
-import { YouthAdolescentProfile } from &ldquo;./role-specific/youth-adolescent-profile&rdquo;;
-import { CompanyProfile } from &ldquo;./role-specific/company-profile&rdquo;;
-import { InstitutionalProfile } from &ldquo;./role-specific/institutional-profile&rdquo;;
+import { YouthAdolescentProfile } from "./role-specific/youth-adolescent-profile";
+import { CompanyProfile } from "./role-specific/company-profile";
+import { InstitutionalProfile } from "./role-specific/institutional-profile";
 
 export function AdaptiveProfileRouter() {
   const { profile, isLoading, error } = useCurrentUser();
@@ -16,14 +16,14 @@ export function AdaptiveProfileRouter() {
   // Show skeleton while loading
   if (isLoading) {
     return (
-      <div className=&ldquo;space-y-6&rdquo;>
-        <div className=&ldquo;space-y-2&rdquo;>
-          <Skeleton className=&ldquo;h-8 w-64&rdquo; />
-          <Skeleton className=&ldquo;h-4 w-96&rdquo; />
+      <div className="space-y-6">
+        <div className="space-y-2">
+          <Skeleton className="h-8 w-64" />
+          <Skeleton className="h-4 w-96" />
         </div>
-        <div className=&ldquo;grid gap-6 md:grid-cols-2&rdquo;>
-          <Skeleton className=&ldquo;h-96&rdquo; />
-          <Skeleton className=&ldquo;h-96&rdquo; />
+        <div className="grid gap-6 md:grid-cols-2">
+          <Skeleton className="h-96" />
+          <Skeleton className="h-96" />
         </div>
       </div>
     );
@@ -32,8 +32,8 @@ export function AdaptiveProfileRouter() {
   // Show error state
   if (error) {
     return (
-      <Alert variant=&ldquo;destructive&rdquo;>
-        <AlertCircle className=&ldquo;h-4 w-4&rdquo; />
+      <Alert variant="destructive">
+        <AlertCircle className="h-4 w-4" />
         <AlertDescription>
           Error al cargar el perfil: {error.message}
         </AlertDescription>
@@ -45,7 +45,7 @@ export function AdaptiveProfileRouter() {
   if (!profile) {
     return (
       <Alert>
-        <AlertCircle className=&ldquo;h-4 w-4&rdquo; />
+        <AlertCircle className="h-4 w-4" />
         <AlertDescription>
           No se pudo cargar la información del perfil. Por favor, inicia sesión
           nuevamente.
@@ -56,24 +56,24 @@ export function AdaptiveProfileRouter() {
 
   // Route to appropriate profile form based on user role
   switch (profile.role) {
-    case &ldquo;YOUTH&rdquo;:
-    case &ldquo;ADOLESCENTS&rdquo;:
+    case "YOUTH":
+    case "ADOLESCENTS":
       return (
         <YouthAdolescentProfile userRole={profile.role} profile={profile} />
       );
 
-    case &ldquo;COMPANIES&rdquo;:
+    case "COMPANIES":
       return <CompanyProfile profile={profile} />;
 
-    case &ldquo;MUNICIPAL_GOVERNMENTS&rdquo;:
-    case &ldquo;TRAINING_CENTERS&rdquo;:
-    case &ldquo;NGOS_AND_FOUNDATIONS&rdquo;:
+    case "MUNICIPAL_GOVERNMENTS":
+    case "TRAINING_CENTERS":
+    case "NGOS_AND_FOUNDATIONS":
       return <InstitutionalProfile userRole={profile.role} profile={profile} />;
 
     default:
       return (
         <Alert>
-          <AlertCircle className=&ldquo;h-4 w-4&rdquo; />
+          <AlertCircle className="h-4 w-4" />
           <AlertDescription>
             Tipo de usuario no reconocido. Contacta al soporte técnico.
           </AlertDescription>

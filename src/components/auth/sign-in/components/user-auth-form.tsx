@@ -1,13 +1,13 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import { useState } from &ldquo;react&rdquo;;
-import { useForm } from &ldquo;react-hook-form&rdquo;;
-import { zodResolver } from &ldquo;@hookform/resolvers/zod&rdquo;;
-import Link from &ldquo;next/link&rdquo;;
-import { FacebookIcon, GithubIcon } from &ldquo;lucide-react&rdquo;;
-import { useAuth } from &ldquo;@/providers/auth-provider&rdquo;;
-import { cn } from &ldquo;@/lib/utils&rdquo;;
-import { Button } from &ldquo;@/components/ui/button&rdquo;;
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
+import { FacebookIcon, GithubIcon } from "lucide-react";
+import { useAuth } from "@/providers/auth-provider";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -15,14 +15,14 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from &ldquo;@/components/ui/form&rdquo;;
-import { Input } from &ldquo;@/components/ui/input&rdquo;;
-import { PasswordInput } from &ldquo;@/components/utils/password-input&rdquo;;
-import type { SignInFormData, UserAuthFormProps } from &ldquo;@/types/auth/sign-in&rdquo;;
-import { signInFormSchema } from &ldquo;@/types/auth/sign-in&rdquo;;
-import { toast } from &ldquo;@/components/ui/use-toast&rdquo;;
-import { useRouter } from &ldquo;next/navigation&rdquo;;
-import { saltAndHashPassword } from &ldquo;@/lib/auth/password-crypto&rdquo;;
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/utils/password-input";
+import type { SignInFormData, UserAuthFormProps } from "@/types/auth/sign-in";
+import { signInFormSchema } from "@/types/auth/sign-in";
+import { toast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
+import { saltAndHashPassword } from "@/lib/auth/password-crypto";
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = useState(false);
@@ -30,8 +30,8 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const form = useForm<SignInFormData>({
     resolver: zodResolver(signInFormSchema),
     defaultValues: {
-      email: &ldquo;&rdquo;,
-      password: &ldquo;&rdquo;,
+      email: "",
+      password: "",
     },
   });
 
@@ -47,15 +47,15 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 
       await signIn(data.email, hashedPassword);
       toast({
-        title: &ldquo;Success&rdquo;,
-        description: &ldquo;You have been signed in.&rdquo;,
+        title: "Success",
+        description: "You have been signed in.",
       });
-      router.push(&ldquo;/dashboard&rdquo;);
+      router.push("/dashboard");
     } catch {
       toast({
-        title: &ldquo;Error&rdquo;,
-        description: &ldquo;Invalid email or password.&rdquo;,
-        variant: &ldquo;destructive&rdquo;,
+        title: "Error",
+        description: "Invalid email or password.",
+        variant: "destructive",
       });
     } finally {
       setIsLoading(false);
@@ -63,18 +63,18 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   }
 
   return (
-    <div className={cn(&ldquo;grid gap-6&rdquo;, className)} {...props}>
+    <div className={cn("grid gap-6", className)} {...props}>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className=&ldquo;grid gap-2&rdquo;>
+          <div className="grid gap-2">
             <FormField
               control={form.control}
-              name=&ldquo;email&rdquo;
+              name="email"
               render={({ field }) => (
-                <FormItem className=&ldquo;space-y-1&rdquo;>
+                <FormItem className="space-y-1">
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder=&ldquo;name@example.com&rdquo; {...field} />
+                    <Input placeholder="name@example.com" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -82,56 +82,56 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             />
             <FormField
               control={form.control}
-              name=&ldquo;password&rdquo;
+              name="password"
               render={({ field }) => (
-                <FormItem className=&ldquo;space-y-1&rdquo;>
-                  <div className=&ldquo;flex items-center justify-between&rdquo;>
+                <FormItem className="space-y-1">
+                  <div className="flex items-center justify-between">
                     <FormLabel>Password</FormLabel>
                     <Link
-                      href=&ldquo;/forgot-password&rdquo;
-                      className=&ldquo;text-sm font-medium text-muted-foreground hover:opacity-75&rdquo;
+                      href="/forgot-password"
+                      className="text-sm font-medium text-muted-foreground hover:opacity-75"
                     >
                       Forgot password?
                     </Link>
                   </div>
                   <FormControl>
-                    <PasswordInput placeholder=&ldquo;********&rdquo; {...field} />
+                    <PasswordInput placeholder="********" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button className=&ldquo;mt-2&rdquo; disabled={isLoading}>
+            <Button className="mt-2" disabled={isLoading}>
               Login
             </Button>
 
-            <div className=&ldquo;relative my-2&rdquo;>
-              <div className=&ldquo;absolute inset-0 flex items-center&rdquo;>
-                <span className=&ldquo;w-full border-t&rdquo; />
+            <div className="relative my-2">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
               </div>
-              <div className=&ldquo;relative flex justify-center text-xs uppercase&rdquo;>
-                <span className=&ldquo;bg-background px-2 text-muted-foreground&rdquo;>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-background px-2 text-muted-foreground">
                   Or continue with
                 </span>
               </div>
             </div>
 
-            <div className=&ldquo;flex items-center gap-2&rdquo;>
+            <div className="flex items-center gap-2">
               <Button
-                variant=&ldquo;outline&rdquo;
-                className=&ldquo;w-full&rdquo;
-                type=&ldquo;button&rdquo;
+                variant="outline"
+                className="w-full"
+                type="button"
                 disabled={isLoading}
               >
-                <GithubIcon className=&ldquo;h-4 w-4&rdquo; /> GitHub
+                <GithubIcon className="h-4 w-4" /> GitHub
               </Button>
               <Button
-                variant=&ldquo;outline&rdquo;
-                className=&ldquo;w-full&rdquo;
-                type=&ldquo;button&rdquo;
+                variant="outline"
+                className="w-full"
+                type="button"
                 disabled={isLoading}
               >
-                <FacebookIcon className=&ldquo;h-4 w-4&rdquo; /> Facebook
+                <FacebookIcon className="h-4 w-4" /> Facebook
               </Button>
             </div>
           </div>

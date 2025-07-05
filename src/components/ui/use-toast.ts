@@ -1,12 +1,12 @@
-&ldquo;use client&rdquo;
+"use client"
 
 // Inspired by react-hot-toast library
-import * as React from &ldquo;react&rdquo;
+import * as React from "react"
 
 import type {
   ToastActionElement,
   ToastProps,
-} from &ldquo;@/components/ui/toast&rdquo;
+} from "@/components/ui/toast"
 
 const TOAST_LIMIT = 1
 const TOAST_REMOVE_DELAY = 1000000
@@ -20,10 +20,10 @@ type ToasterToast = ToastProps & {
 
 // Replace the actionTypes object with an enum
 enum ActionType {
-  ADD_TOAST = &ldquo;ADD_TOAST&rdquo;,
-  UPDATE_TOAST = &ldquo;UPDATE_TOAST&rdquo;,
-  DISMISS_TOAST = &ldquo;DISMISS_TOAST&rdquo;,
-  REMOVE_TOAST = &ldquo;REMOVE_TOAST&rdquo;,
+  ADD_TOAST = "ADD_TOAST",
+  UPDATE_TOAST = "UPDATE_TOAST",
+  DISMISS_TOAST = "DISMISS_TOAST",
+  REMOVE_TOAST = "REMOVE_TOAST",
 }
 
 let count = 0
@@ -45,11 +45,11 @@ type Action =
     }
   | {
       type: ActionType.DISMISS_TOAST;
-      toastId?: ToasterToast[&ldquo;id&rdquo;];
+      toastId?: ToasterToast["id"];
     }
   | {
       type: ActionType.REMOVE_TOAST;
-      toastId?: ToasterToast[&ldquo;id&rdquo;];
+      toastId?: ToasterToast["id"];
     };
 
 interface State {
@@ -141,7 +141,7 @@ function dispatch(action: Action) {
   })
 }
 
-type Toast = Omit<ToasterToast, &ldquo;id&rdquo;>
+type Toast = Omit<ToasterToast, "id">
 
 function toast({ ...props }: Toast) {
   const id = genId()

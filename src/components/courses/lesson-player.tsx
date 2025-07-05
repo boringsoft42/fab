@@ -1,10 +1,10 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import { useState, useRef, useEffect } from &ldquo;react&rdquo;;
-import { Lesson } from &ldquo;@/types/courses&rdquo;;
-import { Button } from &ldquo;@/components/ui/button&rdquo;;
-import { Slider } from &ldquo;@/components/ui/slider&rdquo;;
-import { Card, CardContent } from &ldquo;@/components/ui/card&rdquo;;
+import { useState, useRef, useEffect } from "react";
+import { Lesson } from "@/types/courses";
+import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Play,
   Pause,
@@ -15,8 +15,8 @@ import {
   RotateCcw,
   RotateCw,
   CheckCircle2,
-} from &ldquo;lucide-react&rdquo;;
-import { formatDuration } from &ldquo;date-fns&rdquo;;
+} from "lucide-react";
+import { formatDuration } from "date-fns";
 
 interface LessonPlayerProps {
   lesson: Lesson;
@@ -40,14 +40,14 @@ export const LessonPlayer = ({ lesson, onComplete }: LessonPlayerProps) => {
       setIsCompleted(true);
     };
 
-    video.addEventListener(&ldquo;timeupdate&rdquo;, updateTime);
-    video.addEventListener(&ldquo;loadedmetadata&rdquo;, updateDuration);
-    video.addEventListener(&ldquo;ended&rdquo;, handleEnded);
+    video.addEventListener("timeupdate", updateTime);
+    video.addEventListener("loadedmetadata", updateDuration);
+    video.addEventListener("ended", handleEnded);
 
     return () => {
-      video.removeEventListener(&ldquo;timeupdate&rdquo;, updateTime);
-      video.removeEventListener(&ldquo;loadedmetadata&rdquo;, updateDuration);
-      video.removeEventListener(&ldquo;ended&rdquo;, handleEnded);
+      video.removeEventListener("timeupdate", updateTime);
+      video.removeEventListener("loadedmetadata", updateDuration);
+      video.removeEventListener("ended", handleEnded);
     };
   }, []);
 
@@ -142,34 +142,34 @@ export const LessonPlayer = ({ lesson, onComplete }: LessonPlayerProps) => {
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs.toString().padStart(2, &ldquo;0&rdquo;)}`;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
   return (
-    <div className=&ldquo;max-w-4xl mx-auto&rdquo;>
+    <div className="max-w-4xl mx-auto">
       {/* Video Player */}
-      <Card className=&ldquo;mb-6&rdquo;>
-        <CardContent className=&ldquo;p-0&rdquo;>
+      <Card className="mb-6">
+        <CardContent className="p-0">
           <div
-            className=&ldquo;relative bg-black rounded-lg overflow-hidden group&rdquo;
+            className="relative bg-black rounded-lg overflow-hidden group"
             onMouseEnter={() => setShowControls(true)}
             onMouseLeave={() => setShowControls(false)}
           >
             <video
               ref={videoRef}
-              className=&ldquo;w-full aspect-video&rdquo;
+              className="w-full aspect-video"
               poster={lesson.content.video?.thumbnails?.[0]}
               onClick={togglePlay}
             >
-              <source src={lesson.content.video?.url} type=&ldquo;video/mp4&rdquo; />
+              <source src={lesson.content.video?.url} type="video/mp4" />
               {lesson.content.video?.subtitles?.map((subtitle) => (
                 <track
                   key={subtitle.language}
                   src={subtitle.url}
-                  kind=&ldquo;subtitles&rdquo;
+                  kind="subtitles"
                   srcLang={subtitle.language}
                   label={
-                    subtitle.language === &ldquo;es&rdquo; ? &ldquo;Español&rdquo; : subtitle.language
+                    subtitle.language === "es" ? "Español" : subtitle.language
                   }
                 />
               ))}
@@ -177,113 +177,113 @@ export const LessonPlayer = ({ lesson, onComplete }: LessonPlayerProps) => {
 
             {/* Video Controls Overlay */}
             <div
-              className={`absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-4 transition-opacity ${showControls ? &ldquo;opacity-100&rdquo; : &ldquo;opacity-0&rdquo;}`}
+              className={`absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-4 transition-opacity ${showControls ? "opacity-100" : "opacity-0"}`}
             >
               {/* Progress Bar */}
-              <div className=&ldquo;mb-4&rdquo;>
+              <div className="mb-4">
                 <Slider
                   value={[duration > 0 ? (currentTime / duration) * 100 : 0]}
                   onValueChange={handleSeek}
                   max={100}
                   step={0.1}
-                  className=&ldquo;w-full&rdquo;
+                  className="w-full"
                 />
-                <div className=&ldquo;flex justify-between text-xs text-white mt-1&rdquo;>
+                <div className="flex justify-between text-xs text-white mt-1">
                   <span>{formatTime(currentTime)}</span>
                   <span>{formatTime(duration)}</span>
                 </div>
               </div>
 
               {/* Control Buttons */}
-              <div className=&ldquo;flex items-center justify-between&rdquo;>
-                <div className=&ldquo;flex items-center gap-2&rdquo;>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
                   <Button
-                    variant=&ldquo;ghost&rdquo;
-                    size=&ldquo;sm&rdquo;
+                    variant="ghost"
+                    size="sm"
                     onClick={skipBackward}
-                    className=&ldquo;text-white hover:bg-white/20&rdquo;
+                    className="text-white hover:bg-white/20"
                   >
-                    <RotateCcw className=&ldquo;h-4 w-4&rdquo; />
+                    <RotateCcw className="h-4 w-4" />
                   </Button>
 
                   <Button
-                    variant=&ldquo;ghost&rdquo;
-                    size=&ldquo;sm&rdquo;
+                    variant="ghost"
+                    size="sm"
                     onClick={togglePlay}
-                    className=&ldquo;text-white hover:bg-white/20&rdquo;
+                    className="text-white hover:bg-white/20"
                   >
                     {isPlaying ? (
-                      <Pause className=&ldquo;h-5 w-5&rdquo; />
+                      <Pause className="h-5 w-5" />
                     ) : (
-                      <Play className=&ldquo;h-5 w-5&rdquo; />
+                      <Play className="h-5 w-5" />
                     )}
                   </Button>
 
                   <Button
-                    variant=&ldquo;ghost&rdquo;
-                    size=&ldquo;sm&rdquo;
+                    variant="ghost"
+                    size="sm"
                     onClick={skipForward}
-                    className=&ldquo;text-white hover:bg-white/20&rdquo;
+                    className="text-white hover:bg-white/20"
                   >
-                    <RotateCw className=&ldquo;h-4 w-4&rdquo; />
+                    <RotateCw className="h-4 w-4" />
                   </Button>
 
-                  <div className=&ldquo;flex items-center gap-2 ml-4&rdquo;>
+                  <div className="flex items-center gap-2 ml-4">
                     <Button
-                      variant=&ldquo;ghost&rdquo;
-                      size=&ldquo;sm&rdquo;
+                      variant="ghost"
+                      size="sm"
                       onClick={toggleMute}
-                      className=&ldquo;text-white hover:bg-white/20&rdquo;
+                      className="text-white hover:bg-white/20"
                     >
                       {isMuted ? (
-                        <VolumeX className=&ldquo;h-4 w-4&rdquo; />
+                        <VolumeX className="h-4 w-4" />
                       ) : (
-                        <Volume2 className=&ldquo;h-4 w-4&rdquo; />
+                        <Volume2 className="h-4 w-4" />
                       )}
                     </Button>
                     <Slider
                       value={[isMuted ? 0 : volume * 100]}
                       onValueChange={handleVolumeChange}
                       max={100}
-                      className=&ldquo;w-16&rdquo;
+                      className="w-16"
                     />
                   </div>
                 </div>
 
-                <div className=&ldquo;flex items-center gap-2&rdquo;>
+                <div className="flex items-center gap-2">
                   {/* Playback Speed */}
                   <select
                     value={playbackRate}
                     onChange={(e) => changePlaybackRate(Number(e.target.value))}
-                    className=&ldquo;bg-transparent text-white text-sm border border-white/20 rounded px-2 py-1&rdquo;
+                    className="bg-transparent text-white text-sm border border-white/20 rounded px-2 py-1"
                   >
-                    <option value={0.5} className=&ldquo;text-black&rdquo;>
+                    <option value={0.5} className="text-black">
                       0.5x
                     </option>
-                    <option value={0.75} className=&ldquo;text-black&rdquo;>
+                    <option value={0.75} className="text-black">
                       0.75x
                     </option>
-                    <option value={1} className=&ldquo;text-black&rdquo;>
+                    <option value={1} className="text-black">
                       1x
                     </option>
-                    <option value={1.25} className=&ldquo;text-black&rdquo;>
+                    <option value={1.25} className="text-black">
                       1.25x
                     </option>
-                    <option value={1.5} className=&ldquo;text-black&rdquo;>
+                    <option value={1.5} className="text-black">
                       1.5x
                     </option>
-                    <option value={2} className=&ldquo;text-black&rdquo;>
+                    <option value={2} className="text-black">
                       2x
                     </option>
                   </select>
 
                   <Button
-                    variant=&ldquo;ghost&rdquo;
-                    size=&ldquo;sm&rdquo;
+                    variant="ghost"
+                    size="sm"
                     onClick={toggleFullscreen}
-                    className=&ldquo;text-white hover:bg-white/20&rdquo;
+                    className="text-white hover:bg-white/20"
                   >
-                    <Maximize className=&ldquo;h-4 w-4&rdquo; />
+                    <Maximize className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
@@ -291,13 +291,13 @@ export const LessonPlayer = ({ lesson, onComplete }: LessonPlayerProps) => {
 
             {/* Play Button Overlay (when paused) */}
             {!isPlaying && (
-              <div className=&ldquo;absolute inset-0 flex items-center justify-center&rdquo;>
+              <div className="absolute inset-0 flex items-center justify-center">
                 <Button
                   onClick={togglePlay}
-                  size=&ldquo;lg&rdquo;
-                  className=&ldquo;rounded-full h-16 w-16 bg-white/20 hover:bg-white/30 text-white&rdquo;
+                  size="lg"
+                  className="rounded-full h-16 w-16 bg-white/20 hover:bg-white/30 text-white"
                 >
-                  <Play className=&ldquo;h-8 w-8 fill-current&rdquo; />
+                  <Play className="h-8 w-8 fill-current" />
                 </Button>
               </div>
             )}
@@ -306,33 +306,33 @@ export const LessonPlayer = ({ lesson, onComplete }: LessonPlayerProps) => {
       </Card>
 
       {/* Lesson Info and Progress */}
-      <div className=&ldquo;space-y-6&rdquo;>
+      <div className="space-y-6">
         <Card>
-          <CardContent className=&ldquo;p-6&rdquo;>
-            <div className=&ldquo;flex items-start justify-between mb-4&rdquo;>
+          <CardContent className="p-6">
+            <div className="flex items-start justify-between mb-4">
               <div>
-                <h2 className=&ldquo;text-xl font-semibold mb-2&rdquo;>{lesson.title}</h2>
+                <h2 className="text-xl font-semibold mb-2">{lesson.title}</h2>
                 {lesson.description && (
-                  <p className=&ldquo;text-muted-foreground&rdquo;>{lesson.description}</p>
+                  <p className="text-muted-foreground">{lesson.description}</p>
                 )}
               </div>
-              <div className=&ldquo;text-right&rdquo;>
-                <div className=&ldquo;text-2xl font-bold text-blue-600&rdquo;>
+              <div className="text-right">
+                <div className="text-2xl font-bold text-blue-600">
                   {Math.round(watchedPercentage)}%
                 </div>
-                <div className=&ldquo;text-sm text-muted-foreground&rdquo;>Progreso</div>
+                <div className="text-sm text-muted-foreground">Progreso</div>
               </div>
             </div>
 
-            <div className=&ldquo;space-y-4&rdquo;>
+            <div className="space-y-4">
               <div>
-                <div className=&ldquo;flex justify-between text-sm mb-2&rdquo;>
+                <div className="flex justify-between text-sm mb-2">
                   <span>Progreso de la lección</span>
                   <span>{Math.round(watchedPercentage)}%</span>
                 </div>
-                <div className=&ldquo;w-full bg-gray-200 rounded-full h-2&rdquo;>
+                <div className="w-full bg-gray-200 rounded-full h-2">
                   <div
-                    className=&ldquo;bg-blue-600 h-2 rounded-full transition-all duration-300&rdquo;
+                    className="bg-blue-600 h-2 rounded-full transition-all duration-300"
                     style={{ width: `${watchedPercentage}%` }}
                   ></div>
                 </div>
@@ -341,16 +341,16 @@ export const LessonPlayer = ({ lesson, onComplete }: LessonPlayerProps) => {
               {(isCompleted || watchedPercentage >= 90) && (
                 <Button
                   onClick={onComplete}
-                  className=&ldquo;w-full&rdquo;
+                  className="w-full"
                   disabled={isCompleted}
                 >
                   {isCompleted ? (
                     <>
-                      <CheckCircle2 className=&ldquo;h-4 w-4 mr-2&rdquo; />
+                      <CheckCircle2 className="h-4 w-4 mr-2" />
                       Lección completada
                     </>
                   ) : (
-                    &ldquo;Marcar como completada&rdquo;
+                    "Marcar como completada"
                   )}
                 </Button>
               )}
@@ -362,10 +362,10 @@ export const LessonPlayer = ({ lesson, onComplete }: LessonPlayerProps) => {
         {lesson.content.text && (
           <Card>
             <CardHeader>
-              <h3 className=&ldquo;text-lg font-semibold&rdquo;>Información adicional</h3>
+              <h3 className="text-lg font-semibold">Información adicional</h3>
             </CardHeader>
             <CardContent>
-              <div className=&ldquo;prose max-w-none&rdquo;>
+              <div className="prose max-w-none">
                 <p>{lesson.content.text}</p>
               </div>
             </CardContent>
@@ -376,48 +376,48 @@ export const LessonPlayer = ({ lesson, onComplete }: LessonPlayerProps) => {
         {lesson.attachments && lesson.attachments.length > 0 && (
           <Card>
             <CardHeader>
-              <h3 className=&ldquo;text-lg font-semibold&rdquo;>Recursos descargables</h3>
+              <h3 className="text-lg font-semibold">Recursos descargables</h3>
             </CardHeader>
             <CardContent>
-              <div className=&ldquo;space-y-2&rdquo;>
+              <div className="space-y-2">
                 {lesson.attachments.map((attachment) => (
                   <div
                     key={attachment.id}
-                    className=&ldquo;flex items-center justify-between p-3 bg-muted rounded-lg&rdquo;
+                    className="flex items-center justify-between p-3 bg-muted rounded-lg"
                   >
-                    <div className=&ldquo;flex items-center gap-3&rdquo;>
-                      <div className=&ldquo;p-2 bg-blue-100 rounded&rdquo;>
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-blue-100 rounded">
                         <svg
-                          className=&ldquo;h-4 w-4 text-blue-600&rdquo;
-                          fill=&ldquo;currentColor&rdquo;
-                          viewBox=&ldquo;0 0 20 20&rdquo;
+                          className="h-4 w-4 text-blue-600"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
                         >
                           <path
-                            fillRule=&ldquo;evenodd&rdquo;
-                            d=&ldquo;M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z&rdquo;
-                            clipRule=&ldquo;evenodd&rdquo;
+                            fillRule="evenodd"
+                            d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                            clipRule="evenodd"
                           />
                         </svg>
                       </div>
                       <div>
-                        <div className=&ldquo;font-medium&rdquo;>{attachment.name}</div>
-                        <div className=&ldquo;text-sm text-muted-foreground&rdquo;>
-                          {attachment.type} •{&ldquo; &rdquo;}
+                        <div className="font-medium">{attachment.name}</div>
+                        <div className="text-sm text-muted-foreground">
+                          {attachment.type} •{" "}
                           {(attachment.size / 1024 / 1024).toFixed(2)} MB
                         </div>
                       </div>
                     </div>
-                    <Button variant=&ldquo;outline&rdquo; size=&ldquo;sm&rdquo; asChild>
+                    <Button variant="outline" size="sm" asChild>
                       <a href={attachment.url} download>
                         <svg
-                          className=&ldquo;h-4 w-4 mr-2&rdquo;
-                          fill=&ldquo;currentColor&rdquo;
-                          viewBox=&ldquo;0 0 20 20&rdquo;
+                          className="h-4 w-4 mr-2"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
                         >
                           <path
-                            fillRule=&ldquo;evenodd&rdquo;
-                            d=&ldquo;M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z&rdquo;
-                            clipRule=&ldquo;evenodd&rdquo;
+                            fillRule="evenodd"
+                            d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                            clipRule="evenodd"
                           />
                         </svg>
                         Descargar

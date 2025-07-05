@@ -1,16 +1,16 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import { useCurrentUser } from &ldquo;@/hooks/use-current-user&rdquo;;
-import { Skeleton } from &ldquo;@/components/ui/skeleton&rdquo;;
-import { Card, CardContent, CardHeader, CardTitle } from &ldquo;@/components/ui/card&rdquo;;
-import { Alert, AlertDescription } from &ldquo;@/components/ui/alert&rdquo;;
-import { AlertCircle } from &ldquo;lucide-react&rdquo;;
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 // Import role-specific dashboard components
-import { DashboardYouth } from &ldquo;./role-specific/dashboard-youth&rdquo;;
-import { DashboardAdolescent } from &ldquo;./role-specific/dashboard-adolescent&rdquo;;
-import { DashboardCompany } from &ldquo;./role-specific/dashboard-company&rdquo;;
-import { DashboardMunicipio } from &ldquo;./dashboard-municipio&rdquo;;
+import { DashboardYouth } from "./role-specific/dashboard-youth";
+import { DashboardAdolescent } from "./role-specific/dashboard-adolescent";
+import { DashboardCompany } from "./role-specific/dashboard-company";
+import { DashboardMunicipio } from "./dashboard-municipio";
 
 // Placeholder components for other roles (to be implemented later)
 function DashboardMunicipalGovernment() {
@@ -21,12 +21,12 @@ function DashboardMunicipalGovernment() {
 
 function DashboardTrainingCenter() {
   return (
-    <div className=&ldquo;space-y-6&rdquo;>
+    <div className="space-y-6">
       <div>
-        <h1 className=&ldquo;text-3xl font-bold tracking-tight&rdquo;>
+        <h1 className="text-3xl font-bold tracking-tight">
           Dashboard Educativo
         </h1>
-        <p className=&ldquo;text-muted-foreground&rdquo;>
+        <p className="text-muted-foreground">
           Panel de centro de capacitación - En desarrollo
         </p>
       </div>
@@ -44,10 +44,10 @@ function DashboardTrainingCenter() {
 
 function DashboardNGO() {
   return (
-    <div className=&ldquo;space-y-6&rdquo;>
+    <div className="space-y-6">
       <div>
-        <h1 className=&ldquo;text-3xl font-bold tracking-tight&rdquo;>Dashboard Social</h1>
-        <p className=&ldquo;text-muted-foreground&rdquo;>
+        <h1 className="text-3xl font-bold tracking-tight">Dashboard Social</h1>
+        <p className="text-muted-foreground">
           Panel de ONG/Fundación - En desarrollo
         </p>
       </div>
@@ -69,22 +69,22 @@ export function AdaptiveDashboard() {
   // Show skeleton while loading
   if (isLoading) {
     return (
-      <div className=&ldquo;space-y-6&rdquo;>
-        <div className=&ldquo;space-y-2&rdquo;>
-          <Skeleton className=&ldquo;h-8 w-64&rdquo; />
-          <Skeleton className=&ldquo;h-4 w-96&rdquo; />
+      <div className="space-y-6">
+        <div className="space-y-2">
+          <Skeleton className="h-8 w-64" />
+          <Skeleton className="h-4 w-96" />
         </div>
 
-        <div className=&ldquo;grid gap-4 md:grid-cols-2 lg:grid-cols-4&rdquo;>
-          <Skeleton className=&ldquo;h-32&rdquo; />
-          <Skeleton className=&ldquo;h-32&rdquo; />
-          <Skeleton className=&ldquo;h-32&rdquo; />
-          <Skeleton className=&ldquo;h-32&rdquo; />
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <Skeleton className="h-32" />
+          <Skeleton className="h-32" />
+          <Skeleton className="h-32" />
+          <Skeleton className="h-32" />
         </div>
 
-        <div className=&ldquo;grid gap-6 md:grid-cols-2&rdquo;>
-          <Skeleton className=&ldquo;h-80&rdquo; />
-          <Skeleton className=&ldquo;h-80&rdquo; />
+        <div className="grid gap-6 md:grid-cols-2">
+          <Skeleton className="h-80" />
+          <Skeleton className="h-80" />
         </div>
       </div>
     );
@@ -93,9 +93,9 @@ export function AdaptiveDashboard() {
   // Show error state
   if (error) {
     return (
-      <div className=&ldquo;space-y-6&rdquo;>
-        <Alert variant=&ldquo;destructive&rdquo;>
-          <AlertCircle className=&ldquo;h-4 w-4&rdquo; />
+      <div className="space-y-6">
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
           <AlertDescription>
             Error al cargar el dashboard: {error.message}
           </AlertDescription>
@@ -107,9 +107,9 @@ export function AdaptiveDashboard() {
   // Show fallback if no profile
   if (!profile) {
     return (
-      <div className=&ldquo;space-y-6&rdquo;>
+      <div className="space-y-6">
         <Alert>
-          <AlertCircle className=&ldquo;h-4 w-4&rdquo; />
+          <AlertCircle className="h-4 w-4" />
           <AlertDescription>
             No se pudo cargar la información del perfil. Por favor, inicia
             sesión nuevamente.
@@ -121,22 +121,22 @@ export function AdaptiveDashboard() {
 
   // Render appropriate dashboard based on user role
   switch (profile.role) {
-    case &ldquo;YOUTH&rdquo;:
+    case "YOUTH":
       return <DashboardYouth />;
 
-    case &ldquo;ADOLESCENTS&rdquo;:
+    case "ADOLESCENTS":
       return <DashboardAdolescent />;
 
-    case &ldquo;COMPANIES&rdquo;:
+    case "COMPANIES":
       return <DashboardCompany />;
 
-    case &ldquo;MUNICIPAL_GOVERNMENTS&rdquo;:
+    case "MUNICIPAL_GOVERNMENTS":
       return <DashboardMunicipalGovernment />;
 
-    case &ldquo;TRAINING_CENTERS&rdquo;:
+    case "TRAINING_CENTERS":
       return <DashboardTrainingCenter />;
 
-    case &ldquo;NGOS_AND_FOUNDATIONS&rdquo;:
+    case "NGOS_AND_FOUNDATIONS":
       return <DashboardNGO />;
 
     default:

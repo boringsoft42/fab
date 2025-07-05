@@ -1,17 +1,17 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import { useState, useEffect } from &ldquo;react&rdquo;;
-import { useParams, useRouter } from &ldquo;next/navigation&rdquo;;
-import Image from &ldquo;next/image&rdquo;;
-import Link from &ldquo;next/link&rdquo;;
-import { Course, Module } from &ldquo;@/types/courses&rdquo;;
-import { Button } from &ldquo;@/components/ui/button&rdquo;;
-import { Card, CardContent, CardHeader, CardTitle } from &ldquo;@/components/ui/card&rdquo;;
-import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
-import { Progress } from &ldquo;@/components/ui/progress&rdquo;;
-import { Avatar, AvatarFallback, AvatarImage } from &ldquo;@/components/ui/avatar&rdquo;;
-import { Separator } from &ldquo;@/components/ui/separator&rdquo;;
-import { Tabs, TabsContent, TabsList, TabsTrigger } from &ldquo;@/components/ui/tabs&rdquo;;
+import { useState, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
+import Image from "next/image";
+import Link from "next/link";
+import { Course, Module } from "@/types/courses";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Star,
   Clock,
@@ -28,7 +28,7 @@ import {
   Globe,
   ChevronDown,
   ChevronRight,
-} from &ldquo;lucide-react&rdquo;;
+} from "lucide-react";
 export default function CourseDetailPage() {
   const [course, setCourse] = useState<Course | null>(null);
   const [modules, setModules] = useState<Module[]>([]);
@@ -52,10 +52,10 @@ export default function CourseDetailPage() {
         setCourse(data.course);
         setModules(data.modules);
       } else {
-        console.error(&ldquo;Error loading course:&rdquo;, data);
+        console.error("Error loading course:", data);
       }
     } catch (error) {
-      console.error(&ldquo;Error fetching course:&rdquo;, error);
+      console.error("Error fetching course:", error);
     } finally {
       setLoading(false);
     }
@@ -75,47 +75,47 @@ export default function CourseDetailPage() {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
     if (hours === 0) return `${mins} min`;
-    return `${hours}h ${mins > 0 ? `${mins}m` : &ldquo;&rdquo;}`;
+    return `${hours}h ${mins > 0 ? `${mins}m` : ""}`;
   };
 
   const getCategoryLabel = (category: string) => {
     const labels: Record<string, string> = {
-      soft_skills: &ldquo;Habilidades Blandas&rdquo;,
-      basic_competencies: &ldquo;Competencias Básicas&rdquo;,
-      job_placement: &ldquo;Inserción Laboral&rdquo;,
-      entrepreneurship: &ldquo;Emprendimiento&rdquo;,
-      technical_skills: &ldquo;Habilidades Técnicas&rdquo;,
-      digital_literacy: &ldquo;Alfabetización Digital&rdquo;,
-      communication: &ldquo;Comunicación&rdquo;,
-      leadership: &ldquo;Liderazgo&rdquo;,
+      soft_skills: "Habilidades Blandas",
+      basic_competencies: "Competencias Básicas",
+      job_placement: "Inserción Laboral",
+      entrepreneurship: "Emprendimiento",
+      technical_skills: "Habilidades Técnicas",
+      digital_literacy: "Alfabetización Digital",
+      communication: "Comunicación",
+      leadership: "Liderazgo",
     };
     return labels[category] || category;
   };
 
   const getLevelLabel = (level: string) => {
     const labels: Record<string, string> = {
-      beginner: &ldquo;Principiante&rdquo;,
-      intermediate: &ldquo;Intermedio&rdquo;,
-      advanced: &ldquo;Avanzado&rdquo;,
+      beginner: "Principiante",
+      intermediate: "Intermedio",
+      advanced: "Avanzado",
     };
     return labels[level] || level;
   };
 
   if (loading) {
     return (
-      <div className=&ldquo;container mx-auto p-6&rdquo;>
-        <div className=&ldquo;animate-pulse space-y-6&rdquo;>
-          <div className=&ldquo;h-8 bg-gray-200 rounded w-1/4&rdquo; />
-          <div className=&ldquo;grid grid-cols-1 lg:grid-cols-3 gap-8&rdquo;>
-            <div className=&ldquo;lg:col-span-2 space-y-6&rdquo;>
-              <div className=&ldquo;h-64 bg-gray-200 rounded&rdquo; />
-              <div className=&ldquo;h-6 bg-gray-200 rounded w-3/4&rdquo; />
-              <div className=&ldquo;h-4 bg-gray-200 rounded w-full&rdquo; />
-              <div className=&ldquo;h-4 bg-gray-200 rounded w-5/6&rdquo; />
+      <div className="container mx-auto p-6">
+        <div className="animate-pulse space-y-6">
+          <div className="h-8 bg-gray-200 rounded w-1/4" />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 space-y-6">
+              <div className="h-64 bg-gray-200 rounded" />
+              <div className="h-6 bg-gray-200 rounded w-3/4" />
+              <div className="h-4 bg-gray-200 rounded w-full" />
+              <div className="h-4 bg-gray-200 rounded w-5/6" />
             </div>
-            <div className=&ldquo;space-y-4&rdquo;>
-              <div className=&ldquo;h-32 bg-gray-200 rounded&rdquo; />
-              <div className=&ldquo;h-12 bg-gray-200 rounded&rdquo; />
+            <div className="space-y-4">
+              <div className="h-32 bg-gray-200 rounded" />
+              <div className="h-12 bg-gray-200 rounded" />
             </div>
           </div>
         </div>
@@ -125,74 +125,74 @@ export default function CourseDetailPage() {
 
   if (!course) {
     return (
-      <div className=&ldquo;container mx-auto p-6 text-center&rdquo;>
-        <h1 className=&ldquo;text-2xl font-bold mb-4&rdquo;>Curso no encontrado</h1>
+      <div className="container mx-auto p-6 text-center">
+        <h1 className="text-2xl font-bold mb-4">Curso no encontrado</h1>
         <Button asChild>
-          <Link href=&ldquo;/courses&rdquo;>Volver al catálogo</Link>
+          <Link href="/courses">Volver al catálogo</Link>
         </Button>
       </div>
     );
   }
 
   return (
-    <div className=&ldquo;container mx-auto p-6&rdquo;>
+    <div className="container mx-auto p-6">
       {/* Breadcrumb */}
-      <div className=&ldquo;flex items-center gap-2 mb-6 text-sm text-muted-foreground&rdquo;>
+      <div className="flex items-center gap-2 mb-6 text-sm text-muted-foreground">
         <Link
-          href=&ldquo;/courses&rdquo;
-          className=&ldquo;hover:text-foreground flex items-center gap-1&rdquo;
+          href="/courses"
+          className="hover:text-foreground flex items-center gap-1"
         >
-          <ArrowLeft className=&ldquo;h-4 w-4&rdquo; />
+          <ArrowLeft className="h-4 w-4" />
           Cursos
         </Link>
         <span>/</span>
-        <span className=&ldquo;text-foreground&rdquo;>{course.title}</span>
+        <span className="text-foreground">{course.title}</span>
       </div>
 
-      <div className=&ldquo;grid grid-cols-1 lg:grid-cols-3 gap-8&rdquo;>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main Content */}
-        <div className=&ldquo;lg:col-span-2 space-y-6&rdquo;>
+        <div className="lg:col-span-2 space-y-6">
           {/* Header */}
           <div>
-            <div className=&ldquo;flex items-center gap-2 mb-3&rdquo;>
-              <Badge variant=&ldquo;outline&rdquo;>
+            <div className="flex items-center gap-2 mb-3">
+              <Badge variant="outline">
                 {getCategoryLabel(course.category)}
               </Badge>
-              <Badge variant=&ldquo;outline&rdquo;>{getLevelLabel(course.level)}</Badge>
+              <Badge variant="outline">{getLevelLabel(course.level)}</Badge>
               {course.isMandatory && (
-                <Badge className=&ldquo;bg-red-500&rdquo;>Obligatorio</Badge>
+                <Badge className="bg-red-500">Obligatorio</Badge>
               )}
               {course.price === 0 && (
-                <Badge className=&ldquo;bg-green-500&rdquo;>Gratis</Badge>
+                <Badge className="bg-green-500">Gratis</Badge>
               )}
             </div>
 
-            <h1 className=&ldquo;text-3xl font-bold mb-4&rdquo;>{course.title}</h1>
+            <h1 className="text-3xl font-bold mb-4">{course.title}</h1>
 
-            <p className=&ldquo;text-lg text-muted-foreground mb-6&rdquo;>
+            <p className="text-lg text-muted-foreground mb-6">
               {course.shortDescription}
             </p>
 
             {/* Course Stats */}
-            <div className=&ldquo;flex flex-wrap items-center gap-6 text-sm&rdquo;>
-              <div className=&ldquo;flex items-center gap-1&rdquo;>
-                <Star className=&ldquo;h-4 w-4 fill-yellow-400 text-yellow-400&rdquo; />
-                <span className=&ldquo;font-medium&rdquo;>{course.rating}</span>
-                <span className=&ldquo;text-muted-foreground&rdquo;>
+            <div className="flex flex-wrap items-center gap-6 text-sm">
+              <div className="flex items-center gap-1">
+                <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                <span className="font-medium">{course.rating}</span>
+                <span className="text-muted-foreground">
                   ({course.studentCount} estudiantes)
                 </span>
               </div>
-              <div className=&ldquo;flex items-center gap-1&rdquo;>
-                <Clock className=&ldquo;h-4 w-4&rdquo; />
+              <div className="flex items-center gap-1">
+                <Clock className="h-4 w-4" />
                 <span>{course.duration} horas</span>
               </div>
-              <div className=&ldquo;flex items-center gap-1&rdquo;>
-                <BookOpen className=&ldquo;h-4 w-4&rdquo; />
+              <div className="flex items-center gap-1">
+                <BookOpen className="h-4 w-4" />
                 <span>{course.totalLessons} lecciones</span>
               </div>
               {course.certification && (
-                <div className=&ldquo;flex items-center gap-1&rdquo;>
-                  <Award className=&ldquo;h-4 w-4&rdquo; />
+                <div className="flex items-center gap-1">
+                  <Award className="h-4 w-4" />
                   <span>Certificado incluido</span>
                 </div>
               )}
@@ -200,50 +200,50 @@ export default function CourseDetailPage() {
           </div>
 
           {/* Course Image/Video */}
-          <div className=&ldquo;relative&rdquo;>
+          <div className="relative">
             <Image
               src={course.thumbnail}
               alt={course.title}
               width={800}
               height={450}
-              className=&ldquo;w-full h-64 md:h-96 object-cover rounded-lg&rdquo;
+              className="w-full h-64 md:h-96 object-cover rounded-lg"
             />
             {course.videoPreview && (
-              <div className=&ldquo;absolute inset-0 flex items-center justify-center&rdquo;>
-                <Button size=&ldquo;lg&rdquo; className=&ldquo;rounded-full h-16 w-16&rdquo;>
-                  <Play className=&ldquo;h-6 w-6 fill-current&rdquo; />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Button size="lg" className="rounded-full h-16 w-16">
+                  <Play className="h-6 w-6 fill-current" />
                 </Button>
               </div>
             )}
           </div>
 
           {/* Course Tabs */}
-          <Tabs defaultValue=&ldquo;overview&rdquo; className=&ldquo;w-full&rdquo;>
-            <TabsList className=&ldquo;grid w-full grid-cols-4&rdquo;>
-              <TabsTrigger value=&ldquo;overview&rdquo;>Descripción</TabsTrigger>
-              <TabsTrigger value=&ldquo;curriculum&rdquo;>Temario</TabsTrigger>
-              <TabsTrigger value=&ldquo;instructor&rdquo;>Instructor</TabsTrigger>
-              <TabsTrigger value=&ldquo;reviews&rdquo;>Reseñas</TabsTrigger>
+          <Tabs defaultValue="overview" className="w-full">
+            <TabsList className="grid w-full grid-cols-4">
+              <TabsTrigger value="overview">Descripción</TabsTrigger>
+              <TabsTrigger value="curriculum">Temario</TabsTrigger>
+              <TabsTrigger value="instructor">Instructor</TabsTrigger>
+              <TabsTrigger value="reviews">Reseñas</TabsTrigger>
             </TabsList>
 
-            <TabsContent value=&ldquo;overview&rdquo; className=&ldquo;space-y-6&rdquo;>
+            <TabsContent value="overview" className="space-y-6">
               <div>
-                <h3 className=&ldquo;text-xl font-semibold mb-4&rdquo;>
+                <h3 className="text-xl font-semibold mb-4">
                   Descripción del curso
                 </h3>
-                <div className=&ldquo;prose max-w-none&rdquo;>
-                  <p className=&ldquo;whitespace-pre-line&rdquo;>{course.description}</p>
+                <div className="prose max-w-none">
+                  <p className="whitespace-pre-line">{course.description}</p>
                 </div>
               </div>
 
               <div>
-                <h3 className=&ldquo;text-xl font-semibold mb-4&rdquo;>
+                <h3 className="text-xl font-semibold mb-4">
                   Objetivos de aprendizaje
                 </h3>
-                <ul className=&ldquo;space-y-2&rdquo;>
+                <ul className="space-y-2">
                   {course.objectives.map((objective, index) => (
-                    <li key={index} className=&ldquo;flex items-start gap-2&rdquo;>
-                      <CheckCircle className=&ldquo;h-5 w-5 text-green-500 mt-0.5 flex-shrink-0&rdquo; />
+                    <li key={index} className="flex items-start gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
                       <span>{objective}</span>
                     </li>
                   ))}
@@ -251,13 +251,13 @@ export default function CourseDetailPage() {
               </div>
 
               <div>
-                <h3 className=&ldquo;text-xl font-semibold mb-4&rdquo;>
+                <h3 className="text-xl font-semibold mb-4">
                   Materiales incluidos
                 </h3>
-                <ul className=&ldquo;space-y-2&rdquo;>
+                <ul className="space-y-2">
                   {course.includedMaterials.map((material, index) => (
-                    <li key={index} className=&ldquo;flex items-start gap-2&rdquo;>
-                      <CheckCircle className=&ldquo;h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0&rdquo; />
+                    <li key={index} className="flex items-start gap-2">
+                      <CheckCircle className="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
                       <span>{material}</span>
                     </li>
                   ))}
@@ -265,10 +265,10 @@ export default function CourseDetailPage() {
               </div>
 
               <div>
-                <h3 className=&ldquo;text-xl font-semibold mb-4&rdquo;>Etiquetas</h3>
-                <div className=&ldquo;flex flex-wrap gap-2&rdquo;>
+                <h3 className="text-xl font-semibold mb-4">Etiquetas</h3>
+                <div className="flex flex-wrap gap-2">
                   {course.tags.map((tag) => (
-                    <Badge key={tag} variant=&ldquo;secondary&rdquo;>
+                    <Badge key={tag} variant="secondary">
                       {tag}
                     </Badge>
                   ))}
@@ -276,83 +276,83 @@ export default function CourseDetailPage() {
               </div>
             </TabsContent>
 
-            <TabsContent value=&ldquo;curriculum&rdquo; className=&ldquo;space-y-4&rdquo;>
+            <TabsContent value="curriculum" className="space-y-4">
               <div>
-                <h3 className=&ldquo;text-xl font-semibold mb-4&rdquo;>
+                <h3 className="text-xl font-semibold mb-4">
                   Contenido del curso
                 </h3>
-                <div className=&ldquo;space-y-3&rdquo;>
+                <div className="space-y-3">
                   {modules.map((module, moduleIndex) => (
                     <Card key={module.id}>
                       <CardHeader
-                        className=&ldquo;cursor-pointer hover:bg-muted/50 transition-colors&rdquo;
+                        className="cursor-pointer hover:bg-muted/50 transition-colors"
                         onClick={() => toggleModule(module.id)}
                       >
-                        <div className=&ldquo;flex items-center justify-between&rdquo;>
-                          <div className=&ldquo;flex items-center gap-3&rdquo;>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
                             {expandedModules.has(module.id) ? (
-                              <ChevronDown className=&ldquo;h-4 w-4&rdquo; />
+                              <ChevronDown className="h-4 w-4" />
                             ) : (
-                              <ChevronRight className=&ldquo;h-4 w-4&rdquo; />
+                              <ChevronRight className="h-4 w-4" />
                             )}
                             <div>
-                              <CardTitle className=&ldquo;text-base&rdquo;>
+                              <CardTitle className="text-base">
                                 Módulo {moduleIndex + 1}: {module.title}
                               </CardTitle>
-                              <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
-                                {module.lessons.length} lecciones •{&ldquo; &rdquo;}
+                              <p className="text-sm text-muted-foreground">
+                                {module.lessons.length} lecciones •{" "}
                                 {formatDuration(module.duration)}
                               </p>
                             </div>
                           </div>
                           {module.isLocked && (
-                            <Lock className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
+                            <Lock className="h-4 w-4 text-muted-foreground" />
                           )}
                         </div>
                       </CardHeader>
 
                       {expandedModules.has(module.id) && (
-                        <CardContent className=&ldquo;pt-0&rdquo;>
-                          <p className=&ldquo;text-sm text-muted-foreground mb-4&rdquo;>
+                        <CardContent className="pt-0">
+                          <p className="text-sm text-muted-foreground mb-4">
                             {module.description}
                           </p>
-                          <div className=&ldquo;space-y-2&rdquo;>
+                          <div className="space-y-2">
                             {module.lessons.map((lesson, lessonIndex) => (
                               <div
                                 key={lesson.id}
-                                className=&ldquo;flex items-center gap-3 p-2 rounded hover:bg-muted/50&rdquo;
+                                className="flex items-center gap-3 p-2 rounded hover:bg-muted/50"
                               >
-                                <div className=&ldquo;flex items-center gap-2 text-sm text-muted-foreground&rdquo;>
+                                <div className="flex items-center gap-2 text-sm text-muted-foreground">
                                   <span>
                                     {moduleIndex + 1}.{lessonIndex + 1}
                                   </span>
-                                  {lesson.type === &ldquo;video&rdquo; && (
-                                    <Play className=&ldquo;h-3 w-3&rdquo; />
+                                  {lesson.type === "video" && (
+                                    <Play className="h-3 w-3" />
                                   )}
-                                  {lesson.type === &ldquo;quiz&rdquo; && (
-                                    <CheckCircle className=&ldquo;h-3 w-3&rdquo; />
+                                  {lesson.type === "quiz" && (
+                                    <CheckCircle className="h-3 w-3" />
                                   )}
-                                  {lesson.type === &ldquo;text&rdquo; && (
-                                    <BookOpen className=&ldquo;h-3 w-3&rdquo; />
+                                  {lesson.type === "text" && (
+                                    <BookOpen className="h-3 w-3" />
                                   )}
                                 </div>
-                                <div className=&ldquo;flex-1&rdquo;>
-                                  <div className=&ldquo;flex items-center justify-between&rdquo;>
-                                    <span className=&ldquo;text-sm font-medium&rdquo;>
+                                <div className="flex-1">
+                                  <div className="flex items-center justify-between">
+                                    <span className="text-sm font-medium">
                                       {lesson.title}
                                     </span>
-                                    <span className=&ldquo;text-xs text-muted-foreground&rdquo;>
+                                    <span className="text-xs text-muted-foreground">
                                       {formatDuration(lesson.duration)}
                                     </span>
                                   </div>
                                   {lesson.description && (
-                                    <p className=&ldquo;text-xs text-muted-foreground mt-1&rdquo;>
+                                    <p className="text-xs text-muted-foreground mt-1">
                                       {lesson.description}
                                     </p>
                                   )}
                                 </div>
                                 {lesson.isPreview && (
-                                  <Badge variant=&ldquo;outline&rdquo; className=&ldquo;text-xs&rdquo;>
+                                  <Badge variant="outline" className="text-xs">
                                     Vista previa
                                   </Badge>
                                 )}
@@ -367,64 +367,64 @@ export default function CourseDetailPage() {
               </div>
             </TabsContent>
 
-            <TabsContent value=&ldquo;instructor&rdquo; className=&ldquo;space-y-6&rdquo;>
+            <TabsContent value="instructor" className="space-y-6">
               <Card>
-                <CardContent className=&ldquo;p-6&rdquo;>
-                  <div className=&ldquo;flex items-start gap-4&rdquo;>
-                    <Avatar className=&ldquo;h-20 w-20&rdquo;>
+                <CardContent className="p-6">
+                  <div className="flex items-start gap-4">
+                    <Avatar className="h-20 w-20">
                       <AvatarImage src={course.instructor.avatar} />
-                      <AvatarFallback className=&ldquo;text-lg&rdquo;>
+                      <AvatarFallback className="text-lg">
                         {course.instructor.name.charAt(0)}
                       </AvatarFallback>
                     </Avatar>
-                    <div className=&ldquo;flex-1&rdquo;>
-                      <h3 className=&ldquo;text-xl font-semibold&rdquo;>
+                    <div className="flex-1">
+                      <h3 className="text-xl font-semibold">
                         {course.instructor.name}
                       </h3>
-                      <p className=&ldquo;text-muted-foreground mb-2&rdquo;>
+                      <p className="text-muted-foreground mb-2">
                         {course.instructor.title}
                       </p>
-                      <div className=&ldquo;flex items-center gap-4 text-sm text-muted-foreground mb-4&rdquo;>
-                        <div className=&ldquo;flex items-center gap-1&rdquo;>
-                          <Star className=&ldquo;h-4 w-4&rdquo; />
+                      <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
+                        <div className="flex items-center gap-1">
+                          <Star className="h-4 w-4" />
                           <span>{course.instructor.rating} rating</span>
                         </div>
-                        <div className=&ldquo;flex items-center gap-1&rdquo;>
-                          <Users className=&ldquo;h-4 w-4&rdquo; />
+                        <div className="flex items-center gap-1">
+                          <Users className="h-4 w-4" />
                           <span>
-                            {course.instructor.totalStudents?.toLocaleString()}{&ldquo; &rdquo;}
+                            {course.instructor.totalStudents?.toLocaleString()}{" "}
                             estudiantes
                           </span>
                         </div>
-                        <div className=&ldquo;flex items-center gap-1&rdquo;>
-                          <BookOpen className=&ldquo;h-4 w-4&rdquo; />
+                        <div className="flex items-center gap-1">
+                          <BookOpen className="h-4 w-4" />
                           <span>{course.instructor.totalCourses} cursos</span>
                         </div>
                       </div>
-                      <p className=&ldquo;text-sm leading-relaxed&rdquo;>
+                      <p className="text-sm leading-relaxed">
                         {course.instructor.bio}
                       </p>
 
                       {course.instructor.socialLinks && (
-                        <div className=&ldquo;flex gap-2 mt-4&rdquo;>
+                        <div className="flex gap-2 mt-4">
                           {course.instructor.socialLinks.website && (
-                            <Button variant=&ldquo;outline&rdquo; size=&ldquo;sm&rdquo; asChild>
+                            <Button variant="outline" size="sm" asChild>
                               <a
                                 href={course.instructor.socialLinks.website}
-                                target=&ldquo;_blank&rdquo;
-                                rel=&ldquo;noopener noreferrer&rdquo;
+                                target="_blank"
+                                rel="noopener noreferrer"
                               >
-                                <Globe className=&ldquo;h-4 w-4 mr-1&rdquo; />
+                                <Globe className="h-4 w-4 mr-1" />
                                 Sitio web
                               </a>
                             </Button>
                           )}
                           {course.instructor.socialLinks.linkedin && (
-                            <Button variant=&ldquo;outline&rdquo; size=&ldquo;sm&rdquo; asChild>
+                            <Button variant="outline" size="sm" asChild>
                               <a
                                 href={course.instructor.socialLinks.linkedin}
-                                target=&ldquo;_blank&rdquo;
-                                rel=&ldquo;noopener noreferrer&rdquo;
+                                target="_blank"
+                                rel="noopener noreferrer"
                               >
                                 LinkedIn
                               </a>
@@ -438,9 +438,9 @@ export default function CourseDetailPage() {
               </Card>
             </TabsContent>
 
-            <TabsContent value=&ldquo;reviews&rdquo;>
-              <div className=&ldquo;text-center py-8&rdquo;>
-                <p className=&ldquo;text-muted-foreground&rdquo;>
+            <TabsContent value="reviews">
+              <div className="text-center py-8">
+                <p className="text-muted-foreground">
                   Las reseñas estarán disponibles próximamente
                 </p>
               </div>
@@ -449,69 +449,69 @@ export default function CourseDetailPage() {
         </div>
 
         {/* Sidebar */}
-        <div className=&ldquo;space-y-6&rdquo;>
+        <div className="space-y-6">
           {/* Enrollment Card */}
-          <Card className=&ldquo;sticky top-6&rdquo;>
-            <CardContent className=&ldquo;p-6&rdquo;>
-              <div className=&ldquo;text-center mb-6&rdquo;>
-                <div className=&ldquo;text-3xl font-bold text-blue-600 mb-2&rdquo;>
+          <Card className="sticky top-6">
+            <CardContent className="p-6">
+              <div className="text-center mb-6">
+                <div className="text-3xl font-bold text-blue-600 mb-2">
                   {course.price === 0
-                    ? &ldquo;Gratis&rdquo;
+                    ? "Gratis"
                     : `$${course.price.toLocaleString()} BOB`}
                 </div>
                 {course.price > 0 && (
-                  <p className=&ldquo;text-sm text-muted-foreground&rdquo;>Pago único</p>
+                  <p className="text-sm text-muted-foreground">Pago único</p>
                 )}
               </div>
 
-              <div className=&ldquo;space-y-4&rdquo;>
-                <Button asChild className=&ldquo;w-full&rdquo; size=&ldquo;lg&rdquo;>
+              <div className="space-y-4">
+                <Button asChild className="w-full" size="lg">
                   <Link href={`/courses/${params.id}/learn`}>Ir al curso</Link>
                 </Button>
 
-                <div className=&ldquo;flex gap-2&rdquo;>
+                <div className="flex gap-2">
                   <Button
-                    variant=&ldquo;outline&rdquo;
+                    variant="outline"
                     onClick={() => setIsSaved(!isSaved)}
-                    className=&ldquo;flex-1&rdquo;
+                    className="flex-1"
                   >
                     <Heart
-                      className={`h-4 w-4 mr-2 ${isSaved ? &ldquo;fill-red-500 text-red-500&rdquo; : &ldquo;&rdquo;}`}
+                      className={`h-4 w-4 mr-2 ${isSaved ? "fill-red-500 text-red-500" : ""}`}
                     />
-                    {isSaved ? &ldquo;Guardado&rdquo; : &ldquo;Guardar&rdquo;}
+                    {isSaved ? "Guardado" : "Guardar"}
                   </Button>
-                  <Button variant=&ldquo;outline&rdquo; size=&ldquo;icon&rdquo;>
-                    <Share2 className=&ldquo;h-4 w-4&rdquo; />
+                  <Button variant="outline" size="icon">
+                    <Share2 className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
 
-              <Separator className=&ldquo;my-6&rdquo; />
+              <Separator className="my-6" />
 
-              <div className=&ldquo;space-y-3 text-sm&rdquo;>
-                <div className=&ldquo;flex justify-between&rdquo;>
+              <div className="space-y-3 text-sm">
+                <div className="flex justify-between">
                   <span>Duración:</span>
-                  <span className=&ldquo;font-medium&rdquo;>{course.duration} horas</span>
+                  <span className="font-medium">{course.duration} horas</span>
                 </div>
-                <div className=&ldquo;flex justify-between&rdquo;>
+                <div className="flex justify-between">
                   <span>Lecciones:</span>
-                  <span className=&ldquo;font-medium&rdquo;>{course.totalLessons}</span>
+                  <span className="font-medium">{course.totalLessons}</span>
                 </div>
-                <div className=&ldquo;flex justify-between&rdquo;>
+                <div className="flex justify-between">
                   <span>Nivel:</span>
-                  <span className=&ldquo;font-medium&rdquo;>
+                  <span className="font-medium">
                     {getLevelLabel(course.level)}
                   </span>
                 </div>
-                <div className=&ldquo;flex justify-between&rdquo;>
+                <div className="flex justify-between">
                   <span>Certificado:</span>
-                  <span className=&ldquo;font-medium&rdquo;>
-                    {course.certification ? &ldquo;Sí&rdquo; : &ldquo;No&rdquo;}
+                  <span className="font-medium">
+                    {course.certification ? "Sí" : "No"}
                   </span>
                 </div>
-                <div className=&ldquo;flex justify-between&rdquo;>
+                <div className="flex justify-between">
                   <span>Acceso:</span>
-                  <span className=&ldquo;font-medium&rdquo;>De por vida</span>
+                  <span className="font-medium">De por vida</span>
                 </div>
               </div>
             </CardContent>
@@ -520,12 +520,12 @@ export default function CourseDetailPage() {
           {/* Course Features */}
           <Card>
             <CardHeader>
-              <CardTitle className=&ldquo;text-lg&rdquo;>Este curso incluye</CardTitle>
+              <CardTitle className="text-lg">Este curso incluye</CardTitle>
             </CardHeader>
-            <CardContent className=&ldquo;space-y-3&rdquo;>
+            <CardContent className="space-y-3">
               {course.includedMaterials.map((material, index) => (
-                <div key={index} className=&ldquo;flex items-center gap-2 text-sm&rdquo;>
-                  <CheckCircle className=&ldquo;h-4 w-4 text-green-500 flex-shrink-0&rdquo; />
+                <div key={index} className="flex items-center gap-2 text-sm">
+                  <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
                   <span>{material}</span>
                 </div>
               ))}

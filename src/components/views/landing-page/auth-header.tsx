@@ -1,15 +1,15 @@
 'use client';
 
-import { useAuth } from &ldquo;@/providers/auth-provider&rdquo;;
-import DashboardButton from &ldquo;@/components/dashboard/dashboard-button&rdquo;;
-import Link from &ldquo;next/link&rdquo;;
+import { useAuth } from "@/providers/auth-provider";
+import DashboardButton from "@/components/dashboard/dashboard-button";
+import Link from "next/link";
 
 export function AuthHeader() {
   const { user, isLoading } = useAuth();
 
   if (isLoading) {
     return (
-      <div className=&ldquo;h-9 w-[100px] animate-pulse rounded-md bg-muted&rdquo; />
+      <div className="h-9 w-[100px] animate-pulse rounded-md bg-muted" />
     );
   }
 
@@ -18,16 +18,16 @@ export function AuthHeader() {
   }
 
   return (
-    <div className=&ldquo;flex items-center space-x-4&rdquo;>
+    <div className="flex items-center space-x-4">
       <Link
-        href=&ldquo;/sign-in&rdquo;
-        className=&ldquo;text-primary hover:text-primary-foreground hover:bg-primary px-4 py-2 rounded-md transition-colors&rdquo;
+        href="/sign-in"
+        className="text-primary hover:text-primary-foreground hover:bg-primary px-4 py-2 rounded-md transition-colors"
       >
         Sign In
       </Link>
       <Link
-        href=&ldquo;/sign-up&rdquo;
-        className=&ldquo;bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 transition-colors&rdquo;
+        href="/sign-up"
+        className="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 transition-colors"
       >
         Sign Up
       </Link>

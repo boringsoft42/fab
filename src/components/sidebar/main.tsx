@@ -1,5 +1,5 @@
-import type { HTMLAttributes, Ref } from &ldquo;react&rdquo;;
-import { cn } from &ldquo;@/lib/utils&rdquo;;
+import type { HTMLAttributes, Ref } from "react";
+import { cn } from "@/lib/utils";
 
 interface MainProps extends HTMLAttributes<HTMLElement> {
   fixed?: boolean;
@@ -10,13 +10,13 @@ export const Main = ({ fixed, ...props }: MainProps) => {
   return (
     <main
       className={cn(
-        &ldquo;peer-[.header-fixed]/header:mt-16&rdquo;,
-        &ldquo;px-4 py-6&rdquo;,
-        fixed && &ldquo;fixed-main flex flex-grow flex-col overflow-hidden&rdquo;
+        "peer-[.header-fixed]/header:mt-16",
+        "px-4 py-6",
+        fixed && "fixed-main flex flex-grow flex-col overflow-hidden"
       )}
       {...props}
     />
   );
 };
 
-Main.displayName = &ldquo;Main&rdquo;;
+Main.displayName = "Main";

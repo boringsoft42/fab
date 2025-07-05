@@ -1,4 +1,4 @@
-import { Brain } from &ldquo;lucide-react&rdquo;
+import { Brain } from "lucide-react"
 
 interface Props {
     children: React.ReactNode

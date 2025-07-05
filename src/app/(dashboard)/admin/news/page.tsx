@@ -1,6 +1,6 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import { useState, useEffect } from &ldquo;react&rdquo;;
+import { useState, useEffect } from "react";
 import {
   Plus,
   Search,
@@ -13,30 +13,30 @@ import {
   Upload,
   X,
   Image as ImageIcon,
-} from &ldquo;lucide-react&rdquo;;
+} from "lucide-react";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from &ldquo;@/components/ui/card&rdquo;;
-import { Button } from &ldquo;@/components/ui/button&rdquo;;
-import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
-import { Input } from &ldquo;@/components/ui/input&rdquo;;
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from &ldquo;@/components/ui/select&rdquo;;
+} from "@/components/ui/select";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from &ldquo;@/components/ui/dropdown-menu&rdquo;;
+} from "@/components/ui/dropdown-menu";
 import {
   Table,
   TableBody,
@@ -44,7 +44,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from &ldquo;@/components/ui/table&rdquo;;
+} from "@/components/ui/table";
 import {
   Dialog,
   DialogContent,
@@ -52,16 +52,16 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from &ldquo;@/components/ui/dialog&rdquo;;
-import { Label } from &ldquo;@/components/ui/label&rdquo;;
-import { Textarea } from &ldquo;@/components/ui/textarea&rdquo;;
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 interface NewsArticle {
   id: string;
   title: string;
   summary: string;
-  status: &ldquo;PUBLISHED&rdquo; | &ldquo;DRAFT&rdquo; | &ldquo;ARCHIVED&rdquo;;
-  priority: &ldquo;LOW&rdquo; | &ldquo;MEDIUM&rdquo; | &ldquo;HIGH&rdquo; | &ldquo;URGENT&rdquo;;
+  status: "PUBLISHED" | "DRAFT" | "ARCHIVED";
+  priority: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
   publishedAt: string;
   viewCount: number;
   likeCount: number;
@@ -74,8 +74,8 @@ interface NewsArticle {
 export default function AdminNewsPage() {
   const [news, setNews] = useState<NewsArticle[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState(&ldquo;&rdquo;);
-  const [statusFilter, setStatusFilter] = useState(&ldquo;all&rdquo;);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [stats, setStats] = useState({
     total: 0,
@@ -87,20 +87,20 @@ export default function AdminNewsPage() {
 
   // News creation form state
   const [newNews, setNewNews] = useState({
-    title: &ldquo;&rdquo;,
-    summary: &ldquo;&rdquo;,
-    content: &ldquo;&rdquo;,
-    category: &ldquo;&rdquo;,
-    tags: &ldquo;&rdquo;,
-    priority: &ldquo;MEDIUM&rdquo;,
-    imageUrl: &ldquo;&rdquo;,
-    status: &ldquo;DRAFT&rdquo;,
-    targetAudience: [&ldquo;YOUTH&rdquo;],
+    title: "",
+    summary: "",
+    content: "",
+    category: "",
+    tags: "",
+    priority: "MEDIUM",
+    imageUrl: "",
+    status: "DRAFT",
+    targetAudience: ["YOUTH"],
   });
-  const [imagePreview, setImagePreview] = useState(&ldquo;&rdquo;);
+  const [imagePreview, setImagePreview] = useState("");
 
   // Default banner image
-  const defaultBannerImage = &ldquo;/api/placeholder/800/400&rdquo;;
+  const defaultBannerImage = "/api/placeholder/800/400";
 
   useEffect(() => {
     fetchNews();
@@ -116,7 +116,7 @@ export default function AdminNewsPage() {
       setNews(data.news || []);
       setStats(data.stats || {});
     } catch (error) {
-      console.error(&ldquo;Error fetching news:&rdquo;, error);
+      console.error("Error fetching news:", error);
     } finally {
       setLoading(false);
     }
@@ -136,76 +136,76 @@ export default function AdminNewsPage() {
   };
 
   const removeImage = () => {
-    setImagePreview(&ldquo;&rdquo;);
-    setNewNews({ ...newNews, imageUrl: &ldquo;&rdquo; });
+    setImagePreview("");
+    setNewNews({ ...newNews, imageUrl: "" });
   };
 
   const handleCreateNews = async () => {
     try {
       const newsData = {
         ...newNews,
-        organizationId: &ldquo;gov-1&rdquo;,
-        organizationName: &ldquo;Gobierno Municipal de Cochabamba&rdquo;,
-        organizationLogo: &ldquo;/api/placeholder/60/60&rdquo;,
+        organizationId: "gov-1",
+        organizationName: "Gobierno Municipal de Cochabamba",
+        organizationLogo: "/api/placeholder/60/60",
         imageUrl: newNews.imageUrl || defaultBannerImage, // Use default if no image uploaded
         tags: newNews.tags
-          .split(&ldquo;,&rdquo;)
+          .split(",")
           .map((tag) => tag.trim())
           .filter(Boolean),
       };
 
-      const response = await fetch(&ldquo;/api/admin/news&rdquo;, {
-        method: &ldquo;POST&rdquo;,
-        headers: { &ldquo;Content-Type&rdquo;: &ldquo;application/json&rdquo; },
+      const response = await fetch("/api/admin/news", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newsData),
       });
 
       if (response.ok) {
         setShowCreateDialog(false);
         setNewNews({
-          title: &ldquo;&rdquo;,
-          summary: &ldquo;&rdquo;,
-          content: &ldquo;&rdquo;,
-          category: &ldquo;&rdquo;,
-          tags: &ldquo;&rdquo;,
-          priority: &ldquo;MEDIUM&rdquo;,
-          imageUrl: &ldquo;&rdquo;,
-          status: &ldquo;DRAFT&rdquo;,
-          targetAudience: [&ldquo;YOUTH&rdquo;],
+          title: "",
+          summary: "",
+          content: "",
+          category: "",
+          tags: "",
+          priority: "MEDIUM",
+          imageUrl: "",
+          status: "DRAFT",
+          targetAudience: ["YOUTH"],
         });
-        setImagePreview(&ldquo;&rdquo;);
+        setImagePreview("");
         fetchNews();
       }
     } catch (error) {
-      console.error(&ldquo;Error creating news:&rdquo;, error);
+      console.error("Error creating news:", error);
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case &ldquo;PUBLISHED&rdquo;:
-        return &ldquo;bg-green-100 text-green-800&rdquo;;
-      case &ldquo;DRAFT&rdquo;:
-        return &ldquo;bg-yellow-100 text-yellow-800&rdquo;;
-      case &ldquo;ARCHIVED&rdquo;:
-        return &ldquo;bg-gray-100 text-gray-800&rdquo;;
+      case "PUBLISHED":
+        return "bg-green-100 text-green-800";
+      case "DRAFT":
+        return "bg-yellow-100 text-yellow-800";
+      case "ARCHIVED":
+        return "bg-gray-100 text-gray-800";
       default:
-        return &ldquo;bg-gray-100 text-gray-800&rdquo;;
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case &ldquo;URGENT&rdquo;:
-        return &ldquo;bg-red-100 text-red-800&rdquo;;
-      case &ldquo;HIGH&rdquo;:
-        return &ldquo;bg-orange-100 text-orange-800&rdquo;;
-      case &ldquo;MEDIUM&rdquo;:
-        return &ldquo;bg-blue-100 text-blue-800&rdquo;;
-      case &ldquo;LOW&rdquo;:
-        return &ldquo;bg-gray-100 text-gray-800&rdquo;;
+      case "URGENT":
+        return "bg-red-100 text-red-800";
+      case "HIGH":
+        return "bg-orange-100 text-orange-800";
+      case "MEDIUM":
+        return "bg-blue-100 text-blue-800";
+      case "LOW":
+        return "bg-gray-100 text-gray-800";
       default:
-        return &ldquo;bg-gray-100 text-gray-800&rdquo;;
+        return "bg-gray-100 text-gray-800";
     }
   };
 
@@ -216,23 +216,23 @@ export default function AdminNewsPage() {
   );
 
   return (
-    <div className=&ldquo;space-y-6&rdquo;>
+    <div className="space-y-6">
       {/* Header */}
-      <div className=&ldquo;flex justify-between items-center&rdquo;>
+      <div className="flex justify-between items-center">
         <div>
-          <h1 className=&ldquo;text-3xl font-bold&rdquo;>Gestión de Noticias</h1>
-          <p className=&ldquo;text-muted-foreground&rdquo;>
+          <h1 className="text-3xl font-bold">Gestión de Noticias</h1>
+          <p className="text-muted-foreground">
             Crea y gestiona noticias que aparecerán en el feed de los jóvenes
           </p>
         </div>
         <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
           <DialogTrigger asChild>
             <Button>
-              <Plus className=&ldquo;w-4 h-4 mr-2&rdquo; />
+              <Plus className="w-4 h-4 mr-2" />
               Crear Noticia
             </Button>
           </DialogTrigger>
-          <DialogContent className=&ldquo;max-w-3xl&rdquo;>
+          <DialogContent className="max-w-3xl">
             <DialogHeader>
               <DialogTitle>Crear Nueva Noticia</DialogTitle>
               <DialogDescription>
@@ -240,52 +240,52 @@ export default function AdminNewsPage() {
                 plataforma
               </DialogDescription>
             </DialogHeader>
-            <div className=&ldquo;grid gap-4 py-4 max-h-[70vh] overflow-y-auto&rdquo;>
+            <div className="grid gap-4 py-4 max-h-[70vh] overflow-y-auto">
               {/* Image Upload Section */}
-              <div className=&ldquo;grid gap-2&rdquo;>
+              <div className="grid gap-2">
                 <Label>Imagen de Portada</Label>
                 {imagePreview ? (
-                  <div className=&ldquo;relative&rdquo;>
+                  <div className="relative">
                     <div
                       style={{
                         backgroundImage: `url(${imagePreview})`,
-                        backgroundSize: &ldquo;cover&rdquo;,
-                        backgroundPosition: &ldquo;center&rdquo;,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
                       }}
-                      className=&ldquo;w-full h-48 rounded-lg border-2 border-dashed border-gray-300&rdquo;
+                      className="w-full h-48 rounded-lg border-2 border-dashed border-gray-300"
                     />
                     <Button
-                      size=&ldquo;sm&rdquo;
-                      variant=&ldquo;destructive&rdquo;
-                      className=&ldquo;absolute top-2 right-2&rdquo;
+                      size="sm"
+                      variant="destructive"
+                      className="absolute top-2 right-2"
                       onClick={removeImage}
                     >
-                      <X className=&ldquo;w-4 h-4&rdquo; />
+                      <X className="w-4 h-4" />
                     </Button>
                   </div>
                 ) : (
-                  <div className=&ldquo;relative&rdquo;>
-                    <div className=&ldquo;w-full h-48 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center bg-gray-50&rdquo;>
-                      <div className=&ldquo;text-center&rdquo;>
-                        <ImageIcon className=&ldquo;w-12 h-12 text-gray-400 mx-auto mb-2&rdquo; />
-                        <p className=&ldquo;text-sm text-gray-500 mb-2&rdquo;>
+                  <div className="relative">
+                    <div className="w-full h-48 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center bg-gray-50">
+                      <div className="text-center">
+                        <ImageIcon className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                        <p className="text-sm text-gray-500 mb-2">
                           Sube una imagen de portada para tu noticia
                         </p>
-                        <p className=&ldquo;text-xs text-gray-400&rdquo;>
+                        <p className="text-xs text-gray-400">
                           Se usará una imagen por defecto si no subes ninguna
                         </p>
                         <Input
-                          type=&ldquo;file&rdquo;
-                          accept=&ldquo;image/*&rdquo;
+                          type="file"
+                          accept="image/*"
                           onChange={handleImageUpload}
-                          className=&ldquo;hidden&rdquo;
-                          id=&ldquo;image-upload&rdquo;
+                          className="hidden"
+                          id="image-upload"
                         />
                         <Label
-                          htmlFor=&ldquo;image-upload&rdquo;
-                          className=&ldquo;cursor-pointer inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:bg-primary/90 mt-2&rdquo;
+                          htmlFor="image-upload"
+                          className="cursor-pointer inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:bg-primary/90 mt-2"
                         >
-                          <Upload className=&ldquo;w-4 h-4 mr-2&rdquo; />
+                          <Upload className="w-4 h-4 mr-2" />
                           Subir Imagen
                         </Label>
                       </div>
@@ -294,44 +294,44 @@ export default function AdminNewsPage() {
                 )}
               </div>
 
-              <div className=&ldquo;grid gap-2&rdquo;>
-                <Label htmlFor=&ldquo;title&rdquo;>Título *</Label>
+              <div className="grid gap-2">
+                <Label htmlFor="title">Título *</Label>
                 <Input
-                  id=&ldquo;title&rdquo;
+                  id="title"
                   value={newNews.title}
                   onChange={(e) =>
                     setNewNews({ ...newNews, title: e.target.value })
                   }
-                  placeholder=&ldquo;Título de la noticia...&rdquo;
+                  placeholder="Título de la noticia..."
                 />
               </div>
-              <div className=&ldquo;grid gap-2&rdquo;>
-                <Label htmlFor=&ldquo;summary&rdquo;>Resumen *</Label>
+              <div className="grid gap-2">
+                <Label htmlFor="summary">Resumen *</Label>
                 <Textarea
-                  id=&ldquo;summary&rdquo;
+                  id="summary"
                   value={newNews.summary}
                   onChange={(e) =>
                     setNewNews({ ...newNews, summary: e.target.value })
                   }
-                  placeholder=&ldquo;Breve resumen de la noticia...&rdquo;
+                  placeholder="Breve resumen de la noticia..."
                   rows={2}
                 />
               </div>
-              <div className=&ldquo;grid gap-2&rdquo;>
-                <Label htmlFor=&ldquo;content&rdquo;>Contenido *</Label>
+              <div className="grid gap-2">
+                <Label htmlFor="content">Contenido *</Label>
                 <Textarea
-                  id=&ldquo;content&rdquo;
+                  id="content"
                   value={newNews.content}
                   onChange={(e) =>
                     setNewNews({ ...newNews, content: e.target.value })
                   }
-                  placeholder=&ldquo;Contenido completo de la noticia...&rdquo;
+                  placeholder="Contenido completo de la noticia..."
                   rows={6}
                 />
               </div>
-              <div className=&ldquo;grid grid-cols-2 gap-4&rdquo;>
-                <div className=&ldquo;grid gap-2&rdquo;>
-                  <Label htmlFor=&ldquo;category&rdquo;>Categoría</Label>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="category">Categoría</Label>
                   <Select
                     value={newNews.category}
                     onValueChange={(value) =>
@@ -339,30 +339,30 @@ export default function AdminNewsPage() {
                     }
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder=&ldquo;Seleccionar categoría&rdquo; />
+                      <SelectValue placeholder="Seleccionar categoría" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value=&ldquo;Política Pública&rdquo;>
+                      <SelectItem value="Política Pública">
                         Política Pública
                       </SelectItem>
-                      <SelectItem value=&ldquo;Programas Sociales&rdquo;>
+                      <SelectItem value="Programas Sociales">
                         Programas Sociales
                       </SelectItem>
-                      <SelectItem value=&ldquo;Educación Digital&rdquo;>
+                      <SelectItem value="Educación Digital">
                         Educación Digital
                       </SelectItem>
-                      <SelectItem value=&ldquo;Empleo Juvenil&rdquo;>
+                      <SelectItem value="Empleo Juvenil">
                         Empleo Juvenil
                       </SelectItem>
-                      <SelectItem value=&ldquo;Capacitación&rdquo;>Capacitación</SelectItem>
-                      <SelectItem value=&ldquo;Anuncios Oficiales&rdquo;>
+                      <SelectItem value="Capacitación">Capacitación</SelectItem>
+                      <SelectItem value="Anuncios Oficiales">
                         Anuncios Oficiales
                       </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
-                <div className=&ldquo;grid gap-2&rdquo;>
-                  <Label htmlFor=&ldquo;priority&rdquo;>Prioridad</Label>
+                <div className="grid gap-2">
+                  <Label htmlFor="priority">Prioridad</Label>
                   <Select
                     value={newNews.priority}
                     onValueChange={(value) =>
@@ -373,26 +373,26 @@ export default function AdminNewsPage() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value=&ldquo;LOW&rdquo;>Baja</SelectItem>
-                      <SelectItem value=&ldquo;MEDIUM&rdquo;>Media</SelectItem>
-                      <SelectItem value=&ldquo;HIGH&rdquo;>Alta</SelectItem>
-                      <SelectItem value=&ldquo;URGENT&rdquo;>Urgente</SelectItem>
+                      <SelectItem value="LOW">Baja</SelectItem>
+                      <SelectItem value="MEDIUM">Media</SelectItem>
+                      <SelectItem value="HIGH">Alta</SelectItem>
+                      <SelectItem value="URGENT">Urgente</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
-              <div className=&ldquo;grid gap-2&rdquo;>
-                <Label htmlFor=&ldquo;tags&rdquo;>Etiquetas</Label>
+              <div className="grid gap-2">
+                <Label htmlFor="tags">Etiquetas</Label>
                 <Input
-                  id=&ldquo;tags&rdquo;
+                  id="tags"
                   value={newNews.tags}
                   onChange={(e) =>
                     setNewNews({ ...newNews, tags: e.target.value })
                   }
-                  placeholder=&ldquo;política pública, juventud, empleo (separadas por comas)&rdquo;
+                  placeholder="política pública, juventud, empleo (separadas por comas)"
                 />
               </div>
-              <div className=&ldquo;flex gap-2 pt-4&rdquo;>
+              <div className="flex gap-2 pt-4">
                 <Button
                   onClick={handleCreateNews}
                   disabled={
@@ -402,9 +402,9 @@ export default function AdminNewsPage() {
                   Crear como Borrador
                 </Button>
                 <Button
-                  variant=&ldquo;outline&rdquo;
+                  variant="outline"
                   onClick={() => {
-                    setNewNews({ ...newNews, status: &ldquo;PUBLISHED&rdquo; });
+                    setNewNews({ ...newNews, status: "PUBLISHED" });
                     handleCreateNews();
                   }}
                   disabled={
@@ -420,53 +420,53 @@ export default function AdminNewsPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className=&ldquo;grid grid-cols-1 md:grid-cols-5 gap-4&rdquo;>
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
         <Card>
-          <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
-            <CardTitle className=&ldquo;text-sm font-medium&rdquo;>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
               Total Noticias
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className=&ldquo;text-2xl font-bold&rdquo;>{stats.total}</div>
+            <div className="text-2xl font-bold">{stats.total}</div>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
-            <CardTitle className=&ldquo;text-sm font-medium&rdquo;>Publicadas</CardTitle>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Publicadas</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className=&ldquo;text-2xl font-bold text-green-600&rdquo;>
+            <div className="text-2xl font-bold text-green-600">
               {stats.published}
             </div>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
-            <CardTitle className=&ldquo;text-sm font-medium&rdquo;>Borradores</CardTitle>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Borradores</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className=&ldquo;text-2xl font-bold text-yellow-600&rdquo;>
+            <div className="text-2xl font-bold text-yellow-600">
               {stats.draft}
             </div>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
-            <CardTitle className=&ldquo;text-sm font-medium&rdquo;>Total Vistas</CardTitle>
-            <Eye className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Vistas</CardTitle>
+            <Eye className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className=&ldquo;text-2xl font-bold&rdquo;>{stats.totalViews}</div>
+            <div className="text-2xl font-bold">{stats.totalViews}</div>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
-            <CardTitle className=&ldquo;text-sm font-medium&rdquo;>Total Likes</CardTitle>
-            <TrendingUp className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Likes</CardTitle>
+            <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className=&ldquo;text-2xl font-bold&rdquo;>{stats.totalLikes}</div>
+            <div className="text-2xl font-bold">{stats.totalLikes}</div>
           </CardContent>
         </Card>
       </div>
@@ -477,24 +477,24 @@ export default function AdminNewsPage() {
           <CardTitle>Filtros y Búsqueda</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className=&ldquo;flex gap-4&rdquo;>
-            <div className=&ldquo;flex-1&rdquo;>
+          <div className="flex gap-4">
+            <div className="flex-1">
               <Input
-                placeholder=&ldquo;Buscar noticias...&rdquo;
+                placeholder="Buscar noticias..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className=&ldquo;max-w-sm&rdquo;
+                className="max-w-sm"
               />
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className=&ldquo;w-[180px]&rdquo;>
-                <SelectValue placeholder=&ldquo;Estado&rdquo; />
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Estado" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value=&ldquo;all&rdquo;>Todos</SelectItem>
-                <SelectItem value=&ldquo;published&rdquo;>Publicados</SelectItem>
-                <SelectItem value=&ldquo;draft&rdquo;>Borradores</SelectItem>
-                <SelectItem value=&ldquo;archived&rdquo;>Archivados</SelectItem>
+                <SelectItem value="all">Todos</SelectItem>
+                <SelectItem value="published">Publicados</SelectItem>
+                <SelectItem value="draft">Borradores</SelectItem>
+                <SelectItem value="archived">Archivados</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -525,13 +525,13 @@ export default function AdminNewsPage() {
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={7} className=&ldquo;text-center py-8&rdquo;>
+                  <TableCell colSpan={7} className="text-center py-8">
                     Cargando noticias...
                   </TableCell>
                 </TableRow>
               ) : filteredNews.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className=&ldquo;text-center py-8&rdquo;>
+                  <TableCell colSpan={7} className="text-center py-8">
                     No se encontraron noticias
                   </TableCell>
                 </TableRow>
@@ -539,20 +539,20 @@ export default function AdminNewsPage() {
                 filteredNews.map((article) => (
                   <TableRow key={article.id}>
                     <TableCell>
-                      <div className=&ldquo;flex gap-3&rdquo;>
+                      <div className="flex gap-3">
                         <div
                           style={{
                             backgroundImage: `url(${article.imageUrl || defaultBannerImage})`,
-                            backgroundSize: &ldquo;cover&rdquo;,
-                            backgroundPosition: &ldquo;center&rdquo;,
+                            backgroundSize: "cover",
+                            backgroundPosition: "center",
                           }}
-                          className=&ldquo;w-16 h-12 rounded&rdquo;
+                          className="w-16 h-12 rounded"
                         />
                         <div>
-                          <div className=&ldquo;font-medium line-clamp-1&rdquo;>
+                          <div className="font-medium line-clamp-1">
                             {article.title}
                           </div>
-                          <div className=&ldquo;text-sm text-muted-foreground line-clamp-1&rdquo;>
+                          <div className="text-sm text-muted-foreground line-clamp-1">
                             {article.summary}
                           </div>
                         </div>
@@ -560,44 +560,44 @@ export default function AdminNewsPage() {
                     </TableCell>
                     <TableCell>
                       <Badge className={getStatusColor(article.status)}>
-                        {article.status === &ldquo;PUBLISHED&rdquo;
-                          ? &ldquo;Publicado&rdquo;
-                          : article.status === &ldquo;DRAFT&rdquo;
-                            ? &ldquo;Borrador&rdquo;
-                            : &ldquo;Archivado&rdquo;}
+                        {article.status === "PUBLISHED"
+                          ? "Publicado"
+                          : article.status === "DRAFT"
+                            ? "Borrador"
+                            : "Archivado"}
                       </Badge>
                     </TableCell>
                     <TableCell>
                       <Badge className={getPriorityColor(article.priority)}>
-                        {article.priority === &ldquo;URGENT&rdquo;
-                          ? &ldquo;Urgente&rdquo;
-                          : article.priority === &ldquo;HIGH&rdquo;
-                            ? &ldquo;Alta&rdquo;
-                            : article.priority === &ldquo;MEDIUM&rdquo;
-                              ? &ldquo;Media&rdquo;
-                              : &ldquo;Baja&rdquo;}
+                        {article.priority === "URGENT"
+                          ? "Urgente"
+                          : article.priority === "HIGH"
+                            ? "Alta"
+                            : article.priority === "MEDIUM"
+                              ? "Media"
+                              : "Baja"}
                       </Badge>
                     </TableCell>
                     <TableCell>{article.category}</TableCell>
                     <TableCell>
                       {article.publishedAt ? (
-                        <div className=&ldquo;flex items-center gap-1&rdquo;>
-                          <Calendar className=&ldquo;w-3 h-3&rdquo; />
+                        <div className="flex items-center gap-1">
+                          <Calendar className="w-3 h-3" />
                           {new Date(article.publishedAt).toLocaleDateString(
-                            &ldquo;es-ES&rdquo;
+                            "es-ES"
                           )}
                         </div>
                       ) : (
-                        <span className=&ldquo;text-muted-foreground&rdquo;>
+                        <span className="text-muted-foreground">
                           No publicado
                         </span>
                       )}
                     </TableCell>
                     <TableCell>
-                      <div className=&ldquo;text-sm&rdquo;>
+                      <div className="text-sm">
                         <div>{article.viewCount} vistas</div>
                         <div>
-                          {article.likeCount} likes, {article.commentCount}{&ldquo; &rdquo;}
+                          {article.likeCount} likes, {article.commentCount}{" "}
                           comentarios
                         </div>
                       </div>
@@ -605,21 +605,21 @@ export default function AdminNewsPage() {
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant=&ldquo;ghost&rdquo; size=&ldquo;sm&rdquo;>
-                            <MoreVertical className=&ldquo;w-4 h-4&rdquo; />
+                          <Button variant="ghost" size="sm">
+                            <MoreVertical className="w-4 h-4" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
                           <DropdownMenuItem>
-                            <Eye className=&ldquo;w-4 h-4 mr-2&rdquo; />
+                            <Eye className="w-4 h-4 mr-2" />
                             Ver
                           </DropdownMenuItem>
                           <DropdownMenuItem>
-                            <Edit className=&ldquo;w-4 h-4 mr-2&rdquo; />
+                            <Edit className="w-4 h-4 mr-2" />
                             Editar
                           </DropdownMenuItem>
-                          <DropdownMenuItem className=&ldquo;text-red-600&rdquo;>
-                            <Trash2 className=&ldquo;w-4 h-4 mr-2&rdquo; />
+                          <DropdownMenuItem className="text-red-600">
+                            <Trash2 className="w-4 h-4 mr-2" />
                             Eliminar
                           </DropdownMenuItem>
                         </DropdownMenuContent>

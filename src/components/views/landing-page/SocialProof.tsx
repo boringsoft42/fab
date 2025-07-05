@@ -1,22 +1,22 @@
-&ldquo;use client&rdquo;
+"use client"
 
-import React from &ldquo;react&rdquo;
+import React from "react"
 
-import { useEffect, useState } from &ldquo;react&rdquo;
-import { motion, useAnimation } from &ldquo;framer-motion&rdquo;
-import { Building, Briefcase, Globe, Laptop, Lightbulb, Rocket, Target, Zap, Brain, Heart } from &ldquo;lucide-react&rdquo;
+import { useEffect, useState } from "react"
+import { motion, useAnimation } from "framer-motion"
+import { Building, Briefcase, Globe, Laptop, Lightbulb, Rocket, Target, Zap, Brain, Heart } from "lucide-react"
 
 const companies = [
-  { name: &ldquo;TechCorp&rdquo;, icon: Building },
-  { name: &ldquo;InnovateLabs&rdquo;, icon: Lightbulb },
-  { name: &ldquo;MindfulCo&rdquo;, icon: Brain },
-  { name: &ldquo;FutureWorks&rdquo;, icon: Rocket },
-  { name: &ldquo;ZenithHealth&rdquo;, icon: Heart },
-  { name: &ldquo;GlobalTech&rdquo;, icon: Globe },
-  { name: &ldquo;SmartSolutions&rdquo;, icon: Laptop },
-  { name: &ldquo;PowerInnovate&rdquo;, icon: Zap },
-  { name: &ldquo;TargetAchievers&rdquo;, icon: Target },
-  { name: &ldquo;BizPro&rdquo;, icon: Briefcase },
+  { name: "TechCorp", icon: Building },
+  { name: "InnovateLabs", icon: Lightbulb },
+  { name: "MindfulCo", icon: Brain },
+  { name: "FutureWorks", icon: Rocket },
+  { name: "ZenithHealth", icon: Heart },
+  { name: "GlobalTech", icon: Globe },
+  { name: "SmartSolutions", icon: Laptop },
+  { name: "PowerInnovate", icon: Zap },
+  { name: "TargetAchievers", icon: Target },
+  { name: "BizPro", icon: Briefcase },
 ]
 
 export default function SocialProof() {
@@ -40,18 +40,18 @@ export default function SocialProof() {
   }, [controls])
 
   return (
-    <section className=&ldquo;py-16 bg-secondary overflow-hidden&rdquo;>
-      <div className=&ldquo;container mx-auto px-4 sm:px-6 lg:px-8&rdquo;>
-        <h2 className=&ldquo;text-2xl md:text-3xl font-bold text-center text-foreground mb-8&rdquo;>
+    <section className="py-16 bg-secondary overflow-hidden">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 className="text-2xl md:text-3xl font-bold text-center text-foreground mb-8">
           Trusted by Leading Organizations
         </h2>
-        <div className=&ldquo;flex justify-center items-center h-24&rdquo;>
-          <motion.div key={currentIndex} animate={controls} className=&ldquo;flex flex-col items-center&rdquo;>
+        <div className="flex justify-center items-center h-24">
+          <motion.div key={currentIndex} animate={controls} className="flex flex-col items-center">
             {React.createElement(companies[currentIndex].icon, {
               size: 48,
-              className: &ldquo;text-primary mb-2&rdquo;,
+              className: "text-primary mb-2",
             })}
-            <span className=&ldquo;text-lg font-semibold text-foreground&rdquo;>{companies[currentIndex].name}</span>
+            <span className="text-lg font-semibold text-foreground">{companies[currentIndex].name}</span>
           </motion.div>
         </div>
       </div>

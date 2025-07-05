@@ -230,53 +230,53 @@ export interface Discussion {
 
 // Enums
 export enum CourseCategory {
-  SOFT_SKILLS = &ldquo;soft_skills&rdquo;,
-  BASIC_COMPETENCIES = &ldquo;basic_competencies&rdquo;,
-  JOB_PLACEMENT = &ldquo;job_placement&rdquo;,
-  ENTREPRENEURSHIP = &ldquo;entrepreneurship&rdquo;,
-  TECHNICAL_SKILLS = &ldquo;technical_skills&rdquo;,
-  DIGITAL_LITERACY = &ldquo;digital_literacy&rdquo;,
-  COMMUNICATION = &ldquo;communication&rdquo;,
-  LEADERSHIP = &ldquo;leadership&rdquo;,
+  SOFT_SKILLS = "soft_skills",
+  BASIC_COMPETENCIES = "basic_competencies",
+  JOB_PLACEMENT = "job_placement",
+  ENTREPRENEURSHIP = "entrepreneurship",
+  TECHNICAL_SKILLS = "technical_skills",
+  DIGITAL_LITERACY = "digital_literacy",
+  COMMUNICATION = "communication",
+  LEADERSHIP = "leadership",
 }
 
 export enum CourseLevel {
-  BEGINNER = &ldquo;beginner&rdquo;,
-  INTERMEDIATE = &ldquo;intermediate&rdquo;,
-  ADVANCED = &ldquo;advanced&rdquo;,
+  BEGINNER = "beginner",
+  INTERMEDIATE = "intermediate",
+  ADVANCED = "advanced",
 }
 
 export enum LessonType {
-  VIDEO = &ldquo;video&rdquo;,
-  TEXT = &ldquo;text&rdquo;,
-  QUIZ = &ldquo;quiz&rdquo;,
-  EXERCISE = &ldquo;exercise&rdquo;,
-  DOCUMENT = &ldquo;document&rdquo;,
-  INTERACTIVE = &ldquo;interactive&rdquo;,
+  VIDEO = "video",
+  TEXT = "text",
+  QUIZ = "quiz",
+  EXERCISE = "exercise",
+  DOCUMENT = "document",
+  INTERACTIVE = "interactive",
 }
 
 export enum QuestionType {
-  MULTIPLE_CHOICE = &ldquo;multiple_choice&rdquo;,
-  TRUE_FALSE = &ldquo;true_false&rdquo;,
-  FILL_BLANK = &ldquo;fill_blank&rdquo;,
-  SORT_ELEMENTS = &ldquo;sort_elements&rdquo;,
-  MULTIPLE_SELECT = &ldquo;multiple_select&rdquo;,
-  SHORT_ANSWER = &ldquo;short_answer&rdquo;,
+  MULTIPLE_CHOICE = "multiple_choice",
+  TRUE_FALSE = "true_false",
+  FILL_BLANK = "fill_blank",
+  SORT_ELEMENTS = "sort_elements",
+  MULTIPLE_SELECT = "multiple_select",
+  SHORT_ANSWER = "short_answer",
 }
 
 export enum EnrollmentStatus {
-  ENROLLED = &ldquo;enrolled&rdquo;,
-  IN_PROGRESS = &ldquo;in_progress&rdquo;,
-  COMPLETED = &ldquo;completed&rdquo;,
-  DROPPED = &ldquo;dropped&rdquo;,
-  SUSPENDED = &ldquo;suspended&rdquo;,
+  ENROLLED = "enrolled",
+  IN_PROGRESS = "in_progress",
+  COMPLETED = "completed",
+  DROPPED = "dropped",
+  SUSPENDED = "suspended",
 }
 
 export enum ResourceType {
-  PDF = &ldquo;PDF&rdquo;,
-  VIDEO = &ldquo;VIDEO&rdquo;,
-  LINK = &ldquo;LINK&rdquo;,
-  IMAGE = &ldquo;IMAGE&rdquo;,
+  PDF = "PDF",
+  VIDEO = "VIDEO",
+  LINK = "LINK",
+  IMAGE = "IMAGE",
 }
 
 // Filter and Search Types
@@ -301,8 +301,8 @@ export interface CourseFilters {
 export interface CourseSearchParams {
   query?: string;
   filters?: CourseFilters;
-  sortBy?: &ldquo;popularity&rdquo; | &ldquo;date&rdquo; | &ldquo;rating&rdquo; | &ldquo;title&rdquo; | &ldquo;duration&rdquo;;
-  sortOrder?: &ldquo;asc&rdquo; | &ldquo;desc&rdquo;;
+  sortBy?: "popularity" | "date" | "rating" | "title" | "duration";
+  sortOrder?: "asc" | "desc";
   page?: number;
   limit?: number;
 }
@@ -339,9 +339,9 @@ export interface MandatoryCourse {
 
 // The 5 mandatory courses
 export const MANDATORY_COURSES = {
-  SOFT_SKILLS: &ldquo;soft-skills-empowerment&rdquo;,
-  BASIC_COMPETENCIES: &ldquo;basic-competencies&rdquo;,
-  JOB_PLACEMENT: &ldquo;job-placement-skills&rdquo;,
-  ENTREPRENEURSHIP: &ldquo;entrepreneurship-fundamentals&rdquo;,
-  TECHNICAL_SKILLS: &ldquo;technical-skills-digital&rdquo;,
+  SOFT_SKILLS: "soft-skills-empowerment",
+  BASIC_COMPETENCIES: "basic-competencies",
+  JOB_PLACEMENT: "job-placement-skills",
+  ENTREPRENEURSHIP: "entrepreneurship-fundamentals",
+  TECHNICAL_SKILLS: "technical-skills-digital",
 } as const;

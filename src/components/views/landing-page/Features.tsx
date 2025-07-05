@@ -1,50 +1,50 @@
-import { Brain, Heart, Zap, Target, Smile, TrendingUp } from &ldquo;lucide-react&rdquo;;
-import { ShineBorder } from &ldquo;@/components/magicui/shine-border&rdquo;;
-import { AnimatedShinyText } from &ldquo;@/components/magicui/animated-shiny-text&rdquo;;
-import { BlurFade } from &ldquo;@/components/magicui/blur-fade&rdquo;;
+import { Brain, Heart, Zap, Target, Smile, TrendingUp } from "lucide-react";
+import { ShineBorder } from "@/components/magicui/shine-border";
+import { AnimatedShinyText } from "@/components/magicui/animated-shiny-text";
+import { BlurFade } from "@/components/magicui/blur-fade";
 
 const features = [
   {
-    id: &ldquo;mental-fitness&rdquo;,
+    id: "mental-fitness",
     icon: Brain,
-    title: &ldquo;Mental Fitness&rdquo;,
+    title: "Mental Fitness",
     description:
-      &ldquo;Train your mind to overcome negative thoughts and boost your mental resilience.&rdquo;,
+      "Train your mind to overcome negative thoughts and boost your mental resilience.",
   },
   {
-    id: &ldquo;emotional-intelligence&rdquo;,
+    id: "emotional-intelligence",
     icon: Heart,
-    title: &ldquo;Emotional Intelligence&rdquo;,
+    title: "Emotional Intelligence",
     description:
-      &ldquo;Develop a deeper understanding of your emotions and learn to manage them effectively.&rdquo;,
+      "Develop a deeper understanding of your emotions and learn to manage them effectively.",
   },
   {
-    id: &ldquo;peak-performance&rdquo;,
+    id: "peak-performance",
     icon: Zap,
-    title: &ldquo;Peak Performance&rdquo;,
+    title: "Peak Performance",
     description:
-      &ldquo;Unlock your full potential and achieve your goals with a positive mindset.&rdquo;,
+      "Unlock your full potential and achieve your goals with a positive mindset.",
   },
   {
-    id: &ldquo;goal-setting&rdquo;,
+    id: "goal-setting",
     icon: Target,
-    title: &ldquo;Goal Setting&rdquo;,
+    title: "Goal Setting",
     description:
-      &ldquo;Learn to set and achieve meaningful goals that align with your values and aspirations.&rdquo;,
+      "Learn to set and achieve meaningful goals that align with your values and aspirations.",
   },
   {
-    id: &ldquo;stress-management&rdquo;,
+    id: "stress-management",
     icon: Smile,
-    title: &ldquo;Stress Management&rdquo;,
+    title: "Stress Management",
     description:
-      &ldquo;Discover techniques to reduce stress and maintain a calm, focused state of mind.&rdquo;,
+      "Discover techniques to reduce stress and maintain a calm, focused state of mind.",
   },
   {
-    id: &ldquo;personal-growth&rdquo;,
+    id: "personal-growth",
     icon: TrendingUp,
-    title: &ldquo;Personal Growth&rdquo;,
+    title: "Personal Growth",
     description:
-      &ldquo;Embark on a journey of continuous self-improvement and lifelong learning.&rdquo;,
+      "Embark on a journey of continuous self-improvement and lifelong learning.",
   },
 ].map((feature, index) => ({
   ...feature,
@@ -53,46 +53,46 @@ const features = [
 
 export default function Features() {
   return (
-    <section id=&ldquo;features&rdquo; className=&ldquo;relative py-20 overflow-hidden&rdquo;>
+    <section id="features" className="relative py-20 overflow-hidden">
       {/* Background decorations */}
-      <div className=&ldquo;absolute inset-0 bg-grid-black/[0.02] -z-10&rdquo; />
-      <div className=&ldquo;absolute inset-0 bg-gradient-to-b from-background to-secondary/20 -z-10&rdquo; />
+      <div className="absolute inset-0 bg-grid-black/[0.02] -z-10" />
+      <div className="absolute inset-0 bg-gradient-to-b from-background to-secondary/20 -z-10" />
 
-      <div className=&ldquo;container mx-auto px-4 sm:px-6 lg:px-8&rdquo;>
-        <BlurFade className=&ldquo;text-center mb-16&rdquo;>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <BlurFade className="text-center mb-16">
           <AnimatedShinyText>
-            <h2 className=&ldquo;text-3xl md:text-4xl font-bold text-foreground mb-4&rdquo;>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
               Empower Your Mind
             </h2>
           </AnimatedShinyText>
-          <p className=&ldquo;text-lg text-muted-foreground max-w-2xl mx-auto&rdquo;>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Discover powerful tools and techniques to enhance your mental
             fitness and emotional intelligence.
           </p>
         </BlurFade>
 
-        <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8&rdquo;>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature) => (
             <ShineBorder
               key={feature.id}
               duration={10}
-              className=&ldquo;group relative backdrop-blur-sm rounded-xl overflow-hidden animate-in fade-in-0 duration-1000&rdquo;
+              className="group relative backdrop-blur-sm rounded-xl overflow-hidden animate-in fade-in-0 duration-1000"
               borderWidth={1}
-              color=&ldquo;rgba(var(--primary), 0.5)&rdquo;
+              color="rgba(var(--primary), 0.5)"
             >
               <div
-                className=&ldquo;relative p-8&rdquo;
+                className="relative p-8"
                 style={{ animationDelay: `${feature.animationDelay}ms` }}
               >
-                <div className=&ldquo;inline-flex items-center justify-center w-12 h-12 rounded-lg bg-primary/10 text-primary mb-6 group-hover:scale-110 transition-transform&rdquo;>
-                  <feature.icon className=&ldquo;h-6 w-6&rdquo; />
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-primary/10 text-primary mb-6 group-hover:scale-110 transition-transform">
+                  <feature.icon className="h-6 w-6" />
                 </div>
 
-                <h3 className=&ldquo;text-xl font-semibold text-foreground mb-3&rdquo;>
+                <h3 className="text-xl font-semibold text-foreground mb-3">
                   {feature.title}
                 </h3>
 
-                <p className=&ldquo;text-muted-foreground&rdquo;>{feature.description}</p>
+                <p className="text-muted-foreground">{feature.description}</p>
               </div>
             </ShineBorder>
           ))}

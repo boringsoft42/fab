@@ -1,12 +1,12 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import { cn } from &ldquo;@/lib/utils&rdquo;;
-import { SearchProvider } from &ldquo;@/context/search-context&rdquo;;
-import { SidebarProvider } from &ldquo;@/components/ui/sidebar&rdquo;;
-import { AdaptiveAppSidebar } from &ldquo;@/components/sidebar/adaptive-app-sidebar&rdquo;;
-import SkipToMain from &ldquo;@/components/skip-to-main&rdquo;;
-import { AdaptiveHeader } from &ldquo;@/components/sidebar/adaptive-header&rdquo;;
-import { RoleGuard } from &ldquo;@/components/auth/role-guard&rdquo;;
+import { cn } from "@/lib/utils";
+import { SearchProvider } from "@/context/search-context";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { AdaptiveAppSidebar } from "@/components/sidebar/adaptive-app-sidebar";
+import SkipToMain from "@/components/skip-to-main";
+import { AdaptiveHeader } from "@/components/sidebar/adaptive-header";
+import { RoleGuard } from "@/components/auth/role-guard";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -18,17 +18,17 @@ export function DashboardLayoutClient({ children }: DashboardLayoutProps) {
       <SearchProvider>
         <SidebarProvider defaultOpen={true}>
           <SkipToMain />
-          <AdaptiveAppSidebar className=&ldquo;fixed inset-y-0 left-0 z-20&rdquo; />
+          <AdaptiveAppSidebar className="fixed inset-y-0 left-0 z-20" />
           <div
-            id=&ldquo;content&rdquo;
+            id="content"
             className={cn(
-              &ldquo;ml-auto w-full max-w-full&rdquo;,
-              &ldquo;peer-data-[state=collapsed]:w-[calc(100%-var(--sidebar-width-icon)-1rem)]&rdquo;,
-              &ldquo;peer-data-[state=expanded]:w-[calc(100%-var(--sidebar-width))]&rdquo;,
-              &ldquo;transition-[width] duration-200 ease-linear&rdquo;,
-              &ldquo;flex min-h-screen flex-col&rdquo;,
-              &ldquo;group-data-[scroll-locked=1]/body:h-full&rdquo;,
-              &ldquo;group-data-[scroll-locked=1]/body:has-[main.fixed-main]:min-h-screen&rdquo;
+              "ml-auto w-full max-w-full",
+              "peer-data-[state=collapsed]:w-[calc(100%-var(--sidebar-width-icon)-1rem)]",
+              "peer-data-[state=expanded]:w-[calc(100%-var(--sidebar-width))]",
+              "transition-[width] duration-200 ease-linear",
+              "flex min-h-screen flex-col",
+              "group-data-[scroll-locked=1]/body:h-full",
+              "group-data-[scroll-locked=1]/body:has-[main.fixed-main]:min-h-screen"
             )}
           >
             <AdaptiveHeader />

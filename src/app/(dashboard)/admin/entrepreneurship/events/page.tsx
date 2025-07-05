@@ -1,19 +1,19 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import { useState, useEffect } from &ldquo;react&rdquo;;
-import { Button } from &ldquo;@/components/ui/button&rdquo;;
-import { Card, CardContent, CardHeader, CardTitle } from &ldquo;@/components/ui/card&rdquo;;
-import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
-import { Input } from &ldquo;@/components/ui/input&rdquo;;
-import { Textarea } from &ldquo;@/components/ui/textarea&rdquo;;
-import { Label } from &ldquo;@/components/ui/label&rdquo;;
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from &ldquo;@/components/ui/select&rdquo;;
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -21,21 +21,21 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from &ldquo;@/components/ui/table&rdquo;;
+} from "@/components/ui/table";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from &ldquo;@/components/ui/dialog&rdquo;;
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from &ldquo;@/components/ui/dropdown-menu&rdquo;;
-import { Checkbox } from &ldquo;@/components/ui/checkbox&rdquo;;
+} from "@/components/ui/dropdown-menu";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Calendar,
   Clock,
@@ -53,7 +53,7 @@ import {
   Award,
   CalendarDays,
   UserCheck,
-} from &ldquo;lucide-react&rdquo;;
+} from "lucide-react";
 
 interface NetworkingEvent {
   id: string;
@@ -62,7 +62,7 @@ interface NetworkingEvent {
   date: Date;
   time: string;
   location: string;
-  type: &ldquo;virtual&rdquo; | &ldquo;presencial&rdquo; | &ldquo;hybrid&rdquo;;
+  type: "virtual" | "presencial" | "hybrid";
   category: string;
   organizer: string;
   organizerId: string;
@@ -71,7 +71,7 @@ interface NetworkingEvent {
   price: number;
   image: string;
   tags: string[];
-  status: &ldquo;published&rdquo; | &ldquo;draft&rdquo; | &ldquo;cancelled&rdquo;;
+  status: "published" | "draft" | "cancelled";
   featured: boolean;
   registrationDeadline: Date;
   requirements: string[];
@@ -118,32 +118,32 @@ export default function AdminEventsPage() {
     upcoming: 0,
   });
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState(&ldquo;&rdquo;);
-  const [selectedType, setSelectedType] = useState(&ldquo;all&rdquo;);
-  const [selectedCategory, setSelectedCategory] = useState(&ldquo;all&rdquo;);
-  const [selectedStatus, setSelectedStatus] = useState(&ldquo;all&rdquo;);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedType, setSelectedType] = useState("all");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedStatus, setSelectedStatus] = useState("all");
   const [showCreateDialog, setShowCreateDialog] = useState(false);
 
   // Form state for creating/editing events
   const [formData, setFormData] = useState({
-    title: &ldquo;&rdquo;,
-    description: &ldquo;&rdquo;,
-    date: &ldquo;&rdquo;,
-    time: &ldquo;&rdquo;,
-    location: &ldquo;&rdquo;,
-    type: &ldquo;presencial&rdquo; as const,
-    category: &ldquo;Networking&rdquo;,
-    organizer: &ldquo;&rdquo;,
+    title: "",
+    description: "",
+    date: "",
+    time: "",
+    location: "",
+    type: "presencial" as const,
+    category: "Networking",
+    organizer: "",
     maxAttendees: 50,
     price: 0,
-    image: &ldquo;&rdquo;,
-    tags: &ldquo;&rdquo;,
+    image: "",
+    tags: "",
     featured: false,
-    status: &ldquo;draft&rdquo; as const,
-    registrationDeadline: &ldquo;&rdquo;,
-    requirements: &ldquo;&rdquo;,
-    agenda: &ldquo;&rdquo;,
-    speakers: &ldquo;&rdquo;,
+    status: "draft" as const,
+    registrationDeadline: "",
+    requirements: "",
+    agenda: "",
+    speakers: "",
   });
 
   useEffect(() => {
@@ -159,11 +159,11 @@ export default function AdminEventsPage() {
   const fetchEvents = async () => {
     try {
       setLoading(true);
-      if (searchQuery) params.append(&ldquo;search&rdquo;, searchQuery);
-      if (selectedType !== &ldquo;all&rdquo;) params.append(&ldquo;type&rdquo;, selectedType);
-      if (selectedCategory !== &ldquo;all&rdquo;)
-        params.append(&ldquo;category&rdquo;, selectedCategory);
-      if (selectedStatus !== &ldquo;all&rdquo;) params.append(&ldquo;status&rdquo;, selectedStatus);
+      if (searchQuery) params.append("search", searchQuery);
+      if (selectedType !== "all") params.append("type", selectedType);
+      if (selectedCategory !== "all")
+        params.append("category", selectedCategory);
+      if (selectedStatus !== "all") params.append("status", selectedStatus);
 
       const response = await fetch(
         `/api/admin/entrepreneurship/events?${params}`
@@ -173,7 +173,7 @@ export default function AdminEventsPage() {
       setEvents(data.events);
       setStats(data.stats);
     } catch (error) {
-      console.error(&ldquo;Error fetching events:&rdquo;, error);
+      console.error("Error fetching events:", error);
     } finally {
       setLoading(false);
     }
@@ -181,26 +181,26 @@ export default function AdminEventsPage() {
 
   const handleCreateEvent = async () => {
     try {
-      const response = await fetch(&ldquo;/api/admin/entrepreneurship/events&rdquo;, {
-        method: &ldquo;POST&rdquo;,
-        headers: { &ldquo;Content-Type&rdquo;: &ldquo;application/json&rdquo; },
+      const response = await fetch("/api/admin/entrepreneurship/events", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...formData,
-          tags: formData.tags.split(&ldquo;,&rdquo;).map((tag) => tag.trim()),
+          tags: formData.tags.split(",").map((tag) => tag.trim()),
           requirements: formData.requirements
-            .split(&ldquo;\n&rdquo;)
+            .split("\n")
             .filter((req) => req.trim()),
           agenda: formData.agenda
-            .split(&ldquo;\n&rdquo;)
+            .split("\n")
             .map((line) => {
-              const [time, activity] = line.split(&ldquo; - &rdquo;);
+              const [time, activity] = line.split(" - ");
               return { time: time?.trim(), activity: activity?.trim() };
             })
             .filter((item) => item.time && item.activity),
           speakers: formData.speakers
-            .split(&ldquo;\n&rdquo;)
+            .split("\n")
             .map((line) => {
-              const [name, role] = line.split(&ldquo; - &rdquo;);
+              const [name, role] = line.split(" - ");
               return { name: name?.trim(), role: role?.trim() };
             })
             .filter((speaker) => speaker.name && speaker.role),
@@ -210,88 +210,88 @@ export default function AdminEventsPage() {
       if (response.ok) {
         setShowCreateDialog(false);
         setFormData({
-          title: &ldquo;&rdquo;,
-          description: &ldquo;&rdquo;,
-          date: &ldquo;&rdquo;,
-          time: &ldquo;&rdquo;,
-          location: &ldquo;&rdquo;,
-          type: &ldquo;presencial&rdquo;,
-          category: &ldquo;Networking&rdquo;,
-          organizer: &ldquo;&rdquo;,
+          title: "",
+          description: "",
+          date: "",
+          time: "",
+          location: "",
+          type: "presencial",
+          category: "Networking",
+          organizer: "",
           maxAttendees: 50,
           price: 0,
-          image: &ldquo;&rdquo;,
-          tags: &ldquo;&rdquo;,
+          image: "",
+          tags: "",
           featured: false,
-          status: &ldquo;draft&rdquo;,
-          registrationDeadline: &ldquo;&rdquo;,
-          requirements: &ldquo;&rdquo;,
-          agenda: &ldquo;&rdquo;,
-          speakers: &ldquo;&rdquo;,
+          status: "draft",
+          registrationDeadline: "",
+          requirements: "",
+          agenda: "",
+          speakers: "",
         });
         fetchEvents();
       }
     } catch (error) {
-      console.error(&ldquo;Error creating event:&rdquo;, error);
+      console.error("Error creating event:", error);
     }
   };
 
   const getTypeIcon = (type: string) => {
     switch (type) {
-      case &ldquo;virtual&rdquo;:
-        return <Monitor className=&ldquo;h-4 w-4&rdquo; />;
-      case &ldquo;presencial&rdquo;:
-        return <Building className=&ldquo;h-4 w-4&rdquo; />;
-      case &ldquo;hybrid&rdquo;:
-        return <Video className=&ldquo;h-4 w-4&rdquo; />;
+      case "virtual":
+        return <Monitor className="h-4 w-4" />;
+      case "presencial":
+        return <Building className="h-4 w-4" />;
+      case "hybrid":
+        return <Video className="h-4 w-4" />;
       default:
-        return <Calendar className=&ldquo;h-4 w-4&rdquo; />;
+        return <Calendar className="h-4 w-4" />;
     }
   };
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case &ldquo;virtual&rdquo;:
-        return &ldquo;bg-blue-100 text-blue-800&rdquo;;
-      case &ldquo;presencial&rdquo;:
-        return &ldquo;bg-green-100 text-green-800&rdquo;;
-      case &ldquo;hybrid&rdquo;:
-        return &ldquo;bg-purple-100 text-purple-800&rdquo;;
+      case "virtual":
+        return "bg-blue-100 text-blue-800";
+      case "presencial":
+        return "bg-green-100 text-green-800";
+      case "hybrid":
+        return "bg-purple-100 text-purple-800";
       default:
-        return &ldquo;bg-gray-100 text-gray-800&rdquo;;
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case &ldquo;published&rdquo;:
-        return &ldquo;bg-green-100 text-green-800&rdquo;;
-      case &ldquo;draft&rdquo;:
-        return &ldquo;bg-yellow-100 text-yellow-800&rdquo;;
-      case &ldquo;cancelled&rdquo;:
-        return &ldquo;bg-red-100 text-red-800&rdquo;;
+      case "published":
+        return "bg-green-100 text-green-800";
+      case "draft":
+        return "bg-yellow-100 text-yellow-800";
+      case "cancelled":
+        return "bg-red-100 text-red-800";
       default:
-        return &ldquo;bg-gray-100 text-gray-800&rdquo;;
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const categories = [
-    &ldquo;Networking&rdquo;,
-    &ldquo;Pitch&rdquo;,
-    &ldquo;Workshop&rdquo;,
-    &ldquo;Feria&rdquo;,
-    &ldquo;Conferencia&rdquo;,
-    &ldquo;Panel&rdquo;,
+    "Networking",
+    "Pitch",
+    "Workshop",
+    "Feria",
+    "Conferencia",
+    "Panel",
   ];
 
   if (loading) {
     return (
-      <div className=&ldquo;container mx-auto p-6&rdquo;>
-        <div className=&ldquo;animate-pulse space-y-6&rdquo;>
-          <div className=&ldquo;h-32 bg-gray-200 rounded-lg&rdquo; />
-          <div className=&ldquo;grid grid-cols-1 md:grid-cols-4 gap-4&rdquo;>
+      <div className="container mx-auto p-6">
+        <div className="animate-pulse space-y-6">
+          <div className="h-32 bg-gray-200 rounded-lg" />
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {[...Array(4)].map((_, i) => (
-              <div key={i} className=&ldquo;h-24 bg-gray-200 rounded&rdquo; />
+              <div key={i} className="h-24 bg-gray-200 rounded" />
             ))}
           </div>
         </div>
@@ -300,32 +300,32 @@ export default function AdminEventsPage() {
   }
 
   return (
-    <div className=&ldquo;container mx-auto p-6 space-y-6&rdquo;>
+    <div className="container mx-auto p-6 space-y-6">
       {/* Header */}
-      <div className=&ldquo;flex items-center justify-between&rdquo;>
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className=&ldquo;text-3xl font-bold&rdquo;>Gestión de Eventos</h1>
-          <p className=&ldquo;text-muted-foreground&rdquo;>
+          <h1 className="text-3xl font-bold">Gestión de Eventos</h1>
+          <p className="text-muted-foreground">
             Administra eventos de networking y capacitación
           </p>
         </div>
         <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
           <DialogTrigger asChild>
             <Button>
-              <Plus className=&ldquo;h-4 w-4 mr-2&rdquo; />
+              <Plus className="h-4 w-4 mr-2" />
               Nuevo Evento
             </Button>
           </DialogTrigger>
-          <DialogContent className=&ldquo;max-w-4xl max-h-[90vh] overflow-y-auto&rdquo;>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Crear Nuevo Evento</DialogTitle>
             </DialogHeader>
-            <div className=&ldquo;space-y-4 p-1&rdquo;>
-              <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 gap-4&rdquo;>
-                <div className=&ldquo;space-y-2&rdquo;>
-                  <Label htmlFor=&ldquo;title&rdquo;>Título *</Label>
+            <div className="space-y-4 p-1">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="title">Título *</Label>
                   <Input
-                    id=&ldquo;title&rdquo;
+                    id="title"
                     value={formData.title}
                     onChange={(e) =>
                       setFormData((prev) => ({
@@ -333,13 +333,13 @@ export default function AdminEventsPage() {
                         title: e.target.value,
                       }))
                     }
-                    placeholder=&ldquo;Título del evento&rdquo;
+                    placeholder="Título del evento"
                   />
                 </div>
-                <div className=&ldquo;space-y-2&rdquo;>
-                  <Label htmlFor=&ldquo;organizer&rdquo;>Organizador *</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="organizer">Organizador *</Label>
                   <Input
-                    id=&ldquo;organizer&rdquo;
+                    id="organizer"
                     value={formData.organizer}
                     onChange={(e) =>
                       setFormData((prev) => ({
@@ -347,15 +347,15 @@ export default function AdminEventsPage() {
                         organizer: e.target.value,
                       }))
                     }
-                    placeholder=&ldquo;Nombre del organizador&rdquo;
+                    placeholder="Nombre del organizador"
                   />
                 </div>
               </div>
 
-              <div className=&ldquo;space-y-2&rdquo;>
-                <Label htmlFor=&ldquo;description&rdquo;>Descripción *</Label>
+              <div className="space-y-2">
+                <Label htmlFor="description">Descripción *</Label>
                 <Textarea
-                  id=&ldquo;description&rdquo;
+                  id="description"
                   value={formData.description}
                   onChange={(e) =>
                     setFormData((prev) => ({
@@ -363,41 +363,41 @@ export default function AdminEventsPage() {
                       description: e.target.value,
                     }))
                   }
-                  placeholder=&ldquo;Descripción detallada del evento&rdquo;
+                  placeholder="Descripción detallada del evento"
                   rows={3}
                 />
               </div>
 
-              <div className=&ldquo;grid grid-cols-1 md:grid-cols-3 gap-4&rdquo;>
-                <div className=&ldquo;space-y-2&rdquo;>
-                  <Label htmlFor=&ldquo;date&rdquo;>Fecha *</Label>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="date">Fecha *</Label>
                   <Input
-                    id=&ldquo;date&rdquo;
-                    type=&ldquo;date&rdquo;
+                    id="date"
+                    type="date"
                     value={formData.date}
                     onChange={(e) =>
                       setFormData((prev) => ({ ...prev, date: e.target.value }))
                     }
                   />
                 </div>
-                <div className=&ldquo;space-y-2&rdquo;>
-                  <Label htmlFor=&ldquo;time&rdquo;>Horario *</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="time">Horario *</Label>
                   <Input
-                    id=&ldquo;time&rdquo;
+                    id="time"
                     value={formData.time}
                     onChange={(e) =>
                       setFormData((prev) => ({ ...prev, time: e.target.value }))
                     }
-                    placeholder=&ldquo;ej: 14:00 - 17:00&rdquo;
+                    placeholder="ej: 14:00 - 17:00"
                   />
                 </div>
-                <div className=&ldquo;space-y-2&rdquo;>
-                  <Label htmlFor=&ldquo;registrationDeadline&rdquo;>
+                <div className="space-y-2">
+                  <Label htmlFor="registrationDeadline">
                     Fecha límite registro
                   </Label>
                   <Input
-                    id=&ldquo;registrationDeadline&rdquo;
-                    type=&ldquo;date&rdquo;
+                    id="registrationDeadline"
+                    type="date"
                     value={formData.registrationDeadline}
                     onChange={(e) =>
                       setFormData((prev) => ({
@@ -409,27 +409,27 @@ export default function AdminEventsPage() {
                 </div>
               </div>
 
-              <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 gap-4&rdquo;>
-                <div className=&ldquo;space-y-2&rdquo;>
-                  <Label htmlFor=&ldquo;type&rdquo;>Tipo *</Label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="type">Tipo *</Label>
                   <Select
                     value={formData.type}
                     onValueChange={(
-                      value: &ldquo;virtual&rdquo; | &ldquo;presencial&rdquo; | &ldquo;hybrid&rdquo;
+                      value: "virtual" | "presencial" | "hybrid"
                     ) => setFormData((prev) => ({ ...prev, type: value }))}
                   >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value=&ldquo;presencial&rdquo;>Presencial</SelectItem>
-                      <SelectItem value=&ldquo;virtual&rdquo;>Virtual</SelectItem>
-                      <SelectItem value=&ldquo;hybrid&rdquo;>Híbrido</SelectItem>
+                      <SelectItem value="presencial">Presencial</SelectItem>
+                      <SelectItem value="virtual">Virtual</SelectItem>
+                      <SelectItem value="hybrid">Híbrido</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
-                <div className=&ldquo;space-y-2&rdquo;>
-                  <Label htmlFor=&ldquo;category&rdquo;>Categoría *</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="category">Categoría *</Label>
                   <Select
                     value={formData.category}
                     onValueChange={(value) =>
@@ -450,10 +450,10 @@ export default function AdminEventsPage() {
                 </div>
               </div>
 
-              <div className=&ldquo;space-y-2&rdquo;>
-                <Label htmlFor=&ldquo;location&rdquo;>Ubicación *</Label>
+              <div className="space-y-2">
+                <Label htmlFor="location">Ubicación *</Label>
                 <Input
-                  id=&ldquo;location&rdquo;
+                  id="location"
                   value={formData.location}
                   onChange={(e) =>
                     setFormData((prev) => ({
@@ -461,16 +461,16 @@ export default function AdminEventsPage() {
                       location: e.target.value,
                     }))
                   }
-                  placeholder=&ldquo;Dirección física o link de videoconferencia&rdquo;
+                  placeholder="Dirección física o link de videoconferencia"
                 />
               </div>
 
-              <div className=&ldquo;grid grid-cols-1 md:grid-cols-3 gap-4&rdquo;>
-                <div className=&ldquo;space-y-2&rdquo;>
-                  <Label htmlFor=&ldquo;maxAttendees&rdquo;>Capacidad máxima</Label>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="maxAttendees">Capacidad máxima</Label>
                   <Input
-                    id=&ldquo;maxAttendees&rdquo;
-                    type=&ldquo;number&rdquo;
+                    id="maxAttendees"
+                    type="number"
                     value={formData.maxAttendees}
                     onChange={(e) =>
                       setFormData((prev) => ({
@@ -478,14 +478,14 @@ export default function AdminEventsPage() {
                         maxAttendees: parseInt(e.target.value) || 0,
                       }))
                     }
-                    min=&ldquo;1&rdquo;
+                    min="1"
                   />
                 </div>
-                <div className=&ldquo;space-y-2&rdquo;>
-                  <Label htmlFor=&ldquo;price&rdquo;>Precio (Bs.)</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="price">Precio (Bs.)</Label>
                   <Input
-                    id=&ldquo;price&rdquo;
-                    type=&ldquo;number&rdquo;
+                    id="price"
+                    type="number"
                     value={formData.price}
                     onChange={(e) =>
                       setFormData((prev) => ({
@@ -493,61 +493,61 @@ export default function AdminEventsPage() {
                         price: parseFloat(e.target.value) || 0,
                       }))
                     }
-                    min=&ldquo;0&rdquo;
-                    step=&ldquo;0.01&rdquo;
+                    min="0"
+                    step="0.01"
                   />
                 </div>
-                <div className=&ldquo;space-y-2&rdquo;>
-                  <Label htmlFor=&ldquo;status&rdquo;>Estado</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="status">Estado</Label>
                   <Select
                     value={formData.status}
                     onValueChange={(
-                      value: &ldquo;published&rdquo; | &ldquo;draft&rdquo; | &ldquo;cancelled&rdquo;
+                      value: "published" | "draft" | "cancelled"
                     ) => setFormData((prev) => ({ ...prev, status: value }))}
                   >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value=&ldquo;draft&rdquo;>Borrador</SelectItem>
-                      <SelectItem value=&ldquo;published&rdquo;>Publicado</SelectItem>
-                      <SelectItem value=&ldquo;cancelled&rdquo;>Cancelado</SelectItem>
+                      <SelectItem value="draft">Borrador</SelectItem>
+                      <SelectItem value="published">Publicado</SelectItem>
+                      <SelectItem value="cancelled">Cancelado</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
 
-              <div className=&ldquo;space-y-2&rdquo;>
-                <Label htmlFor=&ldquo;image&rdquo;>URL de Imagen</Label>
+              <div className="space-y-2">
+                <Label htmlFor="image">URL de Imagen</Label>
                 <Input
-                  id=&ldquo;image&rdquo;
+                  id="image"
                   value={formData.image}
                   onChange={(e) =>
                     setFormData((prev) => ({ ...prev, image: e.target.value }))
                   }
-                  placeholder=&ldquo;URL de la imagen del evento&rdquo;
+                  placeholder="URL de la imagen del evento"
                 />
               </div>
 
-              <div className=&ldquo;space-y-2&rdquo;>
-                <Label htmlFor=&ldquo;tags&rdquo;>Etiquetas</Label>
+              <div className="space-y-2">
+                <Label htmlFor="tags">Etiquetas</Label>
                 <Input
-                  id=&ldquo;tags&rdquo;
+                  id="tags"
                   value={formData.tags}
                   onChange={(e) =>
                     setFormData((prev) => ({ ...prev, tags: e.target.value }))
                   }
-                  placeholder=&ldquo;etiqueta1, etiqueta2, etiqueta3&rdquo;
+                  placeholder="etiqueta1, etiqueta2, etiqueta3"
                 />
-                <p className=&ldquo;text-xs text-muted-foreground&rdquo;>
+                <p className="text-xs text-muted-foreground">
                   Separar con comas
                 </p>
               </div>
 
-              <div className=&ldquo;space-y-2&rdquo;>
-                <Label htmlFor=&ldquo;requirements&rdquo;>Requisitos</Label>
+              <div className="space-y-2">
+                <Label htmlFor="requirements">Requisitos</Label>
                 <Textarea
-                  id=&ldquo;requirements&rdquo;
+                  id="requirements"
                   value={formData.requirements}
                   onChange={(e) =>
                     setFormData((prev) => ({
@@ -555,31 +555,31 @@ export default function AdminEventsPage() {
                       requirements: e.target.value,
                     }))
                   }
-                  placeholder=&ldquo;Un requisito por línea&rdquo;
+                  placeholder="Un requisito por línea"
                   rows={3}
                 />
               </div>
 
-              <div className=&ldquo;space-y-2&rdquo;>
-                <Label htmlFor=&ldquo;agenda&rdquo;>Agenda</Label>
+              <div className="space-y-2">
+                <Label htmlFor="agenda">Agenda</Label>
                 <Textarea
-                  id=&ldquo;agenda&rdquo;
+                  id="agenda"
                   value={formData.agenda}
                   onChange={(e) =>
                     setFormData((prev) => ({ ...prev, agenda: e.target.value }))
                   }
-                  placeholder=&ldquo;09:00 - Registro y bienvenida&#10;10:00 - Presentación principal&#10;11:30 - Coffee break&rdquo;
+                  placeholder="09:00 - Registro y bienvenida&#10;10:00 - Presentación principal&#10;11:30 - Coffee break"
                   rows={4}
                 />
-                <p className=&ldquo;text-xs text-muted-foreground&rdquo;>
+                <p className="text-xs text-muted-foreground">
                   Formato: HH:MM - Actividad (una por línea)
                 </p>
               </div>
 
-              <div className=&ldquo;space-y-2&rdquo;>
-                <Label htmlFor=&ldquo;speakers&rdquo;>Ponentes/Facilitadores</Label>
+              <div className="space-y-2">
+                <Label htmlFor="speakers">Ponentes/Facilitadores</Label>
                 <Textarea
-                  id=&ldquo;speakers&rdquo;
+                  id="speakers"
                   value={formData.speakers}
                   onChange={(e) =>
                     setFormData((prev) => ({
@@ -587,28 +587,28 @@ export default function AdminEventsPage() {
                       speakers: e.target.value,
                     }))
                   }
-                  placeholder=&ldquo;Dr. Roberto Silva - Inversionista Ángel&#10;María González - Mentora Startup&rdquo;
+                  placeholder="Dr. Roberto Silva - Inversionista Ángel&#10;María González - Mentora Startup"
                   rows={3}
                 />
-                <p className=&ldquo;text-xs text-muted-foreground&rdquo;>
+                <p className="text-xs text-muted-foreground">
                   Formato: Nombre - Cargo (uno por línea)
                 </p>
               </div>
 
-              <div className=&ldquo;flex items-center space-x-2&rdquo;>
+              <div className="flex items-center space-x-2">
                 <Checkbox
-                  id=&ldquo;featured&rdquo;
+                  id="featured"
                   checked={formData.featured}
                   onCheckedChange={(checked) =>
                     setFormData((prev) => ({ ...prev, featured: !!checked }))
                   }
                 />
-                <Label htmlFor=&ldquo;featured&rdquo;>Evento destacado</Label>
+                <Label htmlFor="featured">Evento destacado</Label>
               </div>
 
-              <div className=&ldquo;flex justify-end space-x-2 pt-4&rdquo;>
+              <div className="flex justify-end space-x-2 pt-4">
                 <Button
-                  variant=&ldquo;outline&rdquo;
+                  variant="outline"
                   onClick={() => setShowCreateDialog(false)}
                 >
                   Cancelar
@@ -621,89 +621,89 @@ export default function AdminEventsPage() {
       </div>
 
       {/* Statistics Cards */}
-      <div className=&ldquo;grid grid-cols-1 md:grid-cols-6 gap-4&rdquo;>
+      <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
         <Card>
-          <CardContent className=&ldquo;p-4&rdquo;>
-            <div className=&ldquo;flex items-center justify-between&rdquo;>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
               <div>
-                <p className=&ldquo;text-sm font-medium text-muted-foreground&rdquo;>
+                <p className="text-sm font-medium text-muted-foreground">
                   Total Eventos
                 </p>
-                <p className=&ldquo;text-2xl font-bold&rdquo;>{stats.total}</p>
+                <p className="text-2xl font-bold">{stats.total}</p>
               </div>
-              <Calendar className=&ldquo;h-8 w-8 text-blue-600&rdquo; />
+              <Calendar className="h-8 w-8 text-blue-600" />
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className=&ldquo;p-4&rdquo;>
-            <div className=&ldquo;flex items-center justify-between&rdquo;>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
               <div>
-                <p className=&ldquo;text-sm font-medium text-muted-foreground&rdquo;>
+                <p className="text-sm font-medium text-muted-foreground">
                   Próximos
                 </p>
-                <p className=&ldquo;text-2xl font-bold&rdquo;>{stats.upcoming}</p>
+                <p className="text-2xl font-bold">{stats.upcoming}</p>
               </div>
-              <CalendarDays className=&ldquo;h-8 w-8 text-green-600&rdquo; />
+              <CalendarDays className="h-8 w-8 text-green-600" />
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className=&ldquo;p-4&rdquo;>
-            <div className=&ldquo;flex items-center justify-between&rdquo;>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
               <div>
-                <p className=&ldquo;text-sm font-medium text-muted-foreground&rdquo;>
+                <p className="text-sm font-medium text-muted-foreground">
                   Total Asistentes
                 </p>
-                <p className=&ldquo;text-2xl font-bold&rdquo;>{stats.totalAttendees}</p>
+                <p className="text-2xl font-bold">{stats.totalAttendees}</p>
               </div>
-              <Users className=&ldquo;h-8 w-8 text-purple-600&rdquo; />
+              <Users className="h-8 w-8 text-purple-600" />
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className=&ldquo;p-4&rdquo;>
-            <div className=&ldquo;flex items-center justify-between&rdquo;>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
               <div>
-                <p className=&ldquo;text-sm font-medium text-muted-foreground&rdquo;>
+                <p className="text-sm font-medium text-muted-foreground">
                   % Asistencia
                 </p>
-                <p className=&ldquo;text-2xl font-bold&rdquo;>
+                <p className="text-2xl font-bold">
                   {(stats.averageAttendance * 100).toFixed(0)}%
                 </p>
               </div>
-              <UserCheck className=&ldquo;h-8 w-8 text-orange-600&rdquo; />
+              <UserCheck className="h-8 w-8 text-orange-600" />
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className=&ldquo;p-4&rdquo;>
-            <div className=&ldquo;flex items-center justify-between&rdquo;>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
               <div>
-                <p className=&ldquo;text-sm font-medium text-muted-foreground&rdquo;>
+                <p className="text-sm font-medium text-muted-foreground">
                   Publicados
                 </p>
-                <p className=&ldquo;text-2xl font-bold&rdquo;>{stats.byStatus.published}</p>
+                <p className="text-2xl font-bold">{stats.byStatus.published}</p>
               </div>
-              <TrendingUp className=&ldquo;h-8 w-8 text-teal-600&rdquo; />
+              <TrendingUp className="h-8 w-8 text-teal-600" />
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className=&ldquo;p-4&rdquo;>
-            <div className=&ldquo;flex items-center justify-between&rdquo;>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
               <div>
-                <p className=&ldquo;text-sm font-medium text-muted-foreground&rdquo;>
+                <p className="text-sm font-medium text-muted-foreground">
                   Destacados
                 </p>
-                <p className=&ldquo;text-2xl font-bold&rdquo;>{stats.featured}</p>
+                <p className="text-2xl font-bold">{stats.featured}</p>
               </div>
-              <Award className=&ldquo;h-8 w-8 text-yellow-600&rdquo; />
+              <Award className="h-8 w-8 text-yellow-600" />
             </div>
           </CardContent>
         </Card>
@@ -711,27 +711,27 @@ export default function AdminEventsPage() {
 
       {/* Filters */}
       <Card>
-        <CardContent className=&ldquo;p-6&rdquo;>
-          <div className=&ldquo;flex flex-col md:flex-row gap-4&rdquo;>
-            <div className=&ldquo;relative flex-1&rdquo;>
-              <Search className=&ldquo;absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground&rdquo; />
+        <CardContent className="p-6">
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder=&ldquo;Buscar eventos por título, organizador o etiquetas...&rdquo;
+                placeholder="Buscar eventos por título, organizador o etiquetas..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className=&ldquo;pl-10&rdquo;
+                className="pl-10"
               />
             </div>
-            <div className=&ldquo;flex gap-2&rdquo;>
+            <div className="flex gap-2">
               <Select value={selectedType} onValueChange={setSelectedType}>
-                <SelectTrigger className=&ldquo;w-[130px]&rdquo;>
-                  <SelectValue placeholder=&ldquo;Tipo&rdquo; />
+                <SelectTrigger className="w-[130px]">
+                  <SelectValue placeholder="Tipo" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value=&ldquo;all&rdquo;>Todos</SelectItem>
-                  <SelectItem value=&ldquo;virtual&rdquo;>Virtual</SelectItem>
-                  <SelectItem value=&ldquo;presencial&rdquo;>Presencial</SelectItem>
-                  <SelectItem value=&ldquo;hybrid&rdquo;>Híbrido</SelectItem>
+                  <SelectItem value="all">Todos</SelectItem>
+                  <SelectItem value="virtual">Virtual</SelectItem>
+                  <SelectItem value="presencial">Presencial</SelectItem>
+                  <SelectItem value="hybrid">Híbrido</SelectItem>
                 </SelectContent>
               </Select>
 
@@ -739,11 +739,11 @@ export default function AdminEventsPage() {
                 value={selectedCategory}
                 onValueChange={setSelectedCategory}
               >
-                <SelectTrigger className=&ldquo;w-[130px]&rdquo;>
-                  <SelectValue placeholder=&ldquo;Categoría&rdquo; />
+                <SelectTrigger className="w-[130px]">
+                  <SelectValue placeholder="Categoría" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value=&ldquo;all&rdquo;>Todas</SelectItem>
+                  <SelectItem value="all">Todas</SelectItem>
                   {categories.map((category) => (
                     <SelectItem key={category} value={category}>
                       {category}
@@ -753,14 +753,14 @@ export default function AdminEventsPage() {
               </Select>
 
               <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-                <SelectTrigger className=&ldquo;w-[120px]&rdquo;>
-                  <SelectValue placeholder=&ldquo;Estado&rdquo; />
+                <SelectTrigger className="w-[120px]">
+                  <SelectValue placeholder="Estado" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value=&ldquo;all&rdquo;>Todos</SelectItem>
-                  <SelectItem value=&ldquo;published&rdquo;>Publicados</SelectItem>
-                  <SelectItem value=&ldquo;draft&rdquo;>Borradores</SelectItem>
-                  <SelectItem value=&ldquo;cancelled&rdquo;>Cancelados</SelectItem>
+                  <SelectItem value="all">Todos</SelectItem>
+                  <SelectItem value="published">Publicados</SelectItem>
+                  <SelectItem value="draft">Borradores</SelectItem>
+                  <SelectItem value="cancelled">Cancelados</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -790,13 +790,13 @@ export default function AdminEventsPage() {
               {events.map((event) => (
                 <TableRow key={event.id}>
                   <TableCell>
-                    <div className=&ldquo;flex items-center gap-3&rdquo;>
-                      <div className=&ldquo;w-12 h-12 bg-gray-100 rounded flex items-center justify-center&rdquo;>
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 bg-gray-100 rounded flex items-center justify-center">
                         {getTypeIcon(event.type)}
                       </div>
                       <div>
-                        <p className=&ldquo;font-medium&rdquo;>{event.title}</p>
-                        <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
+                        <p className="font-medium">{event.title}</p>
+                        <p className="text-sm text-muted-foreground">
                           {event.organizer} • {event.category}
                         </p>
                       </div>
@@ -809,17 +809,17 @@ export default function AdminEventsPage() {
                   </TableCell>
                   <TableCell>
                     <div>
-                      <p className=&ldquo;font-medium&rdquo;>
+                      <p className="font-medium">
                         {new Date(event.date).toLocaleDateString()}
                       </p>
-                      <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
+                      <p className="text-sm text-muted-foreground">
                         {event.time}
                       </p>
                     </div>
                   </TableCell>
                   <TableCell>
-                    <div className=&ldquo;flex items-center gap-1&rdquo;>
-                      <Users className=&ldquo;h-3 w-3&rdquo; />
+                    <div className="flex items-center gap-1">
+                      <Users className="h-3 w-3" />
                       {event.attendees}/{event.maxAttendees}
                     </div>
                   </TableCell>
@@ -830,31 +830,31 @@ export default function AdminEventsPage() {
                   </TableCell>
                   <TableCell>
                     {event.featured && (
-                      <Award className=&ldquo;h-4 w-4 text-orange-600&rdquo; />
+                      <Award className="h-4 w-4 text-orange-600" />
                     )}
                   </TableCell>
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant=&ldquo;ghost&rdquo; size=&ldquo;sm&rdquo;>
-                          <MoreVertical className=&ldquo;h-4 w-4&rdquo; />
+                        <Button variant="ghost" size="sm">
+                          <MoreVertical className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align=&ldquo;end&rdquo;>
+                      <DropdownMenuContent align="end">
                         <DropdownMenuItem>
-                          <Eye className=&ldquo;h-4 w-4 mr-2&rdquo; />
+                          <Eye className="h-4 w-4 mr-2" />
                           Ver Detalles
                         </DropdownMenuItem>
                         <DropdownMenuItem>
-                          <Edit className=&ldquo;h-4 w-4 mr-2&rdquo; />
+                          <Edit className="h-4 w-4 mr-2" />
                           Editar
                         </DropdownMenuItem>
                         <DropdownMenuItem>
-                          <Users className=&ldquo;h-4 w-4 mr-2&rdquo; />
+                          <Users className="h-4 w-4 mr-2" />
                           Ver Asistentes
                         </DropdownMenuItem>
-                        <DropdownMenuItem className=&ldquo;text-red-600&rdquo;>
-                          <Trash2 className=&ldquo;h-4 w-4 mr-2&rdquo; />
+                        <DropdownMenuItem className="text-red-600">
+                          <Trash2 className="h-4 w-4 mr-2" />
                           Eliminar
                         </DropdownMenuItem>
                       </DropdownMenuContent>
@@ -866,12 +866,12 @@ export default function AdminEventsPage() {
           </Table>
 
           {events.length === 0 && (
-            <div className=&ldquo;text-center py-8&rdquo;>
-              <Calendar className=&ldquo;h-12 w-12 mx-auto text-muted-foreground mb-4&rdquo; />
-              <h3 className=&ldquo;text-lg font-semibold mb-2&rdquo;>
+            <div className="text-center py-8">
+              <Calendar className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+              <h3 className="text-lg font-semibold mb-2">
                 No se encontraron eventos
               </h3>
-              <p className=&ldquo;text-muted-foreground&rdquo;>
+              <p className="text-muted-foreground">
                 Intenta ajustar los filtros o crear nuevos eventos
               </p>
             </div>

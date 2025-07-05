@@ -1,16 +1,16 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import { useState } from &ldquo;react&rdquo;;
-import type { Profile } from &ldquo;@/types/profile&rdquo;;
-import { Button } from &ldquo;@/components/ui/button&rdquo;;
+import { useState } from "react";
+import type { Profile } from "@/types/profile";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from &ldquo;@/components/ui/card&rdquo;;
-import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import {
   Building,
   FileText,
@@ -21,19 +21,19 @@ import {
   Calendar,
   Briefcase,
   Camera,
-} from &ldquo;lucide-react&rdquo;;
+} from "lucide-react";
 
 // Import shared components
-import { ProfileCompletionIndicator } from &ldquo;../shared/profile-completion-indicator&rdquo;;
-import { ImageUpload } from &ldquo;../shared/image-upload&rdquo;;
-import { LocationSelector } from &ldquo;../shared/location-selector&rdquo;;
+import { ProfileCompletionIndicator } from "../shared/profile-completion-indicator";
+import { ImageUpload } from "../shared/image-upload";
+import { LocationSelector } from "../shared/location-selector";
 
 interface CompanyProfileProps {
   profile: Profile;
 }
 
 export function CompanyProfile({ profile }: CompanyProfileProps) {
-  const [activeSection, setActiveSection] = useState(&ldquo;overview&rdquo;);
+  const [activeSection, setActiveSection] = useState("overview");
 
   // Handle section navigation from completion indicator
   const handleSectionClick = (sectionId: string) => {
@@ -42,11 +42,11 @@ export function CompanyProfile({ profile }: CompanyProfileProps) {
 
   const getAvailableSections = () => {
     return [
-      { id: &ldquo;overview&rdquo;, label: &ldquo;Resumen Empresarial&rdquo;, icon: Building },
-      { id: &ldquo;company&rdquo;, label: &ldquo;Información Empresarial&rdquo;, icon: Building },
-      { id: &ldquo;legal&rdquo;, label: &ldquo;Datos Legales&rdquo;, icon: FileText },
-      { id: &ldquo;contact&rdquo;, label: &ldquo;Información de Contacto&rdquo;, icon: Phone },
-      { id: &ldquo;description&rdquo;, label: &ldquo;Descripción y Cultura&rdquo;, icon: Globe },
+      { id: "overview", label: "Resumen Empresarial", icon: Building },
+      { id: "company", label: "Información Empresarial", icon: Building },
+      { id: "legal", label: "Datos Legales", icon: FileText },
+      { id: "contact", label: "Información de Contacto", icon: Phone },
+      { id: "description", label: "Descripción y Cultura", icon: Globe },
     ];
   };
 
@@ -54,35 +54,35 @@ export function CompanyProfile({ profile }: CompanyProfileProps) {
 
   const getCompanySize = (size: string) => {
     switch (size) {
-      case &ldquo;MICRO&rdquo;:
-        return &ldquo;Microempresa (1-10 empleados)&rdquo;;
-      case &ldquo;SMALL&rdquo;:
-        return &ldquo;Pequeña empresa (11-50 empleados)&rdquo;;
-      case &ldquo;MEDIUM&rdquo;:
-        return &ldquo;Mediana empresa (51-200 empleados)&rdquo;;
-      case &ldquo;LARGE&rdquo;:
-        return &ldquo;Gran empresa (200+ empleados)&rdquo;;
+      case "MICRO":
+        return "Microempresa (1-10 empleados)";
+      case "SMALL":
+        return "Pequeña empresa (11-50 empleados)";
+      case "MEDIUM":
+        return "Mediana empresa (51-200 empleados)";
+      case "LARGE":
+        return "Gran empresa (200+ empleados)";
       default:
-        return &ldquo;No especificado&rdquo;;
+        return "No especificado";
     }
   };
 
   return (
-    <div className=&ldquo;max-w-7xl mx-auto p-6 space-y-6&rdquo;>
+    <div className="max-w-7xl mx-auto p-6 space-y-6">
       {/* Header */}
-      <div className=&ldquo;flex items-center justify-between&rdquo;>
-        <div className=&ldquo;space-y-1&rdquo;>
-          <h1 className=&ldquo;text-3xl font-bold&rdquo;>Perfil Empresarial</h1>
-          <p className=&ldquo;text-muted-foreground&rdquo;>
+      <div className="flex items-center justify-between">
+        <div className="space-y-1">
+          <h1 className="text-3xl font-bold">Perfil Empresarial</h1>
+          <p className="text-muted-foreground">
             Información completa de tu empresa para publicar ofertas de trabajo
           </p>
         </div>
 
-        <div className=&ldquo;flex items-center gap-2&rdquo;>
-          <Badge variant=&ldquo;default&rdquo;>Empresa</Badge>
+        <div className="flex items-center gap-2">
+          <Badge variant="default">Empresa</Badge>
           {profile.profileCompletion !== undefined && (
             <Badge
-              variant={profile.profileCompletion >= 80 ? &ldquo;default&rdquo; : &ldquo;outline&rdquo;}
+              variant={profile.profileCompletion >= 80 ? "default" : "outline"}
             >
               {profile.profileCompletion}% Completo
             </Badge>
@@ -90,15 +90,15 @@ export function CompanyProfile({ profile }: CompanyProfileProps) {
         </div>
       </div>
 
-      <div className=&ldquo;grid grid-cols-1 lg:grid-cols-4 gap-6&rdquo;>
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Sidebar Navigation */}
-        <div className=&ldquo;lg:col-span-1&rdquo;>
+        <div className="lg:col-span-1">
           <Card>
             <CardHeader>
-              <CardTitle className=&ldquo;text-sm&rdquo;>Secciones del Perfil</CardTitle>
+              <CardTitle className="text-sm">Secciones del Perfil</CardTitle>
             </CardHeader>
-            <CardContent className=&ldquo;p-0&rdquo;>
-              <nav className=&ldquo;space-y-1&rdquo;>
+            <CardContent className="p-0">
+              <nav className="space-y-1">
                 {sections.map((section) => {
                   const Icon = section.icon;
                   const isActive = activeSection === section.id;
@@ -106,12 +106,12 @@ export function CompanyProfile({ profile }: CompanyProfileProps) {
                   return (
                     <Button
                       key={section.id}
-                      variant={isActive ? &ldquo;secondary&rdquo; : &ldquo;ghost&rdquo;}
-                      className=&ldquo;w-full justify-start text-left h-auto p-3&rdquo;
+                      variant={isActive ? "secondary" : "ghost"}
+                      className="w-full justify-start text-left h-auto p-3"
                       onClick={() => setActiveSection(section.id)}
                     >
-                      <Icon className=&ldquo;h-4 w-4 mr-3 flex-shrink-0&rdquo; />
-                      <span className=&ldquo;truncate&rdquo;>{section.label}</span>
+                      <Icon className="h-4 w-4 mr-3 flex-shrink-0" />
+                      <span className="truncate">{section.label}</span>
                     </Button>
                   );
                 })}
@@ -120,10 +120,10 @@ export function CompanyProfile({ profile }: CompanyProfileProps) {
           </Card>
 
           {/* Company Logo Upload */}
-          <Card className=&ldquo;mt-4&rdquo;>
+          <Card className="mt-4">
             <CardHeader>
-              <CardTitle className=&ldquo;text-sm flex items-center gap-2&rdquo;>
-                <Camera className=&ldquo;h-4 w-4&rdquo; />
+              <CardTitle className="text-sm flex items-center gap-2">
+                <Camera className="h-4 w-4" />
                 Logo Empresarial
               </CardTitle>
             </CardHeader>
@@ -131,40 +131,40 @@ export function CompanyProfile({ profile }: CompanyProfileProps) {
               <ImageUpload
                 currentImage={profile.avatarUrl}
                 onImageChange={(url) => {
-                  console.log(&ldquo;Logo updated:&rdquo;, url);
+                  console.log("Logo updated:", url);
                 }}
-                type=&ldquo;logo&rdquo;
+                type="logo"
                 maxSize={5}
-                placeholder=&ldquo;Logo de la empresa&rdquo;
+                placeholder="Logo de la empresa"
               />
             </CardContent>
           </Card>
         </div>
 
         {/* Main Content */}
-        <div className=&ldquo;lg:col-span-3&rdquo;>
-          <div className=&ldquo;space-y-6&rdquo;>
+        <div className="lg:col-span-3">
+          <div className="space-y-6">
             {/* Overview Section */}
-            {activeSection === &ldquo;overview&rdquo; && (
-              <div className=&ldquo;space-y-6&rdquo;>
+            {activeSection === "overview" && (
+              <div className="space-y-6">
                 <ProfileCompletionIndicator
                   profile={profile}
-                  userRole=&ldquo;COMPANIES&rdquo;
+                  userRole="COMPANIES"
                   onSectionClick={handleSectionClick}
                 />
 
                 {/* Company Overview Cards */}
-                <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 gap-4&rdquo;>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Card>
-                    <CardContent className=&ldquo;p-4&rdquo;>
-                      <div className=&ldquo;flex items-center gap-2&rdquo;>
-                        <Building className=&ldquo;h-5 w-5 text-blue-500&rdquo; />
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-2">
+                        <Building className="h-5 w-5 text-blue-500" />
                         <div>
-                          <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
+                          <p className="text-sm text-muted-foreground">
                             Empresa
                           </p>
-                          <p className=&ldquo;font-medium&rdquo;>
-                            {profile.companyName || &ldquo;Nombre no registrado&rdquo;}
+                          <p className="font-medium">
+                            {profile.companyName || "Nombre no registrado"}
                           </p>
                         </div>
                       </div>
@@ -172,15 +172,15 @@ export function CompanyProfile({ profile }: CompanyProfileProps) {
                   </Card>
 
                   <Card>
-                    <CardContent className=&ldquo;p-4&rdquo;>
-                      <div className=&ldquo;flex items-center gap-2&rdquo;>
-                        <Briefcase className=&ldquo;h-5 w-5 text-green-500&rdquo; />
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-2">
+                        <Briefcase className="h-5 w-5 text-green-500" />
                         <div>
-                          <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
+                          <p className="text-sm text-muted-foreground">
                             Sector
                           </p>
-                          <p className=&ldquo;font-medium&rdquo;>
-                            {profile.businessSector || &ldquo;No especificado&rdquo;}
+                          <p className="font-medium">
+                            {profile.businessSector || "No especificado"}
                           </p>
                         </div>
                       </div>
@@ -188,15 +188,15 @@ export function CompanyProfile({ profile }: CompanyProfileProps) {
                   </Card>
 
                   <Card>
-                    <CardContent className=&ldquo;p-4&rdquo;>
-                      <div className=&ldquo;flex items-center gap-2&rdquo;>
-                        <Users className=&ldquo;h-5 w-5 text-purple-500&rdquo; />
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-2">
+                        <Users className="h-5 w-5 text-purple-500" />
                         <div>
-                          <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
+                          <p className="text-sm text-muted-foreground">
                             Tamaño
                           </p>
-                          <p className=&ldquo;font-medium&rdquo;>
-                            {getCompanySize(profile.companySize || &ldquo;&rdquo;)}
+                          <p className="font-medium">
+                            {getCompanySize(profile.companySize || "")}
                           </p>
                         </div>
                       </div>
@@ -204,17 +204,17 @@ export function CompanyProfile({ profile }: CompanyProfileProps) {
                   </Card>
 
                   <Card>
-                    <CardContent className=&ldquo;p-4&rdquo;>
-                      <div className=&ldquo;flex items-center gap-2&rdquo;>
-                        <MapPin className=&ldquo;h-5 w-5 text-red-500&rdquo; />
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-2">
+                        <MapPin className="h-5 w-5 text-red-500" />
                         <div>
-                          <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
+                          <p className="text-sm text-muted-foreground">
                             Ubicación
                           </p>
-                          <p className=&ldquo;font-medium&rdquo;>
+                          <p className="font-medium">
                             {profile.municipality
                               ? `${profile.municipality}, ${profile.department}`
-                              : &ldquo;No especificado&rdquo;}
+                              : "No especificado"}
                           </p>
                         </div>
                       </div>
@@ -226,15 +226,15 @@ export function CompanyProfile({ profile }: CompanyProfileProps) {
                 {profile.companyDescription && (
                   <Card>
                     <CardHeader>
-                      <CardTitle className=&ldquo;text-lg&rdquo;>
+                      <CardTitle className="text-lg">
                         Acerca de la Empresa
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className=&ldquo;text-muted-foreground line-clamp-3&rdquo;>
+                      <p className="text-muted-foreground line-clamp-3">
                         {profile.companyDescription}
                       </p>
-                      <Button variant=&ldquo;link&rdquo; className=&ldquo;p-0 mt-2&rdquo;>
+                      <Button variant="link" className="p-0 mt-2">
                         Ver descripción completa
                       </Button>
                     </CardContent>
@@ -244,11 +244,11 @@ export function CompanyProfile({ profile }: CompanyProfileProps) {
             )}
 
             {/* Company Information Form */}
-            {activeSection === &ldquo;company&rdquo; && (
+            {activeSection === "company" && (
               <Card>
                 <CardHeader>
-                  <CardTitle className=&ldquo;flex items-center gap-2&rdquo;>
-                    <Building className=&ldquo;h-5 w-5&rdquo; />
+                  <CardTitle className="flex items-center gap-2">
+                    <Building className="h-5 w-5" />
                     Información Empresarial
                   </CardTitle>
                   <CardDescription>
@@ -256,42 +256,42 @@ export function CompanyProfile({ profile }: CompanyProfileProps) {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className=&ldquo;space-y-4&rdquo;>
-                    <div className=&ldquo;grid grid-cols-2 gap-4&rdquo;>
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <p className=&ldquo;text-sm font-medium&rdquo;>
+                        <p className="text-sm font-medium">
                           Nombre de la Empresa
                         </p>
-                        <p className=&ldquo;text-muted-foreground&rdquo;>
-                          {profile.companyName || &ldquo;No especificado&rdquo;}
+                        <p className="text-muted-foreground">
+                          {profile.companyName || "No especificado"}
                         </p>
                       </div>
                       <div>
-                        <p className=&ldquo;text-sm font-medium&rdquo;>
+                        <p className="text-sm font-medium">
                           Sector Empresarial
                         </p>
-                        <p className=&ldquo;text-muted-foreground&rdquo;>
-                          {profile.businessSector || &ldquo;No especificado&rdquo;}
+                        <p className="text-muted-foreground">
+                          {profile.businessSector || "No especificado"}
                         </p>
                       </div>
                       <div>
-                        <p className=&ldquo;text-sm font-medium&rdquo;>
+                        <p className="text-sm font-medium">
                           Tamaño de la Empresa
                         </p>
-                        <p className=&ldquo;text-muted-foreground&rdquo;>
-                          {getCompanySize(profile.companySize || &ldquo;&rdquo;)}
+                        <p className="text-muted-foreground">
+                          {getCompanySize(profile.companySize || "")}
                         </p>
                       </div>
                       <div>
-                        <p className=&ldquo;text-sm font-medium&rdquo;>Año de Fundación</p>
-                        <p className=&ldquo;text-muted-foreground&rdquo;>
-                          {profile.foundedYear || &ldquo;No especificado&rdquo;}
+                        <p className="text-sm font-medium">Año de Fundación</p>
+                        <p className="text-muted-foreground">
+                          {profile.foundedYear || "No especificado"}
                         </p>
                       </div>
                     </div>
 
-                    <div className=&ldquo;pt-4&rdquo;>
-                      <p className=&ldquo;text-muted-foreground&rdquo;>
+                    <div className="pt-4">
+                      <p className="text-muted-foreground">
                         Formulario de información empresarial en desarrollo...
                       </p>
                     </div>
@@ -301,11 +301,11 @@ export function CompanyProfile({ profile }: CompanyProfileProps) {
             )}
 
             {/* Legal Information */}
-            {activeSection === &ldquo;legal&rdquo; && (
+            {activeSection === "legal" && (
               <Card>
                 <CardHeader>
-                  <CardTitle className=&ldquo;flex items-center gap-2&rdquo;>
-                    <FileText className=&ldquo;h-5 w-5&rdquo; />
+                  <CardTitle className="flex items-center gap-2">
+                    <FileText className="h-5 w-5" />
                     Datos Legales
                   </CardTitle>
                   <CardDescription>
@@ -313,28 +313,28 @@ export function CompanyProfile({ profile }: CompanyProfileProps) {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className=&ldquo;space-y-4&rdquo;>
-                    <div className=&ldquo;grid grid-cols-2 gap-4&rdquo;>
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <p className=&ldquo;text-sm font-medium&rdquo;>
+                        <p className="text-sm font-medium">
                           NIT / Número de Identificación Tributaria
                         </p>
-                        <p className=&ldquo;text-muted-foreground&rdquo;>
-                          {profile.taxId || &ldquo;No especificado&rdquo;}
+                        <p className="text-muted-foreground">
+                          {profile.taxId || "No especificado"}
                         </p>
                       </div>
                       <div>
-                        <p className=&ldquo;text-sm font-medium&rdquo;>
+                        <p className="text-sm font-medium">
                           Representante Legal
                         </p>
-                        <p className=&ldquo;text-muted-foreground&rdquo;>
-                          {profile.legalRepresentative || &ldquo;No especificado&rdquo;}
+                        <p className="text-muted-foreground">
+                          {profile.legalRepresentative || "No especificado"}
                         </p>
                       </div>
                     </div>
 
-                    <div className=&ldquo;pt-4&rdquo;>
-                      <p className=&ldquo;text-muted-foreground&rdquo;>
+                    <div className="pt-4">
+                      <p className="text-muted-foreground">
                         Formulario de datos legales en desarrollo...
                       </p>
                     </div>
@@ -344,12 +344,12 @@ export function CompanyProfile({ profile }: CompanyProfileProps) {
             )}
 
             {/* Contact Information */}
-            {activeSection === &ldquo;contact&rdquo; && (
-              <div className=&ldquo;space-y-6&rdquo;>
+            {activeSection === "contact" && (
+              <div className="space-y-6">
                 <Card>
                   <CardHeader>
-                    <CardTitle className=&ldquo;flex items-center gap-2&rdquo;>
-                      <Phone className=&ldquo;h-5 w-5&rdquo; />
+                    <CardTitle className="flex items-center gap-2">
+                      <Phone className="h-5 w-5" />
                       Información de Contacto
                     </CardTitle>
                     <CardDescription>
@@ -357,38 +357,38 @@ export function CompanyProfile({ profile }: CompanyProfileProps) {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className=&ldquo;space-y-4&rdquo;>
-                      <div className=&ldquo;grid grid-cols-2 gap-4&rdquo;>
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <p className=&ldquo;text-sm font-medium&rdquo;>
+                          <p className="text-sm font-medium">
                             Email Corporativo
                           </p>
-                          <p className=&ldquo;text-muted-foreground&rdquo;>
-                            {profile.email || &ldquo;No especificado&rdquo;}
+                          <p className="text-muted-foreground">
+                            {profile.email || "No especificado"}
                           </p>
                         </div>
                         <div>
-                          <p className=&ldquo;text-sm font-medium&rdquo;>Teléfono</p>
-                          <p className=&ldquo;text-muted-foreground&rdquo;>
-                            {profile.phone || &ldquo;No especificado&rdquo;}
+                          <p className="text-sm font-medium">Teléfono</p>
+                          <p className="text-muted-foreground">
+                            {profile.phone || "No especificado"}
                           </p>
                         </div>
                         <div>
-                          <p className=&ldquo;text-sm font-medium&rdquo;>Dirección</p>
-                          <p className=&ldquo;text-muted-foreground&rdquo;>
-                            {profile.address || &ldquo;No especificado&rdquo;}
+                          <p className="text-sm font-medium">Dirección</p>
+                          <p className="text-muted-foreground">
+                            {profile.address || "No especificado"}
                           </p>
                         </div>
                         <div>
-                          <p className=&ldquo;text-sm font-medium&rdquo;>Sitio Web</p>
-                          <p className=&ldquo;text-muted-foreground&rdquo;>
-                            {profile.website || &ldquo;No especificado&rdquo;}
+                          <p className="text-sm font-medium">Sitio Web</p>
+                          <p className="text-muted-foreground">
+                            {profile.website || "No especificado"}
                           </p>
                         </div>
                       </div>
 
-                      <div className=&ldquo;pt-4&rdquo;>
-                        <p className=&ldquo;text-muted-foreground&rdquo;>
+                      <div className="pt-4">
+                        <p className="text-muted-foreground">
                           Formulario de contacto en desarrollo...
                         </p>
                       </div>
@@ -398,10 +398,10 @@ export function CompanyProfile({ profile }: CompanyProfileProps) {
 
                 {/* Location Selector */}
                 <LocationSelector
-                  selectedDepartment={profile.department || &ldquo;&rdquo;}
-                  selectedMunicipality={profile.municipality || &ldquo;&rdquo;}
+                  selectedDepartment={profile.department || ""}
+                  selectedMunicipality={profile.municipality || ""}
                   onLocationChange={(department, municipality) => {
-                    console.log(&ldquo;Location updated:&rdquo;, {
+                    console.log("Location updated:", {
                       department,
                       municipality,
                     });
@@ -412,11 +412,11 @@ export function CompanyProfile({ profile }: CompanyProfileProps) {
             )}
 
             {/* Company Description */}
-            {activeSection === &ldquo;description&rdquo; && (
+            {activeSection === "description" && (
               <Card>
                 <CardHeader>
-                  <CardTitle className=&ldquo;flex items-center gap-2&rdquo;>
-                    <Globe className=&ldquo;h-5 w-5&rdquo; />
+                  <CardTitle className="flex items-center gap-2">
+                    <Globe className="h-5 w-5" />
                     Descripción y Cultura Empresarial
                   </CardTitle>
                   <CardDescription>
@@ -424,20 +424,20 @@ export function CompanyProfile({ profile }: CompanyProfileProps) {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className=&ldquo;space-y-4&rdquo;>
+                  <div className="space-y-4">
                     {profile.companyDescription && (
-                      <div className=&ldquo;p-4 bg-muted rounded-lg&rdquo;>
-                        <p className=&ldquo;text-sm font-medium mb-2&rdquo;>
+                      <div className="p-4 bg-muted rounded-lg">
+                        <p className="text-sm font-medium mb-2">
                           Descripción Actual:
                         </p>
-                        <p className=&ldquo;text-muted-foreground&rdquo;>
+                        <p className="text-muted-foreground">
                           {profile.companyDescription}
                         </p>
                       </div>
                     )}
 
-                    <div className=&ldquo;pt-4&rdquo;>
-                      <p className=&ldquo;text-muted-foreground&rdquo;>
+                    <div className="pt-4">
+                      <p className="text-muted-foreground">
                         Editor de descripción empresarial en desarrollo...
                       </p>
                     </div>

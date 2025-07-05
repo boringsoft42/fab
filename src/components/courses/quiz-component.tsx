@@ -1,15 +1,15 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import { useState, useEffect } from &ldquo;react&rdquo;;
-import { Quiz, Question, QuestionType, QuizAnswer } from &ldquo;@/types/courses&rdquo;;
-import { Button } from &ldquo;@/components/ui/button&rdquo;;
-import { Card, CardContent, CardHeader, CardTitle } from &ldquo;@/components/ui/card&rdquo;;
-import { Progress } from &ldquo;@/components/ui/progress&rdquo;;
-import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
-import { RadioGroup, RadioGroupItem } from &ldquo;@/components/ui/radio-group&rdquo;;
-import { Checkbox } from &ldquo;@/components/ui/checkbox&rdquo;;
-import { Input } from &ldquo;@/components/ui/input&rdquo;;
-import { Textarea } from &ldquo;@/components/ui/textarea&rdquo;;
+import { useState, useEffect } from "react";
+import { Quiz, Question, QuestionType, QuizAnswer } from "@/types/courses";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Clock,
   CheckCircle2,
@@ -17,8 +17,8 @@ import {
   AlertCircle,
   Trophy,
   RotateCcw,
-} from &ldquo;lucide-react&rdquo;;
-import { useToast } from &ldquo;@/components/ui/use-toast&rdquo;;
+} from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 
 interface QuizComponentProps {
   quiz: Quiz;
@@ -33,8 +33,8 @@ export const QuizComponent = ({ quiz, onComplete }: QuizComponentProps) => {
     quiz.timeLimit ? quiz.timeLimit * 60 : null
   );
   const [quizState, setQuizState] = useState<
-    &ldquo;taking&rdquo; | &ldquo;completed&rdquo; | &ldquo;reviewing&rdquo;
-  >(&ldquo;taking&rdquo;);
+    "taking" | "completed" | "reviewing"
+  >("taking");
   const [score, setScore] = useState(0);
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [attemptStartTime] = useState(Date.now());
@@ -45,7 +45,7 @@ export const QuizComponent = ({ quiz, onComplete }: QuizComponentProps) => {
 
   // Timer effect
   useEffect(() => {
-    if (timeLeft === null || timeLeft <= 0 || quizState !== &ldquo;taking&rdquo;) return;
+    if (timeLeft === null || timeLeft <= 0 || quizState !== "taking") return;
 
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
@@ -63,7 +63,7 @@ export const QuizComponent = ({ quiz, onComplete }: QuizComponentProps) => {
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, &ldquo;0&rdquo;)}`;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
   const updateAnswer = (questionId: string, answer: string | string[]) => {
@@ -103,8 +103,8 @@ export const QuizComponent = ({ quiz, onComplete }: QuizComponentProps) => {
       case QuestionType.FILL_BLANK:
       case QuestionType.SHORT_ANSWER:
         if (
-          typeof answer !== &ldquo;string&rdquo; ||
-          typeof question.correctAnswer !== &ldquo;string&rdquo;
+          typeof answer !== "string" ||
+          typeof question.correctAnswer !== "string"
         )
           return false;
         return (
@@ -140,20 +140,20 @@ export const QuizComponent = ({ quiz, onComplete }: QuizComponentProps) => {
 
     setCorrectAnswers(correctCount);
     setScore(finalScore);
-    setQuizState(&ldquo;completed&rdquo;);
+    setQuizState("completed");
 
     if (finalScore >= quiz.passingScore) {
       toast({
-        title: &ldquo;¡Felicitaciones!&rdquo;,
+        title: "¡Felicitaciones!",
         description: `Has aprobado el quiz con ${finalScore}%`,
         duration: 5000,
       });
       onComplete(finalScore);
     } else {
       toast({
-        title: &ldquo;Quiz completado&rdquo;,
+        title: "Quiz completado",
         description: `Puntuación: ${finalScore}%. Necesitas ${quiz.passingScore}% para aprobar.`,
-        variant: &ldquo;destructive&rdquo;,
+        variant: "destructive",
         duration: 5000,
       });
     }
@@ -163,28 +163,28 @@ export const QuizComponent = ({ quiz, onComplete }: QuizComponentProps) => {
     setCurrentQuestionIndex(0);
     setAnswers({});
     setTimeLeft(quiz.timeLimit ? quiz.timeLimit * 60 : null);
-    setQuizState(&ldquo;taking&rdquo;);
+    setQuizState("taking");
     setScore(0);
     setCorrectAnswers(0);
   };
 
   const getCurrentAnswer = () => {
-    if (!currentQuestion?.id) return &ldquo;&rdquo;;
+    if (!currentQuestion?.id) return "";
     return (
       answers[currentQuestion.id]?.answer ||
-      (currentQuestion.type === QuestionType.MULTIPLE_SELECT ? [] : &ldquo;&rdquo;)
+      (currentQuestion.type === QuestionType.MULTIPLE_SELECT ? [] : "")
     );
   };
 
   // Early return if no questions or current question is not available
   if (!quiz.questions || quiz.questions.length === 0) {
     return (
-      <div className=&ldquo;max-w-2xl mx-auto&rdquo;>
+      <div className="max-w-2xl mx-auto">
         <Card>
-          <CardContent className=&ldquo;p-8 text-center&rdquo;>
-            <AlertCircle className=&ldquo;h-16 w-16 text-orange-600 mx-auto mb-4&rdquo; />
-            <h3 className=&ldquo;text-lg font-semibold mb-2&rdquo;>Quiz no disponible</h3>
-            <p className=&ldquo;text-muted-foreground&rdquo;>
+          <CardContent className="p-8 text-center">
+            <AlertCircle className="h-16 w-16 text-orange-600 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Quiz no disponible</h3>
+            <p className="text-muted-foreground">
               Este quiz no tiene preguntas configuradas.
             </p>
           </CardContent>
@@ -195,12 +195,12 @@ export const QuizComponent = ({ quiz, onComplete }: QuizComponentProps) => {
 
   if (!currentQuestion) {
     return (
-      <div className=&ldquo;max-w-2xl mx-auto&rdquo;>
+      <div className="max-w-2xl mx-auto">
         <Card>
-          <CardContent className=&ldquo;p-8 text-center&rdquo;>
-            <AlertCircle className=&ldquo;h-16 w-16 text-orange-600 mx-auto mb-4&rdquo; />
-            <h3 className=&ldquo;text-lg font-semibold mb-2&rdquo;>Error en el quiz</h3>
-            <p className=&ldquo;text-muted-foreground&rdquo;>
+          <CardContent className="p-8 text-center">
+            <AlertCircle className="h-16 w-16 text-orange-600 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Error en el quiz</h3>
+            <p className="text-muted-foreground">
               No se pudo cargar la pregunta actual.
             </p>
           </CardContent>
@@ -209,74 +209,74 @@ export const QuizComponent = ({ quiz, onComplete }: QuizComponentProps) => {
     );
   }
 
-  if (quizState === &ldquo;completed&rdquo;) {
+  if (quizState === "completed") {
     return (
-      <div className=&ldquo;max-w-2xl mx-auto&rdquo;>
+      <div className="max-w-2xl mx-auto">
         <Card>
-          <CardContent className=&ldquo;p-8 text-center&rdquo;>
-            <div className=&ldquo;mb-6&rdquo;>
+          <CardContent className="p-8 text-center">
+            <div className="mb-6">
               {score >= quiz.passingScore ? (
-                <div className=&ldquo;text-green-600&rdquo;>
-                  <Trophy className=&ldquo;h-16 w-16 mx-auto mb-4&rdquo; />
-                  <h2 className=&ldquo;text-2xl font-bold text-green-800&rdquo;>
+                <div className="text-green-600">
+                  <Trophy className="h-16 w-16 mx-auto mb-4" />
+                  <h2 className="text-2xl font-bold text-green-800">
                     ¡Excelente trabajo!
                   </h2>
                 </div>
               ) : (
-                <div className=&ldquo;text-orange-600&rdquo;>
-                  <AlertCircle className=&ldquo;h-16 w-16 mx-auto mb-4&rdquo; />
-                  <h2 className=&ldquo;text-2xl font-bold text-orange-800&rdquo;>
+                <div className="text-orange-600">
+                  <AlertCircle className="h-16 w-16 mx-auto mb-4" />
+                  <h2 className="text-2xl font-bold text-orange-800">
                     Quiz completado
                   </h2>
                 </div>
               )}
             </div>
 
-            <div className=&ldquo;grid grid-cols-1 md:grid-cols-3 gap-4 mb-6&rdquo;>
-              <div className=&ldquo;text-center&rdquo;>
-                <div className=&ldquo;text-3xl font-bold text-blue-600&rdquo;>{score}%</div>
-                <div className=&ldquo;text-sm text-muted-foreground&rdquo;>Puntuación</div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <div className="text-center">
+                <div className="text-3xl font-bold text-blue-600">{score}%</div>
+                <div className="text-sm text-muted-foreground">Puntuación</div>
               </div>
-              <div className=&ldquo;text-center&rdquo;>
-                <div className=&ldquo;text-3xl font-bold text-green-600&rdquo;>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-green-600">
                   {correctAnswers}
                 </div>
-                <div className=&ldquo;text-sm text-muted-foreground&rdquo;>Correctas</div>
+                <div className="text-sm text-muted-foreground">Correctas</div>
               </div>
-              <div className=&ldquo;text-center&rdquo;>
-                <div className=&ldquo;text-3xl font-bold text-red-600&rdquo;>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-red-600">
                   {quiz.questions.length - correctAnswers}
                 </div>
-                <div className=&ldquo;text-sm text-muted-foreground&rdquo;>Incorrectas</div>
+                <div className="text-sm text-muted-foreground">Incorrectas</div>
               </div>
             </div>
 
-            <div className=&ldquo;mb-6&rdquo;>
-              <Progress value={score} className=&ldquo;h-3&rdquo; />
-              <div className=&ldquo;flex justify-between text-sm text-muted-foreground mt-2&rdquo;>
+            <div className="mb-6">
+              <Progress value={score} className="h-3" />
+              <div className="flex justify-between text-sm text-muted-foreground mt-2">
                 <span>0%</span>
-                <span className=&ldquo;font-medium&rdquo;>
+                <span className="font-medium">
                   Puntuación necesaria: {quiz.passingScore}%
                 </span>
                 <span>100%</span>
               </div>
             </div>
 
-            <div className=&ldquo;flex gap-3 justify-center&rdquo;>
+            <div className="flex gap-3 justify-center">
               {score < quiz.passingScore && (
                 <Button
                   onClick={retakeQuiz}
-                  className=&ldquo;flex items-center gap-2&rdquo;
+                  className="flex items-center gap-2"
                 >
-                  <RotateCcw className=&ldquo;h-4 w-4&rdquo; />
+                  <RotateCcw className="h-4 w-4" />
                   Intentar de nuevo
                 </Button>
               )}
 
               {quiz.showCorrectAnswers && (
                 <Button
-                  variant=&ldquo;outline&rdquo;
-                  onClick={() => setQuizState(&ldquo;reviewing&rdquo;)}
+                  variant="outline"
+                  onClick={() => setQuizState("reviewing")}
                 >
                   Revisar respuestas
                 </Button>
@@ -288,12 +288,12 @@ export const QuizComponent = ({ quiz, onComplete }: QuizComponentProps) => {
     );
   }
 
-  if (quizState === &ldquo;reviewing&rdquo;) {
+  if (quizState === "reviewing") {
     return (
-      <div className=&ldquo;max-w-3xl mx-auto space-y-6&rdquo;>
-        <div className=&ldquo;flex items-center justify-between&rdquo;>
-          <h2 className=&ldquo;text-2xl font-bold&rdquo;>Revisión del Quiz</h2>
-          <Button variant=&ldquo;outline&rdquo; onClick={() => setQuizState(&ldquo;completed&rdquo;)}>
+      <div className="max-w-3xl mx-auto space-y-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold">Revisión del Quiz</h2>
+          <Button variant="outline" onClick={() => setQuizState("completed")}>
             Volver a resultados
           </Button>
         </div>
@@ -303,49 +303,49 @@ export const QuizComponent = ({ quiz, onComplete }: QuizComponentProps) => {
           return (
             <Card key={question.id}>
               <CardHeader>
-                <div className=&ldquo;flex items-start justify-between&rdquo;>
-                  <CardTitle className=&ldquo;text-lg&rdquo;>
+                <div className="flex items-start justify-between">
+                  <CardTitle className="text-lg">
                     {index + 1}. {question.question}
                   </CardTitle>
                   {userAnswer?.isCorrect ? (
-                    <CheckCircle2 className=&ldquo;h-6 w-6 text-green-600&rdquo; />
+                    <CheckCircle2 className="h-6 w-6 text-green-600" />
                   ) : (
-                    <XCircle className=&ldquo;h-6 w-6 text-red-600&rdquo; />
+                    <XCircle className="h-6 w-6 text-red-600" />
                   )}
                 </div>
               </CardHeader>
               <CardContent>
-                <div className=&ldquo;space-y-4&rdquo;>
+                <div className="space-y-4">
                   <div>
-                    <p className=&ldquo;font-medium text-sm text-muted-foreground mb-2&rdquo;>
+                    <p className="font-medium text-sm text-muted-foreground mb-2">
                       Tu respuesta:
                     </p>
                     <p
-                      className={`p-2 rounded ${userAnswer?.isCorrect ? &ldquo;bg-green-50 text-green-800&rdquo; : &ldquo;bg-red-50 text-red-800&rdquo;}`}
+                      className={`p-2 rounded ${userAnswer?.isCorrect ? "bg-green-50 text-green-800" : "bg-red-50 text-red-800"}`}
                     >
                       {Array.isArray(userAnswer?.answer)
-                        ? userAnswer.answer.join(&ldquo;, &rdquo;)
-                        : userAnswer?.answer || &ldquo;Sin respuesta&rdquo;}
+                        ? userAnswer.answer.join(", ")
+                        : userAnswer?.answer || "Sin respuesta"}
                     </p>
                   </div>
 
                   <div>
-                    <p className=&ldquo;font-medium text-sm text-muted-foreground mb-2&rdquo;>
+                    <p className="font-medium text-sm text-muted-foreground mb-2">
                       Respuesta correcta:
                     </p>
-                    <p className=&ldquo;p-2 rounded bg-green-50 text-green-800&rdquo;>
+                    <p className="p-2 rounded bg-green-50 text-green-800">
                       {Array.isArray(question.correctAnswer)
-                        ? question.correctAnswer.join(&ldquo;, &rdquo;)
+                        ? question.correctAnswer.join(", ")
                         : question.correctAnswer}
                     </p>
                   </div>
 
                   {question.explanation && (
                     <div>
-                      <p className=&ldquo;font-medium text-sm text-muted-foreground mb-2&rdquo;>
+                      <p className="font-medium text-sm text-muted-foreground mb-2">
                         Explicación:
                       </p>
-                      <p className=&ldquo;p-2 rounded bg-blue-50 text-blue-800&rdquo;>
+                      <p className="p-2 rounded bg-blue-50 text-blue-800">
                         {question.explanation}
                       </p>
                     </div>
@@ -360,56 +360,56 @@ export const QuizComponent = ({ quiz, onComplete }: QuizComponentProps) => {
   }
 
   return (
-    <div className=&ldquo;max-w-3xl mx-auto&rdquo;>
+    <div className="max-w-3xl mx-auto">
       {/* Quiz Header */}
-      <Card className=&ldquo;mb-6&rdquo;>
+      <Card className="mb-6">
         <CardHeader>
-          <div className=&ldquo;flex items-center justify-between&rdquo;>
+          <div className="flex items-center justify-between">
             <div>
-              <CardTitle className=&ldquo;text-xl&rdquo;>{quiz.title}</CardTitle>
-              <p className=&ldquo;text-muted-foreground&rdquo;>{quiz.description}</p>
+              <CardTitle className="text-xl">{quiz.title}</CardTitle>
+              <p className="text-muted-foreground">{quiz.description}</p>
             </div>
             {timeLeft !== null && (
-              <div className=&ldquo;text-right&rdquo;>
-                <div className=&ldquo;flex items-center gap-2 text-lg font-bold&rdquo;>
-                  <Clock className=&ldquo;h-5 w-5&rdquo; />
+              <div className="text-right">
+                <div className="flex items-center gap-2 text-lg font-bold">
+                  <Clock className="h-5 w-5" />
                   <span
                     className={
-                      timeLeft < 300 ? &ldquo;text-red-600&rdquo; : &ldquo;text-blue-600&rdquo;
+                      timeLeft < 300 ? "text-red-600" : "text-blue-600"
                     }
                   >
                     {formatTime(timeLeft)}
                   </span>
                 </div>
-                <p className=&ldquo;text-sm text-muted-foreground&rdquo;>Tiempo restante</p>
+                <p className="text-sm text-muted-foreground">Tiempo restante</p>
               </div>
             )}
           </div>
 
-          <div className=&ldquo;mt-4&rdquo;>
-            <div className=&ldquo;flex justify-between text-sm mb-2&rdquo;>
+          <div className="mt-4">
+            <div className="flex justify-between text-sm mb-2">
               <span>
                 Pregunta {currentQuestionIndex + 1} de {quiz.questions.length}
               </span>
               <span>{Math.round(progress)}% completado</span>
             </div>
-            <Progress value={progress} className=&ldquo;h-2&rdquo; />
+            <Progress value={progress} className="h-2" />
           </div>
         </CardHeader>
       </Card>
 
       {/* Question Card */}
-      <Card className=&ldquo;mb-6&rdquo;>
+      <Card className="mb-6">
         <CardHeader>
-          <CardTitle className=&ldquo;text-lg&rdquo;>
-            {currentQuestionIndex + 1}.{&ldquo; &rdquo;}
-            {currentQuestion?.question || &ldquo;Pregunta no disponible&rdquo;}
+          <CardTitle className="text-lg">
+            {currentQuestionIndex + 1}.{" "}
+            {currentQuestion?.question || "Pregunta no disponible"}
           </CardTitle>
-          <div className=&ldquo;flex items-center gap-2&rdquo;>
-            <Badge variant=&ldquo;outline&rdquo;>
-              {currentQuestion?.type?.replace(&ldquo;_&rdquo;, &ldquo; &rdquo;) || &ldquo;Pregunta&rdquo;}
+          <div className="flex items-center gap-2">
+            <Badge variant="outline">
+              {currentQuestion?.type?.replace("_", " ") || "Pregunta"}
             </Badge>
-            <span className=&ldquo;text-sm text-muted-foreground&rdquo;>
+            <span className="text-sm text-muted-foreground">
               {currentQuestion?.points || 0} puntos
             </span>
           </div>
@@ -427,21 +427,21 @@ export const QuizComponent = ({ quiz, onComplete }: QuizComponentProps) => {
       </Card>
 
       {/* Navigation */}
-      <div className=&ldquo;flex justify-between&rdquo;>
+      <div className="flex justify-between">
         <Button
-          variant=&ldquo;outline&rdquo;
+          variant="outline"
           onClick={goToPreviousQuestion}
           disabled={currentQuestionIndex === 0}
         >
           Anterior
         </Button>
 
-        <div className=&ldquo;flex gap-2&rdquo;>
+        <div className="flex gap-2">
           <Button
             onClick={isLastQuestion ? submitQuiz : goToNextQuestion}
             disabled={!currentQuestion?.id || !answers[currentQuestion.id]}
           >
-            {isLastQuestion ? &ldquo;Finalizar Quiz&rdquo; : &ldquo;Siguiente&rdquo;}
+            {isLastQuestion ? "Finalizar Quiz" : "Siguiente"}
           </Button>
         </div>
       </div>
@@ -465,9 +465,9 @@ const QuestionInput = ({
       return (
         <RadioGroup value={value as string} onValueChange={onChange}>
           {question.options?.map((option) => (
-            <div key={option} className=&ldquo;flex items-center space-x-2&rdquo;>
+            <div key={option} className="flex items-center space-x-2">
               <RadioGroupItem value={option} id={option} />
-              <label htmlFor={option} className=&ldquo;cursor-pointer flex-1 py-2&rdquo;>
+              <label htmlFor={option} className="cursor-pointer flex-1 py-2">
                 {option}
               </label>
             </div>
@@ -477,9 +477,9 @@ const QuestionInput = ({
 
     case QuestionType.MULTIPLE_SELECT:
       return (
-        <div className=&ldquo;space-y-3&rdquo;>
+        <div className="space-y-3">
           {question.options?.map((option) => (
-            <div key={option} className=&ldquo;flex items-center space-x-2&rdquo;>
+            <div key={option} className="flex items-center space-x-2">
               <Checkbox
                 id={option}
                 checked={(value as string[]).includes(option)}
@@ -492,7 +492,7 @@ const QuestionInput = ({
                   }
                 }}
               />
-              <label htmlFor={option} className=&ldquo;cursor-pointer flex-1 py-2&rdquo;>
+              <label htmlFor={option} className="cursor-pointer flex-1 py-2">
                 {option}
               </label>
             </div>
@@ -506,8 +506,8 @@ const QuestionInput = ({
         <Input
           value={value as string}
           onChange={(e) => onChange(e.target.value)}
-          placeholder=&ldquo;Escribe tu respuesta aquí...&rdquo;
-          className=&ldquo;w-full&rdquo;
+          placeholder="Escribe tu respuesta aquí..."
+          className="w-full"
         />
       );
 
@@ -516,8 +516,8 @@ const QuestionInput = ({
         <Textarea
           value={value as string}
           onChange={(e) => onChange(e.target.value)}
-          placeholder=&ldquo;Escribe tu respuesta aquí...&rdquo;
-          className=&ldquo;w-full&rdquo;
+          placeholder="Escribe tu respuesta aquí..."
+          className="w-full"
           rows={4}
         />
       );

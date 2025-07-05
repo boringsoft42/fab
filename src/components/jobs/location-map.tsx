@@ -1,8 +1,8 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import { MapContainer, TileLayer, Marker } from &ldquo;react-leaflet&rdquo;;
-import L from &ldquo;leaflet&rdquo;;
-import &ldquo;leaflet/dist/leaflet.css&rdquo;;
+import { MapContainer, TileLayer, Marker } from "react-leaflet";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 
 type Location = {
   latitude: number;
@@ -14,11 +14,11 @@ interface LocationMapProps {
 }
 
 const markerIcon = new L.Icon({
-  iconUrl: &ldquo;https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png&rdquo;,
-  iconRetinaUrl: &ldquo;https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png&rdquo;,
+  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+  iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
   iconSize: [25, 41],
   iconAnchor: [12, 41],
-  shadowUrl: &ldquo;https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png&rdquo;,
+  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
   shadowSize: [41, 41],
 });
 
@@ -27,16 +27,16 @@ export const LocationMap: React.FC<LocationMapProps> = ({ location }) => {
   const longitude = location?.longitude ?? -66.1570;
 
   return (
-    <div className=&ldquo;rounded-xl overflow-hidden border border-gray-200&rdquo; style={{ height: &ldquo;300px&rdquo; }}>
+    <div className="rounded-xl overflow-hidden border border-gray-200" style={{ height: "300px" }}>
       <MapContainer
         center={[latitude, longitude]}
         zoom={13}
         scrollWheelZoom={false}
-        style={{ width: &ldquo;100%&rdquo;, height: &ldquo;100%&rdquo; }}
+        style={{ width: "100%", height: "100%" }}
       >
         <TileLayer
-          attribution='&copy; <a href=&ldquo;https://osm.org/copyright&rdquo;>OpenStreetMap</a>'
-          url=&ldquo;https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png&rdquo;
+          attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a>'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <Marker position={[latitude, longitude]} icon={markerIcon} />
       </MapContainer>

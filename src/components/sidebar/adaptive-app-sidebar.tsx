@@ -1,4 +1,4 @@
-&ldquo;use client&rdquo;;
+"use client";
 
 import {
   Sidebar,
@@ -6,14 +6,14 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
-} from &ldquo;@/components/ui/sidebar&rdquo;;
-import { NavGroup } from &ldquo;./nav-group&rdquo;;
-import { NavUser } from &ldquo;./nav-user&rdquo;;
-import { TeamSwitcher } from &ldquo;./team-switcher&rdquo;;
-import { getSidebarDataByRole } from &ldquo;./data/role-based-sidebar-data&rdquo;;
-import { useCurrentUser } from &ldquo;@/hooks/use-current-user&rdquo;;
-import { Skeleton } from &ldquo;@/components/ui/skeleton&rdquo;;
-import type { NavGroupProps } from &ldquo;./types&rdquo;;
+} from "@/components/ui/sidebar";
+import { NavGroup } from "./nav-group";
+import { NavUser } from "./nav-user";
+import { TeamSwitcher } from "./team-switcher";
+import { getSidebarDataByRole } from "./data/role-based-sidebar-data";
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { Skeleton } from "@/components/ui/skeleton";
+import type { NavGroupProps } from "./types";
 
 export function AdaptiveAppSidebar({
   ...props
@@ -23,27 +23,27 @@ export function AdaptiveAppSidebar({
   // Show skeleton while loading
   if (isLoading) {
     return (
-      <Sidebar collapsible=&ldquo;icon&rdquo; variant=&ldquo;floating&rdquo; {...props}>
+      <Sidebar collapsible="icon" variant="floating" {...props}>
         <SidebarHeader>
-          <Skeleton className=&ldquo;h-10 w-full&rdquo; />
+          <Skeleton className="h-10 w-full" />
         </SidebarHeader>
         <SidebarContent>
-          <div className=&ldquo;space-y-4 p-4&rdquo;>
-            <Skeleton className=&ldquo;h-6 w-20&rdquo; />
-            <div className=&ldquo;space-y-2&rdquo;>
-              <Skeleton className=&ldquo;h-8 w-full&rdquo; />
-              <Skeleton className=&ldquo;h-8 w-full&rdquo; />
-              <Skeleton className=&ldquo;h-8 w-full&rdquo; />
+          <div className="space-y-4 p-4">
+            <Skeleton className="h-6 w-20" />
+            <div className="space-y-2">
+              <Skeleton className="h-8 w-full" />
+              <Skeleton className="h-8 w-full" />
+              <Skeleton className="h-8 w-full" />
             </div>
-            <Skeleton className=&ldquo;h-6 w-20&rdquo; />
-            <div className=&ldquo;space-y-2&rdquo;>
-              <Skeleton className=&ldquo;h-8 w-full&rdquo; />
-              <Skeleton className=&ldquo;h-8 w-full&rdquo; />
+            <Skeleton className="h-6 w-20" />
+            <div className="space-y-2">
+              <Skeleton className="h-8 w-full" />
+              <Skeleton className="h-8 w-full" />
             </div>
           </div>
         </SidebarContent>
         <SidebarFooter>
-          <Skeleton className=&ldquo;h-10 w-full&rdquo; />
+          <Skeleton className="h-10 w-full" />
         </SidebarFooter>
         <SidebarRail />
       </Sidebar>
@@ -51,11 +51,11 @@ export function AdaptiveAppSidebar({
   }
 
   // Get sidebar data based on user role, fallback to YOUTH if no profile
-  const userRole = profile?.role || &ldquo;YOUTH&rdquo;;
+  const userRole = profile?.role || "YOUTH";
   const sidebarData = getSidebarDataByRole(userRole);
 
   return (
-    <Sidebar collapsible=&ldquo;icon&rdquo; variant=&ldquo;floating&rdquo; {...props}>
+    <Sidebar collapsible="icon" variant="floating" {...props}>
       <SidebarHeader>
         <TeamSwitcher teams={sidebarData.teams} />
       </SidebarHeader>

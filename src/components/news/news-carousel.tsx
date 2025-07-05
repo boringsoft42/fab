@@ -1,6 +1,6 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import { useState, useEffect } from &ldquo;react&rdquo;;
+import { useState, useEffect } from "react";
 import {
   ChevronLeft,
   ChevronRight,
@@ -11,13 +11,13 @@ import {
   ExternalLink,
   Building2,
   Shield,
-} from &ldquo;lucide-react&rdquo;;
-import { Card, CardContent, CardHeader, CardTitle } from &ldquo;@/components/ui/card&rdquo;;
-import { Button } from &ldquo;@/components/ui/button&rdquo;;
-import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
-import { Avatar, AvatarFallback, AvatarImage } from &ldquo;@/components/ui/avatar&rdquo;;
-import { Skeleton } from &ldquo;@/components/ui/skeleton&rdquo;;
-import { NewsArticle } from &ldquo;@/types/news&rdquo;;
+} from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Skeleton } from "@/components/ui/skeleton";
+import { NewsArticle } from "@/types/news";
 
 interface NewsCarouselProps {
   className?: string;
@@ -40,50 +40,50 @@ export function NewsCarousel({ className }: NewsCarouselProps) {
 
       // Fetch company news
       const companyResponse = await fetch(
-        &ldquo;/api/news?type=company&featured=true&targetAudience=YOUTH&limit=6&rdquo;
+        "/api/news?type=company&featured=true&targetAudience=YOUTH&limit=6"
       );
       const companyData = await companyResponse.json();
 
       // Fetch government/NGO news
       const govResponse = await fetch(
-        &ldquo;/api/news?type=government&targetAudience=YOUTH&limit=6&rdquo;
+        "/api/news?type=government&targetAudience=YOUTH&limit=6"
       );
       const govData = await govResponse.json();
 
       const ngoResponse = await fetch(
-        &ldquo;/api/news?type=ngo&targetAudience=YOUTH&limit=6&rdquo;
+        "/api/news?type=ngo&targetAudience=YOUTH&limit=6"
       );
       const ngoData = await ngoResponse.json();
 
       setCompanyNews(companyData.news || []);
       setGovernmentNews([...(govData.news || []), ...(ngoData.news || [])]);
     } catch (error) {
-      console.error(&ldquo;Error fetching news:&rdquo;, error);
+      console.error("Error fetching news:", error);
     } finally {
       setLoading(false);
     }
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString(&ldquo;es-ES&rdquo;, {
-      day: &ldquo;2-digit&rdquo;,
-      month: &ldquo;short&rdquo;,
-      year: &ldquo;numeric&rdquo;,
+    return new Date(dateString).toLocaleDateString("es-ES", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
     });
   };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case &ldquo;URGENT&rdquo;:
-        return &ldquo;bg-red-500&rdquo;;
-      case &ldquo;HIGH&rdquo;:
-        return &ldquo;bg-orange-500&rdquo;;
-      case &ldquo;MEDIUM&rdquo;:
-        return &ldquo;bg-blue-500&rdquo;;
-      case &ldquo;LOW&rdquo;:
-        return &ldquo;bg-gray-500&rdquo;;
+      case "URGENT":
+        return "bg-red-500";
+      case "HIGH":
+        return "bg-orange-500";
+      case "MEDIUM":
+        return "bg-blue-500";
+      case "LOW":
+        return "bg-gray-500";
       default:
-        return &ldquo;bg-gray-500&rdquo;;
+        return "bg-gray-500";
     }
   };
 
@@ -121,93 +121,93 @@ export function NewsCarousel({ className }: NewsCarouselProps) {
     compact?: boolean;
   }) => (
     <Card
-      className={`hover:shadow-lg transition-shadow cursor-pointer ${compact ? &ldquo;h-full&rdquo; : &ldquo;&rdquo;}`}
+      className={`hover:shadow-lg transition-shadow cursor-pointer ${compact ? "h-full" : ""}`}
     >
-      <div className=&ldquo;relative&rdquo;>
+      <div className="relative">
         {article.imageUrl && (
           <div
-            className={`relative ${compact ? &ldquo;h-32&rdquo; : &ldquo;h-48&rdquo;} overflow-hidden rounded-t-lg`}
+            className={`relative ${compact ? "h-32" : "h-48"} overflow-hidden rounded-t-lg`}
           >
             <img
               src={article.imageUrl}
               alt={article.title}
-              className=&ldquo;w-full h-full object-cover&rdquo;
+              className="w-full h-full object-cover"
             />
-            <div className=&ldquo;absolute top-2 left-2&rdquo;>
+            <div className="absolute top-2 left-2">
               <Badge
                 className={`${getPriorityColor(article.priority)} text-white border-0`}
               >
-                {article.priority === &ldquo;URGENT&rdquo;
-                  ? &ldquo;Urgente&rdquo;
-                  : article.priority === &ldquo;HIGH&rdquo;
-                    ? &ldquo;Importante&rdquo;
-                    : article.priority === &ldquo;MEDIUM&rdquo;
-                      ? &ldquo;Medio&rdquo;
-                      : &ldquo;Bajo&rdquo;}
+                {article.priority === "URGENT"
+                  ? "Urgente"
+                  : article.priority === "HIGH"
+                    ? "Importante"
+                    : article.priority === "MEDIUM"
+                      ? "Medio"
+                      : "Bajo"}
               </Badge>
             </div>
           </div>
         )}
       </div>
 
-      <CardContent className=&ldquo;p-4&rdquo;>
-        <div className=&ldquo;flex items-center gap-2 mb-2&rdquo;>
-          <Avatar className=&ldquo;w-6 h-6&rdquo;>
+      <CardContent className="p-4">
+        <div className="flex items-center gap-2 mb-2">
+          <Avatar className="w-6 h-6">
             <AvatarImage src={article.authorLogo} alt={article.authorName} />
-            <AvatarFallback className=&ldquo;text-xs&rdquo;>
-              {article.authorType === &ldquo;COMPANY&rdquo; ? (
-                <Building2 className=&ldquo;w-3 h-3&rdquo; />
+            <AvatarFallback className="text-xs">
+              {article.authorType === "COMPANY" ? (
+                <Building2 className="w-3 h-3" />
               ) : (
-                <Shield className=&ldquo;w-3 h-3&rdquo; />
+                <Shield className="w-3 h-3" />
               )}
             </AvatarFallback>
           </Avatar>
-          <span className=&ldquo;text-xs text-muted-foreground&rdquo;>
+          <span className="text-xs text-muted-foreground">
             {article.authorName}
           </span>
-          <div className=&ldquo;flex items-center gap-1 text-xs text-muted-foreground ml-auto&rdquo;>
-            <Clock className=&ldquo;w-3 h-3&rdquo; />
+          <div className="flex items-center gap-1 text-xs text-muted-foreground ml-auto">
+            <Clock className="w-3 h-3" />
             {formatDate(article.publishedAt)}
           </div>
         </div>
 
         <h3
-          className={`font-semibold mb-2 line-clamp-2 ${compact ? &ldquo;text-sm&rdquo; : &ldquo;text-base&rdquo;}`}
+          className={`font-semibold mb-2 line-clamp-2 ${compact ? "text-sm" : "text-base"}`}
         >
           {article.title}
         </h3>
 
         <p
-          className={`text-muted-foreground mb-3 line-clamp-2 ${compact ? &ldquo;text-xs&rdquo; : &ldquo;text-sm&rdquo;}`}
+          className={`text-muted-foreground mb-3 line-clamp-2 ${compact ? "text-xs" : "text-sm"}`}
         >
           {article.summary}
         </p>
 
-        <div className=&ldquo;flex flex-wrap gap-1 mb-3&rdquo;>
+        <div className="flex flex-wrap gap-1 mb-3">
           {article.tags.slice(0, 2).map((tag, index) => (
-            <Badge key={index} variant=&ldquo;secondary&rdquo; className=&ldquo;text-xs&rdquo;>
+            <Badge key={index} variant="secondary" className="text-xs">
               {tag}
             </Badge>
           ))}
         </div>
 
-        <div className=&ldquo;flex items-center justify-between text-xs text-muted-foreground&rdquo;>
-          <div className=&ldquo;flex items-center gap-3&rdquo;>
-            <div className=&ldquo;flex items-center gap-1&rdquo;>
-              <Eye className=&ldquo;w-3 h-3&rdquo; />
+        <div className="flex items-center justify-between text-xs text-muted-foreground">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1">
+              <Eye className="w-3 h-3" />
               {article.viewCount}
             </div>
-            <div className=&ldquo;flex items-center gap-1&rdquo;>
-              <Heart className=&ldquo;w-3 h-3&rdquo; />
+            <div className="flex items-center gap-1">
+              <Heart className="w-3 h-3" />
               {article.likeCount}
             </div>
-            <div className=&ldquo;flex items-center gap-1&rdquo;>
-              <MessageSquare className=&ldquo;w-3 h-3&rdquo; />
+            <div className="flex items-center gap-1">
+              <MessageSquare className="w-3 h-3" />
               {article.commentCount}
             </div>
           </div>
-          <Button variant=&ldquo;ghost&rdquo; size=&ldquo;sm&rdquo; className=&ldquo;h-6 px-2&rdquo;>
-            <ExternalLink className=&ldquo;w-3 h-3&rdquo; />
+          <Button variant="ghost" size="sm" className="h-6 px-2">
+            <ExternalLink className="w-3 h-3" />
           </Button>
         </div>
       </CardContent>
@@ -217,20 +217,20 @@ export function NewsCarousel({ className }: NewsCarouselProps) {
   if (loading) {
     return (
       <div className={`space-y-6 ${className}`}>
-        <div className=&ldquo;text-center&rdquo;>
-          <Skeleton className=&ldquo;h-8 w-64 mx-auto mb-2&rdquo; />
-          <Skeleton className=&ldquo;h-4 w-96 mx-auto&rdquo; />
+        <div className="text-center">
+          <Skeleton className="h-8 w-64 mx-auto mb-2" />
+          <Skeleton className="h-4 w-96 mx-auto" />
         </div>
-        <div className=&ldquo;grid grid-cols-1 lg:grid-cols-2 gap-6&rdquo;>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {[...Array(2)].map((_, i) => (
-            <div key={i} className=&ldquo;space-y-4&rdquo;>
-              <Skeleton className=&ldquo;h-6 w-48&rdquo; />
-              <div className=&ldquo;grid gap-4&rdquo;>
+            <div key={i} className="space-y-4">
+              <Skeleton className="h-6 w-48" />
+              <div className="grid gap-4">
                 {[...Array(3)].map((_, j) => (
-                  <div key={j} className=&ldquo;space-y-3&rdquo;>
-                    <Skeleton className=&ldquo;h-32 w-full rounded&rdquo; />
-                    <Skeleton className=&ldquo;h-4 w-full&rdquo; />
-                    <Skeleton className=&ldquo;h-3 w-3/4&rdquo; />
+                  <div key={j} className="space-y-3">
+                    <Skeleton className="h-32 w-full rounded" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-3 w-3/4" />
                   </div>
                 ))}
               </div>
@@ -244,45 +244,45 @@ export function NewsCarousel({ className }: NewsCarouselProps) {
   return (
     <div className={`space-y-6 ${className}`}>
       {/* Header */}
-      <div className=&ldquo;text-center&rdquo;>
-        <h2 className=&ldquo;text-2xl font-bold text-gray-900 mb-2&rdquo;>
+      <div className="text-center">
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">
           Noticias Destacadas
         </h2>
-        <p className=&ldquo;text-muted-foreground&rdquo;>
+        <p className="text-muted-foreground">
           Mantente informado sobre las últimas oportunidades y anuncios
           importantes
         </p>
       </div>
 
       {/* News Grid */}
-      <div className=&ldquo;grid grid-cols-1 lg:grid-cols-2 gap-6&rdquo;>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Company News Column */}
-        <div className=&ldquo;space-y-4&rdquo;>
-          <div className=&ldquo;flex items-center justify-between&rdquo;>
-            <h3 className=&ldquo;text-lg font-semibold flex items-center gap-2&rdquo;>
-              <Building2 className=&ldquo;w-5 h-5 text-blue-600&rdquo; />
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold flex items-center gap-2">
+              <Building2 className="w-5 h-5 text-blue-600" />
               Noticias Empresariales
             </h3>
             {companyNews.length > 3 && (
-              <div className=&ldquo;flex gap-1&rdquo;>
-                <Button variant=&ldquo;outline&rdquo; size=&ldquo;sm&rdquo; onClick={prevCompany}>
-                  <ChevronLeft className=&ldquo;w-4 h-4&rdquo; />
+              <div className="flex gap-1">
+                <Button variant="outline" size="sm" onClick={prevCompany}>
+                  <ChevronLeft className="w-4 h-4" />
                 </Button>
-                <Button variant=&ldquo;outline&rdquo; size=&ldquo;sm&rdquo; onClick={nextCompany}>
-                  <ChevronRight className=&ldquo;w-4 h-4&rdquo; />
+                <Button variant="outline" size="sm" onClick={nextCompany}>
+                  <ChevronRight className="w-4 h-4" />
                 </Button>
               </div>
             )}
           </div>
 
-          <div className=&ldquo;space-y-4&rdquo;>
+          <div className="space-y-4">
             {companyNews.length > 0 ? (
               <>
                 {/* Featured article */}
                 <NewsCard article={companyNews[companyIndex]} />
 
                 {/* Compact articles */}
-                <div className=&ldquo;grid grid-cols-1 gap-3&rdquo;>
+                <div className="grid grid-cols-1 gap-3">
                   {companyNews
                     .slice(companyIndex + 1, companyIndex + 3)
                     .map((article, index) => (
@@ -291,9 +291,9 @@ export function NewsCarousel({ className }: NewsCarouselProps) {
                 </div>
               </>
             ) : (
-              <Card className=&ldquo;p-6 text-center&rdquo;>
-                <Building2 className=&ldquo;w-12 h-12 text-gray-400 mx-auto mb-3&rdquo; />
-                <p className=&ldquo;text-muted-foreground&rdquo;>
+              <Card className="p-6 text-center">
+                <Building2 className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                <p className="text-muted-foreground">
                   No hay noticias empresariales disponibles
                 </p>
               </Card>
@@ -302,32 +302,32 @@ export function NewsCarousel({ className }: NewsCarouselProps) {
         </div>
 
         {/* Government/NGO News Column */}
-        <div className=&ldquo;space-y-4&rdquo;>
-          <div className=&ldquo;flex items-center justify-between&rdquo;>
-            <h3 className=&ldquo;text-lg font-semibold flex items-center gap-2&rdquo;>
-              <Shield className=&ldquo;w-5 h-5 text-green-600&rdquo; />
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold flex items-center gap-2">
+              <Shield className="w-5 h-5 text-green-600" />
               Noticias Gubernamentales y ONGs
             </h3>
             {governmentNews.length > 3 && (
-              <div className=&ldquo;flex gap-1&rdquo;>
-                <Button variant=&ldquo;outline&rdquo; size=&ldquo;sm&rdquo; onClick={prevGovernment}>
-                  <ChevronLeft className=&ldquo;w-4 h-4&rdquo; />
+              <div className="flex gap-1">
+                <Button variant="outline" size="sm" onClick={prevGovernment}>
+                  <ChevronLeft className="w-4 h-4" />
                 </Button>
-                <Button variant=&ldquo;outline&rdquo; size=&ldquo;sm&rdquo; onClick={nextGovernment}>
-                  <ChevronRight className=&ldquo;w-4 h-4&rdquo; />
+                <Button variant="outline" size="sm" onClick={nextGovernment}>
+                  <ChevronRight className="w-4 h-4" />
                 </Button>
               </div>
             )}
           </div>
 
-          <div className=&ldquo;space-y-4&rdquo;>
+          <div className="space-y-4">
             {governmentNews.length > 0 ? (
               <>
                 {/* Featured article */}
                 <NewsCard article={governmentNews[governmentIndex]} />
 
                 {/* Compact articles */}
-                <div className=&ldquo;grid grid-cols-1 gap-3&rdquo;>
+                <div className="grid grid-cols-1 gap-3">
                   {governmentNews
                     .slice(governmentIndex + 1, governmentIndex + 3)
                     .map((article, index) => (
@@ -336,9 +336,9 @@ export function NewsCarousel({ className }: NewsCarouselProps) {
                 </div>
               </>
             ) : (
-              <Card className=&ldquo;p-6 text-center&rdquo;>
-                <Shield className=&ldquo;w-12 h-12 text-gray-400 mx-auto mb-3&rdquo; />
-                <p className=&ldquo;text-muted-foreground&rdquo;>
+              <Card className="p-6 text-center">
+                <Shield className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                <p className="text-muted-foreground">
                   No hay noticias gubernamentales disponibles
                 </p>
               </Card>
@@ -348,10 +348,10 @@ export function NewsCarousel({ className }: NewsCarouselProps) {
       </div>
 
       {/* View More Button */}
-      <div className=&ldquo;text-center&rdquo;>
-        <Button variant=&ldquo;outline&rdquo; size=&ldquo;lg&rdquo;>
+      <div className="text-center">
+        <Button variant="outline" size="lg">
           Ver Todas las Noticias
-          <ExternalLink className=&ldquo;w-4 h-4 ml-2&rdquo; />
+          <ExternalLink className="w-4 h-4 ml-2" />
         </Button>
       </div>
     </div>

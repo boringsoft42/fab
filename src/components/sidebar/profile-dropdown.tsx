@@ -1,9 +1,9 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import Link from &ldquo;next/link&rdquo;;
-import { useRouter } from &ldquo;next/navigation&rdquo;;
-import { BadgeCheck, LogOut, Settings, User } from &ldquo;lucide-react&rdquo;;
-import { Avatar, AvatarFallback, AvatarImage } from &ldquo;@/components/ui/avatar&rdquo;;
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { BadgeCheck, LogOut, Settings, User } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,27 +12,27 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from &ldquo;@/components/ui/dropdown-menu&rdquo;;
-import { Button } from &ldquo;@/components/ui/button&rdquo;;
-import { useCurrentUser } from &ldquo;@/hooks/use-current-user&rdquo;;
-import { useMockAuth } from &ldquo;@/context/mock-auth-context&rdquo;;
-import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { useMockAuth } from "@/context/mock-auth-context";
+import { Badge } from "@/components/ui/badge";
 type UserRole =
-  | &ldquo;YOUTH&rdquo;
-  | &ldquo;ADOLESCENTS&rdquo;
-  | &ldquo;COMPANIES&rdquo;
-  | &ldquo;MUNICIPAL_GOVERNMENTS&rdquo;
-  | &ldquo;TRAINING_CENTERS&rdquo;
-  | &ldquo;NGOS_AND_FOUNDATIONS&rdquo;
-  | &ldquo;SUPERADMIN&rdquo;;
+  | "YOUTH"
+  | "ADOLESCENTS"
+  | "COMPANIES"
+  | "MUNICIPAL_GOVERNMENTS"
+  | "TRAINING_CENTERS"
+  | "NGOS_AND_FOUNDATIONS"
+  | "SUPERADMIN";
 
 export function ProfileDropdown() {
   const { profile, user, isLoading } = useCurrentUser();
   const { signOut } = useMockAuth();
   if (isLoading) {
     return (
-      <Button variant=&ldquo;ghost&rdquo; className=&ldquo;relative h-8 w-8 rounded-full&rdquo;>
-        <div className=&ldquo;h-8 w-8 rounded-full bg-primary/10 animate-pulse&rdquo; />
+      <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+        <div className="h-8 w-8 rounded-full bg-primary/10 animate-pulse" />
       </Button>
     );
   }
@@ -40,63 +40,63 @@ export function ProfileDropdown() {
   if (!profile || !user) return null;
 
   const displayName =
-    [profile?.firstName, profile?.lastName].filter(Boolean).join(&ldquo; &rdquo;) ||
+    [profile?.firstName, profile?.lastName].filter(Boolean).join(" ") ||
     user?.name ||
-    user?.email?.split(&ldquo;@&rdquo;)[0] ||
-    &ldquo;Usuario&rdquo;;
+    user?.email?.split("@")[0] ||
+    "Usuario";
 
   // Get initials for avatar fallback
   const getInitials = () => {
     if (profile?.firstName || profile?.lastName) {
       return [profile.firstName?.[0], profile.lastName?.[0]]
         .filter(Boolean)
-        .join(&ldquo;&rdquo;)
+        .join("")
         .toUpperCase();
     }
     if (user?.name) {
       return user.name
-        .split(&ldquo; &rdquo;)
+        .split(" ")
         .map((n: string) => n[0])
-        .join(&ldquo;&rdquo;)
+        .join("")
         .toUpperCase();
     }
-    return user?.email?.[0]?.toUpperCase() || &ldquo;U&rdquo;;
+    return user?.email?.[0]?.toUpperCase() || "U";
   };
 
   // Get role display name
   const getRoleDisplay = (role?: UserRole | null) => {
-    if (!role) return &ldquo;Sin rol&rdquo;;
+    if (!role) return "Sin rol";
     return role
       .toString()
-      .replace(&ldquo;_&rdquo;, &ldquo; &rdquo;)
+      .replace("_", " ")
       .replace(/\b\w/g, (l) => l.toUpperCase());
   };
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant=&ldquo;ghost&rdquo; className=&ldquo;relative h-8 w-8 rounded-full&rdquo;>
-          <Avatar className=&ldquo;h-8 w-8 ring-2 ring-primary/10&rdquo;>
+        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+          <Avatar className="h-8 w-8 ring-2 ring-primary/10">
             <AvatarImage
-              src={profile?.profilePicture || &ldquo;&rdquo;}
-              alt={displayName || user?.email || &ldquo;User&rdquo;}
+              src={profile?.profilePicture || ""}
+              alt={displayName || user?.email || "User"}
             />
-            <AvatarFallback className=&ldquo;bg-primary/10&rdquo;>
+            <AvatarFallback className="bg-primary/10">
               {getInitials()}
             </AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className=&ldquo;w-56&rdquo; align=&ldquo;end&rdquo; forceMount>
-        <DropdownMenuLabel className=&ldquo;font-normal&rdquo;>
-          <div className=&ldquo;flex flex-col space-y-1&rdquo;>
-            <div className=&ldquo;flex items-center justify-between&rdquo;>
-              <p className=&ldquo;text-sm font-medium leading-none&rdquo;>{displayName}</p>
-              <Badge variant=&ldquo;outline&rdquo; className=&ldquo;ml-2 text-xs&rdquo;>
+      <DropdownMenuContent className="w-56" align="end" forceMount>
+        <DropdownMenuLabel className="font-normal">
+          <div className="flex flex-col space-y-1">
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-medium leading-none">{displayName}</p>
+              <Badge variant="outline" className="ml-2 text-xs">
                 {getRoleDisplay(profile?.role)}
               </Badge>
             </div>
-            <p className=&ldquo;text-xs leading-none text-muted-foreground&rdquo;>
+            <p className="text-xs leading-none text-muted-foreground">
               {user?.email}
             </p>
           </div>
@@ -104,21 +104,21 @@ export function ProfileDropdown() {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <Link href=&ldquo;/profile&rdquo;>
-              <User className=&ldquo;mr-2 h-4 w-4&rdquo; />
+            <Link href="/profile">
+              <User className="mr-2 h-4 w-4" />
               Profile
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href=&ldquo;/settings&rdquo;>
-              <Settings className=&ldquo;mr-2 h-4 w-4&rdquo; />
+            <Link href="/settings">
+              <Settings className="mr-2 h-4 w-4" />
               Settings
             </Link>
           </DropdownMenuItem>
-          {profile?.role === &ldquo;SUPERADMIN&rdquo; && (
+          {profile?.role === "SUPERADMIN" && (
             <DropdownMenuItem asChild>
-              <Link href=&ldquo;/admin&rdquo;>
-                <BadgeCheck className=&ldquo;mr-2 h-4 w-4&rdquo; />
+              <Link href="/admin">
+                <BadgeCheck className="mr-2 h-4 w-4" />
                 Admin
               </Link>
             </DropdownMenuItem>
@@ -128,10 +128,10 @@ export function ProfileDropdown() {
         <DropdownMenuItem
           onClick={() => {
             signOut();
-            router.replace(&ldquo;/login&rdquo;);
+            router.replace("/login");
           }}
         >
-          <LogOut className=&ldquo;mr-2 h-4 w-4&rdquo; />
+          <LogOut className="mr-2 h-4 w-4" />
           Log out
         </DropdownMenuItem>
       </DropdownMenuContent>

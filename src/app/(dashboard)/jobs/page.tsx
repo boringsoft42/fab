@@ -1,23 +1,23 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import { useState, useEffect } from &ldquo;react&rdquo;;
-import { useSearchParams } from &ldquo;next/navigation&rdquo;;
-import { Search, Filter, Grid, List, SortDesc } from &ldquo;lucide-react&rdquo;;
-import { Button } from &ldquo;@/components/ui/button&rdquo;;
-import { Input } from &ldquo;@/components/ui/input&rdquo;;
-import { Card, CardContent, CardHeader, CardTitle } from &ldquo;@/components/ui/card&rdquo;;
-import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
-import { Skeleton } from &ldquo;@/components/ui/skeleton&rdquo;;
-import { JobSearchFilters } from &ldquo;@/components/jobs/job-search-filters&rdquo;;
-import { JobCard } from &ldquo;@/components/jobs/job-card&rdquo;;
-import { JobOffer, JobSearchFilters as JobFilters } from &ldquo;@/types/jobs&rdquo;;
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import { Search, Filter, Grid, List, SortDesc } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import { JobSearchFilters } from "@/components/jobs/job-search-filters";
+import { JobCard } from "@/components/jobs/job-card";
+import { JobOffer, JobSearchFilters as JobFilters } from "@/types/jobs";
 
 export default function JobsPage() {
   const [jobs, setJobs] = useState<JobOffer[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalJobs, setTotalJobs] = useState(0);
-  const [searchQuery, setSearchQuery] = useState(&ldquo;&rdquo;);
-  const [viewMode, setViewMode] = useState<&ldquo;grid&rdquo; | &ldquo;list&rdquo;>(&ldquo;grid&rdquo;);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState<JobFilters>({});
 
@@ -26,37 +26,37 @@ export default function JobsPage() {
   const fetchJobs = async (searchFilters: JobFilters) => {
     setLoading(true);
     try {
-      if (searchFilters.query) params.append(&ldquo;query&rdquo;, searchFilters.query);
+      if (searchFilters.query) params.append("query", searchFilters.query);
       if (searchFilters.location) {
-        searchFilters.location.forEach((loc) => params.append(&ldquo;location&rdquo;, loc));
+        searchFilters.location.forEach((loc) => params.append("location", loc));
       }
       if (searchFilters.contractType) {
         searchFilters.contractType.forEach((type) =>
-          params.append(&ldquo;contractType&rdquo;, type)
+          params.append("contractType", type)
         );
       }
       if (searchFilters.workModality) {
         searchFilters.workModality.forEach((modality) =>
-          params.append(&ldquo;workModality&rdquo;, modality)
+          params.append("workModality", modality)
         );
       }
       if (searchFilters.experienceLevel) {
         searchFilters.experienceLevel.forEach((level) =>
-          params.append(&ldquo;experienceLevel&rdquo;, level)
+          params.append("experienceLevel", level)
         );
       }
       if (searchFilters.salaryMin)
-        params.append(&ldquo;salaryMin&rdquo;, searchFilters.salaryMin.toString());
+        params.append("salaryMin", searchFilters.salaryMin.toString());
       if (searchFilters.salaryMax)
-        params.append(&ldquo;salaryMax&rdquo;, searchFilters.salaryMax.toString());
+        params.append("salaryMax", searchFilters.salaryMax.toString());
       if (searchFilters.publishedInDays)
         params.append(
-          &ldquo;publishedInDays&rdquo;,
+          "publishedInDays",
           searchFilters.publishedInDays.toString()
         );
       if (searchFilters.sector) {
         searchFilters.sector.forEach((sector) =>
-          params.append(&ldquo;sector&rdquo;, sector)
+          params.append("sector", sector)
         );
       }
 
@@ -66,7 +66,7 @@ export default function JobsPage() {
       setJobs(data.jobs || []);
       setTotalJobs(data.total || 0);
     } catch (error) {
-      console.error(&ldquo;Error fetching jobs:&rdquo;, error);
+      console.error("Error fetching jobs:", error);
     } finally {
       setLoading(false);
     }
@@ -74,7 +74,7 @@ export default function JobsPage() {
 
   useEffect(() => {
     // Initialize search query from URL params
-    const query = searchParams.get(&ldquo;q&rdquo;) || &ldquo;&rdquo;;
+    const query = searchParams.get("q") || "";
     setSearchQuery(query);
     setFilters((prev) => ({ ...prev, query }));
   }, [searchParams]);
@@ -97,56 +97,56 @@ export default function JobsPage() {
   };
 
   return (
-    <div className=&ldquo;min-h-screen bg-gray-50&rdquo;>
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className=&ldquo;bg-white border-b&rdquo;>
-        <div className=&ldquo;max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6&rdquo;>
-          <div className=&ldquo;flex flex-col space-y-4&rdquo;>
-            <div className=&ldquo;flex items-center justify-between&rdquo;>
+      <div className="bg-white border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex flex-col space-y-4">
+            <div className="flex items-center justify-between">
               <div>
-                <h1 className=&ldquo;text-2xl font-bold text-gray-900&rdquo;>
+                <h1 className="text-2xl font-bold text-gray-900">
                   Buscar Empleos
                 </h1>
-                <p className=&ldquo;text-gray-600&rdquo;>
+                <p className="text-gray-600">
                   Encuentra oportunidades laborales que se ajusten a tu perfil
                 </p>
               </div>
-              <div className=&ldquo;flex items-center space-x-2&rdquo;>
+              <div className="flex items-center space-x-2">
                 <Button
-                  variant={viewMode === &ldquo;grid&rdquo; ? &ldquo;default&rdquo; : &ldquo;outline&rdquo;}
-                  size=&ldquo;sm&rdquo;
-                  onClick={() => setViewMode(&ldquo;grid&rdquo;)}
+                  variant={viewMode === "grid" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setViewMode("grid")}
                 >
-                  <Grid className=&ldquo;w-4 h-4&rdquo; />
+                  <Grid className="w-4 h-4" />
                 </Button>
                 <Button
-                  variant={viewMode === &ldquo;list&rdquo; ? &ldquo;default&rdquo; : &ldquo;outline&rdquo;}
-                  size=&ldquo;sm&rdquo;
-                  onClick={() => setViewMode(&ldquo;list&rdquo;)}
+                  variant={viewMode === "list" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setViewMode("list")}
                 >
-                  <List className=&ldquo;w-4 h-4&rdquo; />
+                  <List className="w-4 h-4" />
                 </Button>
               </div>
             </div>
 
             {/* Search Bar */}
-            <form onSubmit={handleSearch} className=&ldquo;flex space-x-2&rdquo;>
-              <div className=&ldquo;flex-1 relative&rdquo;>
-                <Search className=&ldquo;absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4&rdquo; />
+            <form onSubmit={handleSearch} className="flex space-x-2">
+              <div className="flex-1 relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <Input
-                  placeholder=&ldquo;Buscar por título, empresa, habilidades...&rdquo;
+                  placeholder="Buscar por título, empresa, habilidades..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className=&ldquo;pl-10 pr-4 py-2&rdquo;
+                  className="pl-10 pr-4 py-2"
                 />
               </div>
-              <Button type=&ldquo;submit&rdquo;>Buscar</Button>
+              <Button type="submit">Buscar</Button>
               <Button
-                variant=&ldquo;outline&rdquo;
+                variant="outline"
                 onClick={() => setShowFilters(!showFilters)}
-                className=&ldquo;flex items-center space-x-2&rdquo;
+                className="flex items-center space-x-2"
               >
-                <Filter className=&ldquo;w-4 h-4&rdquo; />
+                <Filter className="w-4 h-4" />
                 <span>Filtros</span>
               </Button>
             </form>
@@ -154,11 +154,11 @@ export default function JobsPage() {
         </div>
       </div>
 
-      <div className=&ldquo;max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6&rdquo;>
-        <div className=&ldquo;flex gap-6&rdquo;>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="flex gap-6">
           {/* Filters Sidebar */}
           {showFilters && (
-            <div className=&ldquo;w-80 flex-shrink-0&rdquo;>
+            <div className="w-80 flex-shrink-0">
               <JobSearchFilters
                 filters={filters}
                 onFiltersChange={handleFiltersChange}
@@ -168,26 +168,26 @@ export default function JobsPage() {
           )}
 
           {/* Results */}
-          <div className=&ldquo;flex-1&rdquo;>
+          <div className="flex-1">
             {/* Results Header */}
-            <div className=&ldquo;flex items-center justify-between mb-6&rdquo;>
-              <div className=&ldquo;flex items-center space-x-4&rdquo;>
-                <h2 className=&ldquo;text-lg font-semibold text-gray-900&rdquo;>
-                  {loading ? &ldquo;Buscando...&rdquo; : `${totalJobs} empleos encontrados`}
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center space-x-4">
+                <h2 className="text-lg font-semibold text-gray-900">
+                  {loading ? "Buscando..." : `${totalJobs} empleos encontrados`}
                 </h2>
                 {Object.keys(filters).length > 1 && (
                   <Button
-                    variant=&ldquo;ghost&rdquo;
+                    variant="ghost"
                     onClick={clearFilters}
-                    className=&ldquo;text-sm&rdquo;
+                    className="text-sm"
                   >
                     Limpiar filtros
                   </Button>
                 )}
               </div>
-              <div className=&ldquo;flex items-center space-x-2&rdquo;>
-                <SortDesc className=&ldquo;w-4 h-4 text-gray-400&rdquo; />
-                <span className=&ldquo;text-sm text-gray-600&rdquo;>
+              <div className="flex items-center space-x-2">
+                <SortDesc className="w-4 h-4 text-gray-400" />
+                <span className="text-sm text-gray-600">
                   Más recientes primero
                 </span>
               </div>
@@ -197,38 +197,38 @@ export default function JobsPage() {
             {(filters.contractType?.length ||
               filters.workModality?.length ||
               filters.experienceLevel?.length) && (
-              <div className=&ldquo;flex flex-wrap gap-2 mb-4&rdquo;>
+              <div className="flex flex-wrap gap-2 mb-4">
                 {filters.contractType?.map((type) => (
-                  <Badge key={type} variant=&ldquo;secondary&rdquo; className=&ldquo;text-xs&rdquo;>
-                    {type === &ldquo;FULL_TIME&rdquo;
-                      ? &ldquo;Tiempo completo&rdquo;
-                      : type === &ldquo;PART_TIME&rdquo;
-                        ? &ldquo;Medio tiempo&rdquo;
-                        : type === &ldquo;INTERNSHIP&rdquo;
-                          ? &ldquo;Prácticas-Pasantías&rdquo;
-                          : type === &ldquo;VOLUNTEER&rdquo;
-                            ? &ldquo;Voluntariado&rdquo;
-                            : &ldquo;Freelance&rdquo;}
+                  <Badge key={type} variant="secondary" className="text-xs">
+                    {type === "FULL_TIME"
+                      ? "Tiempo completo"
+                      : type === "PART_TIME"
+                        ? "Medio tiempo"
+                        : type === "INTERNSHIP"
+                          ? "Prácticas-Pasantías"
+                          : type === "VOLUNTEER"
+                            ? "Voluntariado"
+                            : "Freelance"}
                   </Badge>
                 ))}
                 {filters.workModality?.map((modality) => (
-                  <Badge key={modality} variant=&ldquo;secondary&rdquo; className=&ldquo;text-xs&rdquo;>
-                    {modality === &ldquo;ON_SITE&rdquo;
-                      ? &ldquo;Presencial&rdquo;
-                      : modality === &ldquo;REMOTE&rdquo;
-                        ? &ldquo;Remoto&rdquo;
-                        : &ldquo;Híbrido&rdquo;}
+                  <Badge key={modality} variant="secondary" className="text-xs">
+                    {modality === "ON_SITE"
+                      ? "Presencial"
+                      : modality === "REMOTE"
+                        ? "Remoto"
+                        : "Híbrido"}
                   </Badge>
                 ))}
                 {filters.experienceLevel?.map((level) => (
-                  <Badge key={level} variant=&ldquo;secondary&rdquo; className=&ldquo;text-xs&rdquo;>
-                    {level === &ldquo;NO_EXPERIENCE&rdquo;
-                      ? &ldquo;Sin experiencia&rdquo;
-                      : level === &ldquo;ENTRY_LEVEL&rdquo;
-                        ? &ldquo;Principiante&rdquo;
-                        : level === &ldquo;MID_LEVEL&rdquo;
-                          ? &ldquo;Intermedio&rdquo;
-                          : &ldquo;Senior&rdquo;}
+                  <Badge key={level} variant="secondary" className="text-xs">
+                    {level === "NO_EXPERIENCE"
+                      ? "Sin experiencia"
+                      : level === "ENTRY_LEVEL"
+                        ? "Principiante"
+                        : level === "MID_LEVEL"
+                          ? "Intermedio"
+                          : "Senior"}
                   </Badge>
                 ))}
               </div>
@@ -238,23 +238,23 @@ export default function JobsPage() {
             {loading ? (
               <div
                 className={
-                  viewMode === &ldquo;grid&rdquo;
-                    ? &ldquo;grid grid-cols-1 md:grid-cols-2 gap-6&rdquo;
-                    : &ldquo;space-y-4&rdquo;
+                  viewMode === "grid"
+                    ? "grid grid-cols-1 md:grid-cols-2 gap-6"
+                    : "space-y-4"
                 }
               >
                 {[...Array(6)].map((_, i) => (
                   <Card key={i}>
                     <CardHeader>
-                      <Skeleton className=&ldquo;h-6 w-3/4&rdquo; />
-                      <Skeleton className=&ldquo;h-4 w-1/2&rdquo; />
+                      <Skeleton className="h-6 w-3/4" />
+                      <Skeleton className="h-4 w-1/2" />
                     </CardHeader>
                     <CardContent>
-                      <Skeleton className=&ldquo;h-20 w-full mb-4&rdquo; />
-                      <div className=&ldquo;flex space-x-2&rdquo;>
-                        <Skeleton className=&ldquo;h-6 w-16&rdquo; />
-                        <Skeleton className=&ldquo;h-6 w-20&rdquo; />
-                        <Skeleton className=&ldquo;h-6 w-14&rdquo; />
+                      <Skeleton className="h-20 w-full mb-4" />
+                      <div className="flex space-x-2">
+                        <Skeleton className="h-6 w-16" />
+                        <Skeleton className="h-6 w-20" />
+                        <Skeleton className="h-6 w-14" />
                       </div>
                     </CardContent>
                   </Card>
@@ -263,9 +263,9 @@ export default function JobsPage() {
             ) : jobs.length > 0 ? (
               <div
                 className={
-                  viewMode === &ldquo;grid&rdquo;
-                    ? &ldquo;grid grid-cols-1 md:grid-cols-2 gap-6&rdquo;
-                    : &ldquo;space-y-4&rdquo;
+                  viewMode === "grid"
+                    ? "grid grid-cols-1 md:grid-cols-2 gap-6"
+                    : "space-y-4"
                 }
               >
                 {jobs.map((job) => (
@@ -274,16 +274,16 @@ export default function JobsPage() {
               </div>
             ) : (
               <Card>
-                <CardContent className=&ldquo;flex flex-col items-center justify-center py-12 text-center&rdquo;>
-                  <Search className=&ldquo;w-12 h-12 text-gray-400 mb-4&rdquo; />
-                  <h3 className=&ldquo;text-lg font-semibold text-gray-900 mb-2&rdquo;>
+                <CardContent className="flex flex-col items-center justify-center py-12 text-center">
+                  <Search className="w-12 h-12 text-gray-400 mb-4" />
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
                     No se encontraron empleos
                   </h3>
-                  <p className=&ldquo;text-gray-600 mb-4&rdquo;>
+                  <p className="text-gray-600 mb-4">
                     Intenta ajustar tus filtros de búsqueda o buscar términos
                     diferentes.
                   </p>
-                  <Button onClick={clearFilters} variant=&ldquo;outline&rdquo;>
+                  <Button onClick={clearFilters} variant="outline">
                     Limpiar todos los filtros
                   </Button>
                 </CardContent>

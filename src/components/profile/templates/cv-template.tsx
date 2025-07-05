@@ -1,18 +1,18 @@
-&ldquo;use client&rdquo;;
+"use client";
 
-import { Button } from &ldquo;@/components/ui/button&rdquo;;
-import { Card, CardContent, CardHeader, CardTitle } from &ldquo;@/components/ui/card&rdquo;;
-import { Input } from &ldquo;@/components/ui/input&rdquo;;
-import { Textarea } from &ldquo;@/components/ui/textarea&rdquo;;
-import { Label } from &ldquo;@/components/ui/label&rdquo;;
-import { Separator } from &ldquo;@/components/ui/separator&rdquo;;
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 import {
   DialogHeader,
   DialogTitle,
   DialogContent,
-} from &ldquo;@/components/ui/dialog&rdquo;;
-import { Plus, Trash2, Download, Printer } from &ldquo;lucide-react&rdquo;;
-import { useState } from &ldquo;react&rdquo;;
+} from "@/components/ui/dialog";
+import { Plus, Trash2, Download, Printer } from "lucide-react";
+import { useState } from "react";
 
 interface Section {
   id: string;
@@ -24,7 +24,7 @@ const addItem = (section: Section, setSection: (section: Section) => void) => {
   const newId = `${section.id}-${section.items.length + 1}`;
   setSection({
     ...section,
-    items: [...section.items, { id: newId, content: &ldquo;&rdquo; }],
+    items: [...section.items, { id: newId, content: "" }],
   });
 };
 
@@ -56,18 +56,18 @@ const updateItem = (
 
 export function CVTemplate() {
   const [education, setEducation] = useState<Section>({
-    id: &ldquo;education&rdquo;,
-    items: [{ id: &ldquo;edu-1&rdquo;, content: &ldquo;&rdquo; }],
+    id: "education",
+    items: [{ id: "edu-1", content: "" }],
   });
 
   const [experience, setExperience] = useState<Section>({
-    id: &ldquo;experience&rdquo;,
-    items: [{ id: &ldquo;exp-1&rdquo;, content: &ldquo;&rdquo; }],
+    id: "experience",
+    items: [{ id: "exp-1", content: "" }],
   });
 
   const [skills, setSkills] = useState<Section>({
-    id: &ldquo;skills&rdquo;,
-    items: [{ id: &ldquo;skill-1&rdquo;, content: &ldquo;&rdquo; }],
+    id: "skills",
+    items: [{ id: "skill-1", content: "" }],
   });
 
   const handlePrint = () => {
@@ -79,37 +79,37 @@ export function CVTemplate() {
   };
 
   return (
-    <div className=&ldquo;print-content&rdquo;>
+    <div className="print-content">
       <DialogHeader>
         <DialogTitle>Curriculum Vitae</DialogTitle>
       </DialogHeader>
 
-      <div className=&ldquo;max-h-[80vh] overflow-y-auto py-4&rdquo;>
-        <Card className=&ldquo;w-full max-w-4xl mx-auto print:shadow-none&rdquo;>
-          <CardContent className=&ldquo;space-y-6&rdquo;>
+      <div className="max-h-[80vh] overflow-y-auto py-4">
+        <Card className="w-full max-w-4xl mx-auto print:shadow-none">
+          <CardContent className="space-y-6">
             {/* Personal Information */}
-            <div className=&ldquo;space-y-4&rdquo;>
-              <h3 className=&ldquo;text-lg font-semibold&rdquo;>Información Personal</h3>
-              <div className=&ldquo;grid grid-cols-2 gap-4&rdquo;>
-                <div className=&ldquo;space-y-2&rdquo;>
-                  <Label htmlFor=&ldquo;fullName&rdquo;>Nombre Completo</Label>
-                  <Input id=&ldquo;fullName&rdquo; placeholder=&ldquo;Ej: Juan Pérez Gómez&rdquo; />
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Información Personal</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="fullName">Nombre Completo</Label>
+                  <Input id="fullName" placeholder="Ej: Juan Pérez Gómez" />
                 </div>
-                <div className=&ldquo;space-y-2&rdquo;>
-                  <Label htmlFor=&ldquo;email&rdquo;>Correo Electrónico</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="email">Correo Electrónico</Label>
                   <Input
-                    id=&ldquo;email&rdquo;
-                    type=&ldquo;email&rdquo;
-                    placeholder=&ldquo;Ej: juan@email.com&rdquo;
+                    id="email"
+                    type="email"
+                    placeholder="Ej: juan@email.com"
                   />
                 </div>
-                <div className=&ldquo;space-y-2&rdquo;>
-                  <Label htmlFor=&ldquo;phone&rdquo;>Teléfono</Label>
-                  <Input id=&ldquo;phone&rdquo; placeholder=&ldquo;Ej: +591 ...&rdquo; />
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Teléfono</Label>
+                  <Input id="phone" placeholder="Ej: +591 ..." />
                 </div>
-                <div className=&ldquo;space-y-2&rdquo;>
-                  <Label htmlFor=&ldquo;location&rdquo;>Ubicación</Label>
-                  <Input id=&ldquo;location&rdquo; placeholder=&ldquo;Ej: La Paz, Bolivia&rdquo; />
+                <div className="space-y-2">
+                  <Label htmlFor="location">Ubicación</Label>
+                  <Input id="location" placeholder="Ej: La Paz, Bolivia" />
                 </div>
               </div>
             </div>
@@ -117,32 +117,32 @@ export function CVTemplate() {
             <Separator />
 
             {/* Professional Summary */}
-            <div className=&ldquo;space-y-2&rdquo;>
-              <Label htmlFor=&ldquo;summary&rdquo;>Resumen Profesional</Label>
+            <div className="space-y-2">
+              <Label htmlFor="summary">Resumen Profesional</Label>
               <Textarea
-                id=&ldquo;summary&rdquo;
-                placeholder=&ldquo;Breve descripción de tus objetivos profesionales y habilidades principales (2-3 oraciones)&rdquo;
-                className=&ldquo;h-24&rdquo;
+                id="summary"
+                placeholder="Breve descripción de tus objetivos profesionales y habilidades principales (2-3 oraciones)"
+                className="h-24"
               />
             </div>
 
             <Separator />
 
             {/* Education */}
-            <div className=&ldquo;space-y-4&rdquo;>
-              <div className=&ldquo;flex items-center justify-between&rdquo;>
-                <h3 className=&ldquo;text-lg font-semibold&rdquo;>Educación</h3>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold">Educación</h3>
                 <Button
-                  variant=&ldquo;outline&rdquo;
-                  size=&ldquo;sm&rdquo;
+                  variant="outline"
+                  size="sm"
                   onClick={() => addItem(education, setEducation)}
                 >
-                  <Plus className=&ldquo;h-4 w-4 mr-2&rdquo; />
+                  <Plus className="h-4 w-4 mr-2" />
                   Agregar
                 </Button>
               </div>
               {education.items.map((item) => (
-                <div key={item.id} className=&ldquo;flex gap-2&rdquo;>
+                <div key={item.id} className="flex gap-2">
                   <Textarea
                     value={item.content}
                     onChange={(e) =>
@@ -153,15 +153,15 @@ export function CVTemplate() {
                         e.target.value
                       )
                     }
-                    placeholder=&ldquo;Ej: Bachiller en Humanidades - Colegio San Calixto (2020-2023)&rdquo;
-                    className=&ldquo;flex-1&rdquo;
+                    placeholder="Ej: Bachiller en Humanidades - Colegio San Calixto (2020-2023)"
+                    className="flex-1"
                   />
                   <Button
-                    variant=&ldquo;ghost&rdquo;
-                    size=&ldquo;icon&rdquo;
+                    variant="ghost"
+                    size="icon"
                     onClick={() => removeItem(education, setEducation, item.id)}
                   >
-                    <Trash2 className=&ldquo;h-4 w-4&rdquo; />
+                    <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
               ))}
@@ -170,20 +170,20 @@ export function CVTemplate() {
             <Separator />
 
             {/* Experience */}
-            <div className=&ldquo;space-y-4&rdquo;>
-              <div className=&ldquo;flex items-center justify-between&rdquo;>
-                <h3 className=&ldquo;text-lg font-semibold&rdquo;>Experiencia</h3>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold">Experiencia</h3>
                 <Button
-                  variant=&ldquo;outline&rdquo;
-                  size=&ldquo;sm&rdquo;
+                  variant="outline"
+                  size="sm"
                   onClick={() => addItem(experience, setExperience)}
                 >
-                  <Plus className=&ldquo;h-4 w-4 mr-2&rdquo; />
+                  <Plus className="h-4 w-4 mr-2" />
                   Agregar
                 </Button>
               </div>
               {experience.items.map((item) => (
-                <div key={item.id} className=&ldquo;flex gap-2&rdquo;>
+                <div key={item.id} className="flex gap-2">
                   <Textarea
                     value={item.content}
                     onChange={(e) =>
@@ -194,17 +194,17 @@ export function CVTemplate() {
                         e.target.value
                       )
                     }
-                    placeholder=&ldquo;Ej: Pasante de Marketing Digital - Empresa XYZ (Ene 2023 - Jun 2023)&#10;• Principales responsabilidades y logros&#10;• Impacto y resultados obtenidos&rdquo;
-                    className=&ldquo;flex-1 h-32&rdquo;
+                    placeholder="Ej: Pasante de Marketing Digital - Empresa XYZ (Ene 2023 - Jun 2023)&#10;• Principales responsabilidades y logros&#10;• Impacto y resultados obtenidos"
+                    className="flex-1 h-32"
                   />
                   <Button
-                    variant=&ldquo;ghost&rdquo;
-                    size=&ldquo;icon&rdquo;
+                    variant="ghost"
+                    size="icon"
                     onClick={() =>
                       removeItem(experience, setExperience, item.id)
                     }
                   >
-                    <Trash2 className=&ldquo;h-4 w-4&rdquo; />
+                    <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
               ))}
@@ -213,45 +213,45 @@ export function CVTemplate() {
             <Separator />
 
             {/* Skills */}
-            <div className=&ldquo;space-y-4&rdquo;>
-              <div className=&ldquo;flex items-center justify-between&rdquo;>
-                <h3 className=&ldquo;text-lg font-semibold&rdquo;>Habilidades</h3>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold">Habilidades</h3>
                 <Button
-                  variant=&ldquo;outline&rdquo;
-                  size=&ldquo;sm&rdquo;
+                  variant="outline"
+                  size="sm"
                   onClick={() => addItem(skills, setSkills)}
                 >
-                  <Plus className=&ldquo;h-4 w-4 mr-2&rdquo; />
+                  <Plus className="h-4 w-4 mr-2" />
                   Agregar
                 </Button>
               </div>
               {skills.items.map((item) => (
-                <div key={item.id} className=&ldquo;flex gap-2&rdquo;>
+                <div key={item.id} className="flex gap-2">
                   <Input
                     value={item.content}
                     onChange={(e) =>
                       updateItem(skills, setSkills, item.id, e.target.value)
                     }
-                    placeholder=&ldquo;Ej: Microsoft Office, Diseño Gráfico, Trabajo en Equipo&rdquo;
+                    placeholder="Ej: Microsoft Office, Diseño Gráfico, Trabajo en Equipo"
                   />
                   <Button
-                    variant=&ldquo;ghost&rdquo;
-                    size=&ldquo;icon&rdquo;
+                    variant="ghost"
+                    size="icon"
                     onClick={() => removeItem(skills, setSkills, item.id)}
                   >
-                    <Trash2 className=&ldquo;h-4 w-4&rdquo; />
+                    <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
               ))}
             </div>
 
-            <div className=&ldquo;flex justify-end space-x-2 pt-4 print:hidden&rdquo;>
-              <Button variant=&ldquo;outline&rdquo; onClick={handlePrint}>
-                <Printer className=&ldquo;h-4 w-4 mr-2&rdquo; />
+            <div className="flex justify-end space-x-2 pt-4 print:hidden">
+              <Button variant="outline" onClick={handlePrint}>
+                <Printer className="h-4 w-4 mr-2" />
                 Imprimir
               </Button>
-              <Button variant=&ldquo;outline&rdquo; onClick={handleDownloadPDF}>
-                <Download className=&ldquo;h-4 w-4 mr-2&rdquo; />
+              <Button variant="outline" onClick={handleDownloadPDF}>
+                <Download className="h-4 w-4 mr-2" />
                 Descargar PDF
               </Button>
               <Button>Guardar CV</Button>
