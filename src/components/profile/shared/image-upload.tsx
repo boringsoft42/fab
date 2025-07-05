@@ -1,17 +1,17 @@
-"use client";
+&ldquo;use client&rdquo;;
 
-import { useState, useCallback } from "react";
-import { useDropzone } from "react-dropzone";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardContent } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Upload, X, User, Building, AlertCircle } from "lucide-react";
+import { useState, useCallback } from &ldquo;react&rdquo;;
+import { useDropzone } from &ldquo;react-dropzone&rdquo;;
+import { Button } from &ldquo;@/components/ui/button&rdquo;;
+import { Avatar, AvatarFallback, AvatarImage } from &ldquo;@/components/ui/avatar&rdquo;;
+import { Card, CardContent } from &ldquo;@/components/ui/card&rdquo;;
+import { Alert, AlertDescription } from &ldquo;@/components/ui/alert&rdquo;;
+import { Upload, X, User, Building, AlertCircle } from &ldquo;lucide-react&rdquo;;
 
 interface ImageUploadProps {
   currentImage?: string | null;
   onImageChange: (imageUrl: string | null) => void;
-  type?: "avatar" | "logo";
+  type?: &ldquo;avatar&rdquo; | &ldquo;logo&rdquo;;
   maxSize?: number; // in MB
   acceptedTypes?: string[];
   className?: string;
@@ -21,9 +21,9 @@ interface ImageUploadProps {
 export function ImageUpload({
   currentImage,
   onImageChange,
-  type = "avatar",
+  type = &ldquo;avatar&rdquo;,
   maxSize = 5,
-  acceptedTypes = ["image/jpeg", "image/png", "image/webp"],
+  acceptedTypes = [&ldquo;image/jpeg&rdquo;, &ldquo;image/png&rdquo;, &ldquo;image/webp&rdquo;],
   className,
   placeholder,
 }: ImageUploadProps) {
@@ -32,17 +32,17 @@ export function ImageUpload({
 
   const uploadImage = async (file: File): Promise<string> => {
     const formData = new FormData();
-    formData.append("file", file);
-    formData.append("type", type);
+    formData.append(&ldquo;file&rdquo;, file);
+    formData.append(&ldquo;type&rdquo;, type);
 
-    const response = await fetch("/api/upload/image", {
-      method: "POST",
+    const response = await fetch(&ldquo;/api/upload/image&rdquo;, {
+      method: &ldquo;POST&rdquo;,
       body: formData,
     });
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.error || "Error al subir la imagen");
+      throw new Error(errorData.error || &ldquo;Error al subir la imagen&rdquo;);
     }
 
     const data = await response.json();
@@ -64,7 +64,7 @@ export function ImageUpload({
 
       // Validate file type
       if (!acceptedTypes.includes(file.type)) {
-        setError("Formato de imagen no válido. Usa JPG, PNG o WebP");
+        setError(&ldquo;Formato de imagen no válido. Usa JPG, PNG o WebP&rdquo;);
         return;
       }
 
@@ -74,7 +74,7 @@ export function ImageUpload({
         onImageChange(imageUrl);
       } catch (err) {
         setError(
-          err instanceof Error ? err.message : "Error al subir la imagen"
+          err instanceof Error ? err.message : &ldquo;Error al subir la imagen&rdquo;
         );
       } finally {
         setIsUploading(false);
@@ -86,8 +86,8 @@ export function ImageUpload({
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: {
-      "image/*": acceptedTypes
-        .map((type) => type.split("/")[1])
+      &ldquo;image/*&rdquo;: acceptedTypes
+        .map((type) => type.split(&ldquo;/&rdquo;)[1])
         .map((ext) => `.${ext}`),
     },
     multiple: false,
@@ -101,11 +101,11 @@ export function ImageUpload({
 
   const getPlaceholder = () => {
     if (placeholder) return placeholder;
-    return type === "logo" ? "Logo de la organización" : "Foto de perfil";
+    return type === &ldquo;logo&rdquo; ? &ldquo;Logo de la organización&rdquo; : &ldquo;Foto de perfil&rdquo;;
   };
 
   const getIcon = () => {
-    return type === "logo" ? Building : User;
+    return type === &ldquo;logo&rdquo; ? Building : User;
   };
 
   const Icon = getIcon();
@@ -114,31 +114,31 @@ export function ImageUpload({
     <div className={`space-y-4 ${className}`}>
       {/* Current Image Display */}
       {currentImage && (
-        <div className="flex items-center gap-4">
-          {type === "avatar" ? (
-            <Avatar className="h-20 w-20">
-              <AvatarImage src={currentImage} alt="Imagen actual" />
+        <div className=&ldquo;flex items-center gap-4&rdquo;>
+          {type === &ldquo;avatar&rdquo; ? (
+            <Avatar className=&ldquo;h-20 w-20&rdquo;>
+              <AvatarImage src={currentImage} alt=&ldquo;Imagen actual&rdquo; />
               <AvatarFallback>
-                <User className="h-8 w-8" />
+                <User className=&ldquo;h-8 w-8&rdquo; />
               </AvatarFallback>
             </Avatar>
           ) : (
-            <div className="h-20 w-20 rounded-lg border overflow-hidden">
+            <div className=&ldquo;h-20 w-20 rounded-lg border overflow-hidden&rdquo;>
               <img
                 src={currentImage}
-                alt="Logo actual"
-                className="h-full w-full object-cover"
+                alt=&ldquo;Logo actual&rdquo;
+                className=&ldquo;h-full w-full object-cover&rdquo;
               />
             </div>
           )}
 
           <Button
-            variant="outline"
-            size="sm"
+            variant=&ldquo;outline&rdquo;
+            size=&ldquo;sm&rdquo;
             onClick={handleRemove}
             disabled={isUploading}
           >
-            <X className="h-4 w-4 mr-2" />
+            <X className=&ldquo;h-4 w-4 mr-2&rdquo; />
             Eliminar
           </Button>
         </div>
@@ -146,43 +146,43 @@ export function ImageUpload({
 
       {/* Upload Area */}
       <Card>
-        <CardContent className="p-6">
+        <CardContent className=&ldquo;p-6&rdquo;>
           <div
             {...getRootProps()}
             className={`
               border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors
-              ${isDragActive ? "border-primary bg-primary/5" : "border-muted-foreground/25"}
-              ${isUploading ? "cursor-not-allowed opacity-50" : "hover:border-primary/50"}
+              ${isDragActive ? &ldquo;border-primary bg-primary/5&rdquo; : &ldquo;border-muted-foreground/25&rdquo;}
+              ${isUploading ? &ldquo;cursor-not-allowed opacity-50&rdquo; : &ldquo;hover:border-primary/50&rdquo;}
             `}
           >
             <input {...getInputProps()} />
 
-            <div className="space-y-4">
-              <div className="mx-auto w-12 h-12 rounded-full bg-muted flex items-center justify-center">
+            <div className=&ldquo;space-y-4&rdquo;>
+              <div className=&ldquo;mx-auto w-12 h-12 rounded-full bg-muted flex items-center justify-center&rdquo;>
                 {isUploading ? (
-                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary" />
+                  <div className=&ldquo;animate-spin rounded-full h-6 w-6 border-b-2 border-primary&rdquo; />
                 ) : (
-                  <Upload className="h-6 w-6 text-muted-foreground" />
+                  <Upload className=&ldquo;h-6 w-6 text-muted-foreground&rdquo; />
                 )}
               </div>
 
-              <div className="space-y-2">
-                <p className="text-sm font-medium">
+              <div className=&ldquo;space-y-2&rdquo;>
+                <p className=&ldquo;text-sm font-medium&rdquo;>
                   {isUploading
-                    ? "Subiendo imagen..."
+                    ? &ldquo;Subiendo imagen...&rdquo;
                     : isDragActive
-                      ? "Suelta la imagen aquí"
+                      ? &ldquo;Suelta la imagen aquí&rdquo;
                       : `Arrastra una imagen o haz clic para seleccionar`}
                 </p>
 
-                <p className="text-xs text-muted-foreground">
+                <p className=&ldquo;text-xs text-muted-foreground&rdquo;>
                   {getPlaceholder()} • Máximo {maxSize}MB • JPG, PNG, WebP
                 </p>
               </div>
 
               {!isUploading && (
-                <Button variant="outline" size="sm" type="button">
-                  <Icon className="h-4 w-4 mr-2" />
+                <Button variant=&ldquo;outline&rdquo; size=&ldquo;sm&rdquo; type=&ldquo;button&rdquo;>
+                  <Icon className=&ldquo;h-4 w-4 mr-2&rdquo; />
                   Seleccionar Imagen
                 </Button>
               )}
@@ -193,8 +193,8 @@ export function ImageUpload({
 
       {/* Error Message */}
       {error && (
-        <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
+        <Alert variant=&ldquo;destructive&rdquo;>
+          <AlertCircle className=&ldquo;h-4 w-4&rdquo; />
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}

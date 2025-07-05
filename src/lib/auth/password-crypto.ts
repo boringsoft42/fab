@@ -1,4 +1,4 @@
-"use client";
+&ldquo;use client&rdquo;;
 
 /**
  * Utility functions for client-side password hashing before transmission
@@ -18,13 +18,13 @@ export async function hashPassword(password: string): Promise<string> {
   const data = encoder.encode(password);
 
   // Hash the password using SHA-256
-  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  const hashBuffer = await crypto.subtle.digest(&ldquo;SHA-256&rdquo;, data);
 
   // Convert the hash to a hex string
   const hashArray = Array.from(new Uint8Array(hashBuffer));
   const hashHex = hashArray
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
+    .map((b) => b.toString(16).padStart(2, &ldquo;0&rdquo;))
+    .join(&ldquo;&rdquo;);
 
   return hashHex;
 }

@@ -1,110 +1,110 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from &ldquo;next/server&rdquo;;
 
 // Mock data for demonstration - in real app this would come from Prisma/database
 const events = [
   {
-    id: "event-1",
-    title: "Startup Pitch Night Cochabamba",
+    id: &ldquo;event-1&rdquo;,
+    title: &ldquo;Startup Pitch Night Cochabamba&rdquo;,
     description:
-      "Noche de pitches para startups emergentes. Oportunidad de presentar tu idea ante inversionistas y mentores.",
-    date: new Date("2024-03-15"),
-    time: "19:00 - 22:00",
-    location: "Centro de Convenciones Cochabamba",
-    type: "presencial",
-    category: "Pitch",
-    organizer: "Startup Hub Bolivia",
-    organizerId: "org-1",
+      &ldquo;Noche de pitches para startups emergentes. Oportunidad de presentar tu idea ante inversionistas y mentores.&rdquo;,
+    date: new Date(&ldquo;2024-03-15&rdquo;),
+    time: &ldquo;19:00 - 22:00&rdquo;,
+    location: &ldquo;Centro de Convenciones Cochabamba&rdquo;,
+    type: &ldquo;presencial&rdquo;,
+    category: &ldquo;Pitch&rdquo;,
+    organizer: &ldquo;Startup Hub Bolivia&rdquo;,
+    organizerId: &ldquo;org-1&rdquo;,
     attendees: 67,
     maxAttendees: 100,
     price: 0,
-    image: "/api/placeholder/400/200",
-    tags: ["Pitch", "Inversión", "Networking"],
-    status: "published",
+    image: &ldquo;/api/placeholder/400/200&rdquo;,
+    tags: [&ldquo;Pitch&rdquo;, &ldquo;Inversión&rdquo;, &ldquo;Networking&rdquo;],
+    status: &ldquo;published&rdquo;,
     featured: true,
-    registrationDeadline: new Date("2024-03-13"),
-    requirements: ["Presentación de 5 minutos", "Pitch deck obligatorio"],
+    registrationDeadline: new Date(&ldquo;2024-03-13&rdquo;),
+    requirements: [&ldquo;Presentación de 5 minutos&rdquo;, &ldquo;Pitch deck obligatorio&rdquo;],
     agenda: [
-      { time: "19:00", activity: "Registro y networking" },
-      { time: "19:30", activity: "Presentaciones startup" },
-      { time: "21:30", activity: "Evaluación y networking" },
+      { time: &ldquo;19:00&rdquo;, activity: &ldquo;Registro y networking&rdquo; },
+      { time: &ldquo;19:30&rdquo;, activity: &ldquo;Presentaciones startup&rdquo; },
+      { time: &ldquo;21:30&rdquo;, activity: &ldquo;Evaluación y networking&rdquo; },
     ],
     speakers: [
-      { name: "Dr. Roberto Silva", role: "Inversionista Ángel" },
-      { name: "María González", role: "Mentora Startup" },
+      { name: &ldquo;Dr. Roberto Silva&rdquo;, role: &ldquo;Inversionista Ángel&rdquo; },
+      { name: &ldquo;María González&rdquo;, role: &ldquo;Mentora Startup&rdquo; },
     ],
-    createdAt: new Date("2024-02-01"),
-    updatedAt: new Date("2024-02-20"),
+    createdAt: new Date(&ldquo;2024-02-01&rdquo;),
+    updatedAt: new Date(&ldquo;2024-02-20&rdquo;),
   },
   {
-    id: "event-2",
-    title: "Workshop: Marketing Digital para Emprendedores",
+    id: &ldquo;event-2&rdquo;,
+    title: &ldquo;Workshop: Marketing Digital para Emprendedores&rdquo;,
     description:
-      "Aprende estrategias efectivas de marketing digital para hacer crecer tu emprendimiento.",
-    date: new Date("2024-03-20"),
-    time: "14:00 - 17:00",
-    location: "Online - Zoom",
-    type: "virtual",
-    category: "Workshop",
-    organizer: "Digital Entrepreneurs BO",
-    organizerId: "org-2",
+      &ldquo;Aprende estrategias efectivas de marketing digital para hacer crecer tu emprendimiento.&rdquo;,
+    date: new Date(&ldquo;2024-03-20&rdquo;),
+    time: &ldquo;14:00 - 17:00&rdquo;,
+    location: &ldquo;Online - Zoom&rdquo;,
+    type: &ldquo;virtual&rdquo;,
+    category: &ldquo;Workshop&rdquo;,
+    organizer: &ldquo;Digital Entrepreneurs BO&rdquo;,
+    organizerId: &ldquo;org-2&rdquo;,
     attendees: 134,
     maxAttendees: 200,
     price: 50,
-    image: "/api/placeholder/400/200",
-    tags: ["Marketing", "Digital", "Capacitación"],
-    status: "published",
+    image: &ldquo;/api/placeholder/400/200&rdquo;,
+    tags: [&ldquo;Marketing&rdquo;, &ldquo;Digital&rdquo;, &ldquo;Capacitación&rdquo;],
+    status: &ldquo;published&rdquo;,
     featured: false,
-    registrationDeadline: new Date("2024-03-18"),
+    registrationDeadline: new Date(&ldquo;2024-03-18&rdquo;),
     requirements: [
-      "Conocimientos básicos de marketing",
-      "Laptop o dispositivo",
+      &ldquo;Conocimientos básicos de marketing&rdquo;,
+      &ldquo;Laptop o dispositivo&rdquo;,
     ],
     agenda: [
-      { time: "14:00", activity: "Introducción al marketing digital" },
-      { time: "15:00", activity: "Estrategias de redes sociales" },
-      { time: "16:00", activity: "Métricas y análisis" },
+      { time: &ldquo;14:00&rdquo;, activity: &ldquo;Introducción al marketing digital&rdquo; },
+      { time: &ldquo;15:00&rdquo;, activity: &ldquo;Estrategias de redes sociales&rdquo; },
+      { time: &ldquo;16:00&rdquo;, activity: &ldquo;Métricas y análisis&rdquo; },
     ],
     speakers: [
       {
-        name: "Lic. Carmen Rodriguez",
-        role: "Especialista en Marketing Digital",
+        name: &ldquo;Lic. Carmen Rodriguez&rdquo;,
+        role: &ldquo;Especialista en Marketing Digital&rdquo;,
       },
     ],
-    createdAt: new Date("2024-02-05"),
-    updatedAt: new Date("2024-02-18"),
+    createdAt: new Date(&ldquo;2024-02-05&rdquo;),
+    updatedAt: new Date(&ldquo;2024-02-18&rdquo;),
   },
   {
-    id: "event-3",
-    title: "Feria de Emprendimientos Sostenibles",
+    id: &ldquo;event-3&rdquo;,
+    title: &ldquo;Feria de Emprendimientos Sostenibles&rdquo;,
     description:
-      "Exposición de emprendimientos con enfoque en sostenibilidad y responsabilidad social.",
-    date: new Date("2024-03-25"),
-    time: "09:00 - 18:00",
-    location: "Plaza Murillo, La Paz",
-    type: "presencial",
-    category: "Feria",
-    organizer: "EcoEmprende Bolivia",
-    organizerId: "org-3",
+      &ldquo;Exposición de emprendimientos con enfoque en sostenibilidad y responsabilidad social.&rdquo;,
+    date: new Date(&ldquo;2024-03-25&rdquo;),
+    time: &ldquo;09:00 - 18:00&rdquo;,
+    location: &ldquo;Plaza Murillo, La Paz&rdquo;,
+    type: &ldquo;presencial&rdquo;,
+    category: &ldquo;Feria&rdquo;,
+    organizer: &ldquo;EcoEmprende Bolivia&rdquo;,
+    organizerId: &ldquo;org-3&rdquo;,
     attendees: 89,
     maxAttendees: 150,
     price: 0,
-    image: "/api/placeholder/400/200",
-    tags: ["Sostenibilidad", "Expo", "Verde"],
-    status: "published",
+    image: &ldquo;/api/placeholder/400/200&rdquo;,
+    tags: [&ldquo;Sostenibilidad&rdquo;, &ldquo;Expo&rdquo;, &ldquo;Verde&rdquo;],
+    status: &ldquo;published&rdquo;,
     featured: true,
-    registrationDeadline: new Date("2024-03-23"),
-    requirements: ["Emprendimiento con enfoque sostenible"],
+    registrationDeadline: new Date(&ldquo;2024-03-23&rdquo;),
+    requirements: [&ldquo;Emprendimiento con enfoque sostenible&rdquo;],
     agenda: [
-      { time: "09:00", activity: "Apertura y bienvenida" },
-      { time: "10:00", activity: "Exposición de emprendimientos" },
-      { time: "16:00", activity: "Panel: Futuro sostenible" },
+      { time: &ldquo;09:00&rdquo;, activity: &ldquo;Apertura y bienvenida&rdquo; },
+      { time: &ldquo;10:00&rdquo;, activity: &ldquo;Exposición de emprendimientos&rdquo; },
+      { time: &ldquo;16:00&rdquo;, activity: &ldquo;Panel: Futuro sostenible&rdquo; },
     ],
     speakers: [
-      { name: "Dr. Luis Vargas", role: "Experto en Sostenibilidad" },
-      { name: "Ana Morales", role: "Emprendedora Social" },
+      { name: &ldquo;Dr. Luis Vargas&rdquo;, role: &ldquo;Experto en Sostenibilidad&rdquo; },
+      { name: &ldquo;Ana Morales&rdquo;, role: &ldquo;Emprendedora Social&rdquo; },
     ],
-    createdAt: new Date("2024-02-10"),
-    updatedAt: new Date("2024-02-22"),
+    createdAt: new Date(&ldquo;2024-02-10&rdquo;),
+    updatedAt: new Date(&ldquo;2024-02-22&rdquo;),
   },
 ];
 
@@ -112,12 +112,12 @@ const events = [
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const search = searchParams.get("search");
-    const type = searchParams.get("type");
-    const category = searchParams.get("category");
-    const status = searchParams.get("status");
-    const limit = parseInt(searchParams.get("limit") || "10");
-    const page = parseInt(searchParams.get("page") || "1");
+    const search = searchParams.get(&ldquo;search&rdquo;);
+    const type = searchParams.get(&ldquo;type&rdquo;);
+    const category = searchParams.get(&ldquo;category&rdquo;);
+    const status = searchParams.get(&ldquo;status&rdquo;);
+    const limit = parseInt(searchParams.get(&ldquo;limit&rdquo;) || &ldquo;10&rdquo;);
+    const page = parseInt(searchParams.get(&ldquo;page&rdquo;) || &ldquo;1&rdquo;);
 
     let filtered = [...events];
 
@@ -135,17 +135,17 @@ export async function GET(request: NextRequest) {
     }
 
     // Apply type filter
-    if (type && type !== "all") {
+    if (type && type !== &ldquo;all&rdquo;) {
       filtered = filtered.filter((event) => event.type === type);
     }
 
     // Apply category filter
-    if (category && category !== "all") {
+    if (category && category !== &ldquo;all&rdquo;) {
       filtered = filtered.filter((event) => event.category === category);
     }
 
     // Apply status filter
-    if (status && status !== "all") {
+    if (status && status !== &ldquo;all&rdquo;) {
       filtered = filtered.filter((event) => event.status === status);
     }
 
@@ -158,20 +158,20 @@ export async function GET(request: NextRequest) {
     const stats = {
       total: filtered.length,
       byType: {
-        virtual: events.filter((e) => e.type === "virtual").length,
-        presencial: events.filter((e) => e.type === "presencial").length,
-        hybrid: events.filter((e) => e.type === "hybrid").length,
+        virtual: events.filter((e) => e.type === &ldquo;virtual&rdquo;).length,
+        presencial: events.filter((e) => e.type === &ldquo;presencial&rdquo;).length,
+        hybrid: events.filter((e) => e.type === &ldquo;hybrid&rdquo;).length,
       },
       byCategory: {
-        pitch: events.filter((e) => e.category === "Pitch").length,
-        workshop: events.filter((e) => e.category === "Workshop").length,
-        feria: events.filter((e) => e.category === "Feria").length,
-        networking: events.filter((e) => e.category === "Networking").length,
+        pitch: events.filter((e) => e.category === &ldquo;Pitch&rdquo;).length,
+        workshop: events.filter((e) => e.category === &ldquo;Workshop&rdquo;).length,
+        feria: events.filter((e) => e.category === &ldquo;Feria&rdquo;).length,
+        networking: events.filter((e) => e.category === &ldquo;Networking&rdquo;).length,
       },
       byStatus: {
-        published: events.filter((e) => e.status === "published").length,
-        draft: events.filter((e) => e.status === "draft").length,
-        cancelled: events.filter((e) => e.status === "cancelled").length,
+        published: events.filter((e) => e.status === &ldquo;published&rdquo;).length,
+        draft: events.filter((e) => e.status === &ldquo;draft&rdquo;).length,
+        cancelled: events.filter((e) => e.status === &ldquo;cancelled&rdquo;).length,
       },
       totalAttendees: events.reduce((sum, e) => sum + e.attendees, 0),
       averageAttendance:
@@ -192,9 +192,9 @@ export async function GET(request: NextRequest) {
       stats,
     });
   } catch (error) {
-    console.error("Error fetching events:", error);
+    console.error(&ldquo;Error fetching events:&rdquo;, error);
     return NextResponse.json(
-      { error: "Error al obtener eventos" },
+      { error: &ldquo;Error al obtener eventos&rdquo; },
       { status: 500 }
     );
   }
@@ -207,14 +207,14 @@ export async function POST(request: NextRequest) {
 
     // Validate required fields
     const requiredFields = [
-      "title",
-      "description",
-      "date",
-      "time",
-      "location",
-      "type",
-      "category",
-      "organizer",
+      &ldquo;title&rdquo;,
+      &ldquo;description&rdquo;,
+      &ldquo;date&rdquo;,
+      &ldquo;time&rdquo;,
+      &ldquo;location&rdquo;,
+      &ldquo;type&rdquo;,
+      &ldquo;category&rdquo;,
+      &ldquo;organizer&rdquo;,
     ];
     for (const field of requiredFields) {
       if (!data[field]) {
@@ -230,8 +230,8 @@ export async function POST(request: NextRequest) {
       id: `event-${Date.now()}`,
       ...data,
       attendees: 0,
-      organizerId: "current-user-id", // This would come from user context
-      status: data.status || "draft",
+      organizerId: &ldquo;current-user-id&rdquo;, // This would come from user context
+      status: data.status || &ldquo;draft&rdquo;,
       featured: data.featured || false,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -242,15 +242,15 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(
       {
-        message: "Evento creado exitosamente",
+        message: &ldquo;Evento creado exitosamente&rdquo;,
         event: newEvent,
       },
       { status: 201 }
     );
   } catch (error) {
-    console.error("Error creating event:", error);
+    console.error(&ldquo;Error creating event:&rdquo;, error);
     return NextResponse.json(
-      { error: "Error al crear evento" },
+      { error: &ldquo;Error al crear evento&rdquo; },
       { status: 500 }
     );
   }

@@ -1,17 +1,17 @@
-"use client";
+&ldquo;use client&rdquo;;
 
-import { Inter } from "next/font/google";
-import "./globals.css";
+import { Inter } from &ldquo;next/font/google&rdquo;;
+import &ldquo;./globals.css&rdquo;;
 import 'leaflet/dist/leaflet.css';
-import { QueryProvider } from "@/lib/providers/QueryProvider";
-import { MockAuthProvider } from "@/context/mock-auth-context";
-import { ThemeProvider } from "@/context/theme-context";
-import dynamic from "next/dynamic";
+import { QueryProvider } from &ldquo;@/lib/providers/QueryProvider&rdquo;;
+import { MockAuthProvider } from &ldquo;@/context/mock-auth-context&rdquo;;
+import { ThemeProvider } from &ldquo;@/context/theme-context&rdquo;;
+import dynamic from &ldquo;next/dynamic&rdquo;;
 
-const APP_NAME = "POSITIVE-NEXT";
-const APP_DESCRIPTION = "Your Mind's Best Friend";
+const APP_NAME = &ldquo;POSITIVE-NEXT&rdquo;;
+const APP_DESCRIPTION = &ldquo;Your Mind's Best Friend&rdquo;;
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: [&ldquo;latin&rdquo;] });
 
 export default function RootLayout({
   children,
@@ -19,19 +19,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es" suppressHydrationWarning>
+    <html lang=&ldquo;es&rdquo; suppressHydrationWarning>
       <head>
         <title>{APP_NAME}</title>
-        <meta name="description" content={APP_DESCRIPTION} />
+        <meta name=&ldquo;description&rdquo; content={APP_DESCRIPTION} />
         <link
-          rel="stylesheet"
-          href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-          crossOrigin=""
+          rel=&ldquo;stylesheet&rdquo;
+          href=&ldquo;https://unpkg.com/leaflet@1.9.4/dist/leaflet.css&rdquo;
+          integrity=&ldquo;sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=&rdquo;
+          crossOrigin=&ldquo;&rdquo;
         />
       </head>
       <body className={inter.className}>
-        <ThemeProvider defaultTheme="system" storageKey="app-theme">
+        <ThemeProvider defaultTheme=&ldquo;system&rdquo; storageKey=&ldquo;app-theme&rdquo;>
           <QueryProvider>
             <MockAuthProvider>{children}</MockAuthProvider>
           </QueryProvider>

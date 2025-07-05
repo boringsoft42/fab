@@ -1,10 +1,10 @@
-"use client";
+&ldquo;use client&rdquo;;
 
-import { createContext, useContext, useEffect, useState } from "react";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import type { User, Session } from "@supabase/auth-helpers-nextjs";
-import { useRouter } from "next/navigation";
-import type { Profile } from "@/types/profile";
+import { createContext, useContext, useEffect, useState } from &ldquo;react&rdquo;;
+import { createClientComponentClient } from &ldquo;@supabase/auth-helpers-nextjs&rdquo;;
+import type { User, Session } from &ldquo;@supabase/auth-helpers-nextjs&rdquo;;
+import { useRouter } from &ldquo;next/navigation&rdquo;;
+import type { Profile } from &ldquo;@/types/profile&rdquo;;
 
 type AuthContextType = {
   user: User | null;
@@ -31,18 +31,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const router = useRouter();
   const supabase = createClientComponentClient();
 
   // Fetch profile function
   const fetchProfile = async (userId: string) => {
     try {
       const response = await fetch(`/api/profile/${userId}`);
-      if (!response.ok) throw new Error("Failed to fetch profile");
+      if (!response.ok) throw new Error(&ldquo;Failed to fetch profile&rdquo;);
       const data = await response.json();
       setProfile(data.profile);
     } catch (error) {
-      console.error("Error fetching profile:", error);
+      console.error(&ldquo;Error fetching profile:&rdquo;, error);
       setProfile(null);
     }
   };
@@ -72,8 +71,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       setIsLoading(false);
 
-      if (event === "SIGNED_OUT") {
-        router.push("/sign-in");
+      if (event === &ldquo;SIGNED_OUT&rdquo;) {
+        router.push(&ldquo;/sign-in&rdquo;);
       }
     });
 
@@ -91,7 +90,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (data.user) {
       await fetchProfile(data.user.id);
     }
-    router.push("/dashboard");
+    router.push(&ldquo;/dashboard&rdquo;);
   };
 
   const signUp = async (email: string, password: string) => {
@@ -106,7 +105,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
     setProfile(null);
-    router.push("/sign-in");
+    router.push(&ldquo;/sign-in&rdquo;);
   };
 
   return (

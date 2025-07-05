@@ -1,11 +1,11 @@
-"use client";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FacebookIcon, GithubIcon, UploadCloud } from "lucide-react";
-import { useAuth } from "@/hooks/use-auth";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+&ldquo;use client&rdquo;;
+import { useState } from &ldquo;react&rdquo;;
+import { useForm } from &ldquo;react-hook-form&rdquo;;
+import { zodResolver } from &ldquo;@hookform/resolvers/zod&rdquo;;
+import { FacebookIcon, GithubIcon, UploadCloud } from &ldquo;lucide-react&rdquo;;
+import { useAuth } from &ldquo;@/hooks/use-auth&rdquo;;
+import { cn } from &ldquo;@/lib/utils&rdquo;;
+import { Button } from &ldquo;@/components/ui/button&rdquo;;
 import {
   Form,
   FormControl,
@@ -13,34 +13,32 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { PasswordInput } from "@/components/utils/password-input";
-import { PasswordStrengthIndicator } from "@/components/utils/password-strength-indicator";
-import type { SignUpFormProps, SignUpFormData } from "@/types/auth/sign-up";
-import { signUpFormSchema } from "@/types/auth/sign-up";
-import { toast } from "@/components/ui/use-toast";
-import Image from "next/image";
-import { uploadAvatar } from "@/lib/supabase/upload-avatar";
-import { useRouter } from "next/navigation";
-import { saltAndHashPassword } from "@/lib/auth/password-crypto";
+} from &ldquo;@/components/ui/form&rdquo;;
+import { Input } from &ldquo;@/components/ui/input&rdquo;;
+import { PasswordInput } from &ldquo;@/components/utils/password-input&rdquo;;
+import { PasswordStrengthIndicator } from &ldquo;@/components/utils/password-strength-indicator&rdquo;;
+import type { SignUpFormProps, SignUpFormData } from &ldquo;@/types/auth/sign-up&rdquo;;
+import { signUpFormSchema } from &ldquo;@/types/auth/sign-up&rdquo;;
+import { toast } from &ldquo;@/components/ui/use-toast&rdquo;;
+import Image from &ldquo;next/image&rdquo;;
+import { uploadAvatar } from &ldquo;@/lib/supabase/upload-avatar&rdquo;;
+import { useRouter } from &ldquo;next/navigation&rdquo;;
+import { saltAndHashPassword } from &ldquo;@/lib/auth/password-crypto&rdquo;;
 
 export function SignUpForm({ className, ...props }: SignUpFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const { signUp } = useAuth();
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
-  const [password, setPassword] = useState("");
-  const router = useRouter();
-
+  const [password, setPassword] = useState(&ldquo;&rdquo;);
   const form = useForm<SignUpFormData>({
     resolver: zodResolver(signUpFormSchema),
     defaultValues: {
-      email: "",
-      firstName: "",
-      lastName: "",
-      password: "",
-      confirmPassword: "",
+      email: &ldquo;&rdquo;,
+      firstName: &ldquo;&rdquo;,
+      lastName: &ldquo;&rdquo;,
+      password: &ldquo;&rdquo;,
+      confirmPassword: &ldquo;&rdquo;,
     },
   });
 
@@ -59,7 +57,7 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
-    form.setValue("password", e.target.value);
+    form.setValue(&ldquo;password&rdquo;, e.target.value);
   };
 
   async function onSubmit(data: SignUpFormData) {
@@ -78,7 +76,7 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
       );
 
       if (!success || error) {
-        throw error || new Error("Failed to sign up");
+        throw error || new Error(&ldquo;Failed to sign up&rdquo;);
       }
 
       if (user) {
@@ -87,20 +85,20 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
           try {
             avatarUrl = await uploadAvatar(avatarFile, user.id);
           } catch (error) {
-            console.error("Avatar upload failed:", error);
+            console.error(&ldquo;Avatar upload failed:&rdquo;, error);
             toast({
-              title: "Warning",
+              title: &ldquo;Warning&rdquo;,
               description:
-                "Failed to upload avatar, you can add it later from your profile.",
-              variant: "default",
+                &ldquo;Failed to upload avatar, you can add it later from your profile.&rdquo;,
+              variant: &ldquo;default&rdquo;,
             });
           }
         }
 
-        const response = await fetch("/api/profile", {
-          method: "POST",
+        const response = await fetch(&ldquo;/api/profile&rdquo;, {
+          method: &ldquo;POST&rdquo;,
           headers: {
-            "Content-Type": "application/json",
+            &ldquo;Content-Type&rdquo;: &ldquo;application/json&rdquo;,
           },
           body: JSON.stringify({
             userId: user.id,
@@ -112,7 +110,7 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
         });
 
         let result: Record<string, unknown>;
-        let text = ""; // Define text outside the try block
+        let text = &ldquo;&rdquo;; // Define text outside the try block
 
         try {
           text = await response.text(); // Assign value inside try
@@ -120,45 +118,45 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
 
           if (!response.ok) {
             throw new Error(
-              typeof result.error === "string"
+              typeof result.error === &ldquo;string&rdquo;
                 ? result.error
                 : `Server responded with status ${response.status}`
             );
           }
         } catch (parseError) {
           console.error(
-            "Response parsing error:",
+            &ldquo;Response parsing error:&rdquo;,
             parseError,
-            "Response text:",
+            &ldquo;Response text:&rdquo;,
             text
           );
-          throw new Error("Invalid server response");
+          throw new Error(&ldquo;Invalid server response&rdquo;);
         }
 
         toast({
-          title: "Success",
+          title: &ldquo;Success&rdquo;,
           description:
-            "Your account has been created! Please verify your email to continue.",
+            &ldquo;Your account has been created! Please verify your email to continue.&rdquo;,
         });
 
         // Redirect to verification page instead of dashboard if email confirmation is required
         if (confirmEmail) {
-          router.push("/verify-email");
+          router.push(&ldquo;/verify-email&rdquo;);
         } else if (session) {
-          router.push("/dashboard");
+          router.push(&ldquo;/dashboard&rdquo;);
         }
       }
     } catch (error) {
-      console.error("Sign up error:", error);
+      console.error(&ldquo;Sign up error:&rdquo;, error);
       const errorMessage =
         error instanceof Error
           ? error.message
-          : "Something went wrong. Please try again.";
+          : &ldquo;Something went wrong. Please try again.&rdquo;;
 
       toast({
-        title: "Error",
+        title: &ldquo;Error&rdquo;,
         description: errorMessage,
-        variant: "destructive",
+        variant: &ldquo;destructive&rdquo;,
       });
     } finally {
       setIsLoading(false);
@@ -166,55 +164,55 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
   }
 
   return (
-    <div className={cn("grid gap-6", className)} {...props}>
+    <div className={cn(&ldquo;grid gap-6&rdquo;, className)} {...props}>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <div className="flex flex-col items-center gap-4">
-            <div className="relative h-24 w-24">
+        <form onSubmit={form.handleSubmit(onSubmit)} className=&ldquo;space-y-4&rdquo;>
+          <div className=&ldquo;flex flex-col items-center gap-4&rdquo;>
+            <div className=&ldquo;relative h-24 w-24&rdquo;>
               {avatarPreview ? (
                 <Image
                   src={avatarPreview}
-                  alt="Avatar preview"
+                  alt=&ldquo;Avatar preview&rdquo;
                   fill
-                  className="rounded-full object-cover"
+                  className=&ldquo;rounded-full object-cover&rdquo;
                 />
               ) : (
-                <div className="flex h-24 w-24 items-center justify-center rounded-full bg-muted">
-                  <UploadCloud className="h-8 w-8 text-muted-foreground" />
+                <div className=&ldquo;flex h-24 w-24 items-center justify-center rounded-full bg-muted&rdquo;>
+                  <UploadCloud className=&ldquo;h-8 w-8 text-muted-foreground&rdquo; />
                 </div>
               )}
             </div>
             <Input
-              type="file"
-              accept="image/*"
+              type=&ldquo;file&rdquo;
+              accept=&ldquo;image/*&rdquo;
               onChange={handleAvatarChange}
-              className="w-full max-w-xs"
+              className=&ldquo;w-full max-w-xs&rdquo;
             />
           </div>
 
           <FormField
             control={form.control}
-            name="email"
+            name=&ldquo;email&rdquo;
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="name@example.com" {...field} />
+                  <Input placeholder=&ldquo;name@example.com&rdquo; {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className=&ldquo;grid grid-cols-2 gap-4&rdquo;>
             <FormField
               control={form.control}
-              name="firstName"
+              name=&ldquo;firstName&rdquo;
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>First Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="John" {...field} />
+                    <Input placeholder=&ldquo;John&rdquo; {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -222,12 +220,12 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
             />
             <FormField
               control={form.control}
-              name="lastName"
+              name=&ldquo;lastName&rdquo;
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Last Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Doe" {...field} />
+                    <Input placeholder=&ldquo;Doe&rdquo; {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -237,13 +235,13 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
 
           <FormField
             control={form.control}
-            name="password"
+            name=&ldquo;password&rdquo;
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
                   <PasswordInput
-                    placeholder="********"
+                    placeholder=&ldquo;********&rdquo;
                     {...field}
                     onChange={handlePasswordChange}
                   />
@@ -256,51 +254,51 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
 
           <FormField
             control={form.control}
-            name="confirmPassword"
+            name=&ldquo;confirmPassword&rdquo;
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Confirm Password</FormLabel>
                 <FormControl>
-                  <PasswordInput placeholder="********" {...field} />
+                  <PasswordInput placeholder=&ldquo;********&rdquo; {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          <Button className="w-full" disabled={isLoading}>
+          <Button className=&ldquo;w-full&rdquo; disabled={isLoading}>
             Create Account
           </Button>
         </form>
       </Form>
 
-      <div className="relative">
-        <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t" />
+      <div className=&ldquo;relative&rdquo;>
+        <div className=&ldquo;absolute inset-0 flex items-center&rdquo;>
+          <span className=&ldquo;w-full border-t&rdquo; />
         </div>
-        <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-background px-2 text-muted-foreground">
+        <div className=&ldquo;relative flex justify-center text-xs uppercase&rdquo;>
+          <span className=&ldquo;bg-background px-2 text-muted-foreground&rdquo;>
             Or continue with
           </span>
         </div>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className=&ldquo;flex items-center gap-2&rdquo;>
         <Button
-          variant="outline"
-          className="w-full"
-          type="button"
+          variant=&ldquo;outline&rdquo;
+          className=&ldquo;w-full&rdquo;
+          type=&ldquo;button&rdquo;
           disabled={isLoading}
         >
-          <GithubIcon className="h-4 w-4" /> GitHub
+          <GithubIcon className=&ldquo;h-4 w-4&rdquo; /> GitHub
         </Button>
         <Button
-          variant="outline"
-          className="w-full"
-          type="button"
+          variant=&ldquo;outline&rdquo;
+          className=&ldquo;w-full&rdquo;
+          type=&ldquo;button&rdquo;
           disabled={isLoading}
         >
-          <FacebookIcon className="h-4 w-4" /> Facebook
+          <FacebookIcon className=&ldquo;h-4 w-4&rdquo; /> Facebook
         </Button>
       </div>
     </div>

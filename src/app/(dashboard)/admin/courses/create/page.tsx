@@ -11,7 +11,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
@@ -63,9 +68,8 @@ interface CourseFormData {
 }
 
 export default function CreateCoursePage() {
-  const router = useRouter();
-  const [certificateDialogOpen, setCertificateDialogOpen] = useState(false)
-const [certificateFile, setCertificateFile] = useState<File | null>(null)
+  const [certificateDialogOpen, setCertificateDialogOpen] = useState(false);
+  const [certificateFile, setCertificateFile] = useState<File | null>(null);
 
   const [activeTab, setActiveTab] = useState("basic");
   const [formData, setFormData] = useState<CourseFormData>({
@@ -94,7 +98,10 @@ const [certificateFile, setCertificateFile] = useState<File | null>(null)
     },
   });
 
-  const handleInputChange = (field: keyof CourseFormData, value: any) => {
+  const handleInputChange = (
+    field: keyof CourseFormData,
+    value: string | number | boolean
+  ) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
@@ -260,66 +267,69 @@ const [certificateFile, setCertificateFile] = useState<File | null>(null)
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="title">Título del Curso *</Label>
+            <CardContent className=&ldquo;space-y-4&rdquo;>
+              <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 gap-4&rdquo;>
+                <div className=&ldquo;space-y-2&rdquo;>
+                  <Label htmlFor=&ldquo;title&rdquo;>Título del Curso *</Label>
                   <Input
-                    id="title"
+                    id=&ldquo;title&rdquo;
                     value={formData.title}
-                    onChange={(e) => handleInputChange("title", e.target.value)}
-                    placeholder="Ej: Habilidades Laborales Básicas"
+                    onChange={(e) => handleInputChange(&ldquo;title&rdquo;, e.target.value)}
+                    placeholder=&ldquo;Ej: Habilidades Laborales Básicas&rdquo;
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="slug">URL del Curso</Label>
+                <div className=&ldquo;space-y-2&rdquo;>
+                  <Label htmlFor=&ldquo;slug&rdquo;>URL del Curso</Label>
                   <Input
-                    id="slug"
+                    id=&ldquo;slug&rdquo;
                     value={formData.slug}
-                    onChange={(e) => handleInputChange("slug", e.target.value)}
-                    placeholder="habilidades-laborales-basicas"
+                    onChange={(e) => handleInputChange(&ldquo;slug&rdquo;, e.target.value)}
+                    placeholder=&ldquo;habilidades-laborales-basicas&rdquo;
                   />
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="shortDescription">Descripción Corta *</Label>
+              <div className=&ldquo;space-y-2&rdquo;>
+                <Label htmlFor=&ldquo;shortDescription&rdquo;>Descripción Corta *</Label>
                 <Input
-                  id="shortDescription"
+                  id=&ldquo;shortDescription&rdquo;
                   value={formData.shortDescription}
                   onChange={(e) =>
-                    handleInputChange("shortDescription", e.target.value)
+                    handleInputChange(&ldquo;shortDescription&rdquo;, e.target.value)
                   }
-                  placeholder="Descripción que aparece en las tarjetas del curso"
+                  placeholder=&ldquo;Descripción que aparece en las tarjetas del curso&rdquo;
                   maxLength={120}
                 />
-                <p className="text-xs text-muted-foreground">
+                <p className=&ldquo;text-xs text-muted-foreground&rdquo;>
                   {formData.shortDescription.length}/120 caracteres
                 </p>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="description">Descripción Completa *</Label>
+              <div className=&ldquo;space-y-2&rdquo;>
+                <Label htmlFor=&ldquo;description&rdquo;>Descripción Completa *</Label>
                 <Textarea
-                  id="description"
+                  id=&ldquo;description&rdquo;
                   value={formData.description}
                   onChange={(e) =>
-                    handleInputChange("description", e.target.value)
+                    handleInputChange(&ldquo;description&rdquo;, e.target.value)
                   }
-                  placeholder="Descripción detallada del curso, objetivos, metodología..."
+                  placeholder=&ldquo;Descripción detallada del curso, objetivos, metodología...&rdquo;
                   rows={4}
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="space-y-2">
+              <div className=&ldquo;grid grid-cols-1 md:grid-cols-3 gap-4&rdquo;>
+                <div className=&ldquo;space-y-2&rdquo;>
                   <Label>Categoría *</Label>
                   <Select
                     value={formData.category}
                     onValueChange={(value) =>
-                      handleInputChange("category", value as CourseCategory)
+                      handleInputChange(&ldquo;category&rdquo;, value as CourseCategory)
                     }
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Seleccionar categoría" />
+                      <SelectValue placeholder=&ldquo;Seleccionar categoría&rdquo; />
                     </SelectTrigger>
                     <SelectContent>
                       {Object.values(CourseCategory).map((category) => (
@@ -331,16 +341,16 @@ const [certificateFile, setCertificateFile] = useState<File | null>(null)
                   </Select>
                 </div>
 
-                <div className="space-y-2">
+                <div className=&ldquo;space-y-2&rdquo;>
                   <Label>Nivel *</Label>
                   <Select
                     value={formData.level}
                     onValueChange={(value) =>
-                      handleInputChange("level", value as CourseLevel)
+                      handleInputChange(&ldquo;level&rdquo;, value as CourseLevel)
                     }
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Nivel del curso" />
+                      <SelectValue placeholder=&ldquo;Nivel del curso&rdquo; />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value={CourseLevel.BEGINNER}>
@@ -356,20 +366,20 @@ const [certificateFile, setCertificateFile] = useState<File | null>(null)
                   </Select>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="duration">Duración (horas) *</Label>
+                <div className=&ldquo;space-y-2&rdquo;>
+                  <Label htmlFor=&ldquo;duration&rdquo;>Duración (horas) *</Label>
                   <Input
-                    id="duration"
-                    type="number"
+                    id=&ldquo;duration&rdquo;
+                    type=&ldquo;number&rdquo;
                     value={formData.duration}
                     onChange={(e) =>
                       handleInputChange(
-                        "duration",
+                        &ldquo;duration&rdquo;,
                         parseInt(e.target.value) || 0
                       )
                     }
-                    min="1"
-                    max="100"
+                    min=&ldquo;1&rdquo;
+                    max=&ldquo;100&rdquo;
                   />
                 </div>
               </div>
@@ -380,31 +390,31 @@ const [certificateFile, setCertificateFile] = useState<File | null>(null)
             <CardHeader>
               <CardTitle>Recursos Multimedia</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
+            <CardContent className=&ldquo;space-y-4&rdquo;>
+              <div className=&ldquo;space-y-2&rdquo;>
                 <Label>Imagen de Portada</Label>
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                  <Upload className="h-8 w-8 mx-auto text-gray-400 mb-2" />
-                  <p className="text-sm text-gray-600">
-                    Arrastra una imagen aquí o{" "}
-                    <span className="text-blue-600 cursor-pointer">
+                <div className=&ldquo;border-2 border-dashed border-gray-300 rounded-lg p-6 text-center&rdquo;>
+                  <Upload className=&ldquo;h-8 w-8 mx-auto text-gray-400 mb-2&rdquo; />
+                  <p className=&ldquo;text-sm text-gray-600&rdquo;>
+                    Arrastra una imagen aquí o{&ldquo; &rdquo;}
+                    <span className=&ldquo;text-blue-600 cursor-pointer&rdquo;>
                       buscar archivo
                     </span>
                   </p>
-                  <p className="text-xs text-gray-500">
+                  <p className=&ldquo;text-xs text-gray-500&rdquo;>
                     Recomendado: 1280x720px, JPG o PNG
                   </p>
                 </div>
               </div>
 
-              <div className="space-y-2">
+              <div className=&ldquo;space-y-2&rdquo;>
                 <Label>Video de Presentación (Opcional)</Label>
                 <Input
                   value={formData.videoPreview}
                   onChange={(e) =>
-                    handleInputChange("videoPreview", e.target.value)
+                    handleInputChange(&ldquo;videoPreview&rdquo;, e.target.value)
                   }
-                  placeholder="URL del video de presentación"
+                  placeholder=&ldquo;URL del video de presentación&rdquo;
                 />
               </div>
             </CardContent>
@@ -412,41 +422,41 @@ const [certificateFile, setCertificateFile] = useState<File | null>(null)
         </TabsContent>
 
         {/* Content Tab */}
-        <TabsContent value="content" className="space-y-6">
+        <TabsContent value=&ldquo;content&rdquo; className=&ldquo;space-y-6&rdquo;>
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Target className="h-5 w-5" />
+              <CardTitle className=&ldquo;flex items-center gap-2&rdquo;>
+                <Target className=&ldquo;h-5 w-5&rdquo; />
                 Objetivos de Aprendizaje
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className=&ldquo;space-y-4&rdquo;>
               {formData.objectives.map((objective, index) => (
-                <div key={index} className="flex gap-2">
+                <div key={index} className=&ldquo;flex gap-2&rdquo;>
                   <Input
                     value={objective}
                     onChange={(e) =>
-                      handleArrayChange("objectives", index, e.target.value)
+                      handleArrayChange(&ldquo;objectives&rdquo;, index, e.target.value)
                     }
                     placeholder={`Objetivo ${index + 1}`}
                   />
                   {formData.objectives.length > 1 && (
                     <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={() => removeArrayItem("objectives", index)}
+                      variant=&ldquo;outline&rdquo;
+                      size=&ldquo;icon&rdquo;
+                      onClick={() => removeArrayItem(&ldquo;objectives&rdquo;, index)}
                     >
-                      <X className="h-4 w-4" />
+                      <X className=&ldquo;h-4 w-4&rdquo; />
                     </Button>
                   )}
                 </div>
               ))}
               <Button
-                variant="outline"
-                onClick={() => addArrayItem("objectives")}
-                className="w-full"
+                variant=&ldquo;outline&rdquo;
+                onClick={() => addArrayItem(&ldquo;objectives&rdquo;)}
+                className=&ldquo;w-full&rdquo;
               >
-                <Plus className="h-4 w-4 mr-2" />
+                <Plus className=&ldquo;h-4 w-4 mr-2&rdquo; />
                 Agregar Objetivo
               </Button>
             </CardContent>
@@ -456,33 +466,33 @@ const [certificateFile, setCertificateFile] = useState<File | null>(null)
             <CardHeader>
               <CardTitle>Prerrequisitos</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className=&ldquo;space-y-4&rdquo;>
               {formData.prerequisites.map((prerequisite, index) => (
-                <div key={index} className="flex gap-2">
+                <div key={index} className=&ldquo;flex gap-2&rdquo;>
                   <Input
                     value={prerequisite}
                     onChange={(e) =>
-                      handleArrayChange("prerequisites", index, e.target.value)
+                      handleArrayChange(&ldquo;prerequisites&rdquo;, index, e.target.value)
                     }
                     placeholder={`Prerrequisito ${index + 1}`}
                   />
                   {formData.prerequisites.length > 1 && (
                     <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={() => removeArrayItem("prerequisites", index)}
+                      variant=&ldquo;outline&rdquo;
+                      size=&ldquo;icon&rdquo;
+                      onClick={() => removeArrayItem(&ldquo;prerequisites&rdquo;, index)}
                     >
-                      <X className="h-4 w-4" />
+                      <X className=&ldquo;h-4 w-4&rdquo; />
                     </Button>
                   )}
                 </div>
               ))}
               <Button
-                variant="outline"
-                onClick={() => addArrayItem("prerequisites")}
-                className="w-full"
+                variant=&ldquo;outline&rdquo;
+                onClick={() => addArrayItem(&ldquo;prerequisites&rdquo;)}
+                className=&ldquo;w-full&rdquo;
               >
-                <Plus className="h-4 w-4 mr-2" />
+                <Plus className=&ldquo;h-4 w-4 mr-2&rdquo; />
                 Agregar Prerrequisito
               </Button>
             </CardContent>
@@ -492,14 +502,14 @@ const [certificateFile, setCertificateFile] = useState<File | null>(null)
             <CardHeader>
               <CardTitle>Materiales Incluidos</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className=&ldquo;space-y-4&rdquo;>
               {formData.includedMaterials.map((material, index) => (
-                <div key={index} className="flex gap-2">
+                <div key={index} className=&ldquo;flex gap-2&rdquo;>
                   <Input
                     value={material}
                     onChange={(e) =>
                       handleArrayChange(
-                        "includedMaterials",
+                        &ldquo;includedMaterials&rdquo;,
                         index,
                         e.target.value
                       )
@@ -508,23 +518,23 @@ const [certificateFile, setCertificateFile] = useState<File | null>(null)
                   />
                   {formData.includedMaterials.length > 1 && (
                     <Button
-                      variant="outline"
-                      size="icon"
+                      variant=&ldquo;outline&rdquo;
+                      size=&ldquo;icon&rdquo;
                       onClick={() =>
-                        removeArrayItem("includedMaterials", index)
+                        removeArrayItem(&ldquo;includedMaterials&rdquo;, index)
                       }
                     >
-                      <X className="h-4 w-4" />
+                      <X className=&ldquo;h-4 w-4&rdquo; />
                     </Button>
                   )}
                 </div>
               ))}
               <Button
-                variant="outline"
-                onClick={() => addArrayItem("includedMaterials")}
-                className="w-full"
+                variant=&ldquo;outline&rdquo;
+                onClick={() => addArrayItem(&ldquo;includedMaterials&rdquo;)}
+                className=&ldquo;w-full&rdquo;
               >
-                <Plus className="h-4 w-4 mr-2" />
+                <Plus className=&ldquo;h-4 w-4 mr-2&rdquo; />
                 Agregar Material
               </Button>
             </CardContent>
@@ -534,41 +544,41 @@ const [certificateFile, setCertificateFile] = useState<File | null>(null)
             <CardHeader>
               <CardTitle>Etiquetas</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex flex-wrap gap-2">
+            <CardContent className=&ldquo;space-y-4&rdquo;>
+              <div className=&ldquo;flex flex-wrap gap-2&rdquo;>
                 {formData.tags.map((tag) => (
                   <Badge
                     key={tag}
-                    variant="secondary"
-                    className="flex items-center gap-1"
+                    variant=&ldquo;secondary&rdquo;
+                    className=&ldquo;flex items-center gap-1&rdquo;
                   >
                     {tag}
                     <X
-                      className="h-3 w-3 cursor-pointer"
+                      className=&ldquo;h-3 w-3 cursor-pointer&rdquo;
                       onClick={() => handleTagRemove(tag)}
                     />
                   </Badge>
                 ))}
               </div>
-              <div className="flex gap-2">
+              <div className=&ldquo;flex gap-2&rdquo;>
                 <Input
-                  placeholder="Agregar etiqueta"
+                  placeholder=&ldquo;Agregar etiqueta&rdquo;
                   onKeyPress={(e) => {
-                    if (e.key === "Enter") {
+                    if (e.key === &ldquo;Enter&rdquo;) {
                       e.preventDefault();
                       const target = e.target as HTMLInputElement;
                       handleTagAdd(target.value);
-                      target.value = "";
+                      target.value = &ldquo;&rdquo;;
                     }
                   }}
                 />
                 <Button
-                  variant="outline"
+                  variant=&ldquo;outline&rdquo;
                   onClick={(e) => {
                     const input = (e.target as HTMLElement)
                       .previousElementSibling as HTMLInputElement;
                     handleTagAdd(input.value);
-                    input.value = "";
+                    input.value = &ldquo;&rdquo;;
                   }}
                 >
                   Agregar
@@ -579,64 +589,64 @@ const [certificateFile, setCertificateFile] = useState<File | null>(null)
         </TabsContent>
 
         {/* Instructor Tab */}
-        <TabsContent value="instructor" className="space-y-6">
+        <TabsContent value=&ldquo;instructor&rdquo; className=&ldquo;space-y-6&rdquo;>
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Users className="h-5 w-5" />
+              <CardTitle className=&ldquo;flex items-center gap-2&rdquo;>
+                <Users className=&ldquo;h-5 w-5&rdquo; />
                 Información del Instructor
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="instructorName">
+            <CardContent className=&ldquo;space-y-4&rdquo;>
+              <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 gap-4&rdquo;>
+                <div className=&ldquo;space-y-2&rdquo;>
+                  <Label htmlFor=&ldquo;instructorName&rdquo;>
                     Nombre del Instructor *
                   </Label>
                   <Input
-                    id="instructorName"
+                    id=&ldquo;instructorName&rdquo;
                     value={formData.instructor.name}
                     onChange={(e) =>
-                      handleInstructorChange("name", e.target.value)
+                      handleInstructorChange(&ldquo;name&rdquo;, e.target.value)
                     }
-                    placeholder="Nombre completo"
+                    placeholder=&ldquo;Nombre completo&rdquo;
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="instructorTitle">Título Profesional *</Label>
+                <div className=&ldquo;space-y-2&rdquo;>
+                  <Label htmlFor=&ldquo;instructorTitle&rdquo;>Título Profesional *</Label>
                   <Input
-                    id="instructorTitle"
+                    id=&ldquo;instructorTitle&rdquo;
                     value={formData.instructor.title}
                     onChange={(e) =>
-                      handleInstructorChange("title", e.target.value)
+                      handleInstructorChange(&ldquo;title&rdquo;, e.target.value)
                     }
-                    placeholder="Ej: Especialista en Desarrollo Profesional"
+                    placeholder=&ldquo;Ej: Especialista en Desarrollo Profesional&rdquo;
                   />
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="instructorBio">Biografía del Instructor</Label>
+              <div className=&ldquo;space-y-2&rdquo;>
+                <Label htmlFor=&ldquo;instructorBio&rdquo;>Biografía del Instructor</Label>
                 <Textarea
-                  id="instructorBio"
+                  id=&ldquo;instructorBio&rdquo;
                   value={formData.instructor.bio}
                   onChange={(e) =>
-                    handleInstructorChange("bio", e.target.value)
+                    handleInstructorChange(&ldquo;bio&rdquo;, e.target.value)
                   }
-                  placeholder="Experiencia, credenciales, especialidades..."
+                  placeholder=&ldquo;Experiencia, credenciales, especialidades...&rdquo;
                   rows={3}
                 />
               </div>
 
-              <div className="space-y-2">
+              <div className=&ldquo;space-y-2&rdquo;>
                 <Label>Foto del Instructor</Label>
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                  <Upload className="h-8 w-8 mx-auto text-gray-400 mb-2" />
-                  <p className="text-sm text-gray-600">
+                <div className=&ldquo;border-2 border-dashed border-gray-300 rounded-lg p-6 text-center&rdquo;>
+                  <Upload className=&ldquo;h-8 w-8 mx-auto text-gray-400 mb-2&rdquo; />
+                  <p className=&ldquo;text-sm text-gray-600&rdquo;>
                     Subir foto del instructor
                   </p>
-                  <p className="text-xs text-gray-500">
+                  <p className=&ldquo;text-xs text-gray-500&rdquo;>
                     Recomendado: 400x400px, formato cuadrado
                   </p>
                 </div>
@@ -646,64 +656,64 @@ const [certificateFile, setCertificateFile] = useState<File | null>(null)
         </TabsContent>
 
         {/* Settings Tab */}
-        <TabsContent value="settings" className="space-y-6">
+        <TabsContent value=&ldquo;settings&rdquo; className=&ldquo;space-y-6&rdquo;>
           <Card>
             <CardHeader>
               <CardTitle>Configuración del Curso</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-4">
-                <div className="flex items-center space-x-2">
+            <CardContent className=&ldquo;space-y-6&rdquo;>
+              <div className=&ldquo;space-y-4&rdquo;>
+                <div className=&ldquo;flex items-center space-x-2&rdquo;>
                   <Checkbox
-                    id="isMandatory"
+                    id=&ldquo;isMandatory&rdquo;
                     checked={formData.isMandatory}
                     onCheckedChange={(checked) =>
-                      handleInputChange("isMandatory", checked)
+                      handleInputChange(&ldquo;isMandatory&rdquo;, checked)
                     }
                   />
-                  <Label htmlFor="isMandatory" className="text-sm font-medium">
+                  <Label htmlFor=&ldquo;isMandatory&rdquo; className=&ldquo;text-sm font-medium&rdquo;>
                     Curso Obligatorio
                   </Label>
-                  <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                  <HelpCircle className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
                 </div>
 
-                <div className="flex items-center space-x-2">
+                <div className=&ldquo;flex items-center space-x-2&rdquo;>
                   <Checkbox
-                    id="certification"
+                    id=&ldquo;certification&rdquo;
                     checked={formData.certification}
                     onCheckedChange={(checked) =>
-                      handleInputChange("certification", checked)
+                      handleInputChange(&ldquo;certification&rdquo;, checked)
                     }
                   />
-                  
+
                   <Label
-                    htmlFor="certification"
-                    className="text-sm font-medium"
+                    htmlFor=&ldquo;certification&rdquo;
+                    className=&ldquo;text-sm font-medium&rdquo;
                   >
                     Incluir Certificado de Finalización
                   </Label>
                   {formData.certification && (
-  <Button
-    variant="outline"
-    className="mt-2"
-    onClick={() => setCertificateDialogOpen(true)}
-  >
-    Subir Certificado Personalizado
-  </Button>
-)}
+                    <Button
+                      variant=&ldquo;outline&rdquo;
+                      className=&ldquo;mt-2&rdquo;
+                      onClick={() => setCertificateDialogOpen(true)}
+                    >
+                      Subir Certificado Personalizado
+                    </Button>
+                  )}
 
-                  <Award className="h-4 w-4 text-muted-foreground" />
+                  <Award className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
                 </div>
 
-                <div className="flex items-center space-x-2">
+                <div className=&ldquo;flex items-center space-x-2&rdquo;>
                   <Checkbox
-                    id="isActive"
+                    id=&ldquo;isActive&rdquo;
                     checked={formData.isActive}
                     onCheckedChange={(checked) =>
-                      handleInputChange("isActive", checked)
+                      handleInputChange(&ldquo;isActive&rdquo;, checked)
                     }
                   />
-                  <Label htmlFor="isActive" className="text-sm font-medium">
+                  <Label htmlFor=&ldquo;isActive&rdquo; className=&ldquo;text-sm font-medium&rdquo;>
                     Publicar Inmediatamente
                   </Label>
                 </div>
@@ -711,23 +721,23 @@ const [certificateFile, setCertificateFile] = useState<File | null>(null)
 
               <Separator />
 
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="price">Precio (BOB)</Label>
+              <div className=&ldquo;space-y-4&rdquo;>
+                <div className=&ldquo;space-y-2&rdquo;>
+                  <Label htmlFor=&ldquo;price&rdquo;>Precio (BOB)</Label>
                   <Input
-                    id="price"
-                    type="number"
+                    id=&ldquo;price&rdquo;
+                    type=&ldquo;number&rdquo;
                     value={formData.price}
                     onChange={(e) =>
                       handleInputChange(
-                        "price",
+                        &ldquo;price&rdquo;,
                         parseFloat(e.target.value) || 0
                       )
                     }
-                    min="0"
-                    step="0.01"
+                    min=&ldquo;0&rdquo;
+                    step=&ldquo;0.01&rdquo;
                   />
-                  <p className="text-xs text-muted-foreground">
+                  <p className=&ldquo;text-xs text-muted-foreground&rdquo;>
                     Establecer en 0 para curso gratuito
                   </p>
                 </div>
@@ -740,27 +750,27 @@ const [certificateFile, setCertificateFile] = useState<File | null>(null)
               <CardTitle>Próximos Pasos</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4 text-sm">
-                <div className="flex items-start gap-3 p-3 bg-blue-50 rounded-lg">
-                  <VideoIcon className="h-5 w-5 text-blue-600 mt-0.5" />
+              <div className=&ldquo;space-y-4 text-sm&rdquo;>
+                <div className=&ldquo;flex items-start gap-3 p-3 bg-blue-50 rounded-lg&rdquo;>
+                  <VideoIcon className=&ldquo;h-5 w-5 text-blue-600 mt-0.5&rdquo; />
                   <div>
-                    <p className="font-medium text-blue-900">
+                    <p className=&ldquo;font-medium text-blue-900&rdquo;>
                       Después de crear el curso
                     </p>
-                    <p className="text-blue-700">
+                    <p className=&ldquo;text-blue-700&rdquo;>
                       Podrás agregar módulos, lecciones, videos y exámenes desde
                       el panel de gestión del curso.
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-3 p-3 bg-green-50 rounded-lg">
-                  <FileText className="h-5 w-5 text-green-600 mt-0.5" />
+                <div className=&ldquo;flex items-start gap-3 p-3 bg-green-50 rounded-lg&rdquo;>
+                  <FileText className=&ldquo;h-5 w-5 text-green-600 mt-0.5&rdquo; />
                   <div>
-                    <p className="font-medium text-green-900">
+                    <p className=&ldquo;font-medium text-green-900&rdquo;>
                       Contenido del curso
                     </p>
-                    <p className="text-green-700">
+                    <p className=&ldquo;text-green-700&rdquo;>
                       Estructura tu curso en módulos y lecciones. Cada lección
                       puede ser un video, material de lectura o examen.
                     </p>
@@ -771,49 +781,54 @@ const [certificateFile, setCertificateFile] = useState<File | null>(null)
           </Card>
         </TabsContent>
       </Tabs>
-      <Dialog open={certificateDialogOpen} onOpenChange={setCertificateDialogOpen}>
-  <DialogContent>
-    <DialogHeader>
-      <DialogTitle>Subir Certificado Personalizado</DialogTitle>
-    </DialogHeader>
+      <Dialog
+        open={certificateDialogOpen}
+        onOpenChange={setCertificateDialogOpen}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Subir Certificado Personalizado</DialogTitle>
+          </DialogHeader>
 
-    <div className="space-y-4">
-      <Input
-        type="file"
-        accept=".pdf"
-        onChange={(e) => {
-          const file = e.target.files?.[0]
-          if (file) {
-            setCertificateFile(file)
-          }
-        }}
-      />
+          <div className=&ldquo;space-y-4&rdquo;>
+            <Input
+              type=&ldquo;file&rdquo;
+              accept=&ldquo;.pdf&rdquo;
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  setCertificateFile(file);
+                }
+              }}
+            />
 
-      {certificateFile && (
-        <p className="text-sm text-muted-foreground">
-          Archivo seleccionado: {certificateFile.name}
-        </p>
-      )}
+            {certificateFile && (
+              <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
+                Archivo seleccionado: {certificateFile.name}
+              </p>
+            )}
 
-      <div className="flex justify-end gap-2">
-        <Button variant="outline" onClick={() => setCertificateDialogOpen(false)}>
-          Cancelar
-        </Button>
-        <Button
-          disabled={!certificateFile}
-          onClick={() => {
-            console.log("Subiendo certificado:", certificateFile)
-            // Aquí podrías hacer tu fetch a una API
-            setCertificateDialogOpen(false)
-          }}
-        >
-          Subir
-        </Button>
-      </div>
-    </div>
-  </DialogContent>
-</Dialog>
-
+            <div className=&ldquo;flex justify-end gap-2&rdquo;>
+              <Button
+                variant=&ldquo;outline&rdquo;
+                onClick={() => setCertificateDialogOpen(false)}
+              >
+                Cancelar
+              </Button>
+              <Button
+                disabled={!certificateFile}
+                onClick={() => {
+                  console.log(&ldquo;Subiendo certificado:&rdquo;, certificateFile);
+                  // Aquí podrías hacer tu fetch a una API
+                  setCertificateDialogOpen(false);
+                }}
+              >
+                Subir
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

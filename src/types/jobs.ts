@@ -1,22 +1,22 @@
 export type ContractType =
-  | "FULL_TIME"
-  | "PART_TIME"
-  | "INTERNSHIP"
-  | "VOLUNTEER"
-  | "FREELANCE";
-export type WorkModality = "ON_SITE" | "REMOTE" | "HYBRID";
+  | &ldquo;FULL_TIME&rdquo;
+  | &ldquo;PART_TIME&rdquo;
+  | &ldquo;INTERNSHIP&rdquo;
+  | &ldquo;VOLUNTEER&rdquo;
+  | &ldquo;FREELANCE&rdquo;;
+export type WorkModality = &ldquo;ON_SITE&rdquo; | &ldquo;REMOTE&rdquo; | &ldquo;HYBRID&rdquo;;
 export type ExperienceLevel =
-  | "NO_EXPERIENCE"
-  | "ENTRY_LEVEL"
-  | "MID_LEVEL"
-  | "SENIOR_LEVEL";
-export type JobStatus = "ACTIVE" | "PAUSED" | "CLOSED" | "DRAFT";
+  | &ldquo;NO_EXPERIENCE&rdquo;
+  | &ldquo;ENTRY_LEVEL&rdquo;
+  | &ldquo;MID_LEVEL&rdquo;
+  | &ldquo;SENIOR_LEVEL&rdquo;;
+export type JobStatus = &ldquo;ACTIVE&rdquo; | &ldquo;PAUSED&rdquo; | &ldquo;CLOSED&rdquo; | &ldquo;DRAFT&rdquo;;
 export type ApplicationStatus =
-  | "SENT"
-  | "UNDER_REVIEW"
-  | "PRE_SELECTED"
-  | "REJECTED"
-  | "HIRED";
+  | &ldquo;SENT&rdquo;
+  | &ldquo;UNDER_REVIEW&rdquo;
+  | &ldquo;PRE_SELECTED&rdquo;
+  | &ldquo;REJECTED&rdquo;
+  | &ldquo;HIRED&rdquo;;
 
 export interface Company {
   id: string;
@@ -62,7 +62,7 @@ export interface JobOffer {
 export interface JobQuestion {
   id: string;
   question: string;
-  type: "TEXT" | "MULTIPLE_CHOICE" | "YES_NO";
+  type: &ldquo;TEXT&rdquo; | &ldquo;MULTIPLE_CHOICE&rdquo; | &ldquo;YES_NO&rdquo;;
   required: boolean;
   options?: string[];
 }
@@ -111,7 +111,7 @@ export interface JobAlert {
   name: string;
   filters: JobSearchFilters;
   isActive: boolean;
-  frequency: "DAILY" | "WEEKLY" | "IMMEDIATE";
+  frequency: &ldquo;DAILY&rdquo; | &ldquo;WEEKLY&rdquo; | &ldquo;IMMEDIATE&rdquo;;
   createdAt: string;
   lastNotificationAt?: string;
 }

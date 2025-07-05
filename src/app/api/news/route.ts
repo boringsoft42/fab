@@ -1,173 +1,173 @@
-import { NextRequest, NextResponse } from "next/server";
-import { NewsArticle, NewsType, NewsStatus, NewsPriority } from "@/types/news";
+import { NextRequest, NextResponse } from &ldquo;next/server&rdquo;;
+import { NewsArticle, NewsType, NewsStatus, NewsPriority } from &ldquo;@/types/news&rdquo;;
 
 // Mock news data
 const mockNews: NewsArticle[] = [
   {
-    id: "news-1",
-    title: "TechCorp Bolivia Lanza Programa de Becas 2024",
+    id: &ldquo;news-1&rdquo;,
+    title: &ldquo;TechCorp Bolivia Lanza Programa de Becas 2024&rdquo;,
     content:
-      "TechCorp Bolivia anuncia su programa anual de becas dirigido a jóvenes talentos en tecnología. El programa incluye 50 becas completas para estudios superiores en ingeniería de sistemas, desarrollo de software y ciencia de datos.\n\nLos beneficiarios recibirán:\n• Beca completa para estudios universitarios\n• Mentoring personalizado con profesionales de la empresa\n• Oportunidad de prácticas profesionales\n• Acceso a cursos especializados en tecnologías emergentes\n\nLas postulaciones están abiertas hasta el 31 de marzo. Los requisitos incluyen promedio mínimo de 80 puntos en bachillerato y demostrar pasión por la tecnología.",
+      &ldquo;TechCorp Bolivia anuncia su programa anual de becas dirigido a jóvenes talentos en tecnología. El programa incluye 50 becas completas para estudios superiores en ingeniería de sistemas, desarrollo de software y ciencia de datos.\n\nLos beneficiarios recibirán:\n• Beca completa para estudios universitarios\n• Mentoring personalizado con profesionales de la empresa\n• Oportunidad de prácticas profesionales\n• Acceso a cursos especializados en tecnologías emergentes\n\nLas postulaciones están abiertas hasta el 31 de marzo. Los requisitos incluyen promedio mínimo de 80 puntos en bachillerato y demostrar pasión por la tecnología.&rdquo;,
     summary:
-      "TechCorp Bolivia ofrece 50 becas completas para jóvenes interesados en carreras tecnológicas, incluyendo mentoring y oportunidades de prácticas.",
-    imageUrl: "/api/placeholder/800/400",
-    authorId: "company-1",
-    authorName: "TechCorp Bolivia",
-    authorType: "COMPANY",
-    authorLogo: "/logos/techcorp.svg",
-    status: "PUBLISHED",
-    priority: "HIGH",
+      &ldquo;TechCorp Bolivia ofrece 50 becas completas para jóvenes interesados en carreras tecnológicas, incluyendo mentoring y oportunidades de prácticas.&rdquo;,
+    imageUrl: &ldquo;/api/placeholder/800/400&rdquo;,
+    authorId: &ldquo;company-1&rdquo;,
+    authorName: &ldquo;TechCorp Bolivia&rdquo;,
+    authorType: &ldquo;COMPANY&rdquo;,
+    authorLogo: &ldquo;/logos/techcorp.svg&rdquo;,
+    status: &ldquo;PUBLISHED&rdquo;,
+    priority: &ldquo;HIGH&rdquo;,
     featured: true,
-    tags: ["educación", "becas", "tecnología", "oportunidades"],
-    category: "Educación y Becas",
-    publishedAt: "2024-02-28T09:00:00Z",
-    createdAt: "2024-02-27T15:30:00Z",
-    updatedAt: "2024-02-28T09:00:00Z",
+    tags: [&ldquo;educación&rdquo;, &ldquo;becas&rdquo;, &ldquo;tecnología&rdquo;, &ldquo;oportunidades&rdquo;],
+    category: &ldquo;Educación y Becas&rdquo;,
+    publishedAt: &ldquo;2024-02-28T09:00:00Z&rdquo;,
+    createdAt: &ldquo;2024-02-27T15:30:00Z&rdquo;,
+    updatedAt: &ldquo;2024-02-28T09:00:00Z&rdquo;,
     viewCount: 1250,
     likeCount: 89,
     commentCount: 23,
-    targetAudience: ["YOUTH"],
-    region: "Cochabamba",
+    targetAudience: [&ldquo;YOUTH&rdquo;],
+    region: &ldquo;Cochabamba&rdquo;,
     relatedLinks: [
       {
-        title: "Formulario de Postulación",
-        url: "https://techcorp.bo/becas2024",
+        title: &ldquo;Formulario de Postulación&rdquo;,
+        url: &ldquo;https://techcorp.bo/becas2024&rdquo;,
       },
       {
-        title: "Requisitos Detallados",
-        url: "https://techcorp.bo/becas-requisitos",
+        title: &ldquo;Requisitos Detallados&rdquo;,
+        url: &ldquo;https://techcorp.bo/becas-requisitos&rdquo;,
       },
     ],
   },
   {
-    id: "news-2",
-    title: "Gobierno Municipal Implementa Nueva Política de Empleo Juvenil",
+    id: &ldquo;news-2&rdquo;,
+    title: &ldquo;Gobierno Municipal Implementa Nueva Política de Empleo Juvenil&rdquo;,
     content:
-      "El Gobierno Municipal de Cochabamba anuncia la implementación de una nueva política integral de empleo juvenil que beneficiará a más de 2,000 jóvenes en los próximos 12 meses.\n\nLa política incluye:\n• Programa de primer empleo con subsidio del 50% del salario mínimo\n• Centros de capacitación laboral en oficios técnicos\n• Bolsa de trabajo municipal con prioridad para jóvenes\n• Programa de emprendimiento juvenil con microcréditos\n• Orientación vocacional y laboral gratuita\n\nLa iniciativa tiene un presupuesto de 15 millones de bolivianos y será ejecutada en coordinación con empresas privadas y organizaciones de la sociedad civil.",
+      &ldquo;El Gobierno Municipal de Cochabamba anuncia la implementación de una nueva política integral de empleo juvenil que beneficiará a más de 2,000 jóvenes en los próximos 12 meses.\n\nLa política incluye:\n• Programa de primer empleo con subsidio del 50% del salario mínimo\n• Centros de capacitación laboral en oficios técnicos\n• Bolsa de trabajo municipal con prioridad para jóvenes\n• Programa de emprendimiento juvenil con microcréditos\n• Orientación vocacional y laboral gratuita\n\nLa iniciativa tiene un presupuesto de 15 millones de bolivianos y será ejecutada en coordinación con empresas privadas y organizaciones de la sociedad civil.&rdquo;,
     summary:
-      "Nueva política municipal creará 2,000 empleos para jóvenes con subsidios, capacitación y programas de emprendimiento.",
-    imageUrl: "/api/placeholder/800/400",
-    authorId: "gov-1",
-    authorName: "Gobierno Municipal de Cochabamba",
-    authorType: "GOVERNMENT",
-    authorLogo: "/api/placeholder/60/60",
-    status: "PUBLISHED",
-    priority: "URGENT",
+      &ldquo;Nueva política municipal creará 2,000 empleos para jóvenes con subsidios, capacitación y programas de emprendimiento.&rdquo;,
+    imageUrl: &ldquo;/api/placeholder/800/400&rdquo;,
+    authorId: &ldquo;gov-1&rdquo;,
+    authorName: &ldquo;Gobierno Municipal de Cochabamba&rdquo;,
+    authorType: &ldquo;GOVERNMENT&rdquo;,
+    authorLogo: &ldquo;/api/placeholder/60/60&rdquo;,
+    status: &ldquo;PUBLISHED&rdquo;,
+    priority: &ldquo;URGENT&rdquo;,
     featured: true,
-    tags: ["empleo", "juventud", "política pública", "capacitación"],
-    category: "Política Pública",
-    publishedAt: "2024-02-27T14:00:00Z",
-    createdAt: "2024-02-26T10:15:00Z",
-    updatedAt: "2024-02-27T14:00:00Z",
+    tags: [&ldquo;empleo&rdquo;, &ldquo;juventud&rdquo;, &ldquo;política pública&rdquo;, &ldquo;capacitación&rdquo;],
+    category: &ldquo;Política Pública&rdquo;,
+    publishedAt: &ldquo;2024-02-27T14:00:00Z&rdquo;,
+    createdAt: &ldquo;2024-02-26T10:15:00Z&rdquo;,
+    updatedAt: &ldquo;2024-02-27T14:00:00Z&rdquo;,
     viewCount: 2100,
     likeCount: 156,
     commentCount: 45,
-    targetAudience: ["YOUTH", "COMPANIES"],
-    region: "Cochabamba",
+    targetAudience: [&ldquo;YOUTH&rdquo;, &ldquo;COMPANIES&rdquo;],
+    region: &ldquo;Cochabamba&rdquo;,
   },
   {
-    id: "news-3",
-    title: "Innovate Labs Busca 20 Desarrolladores Junior",
+    id: &ldquo;news-3&rdquo;,
+    title: &ldquo;Innovate Labs Busca 20 Desarrolladores Junior&rdquo;,
     content:
-      "Innovate Labs, startup líder en desarrollo de aplicaciones móviles, anuncia la apertura de 20 posiciones para desarrolladores junior. La empresa ofrece un ambiente de trabajo dinámico y oportunidades de crecimiento profesional acelerado.\n\nBeneficios ofrecidos:\n• Salario competitivo desde 4,500 BOB\n• Horarios flexibles y trabajo híbrido\n• Capacitación continua en nuevas tecnologías\n• Seguro médico privado\n• Ambiente de startup con proyectos desafiantes\n\nLa empresa busca recién graduados o personas con máximo 2 años de experiencia en React, React Native o Flutter.",
+      &ldquo;Innovate Labs, startup líder en desarrollo de aplicaciones móviles, anuncia la apertura de 20 posiciones para desarrolladores junior. La empresa ofrece un ambiente de trabajo dinámico y oportunidades de crecimiento profesional acelerado.\n\nBeneficios ofrecidos:\n• Salario competitivo desde 4,500 BOB\n• Horarios flexibles y trabajo híbrido\n• Capacitación continua en nuevas tecnologías\n• Seguro médico privado\n• Ambiente de startup con proyectos desafiantes\n\nLa empresa busca recién graduados o personas con máximo 2 años de experiencia en React, React Native o Flutter.&rdquo;,
     summary:
-      "Innovate Labs ofrece 20 empleos para desarrolladores junior con salarios competitivos y ambiente de startup.",
-    imageUrl: "/api/placeholder/800/400",
-    authorId: "company-2",
-    authorName: "Innovate Labs",
-    authorType: "COMPANY",
-    authorLogo: "/logos/innovatelabs.svg",
-    status: "PUBLISHED",
-    priority: "MEDIUM",
+      &ldquo;Innovate Labs ofrece 20 empleos para desarrolladores junior con salarios competitivos y ambiente de startup.&rdquo;,
+    imageUrl: &ldquo;/api/placeholder/800/400&rdquo;,
+    authorId: &ldquo;company-2&rdquo;,
+    authorName: &ldquo;Innovate Labs&rdquo;,
+    authorType: &ldquo;COMPANY&rdquo;,
+    authorLogo: &ldquo;/logos/innovatelabs.svg&rdquo;,
+    status: &ldquo;PUBLISHED&rdquo;,
+    priority: &ldquo;MEDIUM&rdquo;,
     featured: false,
-    tags: ["empleo", "desarrollo", "tecnología", "startup"],
-    category: "Ofertas de Empleo",
-    publishedAt: "2024-02-26T16:30:00Z",
-    createdAt: "2024-02-25T11:45:00Z",
-    updatedAt: "2024-02-26T16:30:00Z",
+    tags: [&ldquo;empleo&rdquo;, &ldquo;desarrollo&rdquo;, &ldquo;tecnología&rdquo;, &ldquo;startup&rdquo;],
+    category: &ldquo;Ofertas de Empleo&rdquo;,
+    publishedAt: &ldquo;2024-02-26T16:30:00Z&rdquo;,
+    createdAt: &ldquo;2024-02-25T11:45:00Z&rdquo;,
+    updatedAt: &ldquo;2024-02-26T16:30:00Z&rdquo;,
     viewCount: 890,
     likeCount: 67,
     commentCount: 12,
-    targetAudience: ["YOUTH"],
-    region: "Santa Cruz",
+    targetAudience: [&ldquo;YOUTH&rdquo;],
+    region: &ldquo;Santa Cruz&rdquo;,
   },
   {
-    id: "news-4",
-    title: "ONG Futuro Verde Lanza Programa de Educación Ambiental",
+    id: &ldquo;news-4&rdquo;,
+    title: &ldquo;ONG Futuro Verde Lanza Programa de Educación Ambiental&rdquo;,
     content:
-      "La ONG Futuro Verde presenta su nuevo programa de educación ambiental dirigido a jóvenes de 15 a 25 años. El programa tiene como objetivo formar líderes ambientales que promuevan el desarrollo sostenible en sus comunidades.\n\nEl programa incluye:\n• 40 horas de capacitación en sostenibilidad\n• Proyectos prácticos de conservación\n• Certificación internacional en gestión ambiental\n• Red de contactos con organizaciones ambientales\n• Oportunidades de voluntariado remunerado\n\nLas inscripciones están abiertas hasta el 15 de marzo. El programa es completamente gratuito y se desarrollará los fines de semana durante 3 meses.",
+      &ldquo;La ONG Futuro Verde presenta su nuevo programa de educación ambiental dirigido a jóvenes de 15 a 25 años. El programa tiene como objetivo formar líderes ambientales que promuevan el desarrollo sostenible en sus comunidades.\n\nEl programa incluye:\n• 40 horas de capacitación en sostenibilidad\n• Proyectos prácticos de conservación\n• Certificación internacional en gestión ambiental\n• Red de contactos con organizaciones ambientales\n• Oportunidades de voluntariado remunerado\n\nLas inscripciones están abiertas hasta el 15 de marzo. El programa es completamente gratuito y se desarrollará los fines de semana durante 3 meses.&rdquo;,
     summary:
-      "ONG Futuro Verde ofrece programa gratuito de educación ambiental para formar líderes jóvenes en sostenibilidad.",
-    imageUrl: "/api/placeholder/800/400",
-    authorId: "ngo-1",
-    authorName: "ONG Futuro Verde",
-    authorType: "NGO",
-    authorLogo: "/api/placeholder/60/60",
-    status: "PUBLISHED",
-    priority: "MEDIUM",
+      &ldquo;ONG Futuro Verde ofrece programa gratuito de educación ambiental para formar líderes jóvenes en sostenibilidad.&rdquo;,
+    imageUrl: &ldquo;/api/placeholder/800/400&rdquo;,
+    authorId: &ldquo;ngo-1&rdquo;,
+    authorName: &ldquo;ONG Futuro Verde&rdquo;,
+    authorType: &ldquo;NGO&rdquo;,
+    authorLogo: &ldquo;/api/placeholder/60/60&rdquo;,
+    status: &ldquo;PUBLISHED&rdquo;,
+    priority: &ldquo;MEDIUM&rdquo;,
     featured: true,
-    tags: ["medio ambiente", "educación", "sostenibilidad", "liderazgo"],
-    category: "Programas Sociales",
-    publishedAt: "2024-02-25T12:00:00Z",
-    createdAt: "2024-02-24T09:20:00Z",
-    updatedAt: "2024-02-25T12:00:00Z",
+    tags: [&ldquo;medio ambiente&rdquo;, &ldquo;educación&rdquo;, &ldquo;sostenibilidad&rdquo;, &ldquo;liderazgo&rdquo;],
+    category: &ldquo;Programas Sociales&rdquo;,
+    publishedAt: &ldquo;2024-02-25T12:00:00Z&rdquo;,
+    createdAt: &ldquo;2024-02-24T09:20:00Z&rdquo;,
+    updatedAt: &ldquo;2024-02-25T12:00:00Z&rdquo;,
     viewCount: 760,
     likeCount: 94,
     commentCount: 18,
-    targetAudience: ["YOUTH"],
-    region: "La Paz",
+    targetAudience: [&ldquo;YOUTH&rdquo;],
+    region: &ldquo;La Paz&rdquo;,
   },
   {
-    id: "news-5",
-    title: "Ministerio de Educación Anuncia Nueva Plataforma Digital",
+    id: &ldquo;news-5&rdquo;,
+    title: &ldquo;Ministerio de Educación Anuncia Nueva Plataforma Digital&rdquo;,
     content:
-      "El Ministerio de Educación presenta la nueva plataforma digital 'Educa Bolivia' que revolucionará el acceso a la educación técnica y superior en el país. La plataforma ofrecerá más de 200 cursos gratuitos certificados.\n\nCaracterísticas principales:\n• Cursos en línea completamente gratuitos\n• Certificaciones reconocidas oficialmente\n• Modalidad asíncrona para estudiar a tu ritmo\n• Tutores especializados disponibles\n• Contenido actualizado con estándares internacionales\n\nLa plataforma estará disponible a partir del 1 de abril y beneficiará a más de 100,000 estudiantes en todo el territorio nacional.",
+      &ldquo;El Ministerio de Educación presenta la nueva plataforma digital 'Educa Bolivia' que revolucionará el acceso a la educación técnica y superior en el país. La plataforma ofrecerá más de 200 cursos gratuitos certificados.\n\nCaracterísticas principales:\n• Cursos en línea completamente gratuitos\n• Certificaciones reconocidas oficialmente\n• Modalidad asíncrona para estudiar a tu ritmo\n• Tutores especializados disponibles\n• Contenido actualizado con estándares internacionales\n\nLa plataforma estará disponible a partir del 1 de abril y beneficiará a más de 100,000 estudiantes en todo el territorio nacional.&rdquo;,
     summary:
-      "Nueva plataforma 'Educa Bolivia' ofrecerá 200 cursos técnicos gratuitos con certificación oficial.",
-    imageUrl: "/api/placeholder/800/400",
-    authorId: "gov-2",
-    authorName: "Ministerio de Educación",
-    authorType: "GOVERNMENT",
-    authorLogo: "/api/placeholder/60/60",
-    status: "PUBLISHED",
-    priority: "HIGH",
+      &ldquo;Nueva plataforma 'Educa Bolivia' ofrecerá 200 cursos técnicos gratuitos con certificación oficial.&rdquo;,
+    imageUrl: &ldquo;/api/placeholder/800/400&rdquo;,
+    authorId: &ldquo;gov-2&rdquo;,
+    authorName: &ldquo;Ministerio de Educación&rdquo;,
+    authorType: &ldquo;GOVERNMENT&rdquo;,
+    authorLogo: &ldquo;/api/placeholder/60/60&rdquo;,
+    status: &ldquo;PUBLISHED&rdquo;,
+    priority: &ldquo;HIGH&rdquo;,
     featured: true,
-    tags: ["educación", "tecnología", "cursos gratuitos", "certificación"],
-    category: "Educación Digital",
-    publishedAt: "2024-02-24T10:00:00Z",
-    createdAt: "2024-02-23T14:30:00Z",
-    updatedAt: "2024-02-24T10:00:00Z",
+    tags: [&ldquo;educación&rdquo;, &ldquo;tecnología&rdquo;, &ldquo;cursos gratuitos&rdquo;, &ldquo;certificación&rdquo;],
+    category: &ldquo;Educación Digital&rdquo;,
+    publishedAt: &ldquo;2024-02-24T10:00:00Z&rdquo;,
+    createdAt: &ldquo;2024-02-23T14:30:00Z&rdquo;,
+    updatedAt: &ldquo;2024-02-24T10:00:00Z&rdquo;,
     viewCount: 3200,
     likeCount: 245,
     commentCount: 67,
-    targetAudience: ["YOUTH", "ALL"],
-    region: "Nacional",
+    targetAudience: [&ldquo;YOUTH&rdquo;, &ldquo;ALL&rdquo;],
+    region: &ldquo;Nacional&rdquo;,
   },
   {
-    id: "news-6",
-    title: "FutureWorks Implementa Programa de Diversidad e Inclusión",
+    id: &ldquo;news-6&rdquo;,
+    title: &ldquo;FutureWorks Implementa Programa de Diversidad e Inclusión&rdquo;,
     content:
-      "FutureWorks, empresa consultora líder en transformación digital, anuncia la implementación de su programa de diversidad e inclusión con enfoque especial en la contratación de jóvenes talentos de comunidades rurales.\n\nIniciativas del programa:\n• Becas de capacitación para jóvenes rurales\n• Mentoring con profesionales experimentados\n• Programa de pasantías remuneradas\n• Flexibilidad laboral para estudiantes\n• Capacitación en habilidades digitales\n\nLa empresa se compromete a que el 30% de sus nuevas contrataciones sean jóvenes de áreas rurales, proporcionando oportunidades equitativas de desarrollo profesional.",
+      &ldquo;FutureWorks, empresa consultora líder en transformación digital, anuncia la implementación de su programa de diversidad e inclusión con enfoque especial en la contratación de jóvenes talentos de comunidades rurales.\n\nIniciativas del programa:\n• Becas de capacitación para jóvenes rurales\n• Mentoring con profesionales experimentados\n• Programa de pasantías remuneradas\n• Flexibilidad laboral para estudiantes\n• Capacitación en habilidades digitales\n\nLa empresa se compromete a que el 30% de sus nuevas contrataciones sean jóvenes de áreas rurales, proporcionando oportunidades equitativas de desarrollo profesional.&rdquo;,
     summary:
-      "FutureWorks lanza programa de inclusión con becas y empleos especiales para jóvenes de comunidades rurales.",
-    imageUrl: "/api/placeholder/800/400",
-    authorId: "company-3",
-    authorName: "FutureWorks",
-    authorType: "COMPANY",
-    authorLogo: "/logos/futureworks.svg",
-    status: "PUBLISHED",
-    priority: "MEDIUM",
+      &ldquo;FutureWorks lanza programa de inclusión con becas y empleos especiales para jóvenes de comunidades rurales.&rdquo;,
+    imageUrl: &ldquo;/api/placeholder/800/400&rdquo;,
+    authorId: &ldquo;company-3&rdquo;,
+    authorName: &ldquo;FutureWorks&rdquo;,
+    authorType: &ldquo;COMPANY&rdquo;,
+    authorLogo: &ldquo;/logos/futureworks.svg&rdquo;,
+    status: &ldquo;PUBLISHED&rdquo;,
+    priority: &ldquo;MEDIUM&rdquo;,
     featured: false,
-    tags: ["diversidad", "inclusión", "empleo rural", "oportunidades"],
-    category: "Responsabilidad Social",
-    publishedAt: "2024-02-23T13:15:00Z",
-    createdAt: "2024-02-22T16:00:00Z",
-    updatedAt: "2024-02-23T13:15:00Z",
+    tags: [&ldquo;diversidad&rdquo;, &ldquo;inclusión&rdquo;, &ldquo;empleo rural&rdquo;, &ldquo;oportunidades&rdquo;],
+    category: &ldquo;Responsabilidad Social&rdquo;,
+    publishedAt: &ldquo;2024-02-23T13:15:00Z&rdquo;,
+    createdAt: &ldquo;2024-02-22T16:00:00Z&rdquo;,
+    updatedAt: &ldquo;2024-02-23T13:15:00Z&rdquo;,
     viewCount: 650,
     likeCount: 78,
     commentCount: 15,
-    targetAudience: ["YOUTH"],
-    region: "Cochabamba",
+    targetAudience: [&ldquo;YOUTH&rdquo;],
+    region: &ldquo;Cochabamba&rdquo;,
   },
 ];
 
@@ -175,43 +175,43 @@ const mockNews: NewsArticle[] = [
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const type = searchParams.get("type");
-    const featured = searchParams.get("featured");
-    const limit = parseInt(searchParams.get("limit") || "10");
-    const page = parseInt(searchParams.get("page") || "1");
-    const category = searchParams.get("category");
-    const targetAudience = searchParams.get("targetAudience");
-    const region = searchParams.get("region");
-    const search = searchParams.get("search");
+    const type = searchParams.get(&ldquo;type&rdquo;);
+    const featured = searchParams.get(&ldquo;featured&rdquo;);
+    const limit = parseInt(searchParams.get(&ldquo;limit&rdquo;) || &ldquo;10&rdquo;);
+    const page = parseInt(searchParams.get(&ldquo;page&rdquo;) || &ldquo;1&rdquo;);
+    const category = searchParams.get(&ldquo;category&rdquo;);
+    const targetAudience = searchParams.get(&ldquo;targetAudience&rdquo;);
+    const region = searchParams.get(&ldquo;region&rdquo;);
+    const search = searchParams.get(&ldquo;search&rdquo;);
 
-    let filtered = mockNews.filter((news) => news.status === "PUBLISHED");
+    let filtered = mockNews.filter((news) => news.status === &ldquo;PUBLISHED&rdquo;);
 
     // Apply filters
-    if (type && type !== "all") {
+    if (type && type !== &ldquo;all&rdquo;) {
       filtered = filtered.filter(
         (news) => news.authorType === type.toUpperCase()
       );
     }
 
-    if (featured === "true") {
+    if (featured === &ldquo;true&rdquo;) {
       filtered = filtered.filter((news) => news.featured);
     }
 
-    if (category && category !== "all") {
+    if (category && category !== &ldquo;all&rdquo;) {
       filtered = filtered.filter((news) => news.category === category);
     }
 
-    if (targetAudience && targetAudience !== "all") {
+    if (targetAudience && targetAudience !== &ldquo;all&rdquo;) {
       filtered = filtered.filter(
         (news) =>
           news.targetAudience.includes(targetAudience.toUpperCase()) ||
-          news.targetAudience.includes("ALL")
+          news.targetAudience.includes(&ldquo;ALL&rdquo;)
       );
     }
 
-    if (region && region !== "all") {
+    if (region && region !== &ldquo;all&rdquo;) {
       filtered = filtered.filter(
-        (news) => news.region === region || news.region === "Nacional"
+        (news) => news.region === region || news.region === &ldquo;Nacional&rdquo;
       );
     }
 
@@ -245,19 +245,19 @@ export async function GET(request: NextRequest) {
     // Calculate stats
     const stats = {
       total: filtered.length,
-      published: mockNews.filter((n) => n.status === "PUBLISHED").length,
-      draft: mockNews.filter((n) => n.status === "DRAFT").length,
+      published: mockNews.filter((n) => n.status === &ldquo;PUBLISHED&rdquo;).length,
+      draft: mockNews.filter((n) => n.status === &ldquo;DRAFT&rdquo;).length,
       byType: {
-        company: mockNews.filter((n) => n.authorType === "COMPANY").length,
-        government: mockNews.filter((n) => n.authorType === "GOVERNMENT")
+        company: mockNews.filter((n) => n.authorType === &ldquo;COMPANY&rdquo;).length,
+        government: mockNews.filter((n) => n.authorType === &ldquo;GOVERNMENT&rdquo;)
           .length,
-        ngo: mockNews.filter((n) => n.authorType === "NGO").length,
+        ngo: mockNews.filter((n) => n.authorType === &ldquo;NGO&rdquo;).length,
       },
       byPriority: {
-        low: mockNews.filter((n) => n.priority === "LOW").length,
-        medium: mockNews.filter((n) => n.priority === "MEDIUM").length,
-        high: mockNews.filter((n) => n.priority === "HIGH").length,
-        urgent: mockNews.filter((n) => n.priority === "URGENT").length,
+        low: mockNews.filter((n) => n.priority === &ldquo;LOW&rdquo;).length,
+        medium: mockNews.filter((n) => n.priority === &ldquo;MEDIUM&rdquo;).length,
+        high: mockNews.filter((n) => n.priority === &ldquo;HIGH&rdquo;).length,
+        urgent: mockNews.filter((n) => n.priority === &ldquo;URGENT&rdquo;).length,
       },
       totalViews: mockNews.reduce((sum, n) => sum + n.viewCount, 0),
       totalLikes: mockNews.reduce((sum, n) => sum + n.likeCount, 0),
@@ -275,9 +275,9 @@ export async function GET(request: NextRequest) {
       stats,
     });
   } catch (error) {
-    console.error("Error fetching news:", error);
+    console.error(&ldquo;Error fetching news:&rdquo;, error);
     return NextResponse.json(
-      { error: "Error al obtener noticias" },
+      { error: &ldquo;Error al obtener noticias&rdquo; },
       { status: 500 }
     );
   }
@@ -290,12 +290,12 @@ export async function POST(request: NextRequest) {
 
     // Validate required fields
     const requiredFields = [
-      "title",
-      "content",
-      "summary",
-      "authorId",
-      "authorName",
-      "authorType",
+      &ldquo;title&rdquo;,
+      &ldquo;content&rdquo;,
+      &ldquo;summary&rdquo;,
+      &ldquo;authorId&rdquo;,
+      &ldquo;authorName&rdquo;,
+      &ldquo;authorType&rdquo;,
     ];
     for (const field of requiredFields) {
       if (!newsData[field]) {
@@ -309,18 +309,18 @@ export async function POST(request: NextRequest) {
     const newNews: NewsArticle = {
       id: `news-${Date.now()}`,
       ...newsData,
-      status: newsData.status || "DRAFT",
-      priority: newsData.priority || "MEDIUM",
+      status: newsData.status || &ldquo;DRAFT&rdquo;,
+      priority: newsData.priority || &ldquo;MEDIUM&rdquo;,
       featured: newsData.featured || false,
       tags: newsData.tags || [],
       publishedAt:
-        newsData.status === "PUBLISHED" ? new Date().toISOString() : "",
+        newsData.status === &ldquo;PUBLISHED&rdquo; ? new Date().toISOString() : &ldquo;&rdquo;,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       viewCount: 0,
       likeCount: 0,
       commentCount: 0,
-      targetAudience: newsData.targetAudience || ["ALL"],
+      targetAudience: newsData.targetAudience || [&ldquo;ALL&rdquo;],
     };
 
     // In real app, this would save to database using Prisma
@@ -328,15 +328,15 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(
       {
-        message: "Noticia creada exitosamente",
+        message: &ldquo;Noticia creada exitosamente&rdquo;,
         news: newNews,
       },
       { status: 201 }
     );
   } catch (error) {
-    console.error("Error creating news:", error);
+    console.error(&ldquo;Error creating news:&rdquo;, error);
     return NextResponse.json(
-      { error: "Error al crear noticia" },
+      { error: &ldquo;Error al crear noticia&rdquo; },
       { status: 500 }
     );
   }

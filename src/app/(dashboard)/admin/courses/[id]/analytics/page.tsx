@@ -17,14 +17,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   BarChart3,
   TrendingUp,
-  TrendingDown,
   Users,
   Clock,
   Award,
   BookOpen,
   Eye,
   Download,
-  Calendar,
   ArrowLeft,
   Target,
   AlertTriangle,
@@ -81,7 +79,6 @@ interface AnalyticsData {
 }
 
 export default function CourseAnalyticsPage() {
-  const params = useParams();
   const courseId = params.id as string;
 
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(

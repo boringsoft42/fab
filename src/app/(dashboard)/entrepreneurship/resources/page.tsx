@@ -1,17 +1,17 @@
-"use client";
+&ldquo;use client&rdquo;;
 
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
+import { useState, useEffect } from &ldquo;react&rdquo;;
+import { Button } from &ldquo;@/components/ui/button&rdquo;;
+import { Card, CardContent, CardHeader, CardTitle } from &ldquo;@/components/ui/card&rdquo;;
+import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
+import { Input } from &ldquo;@/components/ui/input&rdquo;;
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from &ldquo;@/components/ui/select&rdquo;;
 import {
   Search,
   Download,
@@ -24,13 +24,13 @@ import {
   Filter,
   SortAsc,
   Eye,
-} from "lucide-react";
+} from &ldquo;lucide-react&rdquo;;
 
 interface Resource {
   id: string;
   title: string;
   description: string;
-  type: "template" | "guide" | "video" | "podcast" | "tool";
+  type: &ldquo;template&rdquo; | &ldquo;guide&rdquo; | &ldquo;video&rdquo; | &ldquo;podcast&rdquo; | &ldquo;tool&rdquo;;
   category: string;
   downloads: number;
   rating: number;
@@ -38,7 +38,7 @@ interface Resource {
   fileSize: string;
   format: string;
   createdAt: Date;
-  difficulty: "beginner" | "intermediate" | "advanced";
+  difficulty: &ldquo;beginner&rdquo; | &ldquo;intermediate&rdquo; | &ldquo;advanced&rdquo;;
   estimatedTime: string;
   tags: string[];
 }
@@ -47,10 +47,10 @@ export default function ResourcesPage() {
   const [resources, setResources] = useState<Resource[]>([]);
   const [filteredResources, setFilteredResources] = useState<Resource[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filterType, setFilterType] = useState("all");
-  const [filterCategory, setFilterCategory] = useState("all");
-  const [sortBy, setSortBy] = useState("popular");
+  const [searchQuery, setSearchQuery] = useState(&ldquo;&rdquo;);
+  const [filterType, setFilterType] = useState(&ldquo;all&rdquo;);
+  const [filterCategory, setFilterCategory] = useState(&ldquo;all&rdquo;);
+  const [sortBy, setSortBy] = useState(&ldquo;popular&rdquo;);
 
   useEffect(() => {
     fetchResources();
@@ -67,122 +67,122 @@ export default function ResourcesPage() {
       // Mock data for demonstration
       const mockResources: Resource[] = [
         {
-          id: "resource-1",
-          title: "Plantilla de Plan de Negocios 2024",
+          id: &ldquo;resource-1&rdquo;,
+          title: &ldquo;Plantilla de Plan de Negocios 2024&rdquo;,
           description:
-            "Plantilla completa en Word con todas las secciones necesarias para crear un plan de negocios profesional. Incluye ejemplos y guías paso a paso.",
-          type: "template",
-          category: "Planificación",
+            &ldquo;Plantilla completa en Word con todas las secciones necesarias para crear un plan de negocios profesional. Incluye ejemplos y guías paso a paso.&rdquo;,
+          type: &ldquo;template&rdquo;,
+          category: &ldquo;Planificación&rdquo;,
           downloads: 2847,
           rating: 4.8,
           reviewCount: 156,
-          fileSize: "2.5 MB",
-          format: "DOCX",
-          createdAt: new Date("2024-01-15"),
-          difficulty: "beginner",
-          estimatedTime: "30 minutos",
-          tags: ["Plan de Negocios", "Startups", "Plantilla", "Fundamentos"],
+          fileSize: &ldquo;2.5 MB&rdquo;,
+          format: &ldquo;DOCX&rdquo;,
+          createdAt: new Date(&ldquo;2024-01-15&rdquo;),
+          difficulty: &ldquo;beginner&rdquo;,
+          estimatedTime: &ldquo;30 minutos&rdquo;,
+          tags: [&ldquo;Plan de Negocios&rdquo;, &ldquo;Startups&rdquo;, &ldquo;Plantilla&rdquo;, &ldquo;Fundamentos&rdquo;],
         },
         {
-          id: "resource-2",
-          title: "Guía de Validación de Mercado",
+          id: &ldquo;resource-2&rdquo;,
+          title: &ldquo;Guía de Validación de Mercado&rdquo;,
           description:
-            "Metodología completa para validar tu idea de negocio antes de invertir tiempo y dinero. Incluye herramientas prácticas y casos de estudio bolivianos.",
-          type: "guide",
-          category: "Validación",
+            &ldquo;Metodología completa para validar tu idea de negocio antes de invertir tiempo y dinero. Incluye herramientas prácticas y casos de estudio bolivianos.&rdquo;,
+          type: &ldquo;guide&rdquo;,
+          category: &ldquo;Validación&rdquo;,
           downloads: 1923,
           rating: 4.6,
           reviewCount: 98,
-          fileSize: "5.1 MB",
-          format: "PDF",
-          createdAt: new Date("2024-01-20"),
-          difficulty: "intermediate",
-          estimatedTime: "45 minutos",
+          fileSize: &ldquo;5.1 MB&rdquo;,
+          format: &ldquo;PDF&rdquo;,
+          createdAt: new Date(&ldquo;2024-01-20&rdquo;),
+          difficulty: &ldquo;intermediate&rdquo;,
+          estimatedTime: &ldquo;45 minutos&rdquo;,
           tags: [
-            "Validación",
-            "Investigación de Mercado",
-            "MVP",
-            "Metodología",
+            &ldquo;Validación&rdquo;,
+            &ldquo;Investigación de Mercado&rdquo;,
+            &ldquo;MVP&rdquo;,
+            &ldquo;Metodología&rdquo;,
           ],
         },
         {
-          id: "resource-3",
-          title: "Finanzas para Emprendedores",
+          id: &ldquo;resource-3&rdquo;,
+          title: &ldquo;Finanzas para Emprendedores&rdquo;,
           description:
-            "Video curso completo sobre gestión financiera básica para startups. Aprende a manejar flujo de caja, proyecciones y métricas financieras clave.",
-          type: "video",
-          category: "Finanzas",
+            &ldquo;Video curso completo sobre gestión financiera básica para startups. Aprende a manejar flujo de caja, proyecciones y métricas financieras clave.&rdquo;,
+          type: &ldquo;video&rdquo;,
+          category: &ldquo;Finanzas&rdquo;,
           downloads: 3456,
           rating: 4.9,
           reviewCount: 234,
-          fileSize: "850 MB",
-          format: "MP4",
-          createdAt: new Date("2024-01-10"),
-          difficulty: "intermediate",
-          estimatedTime: "2 horas",
-          tags: ["Finanzas", "Flujo de Caja", "Métricas", "Contabilidad"],
+          fileSize: &ldquo;850 MB&rdquo;,
+          format: &ldquo;MP4&rdquo;,
+          createdAt: new Date(&ldquo;2024-01-10&rdquo;),
+          difficulty: &ldquo;intermediate&rdquo;,
+          estimatedTime: &ldquo;2 horas&rdquo;,
+          tags: [&ldquo;Finanzas&rdquo;, &ldquo;Flujo de Caja&rdquo;, &ldquo;Métricas&rdquo;, &ldquo;Contabilidad&rdquo;],
         },
         {
-          id: "resource-4",
-          title: "Calculadora de Proyecciones Financieras",
+          id: &ldquo;resource-4&rdquo;,
+          title: &ldquo;Calculadora de Proyecciones Financieras&rdquo;,
           description:
-            "Herramienta Excel interactiva para calcular proyecciones financieras automáticamente. Incluye gráficos dinámicos y análisis de sensibilidad.",
-          type: "tool",
-          category: "Finanzas",
+            &ldquo;Herramienta Excel interactiva para calcular proyecciones financieras automáticamente. Incluye gráficos dinámicos y análisis de sensibilidad.&rdquo;,
+          type: &ldquo;tool&rdquo;,
+          category: &ldquo;Finanzas&rdquo;,
           downloads: 1567,
           rating: 4.7,
           reviewCount: 89,
-          fileSize: "1.2 MB",
-          format: "XLSX",
-          createdAt: new Date("2024-02-01"),
-          difficulty: "advanced",
-          estimatedTime: "15 minutos",
-          tags: ["Excel", "Proyecciones", "Automatización", "Análisis"],
+          fileSize: &ldquo;1.2 MB&rdquo;,
+          format: &ldquo;XLSX&rdquo;,
+          createdAt: new Date(&ldquo;2024-02-01&rdquo;),
+          difficulty: &ldquo;advanced&rdquo;,
+          estimatedTime: &ldquo;15 minutos&rdquo;,
+          tags: [&ldquo;Excel&rdquo;, &ldquo;Proyecciones&rdquo;, &ldquo;Automatización&rdquo;, &ldquo;Análisis&rdquo;],
         },
         {
-          id: "resource-5",
-          title: "Podcast: Emprendedores Bolivianos Exitosos",
+          id: &ldquo;resource-5&rdquo;,
+          title: &ldquo;Podcast: Emprendedores Bolivianos Exitosos&rdquo;,
           description:
-            "Serie de entrevistas inspiradoras con emprendedores bolivianos que han escalado sus negocios. Aprende de sus experiencias y estrategias.",
-          type: "podcast",
-          category: "Inspiración",
+            &ldquo;Serie de entrevistas inspiradoras con emprendedores bolivianos que han escalado sus negocios. Aprende de sus experiencias y estrategias.&rdquo;,
+          type: &ldquo;podcast&rdquo;,
+          category: &ldquo;Inspiración&rdquo;,
           downloads: 892,
           rating: 4.5,
           reviewCount: 67,
-          fileSize: "45 MB",
-          format: "MP3",
-          createdAt: new Date("2024-02-05"),
-          difficulty: "beginner",
-          estimatedTime: "30 minutos",
+          fileSize: &ldquo;45 MB&rdquo;,
+          format: &ldquo;MP3&rdquo;,
+          createdAt: new Date(&ldquo;2024-02-05&rdquo;),
+          difficulty: &ldquo;beginner&rdquo;,
+          estimatedTime: &ldquo;30 minutos&rdquo;,
           tags: [
-            "Historias de Éxito",
-            "Inspiración",
-            "Casos Bolivianos",
-            "Mentalidad",
+            &ldquo;Historias de Éxito&rdquo;,
+            &ldquo;Inspiración&rdquo;,
+            &ldquo;Casos Bolivianos&rdquo;,
+            &ldquo;Mentalidad&rdquo;,
           ],
         },
         {
-          id: "resource-6",
-          title: "Cómo Presentar tu Startup a Inversionistas",
+          id: &ldquo;resource-6&rdquo;,
+          title: &ldquo;Cómo Presentar tu Startup a Inversionistas&rdquo;,
           description:
-            "Masterclass completa sobre cómo crear y presentar un pitch deck efectivo. Incluye plantillas y ejemplos de presentaciones exitosas.",
-          type: "video",
-          category: "Fundraising",
+            &ldquo;Masterclass completa sobre cómo crear y presentar un pitch deck efectivo. Incluye plantillas y ejemplos de presentaciones exitosas.&rdquo;,
+          type: &ldquo;video&rdquo;,
+          category: &ldquo;Fundraising&rdquo;,
           downloads: 2156,
           rating: 4.8,
           reviewCount: 145,
-          fileSize: "1.2 GB",
-          format: "MP4",
-          createdAt: new Date("2024-01-25"),
-          difficulty: "advanced",
-          estimatedTime: "1.5 horas",
-          tags: ["Pitch Deck", "Inversión", "Presentación", "Fundraising"],
+          fileSize: &ldquo;1.2 GB&rdquo;,
+          format: &ldquo;MP4&rdquo;,
+          createdAt: new Date(&ldquo;2024-01-25&rdquo;),
+          difficulty: &ldquo;advanced&rdquo;,
+          estimatedTime: &ldquo;1.5 horas&rdquo;,
+          tags: [&ldquo;Pitch Deck&rdquo;, &ldquo;Inversión&rdquo;, &ldquo;Presentación&rdquo;, &ldquo;Fundraising&rdquo;],
         },
       ];
 
       setResources(mockResources);
     } catch (error) {
-      console.error("Error fetching resources:", error);
+      console.error(&ldquo;Error fetching resources:&rdquo;, error);
     } finally {
       setLoading(false);
     }
@@ -206,12 +206,12 @@ export default function ResourcesPage() {
     }
 
     // Type filter
-    if (filterType !== "all") {
+    if (filterType !== &ldquo;all&rdquo;) {
       filtered = filtered.filter((resource) => resource.type === filterType);
     }
 
     // Category filter
-    if (filterCategory !== "all") {
+    if (filterCategory !== &ldquo;all&rdquo;) {
       filtered = filtered.filter(
         (resource) => resource.category === filterCategory
       );
@@ -219,16 +219,16 @@ export default function ResourcesPage() {
 
     // Sort
     switch (sortBy) {
-      case "newest":
+      case &ldquo;newest&rdquo;:
         filtered.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
         break;
-      case "rating":
+      case &ldquo;rating&rdquo;:
         filtered.sort((a, b) => b.rating - a.rating);
         break;
-      case "downloads":
+      case &ldquo;downloads&rdquo;:
         filtered.sort((a, b) => b.downloads - a.downloads);
         break;
-      case "title":
+      case &ldquo;title&rdquo;:
         filtered.sort((a, b) => a.title.localeCompare(b.title));
         break;
       default: // popular
@@ -240,53 +240,53 @@ export default function ResourcesPage() {
 
   const getResourceIcon = (type: string) => {
     switch (type) {
-      case "template":
-        return <FileText className="h-5 w-5" />;
-      case "guide":
-        return <BookOpen className="h-5 w-5" />;
-      case "video":
-        return <Play className="h-5 w-5" />;
-      case "podcast":
-        return <Headphones className="h-5 w-5" />;
-      case "tool":
-        return <Calculator className="h-5 w-5" />;
+      case &ldquo;template&rdquo;:
+        return <FileText className=&ldquo;h-5 w-5&rdquo; />;
+      case &ldquo;guide&rdquo;:
+        return <BookOpen className=&ldquo;h-5 w-5&rdquo; />;
+      case &ldquo;video&rdquo;:
+        return <Play className=&ldquo;h-5 w-5&rdquo; />;
+      case &ldquo;podcast&rdquo;:
+        return <Headphones className=&ldquo;h-5 w-5&rdquo; />;
+      case &ldquo;tool&rdquo;:
+        return <Calculator className=&ldquo;h-5 w-5&rdquo; />;
       default:
-        return <FileText className="h-5 w-5" />;
+        return <FileText className=&ldquo;h-5 w-5&rdquo; />;
     }
   };
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case "beginner":
-        return "bg-green-100 text-green-800";
-      case "intermediate":
-        return "bg-yellow-100 text-yellow-800";
-      case "advanced":
-        return "bg-red-100 text-red-800";
+      case &ldquo;beginner&rdquo;:
+        return &ldquo;bg-green-100 text-green-800&rdquo;;
+      case &ldquo;intermediate&rdquo;:
+        return &ldquo;bg-yellow-100 text-yellow-800&rdquo;;
+      case &ldquo;advanced&rdquo;:
+        return &ldquo;bg-red-100 text-red-800&rdquo;;
       default:
-        return "bg-gray-100 text-gray-800";
+        return &ldquo;bg-gray-100 text-gray-800&rdquo;;
     }
   };
 
   const categories = [
-    "Planificación",
-    "Validación",
-    "Finanzas",
-    "Marketing",
-    "Fundraising",
-    "Legal",
-    "Inspiración",
+    &ldquo;Planificación&rdquo;,
+    &ldquo;Validación&rdquo;,
+    &ldquo;Finanzas&rdquo;,
+    &ldquo;Marketing&rdquo;,
+    &ldquo;Fundraising&rdquo;,
+    &ldquo;Legal&rdquo;,
+    &ldquo;Inspiración&rdquo;,
   ];
-  const types = ["template", "guide", "video", "podcast", "tool"];
+  const types = [&ldquo;template&rdquo;, &ldquo;guide&rdquo;, &ldquo;video&rdquo;, &ldquo;podcast&rdquo;, &ldquo;tool&rdquo;];
 
   if (loading) {
     return (
-      <div className="container mx-auto p-6">
-        <div className="animate-pulse space-y-6">
-          <div className="h-32 bg-gray-200 rounded-lg" />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className=&ldquo;container mx-auto p-6&rdquo;>
+        <div className=&ldquo;animate-pulse space-y-6&rdquo;>
+          <div className=&ldquo;h-32 bg-gray-200 rounded-lg&rdquo; />
+          <div className=&ldquo;grid grid-cols-1 md:grid-cols-3 gap-4&rdquo;>
             {[...Array(6)].map((_, i) => (
-              <div key={i} className="h-64 bg-gray-200 rounded" />
+              <div key={i} className=&ldquo;h-64 bg-gray-200 rounded&rdquo; />
             ))}
           </div>
         </div>
@@ -295,101 +295,101 @@ export default function ResourcesPage() {
   }
 
   return (
-    <div className="container mx-auto p-6">
+    <div className=&ldquo;container mx-auto p-6&rdquo;>
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Centro de Recursos</h1>
-        <p className="text-muted-foreground">
+      <div className=&ldquo;mb-8&rdquo;>
+        <h1 className=&ldquo;text-3xl font-bold mb-2&rdquo;>Centro de Recursos</h1>
+        <p className=&ldquo;text-muted-foreground&rdquo;>
           Accede a plantillas, guías, videos y herramientas para hacer crecer tu
           emprendimiento
         </p>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      <div className=&ldquo;grid grid-cols-1 md:grid-cols-4 gap-4 mb-8&rdquo;>
         <Card>
-          <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-blue-600">
+          <CardContent className=&ldquo;p-4 text-center&rdquo;>
+            <div className=&ldquo;text-2xl font-bold text-blue-600&rdquo;>
               {resources.length}
             </div>
-            <div className="text-sm text-muted-foreground">
+            <div className=&ldquo;text-sm text-muted-foreground&rdquo;>
               Recursos Totales
             </div>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-green-600">
+          <CardContent className=&ldquo;p-4 text-center&rdquo;>
+            <div className=&ldquo;text-2xl font-bold text-green-600&rdquo;>
               {resources
                 .reduce((sum, r) => sum + r.downloads, 0)
                 .toLocaleString()}
             </div>
-            <div className="text-sm text-muted-foreground">
+            <div className=&ldquo;text-sm text-muted-foreground&rdquo;>
               Descargas Totales
             </div>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-purple-600">
+          <CardContent className=&ldquo;p-4 text-center&rdquo;>
+            <div className=&ldquo;text-2xl font-bold text-purple-600&rdquo;>
               {(
                 resources.reduce((sum, r) => sum + r.rating, 0) /
                 resources.length
               ).toFixed(1)}
             </div>
-            <div className="text-sm text-muted-foreground">
+            <div className=&ldquo;text-sm text-muted-foreground&rdquo;>
               Calificación Promedio
             </div>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-orange-600">
+          <CardContent className=&ldquo;p-4 text-center&rdquo;>
+            <div className=&ldquo;text-2xl font-bold text-orange-600&rdquo;>
               {new Set(resources.map((r) => r.category)).size}
             </div>
-            <div className="text-sm text-muted-foreground">Categorías</div>
+            <div className=&ldquo;text-sm text-muted-foreground&rdquo;>Categorías</div>
           </CardContent>
         </Card>
       </div>
 
       {/* Search and Filters */}
-      <div className="flex flex-col md:flex-row gap-4 mb-6">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+      <div className=&ldquo;flex flex-col md:flex-row gap-4 mb-6&rdquo;>
+        <div className=&ldquo;relative flex-1&rdquo;>
+          <Search className=&ldquo;absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground&rdquo; />
           <Input
-            placeholder="Buscar recursos por título, descripción o etiquetas..."
+            placeholder=&ldquo;Buscar recursos por título, descripción o etiquetas...&rdquo;
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
+            className=&ldquo;pl-10&rdquo;
           />
         </div>
         <Select value={filterType} onValueChange={setFilterType}>
-          <SelectTrigger className="w-40">
-            <SelectValue placeholder="Tipo" />
+          <SelectTrigger className=&ldquo;w-40&rdquo;>
+            <SelectValue placeholder=&ldquo;Tipo&rdquo; />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Todos los tipos</SelectItem>
+            <SelectItem value=&ldquo;all&rdquo;>Todos los tipos</SelectItem>
             {types.map((type) => (
               <SelectItem key={type} value={type}>
-                {type === "template"
-                  ? "Plantillas"
-                  : type === "guide"
-                    ? "Guías"
-                    : type === "video"
-                      ? "Videos"
-                      : type === "podcast"
-                        ? "Podcasts"
-                        : "Herramientas"}
+                {type === &ldquo;template&rdquo;
+                  ? &ldquo;Plantillas&rdquo;
+                  : type === &ldquo;guide&rdquo;
+                    ? &ldquo;Guías&rdquo;
+                    : type === &ldquo;video&rdquo;
+                      ? &ldquo;Videos&rdquo;
+                      : type === &ldquo;podcast&rdquo;
+                        ? &ldquo;Podcasts&rdquo;
+                        : &ldquo;Herramientas&rdquo;}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
         <Select value={filterCategory} onValueChange={setFilterCategory}>
-          <SelectTrigger className="w-48">
-            <SelectValue placeholder="Categoría" />
+          <SelectTrigger className=&ldquo;w-48&rdquo;>
+            <SelectValue placeholder=&ldquo;Categoría&rdquo; />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Todas las categorías</SelectItem>
+            <SelectItem value=&ldquo;all&rdquo;>Todas las categorías</SelectItem>
             {categories.map((category) => (
               <SelectItem key={category} value={category}>
                 {category}
@@ -398,114 +398,114 @@ export default function ResourcesPage() {
           </SelectContent>
         </Select>
         <Select value={sortBy} onValueChange={setSortBy}>
-          <SelectTrigger className="w-40">
-            <SelectValue placeholder="Ordenar por" />
+          <SelectTrigger className=&ldquo;w-40&rdquo;>
+            <SelectValue placeholder=&ldquo;Ordenar por&rdquo; />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="popular">Más populares</SelectItem>
-            <SelectItem value="newest">Más recientes</SelectItem>
-            <SelectItem value="rating">Mejor calificados</SelectItem>
-            <SelectItem value="downloads">Más descargados</SelectItem>
-            <SelectItem value="title">Alfabético</SelectItem>
+            <SelectItem value=&ldquo;popular&rdquo;>Más populares</SelectItem>
+            <SelectItem value=&ldquo;newest&rdquo;>Más recientes</SelectItem>
+            <SelectItem value=&ldquo;rating&rdquo;>Mejor calificados</SelectItem>
+            <SelectItem value=&ldquo;downloads&rdquo;>Más descargados</SelectItem>
+            <SelectItem value=&ldquo;title&rdquo;>Alfabético</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
       {/* Results Count */}
-      <div className="mb-6">
-        <p className="text-muted-foreground">
+      <div className=&ldquo;mb-6&rdquo;>
+        <p className=&ldquo;text-muted-foreground&rdquo;>
           {filteredResources.length} recursos encontrados
         </p>
       </div>
 
       {/* Resources Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6&rdquo;>
         {filteredResources.map((resource) => (
           <Card
             key={resource.id}
-            className="overflow-hidden hover:shadow-lg transition-shadow"
+            className=&ldquo;overflow-hidden hover:shadow-lg transition-shadow&rdquo;
           >
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  <div className="p-2 bg-blue-100 rounded-lg">
+            <CardHeader className=&ldquo;pb-3&rdquo;>
+              <div className=&ldquo;flex items-center justify-between mb-2&rdquo;>
+                <div className=&ldquo;flex items-center gap-2&rdquo;>
+                  <div className=&ldquo;p-2 bg-blue-100 rounded-lg&rdquo;>
                     {getResourceIcon(resource.type)}
                   </div>
-                  <Badge variant="outline">
-                    {resource.type === "template"
-                      ? "Plantilla"
-                      : resource.type === "guide"
-                        ? "Guía"
-                        : resource.type === "video"
-                          ? "Video"
-                          : resource.type === "podcast"
-                            ? "Podcast"
-                            : "Herramienta"}
+                  <Badge variant=&ldquo;outline&rdquo;>
+                    {resource.type === &ldquo;template&rdquo;
+                      ? &ldquo;Plantilla&rdquo;
+                      : resource.type === &ldquo;guide&rdquo;
+                        ? &ldquo;Guía&rdquo;
+                        : resource.type === &ldquo;video&rdquo;
+                          ? &ldquo;Video&rdquo;
+                          : resource.type === &ldquo;podcast&rdquo;
+                            ? &ldquo;Podcast&rdquo;
+                            : &ldquo;Herramienta&rdquo;}
                   </Badge>
                 </div>
                 <Badge className={getDifficultyColor(resource.difficulty)}>
-                  {resource.difficulty === "beginner"
-                    ? "Principiante"
-                    : resource.difficulty === "intermediate"
-                      ? "Intermedio"
-                      : "Avanzado"}
+                  {resource.difficulty === &ldquo;beginner&rdquo;
+                    ? &ldquo;Principiante&rdquo;
+                    : resource.difficulty === &ldquo;intermediate&rdquo;
+                      ? &ldquo;Intermedio&rdquo;
+                      : &ldquo;Avanzado&rdquo;}
                 </Badge>
               </div>
-              <CardTitle className="text-lg line-clamp-2">
+              <CardTitle className=&ldquo;text-lg line-clamp-2&rdquo;>
                 {resource.title}
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-sm text-muted-foreground line-clamp-3">
+            <CardContent className=&ldquo;space-y-4&rdquo;>
+              <p className=&ldquo;text-sm text-muted-foreground line-clamp-3&rdquo;>
                 {resource.description}
               </p>
 
-              <div className="flex items-center justify-between text-sm text-muted-foreground">
+              <div className=&ldquo;flex items-center justify-between text-sm text-muted-foreground&rdquo;>
                 <span>{resource.category}</span>
                 <span>{resource.estimatedTime}</span>
               </div>
 
-              <div className="flex items-center gap-4 text-sm">
-                <div className="flex items-center gap-1">
-                  <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+              <div className=&ldquo;flex items-center gap-4 text-sm&rdquo;>
+                <div className=&ldquo;flex items-center gap-1&rdquo;>
+                  <Star className=&ldquo;h-4 w-4 fill-yellow-400 text-yellow-400&rdquo; />
                   <span>{resource.rating}</span>
-                  <span className="text-muted-foreground">
+                  <span className=&ldquo;text-muted-foreground&rdquo;>
                     ({resource.reviewCount})
                   </span>
                 </div>
-                <div className="flex items-center gap-1">
-                  <Download className="h-4 w-4 text-muted-foreground" />
+                <div className=&ldquo;flex items-center gap-1&rdquo;>
+                  <Download className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
                   <span>{resource.downloads.toLocaleString()}</span>
                 </div>
               </div>
 
-              <div className="flex flex-wrap gap-1">
+              <div className=&ldquo;flex flex-wrap gap-1&rdquo;>
                 {resource.tags.slice(0, 3).map((tag) => (
-                  <Badge key={tag} variant="secondary" className="text-xs">
+                  <Badge key={tag} variant=&ldquo;secondary&rdquo; className=&ldquo;text-xs&rdquo;>
                     {tag}
                   </Badge>
                 ))}
                 {resource.tags.length > 3 && (
-                  <Badge variant="outline" className="text-xs">
+                  <Badge variant=&ldquo;outline&rdquo; className=&ldquo;text-xs&rdquo;>
                     +{resource.tags.length - 3}
                   </Badge>
                 )}
               </div>
 
-              <div className="flex items-center justify-between text-xs text-muted-foreground border-t pt-3">
+              <div className=&ldquo;flex items-center justify-between text-xs text-muted-foreground border-t pt-3&rdquo;>
                 <span>
                   {resource.format} • {resource.fileSize}
                 </span>
                 <span>{resource.createdAt.toLocaleDateString()}</span>
               </div>
 
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm" className="flex-1">
-                  <Eye className="h-3 w-3 mr-1" />
+              <div className=&ldquo;flex gap-2&rdquo;>
+                <Button variant=&ldquo;outline&rdquo; size=&ldquo;sm&rdquo; className=&ldquo;flex-1&rdquo;>
+                  <Eye className=&ldquo;h-3 w-3 mr-1&rdquo; />
                   Vista Previa
                 </Button>
-                <Button size="sm" className="flex-1">
-                  <Download className="h-3 w-3 mr-1" />
+                <Button size=&ldquo;sm&rdquo; className=&ldquo;flex-1&rdquo;>
+                  <Download className=&ldquo;h-3 w-3 mr-1&rdquo; />
                   Descargar
                 </Button>
               </div>
@@ -516,22 +516,22 @@ export default function ResourcesPage() {
 
       {/* No Results */}
       {filteredResources.length === 0 && (
-        <div className="text-center py-12">
-          <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-            <Search className="h-8 w-8 text-gray-400" />
+        <div className=&ldquo;text-center py-12&rdquo;>
+          <div className=&ldquo;w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center&rdquo;>
+            <Search className=&ldquo;h-8 w-8 text-gray-400&rdquo; />
           </div>
-          <h3 className="text-lg font-semibold mb-2">
+          <h3 className=&ldquo;text-lg font-semibold mb-2&rdquo;>
             No se encontraron recursos
           </h3>
-          <p className="text-muted-foreground mb-4">
+          <p className=&ldquo;text-muted-foreground mb-4&rdquo;>
             Intenta ajustar los filtros o términos de búsqueda
           </p>
           <Button
-            variant="outline"
+            variant=&ldquo;outline&rdquo;
             onClick={() => {
-              setSearchQuery("");
-              setFilterType("all");
-              setFilterCategory("all");
+              setSearchQuery(&ldquo;&rdquo;);
+              setFilterType(&ldquo;all&rdquo;);
+              setFilterCategory(&ldquo;all&rdquo;);
             }}
           >
             Limpiar Filtros

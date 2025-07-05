@@ -1,101 +1,101 @@
-import { NextRequest, NextResponse } from "next/server";
-import { JobApplication, ApplicationStatus } from "@/types/jobs";
+import { NextRequest, NextResponse } from &ldquo;next/server&rdquo;;
+import { JobApplication, ApplicationStatus } from &ldquo;@/types/jobs&rdquo;;
 
 // Mock applications data (same as job applications but filtered by user)
 const mockApplications: JobApplication[] = [
   {
-    id: "app-1",
-    jobId: "job-1",
-    jobTitle: "Desarrollador Frontend Junior",
-    companyName: "TechCorp Bolivia",
-    companyLogo: "/logos/techcorp.svg",
-    applicantId: "mock-user-id", // Current user ID
-    applicantName: "John Doe",
-    applicantEmail: "john@example.com",
-    cvUrl: "/cv/john-doe.pdf",
-    coverLetter: "Estimado equipo de TechCorp, estoy muy interesado en la posición de Desarrollador Frontend Junior...",
+    id: &ldquo;app-1&rdquo;,
+    jobId: &ldquo;job-1&rdquo;,
+    jobTitle: &ldquo;Desarrollador Frontend Junior&rdquo;,
+    companyName: &ldquo;TechCorp Bolivia&rdquo;,
+    companyLogo: &ldquo;/logos/techcorp.svg&rdquo;,
+    applicantId: &ldquo;mock-user-id&rdquo;, // Current user ID
+    applicantName: &ldquo;John Doe&rdquo;,
+    applicantEmail: &ldquo;john@example.com&rdquo;,
+    cvUrl: &ldquo;/cv/john-doe.pdf&rdquo;,
+    coverLetter: &ldquo;Estimado equipo de TechCorp, estoy muy interesado en la posición de Desarrollador Frontend Junior...&rdquo;,
     answers: [
       {
-        questionId: "q1",
-        question: "¿Tienes experiencia previa trabajando con React?",
-        answer: "6 meses - 1 año"
+        questionId: &ldquo;q1&rdquo;,
+        question: &ldquo;¿Tienes experiencia previa trabajando con React?&rdquo;,
+        answer: &ldquo;6 meses - 1 año&rdquo;
       },
       {
-        questionId: "q2",
-        question: "Describe brevemente tu proyecto más importante con JavaScript",
-        answer: "Desarrollé una aplicación web de gestión de tareas usando React y Node.js con autenticación y base de datos."
+        questionId: &ldquo;q2&rdquo;,
+        question: &ldquo;Describe brevemente tu proyecto más importante con JavaScript&rdquo;,
+        answer: &ldquo;Desarrollé una aplicación web de gestión de tareas usando React y Node.js con autenticación y base de datos.&rdquo;
       }
     ],
-    status: "UNDER_REVIEW",
+    status: &ldquo;UNDER_REVIEW&rdquo;,
     appliedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
     updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
     rating: 4
   },
   {
-    id: "app-2",
-    jobId: "job-2",
-    jobTitle: "Asistente de Marketing Digital",
-    companyName: "Mindful Co.",
-    companyLogo: "/logos/mindfulco.svg",
-    applicantId: "mock-user-id",
-    applicantName: "John Doe",
-    applicantEmail: "john@example.com",
-    cvUrl: "/cv/john-doe.pdf",
-    coverLetter: "Estimado equipo de Mindful Co., estoy emocionado por la oportunidad de unirme a su equipo creativo...",
+    id: &ldquo;app-2&rdquo;,
+    jobId: &ldquo;job-2&rdquo;,
+    jobTitle: &ldquo;Asistente de Marketing Digital&rdquo;,
+    companyName: &ldquo;Mindful Co.&rdquo;,
+    companyLogo: &ldquo;/logos/mindfulco.svg&rdquo;,
+    applicantId: &ldquo;mock-user-id&rdquo;,
+    applicantName: &ldquo;John Doe&rdquo;,
+    applicantEmail: &ldquo;john@example.com&rdquo;,
+    cvUrl: &ldquo;/cv/john-doe.pdf&rdquo;,
+    coverLetter: &ldquo;Estimado equipo de Mindful Co., estoy emocionado por la oportunidad de unirme a su equipo creativo...&rdquo;,
     answers: [
       {
-        questionId: "q1",
-        question: "¿Qué redes sociales utilizas más frecuentemente?",
-        answer: "Instagram"
+        questionId: &ldquo;q1&rdquo;,
+        question: &ldquo;¿Qué redes sociales utilizas más frecuentemente?&rdquo;,
+        answer: &ldquo;Instagram&rdquo;
       }
     ],
-    status: "PRE_SELECTED",
+    status: &ldquo;PRE_SELECTED&rdquo;,
     appliedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
     updatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-    notes: "Candidato con buen potencial creativo",
+    notes: &ldquo;Candidato con buen potencial creativo&rdquo;,
     rating: 5
   },
   {
-    id: "app-3",
-    jobId: "job-3",
-    jobTitle: "Practicante de Contabilidad",
-    companyName: "Zenith Health",
-    companyLogo: "/logos/zenithhealth.svg",
-    applicantId: "mock-user-id",
-    applicantName: "John Doe",
-    applicantEmail: "john@example.com",
-    cvUrl: "/cv/john-doe.pdf",
-    coverLetter: "Estimado equipo de Zenith Health, estoy interesado en realizar mis prácticas profesionales...",
+    id: &ldquo;app-3&rdquo;,
+    jobId: &ldquo;job-3&rdquo;,
+    jobTitle: &ldquo;Practicante de Contabilidad&rdquo;,
+    companyName: &ldquo;Zenith Health&rdquo;,
+    companyLogo: &ldquo;/logos/zenithhealth.svg&rdquo;,
+    applicantId: &ldquo;mock-user-id&rdquo;,
+    applicantName: &ldquo;John Doe&rdquo;,
+    applicantEmail: &ldquo;john@example.com&rdquo;,
+    cvUrl: &ldquo;/cv/john-doe.pdf&rdquo;,
+    coverLetter: &ldquo;Estimado equipo de Zenith Health, estoy interesado en realizar mis prácticas profesionales...&rdquo;,
     answers: [
       {
-        questionId: "q1",
-        question: "¿En qué semestre de la carrera te encuentras actualmente?",
-        answer: "7mo semestre"
+        questionId: &ldquo;q1&rdquo;,
+        question: &ldquo;¿En qué semestre de la carrera te encuentras actualmente?&rdquo;,
+        answer: &ldquo;7mo semestre&rdquo;
       },
       {
-        questionId: "q2",
-        question: "¿Tienes disponibilidad para trabajar medio tiempo por 6 meses?",
-        answer: "Sí"
+        questionId: &ldquo;q2&rdquo;,
+        question: &ldquo;¿Tienes disponibilidad para trabajar medio tiempo por 6 meses?&rdquo;,
+        answer: &ldquo;Sí&rdquo;
       }
     ],
-    status: "REJECTED",
+    status: &ldquo;REJECTED&rdquo;,
     appliedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
     updatedAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
-    notes: "No cumple con los requisitos mínimos de experiencia"
+    notes: &ldquo;No cumple con los requisitos mínimos de experiencia&rdquo;
   },
   {
-    id: "app-4",
-    jobId: "job-1",
-    jobTitle: "Desarrollador Frontend Junior",
-    companyName: "TechCorp Bolivia",
-    companyLogo: "/logos/techcorp.svg",
-    applicantId: "mock-user-id",
-    applicantName: "John Doe",
-    applicantEmail: "john@example.com",
-    cvUrl: "/cv/john-doe-v2.pdf",
-    coverLetter: "Segunda aplicación con CV actualizado...",
+    id: &ldquo;app-4&rdquo;,
+    jobId: &ldquo;job-1&rdquo;,
+    jobTitle: &ldquo;Desarrollador Frontend Junior&rdquo;,
+    companyName: &ldquo;TechCorp Bolivia&rdquo;,
+    companyLogo: &ldquo;/logos/techcorp.svg&rdquo;,
+    applicantId: &ldquo;mock-user-id&rdquo;,
+    applicantName: &ldquo;John Doe&rdquo;,
+    applicantEmail: &ldquo;john@example.com&rdquo;,
+    cvUrl: &ldquo;/cv/john-doe-v2.pdf&rdquo;,
+    coverLetter: &ldquo;Segunda aplicación con CV actualizado...&rdquo;,
     answers: [],
-    status: "SENT",
+    status: &ldquo;SENT&rdquo;,
     appliedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
     updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString()
   }
@@ -107,19 +107,19 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     
     // In a real app, get userId from authentication
-    const userId = "mock-user-id";
+    const userId = &ldquo;mock-user-id&rdquo;;
     
     // Filter applications by current user
     let userApplications = mockApplications.filter(app => app.applicantId === userId);
     
     // Apply status filter if provided
-    const statusFilter = searchParams.get("status") as ApplicationStatus;
+    const statusFilter = searchParams.get(&ldquo;status&rdquo;) as ApplicationStatus;
     if (statusFilter) {
       userApplications = userApplications.filter(app => app.status === statusFilter);
     }
     
     // Apply company filter if provided
-    const companyFilter = searchParams.get("company");
+    const companyFilter = searchParams.get(&ldquo;company&rdquo;);
     if (companyFilter) {
       userApplications = userApplications.filter(app => 
         app.companyName.toLowerCase().includes(companyFilter.toLowerCase())
@@ -127,8 +127,8 @@ export async function GET(request: NextRequest) {
     }
     
     // Apply date range filter if provided
-    const dateFrom = searchParams.get("dateFrom");
-    const dateTo = searchParams.get("dateTo");
+    const dateFrom = searchParams.get(&ldquo;dateFrom&rdquo;);
+    const dateTo = searchParams.get(&ldquo;dateTo&rdquo;);
     
     if (dateFrom) {
       userApplications = userApplications.filter(app => 
@@ -150,11 +150,11 @@ export async function GET(request: NextRequest) {
     // Calculate stats
     const stats = {
       total: userApplications.length,
-      sent: userApplications.filter(app => app.status === "SENT").length,
-      underReview: userApplications.filter(app => app.status === "UNDER_REVIEW").length,
-      preSelected: userApplications.filter(app => app.status === "PRE_SELECTED").length,
-      rejected: userApplications.filter(app => app.status === "REJECTED").length,
-      hired: userApplications.filter(app => app.status === "HIRED").length,
+      sent: userApplications.filter(app => app.status === &ldquo;SENT&rdquo;).length,
+      underReview: userApplications.filter(app => app.status === &ldquo;UNDER_REVIEW&rdquo;).length,
+      preSelected: userApplications.filter(app => app.status === &ldquo;PRE_SELECTED&rdquo;).length,
+      rejected: userApplications.filter(app => app.status === &ldquo;REJECTED&rdquo;).length,
+      hired: userApplications.filter(app => app.status === &ldquo;HIRED&rdquo;).length,
     };
     
     return NextResponse.json({
@@ -162,9 +162,9 @@ export async function GET(request: NextRequest) {
       stats
     });
   } catch (error) {
-    console.error("Error fetching user applications:", error);
+    console.error(&ldquo;Error fetching user applications:&rdquo;, error);
     return NextResponse.json(
-      { error: "Failed to fetch applications" },
+      { error: &ldquo;Failed to fetch applications&rdquo; },
       { status: 500 }
     );
   }
@@ -174,17 +174,17 @@ export async function GET(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const applicationId = searchParams.get("applicationId");
+    const applicationId = searchParams.get(&ldquo;applicationId&rdquo;);
     
     if (!applicationId) {
       return NextResponse.json(
-        { error: "Application ID is required" },
+        { error: &ldquo;Application ID is required&rdquo; },
         { status: 400 }
       );
     }
     
     // In a real app, verify that the application belongs to the current user
-    const userId = "mock-user-id";
+    const userId = &ldquo;mock-user-id&rdquo;;
     
     const applicationIndex = mockApplications.findIndex(
       app => app.id === applicationId && app.applicantId === userId
@@ -192,15 +192,15 @@ export async function DELETE(request: NextRequest) {
     
     if (applicationIndex === -1) {
       return NextResponse.json(
-        { error: "Application not found or unauthorized" },
+        { error: &ldquo;Application not found or unauthorized&rdquo; },
         { status: 404 }
       );
     }
     
     // Check if application can be withdrawn (only SENT status)
-    if (mockApplications[applicationIndex].status !== "SENT") {
+    if (mockApplications[applicationIndex].status !== &ldquo;SENT&rdquo;) {
       return NextResponse.json(
-        { error: "Cannot withdraw application that is already being reviewed" },
+        { error: &ldquo;Cannot withdraw application that is already being reviewed&rdquo; },
         { status: 400 }
       );
     }
@@ -208,11 +208,11 @@ export async function DELETE(request: NextRequest) {
     // Remove application (in real app, might just mark as withdrawn)
     mockApplications.splice(applicationIndex, 1);
     
-    return NextResponse.json({ message: "Application withdrawn successfully" });
+    return NextResponse.json({ message: &ldquo;Application withdrawn successfully&rdquo; });
   } catch (error) {
-    console.error("Error withdrawing application:", error);
+    console.error(&ldquo;Error withdrawing application:&rdquo;, error);
     return NextResponse.json(
-      { error: "Failed to withdraw application" },
+      { error: &ldquo;Failed to withdraw application&rdquo; },
       { status: 500 }
     );
   }

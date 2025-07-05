@@ -9,8 +9,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { Progress } from "@/components/ui/progress";
 import {
   Select,
   SelectContent,
@@ -29,7 +27,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   DropdownMenu,
@@ -45,7 +42,6 @@ import {
   MoreHorizontal,
   Edit,
   Trash2,
-  DragHandle,
   VideoIcon,
   FileText,
   HelpCircle,
@@ -75,7 +71,7 @@ interface Lesson {
   title: string;
   description: string;
   type: "video" | "reading" | "quiz";
-  content: any;
+  content: Record<string, unknown>;
   duration: number;
   order: number;
   isPreview: boolean;
@@ -103,8 +99,6 @@ interface Question {
 }
 
 export default function EditCoursePage() {
-  const params = useParams();
-  const router = useRouter();
   const courseId = params.id as string;
 
   const [activeTab, setActiveTab] = useState("content");
@@ -112,14 +106,12 @@ export default function EditCoursePage() {
   const [expandedModules, setExpandedModules] = useState<Set<string>>(
     new Set()
   );
-  const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
   const [showModuleDialog, setShowModuleDialog] = useState(false);
   const [showLessonDialog, setShowLessonDialog] = useState(false);
-  const [showQuizDialog, setShowQuizDialog] = useState(false);
   const [editingModule, setEditingModule] = useState<Module | null>(null);
   const [editingLesson, setEditingLesson] = useState<Lesson | null>(null);
 
-  const [courseData, setCourseData] = useState({
+  const [courseData] = useState({
     title: "Habilidades Laborales Básicas",
     description:
       "Curso completo sobre competencias fundamentales para el trabajo",
@@ -294,9 +286,9 @@ export default function EditCoursePage() {
 
   const getTotalDuration = () => {
     return modules.reduce(
-      (total, module) =>
+      (total, mod) =>
         total +
-        module.lessons.reduce(
+        mod.lessons.reduce(
           (moduleTotal, lesson) => moduleTotal + lesson.duration,
           0
         ),
@@ -305,7 +297,7 @@ export default function EditCoursePage() {
   };
 
   const getTotalLessons = () => {
-    return modules.reduce((total, module) => total + module.lessons.length, 0);
+    return modules.reduce((total, mod) => total + mod.lessons.length, 0);
   };
 
   return (
@@ -750,7 +742,6 @@ function LessonDialog({
   const [type, setType] = useState<"video" | "reading" | "quiz">(
     lesson?.type || "video"
   );
-  const [duration, setDuration] = useState(lesson?.duration || 0);
   const [videoUrl, setVideoUrl] = useState("");
   const [readingContent, setReadingContent] = useState("");
 
@@ -797,7 +788,9 @@ function LessonDialog({
               <Label htmlFor="lessonType">Tipo de Lección</Label>
               <Select
                 value={type}
-                onValueChange={(value: any) => setType(value)}
+                onValueChange={(value: "video" | "reading" | "quiz") =>
+                  setType(value)
+                }
               >
                 <SelectTrigger>
                   <SelectValue />

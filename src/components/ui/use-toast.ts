@@ -1,12 +1,12 @@
-"use client"
+&ldquo;use client&rdquo;
 
 // Inspired by react-hot-toast library
-import * as React from "react"
+import * as React from &ldquo;react&rdquo;
 
 import type {
   ToastActionElement,
   ToastProps,
-} from "@/components/ui/toast"
+} from &ldquo;@/components/ui/toast&rdquo;
 
 const TOAST_LIMIT = 1
 const TOAST_REMOVE_DELAY = 1000000
@@ -20,10 +20,10 @@ type ToasterToast = ToastProps & {
 
 // Replace the actionTypes object with an enum
 enum ActionType {
-  ADD_TOAST = "ADD_TOAST",
-  UPDATE_TOAST = "UPDATE_TOAST",
-  DISMISS_TOAST = "DISMISS_TOAST",
-  REMOVE_TOAST = "REMOVE_TOAST",
+  ADD_TOAST = &ldquo;ADD_TOAST&rdquo;,
+  UPDATE_TOAST = &ldquo;UPDATE_TOAST&rdquo;,
+  DISMISS_TOAST = &ldquo;DISMISS_TOAST&rdquo;,
+  REMOVE_TOAST = &ldquo;REMOVE_TOAST&rdquo;,
 }
 
 let count = 0
@@ -45,11 +45,11 @@ type Action =
     }
   | {
       type: ActionType.DISMISS_TOAST;
-      toastId?: ToasterToast["id"];
+      toastId?: ToasterToast[&ldquo;id&rdquo;];
     }
   | {
       type: ActionType.REMOVE_TOAST;
-      toastId?: ToasterToast["id"];
+      toastId?: ToasterToast[&ldquo;id&rdquo;];
     };
 
 interface State {
@@ -141,7 +141,7 @@ function dispatch(action: Action) {
   })
 }
 
-type Toast = Omit<ToasterToast, "id">
+type Toast = Omit<ToasterToast, &ldquo;id&rdquo;>
 
 function toast({ ...props }: Toast) {
   const id = genId()
@@ -179,19 +179,6 @@ function useToast() {
   React.useEffect(() => {
     listeners.push(setState)
     return () => {
-      const index = listeners.indexOf(setState)
-      if (index > -1) {
-        listeners.splice(index, 1)
       }
-    }
-  }, [state])
-
-  return {
-    ...state,
-    toast,
-    dismiss: (toastId?: string) =>
-      dispatch({ type: ActionType.DISMISS_TOAST, toastId }),
-  };
-}
 
 export { useToast, toast }

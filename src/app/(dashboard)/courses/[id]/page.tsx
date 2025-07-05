@@ -1,17 +1,17 @@
-"use client";
+&ldquo;use client&rdquo;;
 
-import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
-import Image from "next/image";
-import Link from "next/link";
-import { Course, Module } from "@/types/courses";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useState, useEffect } from &ldquo;react&rdquo;;
+import { useParams, useRouter } from &ldquo;next/navigation&rdquo;;
+import Image from &ldquo;next/image&rdquo;;
+import Link from &ldquo;next/link&rdquo;;
+import { Course, Module } from &ldquo;@/types/courses&rdquo;;
+import { Button } from &ldquo;@/components/ui/button&rdquo;;
+import { Card, CardContent, CardHeader, CardTitle } from &ldquo;@/components/ui/card&rdquo;;
+import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
+import { Progress } from &ldquo;@/components/ui/progress&rdquo;;
+import { Avatar, AvatarFallback, AvatarImage } from &ldquo;@/components/ui/avatar&rdquo;;
+import { Separator } from &ldquo;@/components/ui/separator&rdquo;;
+import { Tabs, TabsContent, TabsList, TabsTrigger } from &ldquo;@/components/ui/tabs&rdquo;;
 import {
   Star,
   Clock,
@@ -28,10 +28,8 @@ import {
   Globe,
   ChevronDown,
   ChevronRight,
-} from "lucide-react";
+} from &ldquo;lucide-react&rdquo;;
 export default function CourseDetailPage() {
-  const params = useParams();
-  const router = useRouter();
   const [course, setCourse] = useState<Course | null>(null);
   const [modules, setModules] = useState<Module[]>([]);
   const [loading, setLoading] = useState(true);
@@ -54,10 +52,10 @@ export default function CourseDetailPage() {
         setCourse(data.course);
         setModules(data.modules);
       } else {
-        console.error("Error loading course:", data);
+        console.error(&ldquo;Error loading course:&rdquo;, data);
       }
     } catch (error) {
-      console.error("Error fetching course:", error);
+      console.error(&ldquo;Error fetching course:&rdquo;, error);
     } finally {
       setLoading(false);
     }
@@ -77,47 +75,47 @@ export default function CourseDetailPage() {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
     if (hours === 0) return `${mins} min`;
-    return `${hours}h ${mins > 0 ? `${mins}m` : ""}`;
+    return `${hours}h ${mins > 0 ? `${mins}m` : &ldquo;&rdquo;}`;
   };
 
   const getCategoryLabel = (category: string) => {
     const labels: Record<string, string> = {
-      soft_skills: "Habilidades Blandas",
-      basic_competencies: "Competencias Básicas",
-      job_placement: "Inserción Laboral",
-      entrepreneurship: "Emprendimiento",
-      technical_skills: "Habilidades Técnicas",
-      digital_literacy: "Alfabetización Digital",
-      communication: "Comunicación",
-      leadership: "Liderazgo",
+      soft_skills: &ldquo;Habilidades Blandas&rdquo;,
+      basic_competencies: &ldquo;Competencias Básicas&rdquo;,
+      job_placement: &ldquo;Inserción Laboral&rdquo;,
+      entrepreneurship: &ldquo;Emprendimiento&rdquo;,
+      technical_skills: &ldquo;Habilidades Técnicas&rdquo;,
+      digital_literacy: &ldquo;Alfabetización Digital&rdquo;,
+      communication: &ldquo;Comunicación&rdquo;,
+      leadership: &ldquo;Liderazgo&rdquo;,
     };
     return labels[category] || category;
   };
 
   const getLevelLabel = (level: string) => {
     const labels: Record<string, string> = {
-      beginner: "Principiante",
-      intermediate: "Intermedio",
-      advanced: "Avanzado",
+      beginner: &ldquo;Principiante&rdquo;,
+      intermediate: &ldquo;Intermedio&rdquo;,
+      advanced: &ldquo;Avanzado&rdquo;,
     };
     return labels[level] || level;
   };
 
   if (loading) {
     return (
-      <div className="container mx-auto p-6">
-        <div className="animate-pulse space-y-6">
-          <div className="h-8 bg-gray-200 rounded w-1/4" />
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2 space-y-6">
-              <div className="h-64 bg-gray-200 rounded" />
-              <div className="h-6 bg-gray-200 rounded w-3/4" />
-              <div className="h-4 bg-gray-200 rounded w-full" />
-              <div className="h-4 bg-gray-200 rounded w-5/6" />
+      <div className=&ldquo;container mx-auto p-6&rdquo;>
+        <div className=&ldquo;animate-pulse space-y-6&rdquo;>
+          <div className=&ldquo;h-8 bg-gray-200 rounded w-1/4&rdquo; />
+          <div className=&ldquo;grid grid-cols-1 lg:grid-cols-3 gap-8&rdquo;>
+            <div className=&ldquo;lg:col-span-2 space-y-6&rdquo;>
+              <div className=&ldquo;h-64 bg-gray-200 rounded&rdquo; />
+              <div className=&ldquo;h-6 bg-gray-200 rounded w-3/4&rdquo; />
+              <div className=&ldquo;h-4 bg-gray-200 rounded w-full&rdquo; />
+              <div className=&ldquo;h-4 bg-gray-200 rounded w-5/6&rdquo; />
             </div>
-            <div className="space-y-4">
-              <div className="h-32 bg-gray-200 rounded" />
-              <div className="h-12 bg-gray-200 rounded" />
+            <div className=&ldquo;space-y-4&rdquo;>
+              <div className=&ldquo;h-32 bg-gray-200 rounded&rdquo; />
+              <div className=&ldquo;h-12 bg-gray-200 rounded&rdquo; />
             </div>
           </div>
         </div>
@@ -127,74 +125,74 @@ export default function CourseDetailPage() {
 
   if (!course) {
     return (
-      <div className="container mx-auto p-6 text-center">
-        <h1 className="text-2xl font-bold mb-4">Curso no encontrado</h1>
+      <div className=&ldquo;container mx-auto p-6 text-center&rdquo;>
+        <h1 className=&ldquo;text-2xl font-bold mb-4&rdquo;>Curso no encontrado</h1>
         <Button asChild>
-          <Link href="/courses">Volver al catálogo</Link>
+          <Link href=&ldquo;/courses&rdquo;>Volver al catálogo</Link>
         </Button>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto p-6">
+    <div className=&ldquo;container mx-auto p-6&rdquo;>
       {/* Breadcrumb */}
-      <div className="flex items-center gap-2 mb-6 text-sm text-muted-foreground">
+      <div className=&ldquo;flex items-center gap-2 mb-6 text-sm text-muted-foreground&rdquo;>
         <Link
-          href="/courses"
-          className="hover:text-foreground flex items-center gap-1"
+          href=&ldquo;/courses&rdquo;
+          className=&ldquo;hover:text-foreground flex items-center gap-1&rdquo;
         >
-          <ArrowLeft className="h-4 w-4" />
+          <ArrowLeft className=&ldquo;h-4 w-4&rdquo; />
           Cursos
         </Link>
         <span>/</span>
-        <span className="text-foreground">{course.title}</span>
+        <span className=&ldquo;text-foreground&rdquo;>{course.title}</span>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className=&ldquo;grid grid-cols-1 lg:grid-cols-3 gap-8&rdquo;>
         {/* Main Content */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className=&ldquo;lg:col-span-2 space-y-6&rdquo;>
           {/* Header */}
           <div>
-            <div className="flex items-center gap-2 mb-3">
-              <Badge variant="outline">
+            <div className=&ldquo;flex items-center gap-2 mb-3&rdquo;>
+              <Badge variant=&ldquo;outline&rdquo;>
                 {getCategoryLabel(course.category)}
               </Badge>
-              <Badge variant="outline">{getLevelLabel(course.level)}</Badge>
+              <Badge variant=&ldquo;outline&rdquo;>{getLevelLabel(course.level)}</Badge>
               {course.isMandatory && (
-                <Badge className="bg-red-500">Obligatorio</Badge>
+                <Badge className=&ldquo;bg-red-500&rdquo;>Obligatorio</Badge>
               )}
               {course.price === 0 && (
-                <Badge className="bg-green-500">Gratis</Badge>
+                <Badge className=&ldquo;bg-green-500&rdquo;>Gratis</Badge>
               )}
             </div>
 
-            <h1 className="text-3xl font-bold mb-4">{course.title}</h1>
+            <h1 className=&ldquo;text-3xl font-bold mb-4&rdquo;>{course.title}</h1>
 
-            <p className="text-lg text-muted-foreground mb-6">
+            <p className=&ldquo;text-lg text-muted-foreground mb-6&rdquo;>
               {course.shortDescription}
             </p>
 
             {/* Course Stats */}
-            <div className="flex flex-wrap items-center gap-6 text-sm">
-              <div className="flex items-center gap-1">
-                <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                <span className="font-medium">{course.rating}</span>
-                <span className="text-muted-foreground">
+            <div className=&ldquo;flex flex-wrap items-center gap-6 text-sm&rdquo;>
+              <div className=&ldquo;flex items-center gap-1&rdquo;>
+                <Star className=&ldquo;h-4 w-4 fill-yellow-400 text-yellow-400&rdquo; />
+                <span className=&ldquo;font-medium&rdquo;>{course.rating}</span>
+                <span className=&ldquo;text-muted-foreground&rdquo;>
                   ({course.studentCount} estudiantes)
                 </span>
               </div>
-              <div className="flex items-center gap-1">
-                <Clock className="h-4 w-4" />
+              <div className=&ldquo;flex items-center gap-1&rdquo;>
+                <Clock className=&ldquo;h-4 w-4&rdquo; />
                 <span>{course.duration} horas</span>
               </div>
-              <div className="flex items-center gap-1">
-                <BookOpen className="h-4 w-4" />
+              <div className=&ldquo;flex items-center gap-1&rdquo;>
+                <BookOpen className=&ldquo;h-4 w-4&rdquo; />
                 <span>{course.totalLessons} lecciones</span>
               </div>
               {course.certification && (
-                <div className="flex items-center gap-1">
-                  <Award className="h-4 w-4" />
+                <div className=&ldquo;flex items-center gap-1&rdquo;>
+                  <Award className=&ldquo;h-4 w-4&rdquo; />
                   <span>Certificado incluido</span>
                 </div>
               )}
@@ -202,50 +200,50 @@ export default function CourseDetailPage() {
           </div>
 
           {/* Course Image/Video */}
-          <div className="relative">
+          <div className=&ldquo;relative&rdquo;>
             <Image
               src={course.thumbnail}
               alt={course.title}
               width={800}
               height={450}
-              className="w-full h-64 md:h-96 object-cover rounded-lg"
+              className=&ldquo;w-full h-64 md:h-96 object-cover rounded-lg&rdquo;
             />
             {course.videoPreview && (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <Button size="lg" className="rounded-full h-16 w-16">
-                  <Play className="h-6 w-6 fill-current" />
+              <div className=&ldquo;absolute inset-0 flex items-center justify-center&rdquo;>
+                <Button size=&ldquo;lg&rdquo; className=&ldquo;rounded-full h-16 w-16&rdquo;>
+                  <Play className=&ldquo;h-6 w-6 fill-current&rdquo; />
                 </Button>
               </div>
             )}
           </div>
 
           {/* Course Tabs */}
-          <Tabs defaultValue="overview" className="w-full">
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="overview">Descripción</TabsTrigger>
-              <TabsTrigger value="curriculum">Temario</TabsTrigger>
-              <TabsTrigger value="instructor">Instructor</TabsTrigger>
-              <TabsTrigger value="reviews">Reseñas</TabsTrigger>
+          <Tabs defaultValue=&ldquo;overview&rdquo; className=&ldquo;w-full&rdquo;>
+            <TabsList className=&ldquo;grid w-full grid-cols-4&rdquo;>
+              <TabsTrigger value=&ldquo;overview&rdquo;>Descripción</TabsTrigger>
+              <TabsTrigger value=&ldquo;curriculum&rdquo;>Temario</TabsTrigger>
+              <TabsTrigger value=&ldquo;instructor&rdquo;>Instructor</TabsTrigger>
+              <TabsTrigger value=&ldquo;reviews&rdquo;>Reseñas</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="overview" className="space-y-6">
+            <TabsContent value=&ldquo;overview&rdquo; className=&ldquo;space-y-6&rdquo;>
               <div>
-                <h3 className="text-xl font-semibold mb-4">
+                <h3 className=&ldquo;text-xl font-semibold mb-4&rdquo;>
                   Descripción del curso
                 </h3>
-                <div className="prose max-w-none">
-                  <p className="whitespace-pre-line">{course.description}</p>
+                <div className=&ldquo;prose max-w-none&rdquo;>
+                  <p className=&ldquo;whitespace-pre-line&rdquo;>{course.description}</p>
                 </div>
               </div>
 
               <div>
-                <h3 className="text-xl font-semibold mb-4">
+                <h3 className=&ldquo;text-xl font-semibold mb-4&rdquo;>
                   Objetivos de aprendizaje
                 </h3>
-                <ul className="space-y-2">
+                <ul className=&ldquo;space-y-2&rdquo;>
                   {course.objectives.map((objective, index) => (
-                    <li key={index} className="flex items-start gap-2">
-                      <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                    <li key={index} className=&ldquo;flex items-start gap-2&rdquo;>
+                      <CheckCircle className=&ldquo;h-5 w-5 text-green-500 mt-0.5 flex-shrink-0&rdquo; />
                       <span>{objective}</span>
                     </li>
                   ))}
@@ -253,13 +251,13 @@ export default function CourseDetailPage() {
               </div>
 
               <div>
-                <h3 className="text-xl font-semibold mb-4">
+                <h3 className=&ldquo;text-xl font-semibold mb-4&rdquo;>
                   Materiales incluidos
                 </h3>
-                <ul className="space-y-2">
+                <ul className=&ldquo;space-y-2&rdquo;>
                   {course.includedMaterials.map((material, index) => (
-                    <li key={index} className="flex items-start gap-2">
-                      <CheckCircle className="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
+                    <li key={index} className=&ldquo;flex items-start gap-2&rdquo;>
+                      <CheckCircle className=&ldquo;h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0&rdquo; />
                       <span>{material}</span>
                     </li>
                   ))}
@@ -267,10 +265,10 @@ export default function CourseDetailPage() {
               </div>
 
               <div>
-                <h3 className="text-xl font-semibold mb-4">Etiquetas</h3>
-                <div className="flex flex-wrap gap-2">
+                <h3 className=&ldquo;text-xl font-semibold mb-4&rdquo;>Etiquetas</h3>
+                <div className=&ldquo;flex flex-wrap gap-2&rdquo;>
                   {course.tags.map((tag) => (
-                    <Badge key={tag} variant="secondary">
+                    <Badge key={tag} variant=&ldquo;secondary&rdquo;>
                       {tag}
                     </Badge>
                   ))}
@@ -278,83 +276,83 @@ export default function CourseDetailPage() {
               </div>
             </TabsContent>
 
-            <TabsContent value="curriculum" className="space-y-4">
+            <TabsContent value=&ldquo;curriculum&rdquo; className=&ldquo;space-y-4&rdquo;>
               <div>
-                <h3 className="text-xl font-semibold mb-4">
+                <h3 className=&ldquo;text-xl font-semibold mb-4&rdquo;>
                   Contenido del curso
                 </h3>
-                <div className="space-y-3">
+                <div className=&ldquo;space-y-3&rdquo;>
                   {modules.map((module, moduleIndex) => (
                     <Card key={module.id}>
                       <CardHeader
-                        className="cursor-pointer hover:bg-muted/50 transition-colors"
+                        className=&ldquo;cursor-pointer hover:bg-muted/50 transition-colors&rdquo;
                         onClick={() => toggleModule(module.id)}
                       >
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
+                        <div className=&ldquo;flex items-center justify-between&rdquo;>
+                          <div className=&ldquo;flex items-center gap-3&rdquo;>
                             {expandedModules.has(module.id) ? (
-                              <ChevronDown className="h-4 w-4" />
+                              <ChevronDown className=&ldquo;h-4 w-4&rdquo; />
                             ) : (
-                              <ChevronRight className="h-4 w-4" />
+                              <ChevronRight className=&ldquo;h-4 w-4&rdquo; />
                             )}
                             <div>
-                              <CardTitle className="text-base">
+                              <CardTitle className=&ldquo;text-base&rdquo;>
                                 Módulo {moduleIndex + 1}: {module.title}
                               </CardTitle>
-                              <p className="text-sm text-muted-foreground">
-                                {module.lessons.length} lecciones •{" "}
+                              <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
+                                {module.lessons.length} lecciones •{&ldquo; &rdquo;}
                                 {formatDuration(module.duration)}
                               </p>
                             </div>
                           </div>
                           {module.isLocked && (
-                            <Lock className="h-4 w-4 text-muted-foreground" />
+                            <Lock className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
                           )}
                         </div>
                       </CardHeader>
 
                       {expandedModules.has(module.id) && (
-                        <CardContent className="pt-0">
-                          <p className="text-sm text-muted-foreground mb-4">
+                        <CardContent className=&ldquo;pt-0&rdquo;>
+                          <p className=&ldquo;text-sm text-muted-foreground mb-4&rdquo;>
                             {module.description}
                           </p>
-                          <div className="space-y-2">
+                          <div className=&ldquo;space-y-2&rdquo;>
                             {module.lessons.map((lesson, lessonIndex) => (
                               <div
                                 key={lesson.id}
-                                className="flex items-center gap-3 p-2 rounded hover:bg-muted/50"
+                                className=&ldquo;flex items-center gap-3 p-2 rounded hover:bg-muted/50&rdquo;
                               >
-                                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                <div className=&ldquo;flex items-center gap-2 text-sm text-muted-foreground&rdquo;>
                                   <span>
                                     {moduleIndex + 1}.{lessonIndex + 1}
                                   </span>
-                                  {lesson.type === "video" && (
-                                    <Play className="h-3 w-3" />
+                                  {lesson.type === &ldquo;video&rdquo; && (
+                                    <Play className=&ldquo;h-3 w-3&rdquo; />
                                   )}
-                                  {lesson.type === "quiz" && (
-                                    <CheckCircle className="h-3 w-3" />
+                                  {lesson.type === &ldquo;quiz&rdquo; && (
+                                    <CheckCircle className=&ldquo;h-3 w-3&rdquo; />
                                   )}
-                                  {lesson.type === "text" && (
-                                    <BookOpen className="h-3 w-3" />
+                                  {lesson.type === &ldquo;text&rdquo; && (
+                                    <BookOpen className=&ldquo;h-3 w-3&rdquo; />
                                   )}
                                 </div>
-                                <div className="flex-1">
-                                  <div className="flex items-center justify-between">
-                                    <span className="text-sm font-medium">
+                                <div className=&ldquo;flex-1&rdquo;>
+                                  <div className=&ldquo;flex items-center justify-between&rdquo;>
+                                    <span className=&ldquo;text-sm font-medium&rdquo;>
                                       {lesson.title}
                                     </span>
-                                    <span className="text-xs text-muted-foreground">
+                                    <span className=&ldquo;text-xs text-muted-foreground&rdquo;>
                                       {formatDuration(lesson.duration)}
                                     </span>
                                   </div>
                                   {lesson.description && (
-                                    <p className="text-xs text-muted-foreground mt-1">
+                                    <p className=&ldquo;text-xs text-muted-foreground mt-1&rdquo;>
                                       {lesson.description}
                                     </p>
                                   )}
                                 </div>
                                 {lesson.isPreview && (
-                                  <Badge variant="outline" className="text-xs">
+                                  <Badge variant=&ldquo;outline&rdquo; className=&ldquo;text-xs&rdquo;>
                                     Vista previa
                                   </Badge>
                                 )}
@@ -369,64 +367,64 @@ export default function CourseDetailPage() {
               </div>
             </TabsContent>
 
-            <TabsContent value="instructor" className="space-y-6">
+            <TabsContent value=&ldquo;instructor&rdquo; className=&ldquo;space-y-6&rdquo;>
               <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-start gap-4">
-                    <Avatar className="h-20 w-20">
+                <CardContent className=&ldquo;p-6&rdquo;>
+                  <div className=&ldquo;flex items-start gap-4&rdquo;>
+                    <Avatar className=&ldquo;h-20 w-20&rdquo;>
                       <AvatarImage src={course.instructor.avatar} />
-                      <AvatarFallback className="text-lg">
+                      <AvatarFallback className=&ldquo;text-lg&rdquo;>
                         {course.instructor.name.charAt(0)}
                       </AvatarFallback>
                     </Avatar>
-                    <div className="flex-1">
-                      <h3 className="text-xl font-semibold">
+                    <div className=&ldquo;flex-1&rdquo;>
+                      <h3 className=&ldquo;text-xl font-semibold&rdquo;>
                         {course.instructor.name}
                       </h3>
-                      <p className="text-muted-foreground mb-2">
+                      <p className=&ldquo;text-muted-foreground mb-2&rdquo;>
                         {course.instructor.title}
                       </p>
-                      <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
-                        <div className="flex items-center gap-1">
-                          <Star className="h-4 w-4" />
+                      <div className=&ldquo;flex items-center gap-4 text-sm text-muted-foreground mb-4&rdquo;>
+                        <div className=&ldquo;flex items-center gap-1&rdquo;>
+                          <Star className=&ldquo;h-4 w-4&rdquo; />
                           <span>{course.instructor.rating} rating</span>
                         </div>
-                        <div className="flex items-center gap-1">
-                          <Users className="h-4 w-4" />
+                        <div className=&ldquo;flex items-center gap-1&rdquo;>
+                          <Users className=&ldquo;h-4 w-4&rdquo; />
                           <span>
-                            {course.instructor.totalStudents?.toLocaleString()}{" "}
+                            {course.instructor.totalStudents?.toLocaleString()}{&ldquo; &rdquo;}
                             estudiantes
                           </span>
                         </div>
-                        <div className="flex items-center gap-1">
-                          <BookOpen className="h-4 w-4" />
+                        <div className=&ldquo;flex items-center gap-1&rdquo;>
+                          <BookOpen className=&ldquo;h-4 w-4&rdquo; />
                           <span>{course.instructor.totalCourses} cursos</span>
                         </div>
                       </div>
-                      <p className="text-sm leading-relaxed">
+                      <p className=&ldquo;text-sm leading-relaxed&rdquo;>
                         {course.instructor.bio}
                       </p>
 
                       {course.instructor.socialLinks && (
-                        <div className="flex gap-2 mt-4">
+                        <div className=&ldquo;flex gap-2 mt-4&rdquo;>
                           {course.instructor.socialLinks.website && (
-                            <Button variant="outline" size="sm" asChild>
+                            <Button variant=&ldquo;outline&rdquo; size=&ldquo;sm&rdquo; asChild>
                               <a
                                 href={course.instructor.socialLinks.website}
-                                target="_blank"
-                                rel="noopener noreferrer"
+                                target=&ldquo;_blank&rdquo;
+                                rel=&ldquo;noopener noreferrer&rdquo;
                               >
-                                <Globe className="h-4 w-4 mr-1" />
+                                <Globe className=&ldquo;h-4 w-4 mr-1&rdquo; />
                                 Sitio web
                               </a>
                             </Button>
                           )}
                           {course.instructor.socialLinks.linkedin && (
-                            <Button variant="outline" size="sm" asChild>
+                            <Button variant=&ldquo;outline&rdquo; size=&ldquo;sm&rdquo; asChild>
                               <a
                                 href={course.instructor.socialLinks.linkedin}
-                                target="_blank"
-                                rel="noopener noreferrer"
+                                target=&ldquo;_blank&rdquo;
+                                rel=&ldquo;noopener noreferrer&rdquo;
                               >
                                 LinkedIn
                               </a>
@@ -440,9 +438,9 @@ export default function CourseDetailPage() {
               </Card>
             </TabsContent>
 
-            <TabsContent value="reviews">
-              <div className="text-center py-8">
-                <p className="text-muted-foreground">
+            <TabsContent value=&ldquo;reviews&rdquo;>
+              <div className=&ldquo;text-center py-8&rdquo;>
+                <p className=&ldquo;text-muted-foreground&rdquo;>
                   Las reseñas estarán disponibles próximamente
                 </p>
               </div>
@@ -451,69 +449,69 @@ export default function CourseDetailPage() {
         </div>
 
         {/* Sidebar */}
-        <div className="space-y-6">
+        <div className=&ldquo;space-y-6&rdquo;>
           {/* Enrollment Card */}
-          <Card className="sticky top-6">
-            <CardContent className="p-6">
-              <div className="text-center mb-6">
-                <div className="text-3xl font-bold text-blue-600 mb-2">
+          <Card className=&ldquo;sticky top-6&rdquo;>
+            <CardContent className=&ldquo;p-6&rdquo;>
+              <div className=&ldquo;text-center mb-6&rdquo;>
+                <div className=&ldquo;text-3xl font-bold text-blue-600 mb-2&rdquo;>
                   {course.price === 0
-                    ? "Gratis"
+                    ? &ldquo;Gratis&rdquo;
                     : `$${course.price.toLocaleString()} BOB`}
                 </div>
                 {course.price > 0 && (
-                  <p className="text-sm text-muted-foreground">Pago único</p>
+                  <p className=&ldquo;text-sm text-muted-foreground&rdquo;>Pago único</p>
                 )}
               </div>
 
-              <div className="space-y-4">
-                <Button asChild className="w-full" size="lg">
+              <div className=&ldquo;space-y-4&rdquo;>
+                <Button asChild className=&ldquo;w-full&rdquo; size=&ldquo;lg&rdquo;>
                   <Link href={`/courses/${params.id}/learn`}>Ir al curso</Link>
                 </Button>
 
-                <div className="flex gap-2">
+                <div className=&ldquo;flex gap-2&rdquo;>
                   <Button
-                    variant="outline"
+                    variant=&ldquo;outline&rdquo;
                     onClick={() => setIsSaved(!isSaved)}
-                    className="flex-1"
+                    className=&ldquo;flex-1&rdquo;
                   >
                     <Heart
-                      className={`h-4 w-4 mr-2 ${isSaved ? "fill-red-500 text-red-500" : ""}`}
+                      className={`h-4 w-4 mr-2 ${isSaved ? &ldquo;fill-red-500 text-red-500&rdquo; : &ldquo;&rdquo;}`}
                     />
-                    {isSaved ? "Guardado" : "Guardar"}
+                    {isSaved ? &ldquo;Guardado&rdquo; : &ldquo;Guardar&rdquo;}
                   </Button>
-                  <Button variant="outline" size="icon">
-                    <Share2 className="h-4 w-4" />
+                  <Button variant=&ldquo;outline&rdquo; size=&ldquo;icon&rdquo;>
+                    <Share2 className=&ldquo;h-4 w-4&rdquo; />
                   </Button>
                 </div>
               </div>
 
-              <Separator className="my-6" />
+              <Separator className=&ldquo;my-6&rdquo; />
 
-              <div className="space-y-3 text-sm">
-                <div className="flex justify-between">
+              <div className=&ldquo;space-y-3 text-sm&rdquo;>
+                <div className=&ldquo;flex justify-between&rdquo;>
                   <span>Duración:</span>
-                  <span className="font-medium">{course.duration} horas</span>
+                  <span className=&ldquo;font-medium&rdquo;>{course.duration} horas</span>
                 </div>
-                <div className="flex justify-between">
+                <div className=&ldquo;flex justify-between&rdquo;>
                   <span>Lecciones:</span>
-                  <span className="font-medium">{course.totalLessons}</span>
+                  <span className=&ldquo;font-medium&rdquo;>{course.totalLessons}</span>
                 </div>
-                <div className="flex justify-between">
+                <div className=&ldquo;flex justify-between&rdquo;>
                   <span>Nivel:</span>
-                  <span className="font-medium">
+                  <span className=&ldquo;font-medium&rdquo;>
                     {getLevelLabel(course.level)}
                   </span>
                 </div>
-                <div className="flex justify-between">
+                <div className=&ldquo;flex justify-between&rdquo;>
                   <span>Certificado:</span>
-                  <span className="font-medium">
-                    {course.certification ? "Sí" : "No"}
+                  <span className=&ldquo;font-medium&rdquo;>
+                    {course.certification ? &ldquo;Sí&rdquo; : &ldquo;No&rdquo;}
                   </span>
                 </div>
-                <div className="flex justify-between">
+                <div className=&ldquo;flex justify-between&rdquo;>
                   <span>Acceso:</span>
-                  <span className="font-medium">De por vida</span>
+                  <span className=&ldquo;font-medium&rdquo;>De por vida</span>
                 </div>
               </div>
             </CardContent>
@@ -522,12 +520,12 @@ export default function CourseDetailPage() {
           {/* Course Features */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Este curso incluye</CardTitle>
+              <CardTitle className=&ldquo;text-lg&rdquo;>Este curso incluye</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3">
+            <CardContent className=&ldquo;space-y-3&rdquo;>
               {course.includedMaterials.map((material, index) => (
-                <div key={index} className="flex items-center gap-2 text-sm">
-                  <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
+                <div key={index} className=&ldquo;flex items-center gap-2 text-sm&rdquo;>
+                  <CheckCircle className=&ldquo;h-4 w-4 text-green-500 flex-shrink-0&rdquo; />
                   <span>{material}</span>
                 </div>
               ))}

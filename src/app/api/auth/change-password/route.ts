@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from &ldquo;next/server&rdquo;;
 
 export async function POST(request: NextRequest) {
   try {
@@ -7,19 +7,19 @@ export async function POST(request: NextRequest) {
     // Validate required fields
     if (!email || !currentPassword || !newPassword) {
       return NextResponse.json(
-        { error: "Email, current password, and new password are required" },
+        { error: &ldquo;Email, current password, and new password are required&rdquo; },
         { status: 400 }
       );
     }
 
     // Mock password change response for development
     return NextResponse.json({
-      message: "Password changed successfully",
+      message: &ldquo;Password changed successfully&rdquo;,
     });
   } catch (error) {
-    console.error("Error changing password:", error);
+    console.error(&ldquo;Error changing password:&rdquo;, error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: &ldquo;Internal server error&rdquo; },
       { status: 500 }
     );
   }

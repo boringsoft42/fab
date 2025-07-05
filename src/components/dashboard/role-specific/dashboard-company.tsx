@@ -1,4 +1,4 @@
-"use client";
+&ldquo;use client&rdquo;;
 
 import {
   Card,
@@ -6,25 +6,25 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+} from &ldquo;@/components/ui/card&rdquo;;
+import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
+import { Button } from &ldquo;@/components/ui/button&rdquo;;
 import {
   Briefcase,
   Users,
   UserCheck,
   ArrowRight,
   Building,
-} from "lucide-react";
-import Link from "next/link";
-import { useEffect, useState } from "react";
+} from &ldquo;lucide-react&rdquo;;
+import Link from &ldquo;next/link&rdquo;;
+import { useEffect, useState } from &ldquo;react&rdquo;;
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from "@/components/ui/dialog";
+} from &ldquo;@/components/ui/dialog&rdquo;;
 
 // Componente de tarjeta de oferta con temporizador y modal
 function SimulatedJobCard() {
@@ -55,26 +55,26 @@ function SimulatedJobCard() {
 
   return (
     <>
-      <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg">
-        <div className="flex items-center gap-4">
-          <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
-            <Briefcase className="w-5 h-5 text-white" />
+      <div className=&ldquo;flex items-center justify-between p-4 bg-blue-50 rounded-lg&rdquo;>
+        <div className=&ldquo;flex items-center gap-4&rdquo;>
+          <div className=&ldquo;w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center&rdquo;>
+            <Briefcase className=&ldquo;w-5 h-5 text-white&rdquo; />
           </div>
           <div>
-            <h4 className="font-medium">Desarrollador Frontend Senior</h4>
-            <p className="text-sm text-gray-600">
+            <h4 className=&ldquo;font-medium&rdquo;>Desarrollador Frontend Senior</h4>
+            <p className=&ldquo;text-sm text-gray-600&rdquo;>
               Cierra en {secondsLeft}s
             </p>
           </div>
         </div>
-        <div className="text-right space-y-1">
-          <p className="font-medium">24 candidatos</p>
+        <div className=&ldquo;text-right space-y-1&rdquo;>
+          <p className=&ldquo;font-medium&rdquo;>24 candidatos</p>
           {result === null ? (
-            <Badge variant="default">Activa</Badge>
+            <Badge variant=&ldquo;default&rdquo;>Activa</Badge>
           ) : result ? (
-            <Badge variant="success">¡Contratado!</Badge>
+            <Badge variant=&ldquo;success&rdquo;>¡Contratado!</Badge>
           ) : (
-            <Badge variant="destructive">Sin contratar</Badge>
+            <Badge variant=&ldquo;destructive&rdquo;>Sin contratar</Badge>
           )}
         </div>
       </div>
@@ -85,8 +85,8 @@ function SimulatedJobCard() {
             <DialogTitle>Resultado de la Oferta</DialogTitle>
             <DialogDescription>
               {result
-                ? "🎉 ¡Se ha contratado un candidato exitosamente!"
-                : "❌ No se logró contratar a ningún candidato esta vez."}
+                ? &ldquo;🎉 ¡Se ha contratado un candidato exitosamente!&rdquo;
+                : &ldquo;❌ No se logró contratar a ningún candidato esta vez.&rdquo;}
             </DialogDescription>
           </DialogHeader>
         </DialogContent>
@@ -97,89 +97,89 @@ function SimulatedJobCard() {
 
 export function DashboardCompany() {
   return (
-    <div className="space-y-8 px-10 py-4">
+    <div className=&ldquo;space-y-8 px-10 py-4&rdquo;>
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg p-6 text-white">
-        <div className="flex items-center justify-between">
+      <div className=&ldquo;bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg p-6 text-white&rdquo;>
+        <div className=&ldquo;flex items-center justify-between&rdquo;>
           <div>
-            <h1 className="text-3xl font-bold mb-2">Panel de Empresa</h1>
-            <p className="text-blue-100">
+            <h1 className=&ldquo;text-3xl font-bold mb-2&rdquo;>Panel de Empresa</h1>
+            <p className=&ldquo;text-blue-100&rdquo;>
               Publica ofertas de empleo y gestiona tus procesos de selección
             </p>
           </div>
-          <Building className="w-16 h-16 text-blue-200 hidden md:block" />
+          <Building className=&ldquo;w-16 h-16 text-blue-200 hidden md:block&rdquo; />
         </div>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className=&ldquo;grid grid-cols-1 md:grid-cols-3 gap-4&rdquo;>
         <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-2">
-              <Briefcase className="w-5 h-5 text-blue-500" />
+          <CardContent className=&ldquo;p-4&rdquo;>
+            <div className=&ldquo;flex items-center space-x-2&rdquo;>
+              <Briefcase className=&ldquo;w-5 h-5 text-blue-500&rdquo; />
               <div>
-                <p className="text-sm font-medium">Ofertas Activas</p>
-                <p className="text-2xl font-bold">8</p>
+                <p className=&ldquo;text-sm font-medium&rdquo;>Ofertas Activas</p>
+                <p className=&ldquo;text-2xl font-bold&rdquo;>8</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-2">
-              <Users className="w-5 h-5 text-green-500" />
+          <CardContent className=&ldquo;p-4&rdquo;>
+            <div className=&ldquo;flex items-center space-x-2&rdquo;>
+              <Users className=&ldquo;w-5 h-5 text-green-500&rdquo; />
               <div>
-                <p className="text-sm font-medium">Candidatos Totales</p>
-                <p className="text-2xl font-bold">124</p>
+                <p className=&ldquo;text-sm font-medium&rdquo;>Candidatos Totales</p>
+                <p className=&ldquo;text-2xl font-bold&rdquo;>124</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-2">
-              <UserCheck className="w-5 h-5 text-purple-500" />
+          <CardContent className=&ldquo;p-4&rdquo;>
+            <div className=&ldquo;flex items-center space-x-2&rdquo;>
+              <UserCheck className=&ldquo;w-5 h-5 text-purple-500&rdquo; />
               <div>
-                <p className="text-sm font-medium">En Proceso</p>
-                <p className="text-2xl font-bold">15</p>
+                <p className=&ldquo;text-sm font-medium&rdquo;>En Proceso</p>
+                <p className=&ldquo;text-2xl font-bold&rdquo;>15</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-  <CardContent className="p-4">
-    <div className="flex items-center space-x-2">
-      <Briefcase className="w-5 h-5 text-gray-500" />
+  <CardContent className=&ldquo;p-4&rdquo;>
+    <div className=&ldquo;flex items-center space-x-2&rdquo;>
+      <Briefcase className=&ldquo;w-5 h-5 text-gray-500&rdquo; />
       <div>
-        <p className="text-sm font-medium">Ofertas Cerradas</p>
-        <p className="text-2xl font-bold">5</p>
+        <p className=&ldquo;text-sm font-medium&rdquo;>Ofertas Cerradas</p>
+        <p className=&ldquo;text-2xl font-bold&rdquo;>5</p>
       </div>
     </div>
   </CardContent>
 </Card>
 
 <Card>
-  <CardContent className="p-4">
-    <div className="flex items-center space-x-2">
-      <Users className="w-5 h-5 text-orange-500" />
+  <CardContent className=&ldquo;p-4&rdquo;>
+    <div className=&ldquo;flex items-center space-x-2&rdquo;>
+      <Users className=&ldquo;w-5 h-5 text-orange-500&rdquo; />
       <div>
-        <p className="text-sm font-medium">Candidatos por Oferta</p>
-        <p className="text-2xl font-bold">15.5</p>
+        <p className=&ldquo;text-sm font-medium&rdquo;>Candidatos por Oferta</p>
+        <p className=&ldquo;text-2xl font-bold&rdquo;>15.5</p>
       </div>
     </div>
   </CardContent>
 </Card>
 
 <Card>
-  <CardContent className="p-4">
-    <div className="flex items-center space-x-2">
-      <UserCheck className="w-5 h-5 text-teal-600" />
+  <CardContent className=&ldquo;p-4&rdquo;>
+    <div className=&ldquo;flex items-center space-x-2&rdquo;>
+      <UserCheck className=&ldquo;w-5 h-5 text-teal-600&rdquo; />
       <div>
-        <p className="text-sm font-medium">Tasa de Conversión</p>
-        <p className="text-2xl font-bold">12%</p>
+        <p className=&ldquo;text-sm font-medium&rdquo;>Tasa de Conversión</p>
+        <p className=&ldquo;text-2xl font-bold&rdquo;>12%</p>
       </div>
     </div>
   </CardContent>
@@ -188,17 +188,17 @@ export function DashboardCompany() {
       </div>
 
       {/* Crear Nueva Oferta */}
-      <Card className="border-dashed">
-        <CardContent className="p-6 text-center">
-          <Briefcase className="w-8 h-8 text-blue-500 mx-auto mb-4" />
-          <h3 className="text-lg font-medium mb-2">Publicar Nueva Oferta</h3>
-          <p className="text-gray-600 mb-4">
+      <Card className=&ldquo;border-dashed&rdquo;>
+        <CardContent className=&ldquo;p-6 text-center&rdquo;>
+          <Briefcase className=&ldquo;w-8 h-8 text-blue-500 mx-auto mb-4&rdquo; />
+          <h3 className=&ldquo;text-lg font-medium mb-2&rdquo;>Publicar Nueva Oferta</h3>
+          <p className=&ldquo;text-gray-600 mb-4&rdquo;>
             Crea una nueva publicación para atraer talento ideal
           </p>
           <Button asChild>
-            <Link href="/jobs/create">
+            <Link href=&ldquo;/jobs/create&rdquo;>
               Crear Oferta
-              <ArrowRight className="w-4 h-4 ml-2" />
+              <ArrowRight className=&ldquo;w-4 h-4 ml-2&rdquo; />
             </Link>
           </Button>
         </CardContent>
@@ -207,8 +207,8 @@ export function DashboardCompany() {
       {/* Ofertas activas destacadas */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Briefcase className="w-5 h-5" />
+          <CardTitle className=&ldquo;flex items-center gap-2&rdquo;>
+            <Briefcase className=&ldquo;w-5 h-5&rdquo; />
             Ofertas de Trabajo Activas
           </CardTitle>
           <CardDescription>
@@ -216,16 +216,16 @@ export function DashboardCompany() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
+          <div className=&ldquo;space-y-4&rdquo;>
             <SimulatedJobCard />
             {/* Puedes duplicar <SimulatedJobCard /> para simular más ofertas */}
           </div>
 
-          <div className="mt-4 pt-4 border-t">
-            <Button asChild className="w-full">
-              <Link href="/job-publishing/my-offers">
+          <div className=&ldquo;mt-4 pt-4 border-t&rdquo;>
+            <Button asChild className=&ldquo;w-full&rdquo;>
+              <Link href=&ldquo;/job-publishing/my-offers&rdquo;>
                 Ver Todas las Ofertas
-                <ArrowRight className="w-4 h-4 ml-2" />
+                <ArrowRight className=&ldquo;w-4 h-4 ml-2&rdquo; />
               </Link>
             </Button>
           </div>
@@ -238,8 +238,8 @@ export function DashboardCompany() {
       {/* Postulaciones Recientes */}
 <Card>
   <CardHeader>
-    <CardTitle className="flex items-center gap-2">
-      <Users className="w-5 h-5" />
+    <CardTitle className=&ldquo;flex items-center gap-2&rdquo;>
+      <Users className=&ldquo;w-5 h-5&rdquo; />
       Postulaciones Recientes
     </CardTitle>
     <CardDescription>
@@ -247,50 +247,50 @@ export function DashboardCompany() {
     </CardDescription>
   </CardHeader>
   <CardContent>
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4&rdquo;>
       {[
         {
-          name: "Ana Martínez",
-          email: "ana.martinez@email.com",
-          phone: "+591 77777777",
-          city: "La Paz",
-          education: "Bachiller - Colegio La Salle",
-          interests: ["Tecnología", "Marketing Digital", "Diseño"],
+          name: &ldquo;Ana Martínez&rdquo;,
+          email: &ldquo;ana.martinez@email.com&rdquo;,
+          phone: &ldquo;+591 77777777&rdquo;,
+          city: &ldquo;La Paz&rdquo;,
+          education: &ldquo;Bachiller - Colegio La Salle&rdquo;,
+          interests: [&ldquo;Tecnología&rdquo;, &ldquo;Marketing Digital&rdquo;, &ldquo;Diseño&rdquo;],
           cv: true,
           cover: false,
         },
         {
-          name: "Carlos Rojas",
-          email: "carlosr@email.com",
-          phone: "+591 78888888",
-          city: "Cochabamba",
-          education: "Técnico Medio - INFOCAL",
-          interests: ["Redes", "Hardware", "Sistemas"],
+          name: &ldquo;Carlos Rojas&rdquo;,
+          email: &ldquo;carlosr@email.com&rdquo;,
+          phone: &ldquo;+591 78888888&rdquo;,
+          city: &ldquo;Cochabamba&rdquo;,
+          education: &ldquo;Técnico Medio - INFOCAL&rdquo;,
+          interests: [&ldquo;Redes&rdquo;, &ldquo;Hardware&rdquo;, &ldquo;Sistemas&rdquo;],
           cv: true,
           cover: true,
         },
       ].map((user) => (
-        <Card key={user.email} className="border border-gray-200 p-4">
-          <div className="flex flex-col space-y-1 mb-2">
-            <h4 className="font-semibold text-base">{user.name}</h4>
-            <p className="text-sm text-gray-600">{user.email}</p>
-            <p className="text-sm text-gray-600">{user.phone}</p>
-            <p className="text-sm text-gray-600">{user.city}</p>
-            <p className="text-sm text-gray-600">{user.education}</p>
+        <Card key={user.email} className=&ldquo;border border-gray-200 p-4&rdquo;>
+          <div className=&ldquo;flex flex-col space-y-1 mb-2&rdquo;>
+            <h4 className=&ldquo;font-semibold text-base&rdquo;>{user.name}</h4>
+            <p className=&ldquo;text-sm text-gray-600&rdquo;>{user.email}</p>
+            <p className=&ldquo;text-sm text-gray-600&rdquo;>{user.phone}</p>
+            <p className=&ldquo;text-sm text-gray-600&rdquo;>{user.city}</p>
+            <p className=&ldquo;text-sm text-gray-600&rdquo;>{user.education}</p>
           </div>
-          <div className="flex flex-wrap gap-1 mb-2">
+          <div className=&ldquo;flex flex-wrap gap-1 mb-2&rdquo;>
             {user.interests.map((tag) => (
-              <Badge key={tag} variant="secondary">
+              <Badge key={tag} variant=&ldquo;secondary&rdquo;>
                 {tag}
               </Badge>
             ))}
           </div>
-          <div className="flex items-center justify-between">
-            <Badge variant={user.cv ? "success" : "destructive"}>
-              CV {user.cv ? "Disponible" : "Faltante"}
+          <div className=&ldquo;flex items-center justify-between&rdquo;>
+            <Badge variant={user.cv ? &ldquo;success&rdquo; : &ldquo;destructive&rdquo;}>
+              CV {user.cv ? &ldquo;Disponible&rdquo; : &ldquo;Faltante&rdquo;}
             </Badge>
-            <Badge variant={user.cover ? "success" : "destructive"}>
-              Carta {user.cover ? "Disponible" : "Faltante"}
+            <Badge variant={user.cover ? &ldquo;success&rdquo; : &ldquo;destructive&rdquo;}>
+              Carta {user.cover ? &ldquo;Disponible&rdquo; : &ldquo;Faltante&rdquo;}
             </Badge>
           </div>
         </Card>
@@ -301,18 +301,18 @@ export function DashboardCompany() {
 
 
       {/* Acciones rápidas */}
-      {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Card className="border-dashed">
-          <CardContent className="p-6 text-center">
-            <Users className="w-8 h-8 text-green-500 mx-auto mb-4" />
-            <h3 className="text-lg font-medium mb-2">Gestionar Candidatos</h3>
-            <p className="text-gray-600 mb-4">
+      {/* <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 gap-4&rdquo;>
+        <Card className=&ldquo;border-dashed&rdquo;>
+          <CardContent className=&ldquo;p-6 text-center&rdquo;>
+            <Users className=&ldquo;w-8 h-8 text-green-500 mx-auto mb-4&rdquo; />
+            <h3 className=&ldquo;text-lg font-medium mb-2&rdquo;>Gestionar Candidatos</h3>
+            <p className=&ldquo;text-gray-600 mb-4&rdquo;>
               Visualiza postulaciones y avanza en tus procesos de selección
             </p>
-            <Button variant="outline" asChild>
-              <Link href="/job-publishing/candidates">
+            <Button variant=&ldquo;outline&rdquo; asChild>
+              <Link href=&ldquo;/job-publishing/candidates&rdquo;>
                 Ver Candidatos
-                <ArrowRight className="w-4 h-4 ml-2" />
+                <ArrowRight className=&ldquo;w-4 h-4 ml-2&rdquo; />
               </Link>
             </Button>
           </CardContent>

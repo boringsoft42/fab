@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import { NextResponse } from &ldquo;next/server&rdquo;;
+import prisma from &ldquo;@/lib/prisma&rdquo;;
 
 export async function GET(
   request: Request,
@@ -10,11 +10,11 @@ export async function GET(
     // In production, this would fetch from your database
     const mockNews = {
       id: params.id,
-      title: "Nuevas oportunidades de empleo en el sector tecnológico",
+      title: &ldquo;Nuevas oportunidades de empleo en el sector tecnológico&rdquo;,
       summary:
-        "Importantes empresas tecnológicas abren sus puertas a jóvenes talentos",
+        &ldquo;Importantes empresas tecnológicas abren sus puertas a jóvenes talentos&rdquo;,
       content: `
-        <div class="prose max-w-none">
+        <div class=&ldquo;prose max-w-none&rdquo;>
           <p>Las principales empresas tecnológicas de la región han anunciado nuevas oportunidades de empleo específicamente diseñadas para jóvenes profesionales y estudiantes en último año.</p>
           
           <h3>Principales áreas de oportunidad:</h3>
@@ -51,25 +51,25 @@ export async function GET(
           </ol>
         </div>
       `,
-      imageUrl: "/window.svg",
-      authorName: "TechCorp",
-      authorType: "COMPANY",
-      authorLogo: "/logos/techcorp.svg",
-      priority: "HIGH",
-      category: "Empleos",
+      imageUrl: &ldquo;/window.svg&rdquo;,
+      authorName: &ldquo;TechCorp&rdquo;,
+      authorType: &ldquo;COMPANY&rdquo;,
+      authorLogo: &ldquo;/logos/techcorp.svg&rdquo;,
+      priority: &ldquo;HIGH&rdquo;,
+      category: &ldquo;Empleos&rdquo;,
       publishedAt: new Date().toISOString(),
       viewCount: 156,
       likeCount: 45,
       commentCount: 12,
       shareCount: 8,
-      tags: ["Tecnología", "Empleo Joven", "Desarrollo Profesional"],
+      tags: [&ldquo;Tecnología&rdquo;, &ldquo;Empleo Joven&rdquo;, &ldquo;Desarrollo Profesional&rdquo;],
       featured: true,
       readTime: 5,
     };
 
     return NextResponse.json(mockNews);
   } catch (error) {
-    console.error("Error fetching news:", error);
-    return new NextResponse("Internal Server Error", { status: 500 });
+    console.error(&ldquo;Error fetching news:&rdquo;, error);
+    return new NextResponse(&ldquo;Internal Server Error&rdquo;, { status: 500 });
   }
 }

@@ -1,27 +1,27 @@
-"use client";
+&ldquo;use client&rdquo;;
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { ArrowLeft, Save, Eye } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import dynamic from "next/dynamic";
-const MapPicker = dynamic(() => import("@/components/dashboard/MapPicker"), { ssr: false });
+import { useState } from &ldquo;react&rdquo;;
+import { useRouter } from &ldquo;next/navigation&rdquo;;
+import { ArrowLeft, Save, Eye } from &ldquo;lucide-react&rdquo;;
+import { Button } from &ldquo;@/components/ui/button&rdquo;;
+import { Card, CardContent, CardHeader, CardTitle } from &ldquo;@/components/ui/card&rdquo;;
+import { Input } from &ldquo;@/components/ui/input&rdquo;;
+import { Label } from &ldquo;@/components/ui/label&rdquo;;
+import { Textarea } from &ldquo;@/components/ui/textarea&rdquo;;
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from &ldquo;@/components/ui/dialog&rdquo;;
+import dynamic from &ldquo;next/dynamic&rdquo;;
+const MapPicker = dynamic(() => import(&ldquo;@/components/dashboard/MapPicker&rdquo;), { ssr: false });
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { useToast } from "@/components/ui/use-toast";
+} from &ldquo;@/components/ui/select&rdquo;;
+import { Checkbox } from &ldquo;@/components/ui/checkbox&rdquo;;
+import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
+import { Separator } from &ldquo;@/components/ui/separator&rdquo;;
+import { useToast } from &ldquo;@/components/ui/use-toast&rdquo;;
 import {
   JobOffer,
   ContractType,
@@ -29,16 +29,15 @@ import {
   ExperienceLevel,
   JobStatus,
   JobQuestion,
-} from "@/types/jobs";
+} from &ldquo;@/types/jobs&rdquo;;
 
-import { ImageIcon, Trash } from "lucide-react";
-import { useRef } from "react";
+import { ImageIcon, Trash } from &ldquo;lucide-react&rdquo;;
+import { useRef } from &ldquo;react&rdquo;;
 
 
 
 
 export default function CreateJobPage() {
-  const router = useRouter();
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [images, setImages] = useState<string[]>([]);
@@ -82,51 +81,51 @@ export default function CreateJobPage() {
 
   // Form state
   const [jobData, setJobData] = useState({
-    title: "",
-    description: "",
-    location: "Cochabamba, Bolivia",
-    contractType: "" as ContractType,
-    workModality: "" as WorkModality,
-    experienceLevel: "" as ExperienceLevel,
-    salaryMin: "",
-    salaryMax: "",
-    salaryCurrency: "BOB",
+    title: &ldquo;&rdquo;,
+    description: &ldquo;&rdquo;,
+    location: &ldquo;Cochabamba, Bolivia&rdquo;,
+    contractType: &ldquo;&rdquo; as ContractType,
+    workModality: &ldquo;&rdquo; as WorkModality,
+    experienceLevel: &ldquo;&rdquo; as ExperienceLevel,
+    salaryMin: &ldquo;&rdquo;,
+    salaryMax: &ldquo;&rdquo;,
+    salaryCurrency: &ldquo;BOB&rdquo;,
     requiredSkills: [] as string[],
     desiredSkills: [] as string[],
     benefits: [] as string[],
     requirements: [] as string[],
     responsibilities: [] as string[],
-    closingDate: "",
+    closingDate: &ldquo;&rdquo;,
     questions: [] as JobQuestion[],
     coordinates: null as [number, number] | null,
-    workSchedule: "",
+    workSchedule: &ldquo;&rdquo;,
   });
 
-  const [skillInput, setSkillInput] = useState("");
-  const [benefitInput, setBenefitInput] = useState("");
-  const [requirementInput, setRequirementInput] = useState("");
-  const [responsibilityInput, setResponsibilityInput] = useState("");
-  const [questionInput, setQuestionInput] = useState("");
+  const [skillInput, setSkillInput] = useState(&ldquo;&rdquo;);
+  const [benefitInput, setBenefitInput] = useState(&ldquo;&rdquo;);
+  const [requirementInput, setRequirementInput] = useState(&ldquo;&rdquo;);
+  const [responsibilityInput, setResponsibilityInput] = useState(&ldquo;&rdquo;);
+  const [questionInput, setQuestionInput] = useState(&ldquo;&rdquo;);
 
   const contractTypeOptions = [
-    { value: "FULL_TIME", label: "Tiempo completo" },
-    { value: "PART_TIME", label: "Medio tiempo" },
-    { value: "INTERNSHIP", label: "Prácticas" },
-    { value: "VOLUNTEER", label: "Voluntariado" },
-    { value: "FREELANCE", label: "Freelance" },
+    { value: &ldquo;FULL_TIME&rdquo;, label: &ldquo;Tiempo completo&rdquo; },
+    { value: &ldquo;PART_TIME&rdquo;, label: &ldquo;Medio tiempo&rdquo; },
+    { value: &ldquo;INTERNSHIP&rdquo;, label: &ldquo;Prácticas&rdquo; },
+    { value: &ldquo;VOLUNTEER&rdquo;, label: &ldquo;Voluntariado&rdquo; },
+    { value: &ldquo;FREELANCE&rdquo;, label: &ldquo;Freelance&rdquo; },
   ];
 
   const workModalityOptions = [
-    { value: "ON_SITE", label: "Presencial" },
-    { value: "REMOTE", label: "Remoto" },
-    { value: "HYBRID", label: "Híbrido" },
+    { value: &ldquo;ON_SITE&rdquo;, label: &ldquo;Presencial&rdquo; },
+    { value: &ldquo;REMOTE&rdquo;, label: &ldquo;Remoto&rdquo; },
+    { value: &ldquo;HYBRID&rdquo;, label: &ldquo;Híbrido&rdquo; },
   ];
 
   const experienceLevelOptions = [
-    { value: "NO_EXPERIENCE", label: "Sin experiencia" },
-    { value: "ENTRY_LEVEL", label: "Principiante" },
-    { value: "MID_LEVEL", label: "Intermedio" },
-    { value: "SENIOR_LEVEL", label: "Senior" },
+    { value: &ldquo;NO_EXPERIENCE&rdquo;, label: &ldquo;Sin experiencia&rdquo; },
+    { value: &ldquo;ENTRY_LEVEL&rdquo;, label: &ldquo;Principiante&rdquo; },
+    { value: &ldquo;MID_LEVEL&rdquo;, label: &ldquo;Intermedio&rdquo; },
+    { value: &ldquo;SENIOR_LEVEL&rdquo;, label: &ldquo;Senior&rdquo; },
   ];
 
   const addToArray = (
@@ -139,7 +138,7 @@ export default function CreateJobPage() {
         ...prev,
         [field]: [...(prev[field] as string[]), value.trim()],
       }));
-      setInput("");
+      setInput(&ldquo;&rdquo;);
     }
   };
 
@@ -155,7 +154,7 @@ export default function CreateJobPage() {
       const newQuestion: JobQuestion = {
         id: `q${Date.now()}`,
         question: questionInput.trim(),
-        type: "TEXT",
+        type: &ldquo;TEXT&rdquo;,
         required: false,
       };
 
@@ -163,7 +162,7 @@ export default function CreateJobPage() {
         ...prev,
         questions: [...prev.questions, newQuestion],
       }));
-      setQuestionInput("");
+      setQuestionInput(&ldquo;&rdquo;);
     }
   };
 
@@ -185,19 +184,19 @@ export default function CreateJobPage() {
 
   const validateForm = () => {
     const required = [
-      "title",
-      "description",
-      "contractType",
-      "workModality",
-      "experienceLevel",
+      &ldquo;title&rdquo;,
+      &ldquo;description&rdquo;,
+      &ldquo;contractType&rdquo;,
+      &ldquo;workModality&rdquo;,
+      &ldquo;experienceLevel&rdquo;,
     ];
 
     for (const field of required) {
       if (!jobData[field as keyof typeof jobData]) {
         toast({
-          title: "Campos requeridos",
+          title: &ldquo;Campos requeridos&rdquo;,
           description: `Por favor completa el campo: ${field}`,
-          variant: "destructive",
+          variant: &ldquo;destructive&rdquo;,
         });
         return false;
       }
@@ -205,9 +204,9 @@ export default function CreateJobPage() {
 
     if (jobData.requiredSkills.length === 0) {
       toast({
-        title: "Habilidades requeridas",
-        description: "Agrega al menos una habilidad requerida",
-        variant: "destructive",
+        title: &ldquo;Habilidades requeridas&rdquo;,
+        description: &ldquo;Agrega al menos una habilidad requerida&rdquo;,
+        variant: &ldquo;destructive&rdquo;,
       });
       return false;
     }
@@ -227,41 +226,40 @@ export default function CreateJobPage() {
         closingDate: jobData.closingDate || undefined,
         status,
         company: {
-          id: "company-1", // In real app, get from auth
-          name: "TechCorp Bolivia",
-          logo: "/logos/techcorp.svg",
-          description: "Empresa líder en desarrollo de software",
-          sector: "Tecnología",
-          size: "51-200 empleados",
-          location: "Cochabamba, Bolivia",
+          id: &ldquo;company-1&rdquo;, // In real app, get from auth
+          name: &ldquo;TechCorp Bolivia&rdquo;,
+          logo: &ldquo;/logos/techcorp.svg&rdquo;,
+          description: &ldquo;Empresa líder en desarrollo de software&rdquo;,
+          sector: &ldquo;Tecnología&rdquo;,
+          size: &ldquo;51-200 empleados&rdquo;,
+          location: &ldquo;Cochabamba, Bolivia&rdquo;,
           rating: 4.5,
           reviewCount: 28,
         },
       };
 
-      const response = await fetch("/api/jobs", {
-        method: "POST",
+      const response = await fetch(&ldquo;/api/jobs&rdquo;, {
+        method: &ldquo;POST&rdquo;,
         headers: {
-          "Content-Type": "application/json",
+          &ldquo;Content-Type&rdquo;: &ldquo;application/json&rdquo;,
         },
         body: JSON.stringify(newJob),
       });
 
       if (response.ok) {
-        const createdJob = await response.json();
         toast({
-          title: "Empleo creado",
-          description: `El empleo ha sido ${status === "ACTIVE" ? "publicado" : "guardado como borrador"}`,
+          title: &ldquo;Empleo creado&rdquo;,
+          description: `El empleo ha sido ${status === &ldquo;ACTIVE&rdquo; ? &ldquo;publicado&rdquo; : &ldquo;guardado como borrador&rdquo;}`,
         });
-        router.push("/jobs/manage");
+        router.push(&ldquo;/jobs/manage&rdquo;);
       } else {
-        throw new Error("Error creating job");
+        throw new Error(&ldquo;Error creating job&rdquo;);
       }
     } catch (error) {
       toast({
-        title: "Error",
-        description: "No se pudo crear el empleo. Inténtalo de nuevo.",
-        variant: "destructive",
+        title: &ldquo;Error&rdquo;,
+        description: &ldquo;No se pudo crear el empleo. Inténtalo de nuevo.&rdquo;,
+        variant: &ldquo;destructive&rdquo;,
       });
     } finally {
       setLoading(false);
@@ -271,21 +269,21 @@ export default function CreateJobPage() {
   if (preview) {
     // Show preview of the job posting
     return (
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="flex items-center justify-between mb-6">
-          <Button variant="ghost" onClick={() => setPreview(false)}>
-            <ArrowLeft className="w-4 h-4 mr-2" />
+      <div className=&ldquo;max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6&rdquo;>
+        <div className=&ldquo;flex items-center justify-between mb-6&rdquo;>
+          <Button variant=&ldquo;ghost&rdquo; onClick={() => setPreview(false)}>
+            <ArrowLeft className=&ldquo;w-4 h-4 mr-2&rdquo; />
             Volver a editar
           </Button>
-          <div className="space-x-2">
+          <div className=&ldquo;space-x-2&rdquo;>
             <Button
-              variant="outline"
-              onClick={() => handleSubmit("DRAFT")}
+              variant=&ldquo;outline&rdquo;
+              onClick={() => handleSubmit(&ldquo;DRAFT&rdquo;)}
               disabled={loading}
             >
               Guardar borrador
             </Button>
-            <Button onClick={() => handleSubmit("ACTIVE")} disabled={loading}>
+            <Button onClick={() => handleSubmit(&ldquo;ACTIVE&rdquo;)} disabled={loading}>
               Publicar empleo
             </Button>
           </div>
@@ -294,35 +292,35 @@ export default function CreateJobPage() {
         {/* Job Preview */}
         <Card>
           <CardHeader>
-            <div className="flex items-center space-x-4">
-              <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
-                <span className="text-xl font-bold text-gray-600">TC</span>
+            <div className=&ldquo;flex items-center space-x-4&rdquo;>
+              <div className=&ldquo;w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center&rdquo;>
+                <span className=&ldquo;text-xl font-bold text-gray-600&rdquo;>TC</span>
               </div>
               <div>
-                <h1 className="text-2xl font-bold">{jobData.title}</h1>
-                <p className="text-gray-600">TechCorp Bolivia</p>
-                <p className="text-sm text-gray-500">{jobData.location}</p>
+                <h1 className=&ldquo;text-2xl font-bold&rdquo;>{jobData.title}</h1>
+                <p className=&ldquo;text-gray-600&rdquo;>TechCorp Bolivia</p>
+                <p className=&ldquo;text-sm text-gray-500&rdquo;>{jobData.location}</p>
               </div>
             </div>
           </CardHeader>
           <CardContent>
-            <div className="space-y-6">
-              <div className="flex flex-wrap gap-2">
-                <Badge variant="secondary">
+            <div className=&ldquo;space-y-6&rdquo;>
+              <div className=&ldquo;flex flex-wrap gap-2&rdquo;>
+                <Badge variant=&ldquo;secondary&rdquo;>
                   {
                     contractTypeOptions.find(
                       (o) => o.value === jobData.contractType
                     )?.label
                   }
                 </Badge>
-                <Badge variant="outline">
+                <Badge variant=&ldquo;outline&rdquo;>
                   {
                     workModalityOptions.find(
                       (o) => o.value === jobData.workModality
                     )?.label
                   }
                 </Badge>
-                <Badge variant="outline">
+                <Badge variant=&ldquo;outline&rdquo;>
                   {
                     experienceLevelOptions.find(
                       (o) => o.value === jobData.experienceLevel
@@ -332,19 +330,19 @@ export default function CreateJobPage() {
               </div>
 
               <div>
-                <h3 className="font-semibold mb-2">Descripción</h3>
-                <p className="text-gray-700 whitespace-pre-wrap">
+                <h3 className=&ldquo;font-semibold mb-2&rdquo;>Descripción</h3>
+                <p className=&ldquo;text-gray-700 whitespace-pre-wrap&rdquo;>
                   {jobData.description}
                 </p>
               </div>
 
               {jobData.responsibilities.length > 0 && (
                 <div>
-                  <h3 className="font-semibold mb-2">Responsabilidades</h3>
-                  <ul className="space-y-1">
+                  <h3 className=&ldquo;font-semibold mb-2&rdquo;>Responsabilidades</h3>
+                  <ul className=&ldquo;space-y-1&rdquo;>
                     {jobData.responsibilities.map((resp, i) => (
-                      <li key={i} className="flex items-start space-x-2">
-                        <span className="w-2 h-2 bg-blue-600 rounded-full mt-2" />
+                      <li key={i} className=&ldquo;flex items-start space-x-2&rdquo;>
+                        <span className=&ldquo;w-2 h-2 bg-blue-600 rounded-full mt-2&rdquo; />
                         <span>{resp}</span>
                       </li>
                     ))}
@@ -353,8 +351,8 @@ export default function CreateJobPage() {
               )}
 
               <div>
-                <h3 className="font-semibold mb-2">Habilidades requeridas</h3>
-                <div className="flex flex-wrap gap-2">
+                <h3 className=&ldquo;font-semibold mb-2&rdquo;>Habilidades requeridas</h3>
+                <div className=&ldquo;flex flex-wrap gap-2&rdquo;>
                   {jobData.requiredSkills.map((skill, i) => (
                     <Badge key={i}>{skill}</Badge>
                   ))}
@@ -371,28 +369,28 @@ export default function CreateJobPage() {
 
     
     
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div className=&ldquo;max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6&rdquo;>
       <Dialog open={showIncompleteProfileModal} onOpenChange={setShowIncompleteProfileModal}>
-  <DialogContent className="z-[9999] max-w-md">
+  <DialogContent className=&ldquo;z-[9999] max-w-md&rdquo;>
     <DialogHeader>
       <DialogTitle>Perfil Incompleto</DialogTitle>
     </DialogHeader>
-    <div className="space-y-4">
-      <p className="text-gray-700 text-sm">
+    <div className=&ldquo;space-y-4&rdquo;>
+      <p className=&ldquo;text-gray-700 text-sm&rdquo;>
         Para publicar una oferta de empleo, debes completar primero tu perfil de empresa.
       </p>
-      <p className="text-gray-500 text-xs">
+      <p className=&ldquo;text-gray-500 text-xs&rdquo;>
         Asegúrate de agregar información como descripción, logo, redes sociales y más.
       </p>
     </div>
-    <div className="flex justify-end gap-2 mt-6">
-      <Button variant="outline" onClick={() => setShowIncompleteProfileModal(false)}>
+    <div className=&ldquo;flex justify-end gap-2 mt-6&rdquo;>
+      <Button variant=&ldquo;outline&rdquo; onClick={() => setShowIncompleteProfileModal(false)}>
         Cerrar
       </Button>
       <Button
         onClick={() => {
           setShowIncompleteProfileModal(false);
-          router.push("/profile"); // Redirige a completar perfil
+          router.push(&ldquo;/profile&rdquo;); // Redirige a completar perfil
         }}
       >
         Completar Perfil
@@ -402,28 +400,28 @@ export default function CreateJobPage() {
 </Dialog>
 
       <Dialog open={showTermsModal} onOpenChange={setShowTermsModal}>
-      <DialogContent className="z-[9999] max-w-lg">
+      <DialogContent className=&ldquo;z-[9999] max-w-lg&rdquo;>
     <DialogHeader>
       <DialogTitle>Confirmación de publicación</DialogTitle>
     </DialogHeader>
 
-    <div className="space-y-4">
-      <p className="text-gray-700 text-sm">
+    <div className=&ldquo;space-y-4&rdquo;>
+      <p className=&ldquo;text-gray-700 text-sm&rdquo;>
         Al publicar esta oferta confirmas que los datos proporcionados son verídicos y que aceptas nuestros Términos y Condiciones.
       </p>
-      <p className="text-gray-500 text-xs">
+      <p className=&ldquo;text-gray-500 text-xs&rdquo;>
         El contenido ofensivo, falso o que incumpla las reglas de la plataforma puede ser eliminado.
       </p>
     </div>
 
-    <div className="flex justify-end gap-2 mt-6">
-      <Button variant="outline" onClick={() => setShowTermsModal(false)}>
+    <div className=&ldquo;flex justify-end gap-2 mt-6&rdquo;>
+      <Button variant=&ldquo;outline&rdquo; onClick={() => setShowTermsModal(false)}>
         Cancelar
       </Button>
       <Button
         onClick={() => {
           setShowTermsModal(false);
-          handleSubmit("ACTIVE");
+          handleSubmit(&ldquo;ACTIVE&rdquo;);
         }}
       >
         Aceptar y Publicar
@@ -433,41 +431,41 @@ export default function CreateJobPage() {
 </Dialog>
 
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center space-x-4">
-          <Button variant="ghost" onClick={() => router.back()}>
-            <ArrowLeft className="w-4 h-4 mr-2" />
+      <div className=&ldquo;flex items-center justify-between mb-6&rdquo;>
+        <div className=&ldquo;flex items-center space-x-4&rdquo;>
+          <Button variant=&ldquo;ghost&rdquo; onClick={() => router.back()}>
+            <ArrowLeft className=&ldquo;w-4 h-4 mr-2&rdquo; />
             Volver
           </Button>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">
+            <h1 className=&ldquo;text-2xl font-bold text-gray-900&rdquo;>
               Crear Nuevo Empleo
             </h1>
-            <p className="text-gray-600">
+            <p className=&ldquo;text-gray-600&rdquo;>
               Completa la información para publicar tu oferta laboral
             </p>
           </div>
         </div>
-        <div className="space-x-2">
-          <Button variant="outline" onClick={() => setPreview(true)}>
-            <Eye className="w-4 h-4 mr-2" />
+        <div className=&ldquo;space-x-2&rdquo;>
+          <Button variant=&ldquo;outline&rdquo; onClick={() => setPreview(true)}>
+            <Eye className=&ldquo;w-4 h-4 mr-2&rdquo; />
             Vista previa
           </Button>
         </div>
       </div>
 
-      <div className="space-y-6">
+      <div className=&ldquo;space-y-6&rdquo;>
         {/* Basic Information */}
         <Card>
           <CardHeader>
             <CardTitle>Información Básica</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className=&ldquo;space-y-4&rdquo;>
             <div>
-              <Label htmlFor="title">Título del empleo *</Label>
+              <Label htmlFor=&ldquo;title&rdquo;>Título del empleo *</Label>
               <Input
-                id="title"
-                placeholder="Ej: Desarrollador Frontend Junior"
+                id=&ldquo;title&rdquo;
+                placeholder=&ldquo;Ej: Desarrollador Frontend Junior&rdquo;
                 value={jobData.title}
                 onChange={(e) =>
                   setJobData((prev) => ({ ...prev, title: e.target.value }))
@@ -476,10 +474,10 @@ export default function CreateJobPage() {
             </div>
 
             <div>
-              <Label htmlFor="description">Descripción del empleo *</Label>
+              <Label htmlFor=&ldquo;description&rdquo;>Descripción del empleo *</Label>
               <Textarea
-                id="description"
-                placeholder="Describe el puesto, responsabilidades principales y qué buscan en el candidato ideal..."
+                id=&ldquo;description&rdquo;
+                placeholder=&ldquo;Describe el puesto, responsabilidades principales y qué buscan en el candidato ideal...&rdquo;
                 value={jobData.description}
                 onChange={(e) =>
                   setJobData((prev) => ({
@@ -487,15 +485,15 @@ export default function CreateJobPage() {
                     description: e.target.value,
                   }))
                 }
-                className="min-h-[120px]"
+                className=&ldquo;min-h-[120px]&rdquo;
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 gap-4&rdquo;>
               <div>
-                <Label htmlFor="location">Ubicación</Label>
+                <Label htmlFor=&ldquo;location&rdquo;>Ubicación</Label>
                 <Input
-                  id="location"
+                  id=&ldquo;location&rdquo;
                   value={jobData.location}
                   onChange={(e) =>
                     setJobData((prev) => ({
@@ -506,7 +504,7 @@ export default function CreateJobPage() {
                 />
               </div>
               <div>
-                <Label htmlFor="contractType">Tipo de contrato *</Label>
+                <Label htmlFor=&ldquo;contractType&rdquo;>Tipo de contrato *</Label>
                 <Select
                   value={jobData.contractType}
                   onValueChange={(value) =>
@@ -517,7 +515,7 @@ export default function CreateJobPage() {
                   }
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Selecciona tipo" />
+                    <SelectValue placeholder=&ldquo;Selecciona tipo&rdquo; />
                   </SelectTrigger>
                   <SelectContent>
                     {contractTypeOptions.map((option) => (
@@ -530,9 +528,9 @@ export default function CreateJobPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 gap-4&rdquo;>
               <div>
-                <Label htmlFor="workModality">Modalidad de trabajo *</Label>
+                <Label htmlFor=&ldquo;workModality&rdquo;>Modalidad de trabajo *</Label>
                 <Select
                   value={jobData.workModality}
                   onValueChange={(value) =>
@@ -543,7 +541,7 @@ export default function CreateJobPage() {
                   }
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Selecciona modalidad" />
+                    <SelectValue placeholder=&ldquo;Selecciona modalidad&rdquo; />
                   </SelectTrigger>
                   <SelectContent>
                     {workModalityOptions.map((option) => (
@@ -555,7 +553,7 @@ export default function CreateJobPage() {
                 </Select>
               </div>
               <div>
-                <Label htmlFor="experienceLevel">Nivel de experiencia *</Label>
+                <Label htmlFor=&ldquo;experienceLevel&rdquo;>Nivel de experiencia *</Label>
                 <Select
                   value={jobData.experienceLevel}
                   onValueChange={(value) =>
@@ -566,7 +564,7 @@ export default function CreateJobPage() {
                   }
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Selecciona nivel" />
+                    <SelectValue placeholder=&ldquo;Selecciona nivel&rdquo; />
                   </SelectTrigger>
                   <SelectContent>
                     {experienceLevelOptions.map((option) => (
@@ -579,13 +577,13 @@ export default function CreateJobPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className=&ldquo;grid grid-cols-1 md:grid-cols-3 gap-4&rdquo;>
   <div>
-    <Label htmlFor="salaryMin">Salario mínimo (BOB)</Label>
+    <Label htmlFor=&ldquo;salaryMin&rdquo;>Salario mínimo (BOB)</Label>
     <Input
-      id="salaryMin"
-      type="number"
-      placeholder="3000"
+      id=&ldquo;salaryMin&rdquo;
+      type=&ldquo;number&rdquo;
+      placeholder=&ldquo;3000&rdquo;
       value={jobData.salaryMin}
       onChange={(e) =>
         setJobData((prev) => ({
@@ -597,11 +595,11 @@ export default function CreateJobPage() {
   </div>
 
   <div>
-    <Label htmlFor="salaryMax">Salario máximo (BOB)</Label>
+    <Label htmlFor=&ldquo;salaryMax&rdquo;>Salario máximo (BOB)</Label>
     <Input
-      id="salaryMax"
-      type="number"
-      placeholder="5000"
+      id=&ldquo;salaryMax&rdquo;
+      type=&ldquo;number&rdquo;
+      placeholder=&ldquo;5000&rdquo;
       value={jobData.salaryMax}
       onChange={(e) =>
         setJobData((prev) => ({
@@ -613,10 +611,10 @@ export default function CreateJobPage() {
   </div>
 
   <div>
-    <Label htmlFor="closingDate">Fecha de inicial</Label>
+    <Label htmlFor=&ldquo;closingDate&rdquo;>Fecha de inicial</Label>
     <Input
-      id="closingDate"
-      type="date"
+      id=&ldquo;closingDate&rdquo;
+      type=&ldquo;date&rdquo;
       value={jobData.closingDate}
       onChange={(e) =>
         setJobData((prev) => ({
@@ -627,10 +625,10 @@ export default function CreateJobPage() {
     />
   </div>
   <div>
-    <Label htmlFor="closingDate">Fecha termino</Label>
+    <Label htmlFor=&ldquo;closingDate&rdquo;>Fecha termino</Label>
     <Input
-      id="closingDate"
-      type="date"
+      id=&ldquo;closingDate&rdquo;
+      type=&ldquo;date&rdquo;
       value={jobData.closingDate}
       onChange={(e) =>
         setJobData((prev) => ({
@@ -641,12 +639,12 @@ export default function CreateJobPage() {
     />
   </div>
 
-  <div className="md:col-span-3">
-    <Label htmlFor="workSchedule">Horario de trabajo</Label>
+  <div className=&ldquo;md:col-span-3&rdquo;>
+    <Label htmlFor=&ldquo;workSchedule&rdquo;>Horario de trabajo</Label>
     <Input
-      id="workSchedule"
-      placeholder="Ej: Lunes a viernes, 8:00 a 17:00"
-      value={jobData.workSchedule || ""}
+      id=&ldquo;workSchedule&rdquo;
+      placeholder=&ldquo;Ej: Lunes a viernes, 8:00 a 17:00&rdquo;
+      value={jobData.workSchedule || &ldquo;&rdquo;}
       onChange={(e) =>
         setJobData((prev) => ({
           ...prev,
@@ -665,38 +663,38 @@ export default function CreateJobPage() {
           <CardHeader>
             <CardTitle>Habilidades y Requisitos</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className=&ldquo;space-y-6&rdquo;>
             {/* Required Skills */}
             <div>
               <Label>Habilidades requeridas *</Label>
-              <div className="flex space-x-2 mt-2">
+              <div className=&ldquo;flex space-x-2 mt-2&rdquo;>
                 <Input
-                  placeholder="Ej: React, JavaScript, etc."
+                  placeholder=&ldquo;Ej: React, JavaScript, etc.&rdquo;
                   value={skillInput}
                   onChange={(e) => setSkillInput(e.target.value)}
                   onKeyPress={(e) => {
-                    if (e.key === "Enter") {
+                    if (e.key === &ldquo;Enter&rdquo;) {
                       e.preventDefault();
-                      addToArray("requiredSkills", skillInput, setSkillInput);
+                      addToArray(&ldquo;requiredSkills&rdquo;, skillInput, setSkillInput);
                     }
                   }}
                 />
                 <Button
-                  type="button"
+                  type=&ldquo;button&rdquo;
                   onClick={() =>
-                    addToArray("requiredSkills", skillInput, setSkillInput)
+                    addToArray(&ldquo;requiredSkills&rdquo;, skillInput, setSkillInput)
                   }
                 >
                   Agregar
                 </Button>
               </div>
-              <div className="flex flex-wrap gap-2 mt-2">
+              <div className=&ldquo;flex flex-wrap gap-2 mt-2&rdquo;>
                 {jobData.requiredSkills.map((skill, i) => (
                   <Badge
                     key={i}
-                    variant="default"
-                    className="cursor-pointer"
-                    onClick={() => removeFromArray("requiredSkills", i)}
+                    variant=&ldquo;default&rdquo;
+                    className=&ldquo;cursor-pointer&rdquo;
+                    onClick={() => removeFromArray(&ldquo;requiredSkills&rdquo;, i)}
                   >
                     {skill} ×
                   </Badge>
@@ -707,16 +705,16 @@ export default function CreateJobPage() {
             {/* Requirements */}
             <div>
               <Label>Requisitos</Label>
-              <div className="flex space-x-2 mt-2">
+              <div className=&ldquo;flex space-x-2 mt-2&rdquo;>
                 <Input
-                  placeholder="Ej: Título universitario en ingeniería"
+                  placeholder=&ldquo;Ej: Título universitario en ingeniería&rdquo;
                   value={requirementInput}
                   onChange={(e) => setRequirementInput(e.target.value)}
                   onKeyPress={(e) => {
-                    if (e.key === "Enter") {
+                    if (e.key === &ldquo;Enter&rdquo;) {
                       e.preventDefault();
                       addToArray(
-                        "requirements",
+                        &ldquo;requirements&rdquo;,
                         requirementInput,
                         setRequirementInput
                       );
@@ -724,10 +722,10 @@ export default function CreateJobPage() {
                   }}
                 />
                 <Button
-                  type="button"
+                  type=&ldquo;button&rdquo;
                   onClick={() =>
                     addToArray(
-                      "requirements",
+                      &ldquo;requirements&rdquo;,
                       requirementInput,
                       setRequirementInput
                     )
@@ -736,17 +734,17 @@ export default function CreateJobPage() {
                   Agregar
                 </Button>
               </div>
-              <div className="space-y-1 mt-2">
+              <div className=&ldquo;space-y-1 mt-2&rdquo;>
                 {jobData.requirements.map((req, i) => (
                   <div
                     key={i}
-                    className="flex items-center justify-between p-2 bg-gray-50 rounded"
+                    className=&ldquo;flex items-center justify-between p-2 bg-gray-50 rounded&rdquo;
                   >
-                    <span className="text-sm">{req}</span>
+                    <span className=&ldquo;text-sm&rdquo;>{req}</span>
                     <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => removeFromArray("requirements", i)}
+                      size=&ldquo;sm&rdquo;
+                      variant=&ldquo;ghost&rdquo;
+                      onClick={() => removeFromArray(&ldquo;requirements&rdquo;, i)}
                     >
                       ×
                     </Button>
@@ -758,16 +756,16 @@ export default function CreateJobPage() {
             {/* Responsibilities */}
             <div>
               <Label>Responsabilidades</Label>
-              <div className="flex space-x-2 mt-2">
+              <div className=&ldquo;flex space-x-2 mt-2&rdquo;>
                 <Input
-                  placeholder="Ej: Desarrollar interfaces de usuario"
+                  placeholder=&ldquo;Ej: Desarrollar interfaces de usuario&rdquo;
                   value={responsibilityInput}
                   onChange={(e) => setResponsibilityInput(e.target.value)}
                   onKeyPress={(e) => {
-                    if (e.key === "Enter") {
+                    if (e.key === &ldquo;Enter&rdquo;) {
                       e.preventDefault();
                       addToArray(
-                        "responsibilities",
+                        &ldquo;responsibilities&rdquo;,
                         responsibilityInput,
                         setResponsibilityInput
                       );
@@ -775,10 +773,10 @@ export default function CreateJobPage() {
                   }}
                 />
                 <Button
-                  type="button"
+                  type=&ldquo;button&rdquo;
                   onClick={() =>
                     addToArray(
-                      "responsibilities",
+                      &ldquo;responsibilities&rdquo;,
                       responsibilityInput,
                       setResponsibilityInput
                     )
@@ -787,17 +785,17 @@ export default function CreateJobPage() {
                   Agregar
                 </Button>
               </div>
-              <div className="space-y-1 mt-2">
+              <div className=&ldquo;space-y-1 mt-2&rdquo;>
                 {jobData.responsibilities.map((resp, i) => (
                   <div
                     key={i}
-                    className="flex items-center justify-between p-2 bg-gray-50 rounded"
+                    className=&ldquo;flex items-center justify-between p-2 bg-gray-50 rounded&rdquo;
                   >
-                    <span className="text-sm">{resp}</span>
+                    <span className=&ldquo;text-sm&rdquo;>{resp}</span>
                     <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => removeFromArray("responsibilities", i)}
+                      size=&ldquo;sm&rdquo;
+                      variant=&ldquo;ghost&rdquo;
+                      onClick={() => removeFromArray(&ldquo;responsibilities&rdquo;, i)}
                     >
                       ×
                     </Button>
@@ -809,34 +807,34 @@ export default function CreateJobPage() {
             {/* Benefits */}
             <div>
               <Label>Beneficios</Label>
-              <div className="flex space-x-2 mt-2">
+              <div className=&ldquo;flex space-x-2 mt-2&rdquo;>
                 <Input
-                  placeholder="Ej: Seguro médico, capacitaciones"
+                  placeholder=&ldquo;Ej: Seguro médico, capacitaciones&rdquo;
                   value={benefitInput}
                   onChange={(e) => setBenefitInput(e.target.value)}
                   onKeyPress={(e) => {
-                    if (e.key === "Enter") {
+                    if (e.key === &ldquo;Enter&rdquo;) {
                       e.preventDefault();
-                      addToArray("benefits", benefitInput, setBenefitInput);
+                      addToArray(&ldquo;benefits&rdquo;, benefitInput, setBenefitInput);
                     }
                   }}
                 />
                 <Button
-                  type="button"
+                  type=&ldquo;button&rdquo;
                   onClick={() =>
-                    addToArray("benefits", benefitInput, setBenefitInput)
+                    addToArray(&ldquo;benefits&rdquo;, benefitInput, setBenefitInput)
                   }
                 >
                   Agregar
                 </Button>
               </div>
-              <div className="flex flex-wrap gap-2 mt-2">
+              <div className=&ldquo;flex flex-wrap gap-2 mt-2&rdquo;>
                 {jobData.benefits.map((benefit, i) => (
                   <Badge
                     key={i}
-                    variant="outline"
-                    className="cursor-pointer"
-                    onClick={() => removeFromArray("benefits", i)}
+                    variant=&ldquo;outline&rdquo;
+                    className=&ldquo;cursor-pointer&rdquo;
+                    onClick={() => removeFromArray(&ldquo;benefits&rdquo;, i)}
                   >
                     {benefit} ×
                   </Badge>
@@ -851,62 +849,62 @@ export default function CreateJobPage() {
           <CardHeader>
             <CardTitle>Preguntas para Candidatos</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className=&ldquo;space-y-4&rdquo;>
             <div>
-              <div className="flex space-x-2">
+              <div className=&ldquo;flex space-x-2&rdquo;>
                 <Input
-                  placeholder="Escribe una pregunta para los candidatos"
+                  placeholder=&ldquo;Escribe una pregunta para los candidatos&rdquo;
                   value={questionInput}
                   onChange={(e) => setQuestionInput(e.target.value)}
                   onKeyPress={(e) => {
-                    if (e.key === "Enter") {
+                    if (e.key === &ldquo;Enter&rdquo;) {
                       e.preventDefault();
                       addQuestion();
                     }
                   }}
                 />
-                <Button type="button" onClick={addQuestion}>
+                <Button type=&ldquo;button&rdquo; onClick={addQuestion}>
                   Agregar pregunta
                 </Button>
               </div>
             </div>
 
             {jobData.questions.length > 0 && (
-              <div className="space-y-3">
+              <div className=&ldquo;space-y-3&rdquo;>
                 {jobData.questions.map((question, i) => (
-                  <div key={question.id} className="p-4 border rounded-lg">
-                    <div className="flex items-start justify-between mb-2">
-                      <span className="font-medium">Pregunta {i + 1}</span>
+                  <div key={question.id} className=&ldquo;p-4 border rounded-lg&rdquo;>
+                    <div className=&ldquo;flex items-start justify-between mb-2&rdquo;>
+                      <span className=&ldquo;font-medium&rdquo;>Pregunta {i + 1}</span>
                       <Button
-                        size="sm"
-                        variant="ghost"
+                        size=&ldquo;sm&rdquo;
+                        variant=&ldquo;ghost&rdquo;
                         onClick={() => removeQuestion(i)}
                       >
                         ×
                       </Button>
                     </div>
-                    <p className="text-sm text-gray-700 mb-2">
+                    <p className=&ldquo;text-sm text-gray-700 mb-2&rdquo;>
                       {question.question}
                     </p>
-                    <div className="flex items-center space-x-4">
+                    <div className=&ldquo;flex items-center space-x-4&rdquo;>
                       <Select
                         value={question.type}
                         onValueChange={(value) =>
                           updateQuestion(i, { type: value as any })
                         }
                       >
-                        <SelectTrigger className="w-40">
+                        <SelectTrigger className=&ldquo;w-40&rdquo;>
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="TEXT">Texto libre</SelectItem>
-                          <SelectItem value="MULTIPLE_CHOICE">
+                          <SelectItem value=&ldquo;TEXT&rdquo;>Texto libre</SelectItem>
+                          <SelectItem value=&ldquo;MULTIPLE_CHOICE&rdquo;>
                             Opción múltiple
                           </SelectItem>
-                          <SelectItem value="YES_NO">Sí/No</SelectItem>
+                          <SelectItem value=&ldquo;YES_NO&rdquo;>Sí/No</SelectItem>
                         </SelectContent>
                       </Select>
-                      <div className="flex items-center space-x-2">
+                      <div className=&ldquo;flex items-center space-x-2&rdquo;>
                         <Checkbox
                           id={`required-${i}`}
                           checked={question.required}
@@ -914,7 +912,7 @@ export default function CreateJobPage() {
                             updateQuestion(i, { required: checked as boolean })
                           }
                         />
-                        <Label htmlFor={`required-${i}`} className="text-sm">
+                        <Label htmlFor={`required-${i}`} className=&ldquo;text-sm&rdquo;>
                           Obligatoria
                         </Label>
                       </div>
@@ -930,26 +928,26 @@ export default function CreateJobPage() {
   <CardHeader>
     <CardTitle>Redes Sociales y Sitio Web</CardTitle>
   </CardHeader>
-  <CardContent className="space-y-4">
+  <CardContent className=&ldquo;space-y-4&rdquo;>
     <div>
-      <Label htmlFor="website">Sitio web</Label>
+      <Label htmlFor=&ldquo;website&rdquo;>Sitio web</Label>
       <Input
-        id="website"
-        placeholder="https://www.tuempresa.com"
-        value={jobData.website || ""}
+        id=&ldquo;website&rdquo;
+        placeholder=&ldquo;https://www.tuempresa.com&rdquo;
+        value={jobData.website || &ldquo;&rdquo;}
         onChange={(e) =>
           setJobData((prev) => ({ ...prev, website: e.target.value }))
         }
       />
     </div>
 
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 gap-4&rdquo;>
       <div>
-        <Label htmlFor="linkedin">LinkedIn</Label>
+        <Label htmlFor=&ldquo;linkedin&rdquo;>LinkedIn</Label>
         <Input
-          id="linkedin"
-          placeholder="https://linkedin.com/company/tuempresa"
-          value={jobData.linkedin || ""}
+          id=&ldquo;linkedin&rdquo;
+          placeholder=&ldquo;https://linkedin.com/company/tuempresa&rdquo;
+          value={jobData.linkedin || &ldquo;&rdquo;}
           onChange={(e) =>
             setJobData((prev) => ({ ...prev, linkedin: e.target.value }))
           }
@@ -957,11 +955,11 @@ export default function CreateJobPage() {
       </div>
 
       <div>
-        <Label htmlFor="facebook">Facebook</Label>
+        <Label htmlFor=&ldquo;facebook&rdquo;>Facebook</Label>
         <Input
-          id="facebook"
-          placeholder="https://facebook.com/tuempresa"
-          value={jobData.facebook || ""}
+          id=&ldquo;facebook&rdquo;
+          placeholder=&ldquo;https://facebook.com/tuempresa&rdquo;
+          value={jobData.facebook || &ldquo;&rdquo;}
           onChange={(e) =>
             setJobData((prev) => ({ ...prev, facebook: e.target.value }))
           }
@@ -969,11 +967,11 @@ export default function CreateJobPage() {
       </div>
 
       <div>
-        <Label htmlFor="instagram">Instagram</Label>
+        <Label htmlFor=&ldquo;instagram&rdquo;>Instagram</Label>
         <Input
-          id="instagram"
-          placeholder="https://instagram.com/tuempresa"
-          value={jobData.instagram || ""}
+          id=&ldquo;instagram&rdquo;
+          placeholder=&ldquo;https://instagram.com/tuempresa&rdquo;
+          value={jobData.instagram || &ldquo;&rdquo;}
           onChange={(e) =>
             setJobData((prev) => ({ ...prev, instagram: e.target.value }))
           }
@@ -981,11 +979,11 @@ export default function CreateJobPage() {
       </div>
 
       <div>
-        <Label htmlFor="twitter">Twitter</Label>
+        <Label htmlFor=&ldquo;twitter&rdquo;>Twitter</Label>
         <Input
-          id="twitter"
-          placeholder="https://twitter.com/tuempresa"
-          value={jobData.twitter || ""}
+          id=&ldquo;twitter&rdquo;
+          placeholder=&ldquo;https://twitter.com/tuempresa&rdquo;
+          value={jobData.twitter || &ldquo;&rdquo;}
           onChange={(e) =>
             setJobData((prev) => ({ ...prev, twitter: e.target.value }))
           }
@@ -1000,7 +998,7 @@ export default function CreateJobPage() {
     <CardHeader>
       <CardTitle>Ubicación Geográfica</CardTitle>
     </CardHeader>
-    <CardContent className="space-y-2">
+    <CardContent className=&ldquo;space-y-2&rdquo;>
       <Label>Selecciona en el mapa la ubicación del empleo</Label>
       <MapPicker
         onChange={(coords) =>
@@ -1008,7 +1006,7 @@ export default function CreateJobPage() {
         }
       />
       {jobData.coordinates && (
-        <p className="text-sm text-muted-foreground mt-2">
+        <p className=&ldquo;text-sm text-muted-foreground mt-2&rdquo;>
           Latitud: {jobData.coordinates[0]}, Longitud: {jobData.coordinates[1]}
         </p>
       )}
@@ -1020,47 +1018,47 @@ export default function CreateJobPage() {
   <CardHeader>
     <CardTitle>Imágenes del Empleo</CardTitle>
   </CardHeader>
-  <CardContent className="space-y-4">
+  <CardContent className=&ldquo;space-y-4&rdquo;>
     <div>
       <Label>Selecciona una o varias imágenes</Label>
-      <div className="flex items-center space-x-2 mt-2">
+      <div className=&ldquo;flex items-center space-x-2 mt-2&rdquo;>
         <Input
           ref={fileInputRef}
-          type="file"
-          accept="image/*"
+          type=&ldquo;file&rdquo;
+          accept=&ldquo;image/*&rdquo;
           multiple
-          className="hidden"
+          className=&ldquo;hidden&rdquo;
           onChange={(e) => handleFiles(e.target.files)}
         />
         <Button
-          variant="outline"
+          variant=&ldquo;outline&rdquo;
           onClick={() => fileInputRef.current?.click()}
         >
-          <ImageIcon className="w-4 h-4 mr-2" />
+          <ImageIcon className=&ldquo;w-4 h-4 mr-2&rdquo; />
           Subir imágenes
         </Button>
       </div>
     </div>
 
     {images.length > 0 && (
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <div className=&ldquo;grid grid-cols-2 md:grid-cols-3 gap-4&rdquo;>
         {images.map((src, index) => (
           <div
             key={index}
-            className="relative group rounded-lg overflow-hidden border"
+            className=&ldquo;relative group rounded-lg overflow-hidden border&rdquo;
           >
             <img
               src={src}
               alt={`imagen-${index}`}
-              className="object-cover w-full h-32"
+              className=&ldquo;object-cover w-full h-32&rdquo;
             />
             <Button
-              size="icon"
-              variant="destructive"
-              className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+              size=&ldquo;icon&rdquo;
+              variant=&ldquo;destructive&rdquo;
+              className=&ldquo;absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity&rdquo;
               onClick={() => removeImage(index)}
             >
-              <Trash className="w-4 h-4" />
+              <Trash className=&ldquo;w-4 h-4&rdquo; />
             </Button>
           </div>
         ))}
@@ -1072,13 +1070,13 @@ export default function CreateJobPage() {
 
 
         {/* Actions */}
-        <div className="flex justify-end space-x-4 pb-8">
+        <div className=&ldquo;flex justify-end space-x-4 pb-8&rdquo;>
           <Button
-            variant="outline"
-            onClick={() => handleSubmit("DRAFT")}
+            variant=&ldquo;outline&rdquo;
+            onClick={() => handleSubmit(&ldquo;DRAFT&rdquo;)}
             disabled={loading}
           >
-            <Save className="w-4 h-4 mr-2" />
+            <Save className=&ldquo;w-4 h-4 mr-2&rdquo; />
             Guardar borrador
           </Button>
           <Button

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from &ldquo;next/server&rdquo;;
 
 export async function GET(
   request: NextRequest,
@@ -9,24 +9,24 @@ export async function GET(
 
     // Return mock profile data for development
     const mockProfile = {
-      id: "mock-profile-id",
+      id: &ldquo;mock-profile-id&rdquo;,
       userId: userId,
-      firstName: "John",
-      lastName: "Doe",
+      firstName: &ldquo;John&rdquo;,
+      lastName: &ldquo;Doe&rdquo;,
       avatarUrl: null,
       active: true,
-      role: "YOUTH",
-      bio: "Mock user bio",
-      location: "Mock City",
+      role: &ldquo;YOUTH&rdquo;,
+      bio: &ldquo;Mock user bio&rdquo;,
+      location: &ldquo;Mock City&rdquo;,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
 
     return NextResponse.json({ profile: mockProfile });
   } catch (error) {
-    console.error("Error fetching profile:", error);
+    console.error(&ldquo;Error fetching profile:&rdquo;, error);
     return NextResponse.json(
-      { error: "Failed to fetch profile" },
+      { error: &ldquo;Failed to fetch profile&rdquo; },
       { status: 500 }
     );
   }
@@ -42,24 +42,24 @@ export async function PATCH(
 
     // Return mock updated profile data for development
     const updatedProfile = {
-      id: "mock-profile-id",
+      id: &ldquo;mock-profile-id&rdquo;,
       userId: userId,
-      firstName: json.firstName || "John",
-      lastName: json.lastName || "Doe",
+      firstName: json.firstName || &ldquo;John&rdquo;,
+      lastName: json.lastName || &ldquo;Doe&rdquo;,
       avatarUrl: json.avatarUrl || null,
       active: json.active !== undefined ? json.active : true,
-      role: "YOUTH",
-      bio: json.bio || "Mock user bio",
-      location: json.location || "Mock City",
+      role: &ldquo;YOUTH&rdquo;,
+      bio: json.bio || &ldquo;Mock user bio&rdquo;,
+      location: json.location || &ldquo;Mock City&rdquo;,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
 
     return NextResponse.json({ profile: updatedProfile });
   } catch (error) {
-    console.error("Error updating profile:", error);
+    console.error(&ldquo;Error updating profile:&rdquo;, error);
     return NextResponse.json(
-      { error: "Failed to update profile" },
+      { error: &ldquo;Failed to update profile&rdquo; },
       { status: 500 }
     );
   }

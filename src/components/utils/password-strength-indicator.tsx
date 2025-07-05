@@ -1,7 +1,7 @@
-import React from "react";
-import { CheckCircle2, XCircle } from "lucide-react";
+import React from &ldquo;react&rdquo;;
+import { CheckCircle2, XCircle } from &ldquo;lucide-react&rdquo;;
 
-export type PasswordStrength = "weak" | "medium" | "strong" | "very-strong";
+export type PasswordStrength = &ldquo;weak&rdquo; | &ldquo;medium&rdquo; | &ldquo;strong&rdquo; | &ldquo;very-strong&rdquo;;
 
 interface PasswordRequirement {
   label: string;
@@ -29,27 +29,27 @@ export function PasswordStrengthIndicator({
   // Define password requirements (only used if external requirements not provided)
   const defaultRequirements: PasswordRequirement[] = [
     {
-      label: "Al menos 8 caracteres",
+      label: &ldquo;Al menos 8 caracteres&rdquo;,
       regex: /.{8,}/,
       met: /.{8,}/.test(password),
     },
     {
-      label: "Al menos una letra mayúscula",
+      label: &ldquo;Al menos una letra mayúscula&rdquo;,
       regex: /[A-Z]/,
       met: /[A-Z]/.test(password),
     },
     {
-      label: "Al menos una letra minúscula",
+      label: &ldquo;Al menos una letra minúscula&rdquo;,
       regex: /[a-z]/,
       met: /[a-z]/.test(password),
     },
     {
-      label: "Al menos un número",
+      label: &ldquo;Al menos un número&rdquo;,
       regex: /[0-9]/,
       met: /[0-9]/.test(password),
     },
     {
-      label: "Al menos un caracter especial",
+      label: &ldquo;Al menos un caracter especial&rdquo;,
       regex: /[^A-Za-z0-9]/,
       met: /[^A-Za-z0-9]/.test(password),
     },
@@ -58,18 +58,18 @@ export function PasswordStrengthIndicator({
   // Merge external requirements with default ones if provided
   const requirements = externalRequirements
     ? [
-        { label: "Al menos 8 caracteres", met: externalRequirements.length },
+        { label: &ldquo;Al menos 8 caracteres&rdquo;, met: externalRequirements.length },
         {
-          label: "Al menos una letra mayúscula",
+          label: &ldquo;Al menos una letra mayúscula&rdquo;,
           met: externalRequirements.uppercase,
         },
         {
-          label: "Al menos una letra minúscula",
+          label: &ldquo;Al menos una letra minúscula&rdquo;,
           met: externalRequirements.lowercase,
         },
-        { label: "Al menos un número", met: externalRequirements.numbers },
+        { label: &ldquo;Al menos un número&rdquo;, met: externalRequirements.numbers },
         {
-          label: "Al menos un caracter especial",
+          label: &ldquo;Al menos un caracter especial&rdquo;,
           met: externalRequirements.special,
         },
       ]
@@ -81,60 +81,60 @@ export function PasswordStrengthIndicator({
       ? externalStrength
       : requirements.filter((req) => req.met).length;
 
-  let strength: PasswordStrength = "weak";
-  let strengthColor = "bg-red-500";
-  let strengthWidth = "20%";
+  let strength: PasswordStrength = &ldquo;weak&rdquo;;
+  let strengthColor = &ldquo;bg-red-500&rdquo;;
+  let strengthWidth = &ldquo;20%&rdquo;;
 
   if (metRequirementsCount === 5) {
-    strength = "very-strong";
-    strengthColor = "bg-green-500";
-    strengthWidth = "100%";
+    strength = &ldquo;very-strong&rdquo;;
+    strengthColor = &ldquo;bg-green-500&rdquo;;
+    strengthWidth = &ldquo;100%&rdquo;;
   } else if (metRequirementsCount === 4) {
-    strength = "strong";
-    strengthColor = "bg-blue-500";
-    strengthWidth = "75%";
+    strength = &ldquo;strong&rdquo;;
+    strengthColor = &ldquo;bg-blue-500&rdquo;;
+    strengthWidth = &ldquo;75%&rdquo;;
   } else if (metRequirementsCount === 3) {
-    strength = "medium";
-    strengthColor = "bg-yellow-500";
-    strengthWidth = "50%";
+    strength = &ldquo;medium&rdquo;;
+    strengthColor = &ldquo;bg-yellow-500&rdquo;;
+    strengthWidth = &ldquo;50%&rdquo;;
   } else if (metRequirementsCount === 2) {
-    strength = "weak";
-    strengthColor = "bg-orange-500";
-    strengthWidth = "25%";
+    strength = &ldquo;weak&rdquo;;
+    strengthColor = &ldquo;bg-orange-500&rdquo;;
+    strengthWidth = &ldquo;25%&rdquo;;
   }
 
   const strengthText = {
-    weak: "Débil",
-    medium: "Media",
-    strong: "Fuerte",
-    "very-strong": "Muy Fuerte",
+    weak: &ldquo;Débil&rdquo;,
+    medium: &ldquo;Media&rdquo;,
+    strong: &ldquo;Fuerte&rdquo;,
+    &ldquo;very-strong&rdquo;: &ldquo;Muy Fuerte&rdquo;,
   };
 
   return (
-    <div className="space-y-2 mt-2">
-      <div className="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
+    <div className=&ldquo;space-y-2 mt-2&rdquo;>
+      <div className=&ldquo;w-full bg-gray-200 h-2 rounded-full overflow-hidden&rdquo;>
         <div
           className={`h-full transition-all duration-300 ${strengthColor}`}
           style={{ width: strengthWidth }}
         />
       </div>
 
-      <div className="text-sm font-medium">
+      <div className=&ldquo;text-sm font-medium&rdquo;>
         {password
           ? `Fortaleza: ${strengthText[strength]}`
-          : "Fortaleza de la contraseña"}
+          : &ldquo;Fortaleza de la contraseña&rdquo;}
       </div>
 
-      <div className="space-y-1.5">
+      <div className=&ldquo;space-y-1.5&rdquo;>
         {requirements.map((requirement, index) => (
-          <div key={index} className="flex items-center text-sm">
+          <div key={index} className=&ldquo;flex items-center text-sm&rdquo;>
             {requirement.met ? (
-              <CheckCircle2 className="text-green-500 mr-2 h-4 w-4" />
+              <CheckCircle2 className=&ldquo;text-green-500 mr-2 h-4 w-4&rdquo; />
             ) : (
-              <XCircle className="text-gray-300 mr-2 h-4 w-4" />
+              <XCircle className=&ldquo;text-gray-300 mr-2 h-4 w-4&rdquo; />
             )}
             <span
-              className={requirement.met ? "text-gray-700" : "text-gray-400"}
+              className={requirement.met ? &ldquo;text-gray-700&rdquo; : &ldquo;text-gray-400&rdquo;}
             >
               {requirement.label}
             </span>

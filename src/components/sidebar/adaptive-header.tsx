@@ -1,16 +1,16 @@
-"use client";
+&ldquo;use client&rdquo;;
 
-import React from "react";
-import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Separator } from "@/components/ui/separator";
-import { useCurrentUser } from "@/hooks/use-current-user";
-import { Search } from "./search";
-import { ThemeSwitch } from "./theme-switch";
-import { ProfileDropdown } from "./profile-dropdown";
-import { Badge } from "@/components/ui/badge";
-import { User, Users, Building2, BookOpen, Target, Shield } from "lucide-react";
+import React from &ldquo;react&rdquo;;
+import { usePathname } from &ldquo;next/navigation&rdquo;;
+import { cn } from &ldquo;@/lib/utils&rdquo;;
+import { SidebarTrigger } from &ldquo;@/components/ui/sidebar&rdquo;;
+import { Separator } from &ldquo;@/components/ui/separator&rdquo;;
+import { useCurrentUser } from &ldquo;@/hooks/use-current-user&rdquo;;
+import { Search } from &ldquo;./search&rdquo;;
+import { ThemeSwitch } from &ldquo;./theme-switch&rdquo;;
+import { ProfileDropdown } from &ldquo;./profile-dropdown&rdquo;;
+import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
+import { User, Users, Building2, BookOpen, Target, Shield } from &ldquo;lucide-react&rdquo;;
 
 interface AdaptiveHeaderProps {
   className?: string;
@@ -33,111 +33,111 @@ export function AdaptiveHeader({
       setOffset(document.body.scrollTop || document.documentElement.scrollTop);
     };
 
-    document.addEventListener("scroll", onScroll, { passive: true });
-    return () => document.removeEventListener("scroll", onScroll);
+    document.addEventListener(&ldquo;scroll&rdquo;, onScroll, { passive: true });
+    return () => document.removeEventListener(&ldquo;scroll&rdquo;, onScroll);
   }, []);
 
   // Get role-specific breadcrumb formatting
   const getRoleBreadcrumb = (pathname: string, role?: string) => {
-    const segments = pathname.split("/").filter(Boolean);
+    const segments = pathname.split(&ldquo;/&rdquo;).filter(Boolean);
 
-    if (segments.length === 0 || segments[0] === "dashboard") {
+    if (segments.length === 0 || segments[0] === &ldquo;dashboard&rdquo;) {
       switch (role) {
-        case "YOUTH":
-          return "Dashboard Personal";
-        case "ADOLESCENTS":
-          return "Dashboard Estudiantil";
-        case "COMPANIES":
-          return "Dashboard Empresarial";
-        case "MUNICIPAL_GOVERNMENTS":
-          return "Dashboard Administrativo";
-        case "TRAINING_CENTERS":
-          return "Dashboard Educativo";
-        case "NGOS_AND_FOUNDATIONS":
-          return "Dashboard Social";
+        case &ldquo;YOUTH&rdquo;:
+          return &ldquo;Dashboard Personal&rdquo;;
+        case &ldquo;ADOLESCENTS&rdquo;:
+          return &ldquo;Dashboard Estudiantil&rdquo;;
+        case &ldquo;COMPANIES&rdquo;:
+          return &ldquo;Dashboard Empresarial&rdquo;;
+        case &ldquo;MUNICIPAL_GOVERNMENTS&rdquo;:
+          return &ldquo;Dashboard Administrativo&rdquo;;
+        case &ldquo;TRAINING_CENTERS&rdquo;:
+          return &ldquo;Dashboard Educativo&rdquo;;
+        case &ldquo;NGOS_AND_FOUNDATIONS&rdquo;:
+          return &ldquo;Dashboard Social&rdquo;;
         default:
-          return "Dashboard";
+          return &ldquo;Dashboard&rdquo;;
       }
     }
 
     // Format other pages based on role context
     const formattedSegments = segments.map((segment) => {
       switch (segment) {
-        case "jobs":
-          return role === "COMPANIES" ? "Mis Empleos" : "Empleos";
-        case "my-applications":
-          return "Mis Postulaciones";
-        case "training":
-          return role === "COMPANIES" ? "Capacitación" : "Mis Cursos";
-        case "entrepreneurship":
-          return "Emprendimiento";
-        case "reports":
-          return role === "COMPANIES" ? "Reportes Empresariales" : "Reportes";
-        case "profile":
-          return role === "COMPANIES" ? "Perfil Empresarial" : "Mi Perfil";
-        case "candidates":
-          return "Candidatos";
-        case "admin":
-          return "Administración";
+        case &ldquo;jobs&rdquo;:
+          return role === &ldquo;COMPANIES&rdquo; ? &ldquo;Mis Empleos&rdquo; : &ldquo;Empleos&rdquo;;
+        case &ldquo;my-applications&rdquo;:
+          return &ldquo;Mis Postulaciones&rdquo;;
+        case &ldquo;training&rdquo;:
+          return role === &ldquo;COMPANIES&rdquo; ? &ldquo;Capacitación&rdquo; : &ldquo;Mis Cursos&rdquo;;
+        case &ldquo;entrepreneurship&rdquo;:
+          return &ldquo;Emprendimiento&rdquo;;
+        case &ldquo;reports&rdquo;:
+          return role === &ldquo;COMPANIES&rdquo; ? &ldquo;Reportes Empresariales&rdquo; : &ldquo;Reportes&rdquo;;
+        case &ldquo;profile&rdquo;:
+          return role === &ldquo;COMPANIES&rdquo; ? &ldquo;Perfil Empresarial&rdquo; : &ldquo;Mi Perfil&rdquo;;
+        case &ldquo;candidates&rdquo;:
+          return &ldquo;Candidatos&rdquo;;
+        case &ldquo;admin&rdquo;:
+          return &ldquo;Administración&rdquo;;
         default:
           return segment.charAt(0).toUpperCase() + segment.slice(1);
       }
     });
 
-    return formattedSegments.join(" / ");
+    return formattedSegments.join(&ldquo; / &rdquo;);
   };
 
   // Get role-specific icon and label
   const getRoleInfo = (role?: string) => {
     switch (role) {
-      case "YOUTH":
+      case &ldquo;YOUTH&rdquo;:
         return {
           icon: User,
-          label: "Joven",
-          color: "bg-blue-100 text-blue-800",
+          label: &ldquo;Joven&rdquo;,
+          color: &ldquo;bg-blue-100 text-blue-800&rdquo;,
         };
-      case "ADOLESCENTS":
+      case &ldquo;ADOLESCENTS&rdquo;:
         return {
           icon: Users,
-          label: "Adolescente",
-          color: "bg-purple-100 text-purple-800",
+          label: &ldquo;Adolescente&rdquo;,
+          color: &ldquo;bg-purple-100 text-purple-800&rdquo;,
         };
-      case "COMPANIES":
+      case &ldquo;COMPANIES&rdquo;:
         return {
           icon: Building2,
-          label: "Empresa",
-          color: "bg-green-100 text-green-800",
+          label: &ldquo;Empresa&rdquo;,
+          color: &ldquo;bg-green-100 text-green-800&rdquo;,
         };
-      case "MUNICIPAL_GOVERNMENTS":
+      case &ldquo;MUNICIPAL_GOVERNMENTS&rdquo;:
         return {
           icon: Shield,
-          label: "Gobierno",
-          color: "bg-red-100 text-red-800",
+          label: &ldquo;Gobierno&rdquo;,
+          color: &ldquo;bg-red-100 text-red-800&rdquo;,
         };
-      case "TRAINING_CENTERS":
+      case &ldquo;TRAINING_CENTERS&rdquo;:
         return {
           icon: BookOpen,
-          label: "Centro",
-          color: "bg-orange-100 text-orange-800",
+          label: &ldquo;Centro&rdquo;,
+          color: &ldquo;bg-orange-100 text-orange-800&rdquo;,
         };
-      case "NGOS_AND_FOUNDATIONS":
+      case &ldquo;NGOS_AND_FOUNDATIONS&rdquo;:
         return {
           icon: Target,
-          label: "ONG",
-          color: "bg-teal-100 text-teal-800",
+          label: &ldquo;ONG&rdquo;,
+          color: &ldquo;bg-teal-100 text-teal-800&rdquo;,
         };
       default:
         return {
           icon: User,
-          label: "Usuario",
-          color: "bg-gray-100 text-gray-800",
+          label: &ldquo;Usuario&rdquo;,
+          color: &ldquo;bg-gray-100 text-gray-800&rdquo;,
         };
     }
   };
 
   // Check if search should be shown for this role
   const shouldShowSearch = (role?: string) => {
-    return ["YOUTH", "ADOLESCENTS", "COMPANIES"].includes(role || "");
+    return [&ldquo;YOUTH&rdquo;, &ldquo;ADOLESCENTS&rdquo;, &ldquo;COMPANIES&rdquo;].includes(role || &ldquo;&rdquo;);
   };
 
   const formattedPath = getRoleBreadcrumb(pathname, profile?.role);
@@ -147,33 +147,33 @@ export function AdaptiveHeader({
   return (
     <header
       className={cn(
-        "flex h-16 items-center gap-3 bg-background p-4 sm:gap-4 border-b",
-        fixed && "header-fixed peer/header fixed z-50 w-[inherit] rounded-md",
-        offset > 10 && fixed ? "shadow-md" : "shadow-none",
+        &ldquo;flex h-16 items-center gap-3 bg-background p-4 sm:gap-4 border-b&rdquo;,
+        fixed && &ldquo;header-fixed peer/header fixed z-50 w-[inherit] rounded-md&rdquo;,
+        offset > 10 && fixed ? &ldquo;shadow-md&rdquo; : &ldquo;shadow-none&rdquo;,
         className
       )}
       {...props}
     >
-      <SidebarTrigger variant="outline" className="scale-125 sm:scale-100" />
-      <Separator orientation="vertical" className="h-6" />
+      <SidebarTrigger variant=&ldquo;outline&rdquo; className=&ldquo;scale-125 sm:scale-100&rdquo; />
+      <Separator orientation=&ldquo;vertical&rdquo; className=&ldquo;h-6&rdquo; />
 
       {/* Role-specific breadcrumb */}
-      <div className="flex items-center gap-2 flex-1">
-        <span className="text-sm font-medium text-muted-foreground">
+      <div className=&ldquo;flex items-center gap-2 flex-1&rdquo;>
+        <span className=&ldquo;text-sm font-medium text-muted-foreground&rdquo;>
           {formattedPath}
         </span>
 
         {/* Role badge */}
         {!isLoading && profile && (
-          <Badge className={cn("ml-2 text-xs", roleInfo.color)}>
-            <roleInfo.icon className="w-3 h-3 mr-1" />
+          <Badge className={cn(&ldquo;ml-2 text-xs&rdquo;, roleInfo.color)}>
+            <roleInfo.icon className=&ldquo;w-3 h-3 mr-1&rdquo; />
             {roleInfo.label}
           </Badge>
         )}
       </div>
 
       {/* Role-specific actions */}
-      <div className="ml-auto flex items-center space-x-4">
+      <div className=&ldquo;ml-auto flex items-center space-x-4&rdquo;>
         {/* Show search only for roles that need it */}
         {showSearch && <Search />}
 

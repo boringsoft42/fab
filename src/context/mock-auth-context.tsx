@@ -1,7 +1,7 @@
-"use client";
+&ldquo;use client&rdquo;;
 
-import React, { createContext, useContext, useState, useCallback } from "react";
-type UserRole = "YOUTH" | "COMPANIES" | "MUNICIPAL_GOVERNMENTS";
+import React, { createContext, useContext, useState, useCallback } from &ldquo;react&rdquo;;
+type UserRole = &ldquo;YOUTH&rdquo; | &ldquo;COMPANIES&rdquo; | &ldquo;MUNICIPAL_GOVERNMENTS&rdquo;;
 
 interface MockUser {
   id: string;
@@ -53,15 +53,15 @@ export function MockAuthProvider({ children }: { children: React.ReactNode }) {
 
         // Mock user data - set role immediately if provided
         const mockUser: MockUser = {
-          id: "mock-user-id",
+          id: &ldquo;mock-user-id&rdquo;,
           email,
-          name: email.split("@")[0],
+          name: email.split(&ldquo;@&rdquo;)[0],
           role: role || null, // Set role immediately if provided
           profile: role
             ? {
-                id: "mock-profile-id",
-                firstName: email.split("@")[0],
-                lastName: "",
+                id: &ldquo;mock-profile-id&rdquo;,
+                firstName: email.split(&ldquo;@&rdquo;)[0],
+                lastName: &ldquo;&rdquo;,
                 profilePicture: null,
                 completionPercentage: 75,
               }
@@ -71,9 +71,9 @@ export function MockAuthProvider({ children }: { children: React.ReactNode }) {
         setUserState(mockUser);
 
         // Store in localStorage for persistence
-        localStorage.setItem("mockUser", JSON.stringify(mockUser));
+        localStorage.setItem(&ldquo;mockUser&rdquo;, JSON.stringify(mockUser));
       } catch (err) {
-        setError(err instanceof Error ? err : new Error("Sign in failed"));
+        setError(err instanceof Error ? err : new Error(&ldquo;Sign in failed&rdquo;));
       } finally {
         setIsLoading(false);
       }
@@ -92,15 +92,15 @@ export function MockAuthProvider({ children }: { children: React.ReactNode }) {
 
         // Mock user data - set role immediately if provided
         const mockUser: MockUser = {
-          id: "mock-user-id",
+          id: &ldquo;mock-user-id&rdquo;,
           email,
           name,
           role: role || null, // Set role immediately if provided
           profile: role
             ? {
-                id: "mock-profile-id",
-                firstName: name.split(" ")[0] || name,
-                lastName: name.split(" ")[1] || "",
+                id: &ldquo;mock-profile-id&rdquo;,
+                firstName: name.split(&ldquo; &rdquo;)[0] || name,
+                lastName: name.split(&ldquo; &rdquo;)[1] || &ldquo;&rdquo;,
                 profilePicture: null,
                 completionPercentage: 75,
               }
@@ -110,9 +110,9 @@ export function MockAuthProvider({ children }: { children: React.ReactNode }) {
         setUserState(mockUser);
 
         // Store in localStorage for persistence
-        localStorage.setItem("mockUser", JSON.stringify(mockUser));
+        localStorage.setItem(&ldquo;mockUser&rdquo;, JSON.stringify(mockUser));
       } catch (err) {
-        setError(err instanceof Error ? err : new Error("Sign up failed"));
+        setError(err instanceof Error ? err : new Error(&ldquo;Sign up failed&rdquo;));
       } finally {
         setIsLoading(false);
       }
@@ -122,46 +122,42 @@ export function MockAuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = useCallback(() => {
     setUserState(null);
-    localStorage.removeItem("mockUser");
+    localStorage.removeItem(&ldquo;mockUser&rdquo;);
   }, []);
 
-  const updateUserRole = useCallback(
-    (role: UserRole) => {
-      if (!user) return;
-
-      const updatedUser: MockUser = {
+  const updatedUser: MockUser = {
         ...user,
         role,
         profile: {
-          id: "mock-profile-id",
-          firstName: user.name.split(" ")[0] || user.name,
-          lastName: user.name.split(" ")[1] || "",
+          id: &ldquo;mock-profile-id&rdquo;,
+          firstName: user.name.split(&ldquo; &rdquo;)[0] || user.name,
+          lastName: user.name.split(&ldquo; &rdquo;)[1] || &ldquo;&rdquo;,
           profilePicture: null,
           completionPercentage: 75,
         },
       };
 
       setUserState(updatedUser);
-      localStorage.setItem("mockUser", JSON.stringify(updatedUser));
+      localStorage.setItem(&ldquo;mockUser&rdquo;, JSON.stringify(updatedUser));
     },
     [user]
   );
 
   const setUser = useCallback((user: MockUser) => {
     setUserState(user);
-    localStorage.setItem("mockUser", JSON.stringify(user));
+    localStorage.setItem(&ldquo;mockUser&rdquo;, JSON.stringify(user));
   }, []);
 
   // Load user from localStorage on mount
   React.useEffect(() => {
-    const storedUser = localStorage.getItem("mockUser");
+    const storedUser = localStorage.getItem(&ldquo;mockUser&rdquo;);
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
         setUserState(parsedUser);
       } catch (err) {
-        console.error("Error parsing stored user:", err);
-        localStorage.removeItem("mockUser");
+        console.error(&ldquo;Error parsing stored user:&rdquo;, err);
+        localStorage.removeItem(&ldquo;mockUser&rdquo;);
       }
     }
   }, []);
@@ -187,7 +183,7 @@ export function MockAuthProvider({ children }: { children: React.ReactNode }) {
 export function useMockAuth() {
   const context = useContext(MockAuthContext);
   if (context === undefined) {
-    throw new Error("useMockAuth must be used within a MockAuthProvider");
+    throw new Error(&ldquo;useMockAuth must be used within a MockAuthProvider&rdquo;);
   }
   return context;
 }

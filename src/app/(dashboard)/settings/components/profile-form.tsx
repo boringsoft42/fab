@@ -1,11 +1,11 @@
-"use client";
+&ldquo;use client&rdquo;;
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
-import { useAuth } from "@/providers/auth-provider";
-import { Button } from "@/components/ui/button";
+import { useState } from &ldquo;react&rdquo;;
+import { useForm } from &ldquo;react-hook-form&rdquo;;
+import { zodResolver } from &ldquo;@hookform/resolvers/zod&rdquo;;
+import { Loader2 } from &ldquo;lucide-react&rdquo;;
+import { useAuth } from &ldquo;@/providers/auth-provider&rdquo;;
+import { Button } from &ldquo;@/components/ui/button&rdquo;;
 import {
   Form,
   FormControl,
@@ -13,13 +13,13 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { toast } from "@/components/ui/use-toast";
-import { ConfirmDialog } from "@/components/ui/confirm-dialog";
-import { AvatarUpload } from "@/components/settings/avatar-upload";
-import { profileFormSchema } from "@/lib/validations/profile";
-import type { ProfileFormValues } from "@/lib/validations/profile";
+} from &ldquo;@/components/ui/form&rdquo;;
+import { Input } from &ldquo;@/components/ui/input&rdquo;;
+import { toast } from &ldquo;@/components/ui/use-toast&rdquo;;
+import { ConfirmDialog } from &ldquo;@/components/ui/confirm-dialog&rdquo;;
+import { AvatarUpload } from &ldquo;@/components/settings/avatar-upload&rdquo;;
+import { profileFormSchema } from &ldquo;@/lib/validations/profile&rdquo;;
+import type { ProfileFormValues } from &ldquo;@/lib/validations/profile&rdquo;;
 
 export function ProfileForm() {
   const { profile } = useAuth();
@@ -32,8 +32,8 @@ export function ProfileForm() {
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
-      firstName: profile?.firstName || "",
-      lastName: profile?.lastName || "",
+      firstName: profile?.firstName || &ldquo;&rdquo;,
+      lastName: profile?.lastName || &ldquo;&rdquo;,
     },
   });
 
@@ -49,27 +49,27 @@ export function ProfileForm() {
       setIsUpdating(true);
 
       const response = await fetch(`/api/profile/${profile.userId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        method: &ldquo;PATCH&rdquo;,
+        headers: { &ldquo;Content-Type&rdquo;: &ldquo;application/json&rdquo; },
         body: JSON.stringify({
           ...pendingChanges,
           avatarUrl: newAvatarUrl || profile.avatarUrl,
         }),
       });
 
-      if (!response.ok) throw new Error("Failed to update profile");
+      if (!response.ok) throw new Error(&ldquo;Failed to update profile&rdquo;);
 
       toast({
-        title: "Profile updated",
-        description: "Your profile has been updated successfully.",
+        title: &ldquo;Profile updated&rdquo;,
+        description: &ldquo;Your profile has been updated successfully.&rdquo;,
       });
 
       form.reset(pendingChanges);
     } catch {
       toast({
-        title: "Error",
-        description: "Failed to update profile. Please try again.",
-        variant: "destructive",
+        title: &ldquo;Error&rdquo;,
+        description: &ldquo;Failed to update profile. Please try again.&rdquo;,
+        variant: &ldquo;destructive&rdquo;,
       });
     } finally {
       setIsUpdating(false);
@@ -81,7 +81,7 @@ export function ProfileForm() {
   return (
     <>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
+        <form onSubmit={form.handleSubmit(handleSubmit)} className=&ldquo;space-y-8&rdquo;>
           {profile && (
             <AvatarUpload
               userId={profile.userId}
@@ -89,26 +89,26 @@ export function ProfileForm() {
               onUploadComplete={(url) => setNewAvatarUrl(url)}
               onUploadError={(error) => {
                 toast({
-                  title: "Error",
+                  title: &ldquo;Error&rdquo;,
                   description: error.message,
-                  variant: "destructive",
+                  variant: &ldquo;destructive&rdquo;,
                 });
               }}
             />
           )}
 
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className=&ldquo;grid gap-4 sm:grid-cols-2&rdquo;>
             <FormField
               control={form.control}
-              name="firstName"
+              name=&ldquo;firstName&rdquo;
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>First Name</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="John"
+                      placeholder=&ldquo;John&rdquo;
                       {...field}
-                      value={field.value ?? ""}
+                      value={field.value ?? &ldquo;&rdquo;}
                     />
                   </FormControl>
                   <FormMessage />
@@ -118,15 +118,15 @@ export function ProfileForm() {
 
             <FormField
               control={form.control}
-              name="lastName"
+              name=&ldquo;lastName&rdquo;
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Last Name</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Doe"
+                      placeholder=&ldquo;Doe&rdquo;
                       {...field}
-                      value={field.value ?? ""}
+                      value={field.value ?? &ldquo;&rdquo;}
                     />
                   </FormControl>
                   <FormMessage />
@@ -135,14 +135,14 @@ export function ProfileForm() {
             />
           </div>
 
-          <div className="flex items-center gap-4">
-            <Button type="submit" disabled={isUpdating}>
-              {isUpdating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          <div className=&ldquo;flex items-center gap-4&rdquo;>
+            <Button type=&ldquo;submit&rdquo; disabled={isUpdating}>
+              {isUpdating && <Loader2 className=&ldquo;mr-2 h-4 w-4 animate-spin&rdquo; />}
               Update profile
             </Button>
             <Button
-              type="button"
-              variant="outline"
+              type=&ldquo;button&rdquo;
+              variant=&ldquo;outline&rdquo;
               onClick={() => form.reset()}
               disabled={isUpdating}
             >
@@ -156,8 +156,8 @@ export function ProfileForm() {
         open={showConfirmDialog}
         onOpenChange={setShowConfirmDialog}
         onConfirm={handleConfirmUpdate}
-        title="Update Profile"
-        description="Are you sure you want to update your profile? This action cannot be undone."
+        title=&ldquo;Update Profile&rdquo;
+        description=&ldquo;Are you sure you want to update your profile? This action cannot be undone.&rdquo;
       />
     </>
   );

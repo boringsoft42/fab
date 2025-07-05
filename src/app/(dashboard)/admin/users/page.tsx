@@ -1,18 +1,18 @@
-"use client"
+&ldquo;use client&rdquo;
 
-import type React from "react"
+import type React from &ldquo;react&rdquo;
 
-import { useState, useEffect } from "react"
-import { Plus, MoreVertical, Eye, Edit, Trash2, Building2, Users, TrendingUp, MapPin, Download, X } from "lucide-react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { useState, useEffect } from &ldquo;react&rdquo;
+import { Plus, MoreVertical, Eye, Edit, Trash2, Building2, Users, TrendingUp, MapPin, Download, X } from &ldquo;lucide-react&rdquo;
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from &ldquo;@/components/ui/card&rdquo;
+import { Button } from &ldquo;@/components/ui/button&rdquo;
+import { Badge } from &ldquo;@/components/ui/badge&rdquo;
+import { Input } from &ldquo;@/components/ui/input&rdquo;
+import { Label } from &ldquo;@/components/ui/label&rdquo;
+import { Textarea } from &ldquo;@/components/ui/textarea&rdquo;
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from &ldquo;@/components/ui/select&rdquo;
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from &ldquo;@/components/ui/dropdown-menu&rdquo;
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from &ldquo;@/components/ui/table&rdquo;
 import {
   Dialog,
   DialogContent,
@@ -20,7 +20,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from &ldquo;@/components/ui/dialog&rdquo;
 import {
   AlertDialog,
   AlertDialogAction,
@@ -30,9 +30,9 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+} from &ldquo;@/components/ui/alert-dialog&rdquo;
+import { Avatar, AvatarFallback, AvatarImage } from &ldquo;@/components/ui/avatar&rdquo;
+import { Tabs, TabsContent, TabsList, TabsTrigger } from &ldquo;@/components/ui/tabs&rdquo;
 
 interface Company {
   id: string
@@ -48,7 +48,7 @@ interface Company {
   address: string
   city: string
   country: string
-  status: "ACTIVE" | "INACTIVE" | "PENDING"
+  status: &ldquo;ACTIVE&rdquo; | &ldquo;INACTIVE&rdquo; | &ldquo;PENDING&rdquo;
   employees: number
   revenue: number
   growth: number
@@ -59,9 +59,9 @@ interface Company {
 export default function CompaniesManagementPage() {
   const [companies, setCompanies] = useState<Company[]>([])
   const [loading, setLoading] = useState(true)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [industryFilter, setIndustryFilter] = useState("all")
-  const [statusFilter, setStatusFilter] = useState("all")
+  const [searchTerm, setSearchTerm] = useState(&ldquo;&rdquo;)
+  const [industryFilter, setIndustryFilter] = useState(&ldquo;all&rdquo;)
+  const [statusFilter, setStatusFilter] = useState(&ldquo;all&rdquo;)
   const [showCreateDialog, setShowCreateDialog] = useState(false)
   const [showEditDialog, setShowEditDialog] = useState(false)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
@@ -79,26 +79,26 @@ export default function CompaniesManagementPage() {
 
   // Form state for create/edit
   const [formData, setFormData] = useState<Partial<Company>>({
-    name: "",
-    description: "",
-    logo: "",
-    industry: "",
-    size: "",
-    founded: "",
-    website: "",
-    email: "",
-    phone: "",
-    address: "",
-    city: "",
-    country: "Bolivia",
-    status: "ACTIVE",
+    name: &ldquo;&rdquo;,
+    description: &ldquo;&rdquo;,
+    logo: &ldquo;&rdquo;,
+    industry: &ldquo;&rdquo;,
+    size: &ldquo;&rdquo;,
+    founded: &ldquo;&rdquo;,
+    website: &ldquo;&rdquo;,
+    email: &ldquo;&rdquo;,
+    phone: &ldquo;&rdquo;,
+    address: &ldquo;&rdquo;,
+    city: &ldquo;&rdquo;,
+    country: &ldquo;Bolivia&rdquo;,
+    status: &ldquo;ACTIVE&rdquo;,
     employees: 0,
     revenue: 0,
     growth: 0,
   })
 
   const [logoFile, setLogoFile] = useState<File | null>(null)
-  const [logoPreview, setLogoPreview] = useState("")
+  const [logoPreview, setLogoPreview] = useState(&ldquo;&rdquo;)
 
   useEffect(() => {
     fetchCompanies()
@@ -110,108 +110,108 @@ export default function CompaniesManagementPage() {
       // Simulated data
       const mockCompanies: Company[] = [
         {
-          id: "1",
-          name: "Cemse Innovación",
-          description: "Empresa líder en desarrollo de soluciones tecnológicas innovadoras",
-          logo: "/placeholder.svg?height=60&width=60",
-          industry: "Tecnología",
-          size: "51-200 empleados",
-          founded: "2018",
-          website: "https://cemse.com.bo",
-          email: "contacto@cemse.com.bo",
-          phone: "+591 2 2345678",
-          address: "Av. Arce 2345, Torre Empresarial",
-          city: "La Paz",
-          country: "Bolivia",
-          status: "ACTIVE",
+          id: &ldquo;1&rdquo;,
+          name: &ldquo;Cemse Innovación&rdquo;,
+          description: &ldquo;Empresa líder en desarrollo de soluciones tecnológicas innovadoras&rdquo;,
+          logo: &ldquo;/placeholder.svg?height=60&width=60&rdquo;,
+          industry: &ldquo;Tecnología&rdquo;,
+          size: &ldquo;51-200 empleados&rdquo;,
+          founded: &ldquo;2018&rdquo;,
+          website: &ldquo;https://cemse.com.bo&rdquo;,
+          email: &ldquo;contacto@cemse.com.bo&rdquo;,
+          phone: &ldquo;+591 2 2345678&rdquo;,
+          address: &ldquo;Av. Arce 2345, Torre Empresarial&rdquo;,
+          city: &ldquo;La Paz&rdquo;,
+          country: &ldquo;Bolivia&rdquo;,
+          status: &ldquo;ACTIVE&rdquo;,
           employees: 127,
           revenue: 2500000,
           growth: 35,
-          createdAt: "2024-01-15",
-          updatedAt: "2024-01-20",
+          createdAt: &ldquo;2024-01-15&rdquo;,
+          updatedAt: &ldquo;2024-01-20&rdquo;,
         },
         {
-          id: "2",
-          name: "TechSolutions Bolivia",
-          description: "Consultoría en transformación digital para empresas",
-          logo: "/placeholder.svg?height=60&width=60",
-          industry: "Tecnología",
-          size: "11-50 empleados",
-          founded: "2020",
-          website: "https://techsolutions.bo",
-          email: "info@techsolutions.bo",
-          phone: "+591 4 4567890",
-          address: "Calle Comercio 123",
-          city: "Cochabamba",
-          country: "Bolivia",
-          status: "ACTIVE",
+          id: &ldquo;2&rdquo;,
+          name: &ldquo;TechSolutions Bolivia&rdquo;,
+          description: &ldquo;Consultoría en transformación digital para empresas&rdquo;,
+          logo: &ldquo;/placeholder.svg?height=60&width=60&rdquo;,
+          industry: &ldquo;Tecnología&rdquo;,
+          size: &ldquo;11-50 empleados&rdquo;,
+          founded: &ldquo;2020&rdquo;,
+          website: &ldquo;https://techsolutions.bo&rdquo;,
+          email: &ldquo;info@techsolutions.bo&rdquo;,
+          phone: &ldquo;+591 4 4567890&rdquo;,
+          address: &ldquo;Calle Comercio 123&rdquo;,
+          city: &ldquo;Cochabamba&rdquo;,
+          country: &ldquo;Bolivia&rdquo;,
+          status: &ldquo;ACTIVE&rdquo;,
           employees: 45,
           revenue: 850000,
           growth: 28,
-          createdAt: "2024-01-10",
-          updatedAt: "2024-01-18",
+          createdAt: &ldquo;2024-01-10&rdquo;,
+          updatedAt: &ldquo;2024-01-18&rdquo;,
         },
         {
-          id: "3",
-          name: "FinanceGroup SA",
-          description: "Servicios financieros y consultoría empresarial",
-          logo: "/placeholder.svg?height=60&width=60",
-          industry: "Finanzas",
-          size: "201-500 empleados",
-          founded: "2015",
-          website: "https://financegroup.bo",
-          email: "contacto@financegroup.bo",
-          phone: "+591 3 3456789",
-          address: "Av. San Martín 456",
-          city: "Santa Cruz",
-          country: "Bolivia",
-          status: "ACTIVE",
+          id: &ldquo;3&rdquo;,
+          name: &ldquo;FinanceGroup SA&rdquo;,
+          description: &ldquo;Servicios financieros y consultoría empresarial&rdquo;,
+          logo: &ldquo;/placeholder.svg?height=60&width=60&rdquo;,
+          industry: &ldquo;Finanzas&rdquo;,
+          size: &ldquo;201-500 empleados&rdquo;,
+          founded: &ldquo;2015&rdquo;,
+          website: &ldquo;https://financegroup.bo&rdquo;,
+          email: &ldquo;contacto@financegroup.bo&rdquo;,
+          phone: &ldquo;+591 3 3456789&rdquo;,
+          address: &ldquo;Av. San Martín 456&rdquo;,
+          city: &ldquo;Santa Cruz&rdquo;,
+          country: &ldquo;Bolivia&rdquo;,
+          status: &ldquo;ACTIVE&rdquo;,
           employees: 289,
           revenue: 4200000,
           growth: 15,
-          createdAt: "2024-01-05",
-          updatedAt: "2024-01-15",
+          createdAt: &ldquo;2024-01-05&rdquo;,
+          updatedAt: &ldquo;2024-01-15&rdquo;,
         },
         {
-          id: "4",
-          name: "EcoVerde Ltda",
-          description: "Soluciones ambientales y energías renovables",
-          logo: "/placeholder.svg?height=60&width=60",
-          industry: "Medio Ambiente",
-          size: "11-50 empleados",
-          founded: "2021",
-          website: "https://ecoverde.bo",
-          email: "info@ecoverde.bo",
-          phone: "+591 2 2987654",
-          address: "Zona Sur, Calle 21",
-          city: "La Paz",
-          country: "Bolivia",
-          status: "PENDING",
+          id: &ldquo;4&rdquo;,
+          name: &ldquo;EcoVerde Ltda&rdquo;,
+          description: &ldquo;Soluciones ambientales y energías renovables&rdquo;,
+          logo: &ldquo;/placeholder.svg?height=60&width=60&rdquo;,
+          industry: &ldquo;Medio Ambiente&rdquo;,
+          size: &ldquo;11-50 empleados&rdquo;,
+          founded: &ldquo;2021&rdquo;,
+          website: &ldquo;https://ecoverde.bo&rdquo;,
+          email: &ldquo;info@ecoverde.bo&rdquo;,
+          phone: &ldquo;+591 2 2987654&rdquo;,
+          address: &ldquo;Zona Sur, Calle 21&rdquo;,
+          city: &ldquo;La Paz&rdquo;,
+          country: &ldquo;Bolivia&rdquo;,
+          status: &ldquo;PENDING&rdquo;,
           employees: 23,
           revenue: 320000,
           growth: 45,
-          createdAt: "2024-01-01",
-          updatedAt: "2024-01-12",
+          createdAt: &ldquo;2024-01-01&rdquo;,
+          updatedAt: &ldquo;2024-01-12&rdquo;,
         },
       ]
 
       const filteredCompanies = mockCompanies.filter((company) => {
-        const matchesIndustry = industryFilter === "all" || company.industry === industryFilter
-        const matchesStatus = statusFilter === "all" || company.status.toLowerCase() === statusFilter
+        const matchesIndustry = industryFilter === &ldquo;all&rdquo; || company.industry === industryFilter
+        const matchesStatus = statusFilter === &ldquo;all&rdquo; || company.status.toLowerCase() === statusFilter
         return matchesIndustry && matchesStatus
       })
 
       setCompanies(filteredCompanies)
       setStats({
         total: mockCompanies.length,
-        active: mockCompanies.filter((c) => c.status === "ACTIVE").length,
-        inactive: mockCompanies.filter((c) => c.status === "INACTIVE").length,
-        pending: mockCompanies.filter((c) => c.status === "PENDING").length,
+        active: mockCompanies.filter((c) => c.status === &ldquo;ACTIVE&rdquo;).length,
+        inactive: mockCompanies.filter((c) => c.status === &ldquo;INACTIVE&rdquo;).length,
+        pending: mockCompanies.filter((c) => c.status === &ldquo;PENDING&rdquo;).length,
         totalEmployees: mockCompanies.reduce((sum, c) => sum + c.employees, 0),
         totalRevenue: mockCompanies.reduce((sum, c) => sum + c.revenue, 0),
       })
     } catch (error) {
-      console.error("Error fetching companies:", error)
+      console.error(&ldquo;Error fetching companies:&rdquo;, error)
     } finally {
       setLoading(false)
     }
@@ -233,31 +233,31 @@ export default function CompaniesManagementPage() {
 
   const removeLogo = () => {
     setLogoFile(null)
-    setLogoPreview("")
-    setFormData({ ...formData, logo: "" })
+    setLogoPreview(&ldquo;&rdquo;)
+    setFormData({ ...formData, logo: &ldquo;&rdquo; })
   }
 
   const resetForm = () => {
     setFormData({
-      name: "",
-      description: "",
-      logo: "",
-      industry: "",
-      size: "",
-      founded: "",
-      website: "",
-      email: "",
-      phone: "",
-      address: "",
-      city: "",
-      country: "Bolivia",
-      status: "ACTIVE",
+      name: &ldquo;&rdquo;,
+      description: &ldquo;&rdquo;,
+      logo: &ldquo;&rdquo;,
+      industry: &ldquo;&rdquo;,
+      size: &ldquo;&rdquo;,
+      founded: &ldquo;&rdquo;,
+      website: &ldquo;&rdquo;,
+      email: &ldquo;&rdquo;,
+      phone: &ldquo;&rdquo;,
+      address: &ldquo;&rdquo;,
+      city: &ldquo;&rdquo;,
+      country: &ldquo;Bolivia&rdquo;,
+      status: &ldquo;ACTIVE&rdquo;,
       employees: 0,
       revenue: 0,
       growth: 0,
     })
     setLogoFile(null)
-    setLogoPreview("")
+    setLogoPreview(&ldquo;&rdquo;)
   }
 
   const handleCreate = async () => {
@@ -269,7 +269,7 @@ export default function CompaniesManagementPage() {
         updatedAt: new Date().toISOString(),
       }
   
-      console.log("Creating company:", newCompany)
+      console.log(&ldquo;Creating company:&rdquo;, newCompany)
   
       // Aquí iría la lógica para guardar la empresa (API o localStorage)
       // Por ahora lo dejamos simulado
@@ -282,7 +282,7 @@ export default function CompaniesManagementPage() {
         setShowCreateDialog(true)
       }, 200) 
     } catch (error) {
-      console.error("Error creating company:", error)
+      console.error(&ldquo;Error creating company:&rdquo;, error)
     }
   }
   
@@ -302,48 +302,48 @@ export default function CompaniesManagementPage() {
         updatedAt: new Date().toISOString(),
       }
 
-      console.log("Updating company:", updatedCompany)
+      console.log(&ldquo;Updating company:&rdquo;, updatedCompany)
       setShowEditDialog(false)
       setSelectedCompany(null)
       resetForm()
       fetchCompanies()
     } catch (error) {
-      console.error("Error updating company:", error)
+      console.error(&ldquo;Error updating company:&rdquo;, error)
     }
   }
 
   const handleDelete = async () => {
     try {
-      console.log("Deleting company:", selectedCompany?.id)
+      console.log(&ldquo;Deleting company:&rdquo;, selectedCompany?.id)
       setShowDeleteDialog(false)
       setSelectedCompany(null)
       fetchCompanies()
     } catch (error) {
-      console.error("Error deleting company:", error)
+      console.error(&ldquo;Error deleting company:&rdquo;, error)
     }
   }
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "ACTIVE":
-        return "bg-green-100 text-green-800"
-      case "INACTIVE":
-        return "bg-red-100 text-red-800"
-      case "PENDING":
-        return "bg-yellow-100 text-yellow-800"
+      case &ldquo;ACTIVE&rdquo;:
+        return &ldquo;bg-green-100 text-green-800&rdquo;
+      case &ldquo;INACTIVE&rdquo;:
+        return &ldquo;bg-red-100 text-red-800&rdquo;
+      case &ldquo;PENDING&rdquo;:
+        return &ldquo;bg-yellow-100 text-yellow-800&rdquo;
       default:
-        return "bg-gray-100 text-gray-800"
+        return &ldquo;bg-gray-100 text-gray-800&rdquo;
     }
   }
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case "ACTIVE":
-        return "Activa"
-      case "INACTIVE":
-        return "Inactiva"
-      case "PENDING":
-        return "Pendiente"
+      case &ldquo;ACTIVE&rdquo;:
+        return &ldquo;Activa&rdquo;
+      case &ldquo;INACTIVE&rdquo;:
+        return &ldquo;Inactiva&rdquo;
+      case &ldquo;PENDING&rdquo;:
+        return &ldquo;Pendiente&rdquo;
       default:
         return status
     }
@@ -357,72 +357,72 @@ export default function CompaniesManagementPage() {
   )
 
   return (
-    <div className="space-y-6">
+    <div className=&ldquo;space-y-6&rdquo;>
       {/* Header */}
-      <div className="flex justify-between items-center">
+      <div className=&ldquo;flex justify-between items-center&rdquo;>
         <div>
-          <h1 className="text-3xl font-bold">Gestión de Empresas</h1>
-          <p className="text-muted-foreground">Administra todas las empresas registradas en la plataforma</p>
+          <h1 className=&ldquo;text-3xl font-bold&rdquo;>Gestión de Empresas</h1>
+          <p className=&ldquo;text-muted-foreground&rdquo;>Administra todas las empresas registradas en la plataforma</p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline">
-            <Download className="w-4 h-4 mr-2" />
+        <div className=&ldquo;flex gap-2&rdquo;>
+          <Button variant=&ldquo;outline&rdquo;>
+            <Download className=&ldquo;w-4 h-4 mr-2&rdquo; />
             Exportar
           </Button>
           <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
             <DialogTrigger asChild>
               <Button>
-                <Plus className="w-4 h-4 mr-2" />
+                <Plus className=&ldquo;w-4 h-4 mr-2&rdquo; />
                 Nueva Empresa
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogContent className=&ldquo;max-w-4xl max-h-[90vh] overflow-y-auto&rdquo;>
               <DialogHeader>
                 <DialogTitle>Crear Nueva Empresa</DialogTitle>
                 <DialogDescription>Registra una nueva empresa en la plataforma</DialogDescription>
               </DialogHeader>
 
-              <Tabs defaultValue="basic" className="w-full">
-                <TabsList className="grid w-full grid-cols-3">
-                  <TabsTrigger value="basic">Información Básica</TabsTrigger>
-                  <TabsTrigger value="contact">Contacto</TabsTrigger>
-                  <TabsTrigger value="metrics">Métricas</TabsTrigger>
+              <Tabs defaultValue=&ldquo;basic&rdquo; className=&ldquo;w-full&rdquo;>
+                <TabsList className=&ldquo;grid w-full grid-cols-3&rdquo;>
+                  <TabsTrigger value=&ldquo;basic&rdquo;>Información Básica</TabsTrigger>
+                  <TabsTrigger value=&ldquo;contact&rdquo;>Contacto</TabsTrigger>
+                  <TabsTrigger value=&ldquo;metrics&rdquo;>Métricas</TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="basic" className="space-y-4">
+                <TabsContent value=&ldquo;basic&rdquo; className=&ldquo;space-y-4&rdquo;>
                   {/* Logo Upload */}
-                  <div className="grid gap-2">
+                  <div className=&ldquo;grid gap-2&rdquo;>
                     <Label>Logo de la Empresa</Label>
                     {logoPreview ? (
-                      <div className="relative w-24 h-24">
-                        <Avatar className="w-24 h-24">
-                          <AvatarImage src={logoPreview || "/placeholder.svg"} alt="Logo preview" />
+                      <div className=&ldquo;relative w-24 h-24&rdquo;>
+                        <Avatar className=&ldquo;w-24 h-24&rdquo;>
+                          <AvatarImage src={logoPreview || &ldquo;/placeholder.svg&rdquo;} alt=&ldquo;Logo preview&rdquo; />
                           <AvatarFallback>
-                            <Building2 className="w-8 h-8" />
+                            <Building2 className=&ldquo;w-8 h-8&rdquo; />
                           </AvatarFallback>
                         </Avatar>
                         <Button
-                          size="sm"
-                          variant="destructive"
-                          className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0"
+                          size=&ldquo;sm&rdquo;
+                          variant=&ldquo;destructive&rdquo;
+                          className=&ldquo;absolute -top-2 -right-2 h-6 w-6 rounded-full p-0&rdquo;
                           onClick={removeLogo}
                         >
-                          <X className="w-3 h-3" />
+                          <X className=&ldquo;w-3 h-3&rdquo; />
                         </Button>
                       </div>
                     ) : (
-                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center w-32">
-                        <Building2 className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                      <div className=&ldquo;border-2 border-dashed border-gray-300 rounded-lg p-6 text-center w-32&rdquo;>
+                        <Building2 className=&ldquo;w-8 h-8 text-gray-400 mx-auto mb-2&rdquo; />
                         <Input
-                          type="file"
-                          accept="image/*"
+                          type=&ldquo;file&rdquo;
+                          accept=&ldquo;image/*&rdquo;
                           onChange={handleLogoUpload}
-                          className="hidden"
-                          id="logo-upload"
+                          className=&ldquo;hidden&rdquo;
+                          id=&ldquo;logo-upload&rdquo;
                         />
                         <Label
-                          htmlFor="logo-upload"
-                          className="cursor-pointer text-sm text-blue-600 hover:text-blue-800"
+                          htmlFor=&ldquo;logo-upload&rdquo;
+                          className=&ldquo;cursor-pointer text-sm text-blue-600 hover:text-blue-800&rdquo;
                         >
                           Subir Logo
                         </Label>
@@ -430,213 +430,213 @@ export default function CompaniesManagementPage() {
                     )}
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="grid gap-2">
-                      <Label htmlFor="name">Nombre de la Empresa *</Label>
+                  <div className=&ldquo;grid grid-cols-2 gap-4&rdquo;>
+                    <div className=&ldquo;grid gap-2&rdquo;>
+                      <Label htmlFor=&ldquo;name&rdquo;>Nombre de la Empresa *</Label>
                       <Input
-                        id="name"
+                        id=&ldquo;name&rdquo;
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        placeholder="Ej: Cemse Innovación"
+                        placeholder=&ldquo;Ej: Cemse Innovación&rdquo;
                       />
                     </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="founded">Año de Fundación</Label>
+                    <div className=&ldquo;grid gap-2&rdquo;>
+                      <Label htmlFor=&ldquo;founded&rdquo;>Año de Fundación</Label>
                       <Input
-                        id="founded"
+                        id=&ldquo;founded&rdquo;
                         value={formData.founded}
                         onChange={(e) => setFormData({ ...formData, founded: e.target.value })}
-                        placeholder="2018"
+                        placeholder=&ldquo;2018&rdquo;
                       />
                     </div>
                   </div>
 
-                  <div className="grid gap-2">
-                    <Label htmlFor="description">Descripción</Label>
+                  <div className=&ldquo;grid gap-2&rdquo;>
+                    <Label htmlFor=&ldquo;description&rdquo;>Descripción</Label>
                     <Textarea
-                      id="description"
+                      id=&ldquo;description&rdquo;
                       value={formData.description}
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                      placeholder="Descripción de la empresa..."
+                      placeholder=&ldquo;Descripción de la empresa...&rdquo;
                       rows={3}
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="grid gap-2">
-                      <Label htmlFor="industry">Sector</Label>
+                  <div className=&ldquo;grid grid-cols-2 gap-4&rdquo;>
+                    <div className=&ldquo;grid gap-2&rdquo;>
+                      <Label htmlFor=&ldquo;industry&rdquo;>Sector</Label>
                       <Select
                         value={formData.industry}
                         onValueChange={(value) => setFormData({ ...formData, industry: value })}
                       >
                         <SelectTrigger>
-                          <SelectValue placeholder="Seleccionar sector" />
+                          <SelectValue placeholder=&ldquo;Seleccionar sector&rdquo; />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="Tecnología">Tecnología</SelectItem>
-                          <SelectItem value="Finanzas">Finanzas</SelectItem>
-                          <SelectItem value="Salud">Salud</SelectItem>
-                          <SelectItem value="Educación">Educación</SelectItem>
-                          <SelectItem value="Manufactura">Manufactura</SelectItem>
-                          <SelectItem value="Servicios">Servicios</SelectItem>
-                          <SelectItem value="Medio Ambiente">Medio Ambiente</SelectItem>
+                          <SelectItem value=&ldquo;Tecnología&rdquo;>Tecnología</SelectItem>
+                          <SelectItem value=&ldquo;Finanzas&rdquo;>Finanzas</SelectItem>
+                          <SelectItem value=&ldquo;Salud&rdquo;>Salud</SelectItem>
+                          <SelectItem value=&ldquo;Educación&rdquo;>Educación</SelectItem>
+                          <SelectItem value=&ldquo;Manufactura&rdquo;>Manufactura</SelectItem>
+                          <SelectItem value=&ldquo;Servicios&rdquo;>Servicios</SelectItem>
+                          <SelectItem value=&ldquo;Medio Ambiente&rdquo;>Medio Ambiente</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="size">Tamaño</Label>
+                    <div className=&ldquo;grid gap-2&rdquo;>
+                      <Label htmlFor=&ldquo;size&rdquo;>Tamaño</Label>
                       <Select
                         value={formData.size}
                         onValueChange={(value) => setFormData({ ...formData, size: value })}
                       >
                         <SelectTrigger>
-                          <SelectValue placeholder="Seleccionar tamaño" />
+                          <SelectValue placeholder=&ldquo;Seleccionar tamaño&rdquo; />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="1-10 empleados">1-10 empleados</SelectItem>
-                          <SelectItem value="11-50 empleados">11-50 empleados</SelectItem>
-                          <SelectItem value="51-200 empleados">51-200 empleados</SelectItem>
-                          <SelectItem value="201-500 empleados">201-500 empleados</SelectItem>
-                          <SelectItem value="500+ empleados">500+ empleados</SelectItem>
+                          <SelectItem value=&ldquo;1-10 empleados&rdquo;>1-10 empleados</SelectItem>
+                          <SelectItem value=&ldquo;11-50 empleados&rdquo;>11-50 empleados</SelectItem>
+                          <SelectItem value=&ldquo;51-200 empleados&rdquo;>51-200 empleados</SelectItem>
+                          <SelectItem value=&ldquo;201-500 empleados&rdquo;>201-500 empleados</SelectItem>
+                          <SelectItem value=&ldquo;500+ empleados&rdquo;>500+ empleados</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                   </div>
 
-                  <div className="grid gap-2">
-                    <Label htmlFor="status">Estado</Label>
+                  <div className=&ldquo;grid gap-2&rdquo;>
+                    <Label htmlFor=&ldquo;status&rdquo;>Estado</Label>
                     <Select
                       value={formData.status}
-                      onValueChange={(value) => setFormData({ ...formData, status: value as Company["status"] })}
+                      onValueChange={(value) => setFormData({ ...formData, status: value as Company[&ldquo;status&rdquo;] })}
                     >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="ACTIVE">Activa</SelectItem>
-                        <SelectItem value="PENDING">Pendiente</SelectItem>
-                        <SelectItem value="INACTIVE">Inactiva</SelectItem>
+                        <SelectItem value=&ldquo;ACTIVE&rdquo;>Activa</SelectItem>
+                        <SelectItem value=&ldquo;PENDING&rdquo;>Pendiente</SelectItem>
+                        <SelectItem value=&ldquo;INACTIVE&rdquo;>Inactiva</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                 </TabsContent>
 
-                <TabsContent value="contact" className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="grid gap-2">
-                      <Label htmlFor="website">Sitio Web</Label>
+                <TabsContent value=&ldquo;contact&rdquo; className=&ldquo;space-y-4&rdquo;>
+                  <div className=&ldquo;grid grid-cols-2 gap-4&rdquo;>
+                    <div className=&ldquo;grid gap-2&rdquo;>
+                      <Label htmlFor=&ldquo;website&rdquo;>Sitio Web</Label>
                       <Input
-                        id="website"
+                        id=&ldquo;website&rdquo;
                         value={formData.website}
                         onChange={(e) => setFormData({ ...formData, website: e.target.value })}
-                        placeholder="https://empresa.com"
+                        placeholder=&ldquo;https://empresa.com&rdquo;
                       />
                     </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="email">Email</Label>
+                    <div className=&ldquo;grid gap-2&rdquo;>
+                      <Label htmlFor=&ldquo;email&rdquo;>Email</Label>
                       <Input
-                        id="email"
-                        type="email"
+                        id=&ldquo;email&rdquo;
+                        type=&ldquo;email&rdquo;
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        placeholder="contacto@empresa.com"
+                        placeholder=&ldquo;contacto@empresa.com&rdquo;
                       />
                     </div>
                   </div>
 
-                  <div className="grid gap-2">
-                    <Label htmlFor="phone">Teléfono</Label>
+                  <div className=&ldquo;grid gap-2&rdquo;>
+                    <Label htmlFor=&ldquo;phone&rdquo;>Teléfono</Label>
                     <Input
-                      id="phone"
+                      id=&ldquo;phone&rdquo;
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      placeholder="+591 2 2345678"
+                      placeholder=&ldquo;+591 2 2345678&rdquo;
                     />
                   </div>
 
-                  <div className="grid gap-2">
-                    <Label htmlFor="address">Dirección</Label>
+                  <div className=&ldquo;grid gap-2&rdquo;>
+                    <Label htmlFor=&ldquo;address&rdquo;>Dirección</Label>
                     <Input
-                      id="address"
+                      id=&ldquo;address&rdquo;
                       value={formData.address}
                       onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                      placeholder="Av. Principal 123"
+                      placeholder=&ldquo;Av. Principal 123&rdquo;
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="grid gap-2">
-                      <Label htmlFor="city">Ciudad</Label>
+                  <div className=&ldquo;grid grid-cols-2 gap-4&rdquo;>
+                    <div className=&ldquo;grid gap-2&rdquo;>
+                      <Label htmlFor=&ldquo;city&rdquo;>Ciudad</Label>
                       <Select
                         value={formData.city}
                         onValueChange={(value) => setFormData({ ...formData, city: value })}
                       >
                         <SelectTrigger>
-                          <SelectValue placeholder="Seleccionar ciudad" />
+                          <SelectValue placeholder=&ldquo;Seleccionar ciudad&rdquo; />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="La Paz">La Paz</SelectItem>
-                          <SelectItem value="Santa Cruz">Santa Cruz</SelectItem>
-                          <SelectItem value="Cochabamba">Cochabamba</SelectItem>
-                          <SelectItem value="Sucre">Sucre</SelectItem>
-                          <SelectItem value="Potosí">Potosí</SelectItem>
-                          <SelectItem value="Oruro">Oruro</SelectItem>
-                          <SelectItem value="Tarija">Tarija</SelectItem>
-                          <SelectItem value="Beni">Beni</SelectItem>
-                          <SelectItem value="Pando">Pando</SelectItem>
+                          <SelectItem value=&ldquo;La Paz&rdquo;>La Paz</SelectItem>
+                          <SelectItem value=&ldquo;Santa Cruz&rdquo;>Santa Cruz</SelectItem>
+                          <SelectItem value=&ldquo;Cochabamba&rdquo;>Cochabamba</SelectItem>
+                          <SelectItem value=&ldquo;Sucre&rdquo;>Sucre</SelectItem>
+                          <SelectItem value=&ldquo;Potosí&rdquo;>Potosí</SelectItem>
+                          <SelectItem value=&ldquo;Oruro&rdquo;>Oruro</SelectItem>
+                          <SelectItem value=&ldquo;Tarija&rdquo;>Tarija</SelectItem>
+                          <SelectItem value=&ldquo;Beni&rdquo;>Beni</SelectItem>
+                          <SelectItem value=&ldquo;Pando&rdquo;>Pando</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="country">País</Label>
+                    <div className=&ldquo;grid gap-2&rdquo;>
+                      <Label htmlFor=&ldquo;country&rdquo;>País</Label>
                       <Input
-                        id="country"
+                        id=&ldquo;country&rdquo;
                         value={formData.country}
                         onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-                        placeholder="Bolivia"
+                        placeholder=&ldquo;Bolivia&rdquo;
                       />
                     </div>
                   </div>
                 </TabsContent>
 
-                <TabsContent value="metrics" className="space-y-4">
-                  <div className="grid grid-cols-3 gap-4">
-                    <div className="grid gap-2">
-                      <Label htmlFor="employees">Número de Empleados</Label>
+                <TabsContent value=&ldquo;metrics&rdquo; className=&ldquo;space-y-4&rdquo;>
+                  <div className=&ldquo;grid grid-cols-3 gap-4&rdquo;>
+                    <div className=&ldquo;grid gap-2&rdquo;>
+                      <Label htmlFor=&ldquo;employees&rdquo;>Número de Empleados</Label>
                       <Input
-                        id="employees"
-                        type="number"
+                        id=&ldquo;employees&rdquo;
+                        type=&ldquo;number&rdquo;
                         value={formData.employees}
                         onChange={(e) => setFormData({ ...formData, employees: Number.parseInt(e.target.value) || 0 })}
-                        placeholder="0"
+                        placeholder=&ldquo;0&rdquo;
                       />
                     </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="revenue">Ingresos Anuales (Bs.)</Label>
+                    <div className=&ldquo;grid gap-2&rdquo;>
+                      <Label htmlFor=&ldquo;revenue&rdquo;>Ingresos Anuales (Bs.)</Label>
                       <Input
-                        id="revenue"
-                        type="number"
+                        id=&ldquo;revenue&rdquo;
+                        type=&ldquo;number&rdquo;
                         value={formData.revenue}
                         onChange={(e) => setFormData({ ...formData, revenue: Number.parseInt(e.target.value) || 0 })}
-                        placeholder="0"
+                        placeholder=&ldquo;0&rdquo;
                       />
                     </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="growth">Crecimiento (%)</Label>
+                    <div className=&ldquo;grid gap-2&rdquo;>
+                      <Label htmlFor=&ldquo;growth&rdquo;>Crecimiento (%)</Label>
                       <Input
-                        id="growth"
-                        type="number"
+                        id=&ldquo;growth&rdquo;
+                        type=&ldquo;number&rdquo;
                         value={formData.growth}
                         onChange={(e) => setFormData({ ...formData, growth: Number.parseInt(e.target.value) || 0 })}
-                        placeholder="0"
+                        placeholder=&ldquo;0&rdquo;
                       />
                     </div>
                   </div>
                 </TabsContent>
               </Tabs>
 
-              <div className="flex justify-end gap-2 pt-4">
-                <Button variant="outline" onClick={() => setShowCreateDialog(false)}>
+              <div className=&ldquo;flex justify-end gap-2 pt-4&rdquo;>
+                <Button variant=&ldquo;outline&rdquo; onClick={() => setShowCreateDialog(false)}>
                   Cancelar
                 </Button>
                 <Button onClick={handleCreate} disabled={!formData.name}>
@@ -649,56 +649,56 @@ export default function CompaniesManagementPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
+      <div className=&ldquo;grid grid-cols-1 md:grid-cols-6 gap-4&rdquo;>
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Empresas</CardTitle>
-            <Building2 className="h-4 w-4 text-muted-foreground" />
+          <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
+            <CardTitle className=&ldquo;text-sm font-medium&rdquo;>Total Empresas</CardTitle>
+            <Building2 className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.total}</div>
+            <div className=&ldquo;text-2xl font-bold&rdquo;>{stats.total}</div>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Activas</CardTitle>
+          <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
+            <CardTitle className=&ldquo;text-sm font-medium&rdquo;>Activas</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">{stats.active}</div>
+            <div className=&ldquo;text-2xl font-bold text-green-600&rdquo;>{stats.active}</div>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Pendientes</CardTitle>
+          <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
+            <CardTitle className=&ldquo;text-sm font-medium&rdquo;>Pendientes</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-yellow-600">{stats.pending}</div>
+            <div className=&ldquo;text-2xl font-bold text-yellow-600&rdquo;>{stats.pending}</div>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Inactivas</CardTitle>
+          <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
+            <CardTitle className=&ldquo;text-sm font-medium&rdquo;>Inactivas</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-red-600">{stats.inactive}</div>
+            <div className=&ldquo;text-2xl font-bold text-red-600&rdquo;>{stats.inactive}</div>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Empleados</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+          <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
+            <CardTitle className=&ldquo;text-sm font-medium&rdquo;>Total Empleados</CardTitle>
+            <Users className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.totalEmployees.toLocaleString()}</div>
+            <div className=&ldquo;text-2xl font-bold&rdquo;>{stats.totalEmployees.toLocaleString()}</div>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Ingresos Totales</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+          <CardHeader className=&ldquo;flex flex-row items-center justify-between space-y-0 pb-2&rdquo;>
+            <CardTitle className=&ldquo;text-sm font-medium&rdquo;>Ingresos Totales</CardTitle>
+            <TrendingUp className=&ldquo;h-4 w-4 text-muted-foreground&rdquo; />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">Bs. {(stats.totalRevenue / 1000000).toFixed(1)}M</div>
+            <div className=&ldquo;text-2xl font-bold&rdquo;>Bs. {(stats.totalRevenue / 1000000).toFixed(1)}M</div>
           </CardContent>
         </Card>
       </div>
@@ -709,36 +709,36 @@ export default function CompaniesManagementPage() {
           <CardTitle>Filtros y Búsqueda</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex gap-4">
-            <div className="flex-1">
+          <div className=&ldquo;flex gap-4&rdquo;>
+            <div className=&ldquo;flex-1&rdquo;>
               <Input
-                placeholder="Buscar empresas..."
+                placeholder=&ldquo;Buscar empresas...&rdquo;
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="max-w-sm"
+                className=&ldquo;max-w-sm&rdquo;
               />
             </div>
             <Select value={industryFilter} onValueChange={setIndustryFilter}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Sector" />
+              <SelectTrigger className=&ldquo;w-[180px]&rdquo;>
+                <SelectValue placeholder=&ldquo;Sector&rdquo; />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Todos los sectores</SelectItem>
-                <SelectItem value="Tecnología">Tecnología</SelectItem>
-                <SelectItem value="Finanzas">Finanzas</SelectItem>
-                <SelectItem value="Salud">Salud</SelectItem>
-                <SelectItem value="Medio Ambiente">Medio Ambiente</SelectItem>
+                <SelectItem value=&ldquo;all&rdquo;>Todos los sectores</SelectItem>
+                <SelectItem value=&ldquo;Tecnología&rdquo;>Tecnología</SelectItem>
+                <SelectItem value=&ldquo;Finanzas&rdquo;>Finanzas</SelectItem>
+                <SelectItem value=&ldquo;Salud&rdquo;>Salud</SelectItem>
+                <SelectItem value=&ldquo;Medio Ambiente&rdquo;>Medio Ambiente</SelectItem>
               </SelectContent>
             </Select>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Estado" />
+              <SelectTrigger className=&ldquo;w-[180px]&rdquo;>
+                <SelectValue placeholder=&ldquo;Estado&rdquo; />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Todos los estados</SelectItem>
-                <SelectItem value="active">Activas</SelectItem>
-                <SelectItem value="pending">Pendientes</SelectItem>
-                <SelectItem value="inactive">Inactivas</SelectItem>
+                <SelectItem value=&ldquo;all&rdquo;>Todos los estados</SelectItem>
+                <SelectItem value=&ldquo;active&rdquo;>Activas</SelectItem>
+                <SelectItem value=&ldquo;pending&rdquo;>Pendientes</SelectItem>
+                <SelectItem value=&ldquo;inactive&rdquo;>Inactivas</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -765,13 +765,13 @@ export default function CompaniesManagementPage() {
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8">
+                  <TableCell colSpan={7} className=&ldquo;text-center py-8&rdquo;>
                     Cargando empresas...
                   </TableCell>
                 </TableRow>
               ) : filteredCompanies.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8">
+                  <TableCell colSpan={7} className=&ldquo;text-center py-8&rdquo;>
                     No se encontraron empresas
                   </TableCell>
                 </TableRow>
@@ -779,27 +779,27 @@ export default function CompaniesManagementPage() {
                 filteredCompanies.map((company) => (
                   <TableRow key={company.id}>
                     <TableCell>
-                      <div className="flex items-center gap-3">
-                        <Avatar className="w-10 h-10">
-                          <AvatarImage src={company.logo || "/placeholder.svg"} alt={company.name} />
+                      <div className=&ldquo;flex items-center gap-3&rdquo;>
+                        <Avatar className=&ldquo;w-10 h-10&rdquo;>
+                          <AvatarImage src={company.logo || &ldquo;/placeholder.svg&rdquo;} alt={company.name} />
                           <AvatarFallback>
-                            <Building2 className="w-4 h-4" />
+                            <Building2 className=&ldquo;w-4 h-4&rdquo; />
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <div className="font-medium">{company.name}</div>
-                          <div className="text-sm text-muted-foreground line-clamp-1">{company.description}</div>
-                          <div className="text-xs text-muted-foreground">Fundada en {company.founded}</div>
+                          <div className=&ldquo;font-medium&rdquo;>{company.name}</div>
+                          <div className=&ldquo;text-sm text-muted-foreground line-clamp-1&rdquo;>{company.description}</div>
+                          <div className=&ldquo;text-xs text-muted-foreground&rdquo;>Fundada en {company.founded}</div>
                         </div>
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge variant="secondary">{company.industry}</Badge>
+                      <Badge variant=&ldquo;secondary&rdquo;>{company.industry}</Badge>
                     </TableCell>
                     <TableCell>
-                      <div className="flex items-center gap-1">
-                        <MapPin className="w-3 h-3" />
-                        <span className="text-sm">
+                      <div className=&ldquo;flex items-center gap-1&rdquo;>
+                        <MapPin className=&ldquo;w-3 h-3&rdquo; />
+                        <span className=&ldquo;text-sm&rdquo;>
                           {company.city}, {company.country}
                         </span>
                       </div>
@@ -808,41 +808,41 @@ export default function CompaniesManagementPage() {
                       <Badge className={getStatusColor(company.status)}>{getStatusText(company.status)}</Badge>
                     </TableCell>
                     {/* <TableCell>
-                      <div className="flex items-center gap-1">
-                        <Users className="w-3 h-3" />
+                      <div className=&ldquo;flex items-center gap-1&rdquo;>
+                        <Users className=&ldquo;w-3 h-3&rdquo; />
                         <span>{company.employees}</span>
                       </div>
                     </TableCell> */}
                     {/* <TableCell>
-                      <div className="text-sm">
+                      <div className=&ldquo;text-sm&rdquo;>
                         <div>Bs. {company.revenue.toLocaleString()}</div>
-                        <div className="text-green-600">+{company.growth}%</div>
+                        <div className=&ldquo;text-green-600&rdquo;>+{company.growth}%</div>
                       </div>
                     </TableCell> */}
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="sm">
-                            <MoreVertical className="w-4 h-4" />
+                          <Button variant=&ldquo;ghost&rdquo; size=&ldquo;sm&rdquo;>
+                            <MoreVertical className=&ldquo;w-4 h-4&rdquo; />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
                           <DropdownMenuItem>
-                            <Eye className="w-4 h-4 mr-2" />
+                            <Eye className=&ldquo;w-4 h-4 mr-2&rdquo; />
                             Ver Detalles
                           </DropdownMenuItem>
                           <DropdownMenuItem onClick={() => handleEdit(company)}>
-                            <Edit className="w-4 h-4 mr-2" />
+                            <Edit className=&ldquo;w-4 h-4 mr-2&rdquo; />
                             Editar
                           </DropdownMenuItem>
                           <DropdownMenuItem
-                            className="text-red-600"
+                            className=&ldquo;text-red-600&rdquo;
                             onClick={() => {
                               setSelectedCompany(company)
                               setShowDeleteDialog(true)
                             }}
                           >
-                            <Trash2 className="w-4 h-4 mr-2" />
+                            <Trash2 className=&ldquo;w-4 h-4 mr-2&rdquo; />
                             Eliminar
                           </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -858,53 +858,53 @@ export default function CompaniesManagementPage() {
 
       {/* Edit Dialog */}
       <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className=&ldquo;max-w-4xl max-h-[90vh] overflow-y-auto&rdquo;>
           <DialogHeader>
             <DialogTitle>Editar Empresa</DialogTitle>
             <DialogDescription>Modifica la información de {selectedCompany?.name}</DialogDescription>
           </DialogHeader>
 
-          <Tabs defaultValue="basic" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="basic">Información Básica</TabsTrigger>
-              <TabsTrigger value="contact">Contacto</TabsTrigger>
-              <TabsTrigger value="metrics">Métricas</TabsTrigger>
+          <Tabs defaultValue=&ldquo;basic&rdquo; className=&ldquo;w-full&rdquo;>
+            <TabsList className=&ldquo;grid w-full grid-cols-3&rdquo;>
+              <TabsTrigger value=&ldquo;basic&rdquo;>Información Básica</TabsTrigger>
+              <TabsTrigger value=&ldquo;contact&rdquo;>Contacto</TabsTrigger>
+              <TabsTrigger value=&ldquo;metrics&rdquo;>Métricas</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="basic" className="space-y-4">
+            <TabsContent value=&ldquo;basic&rdquo; className=&ldquo;space-y-4&rdquo;>
               {/* Same form fields as create, but with formData values */}
-              <div className="grid gap-2">
+              <div className=&ldquo;grid gap-2&rdquo;>
                 <Label>Logo de la Empresa</Label>
                 {logoPreview ? (
-                  <div className="relative w-24 h-24">
-                    <Avatar className="w-24 h-24">
-                      <AvatarImage src={logoPreview || "/placeholder.svg"} alt="Logo preview" />
+                  <div className=&ldquo;relative w-24 h-24&rdquo;>
+                    <Avatar className=&ldquo;w-24 h-24&rdquo;>
+                      <AvatarImage src={logoPreview || &ldquo;/placeholder.svg&rdquo;} alt=&ldquo;Logo preview&rdquo; />
                       <AvatarFallback>
-                        <Building2 className="w-8 h-8" />
+                        <Building2 className=&ldquo;w-8 h-8&rdquo; />
                       </AvatarFallback>
                     </Avatar>
                     <Button
-                      size="sm"
-                      variant="destructive"
-                      className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0"
+                      size=&ldquo;sm&rdquo;
+                      variant=&ldquo;destructive&rdquo;
+                      className=&ldquo;absolute -top-2 -right-2 h-6 w-6 rounded-full p-0&rdquo;
                       onClick={removeLogo}
                     >
-                      <X className="w-3 h-3" />
+                      <X className=&ldquo;w-3 h-3&rdquo; />
                     </Button>
                   </div>
                 ) : (
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center w-32">
-                    <Building2 className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                  <div className=&ldquo;border-2 border-dashed border-gray-300 rounded-lg p-6 text-center w-32&rdquo;>
+                    <Building2 className=&ldquo;w-8 h-8 text-gray-400 mx-auto mb-2&rdquo; />
                     <Input
-                      type="file"
-                      accept="image/*"
+                      type=&ldquo;file&rdquo;
+                      accept=&ldquo;image/*&rdquo;
                       onChange={handleLogoUpload}
-                      className="hidden"
-                      id="logo-upload-edit"
+                      className=&ldquo;hidden&rdquo;
+                      id=&ldquo;logo-upload-edit&rdquo;
                     />
                     <Label
-                      htmlFor="logo-upload-edit"
-                      className="cursor-pointer text-sm text-blue-600 hover:text-blue-800"
+                      htmlFor=&ldquo;logo-upload-edit&rdquo;
+                      className=&ldquo;cursor-pointer text-sm text-blue-600 hover:text-blue-800&rdquo;
                     >
                       Subir Logo
                     </Label>
@@ -912,37 +912,37 @@ export default function CompaniesManagementPage() {
                 )}
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="edit-name">Nombre de la Empresa *</Label>
+              <div className=&ldquo;grid grid-cols-2 gap-4&rdquo;>
+                <div className=&ldquo;grid gap-2&rdquo;>
+                  <Label htmlFor=&ldquo;edit-name&rdquo;>Nombre de la Empresa *</Label>
                   <Input
-                    id="edit-name"
+                    id=&ldquo;edit-name&rdquo;
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   />
                 </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="edit-founded">Año de Fundación</Label>
+                <div className=&ldquo;grid gap-2&rdquo;>
+                  <Label htmlFor=&ldquo;edit-founded&rdquo;>Año de Fundación</Label>
                   <Input
-                    id="edit-founded"
+                    id=&ldquo;edit-founded&rdquo;
                     value={formData.founded}
                     onChange={(e) => setFormData({ ...formData, founded: e.target.value })}
                   />
                 </div>
               </div>
 
-              <div className="grid gap-2">
-                <Label htmlFor="edit-description">Descripción</Label>
+              <div className=&ldquo;grid gap-2&rdquo;>
+                <Label htmlFor=&ldquo;edit-description&rdquo;>Descripción</Label>
                 <Textarea
-                  id="edit-description"
+                  id=&ldquo;edit-description&rdquo;
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   rows={3}
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-2">
+              <div className=&ldquo;grid grid-cols-2 gap-4&rdquo;>
+                <div className=&ldquo;grid gap-2&rdquo;>
                   <Label>Sector</Label>
                   <Select
                     value={formData.industry}
@@ -952,60 +952,60 @@ export default function CompaniesManagementPage() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Tecnología">Tecnología</SelectItem>
-                      <SelectItem value="Finanzas">Finanzas</SelectItem>
-                      <SelectItem value="Salud">Salud</SelectItem>
-                      <SelectItem value="Educación">Educación</SelectItem>
-                      <SelectItem value="Manufactura">Manufactura</SelectItem>
-                      <SelectItem value="Servicios">Servicios</SelectItem>
-                      <SelectItem value="Medio Ambiente">Medio Ambiente</SelectItem>
+                      <SelectItem value=&ldquo;Tecnología&rdquo;>Tecnología</SelectItem>
+                      <SelectItem value=&ldquo;Finanzas&rdquo;>Finanzas</SelectItem>
+                      <SelectItem value=&ldquo;Salud&rdquo;>Salud</SelectItem>
+                      <SelectItem value=&ldquo;Educación&rdquo;>Educación</SelectItem>
+                      <SelectItem value=&ldquo;Manufactura&rdquo;>Manufactura</SelectItem>
+                      <SelectItem value=&ldquo;Servicios&rdquo;>Servicios</SelectItem>
+                      <SelectItem value=&ldquo;Medio Ambiente&rdquo;>Medio Ambiente</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="grid gap-2">
+                <div className=&ldquo;grid gap-2&rdquo;>
                   <Label>Estado</Label>
                   <Select
                     value={formData.status}
-                    onValueChange={(value) => setFormData({ ...formData, status: value as Company["status"] })}
+                    onValueChange={(value) => setFormData({ ...formData, status: value as Company[&ldquo;status&rdquo;] })}
                   >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="ACTIVE">Activa</SelectItem>
-                      <SelectItem value="PENDING">Pendiente</SelectItem>
-                      <SelectItem value="INACTIVE">Inactiva</SelectItem>
+                      <SelectItem value=&ldquo;ACTIVE&rdquo;>Activa</SelectItem>
+                      <SelectItem value=&ldquo;PENDING&rdquo;>Pendiente</SelectItem>
+                      <SelectItem value=&ldquo;INACTIVE&rdquo;>Inactiva</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
             </TabsContent>
 
-            <TabsContent value="contact" className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-2">
+            <TabsContent value=&ldquo;contact&rdquo; className=&ldquo;space-y-4&rdquo;>
+              <div className=&ldquo;grid grid-cols-2 gap-4&rdquo;>
+                <div className=&ldquo;grid gap-2&rdquo;>
                   <Label>Sitio Web</Label>
                   <Input
                     value={formData.website}
                     onChange={(e) => setFormData({ ...formData, website: e.target.value })}
                   />
                 </div>
-                <div className="grid gap-2">
+                <div className=&ldquo;grid gap-2&rdquo;>
                   <Label>Email</Label>
                   <Input
-                    type="email"
+                    type=&ldquo;email&rdquo;
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   />
                 </div>
               </div>
 
-              <div className="grid gap-2">
+              <div className=&ldquo;grid gap-2&rdquo;>
                 <Label>Teléfono</Label>
                 <Input value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
               </div>
 
-              <div className="grid gap-2">
+              <div className=&ldquo;grid gap-2&rdquo;>
                 <Label>Dirección</Label>
                 <Input
                   value={formData.address}
@@ -1013,27 +1013,27 @@ export default function CompaniesManagementPage() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-2">
+              <div className=&ldquo;grid grid-cols-2 gap-4&rdquo;>
+                <div className=&ldquo;grid gap-2&rdquo;>
                   <Label>Ciudad</Label>
                   <Select value={formData.city} onValueChange={(value) => setFormData({ ...formData, city: value })}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="La Paz">La Paz</SelectItem>
-                      <SelectItem value="Santa Cruz">Santa Cruz</SelectItem>
-                      <SelectItem value="Cochabamba">Cochabamba</SelectItem>
-                      <SelectItem value="Sucre">Sucre</SelectItem>
-                      <SelectItem value="Potosí">Potosí</SelectItem>
-                      <SelectItem value="Oruro">Oruro</SelectItem>
-                      <SelectItem value="Tarija">Tarija</SelectItem>
-                      <SelectItem value="Beni">Beni</SelectItem>
-                      <SelectItem value="Pando">Pando</SelectItem>
+                      <SelectItem value=&ldquo;La Paz&rdquo;>La Paz</SelectItem>
+                      <SelectItem value=&ldquo;Santa Cruz&rdquo;>Santa Cruz</SelectItem>
+                      <SelectItem value=&ldquo;Cochabamba&rdquo;>Cochabamba</SelectItem>
+                      <SelectItem value=&ldquo;Sucre&rdquo;>Sucre</SelectItem>
+                      <SelectItem value=&ldquo;Potosí&rdquo;>Potosí</SelectItem>
+                      <SelectItem value=&ldquo;Oruro&rdquo;>Oruro</SelectItem>
+                      <SelectItem value=&ldquo;Tarija&rdquo;>Tarija</SelectItem>
+                      <SelectItem value=&ldquo;Beni&rdquo;>Beni</SelectItem>
+                      <SelectItem value=&ldquo;Pando&rdquo;>Pando</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="grid gap-2">
+                <div className=&ldquo;grid gap-2&rdquo;>
                   <Label>País</Label>
                   <Input
                     value={formData.country}
@@ -1043,28 +1043,28 @@ export default function CompaniesManagementPage() {
               </div>
             </TabsContent>
 
-            <TabsContent value="metrics" className="space-y-4">
-              <div className="grid grid-cols-3 gap-4">
-                <div className="grid gap-2">
+            <TabsContent value=&ldquo;metrics&rdquo; className=&ldquo;space-y-4&rdquo;>
+              <div className=&ldquo;grid grid-cols-3 gap-4&rdquo;>
+                <div className=&ldquo;grid gap-2&rdquo;>
                   <Label>Número de Empleados</Label>
                   <Input
-                    type="number"
+                    type=&ldquo;number&rdquo;
                     value={formData.employees}
                     onChange={(e) => setFormData({ ...formData, employees: Number.parseInt(e.target.value) || 0 })}
                   />
                 </div>
-                <div className="grid gap-2">
+                <div className=&ldquo;grid gap-2&rdquo;>
                   <Label>Ingresos Anuales (Bs.)</Label>
                   <Input
-                    type="number"
+                    type=&ldquo;number&rdquo;
                     value={formData.revenue}
                     onChange={(e) => setFormData({ ...formData, revenue: Number.parseInt(e.target.value) || 0 })}
                   />
                 </div>
-                <div className="grid gap-2">
+                <div className=&ldquo;grid gap-2&rdquo;>
                   <Label>Crecimiento (%)</Label>
                   <Input
-                    type="number"
+                    type=&ldquo;number&rdquo;
                     value={formData.growth}
                     onChange={(e) => setFormData({ ...formData, growth: Number.parseInt(e.target.value) || 0 })}
                   />
@@ -1073,9 +1073,9 @@ export default function CompaniesManagementPage() {
             </TabsContent>
           </Tabs>
 
-          <div className="flex justify-end gap-2 pt-4">
+          <div className=&ldquo;flex justify-end gap-2 pt-4&rdquo;>
             <Button
-              variant="outline"
+              variant=&ldquo;outline&rdquo;
               onClick={() => {
                 setShowEditDialog(false)
                 setSelectedCompany(null)
@@ -1095,13 +1095,13 @@ export default function CompaniesManagementPage() {
           <AlertDialogHeader>
             <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
             <AlertDialogDescription>
-              Esta acción no se puede deshacer. Se eliminará permanentemente la empresa "{selectedCompany?.name}" y
+              Esta acción no se puede deshacer. Se eliminará permanentemente la empresa &ldquo;{selectedCompany?.name}&rdquo; y
               todos sus datos asociados.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel onClick={() => setSelectedCompany(null)}>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
+            <AlertDialogAction onClick={handleDelete} className=&ldquo;bg-red-600 hover:bg-red-700&rdquo;>
               Eliminar
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -1116,7 +1116,7 @@ export default function CompaniesManagementPage() {
         La empresa fue registrada exitosamente en el sistema.
       </DialogDescription>
     </DialogHeader>
-    <div className="flex justify-end">
+    <div className=&ldquo;flex justify-end&rdquo;>
       <Button onClick={() => setSuccessDialogOpen(false)}>Cerrar</Button>
     </div>
   </DialogContent>

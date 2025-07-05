@@ -1,43 +1,43 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from &ldquo;next/server&rdquo;;
 
-type UserRole = "YOUTH" | "COMPANIES" | "MUNICIPAL_GOVERNMENTS";
+type UserRole = &ldquo;YOUTH&rdquo; | &ldquo;COMPANIES&rdquo; | &ldquo;MUNICIPAL_GOVERNMENTS&rdquo;;
 
 // GET: Fetch mock profiles data since we're using mock authentication
 export async function GET(req: NextRequest) {
   try {
     // Get query parameters for filtering
     const { searchParams } = new URL(req.url);
-    const role = searchParams.get("role");
-    const active = searchParams.get("active");
+    const role = searchParams.get(&ldquo;role&rdquo;);
+    const active = searchParams.get(&ldquo;active&rdquo;);
 
     // Mock profiles data
     let mockProfiles = [
       {
-        id: "mock-profile-1",
-        userId: "mock-user-1",
-        firstName: "John",
-        lastName: "Doe",
-        role: "YOUTH" as UserRole,
+        id: &ldquo;mock-profile-1&rdquo;,
+        userId: &ldquo;mock-user-1&rdquo;,
+        firstName: &ldquo;John&rdquo;,
+        lastName: &ldquo;Doe&rdquo;,
+        role: &ldquo;YOUTH&rdquo; as UserRole,
         avatarUrl: null,
         active: true,
         createdAt: new Date().toISOString(),
       },
       {
-        id: "mock-profile-2",
-        userId: "mock-user-2",
-        firstName: "Jane",
-        lastName: "Smith",
-        role: "COMPANIES" as UserRole,
+        id: &ldquo;mock-profile-2&rdquo;,
+        userId: &ldquo;mock-user-2&rdquo;,
+        firstName: &ldquo;Jane&rdquo;,
+        lastName: &ldquo;Smith&rdquo;,
+        role: &ldquo;COMPANIES&rdquo; as UserRole,
         avatarUrl: null,
         active: true,
         createdAt: new Date().toISOString(),
       },
       {
-        id: "mock-profile-3",
-        userId: "mock-user-3",
-        firstName: "Bob",
-        lastName: "Wilson",
-        role: "MUNICIPAL_GOVERNMENTS" as UserRole,
+        id: &ldquo;mock-profile-3&rdquo;,
+        userId: &ldquo;mock-user-3&rdquo;,
+        firstName: &ldquo;Bob&rdquo;,
+        lastName: &ldquo;Wilson&rdquo;,
+        role: &ldquo;MUNICIPAL_GOVERNMENTS&rdquo; as UserRole,
         avatarUrl: null,
         active: false,
         createdAt: new Date().toISOString(),
@@ -50,15 +50,15 @@ export async function GET(req: NextRequest) {
     }
     if (active !== null) {
       mockProfiles = mockProfiles.filter(
-        (profile) => profile.active === (active === "true")
+        (profile) => profile.active === (active === &ldquo;true&rdquo;)
       );
     }
 
     return NextResponse.json({ profiles: mockProfiles });
   } catch (error) {
-    console.error("Error fetching profiles:", error);
+    console.error(&ldquo;Error fetching profiles:&rdquo;, error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: &ldquo;Internal server error&rdquo; },
       { status: 500 }
     );
   }

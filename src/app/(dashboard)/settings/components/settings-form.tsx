@@ -1,11 +1,11 @@
-"use client";
+&ldquo;use client&rdquo;;
 
-import { useState, useEffect } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
+import { useState, useEffect } from &ldquo;react&rdquo;;
+import { zodResolver } from &ldquo;@hookform/resolvers/zod&rdquo;;
+import { useForm } from &ldquo;react-hook-form&rdquo;;
+import * as z from &ldquo;zod&rdquo;;
+import { motion } from &ldquo;framer-motion&rdquo;;
+import { Button } from &ldquo;@/components/ui/button&rdquo;;
 import {
   Form,
   FormControl,
@@ -13,30 +13,30 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from &ldquo;@/components/ui/form&rdquo;;
+import { Input } from &ldquo;@/components/ui/input&rdquo;;
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { useCurrentUser } from "@/hooks/use-current-user";
-import { useToast } from "@/components/ui/use-toast";
-import { LoadingScreen } from "@/components/ui/loading-screen";
-import { AvatarUpload } from "@/components/settings/avatar-upload";
+} from &ldquo;@/components/ui/card&rdquo;;
+import { useCurrentUser } from &ldquo;@/hooks/use-current-user&rdquo;;
+import { useToast } from &ldquo;@/components/ui/use-toast&rdquo;;
+import { LoadingScreen } from &ldquo;@/components/ui/loading-screen&rdquo;;
+import { AvatarUpload } from &ldquo;@/components/settings/avatar-upload&rdquo;;
 
 const settingsFormSchema = z.object({
   firstName: z
     .string()
-    .min(2, "El nombre debe tener al menos 2 caracteres")
+    .min(2, &ldquo;El nombre debe tener al menos 2 caracteres&rdquo;)
     .optional(),
   lastName: z
     .string()
-    .min(2, "El apellido debe tener al menos 2 caracteres")
+    .min(2, &ldquo;El apellido debe tener al menos 2 caracteres&rdquo;)
     .optional(),
-  avatarUrl: z.string().url("URL inválida").optional().or(z.literal("")),
+  avatarUrl: z.string().url(&ldquo;URL inválida&rdquo;).optional().or(z.literal(&ldquo;&rdquo;)),
   active: z.boolean().default(true),
 });
 
@@ -46,15 +46,15 @@ export function SettingsForm() {
   const { profile, user, refetch } = useCurrentUser();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [loadingMessage, setLoadingMessage] = useState<string>("");
+  const [loadingMessage, setLoadingMessage] = useState<string>(&ldquo;&rdquo;);
   const [newAvatarUrl, setNewAvatarUrl] = useState<string | null>(null);
 
   const form = useForm<SettingsFormValues>({
     resolver: zodResolver(settingsFormSchema),
     defaultValues: {
-      firstName: profile?.firstName || "",
-      lastName: profile?.lastName || "",
-      avatarUrl: profile?.avatarUrl || "",
+      firstName: profile?.firstName || &ldquo;&rdquo;,
+      lastName: profile?.lastName || &ldquo;&rdquo;,
+      avatarUrl: profile?.avatarUrl || &ldquo;&rdquo;,
       active: profile?.active ?? true,
     },
   });
@@ -63,9 +63,9 @@ export function SettingsForm() {
   useEffect(() => {
     if (profile) {
       form.reset({
-        firstName: profile.firstName || "",
-        lastName: profile.lastName || "",
-        avatarUrl: profile.avatarUrl || "",
+        firstName: profile.firstName || &ldquo;&rdquo;,
+        lastName: profile.lastName || &ldquo;&rdquo;,
+        avatarUrl: profile.avatarUrl || &ldquo;&rdquo;,
         active: profile.active ?? true,
       });
     }
@@ -76,7 +76,7 @@ export function SettingsForm() {
 
     try {
       setIsSubmitting(true);
-      setLoadingMessage("Actualizando perfil...");
+      setLoadingMessage(&ldquo;Actualizando perfil...&rdquo;);
 
       // Add a small delay to simulate network latency
       await new Promise((resolve) => setTimeout(resolve, 500));
@@ -95,9 +95,9 @@ export function SettingsForm() {
 
           // Use the main profile endpoint - it will get the user ID from the session
           const response = await fetch(`/api/profile`, {
-            method: "PUT",
+            method: &ldquo;PUT&rdquo;,
             headers: {
-              "Content-Type": "application/json",
+              &ldquo;Content-Type&rdquo;: &ldquo;application/json&rdquo;,
             },
             body: JSON.stringify({
               firstName: data.firstName,
@@ -109,7 +109,7 @@ export function SettingsForm() {
 
           if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.error || "Error al actualizar el perfil");
+            throw new Error(errorData.error || &ldquo;Error al actualizar el perfil&rdquo;);
           }
 
           // Refresh the user data after successful update
@@ -136,27 +136,27 @@ export function SettingsForm() {
       if (!success) {
         throw (
           lastError ||
-          new Error("Failed to update profile after multiple attempts")
+          new Error(&ldquo;Failed to update profile after multiple attempts&rdquo;)
         );
       }
 
       toast({
-        title: "Perfil actualizado",
-        description: "Tu información ha sido actualizada correctamente.",
+        title: &ldquo;Perfil actualizado&rdquo;,
+        description: &ldquo;Tu información ha sido actualizada correctamente.&rdquo;,
       });
     } catch (error) {
-      console.error("Error updating profile:", error);
+      console.error(&ldquo;Error updating profile:&rdquo;, error);
       toast({
-        title: "Error",
+        title: &ldquo;Error&rdquo;,
         description:
           error instanceof Error
             ? error.message
-            : "No se pudo actualizar la configuración. Por favor, intenta de nuevo.",
-        variant: "destructive",
+            : &ldquo;No se pudo actualizar la configuración. Por favor, intenta de nuevo.&rdquo;,
+        variant: &ldquo;destructive&rdquo;,
       });
     } finally {
       setIsSubmitting(false);
-      setLoadingMessage("");
+      setLoadingMessage(&ldquo;&rdquo;);
     }
   }
 
@@ -168,13 +168,13 @@ export function SettingsForm() {
     >
       {isSubmitting && (
         <LoadingScreen
-          variant="overlay"
-          message={loadingMessage || "Procesando..."}
+          variant=&ldquo;overlay&rdquo;
+          message={loadingMessage || &ldquo;Procesando...&rdquo;}
         />
       )}
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form onSubmit={form.handleSubmit(onSubmit)} className=&ldquo;space-y-8&rdquo;>
           <Card>
             <CardHeader>
               <CardTitle>Información Personal</CardTitle>
@@ -182,7 +182,7 @@ export function SettingsForm() {
                 Actualiza tu información personal
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className=&ldquo;space-y-4&rdquo;>
               {profile && (
                 <AvatarUpload
                   userId={profile.userId}
@@ -190,23 +190,23 @@ export function SettingsForm() {
                   onUploadComplete={(url) => setNewAvatarUrl(url)}
                   onUploadError={(error) => {
                     toast({
-                      title: "Error",
+                      title: &ldquo;Error&rdquo;,
                       description: error.message,
-                      variant: "destructive",
+                      variant: &ldquo;destructive&rdquo;,
                     });
                   }}
                 />
               )}
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className=&ldquo;grid grid-cols-1 md:grid-cols-2 gap-4&rdquo;>
                 <FormField
                   control={form.control}
-                  name="firstName"
+                  name=&ldquo;firstName&rdquo;
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Nombre</FormLabel>
                       <FormControl>
-                        <Input placeholder="Tu nombre" {...field} />
+                        <Input placeholder=&ldquo;Tu nombre&rdquo; {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -214,12 +214,12 @@ export function SettingsForm() {
                 />
                 <FormField
                   control={form.control}
-                  name="lastName"
+                  name=&ldquo;lastName&rdquo;
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Apellido</FormLabel>
                       <FormControl>
-                        <Input placeholder="Tu apellido" {...field} />
+                        <Input placeholder=&ldquo;Tu apellido&rdquo; {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -229,7 +229,7 @@ export function SettingsForm() {
             </CardContent>
           </Card>
 
-          {(profile?.role as string) === "SUPERADMIN" && (
+          {(profile?.role as string) === &ldquo;SUPERADMIN&rdquo; && (
             <Card>
               <CardHeader>
                 <CardTitle>Información de Rol</CardTitle>
@@ -238,27 +238,27 @@ export function SettingsForm() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="flex items-center space-x-2">
-                  <span className="text-sm font-medium">Rol:</span>
-                  <span className="text-sm text-muted-foreground">
-                    {(profile?.role as string) === "USER" && "Usuario"}
-                    {(profile?.role as string) === "SUPERADMIN" &&
-                      "Administrador"}
+                <div className=&ldquo;flex items-center space-x-2&rdquo;>
+                  <span className=&ldquo;text-sm font-medium&rdquo;>Rol:</span>
+                  <span className=&ldquo;text-sm text-muted-foreground&rdquo;>
+                    {(profile?.role as string) === &ldquo;USER&rdquo; && &ldquo;Usuario&rdquo;}
+                    {(profile?.role as string) === &ldquo;SUPERADMIN&rdquo; &&
+                      &ldquo;Administrador&rdquo;}
                   </span>
                 </div>
               </CardContent>
             </Card>
           )}
 
-          <div className="flex justify-end">
-            <Button type="submit" disabled={isSubmitting}>
+          <div className=&ldquo;flex justify-end&rdquo;>
+            <Button type=&ldquo;submit&rdquo; disabled={isSubmitting}>
               {isSubmitting ? (
                 <>
-                  <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-opacity-20 border-t-white"></span>
+                  <span className=&ldquo;mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-opacity-20 border-t-white&rdquo;></span>
                   Guardando...
                 </>
               ) : (
-                "Guardar Cambios"
+                &ldquo;Guardar Cambios&rdquo;
               )}
             </Button>
           </div>

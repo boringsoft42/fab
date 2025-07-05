@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from &ldquo;next/server&rdquo;;
 import {
   JobOffer,
   JobSearchFilters,
@@ -6,134 +6,134 @@ import {
   WorkModality,
   ExperienceLevel,
   JobStatus,
-} from "@/types/jobs";
+} from &ldquo;@/types/jobs&rdquo;;
 
 // Mock job data
 const mockJobs: JobOffer[] = [
   {
-    id: "job-1",
-    title: "Desarrollador Frontend Junior",
+    id: &ldquo;job-1&rdquo;,
+    title: &ldquo;Desarrollador Frontend Junior&rdquo;,
     description:
-      "Buscamos un desarrollador frontend junior para unirse a nuestro equipo dinámico. Trabajarás en proyectos web modernos usando React, TypeScript y Tailwind CSS.",
+      &ldquo;Buscamos un desarrollador frontend junior para unirse a nuestro equipo dinámico. Trabajarás en proyectos web modernos usando React, TypeScript y Tailwind CSS.&rdquo;,
     company: {
-      id: "company-1",
-      name: "TechCorp Bolivia",
-      logo: "/logos/techcorp.svg",
-      description: "Empresa líder en desarrollo de software",
-      sector: "Tecnología",
-      size: "51-200 empleados",
-      location: "Cochabamba, Bolivia",
+      id: &ldquo;company-1&rdquo;,
+      name: &ldquo;TechCorp Bolivia&rdquo;,
+      logo: &ldquo;/logos/techcorp.svg&rdquo;,
+      description: &ldquo;Empresa líder en desarrollo de software&rdquo;,
+      sector: &ldquo;Tecnología&rdquo;,
+      size: &ldquo;51-200 empleados&rdquo;,
+      location: &ldquo;Cochabamba, Bolivia&rdquo;,
       rating: 4.5,
       reviewCount: 28,
     },
-    location: "Cochabamba, Bolivia",
-    contractType: "FULL_TIME" as ContractType,
-    workModality: "HYBRID" as WorkModality,
-    experienceLevel: "ENTRY_LEVEL" as ExperienceLevel,
+    location: &ldquo;Cochabamba, Bolivia&rdquo;,
+    contractType: &ldquo;FULL_TIME&rdquo; as ContractType,
+    workModality: &ldquo;HYBRID&rdquo; as WorkModality,
+    experienceLevel: &ldquo;ENTRY_LEVEL&rdquo; as ExperienceLevel,
     salaryMin: 3000,
     salaryMax: 4500,
-    salaryCurrency: "BOB",
-    requiredSkills: ["React", "JavaScript", "HTML", "CSS"],
-    desiredSkills: ["TypeScript", "Tailwind CSS", "Git"],
-    benefits: ["Seguro médico", "Capacitaciones", "Ambiente flexible"],
+    salaryCurrency: &ldquo;BOB&rdquo;,
+    requiredSkills: [&ldquo;React&rdquo;, &ldquo;JavaScript&rdquo;, &ldquo;HTML&rdquo;, &ldquo;CSS&rdquo;],
+    desiredSkills: [&ldquo;TypeScript&rdquo;, &ldquo;Tailwind CSS&rdquo;, &ldquo;Git&rdquo;],
+    benefits: [&ldquo;Seguro médico&rdquo;, &ldquo;Capacitaciones&rdquo;, &ldquo;Ambiente flexible&rdquo;],
     requirements: [
-      "Título en Ingeniería de Sistemas o afines",
-      "Conocimientos básicos de React",
-      "Inglés básico",
+      &ldquo;Título en Ingeniería de Sistemas o afines&rdquo;,
+      &ldquo;Conocimientos básicos de React&rdquo;,
+      &ldquo;Inglés básico&rdquo;,
     ],
     responsibilities: [
-      "Desarrollar interfaces de usuario",
-      "Colaborar con el equipo de diseño",
-      "Mantener código de calidad",
+      &ldquo;Desarrollar interfaces de usuario&rdquo;,
+      &ldquo;Colaborar con el equipo de diseño&rdquo;,
+      &ldquo;Mantener código de calidad&rdquo;,
     ],
-    status: "ACTIVE" as JobStatus,
+    status: &ldquo;ACTIVE&rdquo; as JobStatus,
     publishedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
     applicationCount: 15,
     viewCount: 124,
     featured: true,
   },
   {
-    id: "job-2",
-    title: "Asistente de Marketing Digital",
+    id: &ldquo;job-2&rdquo;,
+    title: &ldquo;Asistente de Marketing Digital&rdquo;,
     description:
-      "Oportunidad para jóvenes apasionados por el marketing digital. Aprenderás sobre redes sociales, contenido digital y estrategias de marketing online.",
+      &ldquo;Oportunidad para jóvenes apasionados por el marketing digital. Aprenderás sobre redes sociales, contenido digital y estrategias de marketing online.&rdquo;,
     company: {
-      id: "company-2",
-      name: "Mindful Co.",
-      logo: "/logos/mindfulco.svg",
-      description: "Agencia de marketing digital",
-      sector: "Marketing",
-      size: "11-50 empleados",
-      location: "Cochabamba, Bolivia",
+      id: &ldquo;company-2&rdquo;,
+      name: &ldquo;Mindful Co.&rdquo;,
+      logo: &ldquo;/logos/mindfulco.svg&rdquo;,
+      description: &ldquo;Agencia de marketing digital&rdquo;,
+      sector: &ldquo;Marketing&rdquo;,
+      size: &ldquo;11-50 empleados&rdquo;,
+      location: &ldquo;Cochabamba, Bolivia&rdquo;,
       rating: 4.2,
       reviewCount: 15,
     },
-    location: "Cochabamba, Bolivia",
-    contractType: "PART_TIME" as ContractType,
-    workModality: "ON_SITE" as WorkModality,
-    experienceLevel: "NO_EXPERIENCE" as ExperienceLevel,
+    location: &ldquo;Cochabamba, Bolivia&rdquo;,
+    contractType: &ldquo;PART_TIME&rdquo; as ContractType,
+    workModality: &ldquo;ON_SITE&rdquo; as WorkModality,
+    experienceLevel: &ldquo;NO_EXPERIENCE&rdquo; as ExperienceLevel,
     salaryMin: 1500,
     salaryMax: 2500,
-    salaryCurrency: "BOB",
-    requiredSkills: ["Redes sociales", "Creatividad", "Comunicación"],
-    desiredSkills: ["Photoshop", "Canva", "Google Analytics"],
-    benefits: ["Capacitación continua", "Horarios flexibles", "Proyecto final"],
+    salaryCurrency: &ldquo;BOB&rdquo;,
+    requiredSkills: [&ldquo;Redes sociales&rdquo;, &ldquo;Creatividad&rdquo;, &ldquo;Comunicación&rdquo;],
+    desiredSkills: [&ldquo;Photoshop&rdquo;, &ldquo;Canva&rdquo;, &ldquo;Google Analytics&rdquo;],
+    benefits: [&ldquo;Capacitación continua&rdquo;, &ldquo;Horarios flexibles&rdquo;, &ldquo;Proyecto final&rdquo;],
     requirements: [
-      "Estudiante universitario o bachiller",
-      "Manejo de redes sociales",
-      "Proactividad",
+      &ldquo;Estudiante universitario o bachiller&rdquo;,
+      &ldquo;Manejo de redes sociales&rdquo;,
+      &ldquo;Proactividad&rdquo;,
     ],
     responsibilities: [
-      "Crear contenido para redes sociales",
-      "Analizar métricas",
-      "Apoyar en campañas",
+      &ldquo;Crear contenido para redes sociales&rdquo;,
+      &ldquo;Analizar métricas&rdquo;,
+      &ldquo;Apoyar en campañas&rdquo;,
     ],
-    status: "ACTIVE" as JobStatus,
+    status: &ldquo;ACTIVE&rdquo; as JobStatus,
     publishedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
     applicationCount: 8,
     viewCount: 89,
   },
   {
-    id: "job-3",
-    title: "Practicante de Contabilidad",
+    id: &ldquo;job-3&rdquo;,
+    title: &ldquo;Practicante de Contabilidad&rdquo;,
     description:
-      "Excelente oportunidad para estudiantes de contabilidad que buscan ganar experiencia práctica en una empresa consolidada.",
+      &ldquo;Excelente oportunidad para estudiantes de contabilidad que buscan ganar experiencia práctica en una empresa consolidada.&rdquo;,
     company: {
-      id: "company-3",
-      name: "Zenith Health",
-      logo: "/logos/zenithhealth.svg",
-      description: "Clínica de salud integral",
-      sector: "Salud",
-      size: "101-500 empleados",
-      location: "Cochabamba, Bolivia",
+      id: &ldquo;company-3&rdquo;,
+      name: &ldquo;Zenith Health&rdquo;,
+      logo: &ldquo;/logos/zenithhealth.svg&rdquo;,
+      description: &ldquo;Clínica de salud integral&rdquo;,
+      sector: &ldquo;Salud&rdquo;,
+      size: &ldquo;101-500 empleados&rdquo;,
+      location: &ldquo;Cochabamba, Bolivia&rdquo;,
       rating: 4.7,
       reviewCount: 42,
     },
-    location: "Cochabamba, Bolivia",
-    contractType: "INTERNSHIP" as ContractType,
-    workModality: "ON_SITE" as WorkModality,
-    experienceLevel: "NO_EXPERIENCE" as ExperienceLevel,
+    location: &ldquo;Cochabamba, Bolivia&rdquo;,
+    contractType: &ldquo;INTERNSHIP&rdquo; as ContractType,
+    workModality: &ldquo;ON_SITE&rdquo; as WorkModality,
+    experienceLevel: &ldquo;NO_EXPERIENCE&rdquo; as ExperienceLevel,
     salaryMin: 800,
     salaryMax: 1200,
-    salaryCurrency: "BOB",
-    requiredSkills: ["Excel", "Contabilidad básica", "Organización"],
-    desiredSkills: ["Software contable", "Inglés básico"],
+    salaryCurrency: &ldquo;BOB&rdquo;,
+    requiredSkills: [&ldquo;Excel&rdquo;, &ldquo;Contabilidad básica&rdquo;, &ldquo;Organización&rdquo;],
+    desiredSkills: [&ldquo;Software contable&rdquo;, &ldquo;Inglés básico&rdquo;],
     benefits: [
-      "Certificado de prácticas",
-      "Tutoría profesional",
-      "Posibilidad de contratación",
+      &ldquo;Certificado de prácticas&rdquo;,
+      &ldquo;Tutoría profesional&rdquo;,
+      &ldquo;Posibilidad de contratación&rdquo;,
     ],
     requirements: [
-      "Estudiante de Contabilidad",
-      "Mínimo 6to semestre",
-      "Disponibilidad de 6 meses",
+      &ldquo;Estudiante de Contabilidad&rdquo;,
+      &ldquo;Mínimo 6to semestre&rdquo;,
+      &ldquo;Disponibilidad de 6 meses&rdquo;,
     ],
     responsibilities: [
-      "Apoyo en registros contables",
-      "Archivo de documentos",
-      "Elaboración de reportes básicos",
+      &ldquo;Apoyo en registros contables&rdquo;,
+      &ldquo;Archivo de documentos&rdquo;,
+      &ldquo;Elaboración de reportes básicos&rdquo;,
     ],
-    status: "ACTIVE" as JobStatus,
+    status: &ldquo;ACTIVE&rdquo; as JobStatus,
     publishedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
     applicationCount: 23,
     viewCount: 156,
@@ -147,27 +147,27 @@ export async function GET(request: NextRequest) {
 
     // Extract search filters
     const filters: JobSearchFilters = {
-      query: searchParams.get("query") || undefined,
-      location: searchParams.getAll("location"),
-      contractType: searchParams.getAll("contractType") as ContractType[],
-      workModality: searchParams.getAll("workModality") as WorkModality[],
+      query: searchParams.get(&ldquo;query&rdquo;) || undefined,
+      location: searchParams.getAll(&ldquo;location&rdquo;),
+      contractType: searchParams.getAll(&ldquo;contractType&rdquo;) as ContractType[],
+      workModality: searchParams.getAll(&ldquo;workModality&rdquo;) as WorkModality[],
       experienceLevel: searchParams.getAll(
-        "experienceLevel"
+        &ldquo;experienceLevel&rdquo;
       ) as ExperienceLevel[],
-      salaryMin: searchParams.get("salaryMin")
-        ? parseInt(searchParams.get("salaryMin")!)
+      salaryMin: searchParams.get(&ldquo;salaryMin&rdquo;)
+        ? parseInt(searchParams.get(&ldquo;salaryMin&rdquo;)!)
         : undefined,
-      salaryMax: searchParams.get("salaryMax")
-        ? parseInt(searchParams.get("salaryMax")!)
+      salaryMax: searchParams.get(&ldquo;salaryMax&rdquo;)
+        ? parseInt(searchParams.get(&ldquo;salaryMax&rdquo;)!)
         : undefined,
-      publishedInDays: searchParams.get("publishedInDays")
-        ? parseInt(searchParams.get("publishedInDays")!)
+      publishedInDays: searchParams.get(&ldquo;publishedInDays&rdquo;)
+        ? parseInt(searchParams.get(&ldquo;publishedInDays&rdquo;)!)
         : undefined,
-      sector: searchParams.getAll("sector"),
+      sector: searchParams.getAll(&ldquo;sector&rdquo;),
     };
 
     // Filter jobs based on search criteria
-    let filteredJobs = mockJobs.filter((job) => job.status === "ACTIVE");
+    let filteredJobs = mockJobs.filter((job) => job.status === &ldquo;ACTIVE&rdquo;);
 
     // Apply text search
     if (filters.query) {
@@ -258,9 +258,9 @@ export async function GET(request: NextRequest) {
       filters: filters,
     });
   } catch (error) {
-    console.error("Error fetching jobs:", error);
+    console.error(&ldquo;Error fetching jobs:&rdquo;, error);
     return NextResponse.json(
-      { error: "Failed to fetch jobs" },
+      { error: &ldquo;Failed to fetch jobs&rdquo; },
       { status: 500 }
     );
   }
@@ -278,7 +278,7 @@ export async function POST(request: NextRequest) {
       publishedAt: new Date().toISOString(),
       applicationCount: 0,
       viewCount: 0,
-      status: jobData.status || ("DRAFT" as JobStatus),
+      status: jobData.status || (&ldquo;DRAFT&rdquo; as JobStatus),
     };
 
     // In real app, save to database
@@ -286,9 +286,9 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(newJob, { status: 201 });
   } catch (error) {
-    console.error("Error creating job:", error);
+    console.error(&ldquo;Error creating job:&rdquo;, error);
     return NextResponse.json(
-      { error: "Failed to create job" },
+      { error: &ldquo;Failed to create job&rdquo; },
       { status: 500 }
     );
   }

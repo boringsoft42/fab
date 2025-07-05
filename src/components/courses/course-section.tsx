@@ -1,7 +1,7 @@
-"use client";
+&ldquo;use client&rdquo;;
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState } from &ldquo;react&rdquo;;
+import { motion, AnimatePresence } from &ldquo;framer-motion&rdquo;;
 import {
   FileText,
   Video,
@@ -11,19 +11,19 @@ import {
   Clock,
   CheckCircle,
   PlayCircle,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Separator } from "@/components/ui/separator";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Quiz } from "./quiz";
+} from &ldquo;lucide-react&rdquo;;
+import { Button } from &ldquo;@/components/ui/button&rdquo;;
+import { Card } from &ldquo;@/components/ui/card&rdquo;;
+import { Badge } from &ldquo;@/components/ui/badge&rdquo;;
+import { Progress } from &ldquo;@/components/ui/progress&rdquo;;
+import { Separator } from &ldquo;@/components/ui/separator&rdquo;;
+import { ScrollArea } from &ldquo;@/components/ui/scroll-area&rdquo;;
+import { Quiz } from &ldquo;./quiz&rdquo;;
 import type {
   CourseSection as CourseSectionType,
   CourseResource,
   Quiz as QuizType,
-} from "@/types/courses";
+} from &ldquo;@/types/courses&rdquo;;
 
 interface CourseSectionProps {
   section: CourseSectionType;
@@ -36,72 +36,72 @@ export function CourseSection({
   isActive,
   onComplete,
 }: CourseSectionProps) {
-  const [activeTab, setActiveTab] = useState<"content" | "resources" | "quiz">(
-    "content"
+  const [activeTab, setActiveTab] = useState<&ldquo;content&rdquo; | &ldquo;resources&rdquo; | &ldquo;quiz&rdquo;>(
+    &ldquo;content&rdquo;
   );
   const [videoProgress, setVideoProgress] = useState(0);
 
   const getResourceIcon = (type: string) => {
     switch (type) {
-      case "PDF":
-        return <FileText className="w-4 h-4" />;
-      case "VIDEO":
-        return <Video className="w-4 h-4" />;
-      case "LINK":
-        return <LinkIcon className="w-4 h-4" />;
-      case "IMAGE":
-        return <ImageIcon className="w-4 h-4" />;
+      case &ldquo;PDF&rdquo;:
+        return <FileText className=&ldquo;w-4 h-4&rdquo; />;
+      case &ldquo;VIDEO&rdquo;:
+        return <Video className=&ldquo;w-4 h-4&rdquo; />;
+      case &ldquo;LINK&rdquo;:
+        return <LinkIcon className=&ldquo;w-4 h-4&rdquo; />;
+      case &ldquo;IMAGE&rdquo;:
+        return <ImageIcon className=&ldquo;w-4 h-4&rdquo; />;
       default:
-        return <FileText className="w-4 h-4" />;
+        return <FileText className=&ldquo;w-4 h-4&rdquo; />;
     }
   };
 
   const handleResourceClick = (resource: CourseResource) => {
-    if (resource.type === "PDF" || resource.type === "IMAGE") {
-      window.open(resource.url, "_blank");
-    } else if (resource.type === "LINK") {
-      window.open(resource.url, "_blank");
+    if (resource.type === &ldquo;PDF&rdquo; || resource.type === &ldquo;IMAGE&rdquo;) {
+      window.open(resource.url, &ldquo;_blank&rdquo;);
+    } else if (resource.type === &ldquo;LINK&rdquo;) {
+      window.open(resource.url, &ldquo;_blank&rdquo;);
     }
   };
 
   return (
-    <Card className={`p-6 ${!isActive && "opacity-60"}`}>
-      <div className="space-y-6">
+    <Card className={`p-6 ${!isActive && &ldquo;opacity-60&rdquo;}`}>
+      <div className=&ldquo;space-y-6&rdquo;>
         {/* Section Header */}
         <div>
-          <h3 className="text-xl font-semibold mb-2">{section.title}</h3>
-          <p className="text-gray-600">{section.description}</p>
+          <h3 className=&ldquo;text-xl font-semibold mb-2&rdquo;>{section.title}</h3>
+          <p className=&ldquo;text-gray-600&rdquo;>{section.description}</p>
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex space-x-2 border-b">
+        <div className=&ldquo;flex space-x-2 border-b&rdquo;>
           <Button
-            variant={activeTab === "content" ? "default" : "ghost"}
-            onClick={() => setActiveTab("content")}
+            variant={activeTab === &ldquo;content&rdquo; ? &ldquo;default&rdquo; : &ldquo;ghost&rdquo;}
+            onClick={() => setActiveTab(&ldquo;content&rdquo;)}
           >
-            <PlayCircle className="w-4 h-4 mr-2" />
+            <PlayCircle className=&ldquo;w-4 h-4 mr-2&rdquo; />
             Contenido
           </Button>
           <Button
-            variant={activeTab === "resources" ? "default" : "ghost"}
-            onClick={() => setActiveTab("resources")}
+            variant={activeTab === &ldquo;resources&rdquo; ? &ldquo;default&rdquo; : &ldquo;ghost&rdquo;}
+            onClick={() => setActiveTab(&ldquo;resources&rdquo;)}
           >
-            <FileText className="w-4 h-4 mr-2" />
+            <FileText className=&ldquo;w-4 h-4 mr-2&rdquo; />
             Recursos ({section.resources.length})
           </Button>
           {section.quiz && (
             <Button
-              variant={activeTab === "quiz" ? "default" : "ghost"}
-              onClick={() => setActiveTab("quiz")}
+              variant={activeTab === &ldquo;quiz&rdquo; ? &ldquo;default&rdquo; : &ldquo;ghost&rdquo;}
+              onClick={() => setActiveTab(&ldquo;quiz&rdquo;)}
             >
-              <CheckCircle className="w-4 h-4 mr-2" />
+              <CheckCircle className=&ldquo;w-4 h-4 mr-2&rdquo; />
               Quiz
             </Button>
           )}
         </div>
 
         {/* Content Area */}
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode=&ldquo;wait&rdquo;>
           <motion.div
             key={activeTab}
             initial={{ opacity: 0, y: 10 }}
@@ -109,23 +109,23 @@ export function CourseSection({
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
           >
-            {activeTab === "content" && (
-              <div className="space-y-4">
+            {activeTab === &ldquo;content&rdquo; && (
+              <div className=&ldquo;space-y-4&rdquo;>
                 {section.videoUrl && (
-                  <div className="space-y-2">
-                    <div className="relative aspect-video rounded-lg overflow-hidden bg-gray-100">
+                  <div className=&ldquo;space-y-2&rdquo;>
+                    <div className=&ldquo;relative aspect-video rounded-lg overflow-hidden bg-gray-100&rdquo;>
                       <iframe
                         src={section.videoUrl}
-                        className="absolute inset-0 w-full h-full"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        className=&ldquo;absolute inset-0 w-full h-full&rdquo;
+                        allow=&ldquo;accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture&rdquo;
                         allowFullScreen
                       />
                     </div>
-                    <Progress value={videoProgress} className="h-1" />
-                    <div className="flex justify-between text-sm text-gray-500">
+                    <Progress value={videoProgress} className=&ldquo;h-1&rdquo; />
+                    <div className=&ldquo;flex justify-between text-sm text-gray-500&rdquo;>
                       <span>Progress: {videoProgress}%</span>
-                      <span className="flex items-center">
-                        <Clock className="w-4 h-4 mr-1" />
+                      <span className=&ldquo;flex items-center&rdquo;>
+                        <Clock className=&ldquo;w-4 h-4 mr-1&rdquo; />
                         {section.videoDuration}
                       </span>
                     </div>
@@ -133,42 +133,42 @@ export function CourseSection({
                 )}
                 {section.content && (
                   <div
-                    className="prose max-w-none"
+                    className=&ldquo;prose max-w-none&rdquo;
                     dangerouslySetInnerHTML={{ __html: section.content }}
                   />
                 )}
               </div>
             )}
 
-            {activeTab === "resources" && (
-              <ScrollArea className="h-[400px] pr-4">
-                <div className="space-y-2">
+            {activeTab === &ldquo;resources&rdquo; && (
+              <ScrollArea className=&ldquo;h-[400px] pr-4&rdquo;>
+                <div className=&ldquo;space-y-2&rdquo;>
                   {section.resources.map((resource) => (
                     <div
                       key={resource.id}
-                      className="flex items-center justify-between p-3 rounded-lg border hover:bg-gray-50 cursor-pointer"
+                      className=&ldquo;flex items-center justify-between p-3 rounded-lg border hover:bg-gray-50 cursor-pointer&rdquo;
                       onClick={() => handleResourceClick(resource)}
                     >
-                      <div className="flex items-center space-x-3">
+                      <div className=&ldquo;flex items-center space-x-3&rdquo;>
                         {getResourceIcon(resource.type)}
                         <div>
-                          <p className="font-medium">{resource.title}</p>
+                          <p className=&ldquo;font-medium&rdquo;>{resource.title}</p>
                           {resource.description && (
-                            <p className="text-sm text-gray-500">
+                            <p className=&ldquo;text-sm text-gray-500&rdquo;>
                               {resource.description}
                             </p>
                           )}
                         </div>
                       </div>
-                      <div className="flex items-center space-x-3 text-sm text-gray-500">
+                      <div className=&ldquo;flex items-center space-x-3 text-sm text-gray-500&rdquo;>
                         {resource.fileSize && <span>{resource.fileSize}</span>}
                         {resource.duration && (
-                          <span className="flex items-center">
-                            <Clock className="w-4 h-4 mr-1" />
+                          <span className=&ldquo;flex items-center&rdquo;>
+                            <Clock className=&ldquo;w-4 h-4 mr-1&rdquo; />
                             {resource.duration}
                           </span>
                         )}
-                        <Download className="w-4 h-4" />
+                        <Download className=&ldquo;w-4 h-4&rdquo; />
                       </div>
                     </div>
                   ))}
@@ -176,7 +176,7 @@ export function CourseSection({
               </ScrollArea>
             )}
 
-            {activeTab === "quiz" && section.quiz && (
+            {activeTab === &ldquo;quiz&rdquo; && section.quiz && (
               <Quiz
                 quiz={section.quiz}
                 onComplete={(score) => {

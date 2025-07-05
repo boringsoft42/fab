@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from &ldquo;next/server&rdquo;;
 
 // PUT: Update user password
 export async function PUT(request: NextRequest) {
@@ -8,19 +8,19 @@ export async function PUT(request: NextRequest) {
     // Validate input
     if (!currentPassword || !newPassword) {
       return NextResponse.json(
-        { error: "Current password and new password are required" },
+        { error: &ldquo;Current password and new password are required&rdquo; },
         { status: 400 }
       );
     }
 
     // Mock password update response for development
     return NextResponse.json({
-      message: "Password updated successfully",
+      message: &ldquo;Password updated successfully&rdquo;,
     });
   } catch (error) {
-    console.error("Error updating password:", error);
+    console.error(&ldquo;Error updating password:&rdquo;, error);
     return NextResponse.json(
-      { error: "Failed to update password" },
+      { error: &ldquo;Failed to update password&rdquo; },
       { status: 500 }
     );
   }

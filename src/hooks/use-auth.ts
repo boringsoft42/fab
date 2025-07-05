@@ -1,14 +1,12 @@
-import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase/client";
-import type { User, Session } from "@supabase/supabase-js";
+import { useRouter } from &ldquo;next/navigation&rdquo;;
+import { useState, useEffect } from &ldquo;react&rdquo;;
+import { supabase } from &ldquo;@/lib/supabase/client&rdquo;;
+import type { User, Session } from &ldquo;@supabase/supabase-js&rdquo;;
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
-
   useEffect(() => {
     // Check current session
     supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
@@ -94,7 +92,7 @@ export function useAuth() {
         error: null,
       };
     } catch (error) {
-      console.error("Sign up error:", error);
+      console.error(&ldquo;Sign up error:&rdquo;, error);
       return {
         success: false,
         user: null,
@@ -110,7 +108,7 @@ export function useAuth() {
     if (error) throw error;
     setUser(null);
     setSession(null);
-    router.push("/");
+    router.push(&ldquo;/&rdquo;);
   };
 
   return {

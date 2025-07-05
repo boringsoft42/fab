@@ -3,7 +3,7 @@ import type {
   UserStatus,
   EducationLevel,
   CompanySize,
-} from "@prisma/client";
+} from &ldquo;@prisma/client&rdquo;;
 
 export interface Profile {
   id: string;
@@ -38,7 +38,7 @@ export interface Profile {
   isStudying?: boolean;
   skills?: string[];
   interests?: string[];
-  workExperience?: any; // JSON object
+  workExperience?: unknown; // JSON object
 
   // For COMPANIES
   companyName?: string;
@@ -69,15 +69,15 @@ export interface Profile {
 
 // Utility types for different user roles
 export type YouthProfile = Profile & {
-  role: "YOUTH";
+  role: &ldquo;YOUTH&rdquo;;
   educationLevel?: EducationLevel;
   skills: string[];
   interests: string[];
-  workExperience?: any;
+  workExperience?: unknown;
 };
 
 export type AdolescentProfile = Profile & {
-  role: "ADOLESCENTS";
+  role: &ldquo;ADOLESCENTS&rdquo;;
   educationLevel?: EducationLevel;
   skills: string[];
   interests: string[];
@@ -86,7 +86,7 @@ export type AdolescentProfile = Profile & {
 };
 
 export type CompanyProfile = Profile & {
-  role: "COMPANIES";
+  role: &ldquo;COMPANIES&rdquo;;
   companyName: string;
   taxId?: string;
   legalRepresentative?: string;
@@ -96,7 +96,7 @@ export type CompanyProfile = Profile & {
 };
 
 export type InstitutionProfile = Profile & {
-  role: "MUNICIPAL_GOVERNMENTS" | "TRAINING_CENTERS" | "NGOS_AND_FOUNDATIONS";
+  role: &ldquo;MUNICIPAL_GOVERNMENTS&rdquo; | &ldquo;TRAINING_CENTERS&rdquo; | &ldquo;NGOS_AND_FOUNDATIONS&rdquo;;
   institutionName: string;
   institutionType?: string;
   serviceArea?: string;
@@ -127,9 +127,9 @@ export interface JobOffer {
   benefits?: string;
   salaryMin?: number;
   salaryMax?: number;
-  contractType: "PAID" | "INTERNSHIP" | "VOLUNTEER";
-  workSchedule: "FULL_TIME" | "PART_TIME" | "FLEXIBLE";
-  workModality: "ON_SITE" | "REMOTE" | "HYBRID";
+  contractType: &ldquo;PAID&rdquo; | &ldquo;INTERNSHIP&rdquo; | &ldquo;VOLUNTEER&rdquo;;
+  workSchedule: &ldquo;FULL_TIME&rdquo; | &ldquo;PART_TIME&rdquo; | &ldquo;FLEXIBLE&rdquo;;
+  workModality: &ldquo;ON_SITE&rdquo; | &ldquo;REMOTE&rdquo; | &ldquo;HYBRID&rdquo;;
   location: string;
   municipality: string;
   department: string;
@@ -152,7 +152,7 @@ export interface JobApplication {
   jobOfferId: string;
   coverLetter?: string;
   cvUrl?: string;
-  status: "SENT" | "UNDER_REVIEW" | "PRE_SELECTED" | "REJECTED" | "HIRED";
+  status: &ldquo;SENT&rdquo; | &ldquo;UNDER_REVIEW&rdquo; | &ldquo;PRE_SELECTED&rdquo; | &ldquo;REJECTED&rdquo; | &ldquo;HIRED&rdquo;;
   appliedAt: Date;
   reviewedAt?: Date;
   notes?: string;
@@ -169,7 +169,7 @@ export interface Course {
   objectives: string[];
   prerequisites: string[];
   duration: number;
-  level: "BASIC" | "INTERMEDIATE" | "ADVANCED";
+  level: &ldquo;BASIC&rdquo; | &ldquo;INTERMEDIATE&rdquo; | &ldquo;ADVANCED&rdquo;;
   category: string;
   thumbnailUrl?: string;
   isMandatory: boolean;
@@ -206,7 +206,7 @@ export interface Entrepreneurship {
   description: string;
   category: string;
   subcategory?: string;
-  businessStage: "IDEA" | "STARTUP" | "GROWING" | "ESTABLISHED";
+  businessStage: &ldquo;IDEA&rdquo; | &ldquo;STARTUP&rdquo; | &ldquo;GROWING&rdquo; | &ldquo;ESTABLISHED&rdquo;;
   logo?: string;
   images: string[];
   website?: string;
@@ -215,7 +215,7 @@ export interface Entrepreneurship {
   address?: string;
   municipality: string;
   department: string;
-  socialMedia?: any;
+  socialMedia?: unknown;
   founded?: Date;
   employees?: number;
   annualRevenue?: number;
@@ -240,21 +240,21 @@ export interface BusinessPlan {
   marketAnalysis?: string;
   targetMarket?: string;
   competitiveAnalysis?: string;
-  businessModelCanvas?: any;
+  businessModelCanvas?: unknown;
   revenueStreams: string[];
-  costStructure?: any;
+  costStructure?: unknown;
   marketingStrategy?: string;
   pricingStrategy?: string;
   salesStrategy?: string;
   initialInvestment?: number;
   monthlyExpenses?: number;
-  revenueProjection?: any;
+  revenueProjection?: unknown;
   breakEvenPoint?: number;
   roi?: number;
   riskAnalysis?: string;
   mitigationStrategies: string[];
   operationalPlan?: string;
-  managementTeam?: any;
+  managementTeam?: unknown;
   isCompleted: boolean;
   lastSection?: string;
   completionPercentage: number;

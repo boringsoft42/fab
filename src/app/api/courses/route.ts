@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from &ldquo;next/server&rdquo;;
 import {
   Course,
   CourseCategory,
@@ -6,78 +6,78 @@ import {
   CourseCatalogResponse,
   CourseSearchParams,
   Instructor,
-} from "@/types/courses";
+} from &ldquo;@/types/courses&rdquo;;
 
 // Mock instructors data
 const mockInstructors: Record<string, Instructor> = {
-  "maria-lopez": {
-    id: "maria-lopez",
-    name: "María López",
-    title: "Especialista en Desarrollo Personal",
-    avatar: "/api/placeholder/100/100",
-    bio: "Psicóloga con 15 años de experiencia en desarrollo de habilidades blandas y empoderamiento juvenil.",
+  &ldquo;maria-lopez&rdquo;: {
+    id: &ldquo;maria-lopez&rdquo;,
+    name: &ldquo;María López&rdquo;,
+    title: &ldquo;Especialista en Desarrollo Personal&rdquo;,
+    avatar: &ldquo;/api/placeholder/100/100&rdquo;,
+    bio: &ldquo;Psicóloga con 15 años de experiencia en desarrollo de habilidades blandas y empoderamiento juvenil.&rdquo;,
     rating: 4.8,
     totalStudents: 2500,
     totalCourses: 8,
     socialLinks: {
-      linkedin: "https://linkedin.com/in/marialopez",
-      website: "https://marialopez.dev",
+      linkedin: &ldquo;https://linkedin.com/in/marialopez&rdquo;,
+      website: &ldquo;https://marialopez.dev&rdquo;,
     },
   },
-  "carlos-rivera": {
-    id: "carlos-rivera",
-    name: "Carlos Rivera",
-    title: "Especialista en Competencias Básicas",
-    avatar: "/api/placeholder/100/100",
-    bio: "Educador con 20 años formando competencias básicas en matemáticas y comunicación.",
+  &ldquo;carlos-rivera&rdquo;: {
+    id: &ldquo;carlos-rivera&rdquo;,
+    name: &ldquo;Carlos Rivera&rdquo;,
+    title: &ldquo;Especialista en Competencias Básicas&rdquo;,
+    avatar: &ldquo;/api/placeholder/100/100&rdquo;,
+    bio: &ldquo;Educador con 20 años formando competencias básicas en matemáticas y comunicación.&rdquo;,
     rating: 4.9,
     totalStudents: 3200,
     totalCourses: 5,
     socialLinks: {
-      linkedin: "https://linkedin.com/in/carlosrivera",
+      linkedin: &ldquo;https://linkedin.com/in/carlosrivera&rdquo;,
     },
   },
-  "ana-garcia": {
-    id: "ana-garcia",
-    name: "Ana García",
-    title: "Consultora en Recursos Humanos",
-    avatar: "/api/placeholder/100/100",
-    bio: "Especialista en inserción laboral y desarrollo profesional con 12 años de experiencia.",
+  &ldquo;ana-garcia&rdquo;: {
+    id: &ldquo;ana-garcia&rdquo;,
+    name: &ldquo;Ana García&rdquo;,
+    title: &ldquo;Consultora en Recursos Humanos&rdquo;,
+    avatar: &ldquo;/api/placeholder/100/100&rdquo;,
+    bio: &ldquo;Especialista en inserción laboral y desarrollo profesional con 12 años de experiencia.&rdquo;,
     rating: 4.7,
     totalStudents: 1800,
     totalCourses: 6,
     socialLinks: {
-      linkedin: "https://linkedin.com/in/anagarcia",
-      website: "https://anagarcia.consulting",
+      linkedin: &ldquo;https://linkedin.com/in/anagarcia&rdquo;,
+      website: &ldquo;https://anagarcia.consulting&rdquo;,
     },
   },
-  "luis-mendoza": {
-    id: "luis-mendoza",
-    name: "Luis Mendoza",
-    title: "Emprendedor y Mentor de Negocios",
-    avatar: "/api/placeholder/100/100",
-    bio: "Fundador de 3 empresas exitosas, mentor de emprendedores durante 10 años.",
+  &ldquo;luis-mendoza&rdquo;: {
+    id: &ldquo;luis-mendoza&rdquo;,
+    name: &ldquo;Luis Mendoza&rdquo;,
+    title: &ldquo;Emprendedor y Mentor de Negocios&rdquo;,
+    avatar: &ldquo;/api/placeholder/100/100&rdquo;,
+    bio: &ldquo;Fundador de 3 empresas exitosas, mentor de emprendedores durante 10 años.&rdquo;,
     rating: 4.9,
     totalStudents: 2100,
     totalCourses: 7,
     socialLinks: {
-      linkedin: "https://linkedin.com/in/luismendoza",
-      twitter: "https://twitter.com/luismendoza",
-      website: "https://luismendoza.business",
+      linkedin: &ldquo;https://linkedin.com/in/luismendoza&rdquo;,
+      twitter: &ldquo;https://twitter.com/luismendoza&rdquo;,
+      website: &ldquo;https://luismendoza.business&rdquo;,
     },
   },
-  "sofia-torres": {
-    id: "sofia-torres",
-    name: "Sofía Torres",
-    title: "Especialista en Tecnología Educativa",
-    avatar: "/api/placeholder/100/100",
-    bio: "Ingeniera en sistemas especializada en capacitación tecnológica y transformación digital.",
+  &ldquo;sofia-torres&rdquo;: {
+    id: &ldquo;sofia-torres&rdquo;,
+    name: &ldquo;Sofía Torres&rdquo;,
+    title: &ldquo;Especialista en Tecnología Educativa&rdquo;,
+    avatar: &ldquo;/api/placeholder/100/100&rdquo;,
+    bio: &ldquo;Ingeniera en sistemas especializada en capacitación tecnológica y transformación digital.&rdquo;,
     rating: 4.8,
     totalStudents: 2800,
     totalCourses: 9,
     socialLinks: {
-      linkedin: "https://linkedin.com/in/sofiatorres",
-      website: "https://sofiatorres.tech",
+      linkedin: &ldquo;https://linkedin.com/in/sofiatorres&rdquo;,
+      website: &ldquo;https://sofiatorres.tech&rdquo;,
     },
   },
 };
@@ -85,9 +85,9 @@ const mockInstructors: Record<string, Instructor> = {
 // Mock courses data
 const mockCourses: Course[] = [
   {
-    id: "soft-skills-empowerment",
-    title: "Habilidades Blandas y Empoderamiento Personal",
-    slug: "habilidades-blandas-empoderamiento",
+    id: &ldquo;soft-skills-empowerment&rdquo;,
+    title: &ldquo;Habilidades Blandas y Empoderamiento Personal&rdquo;,
+    slug: &ldquo;habilidades-blandas-empoderamiento&rdquo;,
     description: `Un curso integral diseñado para desarrollar las habilidades blandas esenciales que todo joven necesita para el éxito personal y profesional. 
 
 Este curso te llevará a través de un viaje de autodescubrimiento y crecimiento personal, donde aprenderás a:
@@ -99,11 +99,11 @@ Este curso te llevará a través de un viaje de autodescubrimiento y crecimiento
 
 Con metodologías interactivas, casos prácticos y ejercicios de autorreflexión, este curso te preparará para enfrentar cualquier desafío con seguridad y determinación.`,
     shortDescription:
-      "Desarrolla habilidades blandas esenciales: autoestima, liderazgo, resiliencia y trabajo en equipo.",
-    thumbnail: "/api/placeholder/400/250",
-    videoPreview: "/api/placeholder/video/preview1",
-    instructor: mockInstructors["maria-lopez"],
-    institution: "Centro de Formación CEMSE",
+      &ldquo;Desarrolla habilidades blandas esenciales: autoestima, liderazgo, resiliencia y trabajo en equipo.&rdquo;,
+    thumbnail: &ldquo;/api/placeholder/400/250&rdquo;,
+    videoPreview: &ldquo;/api/placeholder/video/preview1&rdquo;,
+    instructor: mockInstructors[&ldquo;maria-lopez&rdquo;],
+    institution: &ldquo;Centro de Formación CEMSE&rdquo;,
     category: CourseCategory.SOFT_SKILLS,
     level: CourseLevel.BEGINNER,
     duration: 20,
@@ -114,37 +114,37 @@ Con metodologías interactivas, casos prácticos y ejercicios de autorreflexión
     isMandatory: true,
     isActive: true,
     objectives: [
-      "Fortalecer la autoestima y confianza personal",
-      "Desarrollar habilidades de liderazgo efectivo",
-      "Cultivar la resiliencia ante desafíos",
-      "Mejorar la toma de decisiones",
-      "Potenciar el espíritu emprendedor",
-      "Desarrollar planes de crecimiento personal",
+      &ldquo;Fortalecer la autoestima y confianza personal&rdquo;,
+      &ldquo;Desarrollar habilidades de liderazgo efectivo&rdquo;,
+      &ldquo;Cultivar la resiliencia ante desafíos&rdquo;,
+      &ldquo;Mejorar la toma de decisiones&rdquo;,
+      &ldquo;Potenciar el espíritu emprendedor&rdquo;,
+      &ldquo;Desarrollar planes de crecimiento personal&rdquo;,
     ],
     prerequisites: [],
     includedMaterials: [
-      "Videos interactivos (20 horas)",
-      "Ejercicios de autoevaluación",
-      "Plantillas de desarrollo personal",
-      "Casos de estudio reales",
-      "Certificado oficial",
+      &ldquo;Videos interactivos (20 horas)&rdquo;,
+      &ldquo;Ejercicios de autoevaluación&rdquo;,
+      &ldquo;Plantillas de desarrollo personal&rdquo;,
+      &ldquo;Casos de estudio reales&rdquo;,
+      &ldquo;Certificado oficial&rdquo;,
     ],
     certification: true,
     tags: [
-      "habilidades blandas",
-      "liderazgo",
-      "autoestima",
-      "emprendimiento",
-      "desarrollo personal",
+      &ldquo;habilidades blandas&rdquo;,
+      &ldquo;liderazgo&rdquo;,
+      &ldquo;autoestima&rdquo;,
+      &ldquo;emprendimiento&rdquo;,
+      &ldquo;desarrollo personal&rdquo;,
     ],
-    createdAt: new Date("2024-01-15"),
-    updatedAt: new Date("2024-02-20"),
-    publishedAt: new Date("2024-01-20"),
+    createdAt: new Date(&ldquo;2024-01-15&rdquo;),
+    updatedAt: new Date(&ldquo;2024-02-20&rdquo;),
+    publishedAt: new Date(&ldquo;2024-01-20&rdquo;),
   },
   {
-    id: "basic-competencies",
-    title: "Competencias Básicas Fundamentales",
-    slug: "competencias-basicas-fundamentales",
+    id: &ldquo;basic-competencies&rdquo;,
+    title: &ldquo;Competencias Básicas Fundamentales&rdquo;,
+    slug: &ldquo;competencias-basicas-fundamentales&rdquo;,
     description: `Fortalece tus competencias básicas en comunicación y matemáticas con este curso práctico y dinámico.
 
 Diseñado especialmente para jóvenes que desean mejorar sus habilidades fundamentales, este curso cubre:
@@ -156,10 +156,10 @@ Diseñado especialmente para jóvenes que desean mejorar sus habilidades fundame
 
 Con ejercicios interactivos y aplicaciones prácticas, desarrollarás las competencias esenciales para el mundo laboral y la vida diaria.`,
     shortDescription:
-      "Fortalece competencias básicas en comunicación, matemáticas y resolución de problemas.",
-    thumbnail: "/api/placeholder/400/250",
-    instructor: mockInstructors["carlos-rivera"],
-    institution: "Centro de Formación CEMSE",
+      &ldquo;Fortalece competencias básicas en comunicación, matemáticas y resolución de problemas.&rdquo;,
+    thumbnail: &ldquo;/api/placeholder/400/250&rdquo;,
+    instructor: mockInstructors[&ldquo;carlos-rivera&rdquo;],
+    institution: &ldquo;Centro de Formación CEMSE&rdquo;,
     category: CourseCategory.BASIC_COMPETENCIES,
     level: CourseLevel.BEGINNER,
     duration: 5,
@@ -170,36 +170,36 @@ Con ejercicios interactivos y aplicaciones prácticas, desarrollarás las compet
     isMandatory: true,
     isActive: true,
     objectives: [
-      "Mejorar la comunicación oral y escrita",
-      "Dominar operaciones matemáticas básicas",
-      "Aplicar la regla de 3 en situaciones reales",
-      "Calcular porcentajes correctamente",
-      "Desarrollar pensamiento lógico",
+      &ldquo;Mejorar la comunicación oral y escrita&rdquo;,
+      &ldquo;Dominar operaciones matemáticas básicas&rdquo;,
+      &ldquo;Aplicar la regla de 3 en situaciones reales&rdquo;,
+      &ldquo;Calcular porcentajes correctamente&rdquo;,
+      &ldquo;Desarrollar pensamiento lógico&rdquo;,
     ],
     prerequisites: [],
     includedMaterials: [
-      "Videos explicativos (5 horas)",
-      "Ejercicios prácticos interactivos",
-      "Calculadora de regla de 3",
-      "Simuladores matemáticos",
-      "Evaluaciones automáticas",
+      &ldquo;Videos explicativos (5 horas)&rdquo;,
+      &ldquo;Ejercicios prácticos interactivos&rdquo;,
+      &ldquo;Calculadora de regla de 3&rdquo;,
+      &ldquo;Simuladores matemáticos&rdquo;,
+      &ldquo;Evaluaciones automáticas&rdquo;,
     ],
     certification: true,
     tags: [
-      "matemáticas",
-      "comunicación",
-      "competencias básicas",
-      "regla de 3",
-      "porcentajes",
+      &ldquo;matemáticas&rdquo;,
+      &ldquo;comunicación&rdquo;,
+      &ldquo;competencias básicas&rdquo;,
+      &ldquo;regla de 3&rdquo;,
+      &ldquo;porcentajes&rdquo;,
     ],
-    createdAt: new Date("2024-01-10"),
-    updatedAt: new Date("2024-02-15"),
-    publishedAt: new Date("2024-01-15"),
+    createdAt: new Date(&ldquo;2024-01-10&rdquo;),
+    updatedAt: new Date(&ldquo;2024-02-15&rdquo;),
+    publishedAt: new Date(&ldquo;2024-01-15&rdquo;),
   },
   {
-    id: "job-placement-skills",
-    title: "Inserción Laboral y Técnicas de Búsqueda de Empleo",
-    slug: "insercion-laboral-busqueda-empleo",
+    id: &ldquo;job-placement-skills&rdquo;,
+    title: &ldquo;Inserción Laboral y Técnicas de Búsqueda de Empleo&rdquo;,
+    slug: &ldquo;insercion-laboral-busqueda-empleo&rdquo;,
     description: `Prepárate para ingresar al mundo laboral con confianza y las herramientas correctas.
 
 Este curso te equipará con todo lo necesario para una búsqueda de empleo exitosa:
@@ -211,10 +211,10 @@ Este curso te equipará con todo lo necesario para una búsqueda de empleo exito
 
 Incluye casos reales, plantillas profesionales y acceso a nuestro innovador simulador de entrevistas impulsado por inteligencia artificial.`,
     shortDescription:
-      "Domina la búsqueda de empleo: CV, entrevistas, derechos laborales y simulador con IA.",
-    thumbnail: "/api/placeholder/400/250",
-    instructor: mockInstructors["ana-garcia"],
-    institution: "Centro de Formación CEMSE",
+      &ldquo;Domina la búsqueda de empleo: CV, entrevistas, derechos laborales y simulador con IA.&rdquo;,
+    thumbnail: &ldquo;/api/placeholder/400/250&rdquo;,
+    instructor: mockInstructors[&ldquo;ana-garcia&rdquo;],
+    institution: &ldquo;Centro de Formación CEMSE&rdquo;,
     category: CourseCategory.JOB_PLACEMENT,
     level: CourseLevel.INTERMEDIATE,
     duration: 8,
@@ -225,39 +225,39 @@ Incluye casos reales, plantillas profesionales y acceso a nuestro innovador simu
     isMandatory: true,
     isActive: true,
     objectives: [
-      "Conocer derechos y deberes laborales",
-      "Crear CV profesional efectivo",
-      "Redactar cartas de presentación persuasivas",
-      "Dominar técnicas de entrevista",
-      "Practicar con simulador de IA",
-      "Desarrollar presencia profesional",
+      &ldquo;Conocer derechos y deberes laborales&rdquo;,
+      &ldquo;Crear CV profesional efectivo&rdquo;,
+      &ldquo;Redactar cartas de presentación persuasivas&rdquo;,
+      &ldquo;Dominar técnicas de entrevista&rdquo;,
+      &ldquo;Practicar con simulador de IA&rdquo;,
+      &ldquo;Desarrollar presencia profesional&rdquo;,
     ],
     prerequisites: [],
     includedMaterials: [
-      "Videos de capacitación (8 horas)",
-      "Plantillas de CV profesionales",
-      "Generador de cartas de presentación",
-      "Simulador de entrevistas con IA",
-      "Guía de derechos laborales",
-      "Casos de estudio reales",
+      &ldquo;Videos de capacitación (8 horas)&rdquo;,
+      &ldquo;Plantillas de CV profesionales&rdquo;,
+      &ldquo;Generador de cartas de presentación&rdquo;,
+      &ldquo;Simulador de entrevistas con IA&rdquo;,
+      &ldquo;Guía de derechos laborales&rdquo;,
+      &ldquo;Casos de estudio reales&rdquo;,
     ],
     certification: true,
     tags: [
-      "inserción laboral",
-      "CV",
-      "entrevistas",
-      "derechos laborales",
-      "búsqueda empleo",
-      "IA",
+      &ldquo;inserción laboral&rdquo;,
+      &ldquo;CV&rdquo;,
+      &ldquo;entrevistas&rdquo;,
+      &ldquo;derechos laborales&rdquo;,
+      &ldquo;búsqueda empleo&rdquo;,
+      &ldquo;IA&rdquo;,
     ],
-    createdAt: new Date("2024-01-20"),
-    updatedAt: new Date("2024-02-25"),
-    publishedAt: new Date("2024-01-25"),
+    createdAt: new Date(&ldquo;2024-01-20&rdquo;),
+    updatedAt: new Date(&ldquo;2024-02-25&rdquo;),
+    publishedAt: new Date(&ldquo;2024-01-25&rdquo;),
   },
   {
-    id: "entrepreneurship-fundamentals",
-    title: "Fundamentos de Emprendimiento y Desarrollo de Negocios",
-    slug: "fundamentos-emprendimiento-negocios",
+    id: &ldquo;entrepreneurship-fundamentals&rdquo;,
+    title: &ldquo;Fundamentos de Emprendimiento y Desarrollo de Negocios&rdquo;,
+    slug: &ldquo;fundamentos-emprendimiento-negocios&rdquo;,
     description: `Transforma tu idea en un negocio exitoso con este curso completo de emprendimiento.
 
 Aprenderás paso a paso cómo desarrollar y lanzar tu propio emprendimiento:
@@ -269,10 +269,10 @@ Aprenderás paso a paso cómo desarrollar y lanzar tu propio emprendimiento:
 
 Con casos de estudio de emprendedores bolivianos exitosos y herramientas prácticas que podrás aplicar inmediatamente en tu proyecto.`,
     shortDescription:
-      "Aprende a crear y gestionar tu propio negocio: plan de negocios, marketing y finanzas.",
-    thumbnail: "/api/placeholder/400/250",
-    instructor: mockInstructors["luis-mendoza"],
-    institution: "Centro de Formación CEMSE",
+      &ldquo;Aprende a crear y gestionar tu propio negocio: plan de negocios, marketing y finanzas.&rdquo;,
+    thumbnail: &ldquo;/api/placeholder/400/250&rdquo;,
+    instructor: mockInstructors[&ldquo;luis-mendoza&rdquo;],
+    institution: &ldquo;Centro de Formación CEMSE&rdquo;,
     category: CourseCategory.ENTREPRENEURSHIP,
     level: CourseLevel.INTERMEDIATE,
     duration: 12,
@@ -283,39 +283,39 @@ Con casos de estudio de emprendedores bolivianos exitosos y herramientas prácti
     isMandatory: true,
     isActive: true,
     objectives: [
-      "Desarrollar plan de negocios completo",
-      "Crear estrategias de marketing efectivas",
-      "Manejar finanzas básicas empresariales",
-      "Validar ideas de negocio",
-      "Usar herramientas digitales",
-      "Analizar casos de éxito locales",
+      &ldquo;Desarrollar plan de negocios completo&rdquo;,
+      &ldquo;Crear estrategias de marketing efectivas&rdquo;,
+      &ldquo;Manejar finanzas básicas empresariales&rdquo;,
+      &ldquo;Validar ideas de negocio&rdquo;,
+      &ldquo;Usar herramientas digitales&rdquo;,
+      &ldquo;Analizar casos de éxito locales&rdquo;,
     ],
     prerequisites: [],
     includedMaterials: [
-      "Videos instructivos (12 horas)",
-      "Plantilla de plan de negocios",
-      "Calculadora financiera",
-      "Casos de estudio bolivianos",
-      "Herramientas de validación",
-      "Templates de marketing",
+      &ldquo;Videos instructivos (12 horas)&rdquo;,
+      &ldquo;Plantilla de plan de negocios&rdquo;,
+      &ldquo;Calculadora financiera&rdquo;,
+      &ldquo;Casos de estudio bolivianos&rdquo;,
+      &ldquo;Herramientas de validación&rdquo;,
+      &ldquo;Templates de marketing&rdquo;,
     ],
     certification: true,
     tags: [
-      "emprendimiento",
-      "plan de negocios",
-      "marketing",
-      "finanzas",
-      "startup",
-      "Bolivia",
+      &ldquo;emprendimiento&rdquo;,
+      &ldquo;plan de negocios&rdquo;,
+      &ldquo;marketing&rdquo;,
+      &ldquo;finanzas&rdquo;,
+      &ldquo;startup&rdquo;,
+      &ldquo;Bolivia&rdquo;,
     ],
-    createdAt: new Date("2024-02-01"),
-    updatedAt: new Date("2024-03-01"),
-    publishedAt: new Date("2024-02-05"),
+    createdAt: new Date(&ldquo;2024-02-01&rdquo;),
+    updatedAt: new Date(&ldquo;2024-03-01&rdquo;),
+    publishedAt: new Date(&ldquo;2024-02-05&rdquo;),
   },
   {
-    id: "technical-skills-digital",
-    title: "Habilidades Técnicas y Competencias Digitales",
-    slug: "habilidades-tecnicas-competencias-digitales",
+    id: &ldquo;technical-skills-digital&rdquo;,
+    title: &ldquo;Habilidades Técnicas y Competencias Digitales&rdquo;,
+    slug: &ldquo;habilidades-tecnicas-competencias-digitales&rdquo;,
     description: `Desarrolla las habilidades técnicas y digitales más demandadas en el mercado laboral actual.
 
 Este curso te capacitará en:
@@ -327,10 +327,10 @@ Este curso te capacitará en:
 
 Incluye acceso a recursos externos especializados y certificaciones reconocidas por la industria.`,
     shortDescription:
-      "Domina herramientas digitales, ventas, gestión de inventarios y regulaciones técnicas.",
-    thumbnail: "/api/placeholder/400/250",
-    instructor: mockInstructors["sofia-torres"],
-    institution: "Centro de Formación CEMSE",
+      &ldquo;Domina herramientas digitales, ventas, gestión de inventarios y regulaciones técnicas.&rdquo;,
+    thumbnail: &ldquo;/api/placeholder/400/250&rdquo;,
+    instructor: mockInstructors[&ldquo;sofia-torres&rdquo;],
+    institution: &ldquo;Centro de Formación CEMSE&rdquo;,
     category: CourseCategory.TECHNICAL_SKILLS,
     level: CourseLevel.BEGINNER,
     duration: 15,
@@ -341,45 +341,45 @@ Incluye acceso a recursos externos especializados y certificaciones reconocidas 
     isMandatory: true,
     isActive: true,
     objectives: [
-      "Manejar herramientas digitales esenciales",
-      "Desarrollar técnicas de ventas efectivas",
-      "Gestionar inventarios eficientemente",
-      "Conocer regulaciones técnicas",
-      "Usar plataformas especializadas",
+      &ldquo;Manejar herramientas digitales esenciales&rdquo;,
+      &ldquo;Desarrollar técnicas de ventas efectivas&rdquo;,
+      &ldquo;Gestionar inventarios eficientemente&rdquo;,
+      &ldquo;Conocer regulaciones técnicas&rdquo;,
+      &ldquo;Usar plataformas especializadas&rdquo;,
     ],
     prerequisites: [],
     includedMaterials: [
-      "Videos tutoriales (15 horas)",
-      "Software y herramientas digitales",
-      "Simulador de ventas",
-      "Sistema de gestión de inventarios",
-      "Enlaces a cursos especializados",
-      "Certificaciones industriales",
+      &ldquo;Videos tutoriales (15 horas)&rdquo;,
+      &ldquo;Software y herramientas digitales&rdquo;,
+      &ldquo;Simulador de ventas&rdquo;,
+      &ldquo;Sistema de gestión de inventarios&rdquo;,
+      &ldquo;Enlaces a cursos especializados&rdquo;,
+      &ldquo;Certificaciones industriales&rdquo;,
     ],
     certification: true,
     tags: [
-      "habilidades técnicas",
-      "digital",
-      "ventas",
-      "inventarios",
-      "regulaciones",
-      "tecnología",
+      &ldquo;habilidades técnicas&rdquo;,
+      &ldquo;digital&rdquo;,
+      &ldquo;ventas&rdquo;,
+      &ldquo;inventarios&rdquo;,
+      &ldquo;regulaciones&rdquo;,
+      &ldquo;tecnología&rdquo;,
     ],
-    createdAt: new Date("2024-02-10"),
-    updatedAt: new Date("2024-03-05"),
-    publishedAt: new Date("2024-02-15"),
+    createdAt: new Date(&ldquo;2024-02-10&rdquo;),
+    updatedAt: new Date(&ldquo;2024-03-05&rdquo;),
+    publishedAt: new Date(&ldquo;2024-02-15&rdquo;),
   },
   // Additional non-mandatory courses
   {
-    id: "digital-literacy-advanced",
-    title: "Alfabetización Digital Avanzada",
-    slug: "alfabetizacion-digital-avanzada",
-    description: "Curso avanzado de competencias digitales para el siglo XXI.",
+    id: &ldquo;digital-literacy-advanced&rdquo;,
+    title: &ldquo;Alfabetización Digital Avanzada&rdquo;,
+    slug: &ldquo;alfabetizacion-digital-avanzada&rdquo;,
+    description: &ldquo;Curso avanzado de competencias digitales para el siglo XXI.&rdquo;,
     shortDescription:
-      "Competencias digitales avanzadas para profesionales modernos.",
-    thumbnail: "/api/placeholder/400/250",
-    instructor: mockInstructors["sofia-torres"],
-    institution: "Centro de Formación CEMSE",
+      &ldquo;Competencias digitales avanzadas para profesionales modernos.&rdquo;,
+    thumbnail: &ldquo;/api/placeholder/400/250&rdquo;,
+    instructor: mockInstructors[&ldquo;sofia-torres&rdquo;],
+    institution: &ldquo;Centro de Formación CEMSE&rdquo;,
     category: CourseCategory.DIGITAL_LITERACY,
     level: CourseLevel.ADVANCED,
     duration: 10,
@@ -390,21 +390,21 @@ Incluye acceso a recursos externos especializados y certificaciones reconocidas 
     isMandatory: false,
     isActive: true,
     objectives: [
-      "Dominar herramientas digitales avanzadas",
-      "Desarrollar pensamiento computacional",
-      "Crear contenido digital profesional",
+      &ldquo;Dominar herramientas digitales avanzadas&rdquo;,
+      &ldquo;Desarrollar pensamiento computacional&rdquo;,
+      &ldquo;Crear contenido digital profesional&rdquo;,
     ],
-    prerequisites: ["basic-competencies"],
+    prerequisites: [&ldquo;basic-competencies&rdquo;],
     includedMaterials: [
-      "Videos HD (10 horas)",
-      "Software especializado",
-      "Proyectos prácticos",
+      &ldquo;Videos HD (10 horas)&rdquo;,
+      &ldquo;Software especializado&rdquo;,
+      &ldquo;Proyectos prácticos&rdquo;,
     ],
     certification: true,
-    tags: ["digital", "avanzado", "tecnología", "competencias"],
-    createdAt: new Date("2024-02-20"),
-    updatedAt: new Date("2024-03-10"),
-    publishedAt: new Date("2024-02-25"),
+    tags: [&ldquo;digital&rdquo;, &ldquo;avanzado&rdquo;, &ldquo;tecnología&rdquo;, &ldquo;competencias&rdquo;],
+    createdAt: new Date(&ldquo;2024-02-20&rdquo;),
+    updatedAt: new Date(&ldquo;2024-03-10&rdquo;),
+    publishedAt: new Date(&ldquo;2024-02-25&rdquo;),
   },
 ];
 
@@ -413,19 +413,18 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
 
     // Parse search parameters
-    const query = searchParams.get("query") || "";
-    const category = searchParams.get("category");
-    const level = searchParams.get("level");
-    const duration = searchParams.get("duration");
-    const price = searchParams.get("price");
-    const rating = searchParams.get("rating");
-    const isFree = searchParams.get("isFree");
-    const isMandatory = searchParams.get("isMandatory");
-    const instructor = searchParams.get("instructor");
-    const sortBy = searchParams.get("sortBy") || "popularity";
-    const sortOrder = searchParams.get("sortOrder") || "desc";
-    const page = parseInt(searchParams.get("page") || "1");
-    const limit = parseInt(searchParams.get("limit") || "12");
+    const query = searchParams.get(&ldquo;query&rdquo;) || &ldquo;&rdquo;;
+    const category = searchParams.get(&ldquo;category&rdquo;);
+    const level = searchParams.get(&ldquo;level&rdquo;);
+    const price = searchParams.get(&ldquo;price&rdquo;);
+    const rating = searchParams.get(&ldquo;rating&rdquo;);
+    const isFree = searchParams.get(&ldquo;isFree&rdquo;);
+    const isMandatory = searchParams.get(&ldquo;isMandatory&rdquo;);
+    const instructor = searchParams.get(&ldquo;instructor&rdquo;);
+    const sortBy = searchParams.get(&ldquo;sortBy&rdquo;) || &ldquo;popularity&rdquo;;
+    const sortOrder = searchParams.get(&ldquo;sortOrder&rdquo;) || &ldquo;desc&rdquo;;
+    const page = parseInt(searchParams.get(&ldquo;page&rdquo;) || &ldquo;1&rdquo;);
+    const limit = parseInt(searchParams.get(&ldquo;limit&rdquo;) || &ldquo;12&rdquo;);
 
     let filteredCourses = [...mockCourses];
 
@@ -442,28 +441,28 @@ export async function GET(request: NextRequest) {
     }
 
     if (category) {
-      const categories = category.split(",") as CourseCategory[];
+      const categories = category.split(&ldquo;,&rdquo;) as CourseCategory[];
       filteredCourses = filteredCourses.filter((course) =>
         categories.includes(course.category)
       );
     }
 
     if (level) {
-      const levels = level.split(",") as CourseLevel[];
+      const levels = level.split(&ldquo;,&rdquo;) as CourseLevel[];
       filteredCourses = filteredCourses.filter((course) =>
         levels.includes(course.level)
       );
     }
 
     if (duration) {
-      const [min, max] = duration.split("-").map(Number);
+      const [min, max] = duration.split(&ldquo;-&rdquo;).map(Number);
       filteredCourses = filteredCourses.filter(
         (course) => course.duration >= min && course.duration <= max
       );
     }
 
     if (price) {
-      const [min, max] = price.split("-").map(Number);
+      const [min, max] = price.split(&ldquo;-&rdquo;).map(Number);
       filteredCourses = filteredCourses.filter(
         (course) => course.price >= min && course.price <= max
       );
@@ -476,13 +475,13 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    if (isFree === "true") {
+    if (isFree === &ldquo;true&rdquo;) {
       filteredCourses = filteredCourses.filter((course) => course.price === 0);
     }
 
-    if (isMandatory === "true") {
+    if (isMandatory === &ldquo;true&rdquo;) {
       filteredCourses = filteredCourses.filter((course) => course.isMandatory);
-    } else if (isMandatory === "false") {
+    } else if (isMandatory === &ldquo;false&rdquo;) {
       filteredCourses = filteredCourses.filter((course) => !course.isMandatory);
     }
 
@@ -497,28 +496,28 @@ export async function GET(request: NextRequest) {
       let comparison = 0;
 
       switch (sortBy) {
-        case "popularity":
+        case &ldquo;popularity&rdquo;:
           comparison = b.studentCount - a.studentCount;
           break;
-        case "date":
+        case &ldquo;date&rdquo;:
           comparison =
             new Date(b.publishedAt || b.createdAt).getTime() -
             new Date(a.publishedAt || a.createdAt).getTime();
           break;
-        case "rating":
+        case &ldquo;rating&rdquo;:
           comparison = b.rating - a.rating;
           break;
-        case "title":
+        case &ldquo;title&rdquo;:
           comparison = a.title.localeCompare(b.title);
           break;
-        case "duration":
+        case &ldquo;duration&rdquo;:
           comparison = a.duration - b.duration;
           break;
         default:
           comparison = b.studentCount - a.studentCount;
       }
 
-      return sortOrder === "asc" ? -comparison : comparison;
+      return sortOrder === &ldquo;asc&rdquo; ? -comparison : comparison;
     });
 
     // Pagination
@@ -566,9 +565,9 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(response);
   } catch (error) {
-    console.error("Error fetching courses:", error);
+    console.error(&ldquo;Error fetching courses:&rdquo;, error);
     return NextResponse.json(
-      { error: "Error interno del servidor" },
+      { error: &ldquo;Error interno del servidor&rdquo; },
       { status: 500 }
     );
   }

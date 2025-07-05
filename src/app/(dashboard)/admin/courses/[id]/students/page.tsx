@@ -38,7 +38,6 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Search,
-  Filter,
   Download,
   MoreHorizontal,
   Eye,
@@ -52,7 +51,6 @@ import {
   CheckCircle,
   AlertCircle,
   XCircle,
-  Calendar,
   ArrowLeft,
 } from "lucide-react";
 
@@ -110,7 +108,6 @@ interface CourseStats {
 }
 
 export default function CourseStudentsPage() {
-  const params = useParams();
   const courseId = params.id as string;
 
   const [students, setStudents] = useState<StudentEnrollment[]>([]);

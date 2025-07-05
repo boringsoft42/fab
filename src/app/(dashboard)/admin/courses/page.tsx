@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Progress } from "@/components/ui/progress";
 import {
   Table,
   TableBody,
@@ -30,11 +29,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Plus,
   Search,
-  Filter,
   MoreHorizontal,
   Edit,
   Trash2,
@@ -46,8 +43,6 @@ import {
   Star,
   TrendingUp,
   Award,
-  PlayCircle,
-  FileText,
   BarChart3,
 } from "lucide-react";
 
@@ -61,7 +56,6 @@ interface CourseStats {
 }
 
 export default function CourseManagementPage() {
-  const router = useRouter();
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -240,15 +234,6 @@ export default function CourseManagementPage() {
       [CourseCategory.LEADERSHIP]: "Liderazgo",
     };
     return labels[category] || category;
-  };
-
-  const getLevelLabel = (level: CourseLevel) => {
-    const labels = {
-      [CourseLevel.BEGINNER]: "Principiante",
-      [CourseLevel.INTERMEDIATE]: "Intermedio",
-      [CourseLevel.ADVANCED]: "Avanzado",
-    };
-    return labels[level] || level;
   };
 
   if (loading) {

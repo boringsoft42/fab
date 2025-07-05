@@ -1,19 +1,19 @@
-import { createClient } from "@supabase/supabase-js";
-import { applyPasswordHashMiddleware } from "./password-hash-middleware";
+import { createClient } from &ldquo;@supabase/supabase-js&rdquo;;
+import { applyPasswordHashMiddleware } from &ldquo;./password-hash-middleware&rdquo;;
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error("Missing Supabase environment variables");
+  throw new Error(&ldquo;Missing Supabase environment variables&rdquo;);
 }
 
 // Create base client
 const baseClient = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     persistSession: true,
-    storageKey: "app-token",
-    storage: typeof window !== "undefined" ? window.localStorage : undefined,
+    storageKey: &ldquo;app-token&rdquo;,
+    storage: typeof window !== &ldquo;undefined&rdquo; ? window.localStorage : undefined,
   },
 });
 

@@ -1,13 +1,13 @@
-"use client";
+&ldquo;use client&rdquo;;
 
-import { useState, useEffect } from "react";
-import { SettingsForm } from "./components/settings-form";
-import { PasswordDialog } from "./components/password-dialog";
-import { AccountSection } from "./components/account-section";
-import { SettingsLoader } from "./components/settings-loader";
-import { useCurrentUser } from "@/hooks/use-current-user";
-import { Button } from "@/components/ui/button";
-import { LockKeyhole, RefreshCw } from "lucide-react";
+import { useState, useEffect } from &ldquo;react&rdquo;;
+import { SettingsForm } from &ldquo;./components/settings-form&rdquo;;
+import { PasswordDialog } from &ldquo;./components/password-dialog&rdquo;;
+import { AccountSection } from &ldquo;./components/account-section&rdquo;;
+import { SettingsLoader } from &ldquo;./components/settings-loader&rdquo;;
+import { useCurrentUser } from &ldquo;@/hooks/use-current-user&rdquo;;
+import { Button } from &ldquo;@/components/ui/button&rdquo;;
+import { LockKeyhole, RefreshCw } from &ldquo;lucide-react&rdquo;;
 import {
   Card,
   CardContent,
@@ -15,8 +15,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+} from &ldquo;@/components/ui/card&rdquo;;
+import { Tabs, TabsContent, TabsList, TabsTrigger } from &ldquo;@/components/ui/tabs&rdquo;;
 
 export default function SettingsPage() {
   const { profile, isLoading, refetch } = useCurrentUser();
@@ -48,10 +48,10 @@ export default function SettingsPage() {
   // Handle error case
   if (!isLoading && !profile) {
     return (
-      <div className="container mx-auto py-10">
-        <Card className="max-w-md mx-auto">
-          <CardHeader className="text-center">
-            <CardTitle className="text-xl">
+      <div className=&ldquo;container mx-auto py-10&rdquo;>
+        <Card className=&ldquo;max-w-md mx-auto&rdquo;>
+          <CardHeader className=&ldquo;text-center&rdquo;>
+            <CardTitle className=&ldquo;text-xl&rdquo;>
               No se pudo cargar el perfil
             </CardTitle>
             <CardDescription>
@@ -59,19 +59,19 @@ export default function SettingsPage() {
               nuevamente.
             </CardDescription>
           </CardHeader>
-          <CardContent className="flex justify-center">
+          <CardContent className=&ldquo;flex justify-center&rdquo;>
             <Button
               onClick={handleRetry}
-              className="w-full max-w-xs"
+              className=&ldquo;w-full max-w-xs&rdquo;
               disabled={retryLoading}
             >
               {retryLoading ? (
                 <>
-                  <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                  <RefreshCw className=&ldquo;mr-2 h-4 w-4 animate-spin&rdquo; />
                   Cargando...
                 </>
               ) : (
-                "Reintentar"
+                &ldquo;Reintentar&rdquo;
               )}
             </Button>
           </CardContent>
@@ -86,26 +86,26 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="space-y-6 animate-in fade-in-50 duration-500">
+    <div className=&ldquo;space-y-6 animate-in fade-in-50 duration-500&rdquo;>
       <div>
-        <h2 className="text-3xl font-bold tracking-tight">Configuración</h2>
-        <p className="text-muted-foreground">
+        <h2 className=&ldquo;text-3xl font-bold tracking-tight&rdquo;>Configuración</h2>
+        <p className=&ldquo;text-muted-foreground&rdquo;>
           Gestiona tu configuración de cuenta y preferencias.
         </p>
       </div>
 
-      <Tabs defaultValue="profile" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="profile">Perfil</TabsTrigger>
-          <TabsTrigger value="security">Seguridad</TabsTrigger>
+      <Tabs defaultValue=&ldquo;profile&rdquo; className=&ldquo;space-y-6&rdquo;>
+        <TabsList className=&ldquo;grid w-full grid-cols-2&rdquo;>
+          <TabsTrigger value=&ldquo;profile&rdquo;>Perfil</TabsTrigger>
+          <TabsTrigger value=&ldquo;security&rdquo;>Seguridad</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="profile" className="space-y-6">
+        <TabsContent value=&ldquo;profile&rdquo; className=&ldquo;space-y-6&rdquo;>
           <AccountSection />
           <SettingsForm />
         </TabsContent>
 
-        <TabsContent value="security" className="space-y-6">
+        <TabsContent value=&ldquo;security&rdquo; className=&ldquo;space-y-6&rdquo;>
           <Card>
             <CardHeader>
               <CardTitle>Seguridad</CardTitle>
@@ -113,10 +113,10 @@ export default function SettingsPage() {
                 Gestiona la configuración de seguridad de tu cuenta.
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <h3 className="font-medium">Contraseña</h3>
-                <p className="text-sm text-muted-foreground">
+            <CardContent className=&ldquo;space-y-4&rdquo;>
+              <div className=&ldquo;space-y-2&rdquo;>
+                <h3 className=&ldquo;font-medium&rdquo;>Contraseña</h3>
+                <p className=&ldquo;text-sm text-muted-foreground&rdquo;>
                   Actualiza tu contraseña regularmente para mayor seguridad.
                 </p>
               </div>
@@ -124,9 +124,9 @@ export default function SettingsPage() {
             <CardFooter>
               <Button
                 onClick={() => setPasswordDialogOpen(true)}
-                className="flex items-center"
+                className=&ldquo;flex items-center&rdquo;
               >
-                <LockKeyhole className="mr-2 h-4 w-4" />
+                <LockKeyhole className=&ldquo;mr-2 h-4 w-4&rdquo; />
                 Cambiar Contraseña
               </Button>
             </CardFooter>

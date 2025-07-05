@@ -1,26 +1,26 @@
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createClientComponentClient } from &ldquo;@supabase/auth-helpers-nextjs&rdquo;;
 
 const STORAGE_BUCKET =
-  process.env.NEXT_PUBLIC_SUPABASE_STORAGE_BUCKET || "avatars";
+  process.env.NEXT_PUBLIC_SUPABASE_STORAGE_BUCKET || &ldquo;avatars&rdquo;;
 const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
 const ACCEPTED_IMAGE_TYPES = [
-  "image/jpeg",
-  "image/jpg",
-  "image/png",
-  "image/gif",
+  &ldquo;image/jpeg&rdquo;,
+  &ldquo;image/jpg&rdquo;,
+  &ldquo;image/png&rdquo;,
+  &ldquo;image/gif&rdquo;,
 ];
 
 export async function uploadAvatar(file: File, userId: string) {
   // Validate file before upload
   if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
     throw new Error(
-      "Invalid file type. Please upload a JPEG, PNG or GIF image."
+      &ldquo;Invalid file type. Please upload a JPEG, PNG or GIF image.&rdquo;
     );
   }
 
   if (file.size > MAX_FILE_SIZE) {
     throw new Error(
-      "File size too large. Please upload an image smaller than 2MB."
+      &ldquo;File size too large. Please upload an image smaller than 2MB.&rdquo;
     );
   }
 
@@ -28,7 +28,7 @@ export async function uploadAvatar(file: File, userId: string) {
     const supabase = createClientComponentClient();
 
     // Upload the file to Supabase storage
-    const fileExt = file.name.split(".").pop();
+    const fileExt = file.name.split(&ldquo;.&rdquo;).pop();
     const fileName = `${userId}-${Math.random()}.${fileExt}`;
     const filePath = `${fileName}`;
 
@@ -36,7 +36,7 @@ export async function uploadAvatar(file: File, userId: string) {
     const { error: uploadError } = await supabase.storage
       .from(STORAGE_BUCKET)
       .upload(filePath, file, {
-        cacheControl: "3600",
+        cacheControl: &ldquo;3600&rdquo;,
         upsert: false,
       });
 
@@ -49,7 +49,7 @@ export async function uploadAvatar(file: File, userId: string) {
 
     return publicUrl;
   } catch (error) {
-    console.error("Error uploading avatar:", error);
+    console.error(&ldquo;Error uploading avatar:&rdquo;, error);
     throw error;
   }
 }

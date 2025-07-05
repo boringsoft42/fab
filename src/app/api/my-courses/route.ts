@@ -1,35 +1,35 @@
-import { NextRequest, NextResponse } from "next/server";
-import { Enrollment, Course, EnrollmentStatus } from "@/types/courses";
+import { NextRequest, NextResponse } from &ldquo;next/server&rdquo;;
+import { Enrollment, Course, EnrollmentStatus } from &ldquo;@/types/courses&rdquo;;
 
 // Extended mock data including course information with enrollments
 const mockUserCourses = [
   {
     enrollment: {
-      id: "enrollment-1",
-      userId: "user-1",
-      courseId: "soft-skills-empowerment",
-      enrolledAt: new Date("2024-02-01"),
-      lastAccessedAt: new Date("2024-02-28"),
+      id: &ldquo;enrollment-1&rdquo;,
+      userId: &ldquo;user-1&rdquo;,
+      courseId: &ldquo;soft-skills-empowerment&rdquo;,
+      enrolledAt: new Date(&ldquo;2024-02-01&rdquo;),
+      lastAccessedAt: new Date(&ldquo;2024-02-28&rdquo;),
       status: EnrollmentStatus.IN_PROGRESS,
       progress: {
-        courseId: "soft-skills-empowerment",
-        userId: "user-1",
-        completedLessons: ["lesson-1-1", "lesson-1-2"],
+        courseId: &ldquo;soft-skills-empowerment&rdquo;,
+        userId: &ldquo;user-1&rdquo;,
+        completedLessons: [&ldquo;lesson-1-1&rdquo;, &ldquo;lesson-1-2&rdquo;],
         completedModules: [],
-        currentLesson: "lesson-2-1",
-        currentModule: "module-2",
+        currentLesson: &ldquo;lesson-2-1&rdquo;,
+        currentModule: &ldquo;module-2&rdquo;,
         totalProgress: 25,
         timeSpent: 720,
         quizScores: [
           {
-            quizId: "quiz-1-2",
-            lessonId: "lesson-1-2",
+            quizId: &ldquo;quiz-1-2&rdquo;,
+            lessonId: &ldquo;lesson-1-2&rdquo;,
             score: 85,
             totalQuestions: 5,
             correctAnswers: 4,
             timeSpent: 180,
             attemptNumber: 1,
-            completedAt: new Date("2024-02-15"),
+            completedAt: new Date(&ldquo;2024-02-15&rdquo;),
             answers: [],
           },
         ],
@@ -37,15 +37,15 @@ const mockUserCourses = [
       },
     },
     course: {
-      id: "soft-skills-empowerment",
-      title: "Habilidades Blandas y Empoderamiento Personal",
-      thumbnail: "/api/placeholder/400/250",
+      id: &ldquo;soft-skills-empowerment&rdquo;,
+      title: &ldquo;Habilidades Blandas y Empoderamiento Personal&rdquo;,
+      thumbnail: &ldquo;/api/placeholder/400/250&rdquo;,
       instructor: {
-        id: "maria-lopez",
-        name: "María López",
-        title: "Especialista en Desarrollo Personal",
-        avatar: "/api/placeholder/100/100",
-        bio: "Especialista en desarrollo personal",
+        id: &ldquo;maria-lopez&rdquo;,
+        name: &ldquo;María López&rdquo;,
+        title: &ldquo;Especialista en Desarrollo Personal&rdquo;,
+        avatar: &ldquo;/api/placeholder/100/100&rdquo;,
+        bio: &ldquo;Especialista en desarrollo personal&rdquo;,
         rating: 4.8,
         totalStudents: 2500,
         totalCourses: 8,
@@ -58,50 +58,50 @@ const mockUserCourses = [
   },
   {
     enrollment: {
-      id: "enrollment-2",
-      userId: "user-1",
-      courseId: "basic-competencies",
-      enrolledAt: new Date("2024-01-15"),
-      completedAt: new Date("2024-02-10"),
-      lastAccessedAt: new Date("2024-02-10"),
+      id: &ldquo;enrollment-2&rdquo;,
+      userId: &ldquo;user-1&rdquo;,
+      courseId: &ldquo;basic-competencies&rdquo;,
+      enrolledAt: new Date(&ldquo;2024-01-15&rdquo;),
+      completedAt: new Date(&ldquo;2024-02-10&rdquo;),
+      lastAccessedAt: new Date(&ldquo;2024-02-10&rdquo;),
       status: EnrollmentStatus.COMPLETED,
       progress: {
-        courseId: "basic-competencies",
-        userId: "user-1",
+        courseId: &ldquo;basic-competencies&rdquo;,
+        userId: &ldquo;user-1&rdquo;,
         completedLessons: [
-          "lesson-basic-1-1",
-          "lesson-basic-1-2",
-          "lesson-basic-2-1",
+          &ldquo;lesson-basic-1-1&rdquo;,
+          &ldquo;lesson-basic-1-2&rdquo;,
+          &ldquo;lesson-basic-2-1&rdquo;,
         ],
-        completedModules: ["module-basic-1", "module-basic-2"],
+        completedModules: [&ldquo;module-basic-1&rdquo;, &ldquo;module-basic-2&rdquo;],
         totalProgress: 100,
         timeSpent: 300,
         quizScores: [
           {
-            quizId: "quiz-basic-final",
-            lessonId: "lesson-basic-final",
+            quizId: &ldquo;quiz-basic-final&rdquo;,
+            lessonId: &ldquo;lesson-basic-final&rdquo;,
             score: 92,
             totalQuestions: 10,
             correctAnswers: 9,
             timeSpent: 240,
             attemptNumber: 1,
-            completedAt: new Date("2024-02-10"),
+            completedAt: new Date(&ldquo;2024-02-10&rdquo;),
             answers: [],
           },
         ],
-        certificates: ["cert-basic-competencies-001"],
+        certificates: [&ldquo;cert-basic-competencies-001&rdquo;],
       },
     },
     course: {
-      id: "basic-competencies",
-      title: "Competencias Básicas Fundamentales",
-      thumbnail: "/api/placeholder/400/250",
+      id: &ldquo;basic-competencies&rdquo;,
+      title: &ldquo;Competencias Básicas Fundamentales&rdquo;,
+      thumbnail: &ldquo;/api/placeholder/400/250&rdquo;,
       instructor: {
-        id: "carlos-rivera",
-        name: "Carlos Rivera",
-        title: "Especialista en Competencias Básicas",
-        avatar: "/api/placeholder/100/100",
-        bio: "Educador especializado",
+        id: &ldquo;carlos-rivera&rdquo;,
+        name: &ldquo;Carlos Rivera&rdquo;,
+        title: &ldquo;Especialista en Competencias Básicas&rdquo;,
+        avatar: &ldquo;/api/placeholder/100/100&rdquo;,
+        bio: &ldquo;Educador especializado&rdquo;,
         rating: 4.9,
         totalStudents: 3200,
         totalCourses: 5,
@@ -114,15 +114,15 @@ const mockUserCourses = [
   },
   {
     enrollment: {
-      id: "enrollment-3",
-      userId: "user-1",
-      courseId: "job-placement-skills",
-      enrolledAt: new Date("2024-02-20"),
-      lastAccessedAt: new Date("2024-02-20"),
+      id: &ldquo;enrollment-3&rdquo;,
+      userId: &ldquo;user-1&rdquo;,
+      courseId: &ldquo;job-placement-skills&rdquo;,
+      enrolledAt: new Date(&ldquo;2024-02-20&rdquo;),
+      lastAccessedAt: new Date(&ldquo;2024-02-20&rdquo;),
       status: EnrollmentStatus.ENROLLED,
       progress: {
-        courseId: "job-placement-skills",
-        userId: "user-1",
+        courseId: &ldquo;job-placement-skills&rdquo;,
+        userId: &ldquo;user-1&rdquo;,
         completedLessons: [],
         completedModules: [],
         totalProgress: 0,
@@ -132,15 +132,15 @@ const mockUserCourses = [
       },
     },
     course: {
-      id: "job-placement-skills",
-      title: "Inserción Laboral y Técnicas de Búsqueda de Empleo",
-      thumbnail: "/api/placeholder/400/250",
+      id: &ldquo;job-placement-skills&rdquo;,
+      title: &ldquo;Inserción Laboral y Técnicas de Búsqueda de Empleo&rdquo;,
+      thumbnail: &ldquo;/api/placeholder/400/250&rdquo;,
       instructor: {
-        id: "ana-garcia",
-        name: "Ana García",
-        title: "Consultora en Recursos Humanos",
-        avatar: "/api/placeholder/100/100",
-        bio: "Especialista en inserción laboral",
+        id: &ldquo;ana-garcia&rdquo;,
+        name: &ldquo;Ana García&rdquo;,
+        title: &ldquo;Consultora en Recursos Humanos&rdquo;,
+        avatar: &ldquo;/api/placeholder/100/100&rdquo;,
+        bio: &ldquo;Especialista en inserción laboral&rdquo;,
         rating: 4.7,
         totalStudents: 1800,
         totalCourses: 6,
@@ -156,14 +156,14 @@ const mockUserCourses = [
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const userId = searchParams.get("userId");
-    const status = searchParams.get("status") as EnrollmentStatus;
-    const page = parseInt(searchParams.get("page") || "1");
-    const limit = parseInt(searchParams.get("limit") || "10");
+    const userId = searchParams.get(&ldquo;userId&rdquo;);
+    const status = searchParams.get(&ldquo;status&rdquo;) as EnrollmentStatus;
+    const page = parseInt(searchParams.get(&ldquo;page&rdquo;) || &ldquo;1&rdquo;);
+    const limit = parseInt(searchParams.get(&ldquo;limit&rdquo;) || &ldquo;10&rdquo;);
 
     if (!userId) {
       return NextResponse.json(
-        { error: "ID de usuario requerido" },
+        { error: &ldquo;ID de usuario requerido&rdquo; },
         { status: 400 }
       );
     }
@@ -234,9 +234,9 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Error fetching user courses:", error);
+    console.error(&ldquo;Error fetching user courses:&rdquo;, error);
     return NextResponse.json(
-      { error: "Error interno del servidor" },
+      { error: &ldquo;Error interno del servidor&rdquo; },
       { status: 500 }
     );
   }
