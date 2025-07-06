@@ -6,7 +6,7 @@ import { AlertCircle, CheckCircle, ChevronRight, Timer } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import type { Quiz as QuizType, QuizQuestion } from "@/types/courses";
+import type { Quiz as QuizType } from "@/types/courses";
 
 interface QuizProps {
   quiz: QuizType;
@@ -20,7 +20,7 @@ export function Quiz({ quiz, onComplete }: QuizProps) {
   const [answers, setAnswers] = useState<
     { questionId: string; answer: string; isCorrect: boolean }[]
   >([]);
-  const [timeLeft, setTimeLeft] = useState(
+  const [timeLeft] = useState(
     quiz.timeLimit ? quiz.timeLimit * 60 : null
   );
   const [isCompleted, setIsCompleted] = useState(false);

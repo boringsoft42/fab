@@ -1,54 +1,42 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   Search,
   FileText,
   GraduationCap,
-  Lightbulb,
   TrendingUp,
   Clock,
   Award,
   Target,
   ArrowRight,
   Users,
-  BookOpen,
-  Briefcase,
   Shield,
   Info,
-  GraduationCapIcon,
   Heart,
-  ChevronLeft,
-  ChevronRight,
   Eye,
   MessageSquare,
-  ExternalLink,
   Building2,
   Newspaper,
   Star,
   Calendar,
   ThumbsUp,
-  Share2,
   Bookmark,
-  Play,
   CheckCircle,
   AlertCircle,
+  Share,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
-
+import { CardDescription } from "@/components/ui/card";
 // News types
 interface NewsArticle {
   id: string;
@@ -69,10 +57,11 @@ interface NewsArticle {
   tags: string[];
   featured?: boolean;
   readTime?: number;
+  url?: string;
 }
 
 // Enhanced News Carousel Component
-function NewsCarousel() {
+export function LocalNewsCarousel() {
   const [companyNews, setCompanyNews] = useState<NewsArticle[]>([]);
   const [governmentNews, setGovernmentNews] = useState<NewsArticle[]>([]);
   const [loading, setLoading] = useState(true);
@@ -205,7 +194,7 @@ function NewsCarousel() {
           <div
             className={`relative ${compact ? "h-32" : "h-48"} overflow-hidden`}
           >
-            <img
+            <Image
               src={article.imageUrl}
               alt={article.title}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -352,7 +341,7 @@ function NewsCarousel() {
             </div>
             {article.shareCount && (
               <div className="flex items-center gap-1 hover:text-purple-600 cursor-pointer">
-                <Share2 className="w-3 h-3" />
+                <Share className="w-3 h-3" />
                 {article.shareCount.toLocaleString()}
               </div>
             )}
@@ -371,7 +360,7 @@ function NewsCarousel() {
               size="sm"
               className="h-6 px-2 hover:bg-blue-50 hover:text-blue-600"
             >
-              <ExternalLink className="w-3 h-3" />
+              <Link href={article.url || ""} className="w-3 h-3" />
             </Button>
           </div>
         </div>
@@ -616,7 +605,7 @@ export function DashboardAdolescent() {
             </p>
           </div>
           <div className="hidden md:flex">
-            <GraduationCapIcon className="w-16 h-16 text-green-200" />
+            <GraduationCap className="w-16 h-16 text-green-200" />
           </div>
         </div>
       </div>
@@ -638,7 +627,7 @@ export function DashboardAdolescent() {
       </div>
 
       {/* Enhanced News Carousel */}
-      <NewsCarousel />
+        <LocalNewsCarousel />
 
       {/* Quick Access Modules */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

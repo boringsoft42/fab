@@ -18,6 +18,7 @@ import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export default function NewApplicationPage() {
+  const router = useRouter();
   const [hasCV, setHasCV] = useState(false);
   const [hasCoverLetter, setHasCoverLetter] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -62,9 +63,7 @@ export default function NewApplicationPage() {
         <CardContent className="flex flex-col md:flex-row items-start justify-between p-6">
           <div className="flex items-start space-x-4">
             <Avatar className="w-16 h-16">
-              <AvatarFallback>
-                {profile?.name?.[0] ?? "U"}
-              </AvatarFallback>
+              <AvatarFallback>{profile?.name?.[0] ?? "U"}</AvatarFallback>
             </Avatar>
             <div>
               <h2 className="text-xl font-bold">{profile?.name}</h2>
@@ -78,7 +77,8 @@ export default function NewApplicationPage() {
                   <Phone className="w-4 h-4" /> {profile?.phone}
                 </div>
                 <div className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4" /> {profile?.city}, {profile?.country}
+                  <MapPin className="w-4 h-4" /> {profile?.city},{" "}
+                  {profile?.country}
                 </div>
                 <div className="flex items-center gap-2">
                   <GraduationCap className="w-4 h-4" /> {profile?.education}

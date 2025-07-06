@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 interface CompanyGalleryProps {
   images: string[];
@@ -25,7 +26,7 @@ export function CompanyGallery({ images }: CompanyGalleryProps) {
 
   return (
     <div className="relative w-full h-64 rounded-xl overflow-hidden bg-gray-100 shadow-sm">
-      <img
+      <Image
         src={images[currentIndex]}
         alt={`Company image ${currentIndex + 1}`}
         className="w-full h-full object-cover transition-opacity duration-300"

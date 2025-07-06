@@ -2,9 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   Course,
   Module,
-  Lesson,
   LessonType,
-  Quiz,
   QuestionType,
   CourseCategory,
   CourseLevel,
@@ -83,6 +81,9 @@ Con metodologías interactivas, casos prácticos y ejercicios de autorreflexión
         createdAt: new Date("2024-01-15"),
         updatedAt: new Date("2024-02-20"),
         publishedAt: new Date("2024-01-20"),
+        sections: [],
+        totalQuizzes: 1,
+        totalResources: 5,
       },
       modules: [
         {
@@ -147,7 +148,6 @@ Con metodologías interactivas, casos prácticos y ejercicios de autorreflexión
                 ],
                 timeLimit: 15,
                 passingScore: 70,
-                allowedAttempts: 3,
                 showCorrectAnswers: true,
               },
             },
@@ -246,6 +246,9 @@ Con ejercicios interactivos y aplicaciones prácticas, desarrollarás las compet
         createdAt: new Date("2024-01-10"),
         updatedAt: new Date("2024-02-15"),
         publishedAt: new Date("2024-01-15"),
+        sections: [],
+        totalQuizzes: 0,
+        totalResources: 3,
       },
       modules: [
         {

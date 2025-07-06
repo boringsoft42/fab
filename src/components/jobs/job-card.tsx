@@ -32,7 +32,7 @@ export const JobCard = ({ job, viewMode }: JobCardProps) => {
   const expiresAt = job.expiresAt
     ? new Date(job.expiresAt)
     : new Date(new Date(job.publishedAt).getTime() + 15 * 24 * 60 * 60 * 1000);
-  const formatSalary = (min?: number, max?: number, currency = "BOB") => {
+  const formatSalary = (min?: number, max?: number) => {
     if (!min && !max) return "Salario a convenir";
     if (min && max)
       return `Bs. ${min.toLocaleString()} - ${max.toLocaleString()}`;
@@ -209,7 +209,6 @@ export const JobCard = ({ job, viewMode }: JobCardProps) => {
                             {formatSalary(
                               job.salaryMin,
                               job.salaryMax,
-                              job.salaryCurrency
                             )}
                           </p>
                           <p className="text-sm text-gray-500">
@@ -348,7 +347,6 @@ export const JobCard = ({ job, viewMode }: JobCardProps) => {
                   {formatSalary(
                     job.salaryMin,
                     job.salaryMax,
-                    job.salaryCurrency
                   )}
                 </p>
                 <p className="text-xs text-gray-500">

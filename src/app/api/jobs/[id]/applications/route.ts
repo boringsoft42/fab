@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   JobApplication,
   ApplicationStatus,
-  JobQuestionAnswer,
 } from "@/types/jobs";
 
 // Mock applications data

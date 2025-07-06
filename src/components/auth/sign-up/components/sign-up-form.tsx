@@ -28,6 +28,7 @@ import { saltAndHashPassword } from "@/lib/auth/password-crypto";
 export function SignUpForm({ className, ...props }: SignUpFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const { signUp } = useAuth();
+  const router = useRouter();
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [password, setPassword] = useState("");
@@ -88,7 +89,8 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
             console.error("Avatar upload failed:", error);
             toast({
               title: "Warning",
-              description: "Failed to upload avatar, you can add it later from your profile.",
+              description:
+                "Failed to upload avatar, you can add it later from your profile.",
               variant: "default",
             });
           }
@@ -134,7 +136,8 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
 
         toast({
           title: "Success",
-          description: "Your account has been created! Please verify your email to continue.",
+          description:
+            "Your account has been created! Please verify your email to continue.",
         });
 
         // Redirect to verification page instead of dashboard if email confirmation is required

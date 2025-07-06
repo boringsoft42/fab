@@ -7,7 +7,7 @@ import {
   useMap,
   useMapEvents,
 } from "react-leaflet";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import L from "leaflet";
 import type { LeafletMouseEvent } from "leaflet";
 import "leaflet/dist/leaflet.css";

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { NewsArticle, NewsType, NewsStatus, NewsPriority } from "@/types/news";
+import { NewsArticle } from "@/types/news";
 
 // Mock news data
 const mockNews: NewsArticle[] = [

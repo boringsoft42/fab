@@ -16,8 +16,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Building2, Users, TrendingUp, MapPin, Plus, BarChart3, Globe, Mail, Phone, Play, Link, FileText, GraduationCap, Bookmark, Lightbulb, MessageSquare, BookOpen, Briefcase } from "lucide-react"
+import { Building2, Users, TrendingUp, Plus, BarChart3, Play, Link, FileText, GraduationCap, Bookmark, Lightbulb, MessageSquare, BookOpen, Briefcase } from "lucide-react"
 
 interface Company {
   id: string

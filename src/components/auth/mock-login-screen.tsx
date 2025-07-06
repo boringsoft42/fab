@@ -89,7 +89,7 @@ export function MockLoginScreen() {
 
       // Redirect to dashboard (role is already set during sign-in)
       router.replace("/dashboard");
-    } catch (err) {
+    } catch {
       // Error is handled by the context
     }
   };
@@ -116,7 +116,7 @@ export function MockLoginScreen() {
     try {
       await signIn(demoEmail, "demo123", demoRole);
       router.replace("/dashboard");
-    } catch (err) {
+    } catch {
       // Error handled by context
     }
   };

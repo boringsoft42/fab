@@ -6,21 +6,27 @@ import { useMockAuth } from "@/context/mock-auth-context";
 import { LoadingScreen } from "@/components/ui/loading-screen";
 
 export function RootRedirect() {
+  const router = useRouter();
   const { user, isLoading } = useMockAuth();
+
   useEffect(() => {
-    if (!isLoading) {
-      if (user) {
-        // Usuario autenticado
-        if (user.role) {
-          router.replace("/dashboard");
+    const handleRedirect = async () => {
+      if (!isLoading) {
+        if (user) {
+          // Usuario autenticado
+          if (user.role) {
+            await router.replace("/dashboard");
+          } else {
+            await router.replace("/select-role");
+          }
         } else {
-          router.replace("/select-role");
+          // Usuario NO autenticado → redirigir a landing
+          await router.replace("/landing");
         }
-      } else {
-        // Usuario NO autenticado → redirigir a landing
-        router.replace("/landing");
       }
-    }
+    };
+
+    handleRedirect();
   }, [user, isLoading, router]);
 
   return <LoadingScreen />;

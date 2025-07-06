@@ -14,15 +14,12 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Quiz } from "./quiz";
 import type {
   CourseSection as CourseSectionType,
   CourseResource,
-  Quiz as QuizType,
 } from "@/types/courses";
 
 interface CourseSectionProps {
@@ -39,7 +36,7 @@ export function CourseSection({
   const [activeTab, setActiveTab] = useState<"content" | "resources" | "quiz">(
     "content"
   );
-  const [videoProgress, setVideoProgress] = useState(0);
+  const [videoProgress] = useState(0);
 
   const getResourceIcon = (type: string) => {
     switch (type) {

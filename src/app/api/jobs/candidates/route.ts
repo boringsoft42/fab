@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { JobApplication, ApplicationStatus } from "@/types/jobs";
+import { JobApplication} from "@/types/jobs";
 
 // Mock candidates data with comprehensive information
 const candidates: JobApplication[] = [

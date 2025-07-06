@@ -84,7 +84,7 @@ export function MagicLinkForm({ className, ...props }: MagicLinkFormProps) {
         <div className="text-center">
           <h3 className="mb-1 text-lg font-medium">Check your email</h3>
           <p className="text-sm text-muted-foreground">
-            We've sent a magic link to your email. Please check your inbox
+            We &apos;ve sent a magic link to your email. Please check your inbox
             and click the link to sign in.
           </p>
         </div>

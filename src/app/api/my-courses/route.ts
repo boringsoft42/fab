@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Enrollment, Course, EnrollmentStatus } from "@/types/courses";
+import { EnrollmentStatus } from "@/types/courses";
 
 // Extended mock data including course information with enrollments
 const mockUserCourses = [

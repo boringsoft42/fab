@@ -14,7 +14,7 @@ export default function VerifyEmailPage() {
           </p>
           <p className="text-sm text-gray-600">
             Please check your inbox and click the link to verify your account.
-            If you don't see the email, check your spam folder.
+            If you don&apos;t see the email, check your spam folder.
           </p>
         </div>
 

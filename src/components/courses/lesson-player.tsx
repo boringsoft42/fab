@@ -11,12 +11,10 @@ import {
   Volume2,
   VolumeX,
   Maximize,
-  Settings,
   RotateCcw,
   RotateCw,
   CheckCircle2,
 } from "lucide-react";
-import { formatDuration } from "date-fns";
 
 interface LessonPlayerProps {
   lesson: Lesson;

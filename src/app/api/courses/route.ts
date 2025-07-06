@@ -6,7 +6,6 @@ import {
   CourseCategory,
   CourseLevel,
   CourseCatalogResponse,
-  CourseSearchParams,
   Instructor,
 } from "@/types/courses";
 

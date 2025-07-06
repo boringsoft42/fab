@@ -8,7 +8,6 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import {
   Select,
@@ -35,13 +34,11 @@ import {
   Edit,
   Trash2,
   Save,
-  Eye,
   HelpCircle,
   CheckCircle,
-  X,
-  Move,
   Timer,
   Settings,
+  X,
 } from "lucide-react";
 
 interface Question {
@@ -241,7 +238,9 @@ export function QuizBuilder({
           ].map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
+              onClick={() =>
+                setActiveTab(tab.id as "setup" | "questions" | "settings")
+              }
               className={`flex items-center gap-2 py-3 px-1 border-b-2 font-medium text-sm ${
                 activeTab === tab.id
                   ? "border-primary text-primary"
