@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react";
 import {
   Plus,
   MoreVertical,
@@ -16,14 +16,38 @@ import {
   BarChart3,
   PieChart,
   Download,
-} from "lucide-react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+} from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import {
   Dialog,
   DialogContent,
@@ -31,43 +55,43 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 interface BusinessReport {
-  id: string
-  title: string
-  summary: string
-  status: "DRAFT" | "IN_REVIEW" | "COMPLETED" | "APPROVED"
-  priority: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL"
-  createdAt: string
-  period: string
-  department: string
-  reportType: string
+  id: string;
+  title: string;
+  summary: string;
+  status: "DRAFT" | "IN_REVIEW" | "COMPLETED" | "APPROVED";
+  priority: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+  createdAt: string;
+  period: string;
+  department: string;
+  reportType: string;
   metrics: {
-    revenue?: number
-    growth?: number
-    efficiency?: number
-  }
-  attachments: number
-  reviewedBy?: string
-  approvedBy?: string
+    revenue?: number;
+    growth?: number;
+    efficiency?: number;
+  };
+  attachments: number;
+  reviewedBy?: string;
+  approvedBy?: string;
 }
 
 export default function BusinessReportsPage() {
-  const [reports, setReports] = useState<BusinessReport[]>([])
-  const [loading, setLoading] = useState(true)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [statusFilter, setStatusFilter] = useState("all")
-  const [showCreateDialog, setShowCreateDialog] = useState(false)
+  const [reports, setReports] = useState<BusinessReport[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [stats, setStats] = useState({
     total: 0,
     completed: 0,
     draft: 0,
     inReview: 0,
     approved: 0,
-  })
+  });
 
   // Report creation form state
   const [newReport, setNewReport] = useState({
@@ -84,23 +108,20 @@ export default function BusinessReportsPage() {
       growth: "",
       efficiency: "",
     },
-  })
+  });
 
-  const [attachmentFile, setAttachmentFile] = useState<File | null>(null)
+  const [attachmentFile, setAttachmentFile] = useState<File | null>(null);
 
-  useEffect(() => {
-    fetchReports()
-  }, [statusFilter])
-
-  const fetchReports = async () => {
+  const fetchReports = useCallback(async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       // Simulated data for demo
       const mockReports: BusinessReport[] = [
         {
           id: "1",
           title: "Reporte Financiero Q4 2023",
-          summary: "Análisis completo de resultados financieros del cuarto trimestre",
+          summary:
+            "Análisis completo de resultados financieros del cuarto trimestre",
           status: "APPROVED",
           priority: "HIGH",
           createdAt: "2024-01-15",
@@ -129,7 +150,8 @@ export default function BusinessReportsPage() {
         {
           id: "3",
           title: "Reporte de Recursos Humanos - Año 2023",
-          summary: "Análisis anual de gestión de talento y clima organizacional",
+          summary:
+            "Análisis anual de gestión de talento y clima organizacional",
           status: "IN_REVIEW",
           priority: "MEDIUM",
           createdAt: "2024-01-08",
@@ -143,7 +165,8 @@ export default function BusinessReportsPage() {
         {
           id: "4",
           title: "Análisis de Marketing Digital Q4",
-          summary: "Performance de campañas digitales y ROI del último trimestre",
+          summary:
+            "Performance de campañas digitales y ROI del último trimestre",
           status: "DRAFT",
           priority: "LOW",
           createdAt: "2024-01-05",
@@ -153,36 +176,44 @@ export default function BusinessReportsPage() {
           metrics: { growth: 25, efficiency: 65 },
           attachments: 1,
         },
-      ]
+      ];
 
       const filteredReports =
-        statusFilter === "all" ? mockReports : mockReports.filter((r) => r.status.toLowerCase() === statusFilter)
+        statusFilter === "all"
+          ? mockReports
+          : mockReports.filter((r) => r.status.toLowerCase() === statusFilter);
 
-      setReports(filteredReports)
+      setReports(filteredReports);
       setStats({
         total: mockReports.length,
         completed: mockReports.filter((r) => r.status === "COMPLETED").length,
         draft: mockReports.filter((r) => r.status === "DRAFT").length,
         inReview: mockReports.filter((r) => r.status === "IN_REVIEW").length,
         approved: mockReports.filter((r) => r.status === "APPROVED").length,
-      })
+      });
     } catch (error) {
-      console.error("Error fetching reports:", error)
+      console.error("Error fetching reports:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  }, [statusFilter]);
 
-  const handleAttachmentUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
+  useEffect(() => {
+    fetchReports();
+  }, [fetchReports]);
+
+  const handleAttachmentUpload = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
     if (file) {
-      setAttachmentFile(file)
+      setAttachmentFile(file);
     }
-  }
+  };
 
   const removeAttachment = () => {
-    setAttachmentFile(null)
-  }
+    setAttachmentFile(null);
+  };
 
   const handleCreateReport = async () => {
     try {
@@ -191,12 +222,12 @@ export default function BusinessReportsPage() {
         companyId: "company-1",
         createdAt: new Date().toISOString(),
         attachments: attachmentFile ? 1 : 0,
-      }
+      };
 
       // Simulate API call
-      console.log("Creating report:", reportData)
+      console.log("Creating report:", reportData);
 
-      setShowCreateDialog(false)
+      setShowCreateDialog(false);
       setNewReport({
         title: "",
         summary: "",
@@ -211,80 +242,80 @@ export default function BusinessReportsPage() {
           growth: "",
           efficiency: "",
         },
-      })
-      setAttachmentFile(null)
-      fetchReports()
+      });
+      setAttachmentFile(null);
+      fetchReports();
     } catch (error) {
-      console.error("Error creating report:", error)
+      console.error("Error creating report:", error);
     }
-  }
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case "APPROVED":
-        return "bg-green-100 text-green-800"
+        return "bg-green-100 text-green-800";
       case "COMPLETED":
-        return "bg-blue-100 text-blue-800"
+        return "bg-blue-100 text-blue-800";
       case "IN_REVIEW":
-        return "bg-yellow-100 text-yellow-800"
+        return "bg-yellow-100 text-yellow-800";
       case "DRAFT":
-        return "bg-gray-100 text-gray-800"
+        return "bg-gray-100 text-gray-800";
       default:
-        return "bg-gray-100 text-gray-800"
+        return "bg-gray-100 text-gray-800";
     }
-  }
+  };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case "CRITICAL":
-        return "bg-red-100 text-red-800"
+        return "bg-red-100 text-red-800";
       case "HIGH":
-        return "bg-orange-100 text-orange-800"
+        return "bg-orange-100 text-orange-800";
       case "MEDIUM":
-        return "bg-blue-100 text-blue-800"
+        return "bg-blue-100 text-blue-800";
       case "LOW":
-        return "bg-gray-100 text-gray-800"
+        return "bg-gray-100 text-gray-800";
       default:
-        return "bg-gray-100 text-gray-800"
+        return "bg-gray-100 text-gray-800";
     }
-  }
+  };
 
   const getStatusText = (status: string) => {
     switch (status) {
       case "APPROVED":
-        return "Aprobado"
+        return "Aprobado";
       case "COMPLETED":
-        return "Completado"
+        return "Completado";
       case "IN_REVIEW":
-        return "En Revisión"
+        return "En Revisión";
       case "DRAFT":
-        return "Borrador"
+        return "Borrador";
       default:
-        return status
+        return status;
     }
-  }
+  };
 
   const getPriorityText = (priority: string) => {
     switch (priority) {
       case "CRITICAL":
-        return "Crítica"
+        return "Crítica";
       case "HIGH":
-        return "Alta"
+        return "Alta";
       case "MEDIUM":
-        return "Media"
+        return "Media";
       case "LOW":
-        return "Baja"
+        return "Baja";
       default:
-        return priority
+        return priority;
     }
-  }
+  };
 
   const filteredReports = reports.filter(
     (report) =>
       report.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       report.summary.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      report.department.toLowerCase().includes(searchTerm.toLowerCase()),
-  )
+      report.department.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="space-y-6">
@@ -292,7 +323,9 @@ export default function BusinessReportsPage() {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold">Reportes Empresariales</h1>
-          <p className="text-muted-foreground">Gestiona y analiza todos los reportes de tu organización</p>
+          <p className="text-muted-foreground">
+            Gestiona y analiza todos los reportes de tu organización
+          </p>
         </div>
 
         <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
@@ -305,7 +338,9 @@ export default function BusinessReportsPage() {
           <DialogContent className="max-w-3xl">
             <DialogHeader>
               <DialogTitle>Crear Nuevo Reporte</DialogTitle>
-              <DialogDescription>Genera un nuevo reporte empresarial para análisis y seguimiento</DialogDescription>
+              <DialogDescription>
+                Genera un nuevo reporte empresarial para análisis y seguimiento
+              </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4 max-h-[70vh] overflow-y-auto">
               {/* Attachment Upload Section */}
@@ -315,14 +350,20 @@ export default function BusinessReportsPage() {
                   <div className="flex items-center gap-2 p-3 border rounded-lg">
                     <FileText className="w-4 h-4" />
                     <span className="text-sm">{attachmentFile.name}</span>
-                    <Button size="sm" variant="ghost" onClick={removeAttachment}>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={removeAttachment}
+                    >
                       <X className="w-4 h-4" />
                     </Button>
                   </div>
                 ) : (
                   <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
                     <FileText className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                    <p className="text-sm text-gray-500 mb-2">Adjunta documentos de soporte (Excel, PDF, Word)</p>
+                    <p className="text-sm text-gray-500 mb-2">
+                      Adjunta documentos de soporte (Excel, PDF, Word)
+                    </p>
                     <Input
                       type="file"
                       accept=".pdf,.xlsx,.xls,.docx,.doc"
@@ -346,7 +387,9 @@ export default function BusinessReportsPage() {
                 <Input
                   id="title"
                   value={newReport.title}
-                  onChange={(e) => setNewReport({ ...newReport, title: e.target.value })}
+                  onChange={(e) =>
+                    setNewReport({ ...newReport, title: e.target.value })
+                  }
                   placeholder="Ej: Reporte Financiero Q1 2024"
                 />
               </div>
@@ -356,7 +399,9 @@ export default function BusinessReportsPage() {
                 <Textarea
                   id="summary"
                   value={newReport.summary}
-                  onChange={(e) => setNewReport({ ...newReport, summary: e.target.value })}
+                  onChange={(e) =>
+                    setNewReport({ ...newReport, summary: e.target.value })
+                  }
                   placeholder="Breve resumen de los hallazgos principales..."
                   rows={2}
                 />
@@ -367,7 +412,9 @@ export default function BusinessReportsPage() {
                 <Textarea
                   id="content"
                   value={newReport.content}
-                  onChange={(e) => setNewReport({ ...newReport, content: e.target.value })}
+                  onChange={(e) =>
+                    setNewReport({ ...newReport, content: e.target.value })
+                  }
                   placeholder="Análisis detallado, metodología, conclusiones..."
                   rows={6}
                 />
@@ -378,7 +425,9 @@ export default function BusinessReportsPage() {
                   <Label htmlFor="reportType">Tipo de Reporte</Label>
                   <Select
                     value={newReport.reportType}
-                    onValueChange={(value) => setNewReport({ ...newReport, reportType: value })}
+                    onValueChange={(value) =>
+                      setNewReport({ ...newReport, reportType: value })
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Seleccionar tipo" />
@@ -387,7 +436,9 @@ export default function BusinessReportsPage() {
                       <SelectItem value="Financiero">Financiero</SelectItem>
                       <SelectItem value="Comercial">Comercial</SelectItem>
                       <SelectItem value="Operacional">Operacional</SelectItem>
-                      <SelectItem value="Recursos Humanos">Recursos Humanos</SelectItem>
+                      <SelectItem value="Recursos Humanos">
+                        Recursos Humanos
+                      </SelectItem>
                       <SelectItem value="Marketing">Marketing</SelectItem>
                       <SelectItem value="Estratégico">Estratégico</SelectItem>
                     </SelectContent>
@@ -398,7 +449,9 @@ export default function BusinessReportsPage() {
                   <Label htmlFor="department">Departamento</Label>
                   <Select
                     value={newReport.department}
-                    onValueChange={(value) => setNewReport({ ...newReport, department: value })}
+                    onValueChange={(value) =>
+                      setNewReport({ ...newReport, department: value })
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Seleccionar depto" />
@@ -418,7 +471,9 @@ export default function BusinessReportsPage() {
                   <Label htmlFor="priority">Prioridad</Label>
                   <Select
                     value={newReport.priority}
-                    onValueChange={(value) => setNewReport({ ...newReport, priority: value })}
+                    onValueChange={(value) =>
+                      setNewReport({ ...newReport, priority: value })
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -438,7 +493,9 @@ export default function BusinessReportsPage() {
                 <Input
                   id="period"
                   value={newReport.period}
-                  onChange={(e) => setNewReport({ ...newReport, period: e.target.value })}
+                  onChange={(e) =>
+                    setNewReport({ ...newReport, period: e.target.value })
+                  }
                   placeholder="Ej: Q1 2024, Enero 2024, Año 2023"
                 />
               </div>
@@ -453,7 +510,10 @@ export default function BusinessReportsPage() {
                     onChange={(e) =>
                       setNewReport({
                         ...newReport,
-                        metrics: { ...newReport.metrics, revenue: e.target.value },
+                        metrics: {
+                          ...newReport.metrics,
+                          revenue: e.target.value,
+                        },
                       })
                     }
                     placeholder="0"
@@ -468,7 +528,10 @@ export default function BusinessReportsPage() {
                     onChange={(e) =>
                       setNewReport({
                         ...newReport,
-                        metrics: { ...newReport.metrics, growth: e.target.value },
+                        metrics: {
+                          ...newReport.metrics,
+                          growth: e.target.value,
+                        },
                       })
                     }
                     placeholder="0"
@@ -483,7 +546,10 @@ export default function BusinessReportsPage() {
                     onChange={(e) =>
                       setNewReport({
                         ...newReport,
-                        metrics: { ...newReport.metrics, efficiency: e.target.value },
+                        metrics: {
+                          ...newReport.metrics,
+                          efficiency: e.target.value,
+                        },
                       })
                     }
                     placeholder="0"
@@ -494,17 +560,21 @@ export default function BusinessReportsPage() {
               <div className="flex gap-2 pt-4">
                 <Button
                   onClick={handleCreateReport}
-                  disabled={!newReport.title || !newReport.summary || !newReport.content}
+                  disabled={
+                    !newReport.title || !newReport.summary || !newReport.content
+                  }
                 >
                   Crear como Borrador
                 </Button>
                 <Button
                   variant="outline"
                   onClick={() => {
-                    setNewReport({ ...newReport, status: "COMPLETED" })
-                    handleCreateReport()
+                    setNewReport({ ...newReport, status: "COMPLETED" });
+                    handleCreateReport();
                   }}
-                  disabled={!newReport.title || !newReport.summary || !newReport.content}
+                  disabled={
+                    !newReport.title || !newReport.summary || !newReport.content
+                  }
                 >
                   Marcar como Completado
                 </Button>
@@ -518,7 +588,9 @@ export default function BusinessReportsPage() {
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Reportes</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Total Reportes
+            </CardTitle>
             <FileText className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -531,7 +603,9 @@ export default function BusinessReportsPage() {
             <BarChart3 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">{stats.approved}</div>
+            <div className="text-2xl font-bold text-green-600">
+              {stats.approved}
+            </div>
           </CardContent>
         </Card>
         <Card>
@@ -540,7 +614,9 @@ export default function BusinessReportsPage() {
             <PieChart className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-blue-600">{stats.completed}</div>
+            <div className="text-2xl font-bold text-blue-600">
+              {stats.completed}
+            </div>
           </CardContent>
         </Card>
         <Card>
@@ -549,7 +625,9 @@ export default function BusinessReportsPage() {
             <Eye className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-yellow-600">{stats.inReview}</div>
+            <div className="text-2xl font-bold text-yellow-600">
+              {stats.inReview}
+            </div>
           </CardContent>
         </Card>
         <Card>
@@ -558,7 +636,9 @@ export default function BusinessReportsPage() {
             <Edit className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-gray-600">{stats.draft}</div>
+            <div className="text-2xl font-bold text-gray-600">
+              {stats.draft}
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -598,7 +678,9 @@ export default function BusinessReportsPage() {
       <Card>
         <CardHeader>
           <CardTitle>Mis Reportes</CardTitle>
-          <CardDescription>Gestiona todos tus reportes empresariales y su estado de revisión</CardDescription>
+          <CardDescription>
+            Gestiona todos tus reportes empresariales y su estado de revisión
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
@@ -635,8 +717,12 @@ export default function BusinessReportsPage() {
                           <FileText className="w-6 h-6 text-blue-600" />
                         </div>
                         <div>
-                          <div className="font-medium line-clamp-1">{report.title}</div>
-                          <div className="text-sm text-muted-foreground line-clamp-1">{report.summary}</div>
+                          <div className="font-medium line-clamp-1">
+                            {report.title}
+                          </div>
+                          <div className="text-sm text-muted-foreground line-clamp-1">
+                            {report.summary}
+                          </div>
                           <div className="text-xs text-muted-foreground">
                             {report.attachments} archivo(s) adjunto(s)
                           </div>
@@ -644,10 +730,14 @@ export default function BusinessReportsPage() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge className={getStatusColor(report.status)}>{getStatusText(report.status)}</Badge>
+                      <Badge className={getStatusColor(report.status)}>
+                        {getStatusText(report.status)}
+                      </Badge>
                     </TableCell>
                     <TableCell>
-                      <Badge className={getPriorityColor(report.priority)}>{getPriorityText(report.priority)}</Badge>
+                      <Badge className={getPriorityColor(report.priority)}>
+                        {getPriorityText(report.priority)}
+                      </Badge>
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-1">
@@ -662,11 +752,20 @@ export default function BusinessReportsPage() {
                     </TableCell>
                     <TableCell>
                       <div className="text-sm space-y-1">
-                        {report.metrics.revenue && <div>Ingresos: Bs. {report.metrics.revenue.toLocaleString()}</div>}
-                        {report.metrics.growth && (
-                          <div className="text-green-600">+{report.metrics.growth}% crecimiento</div>
+                        {report.metrics.revenue && (
+                          <div>
+                            Ingresos: Bs.{" "}
+                            {report.metrics.revenue.toLocaleString()}
+                          </div>
                         )}
-                        {report.metrics.efficiency && <div>{report.metrics.efficiency}% eficiencia</div>}
+                        {report.metrics.growth && (
+                          <div className="text-green-600">
+                            +{report.metrics.growth}% crecimiento
+                          </div>
+                        )}
+                        {report.metrics.efficiency && (
+                          <div>{report.metrics.efficiency}% eficiencia</div>
+                        )}
                       </div>
                     </TableCell>
                     <TableCell>
@@ -704,5 +803,5 @@ export default function BusinessReportsPage() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

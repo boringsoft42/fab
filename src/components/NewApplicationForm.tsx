@@ -17,6 +17,16 @@ import {
 import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
+interface FormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  coverLetter: string;
+  resume: File | null;
+  [key: string]: string | File | null;
+}
+
 export default function NewApplicationPage() {
   const router = useRouter();
   const [hasCV, setHasCV] = useState(false);

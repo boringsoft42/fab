@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -124,17 +124,7 @@ export default function AdminResourcesPage() {
     status: "draft" as const,
   });
 
-  useEffect(() => {
-    fetchResources();
-  }, [
-    searchQuery,
-    selectedType,
-    selectedCategory,
-    selectedStatus,
-    fetchResources,
-  ]);
-
-  const fetchResources = async () => {
+  const fetchResources = useCallback(async () => {
     try {
       setLoading(true);
       if (searchQuery) params.append("search", searchQuery);
@@ -155,7 +145,11 @@ export default function AdminResourcesPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [searchQuery, selectedType, selectedCategory, selectedStatus]);
+
+  useEffect(() => {
+    fetchResources();
+  }, [fetchResources]);
 
   const handleCreateResource = async () => {
     try {

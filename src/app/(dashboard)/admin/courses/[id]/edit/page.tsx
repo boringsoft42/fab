@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { CourseCategory, CourseLevel } from "@/types/courses";
+import { Question } from "@/types/quiz";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -51,8 +52,6 @@ import {
   ChevronRight,
   Users,
   Clock,
-  Star,
-  Award,
 } from "lucide-react";
 
 interface Module {
@@ -86,16 +85,6 @@ interface Quiz {
   passingScore: number;
   allowedAttempts: number;
   showCorrectAnswers: boolean;
-}
-
-interface Question {
-  id: string;
-  type: "multiple_choice" | "true_false" | "short_answer";
-  question: string;
-  options?: string[];
-  correctAnswer: string | string[];
-  explanation?: string;
-  points: number;
 }
 
 export default function EditCoursePage() {

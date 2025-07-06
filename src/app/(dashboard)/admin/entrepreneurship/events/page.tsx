@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -38,7 +38,6 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Calendar,
-  Clock,
   Users,
   Plus,
   Search,
@@ -146,17 +145,7 @@ export default function AdminEventsPage() {
     speakers: "",
   });
 
-  useEffect(() => {
-    fetchEvents();
-  }, [
-    searchQuery,
-    selectedType,
-    selectedCategory,
-    selectedStatus,
-    fetchEvents,
-  ]);
-
-  const fetchEvents = async () => {
+  const fetchEvents = useCallback(async () => {
     try {
       setLoading(true);
       if (searchQuery) params.append("search", searchQuery);
@@ -177,7 +166,11 @@ export default function AdminEventsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [searchQuery, selectedType, selectedCategory, selectedStatus]);
+
+  useEffect(() => {
+    fetchEvents();
+  }, [fetchEvents]);
 
   const handleCreateEvent = async () => {
     try {

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import Image from "next/image";
 import {
   Plus,
   Search,
@@ -104,11 +105,7 @@ export default function CompanyNewsPage() {
   // Default company banner image
   const defaultBannerImage = "/api/placeholder/800/400";
 
-  useEffect(() => {
-    fetchNews();
-  }, [statusFilter]);
-
-  const fetchNews = async () => {
+  const fetchNews = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch(
@@ -122,7 +119,11 @@ export default function CompanyNewsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [statusFilter]);
+
+  useEffect(() => {
+    fetchNews();
+  }, [fetchNews]);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -538,10 +539,12 @@ export default function CompanyNewsPage() {
                   <TableRow key={article.id}>
                     <TableCell>
                       <div className="flex gap-3">
-                        <img
+                        <Image
                           src={article.imageUrl || defaultBannerImage}
                           alt={article.title}
                           className="w-16 h-12 object-cover rounded"
+                          width={64}
+                          height={48}
                         />
                         <div>
                           <div className="font-medium line-clamp-1">

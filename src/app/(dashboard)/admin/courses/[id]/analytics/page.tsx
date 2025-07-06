@@ -20,7 +20,6 @@ import {
   Users,
   Clock,
   Award,
-  BookOpen,
   Eye,
   Download,
   ArrowLeft,

@@ -539,7 +539,7 @@ export default function InstitutionDirectoryPage() {
     }
   };
 
-  const getTypeLabel = (type: string) => {
+  const getTypeLabel = (type: string) => {  
     switch (type) {
       case "incubator":
         return "Incubadora";

@@ -65,6 +65,12 @@ export const QuizComponent = ({ quiz, onComplete }: QuizComponentProps) => {
     return () => clearInterval(timer);
   }, [timeLeft, quizState]);
 
+  useEffect(() => {
+    if (timeLeft === null || timeLeft <= 0) {
+      submitQuiz();
+    }
+  }, [timeLeft, submitQuiz]);
+
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;

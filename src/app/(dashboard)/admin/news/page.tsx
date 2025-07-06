@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Plus,
-  Search,
   MoreVertical,
   Eye,
   Edit,
@@ -102,11 +101,7 @@ export default function AdminNewsPage() {
   // Default banner image
   const defaultBannerImage = "/api/placeholder/800/400";
 
-  useEffect(() => {
-    fetchNews();
-  }, [statusFilter]);
-
-  const fetchNews = async () => {
+  const fetchNews = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch(
@@ -120,7 +115,11 @@ export default function AdminNewsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [statusFilter]);
+
+  useEffect(() => {
+    fetchNews();
+  }, [fetchNews]);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];

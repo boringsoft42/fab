@@ -1,141 +1,118 @@
 "use client";
 
+import { useState, useEffect, useCallback } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Calendar, User } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 interface Post {
   id: string;
   title: string;
   content: string;
-  image: string;
-  date: string;
-  author: string;
-  category: string;
-  institution: {
-    id: string;
+  author: {
     name: string;
-    logo: string;
+    avatar: string;
   };
+  createdAt: string;
+  likes: number;
+  comments: number;
+  image?: string;
+  date?: string;
+  category?: string;
 }
 
-export default function InstitutionPostPage() {
-  // Mock data - replace with API call
-  const post: Post = {
-    id: "1",
-    title: "Lanzamiento del Programa de Incubación 2024",
-    content: `Nos complace anunciar el lanzamiento de nuestro programa de incubación para el año 2024. Este año, estamos buscando startups innovadoras en el sector tecnológico con impacto social.
+export default function PostDetailPage() {
+  const params = useParams();
+  const [post, setPost] = useState<Post | null>(null);
+  const [loading, setLoading] = useState(true);
 
-El programa está diseñado para apoyar a emprendedores jóvenes que buscan desarrollar soluciones tecnológicas con un impacto social positivo en nuestra comunidad.
+  const fetchPost = useCallback(async () => {
+    try {
+      setLoading(true);
+      // Mock data for demonstration
+      const mockPost: Post = {
+        id: params.postId as string,
+        title: "Introducing Our New Product Line",
+        content:
+          "We're excited to announce our latest product line that revolutionizes the way businesses handle their operations. This innovative solution combines cutting-edge technology with user-friendly interfaces to deliver unparalleled value to our customers.",
+        author: {
+          name: "John Smith",
+          avatar: "/avatars/john.jpg",
+        },
+        createdAt: "2024-03-01",
+        likes: 45,
+        comments: 12,
+        image: "/images/product-line.jpg",
+        date: "2024-03-01",
+        category: "Product Launch",
+      };
+      setPost(mockPost);
+    } catch (error) {
+      console.error("Error fetching post:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [params.postId]);
 
-¿Qué ofrecemos?
-• Mentoría especializada
-• Acceso a financiamiento
-• Espacio de trabajo colaborativo
-• Red de contactos
-• Capacitación técnica y empresarial
+  useEffect(() => {
+    fetchPost();
+  }, [fetchPost]);
 
-Los participantes seleccionados tendrán la oportunidad de trabajar con mentores experimentados, acceder a recursos técnicos y financieros, y formar parte de una comunidad vibrante de emprendedores.
-
-El programa tiene una duración de 6 meses y está abierto a emprendedores entre 18 y 35 años con una idea de negocio validada en el sector tecnológico.
-
-Las postulaciones están abiertas desde el 1 de abril hasta el 30 de abril de 2024.
-
-Para más información sobre el proceso de aplicación y los requisitos, visita nuestro sitio web o contáctanos directamente.`,
-    image: "/images/institutions/posts/incubation-program.jpg",
-    date: "2024-03-15",
-    author: "Ana Rodriguez",
-    category: "Programas",
-    institution: {
-      id: "1",
-      name: "CEMSE Innovation Hub",
-      logo: "/logos/cemse.svg",
-    },
-  };
+  if (loading || !post) {
+    return <div>Loading...</div>;
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50/50">
-      {/* Hero Image */}
-      <div className="relative h-[400px]">
-        <Image
-          src={post.image}
-          alt={post.title}
-          fill
-          className="object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-transparent">
-          <div className="container mx-auto px-6 h-full flex flex-col justify-between py-8">
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" className="text-white" asChild>
-                <Link href={`/entrepreneurship/directory/${params.id}`}>
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Volver a la Institución
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </div>
+    <div className="container mx-auto py-8">
+      <div className="mb-6">
+        <Button variant="ghost" asChild>
+          <Link href={`/entrepreneurship/directory/${params.id}`}>
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Profile
+          </Link>
+        </Button>
       </div>
 
-      {/* Content */}
-      <div className="container mx-auto px-6 py-8">
-        <div className="max-w-3xl mx-auto">
-          {/* Institution Info */}
-          <div className="flex items-center gap-3 mb-8">
-            <div className="relative h-12 w-12 rounded-lg overflow-hidden bg-white">
+      <Card>
+        <CardContent className="p-6">
+          {post.image && (
+            <div className="relative h-[400px] mb-6">
               <Image
-                src={post.institution.logo}
-                alt={post.institution.name}
+                src={post.image}
+                alt={post.title}
                 fill
-                className="object-contain p-2"
+                className="rounded-lg object-cover"
               />
             </div>
-            <Link
-              href={`/entrepreneurship/directory/${post.institution.id}`}
-              className="text-lg font-medium hover:text-blue-600"
-            >
-              {post.institution.name}
-            </Link>
-          </div>
-
-          {/* Post Header */}
-          <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
-
-          {/* Post Metadata */}
-          <div className="flex items-center gap-4 text-muted-foreground mb-8">
-            <div className="flex items-center gap-2">
-              <Calendar className="h-4 w-4" />
-              {new Date(post.date).toLocaleDateString()}
-            </div>
-            <div className="flex items-center gap-2">
-              <User className="h-4 w-4" />
-              {post.author}
-            </div>
-          </div>
-
-          {/* Post Content */}
-          <div className="prose prose-lg max-w-none">
-            {post.content.split("\n\n").map((paragraph, index) => (
-              <p key={index} className="mb-4">
-                {paragraph.includes("•") ? (
-                  <ul className="list-disc pl-4">
-                    {paragraph
-                      .split("•")
-                      .map(
-                        (item, i) =>
-                          item.trim() && <li key={i}>{item.trim()}</li>
-                      )}
-                  </ul>
-                ) : (
-                  paragraph
-                )}
+          )}
+          <div className="flex items-center gap-4 mb-6">
+            <Image
+              src={post.author.avatar}
+              alt={post.author.name}
+              width={48}
+              height={48}
+              className="rounded-full"
+            />
+            <div>
+              <h3 className="font-medium">{post.author.name}</h3>
+              <p className="text-sm text-gray-600">
+                {new Date(post.date || post.createdAt).toLocaleDateString()}
               </p>
-            ))}
+            </div>
           </div>
-        </div>
-      </div>
+          <h1 className="text-3xl font-bold mb-4">{post.title}</h1>
+          <p className="text-gray-600 leading-relaxed whitespace-pre-wrap">
+            {post.content}
+          </p>
+          <div className="mt-6 flex items-center gap-4 text-gray-600">
+            <span>{post.likes} likes</span>
+            <span>{post.comments} comments</span>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

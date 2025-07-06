@@ -53,6 +53,10 @@ import {
   Video,
   User,
   Briefcase,
+  MoreHorizontal,
+  Edit,
+  Trash2,
+  Download,
 } from "lucide-react";
 
 // Types for different content sections
@@ -136,23 +140,27 @@ export default function YouthContentManagementPage() {
   const [activeTab, setActiveTab] = useState("resources");
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [editingItem, setEditingItem] = useState<Resource | Institution | NetworkContact | Mentor | null>(null);
 
   // Form states for different content types
-  const [resourceForm, setResourceForm] = useState({
+  const [resourceForm, setResourceForm] = useState<Resource>({
+    id: "",
     title: "",
     description: "",
-    type: "template" as const,
+    type: "template",
     category: "",
     fileUrl: "",
     thumbnail: "",
-    tags: "",
+    tags: [],
+    status: "draft",
     featured: false,
-    status: "draft" as const,
+    createdAt: new Date(),
   });
 
-  const [institutionForm, setInstitutionForm] = useState({
+  const [institutionForm, setInstitutionForm] = useState<Institution>({
+    id: "",
     name: "",
-    type: "municipality" as const,
+    type: "municipality",
     description: "",
     location: "",
     address: "",
@@ -160,44 +168,50 @@ export default function YouthContentManagementPage() {
     email: "",
     website: "",
     logo: "",
-    services: "",
-    focusAreas: "",
-    programs: "",
+    services: [],
+    focusAreas: [],
+    programs: [],
+    status: "active",
     featured: false,
-    status: "active" as const,
+    createdAt: new Date(),
   });
 
-  const [contactForm, setContactForm] = useState({
+  const [contactForm, setContactForm] = useState<NetworkContact>({
+    id: "",
     name: "",
     businessName: "",
     category: "",
     location: "",
     bio: "",
-    skills: "",
-    interests: "",
+    skills: [],
+    interests: [],
     avatar: "",
-    lookingFor: "",
-    offering: "",
+    lookingFor: [],
+    offering: [],
     experience: "",
+    connections: 0,
     isAvailable: true,
-    status: "active" as const,
+    status: "active",
+    createdAt: new Date(),
   });
 
-  const [mentorForm, setMentorForm] = useState({
+  const [mentorForm, setMentorForm] = useState<Mentor>({
+    id: "",
     name: "",
     title: "",
     company: "",
     location: "",
     bio: "",
-    expertise: "",
+    expertise: [],
     experience: "",
     avatar: "",
-    languages: "",
-    priceType: "free" as const,
-    priceAmount: 0,
+    languages: [],
+    price: { type: "free" },
     availability: "",
-    achievements: "",
-    status: "active" as const,
+    achievements: [],
+    isVerified: false,
+    status: "active",
+    createdAt: new Date(),
   });
 
   const handleCreateContent = async () => {
@@ -211,44 +225,40 @@ export default function YouthContentManagementPage() {
           endpoint = "/api/admin/entrepreneurship/resources";
           data = {
             ...resourceForm,
-            tags: resourceForm.tags.split(",").map((tag) => tag.trim()),
+            tags: resourceForm.tags.map((tag) => tag.trim()),
           };
           break;
         case "institutions":
           endpoint = "/api/admin/institutions";
           data = {
             ...institutionForm,
-            services: institutionForm.services.split(",").map((s) => s.trim()),
-            focusAreas: institutionForm.focusAreas
-              .split(",")
-              .map((f) => f.trim()),
-            programs: institutionForm.programs.split(",").map((p) => p.trim()),
+            services: institutionForm.services.map((s) => s.trim()),
+            focusAreas: institutionForm.focusAreas.map((f) => f.trim()),
+            programs: institutionForm.programs.map((p) => p.trim()),
           };
           break;
         case "contacts":
           endpoint = "/api/admin/youth-content/contacts";
           data = {
             ...contactForm,
-            skills: contactForm.skills.split(",").map((s) => s.trim()),
-            interests: contactForm.interests.split(",").map((i) => i.trim()),
-            lookingFor: contactForm.lookingFor.split(",").map((l) => l.trim()),
-            offering: contactForm.offering.split(",").map((o) => o.trim()),
+            skills: contactForm.skills.map((s) => s.trim()),
+            interests: contactForm.interests.map((i) => i.trim()),
+            lookingFor: contactForm.lookingFor.map((l) => l.trim()),
+            offering: contactForm.offering.map((o) => o.trim()),
           };
           break;
         case "mentors":
           endpoint = "/api/admin/youth-content/mentors";
           data = {
             ...mentorForm,
-            expertise: mentorForm.expertise.split(",").map((e) => e.trim()),
-            languages: mentorForm.languages.split(",").map((l) => l.trim()),
-            achievements: mentorForm.achievements
-              .split(",")
-              .map((a) => a.trim()),
+            expertise: mentorForm.expertise.map((e) => e.trim()),
+            languages: mentorForm.languages.map((l) => l.trim()),
+            achievements: mentorForm.achievements.map((a) => a.trim()),
             price: {
-              type: mentorForm.priceType,
+              type: mentorForm.price.type,
               amount:
-                mentorForm.priceType === "paid"
-                  ? mentorForm.priceAmount
+                mentorForm.price.type === "paid"
+                  ? mentorForm.price.amount
                   : undefined,
             },
           };
@@ -275,17 +285,20 @@ export default function YouthContentManagementPage() {
 
   const resetForms = () => {
     setResourceForm({
+      id: "",
       title: "",
       description: "",
       type: "template",
       category: "",
       fileUrl: "",
       thumbnail: "",
-      tags: "",
-      featured: false,
+      tags: [],
       status: "draft",
+      featured: false,
+      createdAt: new Date(),
     });
     setInstitutionForm({
+      id: "",
       name: "",
       type: "municipality",
       description: "",
@@ -295,42 +308,48 @@ export default function YouthContentManagementPage() {
       email: "",
       website: "",
       logo: "",
-      services: "",
-      focusAreas: "",
-      programs: "",
-      featured: false,
+      services: [],
+      focusAreas: [],
+      programs: [],
       status: "active",
+      featured: false,
+      createdAt: new Date(),
     });
     setContactForm({
+      id: "",
       name: "",
       businessName: "",
       category: "",
       location: "",
       bio: "",
-      skills: "",
-      interests: "",
+      skills: [],
+      interests: [],
       avatar: "",
-      lookingFor: "",
-      offering: "",
+      lookingFor: [],
+      offering: [],
       experience: "",
+      connections: 0,
       isAvailable: true,
       status: "active",
+      createdAt: new Date(),
     });
     setMentorForm({
+      id: "",
       name: "",
       title: "",
       company: "",
       location: "",
       bio: "",
-      expertise: "",
+      expertise: [],
       experience: "",
       avatar: "",
-      languages: "",
-      priceType: "free",
-      priceAmount: 0,
+      languages: [],
+      price: { type: "free" },
       availability: "",
-      achievements: "",
+      achievements: [],
+      isVerified: false,
       status: "active",
+      createdAt: new Date(),
     });
   };
 
@@ -1185,7 +1204,7 @@ export default function YouthContentManagementPage() {
                 {getTabIcon("resources")}
                 Centro de Recursos
               </TabsTrigger>
-              
+
               <TabsTrigger value="contacts" className="flex items-center gap-2">
                 {getTabIcon("contacts")}
                 Red de Contactos

@@ -28,7 +28,6 @@ import {
   CheckCircle,
   Leaf,
   Heart,
-  CircleDollarSign,
   HelpCircle,
   Link,
   Video,

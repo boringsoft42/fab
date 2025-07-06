@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Course, CourseCategory, CourseLevel } from "@/types/courses";
 import { Button } from "@/components/ui/button";
@@ -41,9 +40,8 @@ import {
   BookOpen,
   Clock,
   Star,
-  TrendingUp,
-  Award,
   BarChart3,
+  Award,
 } from "lucide-react";
 
 interface CourseStats {

@@ -34,6 +34,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 // News types
 interface NewsArticle {
@@ -102,10 +103,11 @@ function NewsCarousel() {
       <Card className="group cursor-pointer hover:shadow-lg transition-all duration-300 h-full">
         <div className="relative h-40">
           {article.imageUrl ? (
-            <img
+            <Image
               src={article.imageUrl}
               alt={article.title}
-              className="w-full h-full object-cover rounded-t-lg group-hover:opacity-90 transition-opacity"
+              fill
+              className="object-cover rounded-t-lg group-hover:opacity-90 transition-opacity"
             />
           ) : (
             <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center rounded-t-lg">

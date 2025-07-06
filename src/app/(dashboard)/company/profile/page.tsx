@@ -15,6 +15,10 @@ import {
   X,
   Camera,
   TrendingUp,
+  Target,
+  Award,
+  DollarSign,
+  ExternalLink,
 } from "lucide-react";
 import {
   Card,
@@ -40,6 +44,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import MapMarker from "@/components/MapMarker";
+import Image from "next/image";
 
 interface CompanyProfile {
   id: string;
@@ -215,11 +220,12 @@ export default function CompanyProfilePage() {
           {/* Cover Image */}
           <Card>
             <CardContent className="p-0">
-              <div className="relative">
-                <img
+              <div className="relative h-48 w-full overflow-hidden rounded-t-lg">
+                <Image
                   src={editedProfile.coverImage || "/placeholder.svg"}
                   alt="Portada de la empresa"
-                  className="w-full h-48 object-cover rounded-t-lg"
+                  fill
+                  className="object-cover"
                 />
                 {isEditing && (
                   <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-t-lg">
@@ -724,207 +730,7 @@ export default function CompanyProfilePage() {
               </div>
             </CardContent>
           </Card>
-          {/* <Card>
-            <CardHeader>
-              <CardTitle>Redes Sociales</CardTitle>
-              <CardDescription>Conecta tus perfiles de redes sociales para mayor visibilidad</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-3">
-                <div>
-                  <Label>LinkedIn</Label>
-                  <Input
-                    value={isEditing ? editedProfile.socialMedia.linkedin : profile.socialMedia.linkedin}
-                    onChange={(e) =>
-                      setEditedProfile({
-                        ...editedProfile,
-                        socialMedia: { ...editedProfile.socialMedia, linkedin: e.target.value },
-                      })
-                    }
-                    placeholder="https://linkedin.com/company/tu-empresa"
-                    disabled={!isEditing}
-                  />
-                </div>
-                <div>
-                  <Label>Twitter</Label>
-                  <Input
-                    value={isEditing ? editedProfile.socialMedia.twitter : profile.socialMedia.twitter}
-                    onChange={(e) =>
-                      setEditedProfile({
-                        ...editedProfile,
-                        socialMedia: { ...editedProfile.socialMedia, twitter: e.target.value },
-                      })
-                    }
-                    placeholder="https://twitter.com/tu-empresa"
-                    disabled={!isEditing}
-                  />
-                </div>
-                <div>
-                  <Label>Facebook</Label>
-                  <Input
-                    value={isEditing ? editedProfile.socialMedia.facebook : profile.socialMedia.facebook}
-                    onChange={(e) =>
-                      setEditedProfile({
-                        ...editedProfile,
-                        socialMedia: { ...editedProfile.socialMedia, facebook: e.target.value },
-                      })
-                    }
-                    placeholder="https://facebook.com/tu-empresa"
-                    disabled={!isEditing}
-                  />
-                </div>
-              </div>
-            </CardContent>
-          </Card> */}
         </TabsContent>
-
-        {/* <TabsContent value="social" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Redes Sociales</CardTitle>
-              <CardDescription>Conecta tus perfiles de redes sociales para mayor visibilidad</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-3">
-                <div>
-                  <Label>LinkedIn</Label>
-                  <Input
-                    value={isEditing ? editedProfile.socialMedia.linkedin : profile.socialMedia.linkedin}
-                    onChange={(e) =>
-                      setEditedProfile({
-                        ...editedProfile,
-                        socialMedia: { ...editedProfile.socialMedia, linkedin: e.target.value },
-                      })
-                    }
-                    placeholder="https://linkedin.com/company/tu-empresa"
-                    disabled={!isEditing}
-                  />
-                </div>
-                <div>
-                  <Label>Twitter</Label>
-                  <Input
-                    value={isEditing ? editedProfile.socialMedia.twitter : profile.socialMedia.twitter}
-                    onChange={(e) =>
-                      setEditedProfile({
-                        ...editedProfile,
-                        socialMedia: { ...editedProfile.socialMedia, twitter: e.target.value },
-                      })
-                    }
-                    placeholder="https://twitter.com/tu-empresa"
-                    disabled={!isEditing}
-                  />
-                </div>
-                <div>
-                  <Label>Facebook</Label>
-                  <Input
-                    value={isEditing ? editedProfile.socialMedia.facebook : profile.socialMedia.facebook}
-                    onChange={(e) =>
-                      setEditedProfile({
-                        ...editedProfile,
-                        socialMedia: { ...editedProfile.socialMedia, facebook: e.target.value },
-                      })
-                    }
-                    placeholder="https://facebook.com/tu-empresa"
-                    disabled={!isEditing}
-                  />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="settings" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Shield className="w-5 h-5" />
-                Privacidad
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label>Perfil público</Label>
-                  <p className="text-sm text-muted-foreground">Tu perfil será visible para otros usuarios</p>
-                </div>
-                <Switch
-                  checked={editedProfile.settings.publicProfile}
-                  onCheckedChange={(checked) =>
-                    setEditedProfile({
-                      ...editedProfile,
-                      settings: { ...editedProfile.settings, publicProfile: checked },
-                    })
-                  }
-                />
-              </div>
-              <Separator />
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label>Permitir mensajes</Label>
-                  <p className="text-sm text-muted-foreground">Otros usuarios pueden enviarte mensajes directos</p>
-                </div>
-                <Switch
-                  checked={editedProfile.settings.allowMessages}
-                  onCheckedChange={(checked) =>
-                    setEditedProfile({
-                      ...editedProfile,
-                      settings: { ...editedProfile.settings, allowMessages: checked },
-                    })
-                  }
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Bell className="w-5 h-5" />
-                Notificaciones
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label>Notificaciones por email</Label>
-                  <p className="text-sm text-muted-foreground">Recibe actualizaciones importantes por correo</p>
-                </div>
-                <Switch
-                  checked={editedProfile.settings.emailNotifications}
-                  onCheckedChange={(checked) =>
-                    setEditedProfile({
-                      ...editedProfile,
-                      settings: { ...editedProfile.settings, emailNotifications: checked },
-                    })
-                  }
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <CreditCard className="w-5 h-5" />
-                Plan y Facturación
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label>Plan Actual</Label>
-                    <p className="text-sm text-muted-foreground">Plan Empresarial - Renovación automática</p>
-                  </div>
-                  <Badge>Activo</Badge>
-                </div>
-                <Button variant="outline" className="w-full bg-transparent">
-                  Gestionar Suscripción
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent> */}
       </Tabs>
     </div>
   );

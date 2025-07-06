@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { useParams } from "next/navigation";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   MapPin,
@@ -20,314 +20,244 @@ import {
   User,
   ArrowLeft,
 } from "lucide-react";
-import type { Institution } from "../page";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
-interface InstitutionPost {
+interface Post {
   id: string;
   title: string;
   content: string;
-  image: string;
-  date: string;
-  author: string;
-  category: string;
+  author: {
+    name: string;
+    avatar: string;
+  };
+  createdAt: string;
+  likes: number;
+  comments: number;
+  image?: string;
+  date?: string;
+  category?: string;
 }
 
-export default function InstitutionProfilePage() {
-  const [activeTab, setActiveTab] = useState("about");
-
-  // Mock data - replace with API call
-  const institution: Institution = {
-    id: "1",
-    name: "CEMSE Innovation Hub",
-    description: "Incubadora especializada en tecnología y emprendimientos juveniles con enfoque en innovación social",
-    type: "incubator",
-    category: "Tecnología",
-    logo: "/logos/cemse.svg",
-    coverImage: "/images/institutions/cemse-cover.jpg",
-    website: "https://cemse.edu.bo",
-    email: "incubadora@cemse.edu.bo",
-    phone: "+591 4 123-4567",
-    address: "Av. América E-0505",
-    municipality: "Cochabamba",
-    department: "Cochabamba",
-    servicesOffered: [
-      "Incubación de startups",
-      "Mentoría especializada",
-      "Acceso a financiamiento",
-      "Capacitación técnica",
-      "Networking",
-    ],
-    focusAreas: [
-      "Tecnología",
-      "Innovación Social",
-      "Emprendimientos Juveniles",
-    ],
-    targetAudience: [],
-    eligibilityRequirements: [],
-    contactPerson: "Ing. Ana Rodriguez",
-    socialMedia: {
-      facebook: "https://facebook.com/cemsehub",
-      linkedin: "https://linkedin.com/company/cemse-hub",
-    },
-    isActive: true,
-    isVerified: true,
-    lastUpdated: new Date(),
-    createdAt: new Date("2023-01-15"),
+interface DirectoryProfile {
+  id: string;
+  name: string;
+  description: string;
+  logo: string;
+  coverImage: string;
+  industry: string;
+  location: string;
+  website: string;
+  socialLinks: {
+    linkedin?: string;
+    twitter?: string;
+    facebook?: string;
   };
+  stats: {
+    followers: number;
+    posts: number;
+    likes: number;
+  };
+  servicesOffered: string[];
+  focusAreas: string[];
+  contactPerson?: string;
+  email?: string;
+  phone?: string;
+  address?: string;
+}
 
-  const posts: InstitutionPost[] = [
-    {
-      id: "1",
-      title: "Lanzamiento del Programa de Incubación 2024",
-      content:
-        "Nos complace anunciar el lanzamiento de nuestro programa de incubación para el año 2024. Este año, estamos buscando startups innovadoras en el sector tecnológico con impacto social...",
-      image: "/images/institutions/posts/incubation-program.jpg",
-      date: "2024-03-15",
-      author: "Ana Rodriguez",
-      category: "Programas",
+const mockPosts: Post[] = [
+  {
+    id: "post-1",
+    title: "Introducing Our New Product Line",
+    content: "We're excited to announce...",
+    author: {
+      name: "John Smith",
+      avatar: "/avatars/john.jpg",
     },
-    {
-      id: "2",
-      title: "Caso de Éxito: TechSocial Bolivia",
-      content:
-        "TechSocial Bolivia, una startup graduada de nuestro programa de incubación, ha logrado impactar a más de 1,000 jóvenes a través de su plataforma de educación tecnológica...",
-      image: "/images/institutions/posts/success-story.jpg",
-      date: "2024-03-10",
-      author: "Carlos Mendoza",
-      category: "Casos de Éxito",
-    },
-  ];
+    createdAt: "2024-03-01",
+    likes: 45,
+    comments: 12,
+    image: "/images/product-line.jpg",
+    date: "2024-03-01",
+    category: "Product Launch",
+  },
+  // ... more mock posts
+];
+
+const mockProfile: DirectoryProfile = {
+  id: "1",
+  name: "TechCorp Solutions",
+  description: "Leading technology solutions provider",
+  logo: "/logos/techcorp.svg",
+  coverImage: "/images/cover.jpg",
+  industry: "Technology",
+  location: "San Francisco, CA",
+  website: "https://techcorp.com",
+  socialLinks: {
+    linkedin: "https://linkedin.com/techcorp",
+    twitter: "https://twitter.com/techcorp",
+    facebook: "https://facebook.com/techcorp",
+  },
+  stats: {
+    followers: 1500,
+    posts: 45,
+    likes: 2300,
+  },
+  servicesOffered: [
+    "Product Development",
+    "Cloud Solutions",
+    "Digital Transformation",
+  ],
+  focusAreas: ["Technology", "Innovation", "Enterprise Solutions"],
+  contactPerson: "John Smith",
+  email: "contact@techcorp.com",
+  phone: "+1 (555) 123-4567",
+  address: "123 Tech Street, San Francisco, CA",
+};
+
+export default function DirectoryProfilePage() {
+  const [activeTab, setActiveTab] = useState("about");
+  const params = useParams();
+  const [profile, setProfile] = useState<DirectoryProfile | null>(null);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchProfileData = useCallback(async () => {
+    try {
+      setLoading(true);
+      // In a real app, we would fetch this data from an API
+      setProfile({ ...mockProfile, id: params.id as string });
+      setPosts(mockPosts);
+    } catch (error) {
+      console.error("Error fetching profile data:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [params.id]);
+
+  useEffect(() => {
+    fetchProfileData();
+  }, [fetchProfileData]);
+
+  const renderAuthor = (author: { name: string; avatar: string }) => (
+    <div className="flex items-center gap-2">
+      <Image
+        src={author.avatar}
+        alt={author.name}
+        width={32}
+        height={32}
+        className="rounded-full"
+      />
+      <span className="text-sm font-medium">{author.name}</span>
+    </div>
+  );
+
+  if (loading || !profile) {
+    return <div>Loading...</div>;
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50/50">
-      {/* Hero Banner */}
-      <div className="relative h-[400px]">
-        <Image
-          src={institution.coverImage || "/images/institutions/default-cover.jpg"}
-          alt={institution.name}
-          fill
-          className="object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-transparent">
-          <div className="container mx-auto px-6 h-full flex flex-col justify-between py-8">
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" className="text-white" asChild>
-                <Link href="/entrepreneurship/directory">
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Volver al Directorio
-                </Link>
-              </Button>
-            </div>
-            <div className="flex items-center gap-6">
-              <div className="relative h-32 w-32 rounded-xl overflow-hidden bg-white">
-                <Image
-                  src={institution.logo || "/images/institutions/default-logo.jpg"}
-                  alt={`${institution.name} logo`}
-                  fill
-                  className="object-contain p-4"
-                />
-              </div>
-              <div>
-                <h1 className="text-4xl font-bold text-white mb-2">
-                  {institution.name}
-                </h1>
-                <p className="text-xl text-white/90 max-w-2xl">
-                  {institution.description}
-                </p>
-              </div>
+    <div className="container mx-auto py-8">
+      <Card className="mb-8">
+        <CardContent className="p-6">
+          <div className="flex items-center gap-4">
+            <Image
+              src={profile.logo}
+              alt={profile.name}
+              width={80}
+              height={80}
+              className="rounded-lg"
+            />
+            <div>
+              <h2 className="text-2xl font-bold">{profile.name}</h2>
+              <p className="text-gray-600">{profile.description}</p>
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Social Media */}
-      <div className="bg-white border-b">
-        <div className="container mx-auto px-6">
-          <div className="flex items-center gap-6 py-4">
-            {institution.socialMedia?.facebook && (
-              <a
-                href={institution.socialMedia.facebook}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-600 hover:text-blue-600 transition-colors"
-              >
-                <Facebook className="h-6 w-6" />
-              </a>
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <h3 className="font-semibold mb-3">Services Offered</h3>
+              <ul className="list-disc list-inside space-y-1 text-gray-600">
+                {profile.servicesOffered.map((service, index) => (
+                  <li key={index}>{service}</li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-3">Focus Areas</h3>
+              <ul className="list-disc list-inside space-y-1 text-gray-600">
+                {profile.focusAreas.map((area, index) => (
+                  <li key={index}>{area}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+            {profile.email && (
+              <div className="flex items-center gap-2">
+                <span className="font-medium">Email:</span>
+                <a
+                  href={`mailto:${profile.email}`}
+                  className="text-blue-600 hover:underline"
+                >
+                  {profile.email}
+                </a>
+              </div>
             )}
-            {institution.socialMedia?.instagram && (
-              <a
-                href={institution.socialMedia.instagram}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-600 hover:text-pink-600 transition-colors"
-              >
-                <Instagram className="h-6 w-6" />
-              </a>
+            {profile.phone && (
+              <div className="flex items-center gap-2">
+                <span className="font-medium">Phone:</span>
+                <a
+                  href={`tel:${profile.phone}`}
+                  className="text-blue-600 hover:underline"
+                >
+                  {profile.phone}
+                </a>
+              </div>
             )}
-            {institution.socialMedia?.linkedin && (
-              <a
-                href={institution.socialMedia.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-600 hover:text-blue-700 transition-colors"
-              >
-                <Linkedin className="h-6 w-6" />
-              </a>
+            {profile.address && (
+              <div className="flex items-center gap-2">
+                <span className="font-medium">Address:</span>
+                <span>{profile.address}</span>
+              </div>
             )}
-            {institution.socialMedia?.twitter && (
-              <a
-                href={institution.socialMedia.twitter}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-600 hover:text-blue-400 transition-colors"
-              >
-                <Twitter className="h-6 w-6" />
-              </a>
+            {profile.contactPerson && (
+              <div className="flex items-center gap-2">
+                <span className="font-medium">Contact Person:</span>
+                <span>{profile.contactPerson}</span>
+              </div>
             )}
           </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
-      {/* Main Content */}
-      <div className="container mx-auto px-6 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Column - Info */}
-          <div className="lg:col-span-2">
-            <Tabs
-              value={activeTab}
-              onValueChange={setActiveTab}
-              className="space-y-8"
-            >
-              <TabsList>
-                <TabsTrigger value="about">Información</TabsTrigger>
-                <TabsTrigger value="posts">Publicaciones</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="about" className="space-y-6">
-                <Card>
-                  <CardContent className="p-6">
-                    <h2 className="text-2xl font-semibold mb-4">
-                      Sobre nosotros
-                    </h2>
-                    <p className="text-gray-600 leading-relaxed mb-6">
-                      {institution.description}
-                    </p>
-
-                    <h3 className="font-semibold mb-3">Servicios Ofrecidos</h3>
-                    <ul className="list-disc list-inside space-y-1 text-gray-600 mb-6">
-                      {institution.servicesOffered.map((service, index) => (
-                        <li key={index}>{service}</li>
-                      ))}
-                    </ul>
-
-                    <h3 className="font-semibold mb-3">Áreas de Enfoque</h3>
-                    <ul className="list-disc list-inside space-y-1 text-gray-600">
-                      {institution.focusAreas.map((area, index) => (
-                        <li key={index}>{area}</li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="posts" className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {posts.map((post) => (
-                    <Link
-                      href={`/entrepreneurship/directory/${params.id}/posts/${post.id}`}
-                      key={post.id}
-                    >
-                      <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer h-full">
-                        <div className="relative h-48">
-                          <Image
-                            src={post.image}
-                            alt={post.title}
-                            fill
-                            className="object-cover"
-                          />
-                        </div>
-                        <CardContent className="p-6">
-                          <h3 className="text-xl font-semibold mb-2">
-                            {post.title}
-                          </h3>
-                          <p className="text-muted-foreground mb-4 line-clamp-2">
-                            {post.content}
-                          </p>
-                          <div className="flex items-center justify-between text-sm text-muted-foreground">
-                            <div className="flex items-center gap-2">
-                              <Calendar className="h-4 w-4" />
-                              {new Date(post.date).toLocaleDateString()}
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <User className="h-4 w-4" />
-                              {post.author}
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </Link>
-                  ))}
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {posts.map((post) => (
+          <Card key={post.id}>
+            <CardContent className="p-4">
+              {post.image && (
+                <div className="relative h-48">
+                  <Image
+                    src={post.image}
+                    alt={post.title}
+                    fill
+                    className="rounded-lg object-cover"
+                  />
                 </div>
-              </TabsContent>
-            </Tabs>
-          </div>
-
-          {/* Right Column - Contact Info */}
-          <div className="space-y-6">
-            <Card>
-              <CardContent className="p-6">
-                <h3 className="font-semibold mb-4">Información de Contacto</h3>
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <MapPin className="h-5 w-5 text-muted-foreground" />
-                    <span>{institution.address}</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Mail className="h-5 w-5 text-muted-foreground" />
-                    <a
-                      href={`mailto:${institution.email}`}
-                      className="hover:text-blue-600"
-                    >
-                      {institution.email}
-                    </a>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Phone className="h-5 w-5 text-muted-foreground" />
-                    <a
-                      href={`tel:${institution.phone}`}
-                      className="hover:text-blue-600"
-                    >
-                      {institution.phone}
-                    </a>
-                  </div>
-                  {institution.website && (
-                    <div className="flex items-center gap-3">
-                      <Globe className="h-5 w-5 text-muted-foreground" />
-                      <a
-                        href={institution.website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover:text-blue-600"
-                      >
-                        Visitar sitio web
-                      </a>
-                    </div>
-                  )}
+              )}
+              <h3 className="mt-4 text-xl font-semibold">{post.title}</h3>
+              <p className="mt-2 text-gray-600">{post.content}</p>
+              <div className="mt-4 flex items-center justify-between">
+                {renderAuthor(post.author)}
+                <div className="flex items-center gap-4">
+                  <span>{post.likes} likes</span>
+                  <span>{post.comments} comments</span>
                 </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardContent className="p-6">
-                <h3 className="font-semibold mb-4">Persona de Contacto</h3>
-                <div className="flex items-center gap-3">
-                  <User className="h-5 w-5 text-muted-foreground" />
-                  <span>{institution.contactPerson}</span>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
       </div>
     </div>
   );

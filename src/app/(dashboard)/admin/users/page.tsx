@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Plus,
   MoreVertical,
@@ -15,6 +15,10 @@ import {
   MapPin,
   Download,
   X,
+  Search,
+  MoreHorizontal,
+  UserCheck,
+  UserX,
 } from "lucide-react";
 import {
   Card,
@@ -136,11 +140,7 @@ export default function CompaniesManagementPage() {
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState("");
 
-  useEffect(() => {
-    fetchCompanies();
-  }, [industryFilter, statusFilter]);
-
-  const fetchCompanies = async () => {
+  const fetchCompanies = useCallback(async () => {
     try {
       setLoading(true);
       // Simulated data
@@ -255,7 +255,11 @@ export default function CompaniesManagementPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [industryFilter, statusFilter]);
+
+  useEffect(() => {
+    fetchCompanies();
+  }, [fetchCompanies]);
 
   const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -975,18 +979,6 @@ export default function CompaniesManagementPage() {
                         {getStatusText(company.status)}
                       </Badge>
                     </TableCell>
-                    {/* <TableCell>
-                      <div className="flex items-center gap-1">
-                        <Users className="w-3 h-3" />
-                        <span>{company.employees}</span>
-                      </div>
-                    </TableCell> */}
-                    {/* <TableCell>
-                      <div className="text-sm">
-                        <div>Bs. {company.revenue.toLocaleString()}</div>
-                        <div className="text-green-600">+{company.growth}%</div>
-                      </div>
-                    </TableCell> */}
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
