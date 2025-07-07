@@ -44,6 +44,9 @@ interface JobStats {
 }
 
 export default function ManageJobsPage() {
+  const router = useRouter();
+  const { toast } = useToast();
+
   const [jobs, setJobs] = useState<JobOffer[]>([]);
   const [stats, setStats] = useState<JobStats>({
     total: 0,
@@ -53,8 +56,6 @@ export default function ManageJobsPage() {
     draft: 0,
   });
   const [loading, setLoading] = useState(true);
-
-  const { toast } = useToast();
 
   useEffect(() => {
     fetchCompanyJobs();

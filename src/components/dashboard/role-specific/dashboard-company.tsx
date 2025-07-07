@@ -62,9 +62,7 @@ function SimulatedJobCard() {
           </div>
           <div>
             <h4 className="font-medium">Desarrollador Frontend Senior</h4>
-            <p className="text-sm text-gray-600">
-              Cierra en {secondsLeft}s
-            </p>
+            <p className="text-sm text-gray-600">Cierra en {secondsLeft}s</p>
           </div>
         </div>
         <div className="text-right space-y-1">
@@ -72,7 +70,12 @@ function SimulatedJobCard() {
           {result === null ? (
             <Badge variant="default">Activa</Badge>
           ) : result ? (
-            <Badge variant="success">¡Contratado!</Badge>
+            <Badge
+              variant="default"
+              className="bg-green-100 text-green-800 hover:bg-green-100"
+            >
+              ¡Contratado!
+            </Badge>
           ) : (
             <Badge variant="destructive">Sin contratar</Badge>
           )}
@@ -150,41 +153,40 @@ export function DashboardCompany() {
         </Card>
 
         <Card>
-  <CardContent className="p-4">
-    <div className="flex items-center space-x-2">
-      <Briefcase className="w-5 h-5 text-gray-500" />
-      <div>
-        <p className="text-sm font-medium">Ofertas Cerradas</p>
-        <p className="text-2xl font-bold">5</p>
-      </div>
-    </div>
-  </CardContent>
-</Card>
+          <CardContent className="p-4">
+            <div className="flex items-center space-x-2">
+              <Briefcase className="w-5 h-5 text-gray-500" />
+              <div>
+                <p className="text-sm font-medium">Ofertas Cerradas</p>
+                <p className="text-2xl font-bold">5</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
-<Card>
-  <CardContent className="p-4">
-    <div className="flex items-center space-x-2">
-      <Users className="w-5 h-5 text-orange-500" />
-      <div>
-        <p className="text-sm font-medium">Candidatos por Oferta</p>
-        <p className="text-2xl font-bold">15.5</p>
-      </div>
-    </div>
-  </CardContent>
-</Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center space-x-2">
+              <Users className="w-5 h-5 text-orange-500" />
+              <div>
+                <p className="text-sm font-medium">Candidatos por Oferta</p>
+                <p className="text-2xl font-bold">15.5</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
-<Card>
-  <CardContent className="p-4">
-    <div className="flex items-center space-x-2">
-      <UserCheck className="w-5 h-5 text-teal-600" />
-      <div>
-        <p className="text-sm font-medium">Tasa de Conversión</p>
-        <p className="text-2xl font-bold">12%</p>
-      </div>
-    </div>
-  </CardContent>
-</Card>
-
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center space-x-2">
+              <UserCheck className="w-5 h-5 text-teal-600" />
+              <div>
+                <p className="text-sm font-medium">Tasa de Conversión</p>
+                <p className="text-2xl font-bold">12%</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Crear Nueva Oferta */}
@@ -232,73 +234,83 @@ export function DashboardCompany() {
         </CardContent>
       </Card>
 
-      
-
-
       {/* Postulaciones Recientes */}
-<Card>
-  <CardHeader>
-    <CardTitle className="flex items-center gap-2">
-      <Users className="w-5 h-5" />
-      Postulaciones Recientes
-    </CardTitle>
-    <CardDescription>
-      Revisa las postulaciones enviadas recientemente por jóvenes
-    </CardDescription>
-  </CardHeader>
-  <CardContent>
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {[
-        {
-          name: "Ana Martínez",
-          email: "ana.martinez@email.com",
-          phone: "+591 77777777",
-          city: "La Paz",
-          education: "Bachiller - Colegio La Salle",
-          interests: ["Tecnología", "Marketing Digital", "Diseño"],
-          cv: true,
-          cover: false,
-        },
-        {
-          name: "Carlos Rojas",
-          email: "carlosr@email.com",
-          phone: "+591 78888888",
-          city: "Cochabamba",
-          education: "Técnico Medio - INFOCAL",
-          interests: ["Redes", "Hardware", "Sistemas"],
-          cv: true,
-          cover: true,
-        },
-      ].map((user) => (
-        <Card key={user.email} className="border border-gray-200 p-4">
-          <div className="flex flex-col space-y-1 mb-2">
-            <h4 className="font-semibold text-base">{user.name}</h4>
-            <p className="text-sm text-gray-600">{user.email}</p>
-            <p className="text-sm text-gray-600">{user.phone}</p>
-            <p className="text-sm text-gray-600">{user.city}</p>
-            <p className="text-sm text-gray-600">{user.education}</p>
-          </div>
-          <div className="flex flex-wrap gap-1 mb-2">
-            {user.interests.map((tag) => (
-              <Badge key={tag} variant="secondary">
-                {tag}
-              </Badge>
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Users className="w-5 h-5" />
+            Postulaciones Recientes
+          </CardTitle>
+          <CardDescription>
+            Revisa las postulaciones enviadas recientemente por jóvenes
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[
+              {
+                name: "Ana Martínez",
+                email: "ana.martinez@email.com",
+                phone: "+591 77777777",
+                city: "La Paz",
+                education: "Bachiller - Colegio La Salle",
+                interests: ["Tecnología", "Marketing Digital", "Diseño"],
+                cv: true,
+                cover: false,
+              },
+              {
+                name: "Carlos Rojas",
+                email: "carlosr@email.com",
+                phone: "+591 78888888",
+                city: "Cochabamba",
+                education: "Técnico Medio - INFOCAL",
+                interests: ["Redes", "Hardware", "Sistemas"],
+                cv: true,
+                cover: true,
+              },
+            ].map((user) => (
+              <Card key={user.email} className="border border-gray-200 p-4">
+                <div className="flex flex-col space-y-1 mb-2">
+                  <h4 className="font-semibold text-base">{user.name}</h4>
+                  <p className="text-sm text-gray-600">{user.email}</p>
+                  <p className="text-sm text-gray-600">{user.phone}</p>
+                  <p className="text-sm text-gray-600">{user.city}</p>
+                  <p className="text-sm text-gray-600">{user.education}</p>
+                </div>
+                <div className="flex flex-wrap gap-1 mb-2">
+                  {user.interests.map((tag) => (
+                    <Badge key={tag} variant="secondary">
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+                <div className="flex items-center justify-between">
+                  <Badge
+                    variant={user.cv ? "default" : "destructive"}
+                    className={
+                      user.cv
+                        ? "bg-green-100 text-green-800 hover:bg-green-100"
+                        : ""
+                    }
+                  >
+                    CV {user.cv ? "Disponible" : "Faltante"}
+                  </Badge>
+                  <Badge
+                    variant={user.cover ? "default" : "destructive"}
+                    className={
+                      user.cover
+                        ? "bg-green-100 text-green-800 hover:bg-green-100"
+                        : ""
+                    }
+                  >
+                    Carta {user.cover ? "Disponible" : "Faltante"}
+                  </Badge>
+                </div>
+              </Card>
             ))}
           </div>
-          <div className="flex items-center justify-between">
-            <Badge variant={user.cv ? "success" : "destructive"}>
-              CV {user.cv ? "Disponible" : "Faltante"}
-            </Badge>
-            <Badge variant={user.cover ? "success" : "destructive"}>
-              Carta {user.cover ? "Disponible" : "Faltante"}
-            </Badge>
-          </div>
-        </Card>
-      ))}
-    </div>
-  </CardContent>
-</Card>
-
+        </CardContent>
+      </Card>
 
       {/* Acciones rápidas */}
       {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

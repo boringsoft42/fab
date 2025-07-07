@@ -282,24 +282,21 @@ Con ejercicios interactivos y aplicaciones prácticas, desarrollarás las compet
     },
   };
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(req: NextRequest) {
   try {
-    const courseId = params.id;
-    const courseData = courseDetailsData[courseId];
+    const courseId = req.nextUrl.pathname.split("/")[3];
+    const courseDetails = courseDetailsData[courseId];
 
-    if (!courseData) {
+    if (!courseDetails) {
       return NextResponse.json(
         { error: "Curso no encontrado" },
         { status: 404 }
       );
     }
 
-    return NextResponse.json(courseData);
+    return NextResponse.json(courseDetails);
   } catch (error) {
-    console.error("Error fetching course details:", error);
+    console.error("Error fetching course:", error);
     return NextResponse.json(
       { error: "Error interno del servidor" },
       { status: 500 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Quiz,
   QuizQuestion as Question,
@@ -48,6 +48,34 @@ export const QuizComponent = ({ quiz, onComplete }: QuizComponentProps) => {
   const isLastQuestion = currentQuestionIndex === quiz.questions.length - 1;
   const progress = ((currentQuestionIndex + 1) / quiz.questions.length) * 100;
 
+  const submitQuiz = useCallback(() => {
+    const totalQuestions = quiz.questions.length;
+    const correctCount = Object.values(answers).filter(
+      (answer) => answer.isCorrect
+    ).length;
+    const finalScore = Math.round((correctCount / totalQuestions) * 100);
+
+    setCorrectAnswers(correctCount);
+    setScore(finalScore);
+    setQuizState("completed");
+
+    if (finalScore >= quiz.passingScore) {
+      toast({
+        title: "¡Felicitaciones!",
+        description: `Has aprobado el quiz con ${finalScore}%`,
+        duration: 5000,
+      });
+      onComplete(finalScore);
+    } else {
+      toast({
+        title: "Quiz completado",
+        description: `Puntuación: ${finalScore}%. Necesitas ${quiz.passingScore}% para aprobar.`,
+        variant: "destructive",
+        duration: 5000,
+      });
+    }
+  }, [quiz.questions.length, quiz.passingScore, answers, toast, onComplete]);
+
   // Timer effect
   useEffect(() => {
     if (timeLeft === null || timeLeft <= 0 || quizState !== "taking") return;
@@ -63,7 +91,7 @@ export const QuizComponent = ({ quiz, onComplete }: QuizComponentProps) => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [timeLeft, quizState]);
+  }, [timeLeft, quizState, submitQuiz]);
 
   useEffect(() => {
     if (timeLeft === null || timeLeft <= 0) {
@@ -139,34 +167,6 @@ export const QuizComponent = ({ quiz, onComplete }: QuizComponentProps) => {
   const goToPreviousQuestion = () => {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex((prev) => prev - 1);
-    }
-  };
-
-  const submitQuiz = () => {
-    const totalQuestions = quiz.questions.length;
-    const correctCount = Object.values(answers).filter(
-      (answer) => answer.isCorrect
-    ).length;
-    const finalScore = Math.round((correctCount / totalQuestions) * 100);
-
-    setCorrectAnswers(correctCount);
-    setScore(finalScore);
-    setQuizState("completed");
-
-    if (finalScore >= quiz.passingScore) {
-      toast({
-        title: "¡Felicitaciones!",
-        description: `Has aprobado el quiz con ${finalScore}%`,
-        duration: 5000,
-      });
-      onComplete(finalScore);
-    } else {
-      toast({
-        title: "Quiz completado",
-        description: `Puntuación: ${finalScore}%. Necesitas ${quiz.passingScore}% para aprobar.`,
-        variant: "destructive",
-        duration: 5000,
-      });
     }
   };
 

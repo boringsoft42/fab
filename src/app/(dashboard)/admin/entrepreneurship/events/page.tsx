@@ -124,13 +124,32 @@ export default function AdminEventsPage() {
   const [showCreateDialog, setShowCreateDialog] = useState(false);
 
   // Form state for creating/editing events
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    title: string;
+    description: string;
+    date: string;
+    time: string;
+    location: string;
+    type: "virtual" | "presencial" | "hybrid";
+    category: string;
+    organizer: string;
+    maxAttendees: number;
+    price: number;
+    image: string;
+    tags: string;
+    featured: boolean;
+    status: "published" | "draft" | "cancelled";
+    registrationDeadline: string;
+    requirements: string;
+    agenda: string;
+    speakers: string;
+  }>({
     title: "",
     description: "",
     date: "",
     time: "",
     location: "",
-    type: "presencial" as const,
+    type: "presencial",
     category: "Networking",
     organizer: "",
     maxAttendees: 50,
@@ -138,7 +157,7 @@ export default function AdminEventsPage() {
     image: "",
     tags: "",
     featured: false,
-    status: "draft" as const,
+    status: "draft",
     registrationDeadline: "",
     requirements: "",
     agenda: "",
@@ -148,6 +167,7 @@ export default function AdminEventsPage() {
   const fetchEvents = useCallback(async () => {
     try {
       setLoading(true);
+      const params = new URLSearchParams();
       if (searchQuery) params.append("search", searchQuery);
       if (selectedType !== "all") params.append("type", selectedType);
       if (selectedCategory !== "all")

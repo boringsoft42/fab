@@ -189,17 +189,30 @@ export interface Enrollment {
 export interface CourseProgress {
   userId: string;
   courseId: string;
-  completedSections: string[];
-  quizAttempts: {
+  completedLessons: string[];
+  completedModules: string[];
+  currentLesson?: string;
+  currentModule?: string;
+  totalProgress: number;
+  timeSpent: number;
+  quizScores: {
+    quizId: string;
+    score: number;
+    attempts: number;
+    passed: boolean;
+    lastAttemptAt: Date;
+  }[];
+  certificates: string[];
+  completedSections?: string[];
+  quizAttempts?: {
     quizId: string;
     attempts: number;
     bestScore: number;
     passed: boolean;
     lastAttemptAt: Date;
   }[];
-  downloadedResources: string[];
-  lastAccessedAt: Date;
-  isCompleted: boolean;
+  downloadedResources?: string[];
+  isCompleted?: boolean;
   completedAt?: Date;
 }
 

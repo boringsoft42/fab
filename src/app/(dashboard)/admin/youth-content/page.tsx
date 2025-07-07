@@ -140,7 +140,9 @@ export default function YouthContentManagementPage() {
   const [activeTab, setActiveTab] = useState("resources");
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [editingItem, setEditingItem] = useState<Resource | Institution | NetworkContact | Mentor | null>(null);
+  const [editingItem, setEditingItem] = useState<
+    Resource | Institution | NetworkContact | Mentor | null
+  >(null);
 
   // Form states for different content types
   const [resourceForm, setResourceForm] = useState<Resource>({
@@ -452,7 +454,14 @@ export default function YouthContentManagementPage() {
                       <Label htmlFor="type">Tipo *</Label>
                       <Select
                         value={resourceForm.type}
-                        onValueChange={(value: unknown) =>
+                        onValueChange={(
+                          value:
+                            | "template"
+                            | "guide"
+                            | "video"
+                            | "podcast"
+                            | "tool"
+                        ) =>
                           setResourceForm((prev) => ({ ...prev, type: value }))
                         }
                       >
@@ -530,11 +539,14 @@ export default function YouthContentManagementPage() {
                     <Label htmlFor="tags">Etiquetas</Label>
                     <Input
                       id="tags"
-                      value={resourceForm.tags}
+                      value={resourceForm.tags.join(", ")}
                       onChange={(e) =>
                         setResourceForm((prev) => ({
                           ...prev,
-                          tags: e.target.value,
+                          tags: e.target.value
+                            .split(",")
+                            .map((tag) => tag.trim())
+                            .filter(Boolean),
                         }))
                       }
                       placeholder="etiqueta1, etiqueta2, etiqueta3"
@@ -579,7 +591,14 @@ export default function YouthContentManagementPage() {
                       <Label htmlFor="type">Tipo de Institución *</Label>
                       <Select
                         value={institutionForm.type}
-                        onValueChange={(value: unknown) =>
+                        onValueChange={(
+                          value:
+                            | "municipality"
+                            | "ngo"
+                            | "foundation"
+                            | "training_center"
+                            | "government"
+                        ) =>
                           setInstitutionForm((prev) => ({
                             ...prev,
                             type: value,
@@ -699,17 +718,19 @@ export default function YouthContentManagementPage() {
 
                   <div className="space-y-2">
                     <Label htmlFor="services">Servicios</Label>
-                    <Textarea
+                    <Input
                       id="services"
-                      value={institutionForm.services}
+                      value={institutionForm.services.join(", ")}
                       onChange={(e) =>
                         setInstitutionForm((prev) => ({
                           ...prev,
-                          services: e.target.value,
+                          services: e.target.value
+                            .split(",")
+                            .map((service) => service.trim())
+                            .filter(Boolean),
                         }))
                       }
                       placeholder="servicio1, servicio2, servicio3"
-                      rows={2}
                     />
                   </div>
 
@@ -717,14 +738,17 @@ export default function YouthContentManagementPage() {
                     <Label htmlFor="focusAreas">Áreas de Enfoque</Label>
                     <Input
                       id="focusAreas"
-                      value={institutionForm.focusAreas}
+                      value={institutionForm.focusAreas.join(", ")}
                       onChange={(e) =>
                         setInstitutionForm((prev) => ({
                           ...prev,
-                          focusAreas: e.target.value,
+                          focusAreas: e.target.value
+                            .split(",")
+                            .map((area) => area.trim())
+                            .filter(Boolean),
                         }))
                       }
-                      placeholder="área1, área2, área3"
+                      placeholder="area1, area2, area3"
                     />
                   </div>
 
@@ -841,11 +865,14 @@ export default function YouthContentManagementPage() {
                       <Label htmlFor="skills">Habilidades</Label>
                       <Input
                         id="skills"
-                        value={contactForm.skills}
+                        value={contactForm.skills.join(", ")}
                         onChange={(e) =>
                           setContactForm((prev) => ({
                             ...prev,
-                            skills: e.target.value,
+                            skills: e.target.value
+                              .split(",")
+                              .map((skill) => skill.trim())
+                              .filter(Boolean),
                           }))
                         }
                         placeholder="habilidad1, habilidad2, habilidad3"
@@ -855,14 +882,17 @@ export default function YouthContentManagementPage() {
                       <Label htmlFor="interests">Intereses</Label>
                       <Input
                         id="interests"
-                        value={contactForm.interests}
+                        value={contactForm.interests.join(", ")}
                         onChange={(e) =>
                           setContactForm((prev) => ({
                             ...prev,
-                            interests: e.target.value,
+                            interests: e.target.value
+                              .split(",")
+                              .map((interest) => interest.trim())
+                              .filter(Boolean),
                           }))
                         }
-                        placeholder="interés1, interés2, interés3"
+                        placeholder="interes1, interes2, interes3"
                       />
                     </div>
                   </div>
@@ -872,11 +902,14 @@ export default function YouthContentManagementPage() {
                       <Label htmlFor="lookingFor">Busca</Label>
                       <Input
                         id="lookingFor"
-                        value={contactForm.lookingFor}
+                        value={contactForm.lookingFor.join(", ")}
                         onChange={(e) =>
                           setContactForm((prev) => ({
                             ...prev,
-                            lookingFor: e.target.value,
+                            lookingFor: e.target.value
+                              .split(",")
+                              .map((item) => item.trim())
+                              .filter(Boolean),
                           }))
                         }
                         placeholder="inversionistas, socios, mentores"
@@ -886,11 +919,14 @@ export default function YouthContentManagementPage() {
                       <Label htmlFor="offering">Ofrece</Label>
                       <Input
                         id="offering"
-                        value={contactForm.offering}
+                        value={contactForm.offering.join(", ")}
                         onChange={(e) =>
                           setContactForm((prev) => ({
                             ...prev,
-                            offering: e.target.value,
+                            offering: e.target.value
+                              .split(",")
+                              .map((item) => item.trim())
+                              .filter(Boolean),
                           }))
                         }
                         placeholder="consultoría, desarrollo, marketing"
@@ -999,17 +1035,20 @@ export default function YouthContentManagementPage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="expertise">Áreas de Expertise</Label>
+                      <Label htmlFor="expertise">Áreas de Experiencia</Label>
                       <Input
                         id="expertise"
-                        value={mentorForm.expertise}
+                        value={mentorForm.expertise.join(", ")}
                         onChange={(e) =>
                           setMentorForm((prev) => ({
                             ...prev,
-                            expertise: e.target.value,
+                            expertise: e.target.value
+                              .split(",")
+                              .map((item) => item.trim())
+                              .filter(Boolean),
                           }))
                         }
-                        placeholder="tecnología, marketing, finanzas"
+                        placeholder="area1, area2, area3"
                       />
                     </div>
                     <div className="space-y-2">
@@ -1032,11 +1071,14 @@ export default function YouthContentManagementPage() {
                     <div className="space-y-2">
                       <Label htmlFor="priceType">Tipo de Mentoría</Label>
                       <Select
-                        value={mentorForm.priceType}
-                        onValueChange={(value: unknown) =>
+                        value={mentorForm.price.type}
+                        onValueChange={(value: "free" | "paid") =>
                           setMentorForm((prev) => ({
                             ...prev,
-                            priceType: value,
+                            price: {
+                              ...prev.price,
+                              type: value,
+                            },
                           }))
                         }
                       >
@@ -1049,17 +1091,20 @@ export default function YouthContentManagementPage() {
                         </SelectContent>
                       </Select>
                     </div>
-                    {mentorForm.priceType === "paid" && (
+                    {mentorForm.price.type === "paid" && (
                       <div className="space-y-2">
                         <Label htmlFor="priceAmount">Precio (Bs.)</Label>
                         <Input
                           id="priceAmount"
                           type="number"
-                          value={mentorForm.priceAmount}
+                          value={mentorForm.price.amount}
                           onChange={(e) =>
                             setMentorForm((prev) => ({
                               ...prev,
-                              priceAmount: parseFloat(e.target.value) || 0,
+                              price: {
+                                ...prev.price,
+                                amount: parseFloat(e.target.value) || 0,
+                              },
                             }))
                           }
                           min="0"
@@ -1070,11 +1115,14 @@ export default function YouthContentManagementPage() {
                       <Label htmlFor="languages">Idiomas</Label>
                       <Input
                         id="languages"
-                        value={mentorForm.languages}
+                        value={mentorForm.languages.join(", ")}
                         onChange={(e) =>
                           setMentorForm((prev) => ({
                             ...prev,
-                            languages: e.target.value,
+                            languages: e.target.value
+                              .split(",")
+                              .map((item) => item.trim())
+                              .filter(Boolean),
                           }))
                         }
                         placeholder="español, inglés"
@@ -1101,11 +1149,14 @@ export default function YouthContentManagementPage() {
                     <Label htmlFor="achievements">Logros</Label>
                     <Input
                       id="achievements"
-                      value={mentorForm.achievements}
+                      value={mentorForm.achievements.join(", ")}
                       onChange={(e) =>
                         setMentorForm((prev) => ({
                           ...prev,
-                          achievements: e.target.value,
+                          achievements: e.target.value
+                            .split(",")
+                            .map((item) => item.trim())
+                            .filter(Boolean),
                         }))
                       }
                       placeholder="logro1, logro2, logro3"

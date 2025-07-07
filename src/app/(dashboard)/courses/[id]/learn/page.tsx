@@ -21,6 +21,12 @@ import {
   ChevronUp,
   Lock,
   Download,
+  Star,
+  Clock,
+  BookOpen,
+  CheckCircle2,
+  FileText,
+  Award,
 } from "lucide-react";
 import { QuizComponent } from "@/components/courses/quiz-component";
 import { LessonNotes } from "@/components/courses/lesson-notes";
@@ -30,8 +36,24 @@ import type {
   Quiz,
   QuizQuestion,
   ResourceType,
+  Module,
+  Lesson,
+  Course,
+} from "@/types/courses";
+import {
+  CourseCategory,
+  CourseLevel,
+  LessonType,
+  QuestionType,
 } from "@/types/courses";
 import { LessonPlayer } from "@/components/courses/lesson-player";
+import confetti from "canvas-confetti";
+import { useRouter } from "next/navigation";
+import {
+  Collapsible,
+  CollapsibleTrigger,
+  CollapsibleContent,
+} from "@/components/ui/collapsible";
 
 interface Resource {
   id: string;
@@ -45,48 +67,36 @@ interface Resource {
   updatedAt: Date;
 }
 
-interface Lesson {
-  id: string;
-  title: string;
-  duration: string;
-  completed: boolean;
-  type: "video" | "quiz" | "reading";
-  videoUrl?: string;
-  content?: string;
-  locked?: boolean;
-  resources?: CourseResource[];
-  quiz?: Quiz;
+interface ExtendedLesson extends Lesson {
+  completed?: boolean;
 }
 
-interface Module {
-  id: string;
-  title: string;
-  lessons: Lesson[];
-  completed: boolean;
-  duration: string;
-  locked?: boolean;
+interface ExtendedModule extends Omit<Module, "lessons"> {
+  completed?: boolean;
+  lessons: ExtendedLesson[];
 }
 
-interface Course {
-  id: string;
-  title: string;
-  instructor: string;
-  description: string;
-  modules: Module[];
+interface ExtendedCourse extends Omit<Course, "modules"> {
+  modules: ExtendedModule[];
   totalProgress: number;
-  rating: number;
-  studentsCount: number;
   certificate?: {
     id: string;
-    issued: boolean;
-    completionDate?: string;
+    url: string;
+    issuedAt: Date;
   };
 }
 
-export default function CourseLeanPage() {
-  const courseId = params.id as string;
+interface PageProps {
+  params: Promise<{
+    id: string;
+  }>;
+}
 
-  const [course, setCourse] = useState<Course | null>(null);
+export default async function CourseLeanPage({ params }: PageProps) {
+  const router = useRouter();
+  const { id: courseId } = await params;
+
+  const [course, setCourse] = useState<ExtendedCourse | null>(null);
   const [currentModuleId, setCurrentModuleId] = useState<string>("");
   const [currentLessonId, setCurrentLessonId] = useState<string>("");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -100,170 +110,115 @@ export default function CourseLeanPage() {
   // 10 minutes for demo
   // Mock course data
   useEffect(() => {
-    const mockCourse: Course = {
-      id: courseId,
-      title: "Habilidades Laborales Básicas",
-      instructor: "Dra. Ana Pérez",
-      description:
-        "Desarrolla las competencias fundamentales para el mundo laboral",
-      totalProgress: 15,
-      rating: 4.8,
-      studentsCount: 2847,
+    const mockCourse: ExtendedCourse = {
+      id: "1",
+      title: "Introducción al Emprendimiento",
+      description: "Curso básico de emprendimiento",
+      shortDescription: "Aprende los fundamentos del emprendimiento",
+      thumbnail: "/images/course1.jpg",
+      instructor: {
+        id: "i1",
+        name: "Dr. Juan Pérez",
+        title: "Emprendedor y Mentor",
+        avatar: "/images/instructor1.jpg",
+        bio: "Experto en emprendimiento con más de 10 años de experiencia",
+        rating: 4.8,
+        totalStudents: 1000,
+        totalCourses: 5,
+      },
+      institution: "Universidad Emprendedora",
+      category: CourseCategory.ENTREPRENEURSHIP,
+      level: CourseLevel.BEGINNER,
+      duration: 120,
+      totalLessons: 10,
+      rating: 4.5,
+      studentCount: 500,
+      price: 0,
+      isMandatory: false,
+      isActive: true,
+      objectives: [
+        "Aprender conceptos básicos",
+        "Desarrollar mentalidad emprendedora",
+      ],
+      prerequisites: [],
+      includedMaterials: ["Guías PDF", "Videos descargables"],
+      certification: true,
+      tags: ["emprendimiento", "negocios"],
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      sections: [],
+      totalQuizzes: 2,
+      totalResources: 5,
+      totalProgress: 0,
+      slug: "introduccion-al-emprendimiento",
       certificate: {
-        id: "cert-123",
-        issued: false,
+        id: "cert-1",
+        url: "/certificates/cert-1.pdf",
+        issuedAt: new Date(),
       },
       modules: [
         {
-          id: "mod-1",
-          title: "Introducción a las Habilidades Laborales",
-          duration: "45 min",
-          completed: false,
+          id: "m1",
+          courseId: "1",
+          title: "Fundamentos del Emprendimiento",
+          description: "Conceptos básicos y mentalidad emprendedora",
+          order: 1,
+          duration: 60,
+          isLocked: false,
           lessons: [
             {
-              id: "lesson-1",
-              title: "Bienvenida al curso",
-              duration: "5 min",
-              completed: true,
-              type: "video",
-              videoUrl:
-                "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4",
-              resources: [
-                {
-                  id: "res-1",
-                  title: "Guía de Introducción",
-                  description: "PDF con el contenido detallado del curso",
-                  type: "PDF" as ResourceType,
-                  url: "/resources/guia-introduccion.pdf",
-                  fileSize: "2.4 MB",
-                  createdAt: new Date(),
-                  updatedAt: new Date(),
+              id: "l1",
+              moduleId: "m1",
+              title: "¿Qué es el emprendimiento?",
+              description: "Introducción a los conceptos básicos",
+              type: LessonType.VIDEO,
+              content: {
+                video: {
+                  url: "https://example.com/video1.mp4",
+                  duration: 15,
                 },
-                {
-                  id: "res-2",
-                  title: "Video de Bienvenida",
-                  description: "Mensaje del instructor",
-                  type: "VIDEO" as ResourceType,
-                  url: "https://sample-videos.com/welcome.mp4",
-                  duration: "3:45",
-                  createdAt: new Date(),
-                  updatedAt: new Date(),
-                },
-                {
-                  id: "res-3",
-                  title: "Material Complementario",
-                  description: "Lecturas recomendadas y ejercicios prácticos",
-                  type: "PDF" as ResourceType,
-                  url: "/resources/material-complementario.pdf",
-                  fileSize: "1.8 MB",
-                  createdAt: new Date(),
-                  updatedAt: new Date(),
-                },
-              ],
+              },
+              duration: 15,
+              order: 1,
+              isPreview: true,
+              completed: false,
             },
             {
-              id: "lesson-2",
-              title: "¿Qué son las habilidades laborales?",
-              duration: "8 min",
+              id: "l2",
+              moduleId: "m1",
+              title: "Evaluación de Conceptos",
+              description: "Prueba tus conocimientos",
+              type: LessonType.QUIZ,
+              content: {},
+              duration: 20,
+              order: 2,
+              isPreview: false,
               completed: false,
-              type: "video",
-              videoUrl:
-                "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4",
-              resources: [
-                {
-                  id: "res-4",
-                  title: "Presentación de Habilidades Laborales",
-                  description: "Slides de la presentación",
-                  type: "PDF" as ResourceType,
-                  url: "/resources/presentacion-habilidades.pdf",
-                  fileSize: "3.1 MB",
-                  createdAt: new Date(),
-                  updatedAt: new Date(),
-                },
-                {
-                  id: "res-5",
-                  title: "Enlaces Útiles",
-                  description: "Recursos externos recomendados",
-                  type: "LINK" as ResourceType,
-                  url: "https://example.com/recursos",
-                  createdAt: new Date(),
-                  updatedAt: new Date(),
-                },
-              ],
-            },
-            {
-              id: "quiz-1",
-              title: "Evaluación: Conceptos básicos",
-              duration: "10 min",
-              completed: false,
-              type: "quiz",
               quiz: {
-                id: "quiz-1",
-                title: "Evaluación: Conceptos básicos",
-                description:
-                  "Evalúa tu comprensión de los conceptos fundamentales",
-                timeLimit: 10,
+                id: "q1",
+                title: "Evaluación de Conceptos",
+                description: "Prueba tus conocimientos sobre emprendimiento",
                 passingScore: 70,
-                attempts: 0,
-                isRequired: true,
+                showCorrectAnswers: true,
                 questions: [
                   {
-                    id: "q1",
-                    question:
-                      "¿Cuáles son las habilidades blandas más importantes en el trabajo?",
+                    id: "q1-1",
+                    type: QuestionType.MULTIPLE_CHOICE,
+                    question: "¿Qué es el emprendimiento?",
                     options: [
-                      "Comunicación y trabajo en equipo",
-                      "Solo conocimientos técnicos",
-                      "Experiencia laboral únicamente",
-                      "Ninguna de las anteriores",
+                      "Un hobby",
+                      "Un proceso de crear un negocio",
+                      "Una forma de inversión",
+                      "Un tipo de empleo",
                     ],
-                    correctOption: 0,
+                    correctAnswer: "Un proceso de crear un negocio",
                     explanation:
-                      "Las habilidades blandas como comunicación y trabajo en equipo son fundamentales para el éxito profesional.",
+                      "El emprendimiento es el proceso de identificar, desarrollar y llevar a cabo una visión de negocio",
                     points: 10,
-                  },
-                  {
-                    id: "q2",
-                    question: "¿Qué significa ser proactivo en el trabajo?",
-                    options: [
-                      "Esperar instrucciones constantemente",
-                      "Tomar iniciativa y anticiparse a los problemas",
-                      "Trabajar solo cuando sea necesario",
-                      "Evitar responsabilidades adicionales",
-                    ],
-                    correctOption: 1,
-                    explanation:
-                      "Ser proactivo implica tomar la iniciativa y buscar soluciones antes de que surjan problemas.",
-                    points: 10,
+                    order: 1,
                   },
                 ],
               },
-            },
-          ],
-        },
-        {
-          id: "mod-2",
-          title: "Comunicación Efectiva",
-          duration: "60 min",
-          completed: false,
-          lessons: [
-            {
-              id: "lesson-3",
-              title: "Fundamentos de la comunicación",
-              duration: "12 min",
-              completed: false,
-              type: "video",
-              videoUrl:
-                "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4",
-            },
-            {
-              id: "lesson-4",
-              title: "Comunicación no verbal",
-              duration: "10 min",
-              completed: false,
-              type: "video",
-              videoUrl:
-                "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4",
             },
           ],
         },
@@ -271,43 +226,33 @@ export default function CourseLeanPage() {
     };
 
     setCourse(mockCourse);
-
-    // Set first lesson as current
     setCurrentModuleId(mockCourse.modules[0].id);
     setCurrentLessonId(mockCourse.modules[0].lessons[0].id);
-    setExpandedModules([mockCourse.modules[0].id]);
-
-    // Mostrar motivación si el progreso es bajo, medio o alto
-    const progress = mockCourse.totalProgress;
-
-    if (progress >= 80) {
-      setMotivationMessage(
-        "✨ ¡Estás a punto de terminar el curso, sigue así!"
-      );
-      setShowMotivationModal(true);
-    } else if (progress >= 50) {
-      setMotivationMessage("🔥 ¡Muy bien! Ya pasaste la mitad del camino.");
-      setShowMotivationModal(true);
-    } else if (progress >= 20) {
-      setMotivationMessage("🚀 ¡Buen arranque! No te detengas.");
-      setShowMotivationModal(true);
-    } else {
-      setMotivationMessage(
-        "👣 ¡Vamos! Cada paso cuenta, continúa aprendiendo."
-      );
-      setShowMotivationModal(true);
-    }
   }, [courseId]);
 
+  const hasPreviousLesson = () => {
+    if (!course || !currentModuleId || !currentLessonId) return false;
+    const allLessons = course.modules.flatMap((m) => m.lessons);
+    const currentIndex = allLessons.findIndex((l) => l.id === currentLessonId);
+    return currentIndex > 0;
+  };
+
+  const hasNextLesson = () => {
+    if (!course || !currentModuleId || !currentLessonId) return false;
+    const allLessons = course.modules.flatMap((m) => m.lessons);
+    const currentIndex = allLessons.findIndex((l) => l.id === currentLessonId);
+    return currentIndex < allLessons.length - 1;
+  };
+
   const getCurrentLesson = () => {
-    if (!course) return null;
+    if (!course || !currentModuleId || !currentLessonId) return null;
     return course.modules
       .find((m) => m.id === currentModuleId)
       ?.lessons.find((l) => l.id === currentLessonId);
   };
 
   const getCurrentModule = () => {
-    if (!course) return null;
+    if (!course || !currentModuleId) return null;
     return course.modules.find((m) => m.id === currentModuleId);
   };
 
@@ -348,8 +293,7 @@ export default function CourseLeanPage() {
       if (updated.totalProgress === 100) {
         updated.certificate = {
           ...updated.certificate!,
-          issued: true,
-          completionDate: new Date().toISOString(),
+          issuedAt: new Date(),
         };
       }
 
@@ -357,10 +301,12 @@ export default function CourseLeanPage() {
     });
 
     // Move to next lesson automatically
-    const allLessons = updated.modules.flatMap((m) =>
-      m.lessons.map((l) => ({ ...l, moduleId: m.id }))
+    const allLessons = course.modules.flatMap((m: ExtendedModule) =>
+      m.lessons.map((l: ExtendedLesson) => ({ ...l, moduleId: m.id }))
     );
-    const currentIndex = allLessons.findIndex((l) => l.id === lessonId);
+    const currentIndex = allLessons.findIndex(
+      (l: ExtendedLesson & { moduleId: string }) => l.id === lessonId
+    );
     const isLastLesson = currentIndex === allLessons.length - 1;
 
     if (isLastLesson) {
@@ -437,6 +383,43 @@ export default function CourseLeanPage() {
     );
   };
 
+  const getProgress = () => {
+    if (!course) return 0;
+    const totalLessons = course.modules.reduce(
+      (acc: number, module: ExtendedModule) => acc + module.lessons.length,
+      0
+    );
+    const completedLessons = course.modules.reduce(
+      (acc: number, module: ExtendedModule) =>
+        acc +
+        module.lessons.filter((lesson: ExtendedLesson) => lesson.completed)
+          .length,
+      0
+    );
+    return totalLessons > 0
+      ? Math.round((completedLessons / totalLessons) * 100)
+      : 0;
+  };
+
+  const handleModuleCompletion = (moduleId: string) => {
+    if (!course) return;
+    const updatedCourse: ExtendedCourse = {
+      ...course,
+      modules: course.modules.map((module: ExtendedModule) => {
+        if (module.id === moduleId) {
+          return {
+            ...module,
+            completed: module.lessons.every(
+              (lesson: ExtendedLesson) => lesson.completed
+            ),
+          };
+        }
+        return module;
+      }),
+    };
+    setCourse(updatedCourse);
+  };
+
   const currentLesson = getCurrentLesson();
   const currentModule = getCurrentModule();
 
@@ -452,234 +435,89 @@ export default function CourseLeanPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Dialog open={showMotivationModal} onOpenChange={setShowMotivationModal}>
-        <DialogContent className="text-center">
-          <DialogHeader>
-            <DialogTitle>💡 Motivación del día</DialogTitle>
-          </DialogHeader>
-          <p className="text-lg">{motivationMessage}</p>
-        </DialogContent>
-      </Dialog>
-
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => router.push(`/courses/${courseId}`)}
-            >
-              <ChevronLeft className="h-4 w-4 mr-1" />
-              Volver al curso
-            </Button>
-            <Separator orientation="vertical" className="h-6" />
-            <div>
-              <h1 className="font-semibold text-lg">{course.title}</h1>
-              <p className="text-sm text-muted-foreground">
-                con {course.instructor}
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Star className="h-4 w-4 text-yellow-500 fill-current" />
-              <span className="text-sm font-medium">{course.rating}</span>
-              <span className="text-sm text-muted-foreground">
-                ({course.studentsCount.toLocaleString()} estudiantes)
-              </span>
-            </div>
-            <div className="text-right">
-              <div className="text-sm font-medium">
-                {course.totalProgress}% completado
-              </div>
-              <Progress value={course.totalProgress} className="w-32 h-2" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex">
-        {/* Main Content */}
-        <div className={`flex-1 ${sidebarCollapsed ? "mr-0" : "mr-80"}`}>
-          {currentLesson && (
-            <CourseSection
-              section={{
-                id: currentLesson.id,
-                title: currentLesson.title,
-                description: currentModule?.title || "",
-                order: course.modules.findIndex(
-                  (m) => m.id === currentModuleId
-                ),
-                videoUrl: currentLesson.videoUrl,
-                videoDuration: currentLesson.duration,
-                content: currentLesson.content,
-                resources: currentLesson.resources || [],
-                quiz: currentLesson.quiz,
-              }}
-              isActive={!currentLesson.locked}
-              onComplete={() => handleLessonComplete(currentLessonId)}
-            />
-          )}
-
-          {/* Lesson Info */}
-          <div className="bg-white p-6 border-t">
-            <div className="max-w-4xl mx-auto">
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex-1">
-                  <h2 className="text-xl font-semibold mb-2">
-                    {currentLesson.title}
-                  </h2>
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                    <div className="flex items-center gap-1">
-                      <Clock className="h-4 w-4" />
-                      {currentLesson.duration}
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <BookOpen className="h-4 w-4" />
-                      {currentModule?.title}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  {currentLesson.completed && (
-                    <Badge
-                      variant="secondary"
-                      className="bg-green-100 text-green-800"
-                    >
-                      <CheckCircle2 className="h-3 w-3 mr-1" />
-                      Completado
-                    </Badge>
-                  )}
-                </div>
-              </div>
-
-              {/* Navigation */}
-              <div className="flex items-center justify-between">
-                <Button
-                  variant="outline"
-                  onClick={goToPreviousLesson}
-                  disabled={
-                    course.modules
-                      .flatMap((m) => m.lessons)
-                      .findIndex((l) => l.id === currentLessonId) === 0
-                  }
-                >
-                  <ChevronLeft className="h-4 w-4 mr-1" />
-                  Lección anterior
-                </Button>
-
-                {(() => {
-                  const allLessons = course.modules.flatMap((m) =>
-                    m.lessons.map((l) => ({ ...l, moduleId: m.id }))
-                  );
-                  const currentIndex = allLessons.findIndex(
-                    (l) => l.id === currentLessonId
-                  );
-                  const isLastLesson = currentIndex === allLessons.length - 1;
-
-                  if (course.totalProgress === 100 || isLastLesson) {
-                    return (
-                      <Button
-                        onClick={() => {
-                          confetti({
-                            particleCount: 200,
-                            spread: 80,
-                            origin: { y: 0.6 },
-                          });
-                          setShowCertificate(true);
-                        }}
-                        className="bg-green-600 hover:bg-green-700 text-white"
-                      >
-                        🎉 Celebrar finalización
-                      </Button>
-                    );
-                  }
-
-                  return (
-                    <Button onClick={goToNextLesson}>
-                      Siguiente lección
-                      <ChevronRight className="h-4 w-4 ml-1" />
-                    </Button>
-                  );
-                })()}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Sidebar */}
-        <div
-          className={`fixed right-0 top-0 h-full bg-white border-l border-gray-200 transition-all duration-300 ${
-            sidebarCollapsed ? "w-0" : "w-80"
-          } overflow-hidden`}
-        >
-          <div className="p-4 border-b">
-            <div className="flex items-center justify-between">
-              <h3 className="font-semibold">Contenido del curso</h3>
+    <div className="flex flex-col md:flex-row min-h-screen bg-background">
+      {/* Course Content Sidebar */}
+      <div
+        className={`${
+          sidebarCollapsed ? "w-0 md:w-16" : "w-full md:w-80"
+        } bg-card border-r transition-all duration-300 overflow-hidden`}
+      >
+        {course && (
+          <div className="p-4">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold truncate">{course.title}</h2>
               <Button
                 variant="ghost"
-                size="sm"
+                size="icon"
                 onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
               >
-                <ChevronRight className="h-4 w-4" />
+                {sidebarCollapsed ? <ChevronRight /> : <ChevronLeft />}
               </Button>
             </div>
-            <div className="mt-2 text-sm text-muted-foreground">
-              {course.modules.reduce((acc, m) => acc + m.lessons.length, 0)}{" "}
-              lecciones •{" "}
-              {course.modules.reduce((acc, m) => acc + parseInt(m.duration), 0)}{" "}
-              min
-            </div>
-          </div>
 
-          <div className="overflow-y-auto h-full pb-20">
-            {course.modules.map((module, moduleIndex) => (
-              <div key={module.id} className="border-b border-gray-100">
+            {/* Course Progress */}
+            <div className="mb-4">
+              <div className="flex justify-between mb-2">
+                <span className="text-sm text-muted-foreground">
+                  Progreso del curso
+                </span>
+                <span className="text-sm font-medium">{getProgress()}%</span>
+              </div>
+              <Progress value={getProgress()} className="h-2" />
+            </div>
+
+            {/* Course Stats */}
+            <div className="grid grid-cols-2 gap-2 mb-4">
+              <Card>
+                <CardContent className="p-3">
+                  <div className="flex items-center gap-2">
+                    <Clock className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm">{course.duration}h</span>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-3">
+                  <div className="flex items-center gap-2">
+                    <BookOpen className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm">
+                      {course.totalLessons} lecciones
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Course Modules */}
+            <ScrollArea className="h-[calc(100vh-300px)]">
+              {course.modules.map((module) => (
                 <Collapsible
+                  key={module.id}
                   open={expandedModules.includes(module.id)}
                   onOpenChange={() => toggleModuleExpanded(module.id)}
                 >
-                  <CollapsibleTrigger asChild>
-                    <div
-                      className={`flex items-center justify-between p-4 hover:bg-gray-50 cursor-pointer ${
-                        module.locked ? "opacity-50" : ""
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div
-                          className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium ${
-                            module.completed
-                              ? "bg-green-100 text-green-800"
-                              : module.locked
-                                ? "bg-gray-100 text-gray-400"
-                                : "bg-blue-100 text-blue-800"
-                          }`}
-                        >
+                  <div
+                    className={`p-3 mb-2 rounded-lg ${
+                      module.completed
+                        ? "bg-primary/10"
+                        : module.isLocked
+                          ? "bg-muted/50"
+                          : "bg-card"
+                    }`}
+                  >
+                    <CollapsibleTrigger className="w-full">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
                           {module.completed ? (
-                            <CheckCircle2 className="h-3 w-3" />
-                          ) : module.locked ? (
-                            <Lock className="h-3 w-3" />
+                            <CheckCircle2 className="h-4 w-4 text-primary" />
+                          ) : module.isLocked ? (
+                            <Lock className="h-4 w-4 text-muted-foreground" />
                           ) : (
-                            moduleIndex + 1
+                            <FileText className="h-4 w-4 text-muted-foreground" />
                           )}
-                        </div>
-                        <div className="flex-1">
-                          <div className="font-medium text-sm">
+                          <span className="text-sm font-medium">
                             {module.title}
-                          </div>
-                          <div className="text-xs text-muted-foreground">
-                            {module.duration}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="text-xs text-muted-foreground">
-                          {module.lessons.filter((l) => l.completed).length}/
-                          {module.lessons.length}
+                          </span>
                         </div>
                         {expandedModules.includes(module.id) ? (
                           <ChevronUp className="h-4 w-4" />
@@ -687,115 +525,129 @@ export default function CourseLeanPage() {
                           <ChevronDown className="h-4 w-4" />
                         )}
                       </div>
-                    </div>
-                  </CollapsibleTrigger>
+                    </CollapsibleTrigger>
+                  </div>
 
                   <CollapsibleContent>
-                    <div className="bg-gray-50">
-                      {module.lessons.map((lesson, lessonIndex) => (
-                        <div
+                    <div className="pl-4">
+                      {module.lessons.map((lesson) => (
+                        <button
                           key={lesson.id}
-                          className={`flex items-center gap-3 p-3 pl-6 cursor-pointer hover:bg-white transition-colors ${
-                            lesson.id === currentLessonId
-                              ? "bg-blue-50 border-r-2 border-blue-600"
-                              : ""
-                          } ${lesson.locked ? "opacity-50 cursor-not-allowed" : ""}`}
                           onClick={() => selectLesson(module.id, lesson.id)}
+                          className={`w-full text-left p-2 rounded-lg mb-1 flex items-center gap-2 ${
+                            currentLessonId === lesson.id
+                              ? "bg-primary text-primary-foreground"
+                              : lesson.completed
+                                ? "bg-primary/10"
+                                : "hover:bg-accent"
+                          }`}
+                          disabled={module.isLocked}
                         >
-                          <div
-                            className={`w-5 h-5 rounded-full flex items-center justify-center ${
-                              lesson.completed
-                                ? "bg-green-600"
-                                : lesson.locked
-                                  ? "bg-gray-300"
-                                  : lesson.id === currentLessonId
-                                    ? "bg-blue-600"
-                                    : "border-2 border-gray-300"
-                            }`}
-                          >
-                            {lesson.completed ? (
-                              <CheckCircle2 className="h-3 w-3 text-white" />
-                            ) : lesson.type === "quiz" ? (
-                              <FileText className="h-3 w-3 text-white" />
-                            ) : (
-                              <Play className="h-2 w-2 text-white" />
-                            )}
-                          </div>
-
-                          <div className="flex-1 min-w-0">
-                            <div className="text-sm font-medium truncate">
-                              {lesson.title}
-                            </div>
-                            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                              <Clock className="h-3 w-3" />
-                              {lesson.duration}
-                              {lesson.type === "quiz" && (
-                                <Badge
-                                  variant="outline"
-                                  className="text-xs py-0"
-                                >
-                                  Quiz
-                                </Badge>
-                              )}
-                            </div>
-                          </div>
-                        </div>
+                          {lesson.completed ? (
+                            <CheckCircle2 className="h-4 w-4" />
+                          ) : lesson.type === LessonType.VIDEO ? (
+                            <Play className="h-4 w-4" />
+                          ) : (
+                            <FileText className="h-4 w-4" />
+                          )}
+                          <span className="text-sm truncate">
+                            {lesson.title}
+                          </span>
+                          {lesson.isPreview && (
+                            <Badge variant="secondary" className="ml-auto">
+                              Preview
+                            </Badge>
+                          )}
+                        </button>
                       ))}
                     </div>
                   </CollapsibleContent>
                 </Collapsible>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Collapsed Sidebar Toggle */}
-        {sidebarCollapsed && (
-          <div className="fixed right-0 top-1/2 -translate-y-1/2 z-10">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setSidebarCollapsed(false)}
-              className="rounded-l-lg rounded-r-none border-r-0 bg-white shadow-lg"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
+              ))}
+            </ScrollArea>
           </div>
         )}
       </div>
 
-      {/* Certificate Modal */}
-      {showCertificate && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <Card className="max-w-md mx-4">
-            <CardHeader className="text-center">
-              <Award className="h-16 w-16 text-yellow-500 mx-auto mb-4" />
-              <CardTitle>¡Felicitaciones!</CardTitle>
-            </CardHeader>
-            <CardContent className="text-center space-y-4">
-              <p>
-                Has completado exitosamente el curso{" "}
-                <strong>{course.title}</strong>
+      {/* Main Content Area */}
+      <div className="flex-1 p-4">
+        {course && currentLesson && (
+          <>
+            <div className="mb-4">
+              <h1 className="text-2xl font-bold mb-2">{currentLesson.title}</h1>
+              <p className="text-muted-foreground">
+                {currentLesson.description}
               </p>
-              <p className="text-sm text-muted-foreground">
-                Tu certificado está listo para descargar
-              </p>
-              <div className="flex gap-2">
-                <Button className="flex-1">
-                  <Download className="h-4 w-4 mr-2" />
-                  Descargar certificado
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => setShowCertificate(false)}
-                >
-                  Cerrar
-                </Button>
+            </div>
+
+            {/* Lesson Content */}
+            {currentLesson.type === LessonType.VIDEO &&
+              currentLesson.content.video && (
+                <LessonPlayer
+                  lesson={currentLesson}
+                  onComplete={() => handleLessonComplete(currentLesson.id)}
+                />
+              )}
+
+            {currentLesson.type === LessonType.QUIZ && currentLesson.quiz && (
+              <QuizComponent
+                quiz={currentLesson.quiz}
+                onComplete={() => handleLessonComplete(currentLesson.id)}
+              />
+            )}
+
+            {/* Navigation Buttons */}
+            <div className="flex justify-between mt-4">
+              <Button
+                variant="outline"
+                onClick={goToPreviousLesson}
+                disabled={!hasPreviousLesson()}
+              >
+                <ChevronLeft className="mr-2 h-4 w-4" />
+                Anterior
+              </Button>
+              <Button onClick={goToNextLesson} disabled={!hasNextLesson()}>
+                Siguiente
+                <ChevronRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
+
+            {/* Lesson Notes */}
+            <LessonNotes lessonId={currentLesson.id} />
+          </>
+        )}
+
+        {/* Course Completion Certificate */}
+        {course?.certificate?.url && (
+          <Dialog open={showCertificate} onOpenChange={setShowCertificate}>
+            <DialogContent className="sm:max-w-[600px]">
+              <DialogHeader>
+                <DialogTitle>¡Felicitaciones!</DialogTitle>
+              </DialogHeader>
+              <div className="flex flex-col items-center gap-4 py-8">
+                <Award className="h-16 w-16 text-primary" />
+                <p className="text-center">
+                  Has completado exitosamente el curso{" "}
+                  <strong>{course.title}</strong>. Puedes descargar tu
+                  certificado haciendo clic en el botón de abajo.
+                </p>
+                {course.certificate && (
+                  <Button
+                    onClick={() => {
+                      if (course.certificate?.url) {
+                        window.open(course.certificate.url, "_blank");
+                      }
+                    }}
+                  >
+                    <Download className="mr-2 h-4 w-4" />
+                    Descargar Certificado
+                  </Button>
+                )}
               </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
+            </DialogContent>
+          </Dialog>
+        )}
+      </div>
     </div>
   );
 }

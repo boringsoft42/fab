@@ -102,13 +102,15 @@ interface MunicipalProfile {
     allowMessages: boolean;
     emailNotifications: boolean;
   };
+  certificateUrl?: string;
 }
 
 export default function MunicipalProfilePage() {
   const [profile, setProfile] = useState<MunicipalProfile>({
     id: "municipality-1",
     name: "Municipio de La Paz",
-    description: "Sede de gobierno de Bolivia, centro político, administrativo y cultural del país. Comprometidos con el desarrollo sostenible y la mejora de la calidad de vida de nuestros ciudadanos.",
+    description:
+      "Sede de gobierno de Bolivia, centro político, administrativo y cultural del país. Comprometidos con el desarrollo sostenible y la mejora de la calidad de vida de nuestros ciudadanos.",
     logo: "/placeholder.svg?height=100&width=100",
     coverImage: "/placeholder.svg?height=300&width=800",
     department: "La Paz",
@@ -200,14 +202,69 @@ export default function MunicipalProfilePage() {
 
   const [isEditing, setIsEditing] = useState(false);
   const [editedProfile, setEditedProfile] = useState<MunicipalProfile>(profile);
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [coverFile, setCoverFile] = useState<File | null>(null);
+  const [mayorPhotoFile, setMayorPhotoFile] = useState<File | null>(null);
+  const [certificateFile, setCertificateFile] = useState<File | null>(null);
 
-  const handleSave = async () => {
+  const handleInputChange = (
+    event:
+      | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+      | { target: { name: string; value: string } }
+  ) => {
+    const { name, value } = event.target;
+
+    // Handle nested properties (e.g., 'mayor.name', 'socialMedia.facebook')
+    const parts = name.split(".");
+    if (parts.length > 1) {
+      setEditedProfile((prev) => {
+        const result = { ...prev };
+        let current: any = result;
+        for (let i = 0; i < parts.length - 1; i++) {
+          current = current[parts[i]] = { ...current[parts[i]] };
+        }
+        current[parts[parts.length - 1]] = value;
+        return result as MunicipalProfile;
+      });
+    } else {
+      // Handle top-level properties
+      setEditedProfile((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData();
+
+    if (logoFile) formData.append("logo", logoFile);
+    if (coverFile) formData.append("cover", coverFile);
+    if (mayorPhotoFile) formData.append("mayorPhoto", mayorPhotoFile);
+    if (certificateFile) formData.append("certificate", certificateFile);
+
+    formData.append("profile", JSON.stringify(editedProfile));
+
     try {
-      console.log("Saving municipal profile:", editedProfile);
-      setProfile(editedProfile);
+      const response = await fetch("/api/admin/settings", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save settings");
+      }
+
+      const data = await response.json();
+      setProfile(data.profile);
       setIsEditing(false);
+      setLogoFile(null);
+      setCoverFile(null);
+      setMayorPhotoFile(null);
+      setCertificateFile(null);
     } catch (error) {
-      console.error("Error saving profile:", error);
+      console.error("Error saving settings:", error);
     }
   };
 
@@ -217,17 +274,15 @@ export default function MunicipalProfilePage() {
     setLogoFile(null);
     setCoverFile(null);
     setMayorPhotoFile(null);
+    setCertificateFile(null);
   };
 
   const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       setLogoFile(file);
-      const reader = new FileReader();
-      reader.onload = () => {
-        setEditedProfile({ ...editedProfile, logo: reader.result as string });
-      };
-      reader.readAsDataURL(file);
+      const imageUrl = URL.createObjectURL(file);
+      setEditedProfile({ ...editedProfile, logo: imageUrl });
     }
   };
 
@@ -235,14 +290,8 @@ export default function MunicipalProfilePage() {
     const file = event.target.files?.[0];
     if (file) {
       setCoverFile(file);
-      const reader = new FileReader();
-      reader.onload = () => {
-        setEditedProfile({
-          ...editedProfile,
-          coverImage: reader.result as string,
-        });
-      };
-      reader.readAsDataURL(file);
+      const imageUrl = URL.createObjectURL(file);
+      setEditedProfile({ ...editedProfile, coverImage: imageUrl });
     }
   };
 
@@ -252,14 +301,49 @@ export default function MunicipalProfilePage() {
     const file = event.target.files?.[0];
     if (file) {
       setMayorPhotoFile(file);
-      const reader = new FileReader();
-      reader.onload = () => {
-        setEditedProfile({
-          ...editedProfile,
-          mayor: { ...editedProfile.mayor, photo: reader.result as string },
+      const imageUrl = URL.createObjectURL(file);
+      setEditedProfile({
+        ...editedProfile,
+        mayor: { ...editedProfile.mayor, photo: imageUrl },
+      });
+    }
+  };
+
+  const handleCertificateUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setCertificateFile(file);
+      const formData = new FormData();
+      formData.append("file", file);
+
+      try {
+        const response = await fetch("/api/certificates/upload", {
+          method: "POST",
+          body: formData,
         });
-      };
-      reader.readAsDataURL(file);
+
+        if (!response.ok) {
+          throw new Error("Error al subir certificado");
+        }
+
+        const result = await response.json();
+        console.log("Certificado subido:", result);
+
+        // Update the profile with the certificate URL
+        handleInputChange({
+          target: {
+            name: "certificateUrl",
+            value: result.url,
+          },
+        });
+
+        // Clear the local file state
+        setCertificateFile(null);
+      } catch (error) {
+        console.error("Error uploading certificate:", error);
+      }
     }
   };
 
@@ -290,901 +374,888 @@ export default function MunicipalProfilePage() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold">Perfil Municipal</h1>
-          <p className="text-muted-foreground">
-            Información oficial del municipio y administración local
-          </p>
-        </div>
-        <div className="flex gap-2">
-          {isEditing ? (
-            <>
-              <Button variant="outline" onClick={handleCancel}>
-                <X className="w-4 h-4 mr-2" />
-                Cancelar
-              </Button>
-              <Button onClick={handleSave}>
-                <Save className="w-4 h-4 mr-2" />
-                Guardar Cambios
-              </Button>
-            </>
-          ) : (
-            <Button onClick={() => setIsEditing(true)}>
-              <Edit className="w-4 h-4 mr-2" />
-              Editar Perfil
-            </Button>
-          )}
-        </div>
-      </div>
+    <div className="container mx-auto p-6">
+      <form id="municipal-profile-form" onSubmit={handleSubmit}>
+        <div className="space-y-6">
+          {/* Header */}
+          <div className="flex justify-between items-center">
+            <div>
+              <h1 className="text-3xl font-bold">Perfil Municipal</h1>
+              <p className="text-muted-foreground">
+                Información oficial del municipio y administración local
+              </p>
+            </div>
+            <div className="flex gap-2">
+              {isEditing ? (
+                <>
+                  <Button variant="outline" onClick={handleCancel}>
+                    <X className="w-4 h-4 mr-2" />
+                    Cancelar
+                  </Button>
+                  <Button type="submit" form="municipal-profile-form">
+                    <Save className="w-4 h-4 mr-2" />
+                    Guardar Cambios
+                  </Button>
+                </>
+              ) : (
+                <Button onClick={() => setIsEditing(true)}>
+                  <Edit className="w-4 h-4 mr-2" />
+                  Editar Perfil
+                </Button>
+              )}
+            </div>
+          </div>
 
-      <Tabs defaultValue="general" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="general">Información General</TabsTrigger>
-          <TabsTrigger value="demographics">Demografía</TabsTrigger>
-          <TabsTrigger value="settings">Configuración</TabsTrigger>
-          <TabsTrigger value="settings">Certificados</TabsTrigger>
-        </TabsList>
+          <Tabs defaultValue="general" className="space-y-6">
+            <TabsList className="grid w-full grid-cols-4">
+              <TabsTrigger value="general">Información General</TabsTrigger>
+              <TabsTrigger value="demographics">Demografía</TabsTrigger>
+              <TabsTrigger value="settings">Configuración</TabsTrigger>
+              <TabsTrigger value="settings">Certificados</TabsTrigger>
+            </TabsList>
 
-        <TabsContent value="general" className="space-y-6">
-          {/* Cover Image */}
-          <Card>
-            <CardContent className="p-0">
-              <div className="relative">
-                <div
-                  style={{
-                    backgroundImage: `url(${editedProfile.coverImage || "/placeholder.svg"})`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                  }}
-                  className="w-full h-48 rounded-t-lg"
-                />
-                {isEditing && (
-                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-t-lg">
-                    <Label htmlFor="cover-upload" className="cursor-pointer">
-                      <div className="flex items-center gap-2 text-white bg-black/50 px-4 py-2 rounded-lg">
-                        <Camera className="w-4 h-4" />
-                        Cambiar Imagen
-                      </div>
-                      <Input
-                        id="cover-upload"
-                        type="file"
-                        accept="image/*"
-                        onChange={handleCoverUpload}
-                        className="hidden"
-                      />
-                    </Label>
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Basic Info */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <Card className="lg:col-span-2">
-              <CardHeader>
-                <CardTitle>Información Municipal</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-start gap-4">
+            <TabsContent value="general" className="space-y-6">
+              {/* Cover Image */}
+              <Card>
+                <CardContent className="p-0">
                   <div className="relative">
-                    <Avatar className="w-20 h-20">
-                      <AvatarImage
-                        src={editedProfile.logo || "/placeholder.svg"}
-                        alt={editedProfile.name}
-                      />
-                      <AvatarFallback>
-                        <Building2 className="w-8 h-8" />
-                      </AvatarFallback>
-                    </Avatar>
-                    {isEditing && (
-                      <Label
-                        htmlFor="logo-upload"
-                        className="absolute -bottom-2 -right-2 bg-primary text-primary-foreground rounded-full p-1 cursor-pointer"
-                      >
-                        <Camera className="w-3 h-3" />
-                        <Input
-                          id="logo-upload"
-                          type="file"
-                          accept="image/*"
-                          onChange={handleLogoUpload}
-                          className="hidden"
-                        />
-                      </Label>
-                    )}
-                  </div>
-                  <div className="flex-1 space-y-2">
-                    {isEditing ? (
-                      <Input
-                        value={editedProfile.name}
-                        onChange={(e) =>
-                          setEditedProfile({
-                            ...editedProfile,
-                            name: e.target.value,
-                          })
-                        }
-                        className="text-2xl font-bold"
-                      />
-                    ) : (
-                      <h2 className="text-2xl font-bold">{profile.name}</h2>
-                    )}
-                    <div className="flex gap-2">
-                      <Badge variant="secondary">{profile.department}</Badge>
-                      <Badge variant="outline">{profile.province}</Badge>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-3">
-                  <div>
-                    <Label>Descripción</Label>
-                    {isEditing ? (
-                      <Textarea
-                        value={editedProfile.description}
-                        onChange={(e) =>
-                          setEditedProfile({
-                            ...editedProfile,
-                            description: e.target.value,
-                          })
-                        }
-                        rows={3}
-                      />
-                    ) : (
-                      <p className="text-muted-foreground mt-1">
-                        {profile.description}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label>Región</Label>
-                      {isEditing ? (
-                        <Input
-                          value={editedProfile.region}
-                          onChange={(e) =>
-                            setEditedProfile({
-                              ...editedProfile,
-                              region: e.target.value,
-                            })
-                          }
-                        />
-                      ) : (
-                        <p className="text-sm text-muted-foreground mt-1">
-                          {profile.region}
-                        </p>
-                      )}
-                    </div>
-                    <div>
-                      <Label>Año de Fundación</Label>
-                      {isEditing ? (
-                        <Input
-                          value={editedProfile.founded}
-                          onChange={(e) =>
-                            setEditedProfile({
-                              ...editedProfile,
-                              founded: e.target.value,
-                            })
-                          }
-                        />
-                      ) : (
-                        <p className="text-sm text-muted-foreground mt-1">
-                          {profile.founded}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Información de Contacto</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <Globe className="w-4 h-4 text-muted-foreground" />
-                    {isEditing ? (
-                      <Input
-                        value={editedProfile.website}
-                        onChange={(e) =>
-                          setEditedProfile({
-                            ...editedProfile,
-                            website: e.target.value,
-                          })
-                        }
-                        placeholder="https://..."
-                      />
-                    ) : (
-                      <a
-                        href={profile.website}
-                        className="text-blue-600 hover:underline text-sm"
-                      >
-                        {profile.website}
-                      </a>
-                    )}
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Mail className="w-4 h-4 text-muted-foreground" />
-                    {isEditing ? (
-                      <Input
-                        value={editedProfile.email}
-                        onChange={(e) =>
-                          setEditedProfile({
-                            ...editedProfile,
-                            email: e.target.value,
-                          })
-                        }
-                        type="email"
-                      />
-                    ) : (
-                      <span className="text-sm">{profile.email}</span>
-                    )}
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Phone className="w-4 h-4 text-muted-foreground" />
-                    {isEditing ? (
-                      <Input
-                        value={editedProfile.phone}
-                        onChange={(e) =>
-                          setEditedProfile({
-                            ...editedProfile,
-                            phone: e.target.value,
-                          })
-                        }
-                      />
-                    ) : (
-                      <span className="text-sm">{profile.phone}</span>
-                    )}
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <MapPin className="w-4 h-4 text-muted-foreground mt-0.5" />
-                    <div className="text-sm">
-                      {isEditing ? (
-                        <Input
-                          value={editedProfile.address}
-                          onChange={(e) =>
-                            setEditedProfile({
-                              ...editedProfile,
-                              address: e.target.value,
-                            })
-                          }
-                          placeholder="Dirección"
-                        />
-                      ) : (
-                        <div>{profile.address}</div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Mayor Information */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Briefcase className="w-5 h-5" />
-                Alcalde Municipal
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-start gap-4">
-                <div className="relative">
-                  <Avatar className="w-24 h-24">
-                    <AvatarImage
-                      src={editedProfile.mayor.photo || "/placeholder.svg"}
-                      alt={editedProfile.mayor.name}
+                    <div
+                      style={{
+                        backgroundImage: `url(${editedProfile?.coverImage || "/placeholder.svg"})`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                      }}
+                      className="w-full h-48 rounded-t-lg"
                     />
-                    <AvatarFallback>
-                      <Users className="w-8 h-8" />
-                    </AvatarFallback>
-                  </Avatar>
-                  {isEditing && (
-                    <Label
-                      htmlFor="mayor-photo-upload"
-                      className="absolute -bottom-2 -right-2 bg-primary text-primary-foreground rounded-full p-1 cursor-pointer"
-                    >
-                      <Camera className="w-3 h-3" />
-                      <Input
-                        id="mayor-photo-upload"
-                        type="file"
-                        accept="image/*"
-                        onChange={handleMayorPhotoUpload}
-                        className="hidden"
-                      />
-                    </Label>
-                  )}
-                </div>
-                <div className="flex-1 space-y-2">
-                  {isEditing ? (
-                    <div className="space-y-2">
-                      <Input
-                        value={editedProfile.mayor.name}
-                        onChange={(e) =>
-                          setEditedProfile({
-                            ...editedProfile,
-                            mayor: {
-                              ...editedProfile.mayor,
-                              name: e.target.value,
-                            },
-                          })
-                        }
-                        placeholder="Nombre del alcalde"
-                      />
-                      <Input
-                        value={editedProfile.mayor.party}
-                        onChange={(e) =>
-                          setEditedProfile({
-                            ...editedProfile,
-                            mayor: {
-                              ...editedProfile.mayor,
-                              party: e.target.value,
-                            },
-                          })
-                        }
-                        placeholder="Partido político"
-                      />
-                    </div>
-                  ) : (
-                    <>
-                      <h3 className="text-xl font-semibold">
-                        {profile.mayor.name}
-                      </h3>
-                      <p className="text-muted-foreground">
-                        {profile.mayor.party}
-                      </p>
-                    </>
-                  )}
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                    <div className="flex items-center gap-1">
-                      <Calendar className="w-3 h-3" />
-                      <span>
-                        Período:{" "}
-                        {new Date(profile.mayor.startDate).getFullYear()} -{" "}
-                        {new Date(profile.mayor.endDate).getFullYear()}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex gap-4 text-sm">
-                    <div className="flex items-center gap-1">
-                      <Mail className="w-3 h-3" />
-                      <span>{profile.mayor.email}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Phone className="w-3 h-3" />
-                      <span>{profile.mayor.phone}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="demographics" className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Población Total
-                </CardTitle>
-                <Users className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
-                  {profile.demographics.population.toLocaleString()}
-                </div>
-                <p className="text-xs text-muted-foreground">habitantes</p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Área Total
-                </CardTitle>
-                <MapPin className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
-                  {profile.demographics.area.toLocaleString()}
-                </div>
-                <p className="text-xs text-muted-foreground">km²</p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Densidad</CardTitle>
-                <Home className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
-                  {profile.demographics.density}
-                </div>
-                <p className="text-xs text-muted-foreground">hab/km²</p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Presupuesto
-                </CardTitle>
-                <TrendingUp className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
-                  Bs. {(profile.economy.budget / 1000000).toFixed(0)}M
-                </div>
-                <p className="text-xs text-muted-foreground">millones</p>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Distribución Poblacional</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <div className="flex justify-between text-sm mb-1">
-                    <span>Población Urbana</span>
-                    <span>{profile.demographics.urbanPopulation}%</span>
-                  </div>
-                  <Progress
-                    value={profile.demographics.urbanPopulation}
-                    className="h-2"
-                  />
-                </div>
-                <div>
-                  <div className="flex justify-between text-sm mb-1">
-                    <span>Población Rural</span>
-                    <span>{profile.demographics.ruralPopulation}%</span>
-                  </div>
-                  <Progress
-                    value={profile.demographics.ruralPopulation}
-                    className="h-2"
-                  />
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Indicadores Económicos</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <div className="flex justify-between text-sm mb-1">
-                    <span>Desempleo</span>
-                    <span>{profile.economy.unemployment}%</span>
-                  </div>
-                  <Progress
-                    value={profile.economy.unemployment}
-                    className="h-2"
-                  />
-                </div>
-                <div>
-                  <div className="flex justify-between text-sm mb-1">
-                    <span>Pobreza</span>
-                    <span>{profile.economy.poverty}%</span>
-                  </div>
-                  <Progress value={profile.economy.poverty} className="h-2" />
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Principales Actividades Económicas</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-wrap gap-2">
-                {profile.economy.mainActivities.map((activity, index) => (
-                  <Badge key={index} variant="outline">
-                    {activity}
-                  </Badge>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* <TabsContent value="services" className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Educación</CardTitle>
-                <GraduationCap className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{profile.services.education}%</div>
-                <Progress value={profile.services.education} className="h-2 mt-2" />
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Salud</CardTitle>
-                <Heart className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{profile.services.health}%</div>
-                <Progress value={profile.services.health} className="h-2 mt-2" />
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Agua Potable</CardTitle>
-                <TreePine className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{profile.services.water}%</div>
-                <Progress value={profile.services.water} className="h-2 mt-2" />
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Electricidad</CardTitle>
-                <Award className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{profile.services.electricity}%</div>
-                <Progress value={profile.services.electricity} className="h-2 mt-2" />
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Internet</CardTitle>
-                <Globe className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{profile.services.internet}%</div>
-                <Progress value={profile.services.internet} className="h-2 mt-2" />
-              </CardContent>
-            </Card>
-          </div>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Cobertura de Servicios Básicos</CardTitle>
-              <CardDescription>Porcentaje de población con acceso a servicios esenciales</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="text-sm text-muted-foreground">
-                  Los indicadores muestran el porcentaje de la población que tiene acceso a cada servicio básico. El
-                  municipio trabaja continuamente para mejorar estos índices y garantizar el bienestar de todos los
-                  ciudadanos.
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent> */}
-
-        <TabsContent value="projects" className="space-y-6">
-          <div className="grid gap-4">
-            {profile.projects.map((project, index) => (
-              <Card key={index}>
-                <CardHeader>
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <CardTitle className="text-lg">{project.name}</CardTitle>
-                      <CardDescription>{project.description}</CardDescription>
-                    </div>
-                    <Badge className={getProjectStatusColor(project.status)}>
-                      {getProjectStatusText(project.status)}
-                    </Badge>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center text-sm">
-                      <span>
-                        Presupuesto: Bs. {project.budget.toLocaleString()}
-                      </span>
-                      <span>Progreso: {project.progress}%</span>
-                    </div>
-                    <Progress value={project.progress} className="h-2" />
+                    {isEditing && (
+                      <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-t-lg">
+                        <Label
+                          htmlFor="cover-upload"
+                          className="cursor-pointer"
+                        >
+                          <div className="flex items-center gap-2 text-white bg-black/50 px-4 py-2 rounded-lg">
+                            <Camera className="w-4 h-4" />
+                            Cambiar Imagen
+                          </div>
+                          <Input
+                            id="cover-upload"
+                            type="file"
+                            accept="image/*"
+                            onChange={handleCoverUpload}
+                            className="hidden"
+                          />
+                        </Label>
+                      </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
-            ))}
-          </div>
-        </TabsContent>
 
-        <TabsContent value="settings" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Shield className="w-5 h-5" />
-                Configuración de Privacidad
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label>Perfil público</Label>
-                  <p className="text-sm text-muted-foreground">
-                    La información municipal será visible públicamente
-                  </p>
-                </div>
-                <Switch
-                  checked={editedProfile.settings.publicProfile}
-                  onCheckedChange={(checked) =>
-                    setEditedProfile({
-                      ...editedProfile,
-                      settings: {
-                        ...editedProfile.settings,
-                        publicProfile: checked,
-                      },
-                    })
-                  }
-                />
-              </div>
-              <Separator />
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label>Mostrar presupuesto</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Información presupuestaria visible al público
-                  </p>
-                </div>
-                <Switch
-                  checked={editedProfile.settings.showBudget}
-                  onCheckedChange={(checked) =>
-                    setEditedProfile({
-                      ...editedProfile,
-                      settings: {
-                        ...editedProfile.settings,
-                        showBudget: checked,
-                      },
-                    })
-                  }
-                />
-              </div>
-              <Separator />
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label>Permitir mensajes</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Los ciudadanos pueden enviar mensajes directos
-                  </p>
-                </div>
-                <Switch
-                  checked={editedProfile.settings.allowMessages}
-                  onCheckedChange={(checked) =>
-                    setEditedProfile({
-                      ...editedProfile,
-                      settings: {
-                        ...editedProfile.settings,
-                        allowMessages: checked,
-                      },
-                    })
-                  }
-                />
-              </div>
-            </CardContent>
-          </Card>
+              {/* Basic Info */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <Card className="lg:col-span-2">
+                  <CardHeader>
+                    <CardTitle>Información Municipal</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex items-start gap-4">
+                      <div className="relative">
+                        <Avatar className="w-20 h-20">
+                          <AvatarImage
+                            src={editedProfile?.logo || "/placeholder.svg"}
+                            alt={editedProfile?.name}
+                          />
+                          <AvatarFallback>
+                            <Building2 className="w-8 h-8" />
+                          </AvatarFallback>
+                        </Avatar>
+                        {isEditing && (
+                          <Label
+                            htmlFor="logo-upload"
+                            className="absolute -bottom-2 -right-2 bg-primary text-primary-foreground rounded-full p-1 cursor-pointer"
+                          >
+                            <Camera className="w-3 h-3" />
+                            <Input
+                              id="logo-upload"
+                              type="file"
+                              accept="image/*"
+                              onChange={handleLogoUpload}
+                              className="hidden"
+                            />
+                          </Label>
+                        )}
+                      </div>
+                      <div className="flex-1 space-y-2">
+                        {isEditing ? (
+                          <Input
+                            value={editedProfile?.name}
+                            onChange={(e) =>
+                              setEditedProfile({
+                                ...editedProfile,
+                                name: e.target.value,
+                              })
+                            }
+                            className="text-2xl font-bold"
+                          />
+                        ) : (
+                          <h2 className="text-2xl font-bold">{profile.name}</h2>
+                        )}
+                        <div className="flex gap-2">
+                          <Badge variant="secondary">
+                            {profile.department}
+                          </Badge>
+                          <Badge variant="outline">{profile.province}</Badge>
+                        </div>
+                      </div>
+                    </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Bell className="w-5 h-5" />
-                Notificaciones
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label>Notificaciones por email</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Recibe actualizaciones importantes por correo
-                  </p>
-                </div>
-                <Switch
-                  checked={editedProfile.settings.emailNotifications}
-                  onCheckedChange={(checked) =>
-                    setEditedProfile({
-                      ...editedProfile,
-                      settings: {
-                        ...editedProfile.settings,
-                        emailNotifications: checked,
-                      },
-                    })
-                  }
-                />
-              </div>
-            </CardContent>
-          </Card>
+                    <div className="space-y-3">
+                      <div>
+                        <Label>Descripción</Label>
+                        {isEditing ? (
+                          <Textarea
+                            value={editedProfile?.description}
+                            onChange={(e) =>
+                              setEditedProfile({
+                                ...editedProfile,
+                                description: e.target.value,
+                              })
+                            }
+                            rows={3}
+                          />
+                        ) : (
+                          <p className="text-muted-foreground mt-1">
+                            {profile.description}
+                          </p>
+                        )}
+                      </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Redes Sociales</CardTitle>
-              <CardDescription>
-                Enlaces a perfiles oficiales del municipio
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-3">
-                <div>
-                  <Label>Facebook</Label>
-                  <Input
-                    value={
-                      isEditing
-                        ? editedProfile.socialMedia.facebook
-                        : profile.socialMedia.facebook
-                    }
-                    onChange={(e) =>
-                      setEditedProfile({
-                        ...editedProfile,
-                        socialMedia: {
-                          ...editedProfile.socialMedia,
-                          facebook: e.target.value,
-                        },
-                      })
-                    }
-                    placeholder="https://facebook.com/municipio"
-                    disabled={!isEditing}
-                  />
-                </div>
-                <div>
-                  <Label>Twitter</Label>
-                  <Input
-                    value={
-                      isEditing
-                        ? editedProfile.socialMedia.twitter
-                        : profile.socialMedia.twitter
-                    }
-                    onChange={(e) =>
-                      setEditedProfile({
-                        ...editedProfile,
-                        socialMedia: {
-                          ...editedProfile.socialMedia,
-                          twitter: e.target.value,
-                        },
-                      })
-                    }
-                    placeholder="https://twitter.com/municipio"
-                    disabled={!isEditing}
-                  />
-                </div>
-                <div>
-                  <Label>Instagram</Label>
-                  <Input
-                    value={
-                      isEditing
-                        ? editedProfile.socialMedia.instagram
-                        : profile.socialMedia.instagram
-                    }
-                    onChange={(e) =>
-                      setEditedProfile({
-                        ...editedProfile,
-                        socialMedia: {
-                          ...editedProfile.socialMedia,
-                          instagram: e.target.value,
-                        },
-                      })
-                    }
-                    placeholder="https://instagram.com/municipio"
-                    disabled={!isEditing}
-                  />
-                </div>
-                <div>
-                  <Label>YouTube</Label>
-                  <Input
-                    value={
-                      isEditing
-                        ? editedProfile.socialMedia.youtube
-                        : profile.socialMedia.youtube
-                    }
-                    onChange={(e) =>
-                      setEditedProfile({
-                        ...editedProfile,
-                        socialMedia: {
-                          ...editedProfile.socialMedia,
-                          youtube: e.target.value,
-                        },
-                      })
-                    }
-                    placeholder="https://youtube.com/municipio"
-                    disabled={!isEditing}
-                  />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        <TabsContent value="certificates" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Award className="h-5 w-5" />
-                Certificado de Finalización
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="certificateFile">Subir Certificado (PDF)</Label>
-                <Input
-                  id="certificateFile"
-                  type="file"
-                  accept="application/pdf"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) setCertificateFile(file);
-                  }}
-                />
-                {certificateFile && (
-                  <p className="text-sm text-muted-foreground">
-                    Archivo seleccionado: {certificateFile.name}
-                  </p>
-                )}
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label>Región</Label>
+                          {isEditing ? (
+                            <Input
+                              value={editedProfile?.region}
+                              onChange={(e) =>
+                                setEditedProfile({
+                                  ...editedProfile,
+                                  region: e.target.value,
+                                })
+                              }
+                            />
+                          ) : (
+                            <p className="text-sm text-muted-foreground mt-1">
+                              {profile.region}
+                            </p>
+                          )}
+                        </div>
+                        <div>
+                          <Label>Año de Fundación</Label>
+                          {isEditing ? (
+                            <Input
+                              value={editedProfile?.founded}
+                              onChange={(e) =>
+                                setEditedProfile({
+                                  ...editedProfile,
+                                  founded: e.target.value,
+                                })
+                              }
+                            />
+                          ) : (
+                            <p className="text-sm text-muted-foreground mt-1">
+                              {profile.founded}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Información de Contacto</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2">
+                        <Globe className="w-4 h-4 text-muted-foreground" />
+                        {isEditing ? (
+                          <Input
+                            value={editedProfile?.website}
+                            onChange={(e) =>
+                              setEditedProfile({
+                                ...editedProfile,
+                                website: e.target.value,
+                              })
+                            }
+                            placeholder="https://..."
+                          />
+                        ) : (
+                          <a
+                            href={profile.website}
+                            className="text-blue-600 hover:underline text-sm"
+                          >
+                            {profile.website}
+                          </a>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Mail className="w-4 h-4 text-muted-foreground" />
+                        {isEditing ? (
+                          <Input
+                            value={editedProfile?.email}
+                            onChange={(e) =>
+                              setEditedProfile({
+                                ...editedProfile,
+                                email: e.target.value,
+                              })
+                            }
+                            type="email"
+                          />
+                        ) : (
+                          <span className="text-sm">{profile.email}</span>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Phone className="w-4 h-4 text-muted-foreground" />
+                        {isEditing ? (
+                          <Input
+                            value={editedProfile?.phone}
+                            onChange={(e) =>
+                              setEditedProfile({
+                                ...editedProfile,
+                                phone: e.target.value,
+                              })
+                            }
+                          />
+                        ) : (
+                          <span className="text-sm">{profile.phone}</span>
+                        )}
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <MapPin className="w-4 h-4 text-muted-foreground mt-0.5" />
+                        <div className="text-sm">
+                          {isEditing ? (
+                            <Input
+                              value={editedProfile?.address}
+                              onChange={(e) =>
+                                setEditedProfile({
+                                  ...editedProfile,
+                                  address: e.target.value,
+                                })
+                              }
+                              placeholder="Dirección"
+                            />
+                          ) : (
+                            <div>{profile.address}</div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
 
-              <div className="flex justify-end">
-                <Button
-                  disabled={!certificateFile}
-                  onClick={async () => {
-                    const formDataUpload = new FormData();
-                    formDataUpload.append("file", certificateFile!);
+              {/* Mayor Information */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Briefcase className="w-5 h-5" />
+                    Alcalde Municipal
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-start gap-4">
+                    <div className="relative">
+                      <Avatar className="w-24 h-24">
+                        <AvatarImage
+                          src={editedProfile?.mayor.photo || "/placeholder.svg"}
+                          alt={editedProfile?.mayor.name}
+                        />
+                        <AvatarFallback>
+                          <Users className="w-8 h-8" />
+                        </AvatarFallback>
+                      </Avatar>
+                      {isEditing && (
+                        <Label
+                          htmlFor="mayor-photo-upload"
+                          className="absolute -bottom-2 -right-2 bg-primary text-primary-foreground rounded-full p-1 cursor-pointer"
+                        >
+                          <Camera className="w-3 h-3" />
+                          <Input
+                            id="mayor-photo-upload"
+                            type="file"
+                            accept="image/*"
+                            onChange={handleMayorPhotoUpload}
+                            className="hidden"
+                          />
+                        </Label>
+                      )}
+                    </div>
+                    <div className="flex-1 space-y-2">
+                      {isEditing ? (
+                        <div className="space-y-2">
+                          <Input
+                            value={editedProfile?.mayor.name}
+                            onChange={(e) =>
+                              setEditedProfile({
+                                ...editedProfile,
+                                mayor: {
+                                  ...editedProfile.mayor,
+                                  name: e.target.value,
+                                },
+                              })
+                            }
+                            placeholder="Nombre del alcalde"
+                          />
+                          <Input
+                            value={editedProfile?.mayor.party}
+                            onChange={(e) =>
+                              setEditedProfile({
+                                ...editedProfile,
+                                mayor: {
+                                  ...editedProfile.mayor,
+                                  party: e.target.value,
+                                },
+                              })
+                            }
+                            placeholder="Partido político"
+                          />
+                        </div>
+                      ) : (
+                        <>
+                          <h3 className="text-xl font-semibold">
+                            {profile.mayor.name}
+                          </h3>
+                          <p className="text-muted-foreground">
+                            {profile.mayor.party}
+                          </p>
+                        </>
+                      )}
+                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                        <div className="flex items-center gap-1">
+                          <Calendar className="w-3 h-3" />
+                          <span>
+                            Período:{" "}
+                            {new Date(profile.mayor.startDate).getFullYear()} -{" "}
+                            {new Date(profile.mayor.endDate).getFullYear()}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex gap-4 text-sm">
+                        <div className="flex items-center gap-1">
+                          <Mail className="w-3 h-3" />
+                          <span>{profile.mayor.email}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Phone className="w-3 h-3" />
+                          <span>{profile.mayor.phone}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
 
-                    try {
-                      const res = await fetch("/api/certificates/upload", {
-                        method: "POST",
-                        body: formDataUpload,
-                      });
+            <TabsContent value="demographics" className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">
+                      Población Total
+                    </CardTitle>
+                    <Users className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">
+                      {profile.demographics.population.toLocaleString()}
+                    </div>
+                    <p className="text-xs text-muted-foreground">habitantes</p>
+                  </CardContent>
+                </Card>
 
-                      if (!res.ok)
-                        throw new Error("Error al subir certificado");
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">
+                      Área Total
+                    </CardTitle>
+                    <MapPin className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">
+                      {profile.demographics.area.toLocaleString()}
+                    </div>
+                    <p className="text-xs text-muted-foreground">km²</p>
+                  </CardContent>
+                </Card>
 
-                      const result = await res.json();
-                      console.log("Certificado subido:", result);
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">
+                      Densidad
+                    </CardTitle>
+                    <Home className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">
+                      {profile.demographics.density}
+                    </div>
+                    <p className="text-xs text-muted-foreground">hab/km²</p>
+                  </CardContent>
+                </Card>
 
-                      // Guarda la URL en el estado del curso (si tienes un campo para eso)
-                      handleInputChange("certificateUrl", result.url);
-
-                      // Limpia el estado local si deseas
-                      setCertificateFile(null);
-                    } catch (err) {
-                      console.error("Error al subir:", err);
-                    }
-                  }}
-                >
-                  Subir Certificado
-                </Button>
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">
+                      Presupuesto
+                    </CardTitle>
+                    <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">
+                      Bs. {(profile.economy.budget / 1000000).toFixed(0)}M
+                    </div>
+                    <p className="text-xs text-muted-foreground">millones</p>
+                  </CardContent>
+                </Card>
               </div>
 
-              {formData.certificateUrl && (
-                <div className="text-sm text-green-700">
-                  Certificado cargado:{" "}
-                  <a
-                    href={formData.certificateUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="underline"
-                  >
-                    Ver certificado
-                  </a>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Distribución Poblacional</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <div className="flex justify-between text-sm mb-1">
+                        <span>Población Urbana</span>
+                        <span>{profile.demographics.urbanPopulation}%</span>
+                      </div>
+                      <Progress
+                        value={profile.demographics.urbanPopulation}
+                        className="h-2"
+                      />
+                    </div>
+                    <div>
+                      <div className="flex justify-between text-sm mb-1">
+                        <span>Población Rural</span>
+                        <span>{profile.demographics.ruralPopulation}%</span>
+                      </div>
+                      <Progress
+                        value={profile.demographics.ruralPopulation}
+                        className="h-2"
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Indicadores Económicos</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <div className="flex justify-between text-sm mb-1">
+                        <span>Desempleo</span>
+                        <span>{profile.economy.unemployment}%</span>
+                      </div>
+                      <Progress
+                        value={profile.economy.unemployment}
+                        className="h-2"
+                      />
+                    </div>
+                    <div>
+                      <div className="flex justify-between text-sm mb-1">
+                        <span>Pobreza</span>
+                        <span>{profile.economy.poverty}%</span>
+                      </div>
+                      <Progress
+                        value={profile.economy.poverty}
+                        className="h-2"
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Principales Actividades Económicas</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-2">
+                    {profile.economy.mainActivities.map((activity, index) => (
+                      <Badge key={index} variant="outline">
+                        {activity}
+                      </Badge>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* <TabsContent value="services" className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Educación</CardTitle>
+                    <GraduationCap className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">{profile.services.education}%</div>
+                    <Progress value={profile.services.education} className="h-2 mt-2" />
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Salud</CardTitle>
+                    <Heart className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">{profile.services.health}%</div>
+                    <Progress value={profile.services.health} className="h-2 mt-2" />
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Agua Potable</CardTitle>
+                    <TreePine className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">{profile.services.water}%</div>
+                    <Progress value={profile.services.water} className="h-2 mt-2" />
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Electricidad</CardTitle>
+                    <Award className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">{profile.services.electricity}%</div>
+                    <Progress value={profile.services.electricity} className="h-2 mt-2" />
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Internet</CardTitle>
+                    <Globe className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">{profile.services.internet}%</div>
+                    <Progress value={profile.services.internet} className="h-2 mt-2" />
+                  </CardContent>
+                </Card>
+              </div>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Cobertura de Servicios Básicos</CardTitle>
+                  <CardDescription>Porcentaje de población con acceso a servicios esenciales</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="text-sm text-muted-foreground">
+                      Los indicadores muestran el porcentaje de la población que tiene acceso a cada servicio básico. El
+                      municipio trabaja continuamente para mejorar estos índices y garantizar el bienestar de todos los
+                      ciudadanos.
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent> */}
+
+            <TabsContent value="projects" className="space-y-6">
+              <div className="grid gap-4">
+                {profile.projects.map((project, index) => (
+                  <Card key={index}>
+                    <CardHeader>
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <CardTitle className="text-lg">
+                            {project.name}
+                          </CardTitle>
+                          <CardDescription>
+                            {project.description}
+                          </CardDescription>
+                        </div>
+                        <Badge
+                          className={getProjectStatusColor(project.status)}
+                        >
+                          {getProjectStatusText(project.status)}
+                        </Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center text-sm">
+                          <span>
+                            Presupuesto: Bs. {project.budget.toLocaleString()}
+                          </span>
+                          <span>Progreso: {project.progress}%</span>
+                        </div>
+                        <Progress value={project.progress} className="h-2" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="settings" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Shield className="w-5 h-5" />
+                    Configuración de Privacidad
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Label>Perfil público</Label>
+                      <p className="text-sm text-muted-foreground">
+                        La información municipal será visible públicamente
+                      </p>
+                    </div>
+                    <Switch
+                      checked={editedProfile?.settings.publicProfile}
+                      onCheckedChange={(checked) =>
+                        setEditedProfile({
+                          ...editedProfile,
+                          settings: {
+                            ...editedProfile.settings,
+                            publicProfile: checked,
+                          },
+                        })
+                      }
+                    />
+                  </div>
+                  <Separator />
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Label>Mostrar presupuesto</Label>
+                      <p className="text-sm text-muted-foreground">
+                        Información presupuestaria visible al público
+                      </p>
+                    </div>
+                    <Switch
+                      checked={editedProfile?.settings.showBudget}
+                      onCheckedChange={(checked) =>
+                        setEditedProfile({
+                          ...editedProfile,
+                          settings: {
+                            ...editedProfile.settings,
+                            showBudget: checked,
+                          },
+                        })
+                      }
+                    />
+                  </div>
+                  <Separator />
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Label>Permitir mensajes</Label>
+                      <p className="text-sm text-muted-foreground">
+                        Los ciudadanos pueden enviar mensajes directos
+                      </p>
+                    </div>
+                    <Switch
+                      checked={editedProfile?.settings.allowMessages}
+                      onCheckedChange={(checked) =>
+                        setEditedProfile({
+                          ...editedProfile,
+                          settings: {
+                            ...editedProfile.settings,
+                            allowMessages: checked,
+                          },
+                        })
+                      }
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Bell className="w-5 h-5" />
+                    Notificaciones
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Label>Notificaciones por email</Label>
+                      <p className="text-sm text-muted-foreground">
+                        Recibe actualizaciones importantes por correo
+                      </p>
+                    </div>
+                    <Switch
+                      checked={editedProfile?.settings.emailNotifications}
+                      onCheckedChange={(checked) =>
+                        setEditedProfile({
+                          ...editedProfile,
+                          settings: {
+                            ...editedProfile.settings,
+                            emailNotifications: checked,
+                          },
+                        })
+                      }
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Redes Sociales</CardTitle>
+                  <CardDescription>
+                    Enlaces a perfiles oficiales del municipio
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-3">
+                    <div>
+                      <Label>Facebook</Label>
+                      <Input
+                        value={
+                          isEditing
+                            ? editedProfile?.socialMedia.facebook
+                            : profile.socialMedia.facebook
+                        }
+                        onChange={(e) =>
+                          setEditedProfile({
+                            ...editedProfile,
+                            socialMedia: {
+                              ...editedProfile.socialMedia,
+                              facebook: e.target.value,
+                            },
+                          })
+                        }
+                        placeholder="https://facebook.com/municipio"
+                        disabled={!isEditing}
+                      />
+                    </div>
+                    <div>
+                      <Label>Twitter</Label>
+                      <Input
+                        value={
+                          isEditing
+                            ? editedProfile?.socialMedia.twitter
+                            : profile.socialMedia.twitter
+                        }
+                        onChange={(e) =>
+                          setEditedProfile({
+                            ...editedProfile,
+                            socialMedia: {
+                              ...editedProfile.socialMedia,
+                              twitter: e.target.value,
+                            },
+                          })
+                        }
+                        placeholder="https://twitter.com/municipio"
+                        disabled={!isEditing}
+                      />
+                    </div>
+                    <div>
+                      <Label>Instagram</Label>
+                      <Input
+                        value={
+                          isEditing
+                            ? editedProfile?.socialMedia.instagram
+                            : profile.socialMedia.instagram
+                        }
+                        onChange={(e) =>
+                          setEditedProfile({
+                            ...editedProfile,
+                            socialMedia: {
+                              ...editedProfile.socialMedia,
+                              instagram: e.target.value,
+                            },
+                          })
+                        }
+                        placeholder="https://instagram.com/municipio"
+                        disabled={!isEditing}
+                      />
+                    </div>
+                    <div>
+                      <Label>YouTube</Label>
+                      <Input
+                        value={
+                          isEditing
+                            ? editedProfile?.socialMedia.youtube
+                            : profile.socialMedia.youtube
+                        }
+                        onChange={(e) =>
+                          setEditedProfile({
+                            ...editedProfile,
+                            socialMedia: {
+                              ...editedProfile.socialMedia,
+                              youtube: e.target.value,
+                            },
+                          })
+                        }
+                        placeholder="https://youtube.com/municipio"
+                        disabled={!isEditing}
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            <TabsContent value="certificates" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Award className="h-5 w-5" />
+                    Certificado de Finalización
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="certificateFile">
+                      Subir Certificado (PDF)
+                    </Label>
+                    <Input
+                      id="certificateFile"
+                      type="file"
+                      accept="application/pdf"
+                      onChange={handleCertificateUpload}
+                      disabled={!isEditing}
+                    />
+                    {certificateFile && (
+                      <p className="text-sm text-muted-foreground">
+                        Archivo seleccionado: {certificateFile.name}
+                      </p>
+                    )}
+                  </div>
+
+                  {editedProfile?.certificateUrl && (
+                    <div className="text-sm text-green-700">
+                      Certificado cargado:{" "}
+                      <a
+                        href={editedProfile.certificateUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline"
+                      >
+                        Ver certificado
+                      </a>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </form>
     </div>
   );
 }

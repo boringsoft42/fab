@@ -25,13 +25,10 @@ const mockEnrollments: Enrollment[] = [
   },
 ];
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function POST(req: NextRequest) {
   try {
-    const courseId = params.id;
-    const { userId } = await request.json();
+    const courseId = req.nextUrl.pathname.split("/")[3];
+    const { userId } = await req.json();
 
     if (!userId) {
       return NextResponse.json(
@@ -89,14 +86,10 @@ export async function POST(
   }
 }
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(req: NextRequest) {
   try {
-    const courseId = params.id;
-    const { searchParams } = new URL(request.url);
-    const userId = searchParams.get("userId");
+    const courseId = req.nextUrl.pathname.split("/")[3];
+    const userId = req.nextUrl.searchParams.get("userId");
 
     if (!userId) {
       return NextResponse.json(

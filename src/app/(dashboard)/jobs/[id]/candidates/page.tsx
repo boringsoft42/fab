@@ -58,6 +58,8 @@ interface ApplicationStats {
 
 export default function CandidatesPage() {
   const { toast } = useToast();
+  const params = useParams();
+  const router = useRouter();
 
   const jobId = params.id as string;
 

@@ -34,6 +34,8 @@ export default function JobDetailPage() {
   const [showApplicationModal, setShowApplicationModal] = useState(false);
   const [similarJobs, setSimilarJobs] = useState<JobOffer[]>([]);
 
+  const params = useParams();
+  const router = useRouter();
   const jobId = params.id as string;
 
   useEffect(() => {
@@ -489,7 +491,13 @@ export default function JobDetailPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <LocationMap location={job.location} />
+              <div className="text-center py-8">
+                <MapPin className="h-12 w-12 mx-auto text-gray-400 mb-3" />
+                <p className="text-lg font-medium">{job.location}</p>
+                <p className="text-sm text-gray-600 mt-1">
+                  Ubicación del trabajo
+                </p>
+              </div>
             </CardContent>
           </Card>
         </div>

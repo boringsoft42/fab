@@ -20,6 +20,7 @@ const mockJobs: JobOffer[] = [
       name: "TechCorp Bolivia",
       logo: "/logos/techcorp.svg",
       description: "Empresa líder en desarrollo de software",
+      website: "https://techcorp.bo",
       sector: "Tecnología",
       size: "51-200 empleados",
       location: "Cochabamba, Bolivia",
@@ -51,6 +52,7 @@ const mockJobs: JobOffer[] = [
     applicationCount: 15,
     viewCount: 124,
     featured: true,
+    expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
     id: "job-2",
@@ -62,6 +64,7 @@ const mockJobs: JobOffer[] = [
       name: "Mindful Co.",
       logo: "/logos/mindfulco.svg",
       description: "Agencia de marketing digital",
+      website: "https://mindfulco.bo",
       sector: "Marketing",
       size: "11-50 empleados",
       location: "Cochabamba, Bolivia",
@@ -92,6 +95,7 @@ const mockJobs: JobOffer[] = [
     publishedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
     applicationCount: 8,
     viewCount: 89,
+    expiresAt: new Date(Date.now() + 25 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
     id: "job-3",
@@ -103,6 +107,7 @@ const mockJobs: JobOffer[] = [
       name: "Zenith Health",
       logo: "/logos/zenithhealth.svg",
       description: "Clínica de salud integral",
+      website: "https://zenithhealth.bo",
       sector: "Salud",
       size: "101-500 empleados",
       location: "Cochabamba, Bolivia",
@@ -137,6 +142,7 @@ const mockJobs: JobOffer[] = [
     publishedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
     applicationCount: 23,
     viewCount: 156,
+    expiresAt: new Date(Date.now() + 29 * 24 * 60 * 60 * 1000).toISOString(),
   },
 ];
 

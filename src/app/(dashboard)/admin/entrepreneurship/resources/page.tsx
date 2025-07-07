@@ -111,22 +111,34 @@ export default function AdminResourcesPage() {
   const [showCreateDialog, setShowCreateDialog] = useState(false);
 
   // Form state for creating/editing resources
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    title: string;
+    description: string;
+    type: "template" | "guide" | "video" | "podcast" | "tool";
+    category: string;
+    thumbnail: string;
+    fileUrl: string;
+    fileSize: string;
+    tags: string;
+    featured: boolean;
+    status: "published" | "draft" | "archived";
+  }>({
     title: "",
     description: "",
-    type: "template" as const,
-    category: "",
+    type: "template",
+    category: "Business Planning",
     thumbnail: "",
     fileUrl: "",
     fileSize: "",
     tags: "",
     featured: false,
-    status: "draft" as const,
+    status: "draft",
   });
 
   const fetchResources = useCallback(async () => {
     try {
       setLoading(true);
+      const params = new URLSearchParams();
       if (searchQuery) params.append("search", searchQuery);
       if (selectedType !== "all") params.append("type", selectedType);
       if (selectedCategory !== "all")
@@ -169,7 +181,7 @@ export default function AdminResourcesPage() {
           title: "",
           description: "",
           type: "template",
-          category: "",
+          category: "Business Planning",
           thumbnail: "",
           fileUrl: "",
           fileSize: "",

@@ -1,14 +1,13 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function GET(req: NextRequest) {
   try {
+    const newsId = req.nextUrl.pathname.split("/")[3];
+
     // For demo purposes, return mock data
     // In production, this would fetch from your database
     const mockNews = {
-      id: params.id,
+      id: newsId,
       title: "Nuevas oportunidades de empleo en el sector tecnológico",
       summary:
         "Importantes empresas tecnológicas abren sus puertas a jóvenes talentos",
@@ -69,6 +68,9 @@ export async function GET(
     return NextResponse.json(mockNews);
   } catch (error) {
     console.error("Error fetching news:", error);
-    return new NextResponse("Internal Server Error", { status: 500 });
+    return NextResponse.json(
+      { error: "Error interno del servidor" },
+      { status: 500 }
+    );
   }
 }

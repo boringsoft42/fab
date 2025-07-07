@@ -55,18 +55,3 @@ export interface SidebarItem {
     }[];
   }[];
 }
-
-export interface SidebarData {
-  [key: string]: {
-    title: string;
-    items: {
-      title: string;
-      icon?: LucideIcon;
-      url: string;
-      items?: {
-        title: string;
-        url: string;
-      }[];
-    }[];
-  }[];
-}

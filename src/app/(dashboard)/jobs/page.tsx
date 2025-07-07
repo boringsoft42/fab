@@ -26,6 +26,7 @@ export default function JobsPage() {
   const fetchJobs = async (searchFilters: JobFilters) => {
     setLoading(true);
     try {
+      const params = new URLSearchParams();
       if (searchFilters.query) params.append("query", searchFilters.query);
       if (searchFilters.location) {
         searchFilters.location.forEach((loc) => params.append("location", loc));

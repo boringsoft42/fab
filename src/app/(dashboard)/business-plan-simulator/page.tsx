@@ -74,6 +74,12 @@ interface FinancialData {
 
 export default function BusinessPlanSimulatorPage() {
   const [currentStep, setCurrentStep] = useState(0);
+  const [impacts, setImpacts] = useState({
+    economic: false,
+    social: false,
+    environmental: false,
+  });
+
   const [businessPlan, setBusinessPlan] = useState<BusinessPlan>({
     tripleImpactAssessment: {
       problemSolved: "",
@@ -277,19 +283,25 @@ export default function BusinessPlanSimulatorPage() {
 
   const analyzeTripleImpact = () => {
     const assessment = businessPlan.tripleImpactAssessment;
+    const newImpacts = {
+      economic: false,
+      social: false,
+      environmental: false,
+    };
+
     if (
       assessment.problemSolved.toLowerCase().includes("trabajo") ||
       assessment.problemSolved.toLowerCase().includes("empleo") ||
       assessment.communityInvolvement.toLowerCase().includes("trabajo")
     ) {
-      impacts.economic = true;
+      newImpacts.economic = true;
     }
 
     if (
       assessment.beneficiaries.length > 0 ||
       assessment.communityInvolvement.length > 0
     ) {
-      impacts.social = true;
+      newImpacts.social = true;
     }
 
     if (
@@ -297,10 +309,11 @@ export default function BusinessPlanSimulatorPage() {
       assessment.problemSolved.toLowerCase().includes("ambiente") ||
       assessment.longTermImpact.toLowerCase().includes("ambiente")
     ) {
-      impacts.environmental = true;
+      newImpacts.environmental = true;
     }
 
-    return impacts;
+    setImpacts(newImpacts);
+    return newImpacts;
   };
 
   const getImpactFeedback = () => {

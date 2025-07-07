@@ -249,7 +249,8 @@ export default function MentorshipPage() {
         {
           id: "program-1",
           title: "Acelerador de Startups Tecnológicas",
-          description: "Programa intensivo de 8 semanas para acelerar el crecimiento de startups tecnológicas. Incluye mentoría personalizada, workshops y networking.",
+          description:
+            "Programa intensivo de 8 semanas para acelerar el crecimiento de startups tecnológicas. Incluye mentoría personalizada, workshops y networking.",
           duration: "8 semanas",
           level: "intermediate",
           mentorId: "mentor-1",
@@ -275,7 +276,8 @@ export default function MentorshipPage() {
         {
           id: "program-2",
           title: "Marketing Digital para Emprendedores",
-          description: "Aprende a crear y ejecutar estrategias de marketing digital efectivas para hacer crecer tu emprendimiento.",
+          description:
+            "Aprende a crear y ejecutar estrategias de marketing digital efectivas para hacer crecer tu emprendimiento.",
           duration: "6 semanas",
           level: "beginner",
           mentorId: "mentor-2",
@@ -500,19 +502,14 @@ export default function MentorshipPage() {
                         </span>
                       </div>
                       <div>
-  <span className="text-muted-foreground">WhatsApp: </span>
-  <a
-    href={`https://wa.me/${mentor.whatsapp}`}
-    target="_blank"
-    rel="noopener noreferrer"
-    className="font-medium text-green-600 hover:underline"
-  >
-    Escribir
-  </a>
-</div>
+                        <span className="text-muted-foreground">
+                          Tiempo de respuesta:{" "}
+                        </span>
+                        <span className="font-medium">
+                          {mentor.responseTime}
+                        </span>
+                      </div>
 
-                      
-                      
                       {/* <div className="font-semibold">
                         {mentor.price.type === "free" ? (
                           <span className="text-green-600">Gratuito</span>
@@ -520,7 +517,6 @@ export default function MentorshipPage() {
                           <span>Bs. {mentor.price.amount}/hora</span>
                         )}
                       </div> */}
-                      
                     </div>
 
                     {mentor.achievements.length > 0 && (

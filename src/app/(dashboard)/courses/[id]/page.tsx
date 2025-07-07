@@ -30,6 +30,9 @@ import {
   ChevronRight,
 } from "lucide-react";
 export default function CourseDetailPage() {
+  const params = useParams();
+  const router = useRouter();
+
   const [course, setCourse] = useState<Course | null>(null);
   const [modules, setModules] = useState<Module[]>([]);
   const [loading, setLoading] = useState(true);

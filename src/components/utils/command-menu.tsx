@@ -37,21 +37,27 @@ export function CommandMenu() {
         <CommandEmpty>No results found.</CommandEmpty>
         <CommandGroup heading="Navigation">
           <ScrollArea className="h-[300px]">
-            {sidebarData.navMain.map((group) => (
+            {sidebarData.navGroups.map((group) => (
               <React.Fragment key={group.title}>
-                {group.items?.map((item) => (
-                  <CommandItem
-                    key={item.title}
-                    value={item.title}
-                    onSelect={() => {
-                      runCommand(() => router.push(item.url));
-                    }}
-                  >
-                    {item.icon && <item.icon className="mr-2 h-4 w-4" />}
-                    <span>{item.title}</span>
-                    <ArrowRight className="ml-auto h-4 w-4" />
-                  </CommandItem>
-                ))}
+                {group.items?.map((item) => {
+                  // Only render items that have a direct URL (not collapsible items)
+                  if ("url" in item && item.url) {
+                    return (
+                      <CommandItem
+                        key={item.title}
+                        value={item.title}
+                        onSelect={() => {
+                          runCommand(() => router.push(item.url));
+                        }}
+                      >
+                        {item.icon && <item.icon className="mr-2 h-4 w-4" />}
+                        <span>{item.title}</span>
+                        <ArrowRight className="ml-auto h-4 w-4" />
+                      </CommandItem>
+                    );
+                  }
+                  return null;
+                })}
               </React.Fragment>
             ))}
           </ScrollArea>
