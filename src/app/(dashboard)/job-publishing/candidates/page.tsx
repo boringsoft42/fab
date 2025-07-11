@@ -68,6 +68,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
 import { JobApplication, ApplicationStatus } from "@/types/jobs";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useRef } from "react";
 
 interface CandidatesData {
   candidates: JobApplication[];
@@ -112,6 +113,10 @@ export default function CandidatesPage() {
     useState<ApplicationStatus>("SENT");
   const { toast } = useToast();
   const [page, setPage] = useState(1);
+  const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
+  const [rejectionMessage, setRejectionMessage] = useState("");
+  const [candidateToReject, setCandidateToReject] =
+    useState<JobApplication | null>(null);
 
   useEffect(() => {
     fetchCandidates();
@@ -208,6 +213,28 @@ export default function CandidatesPage() {
       rating: candidateRating || undefined,
       status: candidateStatus,
     });
+  };
+
+  const handleRejectClick = (candidate: JobApplication) => {
+    setCandidateToReject(candidate);
+    setRejectionMessage("");
+    setRejectDialogOpen(true);
+  };
+
+  const handleConfirmReject = () => {
+    if (!candidateToReject) return;
+    // Here you would send the rejection message to the backend if needed
+    // For now, just log it
+    console.log(
+      "Rejected candidate:",
+      candidateToReject.id,
+      "Message:",
+      rejectionMessage
+    );
+    handleStatusChange(candidateToReject, "REJECTED");
+    setRejectDialogOpen(false);
+    setCandidateToReject(null);
+    setRejectionMessage("");
   };
 
   const getStatusBadge = (status: ApplicationStatus) => {
@@ -652,9 +679,7 @@ export default function CandidatesPage() {
                           Preseleccionar
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          onClick={() =>
-                            handleStatusChange(candidate, "REJECTED")
-                          }
+                          onClick={() => handleRejectClick(candidate)}
                           disabled={candidate.status === "REJECTED"}
                         >
                           <XCircle className="mr-2 h-4 w-4" />
@@ -918,6 +943,42 @@ export default function CandidatesPage() {
               Cancelar
             </Button>
             <Button onClick={handleUpdateSubmit}>Guardar Cambios</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Optional Rejection Message Dialog */}
+      <Dialog open={rejectDialogOpen} onOpenChange={setRejectDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Rechazar Candidato</DialogTitle>
+            <DialogDescription>
+              Puedes agregar una respuesta opcional para que el joven sepa el
+              motivo del rechazo.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <Label htmlFor="rejection-message">
+              Mensaje para el candidato (opcional)
+            </Label>
+            <Textarea
+              id="rejection-message"
+              placeholder="Explica brevemente el motivo del rechazo (opcional)"
+              value={rejectionMessage}
+              onChange={(e) => setRejectionMessage(e.target.value)}
+              className="min-h-[100px]"
+            />
+          </div>
+          <div className="flex justify-end space-x-3 mt-4">
+            <Button
+              variant="outline"
+              onClick={() => setRejectDialogOpen(false)}
+            >
+              Cancelar
+            </Button>
+            <Button variant="destructive" onClick={handleConfirmReject}>
+              Confirmar Rechazo
+            </Button>
           </div>
         </DialogContent>
       </Dialog>

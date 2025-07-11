@@ -113,7 +113,7 @@ export const JobSearchFilters = ({
   const contractTypeOptions = [
     { value: "FULL_TIME" as ContractType, label: "Tiempo completo" },
     { value: "PART_TIME" as ContractType, label: "Medio tiempo" },
-    { value: "INTERNSHIP" as ContractType, label: "Prácticas" },
+    { value: "INTERNSHIP" as ContractType, label: "Prácticas-Pasantias" },
     { value: "VOLUNTEER" as ContractType, label: "Voluntariado" },
     { value: "FREELANCE" as ContractType, label: "Freelance" },
   ];
