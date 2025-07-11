@@ -45,6 +45,9 @@ interface EntrepreneurshipForm {
       instagram: string;
       linkedin: string;
     };
+    municipality: string;
+    priceMin: string;
+    priceMax: string;
   };
   services: {
     services: string[];
@@ -91,6 +94,9 @@ export default function PublishEntrepreneurshipPage() {
         instagram: "",
         linkedin: "",
       },
+      municipality: "",
+      priceMin: "",
+      priceMax: "",
     },
     services: {
       services: [],
@@ -215,6 +221,19 @@ export default function PublishEntrepreneurshipPage() {
     "Pando",
   ];
 
+  const municipalitiesByCity: Record<string, string[]> = {
+    "La Paz": ["Viacha", "El Alto", "Achocalla"],
+    Cochabamba: ["Sacaba", "Quillacollo"],
+    "Santa Cruz": ["Warnes", "Montero"],
+    Oruro: ["Challapata"],
+    Potosí: ["Uyuni"],
+    Sucre: ["Yotala"],
+    Tarija: ["Bermejo"],
+    Beni: ["Trinidad"],
+    Pando: ["Cobija"],
+  };
+  const [selectedMunicipality, setSelectedMunicipality] = useState("");
+
   const updateFormData = (
     section: keyof EntrepreneurshipForm,
     field: string,
@@ -323,6 +342,9 @@ export default function PublishEntrepreneurshipPage() {
             instagram: "",
             linkedin: "",
           },
+          municipality: "",
+          priceMin: "",
+          priceMax: "",
         },
         services: {
           services: [],
@@ -403,8 +425,8 @@ export default function PublishEntrepreneurshipPage() {
                 <div>
                   <h4 className="font-semibold mb-2">Rango de Precios</h4>
                   <p>
-                    Bs. {formData.services.priceRange.min} - Bs.{" "}
-                    {formData.services.priceRange.max}
+                    Bs. {formData.basicInfo.priceMin} - Bs.{" "}
+                    {formData.basicInfo.priceMax}
                   </p>
                 </div>
 
@@ -584,9 +606,10 @@ export default function PublishEntrepreneurshipPage() {
                     <Label>Ubicación *</Label>
                     <Select
                       value={formData.basicInfo.location}
-                      onValueChange={(value) =>
-                        updateFormData("basicInfo", "location", value)
-                      }
+                      onValueChange={(value) => {
+                        updateFormData("basicInfo", "location", value);
+                        setSelectedMunicipality("");
+                      }}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Selecciona tu ubicación" />
@@ -600,15 +623,53 @@ export default function PublishEntrepreneurshipPage() {
                       </SelectContent>
                     </Select>
                   </div>
-
                   <div className="space-y-2">
-                    <Label>Sitio Web</Label>
+                    <Label>Municipio</Label>
+                    <Select
+                      value={selectedMunicipality}
+                      onValueChange={(value) => {
+                        setSelectedMunicipality(value);
+                        updateFormData("basicInfo", "municipality", value);
+                      }}
+                      disabled={!formData.basicInfo.location}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecciona un municipio" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {(
+                          municipalitiesByCity[formData.basicInfo.location] ||
+                          []
+                        ).map((muni) => (
+                          <SelectItem key={muni} value={muni}>
+                            {muni}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Precio Mínimo (Bs.)</Label>
                     <Input
-                      value={formData.basicInfo.website}
+                      type="number"
+                      value={formData.basicInfo.priceMin || ""}
                       onChange={(e) =>
-                        updateFormData("basicInfo", "website", e.target.value)
+                        updateFormData("basicInfo", "priceMin", e.target.value)
                       }
-                      placeholder="https://mi-emprendimiento.com"
+                      placeholder="Ej: 100"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Precio Máximo (Bs.)</Label>
+                    <Input
+                      type="number"
+                      value={formData.basicInfo.priceMax || ""}
+                      onChange={(e) =>
+                        updateFormData("basicInfo", "priceMax", e.target.value)
+                      }
+                      placeholder="Ej: 1000"
                     />
                   </div>
                 </div>

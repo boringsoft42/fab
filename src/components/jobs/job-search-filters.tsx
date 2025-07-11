@@ -163,6 +163,44 @@ export const JobSearchFilters = ({
     { value: 90, label: "Últimos 3 meses" },
   ];
 
+  const cityMunicipalityMap: Record<string, string[]> = {
+    "La Paz": ["Viacha", "El Alto", "Achocalla"],
+    Cochabamba: ["Sacaba", "Quillacollo"],
+    "Santa Cruz": ["Warnes", "Montero"],
+    // Add more as needed
+  };
+
+  const [selectedCity, setSelectedCity] = useState<string>("");
+  const [selectedMunicipality, setSelectedMunicipality] = useState<string>("");
+
+  // When city changes, reset municipality
+  const handleCityChange = (city: string, checked: boolean) => {
+    setSelectedCity(checked ? city : "");
+    setSelectedMunicipality("");
+    if (checked) {
+      // Remove all other cities from filters.location, add this one
+      onFiltersChange({
+        ...filters,
+        location: [city],
+      });
+    } else {
+      onFiltersChange({
+        ...filters,
+        location: [],
+      });
+    }
+  };
+
+  const handleMunicipalityChange = (municipality: string) => {
+    setSelectedMunicipality(municipality);
+    if (selectedCity && municipality) {
+      onFiltersChange({
+        ...filters,
+        location: [municipality + ", " + selectedCity],
+      });
+    }
+  };
+
   const FilterSection = ({
     title,
     isExpanded,
@@ -229,21 +267,39 @@ export const JobSearchFilters = ({
         onToggle={() => toggleSection("location")}
       >
         <div className="space-y-2">
-          {locationOptions.map((location) => (
-            <div key={location} className="flex items-center space-x-2">
+          {locationOptions.map((city) => (
+            <div key={city} className="flex items-center space-x-2">
               <Checkbox
-                id={`location-${location}`}
-                checked={filters.location?.includes(location) || false}
+                id={`location-${city}`}
+                checked={selectedCity === city}
                 onCheckedChange={(checked) =>
-                  handleLocationChange(location, checked as boolean)
+                  handleCityChange(city, checked as boolean)
                 }
               />
-              <Label htmlFor={`location-${location}`} className="text-sm">
-                {location}
+              <Label htmlFor={`location-${city}`} className="text-sm">
+                {city}
               </Label>
             </div>
           ))}
         </div>
+        {/* Municipality dropdown if city selected and has municipalities */}
+        {selectedCity && cityMunicipalityMap[selectedCity] && (
+          <div className="mt-4">
+            <Label className="text-sm mb-1 block">Municipio</Label>
+            <select
+              className="w-full border rounded px-2 py-1 text-sm"
+              value={selectedMunicipality}
+              onChange={(e) => handleMunicipalityChange(e.target.value)}
+            >
+              <option value="">Seleccionar municipio</option>
+              {cityMunicipalityMap[selectedCity].map((muni) => (
+                <option key={muni} value={muni}>
+                  {muni}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
       </FilterSection>
 
       {/* Contract Type */}
