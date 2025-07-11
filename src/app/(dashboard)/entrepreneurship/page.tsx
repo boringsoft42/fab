@@ -81,7 +81,8 @@ export default function EntrepreneurshipPage() {
         {
           id: "resource-1",
           title: "Plantilla de Plan de Negocios",
-          description: "Plantilla completa en Word para crear tu plan de negocios paso a paso",
+          description:
+            "Plantilla completa en Word para crear tu plan de negocios paso a paso",
           type: "template",
           thumbnail: "/api/placeholder/300/200",
           category: "Planificación",
@@ -91,7 +92,8 @@ export default function EntrepreneurshipPage() {
         {
           id: "resource-2",
           title: "Cómo Validar tu Idea de Negocio",
-          description: "Guía práctica para validar tu idea antes de invertir tiempo y dinero",
+          description:
+            "Guía práctica para validar tu idea antes de invertir tiempo y dinero",
           type: "guide",
           thumbnail: "/api/placeholder/300/200",
           category: "Validación",
@@ -101,7 +103,8 @@ export default function EntrepreneurshipPage() {
         {
           id: "resource-3",
           title: "Finanzas para Emprendedores",
-          description: "Video curso sobre gestión financiera básica para startups",
+          description:
+            "Video curso sobre gestión financiera básica para startups",
           type: "video",
           thumbnail: "/api/placeholder/300/200",
           category: "Finanzas",
@@ -114,7 +117,8 @@ export default function EntrepreneurshipPage() {
         {
           id: "program-1",
           name: "Aceleradora Municipal 2024",
-          description: "Programa de aceleración para startups locales con mentoría y financiamiento",
+          description:
+            "Programa de aceleración para startups locales con mentoría y financiamiento",
           organizer: "Alcaldía de Cochabamba",
           type: "accelerator",
           duration: "6 meses",
@@ -124,7 +128,8 @@ export default function EntrepreneurshipPage() {
         {
           id: "program-2",
           name: "Fondo Jóvenes Emprendedores",
-          description: "Grants de hasta $5000 USD para jóvenes emprendedores bolivianos",
+          description:
+            "Grants de hasta $5000 USD para jóvenes emprendedores bolivianos",
           organizer: "Fundación Pro-Joven",
           type: "grant",
           duration: "12 meses",
@@ -138,7 +143,8 @@ export default function EntrepreneurshipPage() {
           id: "story-1",
           entrepreneur: "María Gonzáles",
           businessName: "EcoTech Bolivia",
-          description: "Startup de tecnología verde que desarrolla soluciones sostenibles para el agro",
+          description:
+            "Startup de tecnología verde que desarrolla soluciones sostenibles para el agro",
           industry: "AgTech",
           location: "Santa Cruz",
           image: "/api/placeholder/300/300",
@@ -149,7 +155,8 @@ export default function EntrepreneurshipPage() {
           id: "story-2",
           entrepreneur: "Carlos Mamani",
           businessName: "Artesanías Digitales",
-          description: "Plataforma que conecta artesanos locales con mercados internacionales",
+          description:
+            "Plataforma que conecta artesanos locales con mercados internacionales",
           industry: "E-commerce",
           location: "La Paz",
           image: "/api/placeholder/300/300",
