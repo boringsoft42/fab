@@ -29,6 +29,8 @@ export default function PostDetailPage() {
   const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // TODO: Integrar hook real para post (usePost) cuando esté disponible
+  // Reemplazar fetchPost y mockPost por datos reales de la API
   const fetchPost = useCallback(async () => {
     try {
       setLoading(true);

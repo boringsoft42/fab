@@ -5,11 +5,28 @@ const nextConfig = {
       // Add your Supabase project domain
       "swfgvfhpmicwptupjyko.supabase.co",
       "xqakfzhkeiongvzgbhji.supabase.co",
+      "example.com",
+      "img.youtube.com",
+      "placehold.co",
+      "localhost",
     ],
     remotePatterns: [
       {
         protocol: "https",
         hostname: "images.unsplash.com",
+      },
+      {
+        protocol: "https",
+        hostname: "example.com",
+      },
+      {
+        protocol: "https",
+        hostname: "img.youtube.com",
+      },
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "3001",
       },
     ],
   },
@@ -49,7 +66,7 @@ const nextConfig = {
           {
             key: "Content-Security-Policy",
             value:
-              "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://*.supabase.co; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.stripe.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*.supabase.co https://* blob:; font-src 'self' data:; frame-src 'self' https://js.stripe.com; object-src 'none'",
+              "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://*.supabase.co; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.stripe.com http://localhost:3001 http://localhost:3000; style-src 'self' 'unsafe-inline' https://unpkg.com; img-src 'self' data: https://*.supabase.co https://* http://localhost:3001 blob:; font-src 'self' data:; frame-src 'self' https://js.stripe.com; object-src 'none'",
           },
         ],
       },

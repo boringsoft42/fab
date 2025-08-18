@@ -1,0 +1,40 @@
+import { NextRequest, NextResponse } from 'next/server';
+
+const BACKEND_BASE_URL = process.env.BACKEND_BASE_URL || 'http://localhost:3001';
+
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { applicationId: string; messageId: string } }
+) {
+  try {
+    const token = request.headers.get('authorization');
+    
+    if (!token) {
+      return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
+    }
+
+    const response = await fetch(
+      `${BACKEND_BASE_URL}/api/jobapplication-messages/${params.applicationId}/messages/${params.messageId}/read`,
+      {
+        method: 'PUT',
+        headers: {
+          'Authorization': token,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Backend responded with ${response.status}`);
+    }
+
+    const data = await response.json();
+    return NextResponse.json(data);
+  } catch (error) {
+    console.error('Error marking message as read:', error);
+    return NextResponse.json(
+      { error: 'Error al marcar mensaje como leído' },
+      { status: 500 }
+    );
+  }
+}

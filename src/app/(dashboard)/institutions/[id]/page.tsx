@@ -49,7 +49,8 @@ interface Institution {
   posts: InstitutionPost[];
 }
 
-// Mock data - replace with actual API call
+// TODO: Integrar hook real para institución (useInstitution) cuando esté disponible
+// Reemplazar mockInstitution por datos reales de la API
 const mockInstitution: Institution = {
   id: "1",
   name: "TechCorp Academy",

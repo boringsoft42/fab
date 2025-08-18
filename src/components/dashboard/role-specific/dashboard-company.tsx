@@ -55,9 +55,9 @@ function SimulatedJobCard() {
 
   return (
     <>
-      <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg">
+      <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
         <div className="flex items-center gap-4">
-          <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+          <div className="w-10 h-10 bg-gray-500 rounded-lg flex items-center justify-center">
             <Briefcase className="w-5 h-5 text-white" />
           </div>
           <div>
@@ -102,15 +102,15 @@ export function DashboardCompany() {
   return (
     <div className="space-y-8 px-10 py-4">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg p-6 text-white">
+      <div className="bg-gray-100 rounded-lg p-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold mb-2">Panel de Empresa</h1>
-            <p className="text-blue-100">
+            <h1 className="text-3xl font-bold mb-2 text-gray-900">Panel de Empresa</h1>
+            <p className="text-gray-600">
               Publica ofertas de empleo y gestiona tus procesos de selección
             </p>
           </div>
-          <Building className="w-16 h-16 text-blue-200 hidden md:block" />
+          <Building className="w-16 h-16 text-gray-400 hidden md:block" />
         </div>
       </div>
 
@@ -119,7 +119,7 @@ export function DashboardCompany() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center space-x-2">
-              <Briefcase className="w-5 h-5 text-blue-500" />
+              <Briefcase className="w-5 h-5 text-gray-500" />
               <div>
                 <p className="text-sm font-medium">Ofertas Activas</p>
                 <p className="text-2xl font-bold">8</p>
@@ -131,7 +131,7 @@ export function DashboardCompany() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center space-x-2">
-              <Users className="w-5 h-5 text-green-500" />
+              <Users className="w-5 h-5 text-gray-500" />
               <div>
                 <p className="text-sm font-medium">Candidatos Totales</p>
                 <p className="text-2xl font-bold">124</p>
@@ -143,7 +143,7 @@ export function DashboardCompany() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center space-x-2">
-              <UserCheck className="w-5 h-5 text-purple-500" />
+              <UserCheck className="w-5 h-5 text-gray-500" />
               <div>
                 <p className="text-sm font-medium">En Proceso</p>
                 <p className="text-2xl font-bold">15</p>
@@ -167,7 +167,7 @@ export function DashboardCompany() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center space-x-2">
-              <Users className="w-5 h-5 text-orange-500" />
+              <Users className="w-5 h-5 text-gray-500" />
               <div>
                 <p className="text-sm font-medium">Candidatos por Oferta</p>
                 <p className="text-2xl font-bold">15.5</p>
@@ -179,7 +179,7 @@ export function DashboardCompany() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center space-x-2">
-              <UserCheck className="w-5 h-5 text-teal-600" />
+              <UserCheck className="w-5 h-5 text-gray-500" />
               <div>
                 <p className="text-sm font-medium">Tasa de Conversión</p>
                 <p className="text-2xl font-bold">12%</p>
@@ -192,7 +192,7 @@ export function DashboardCompany() {
       {/* Crear Nueva Oferta */}
       <Card className="border-dashed">
         <CardContent className="p-6 text-center">
-          <Briefcase className="w-8 h-8 text-blue-500 mx-auto mb-4" />
+          <Briefcase className="w-8 h-8 text-gray-500 mx-auto mb-4" />
           <h3 className="text-lg font-medium mb-2">Publicar Nueva Oferta</h3>
           <p className="text-gray-600 mb-4">
             Crea una nueva publicación para atraer talento ideal

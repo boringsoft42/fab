@@ -67,6 +67,8 @@ interface DirectoryProfile {
   address?: string;
 }
 
+// TODO: Integrar hooks reales para perfil y posts (useProfile, usePosts) cuando estén disponibles
+// Reemplazar fetchProfileData, mockProfile y mockPosts por datos reales de la API
 const mockPosts: Post[] = [
   {
     id: "post-1",

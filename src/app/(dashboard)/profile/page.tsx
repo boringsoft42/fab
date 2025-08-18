@@ -35,18 +35,61 @@ import { CoverLetterTemplate } from "@/components/profile/templates/cover-letter
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { useCurrentProfile } from "@/hooks/useProfileApi";
+import { Profile } from "@/types/profile";
 
-interface ProfileData {
-  name: string;
-  email: string;
-  phone: string;
-  location: string;
-  avatar: string;
-  education: string;
-  interests: string[];
-  skills: string[];
-  achievements: Achievement[];
+interface Achievement {
+  id: string;
+  title: string;
+  description: string;
+  date: string;
 }
+
+// Mock data for demonstration
+const mockProfile: Profile = {
+  id: "1",
+  userId: "1",
+  firstName: "Juan Carlos",
+  lastName: "Pérez",
+  email: "juan.perez@email.com",
+  phone: "+591 700 123 456",
+  address: "Av. Principal 123",
+  municipality: "La Paz",
+  department: "La Paz",
+  country: "Bolivia",
+  educationLevel: "SECONDARY",
+  currentInstitution: "Colegio Nacional",
+  skills: ["JavaScript", "React", "HTML", "CSS", "Excel"],
+  interests: ["Programación", "Diseño web", "Tecnología", "Música"],
+  active: true,
+  status: "ACTIVE",
+  role: "YOUTH",
+  profileCompletion: 85,
+  parentalConsent: false,
+  createdAt: new Date(),
+  updatedAt: new Date(),
+};
+
+const mockAchievements: Achievement[] = [
+  {
+    id: "1",
+    title: "Primer lugar en Hackathon 2023",
+    description: "Gané el primer lugar en el hackathon de desarrollo web organizado por la universidad",
+    date: "2023"
+  },
+  {
+    id: "2", 
+    title: "Certificación en JavaScript",
+    description: "Completé exitosamente el curso avanzado de JavaScript",
+    date: "2023"
+  },
+  {
+    id: "3",
+    title: "Proyecto de voluntariado",
+    description: "Participé en un proyecto de enseñanza de programación a niños",
+    date: "2022"
+  }
+];
 
 interface Achievement {
   id: string;
@@ -67,57 +110,63 @@ export default function ProfilePage() {
     date: "",
   });
 
-  const [profile, setProfile] = useState<ProfileData>({
-    name: "Ana Martínez",
-    email: "ana.martinez@email.com",
-    phone: "+591 77777777",
-    location: "La Paz, Bolivia",
-    avatar: "/api/placeholder/100/100",
-    education: "Bachiller - Colegio La Salle",
-    interests: ["Tecnología", "Marketing Digital", "Diseño"],
-    skills: ["Microsoft Office", "Redes Sociales", "Fotografía"],
-    achievements: [
-      {
-        id: "1",
-        title: "Primer lugar en Feria de Ciencias 2023",
-        description: "Proyecto de innovación tecnológica para el cuidado del medio ambiente",
-        date: "2023",
-      },
-      {
-        id: "2",
-        title: "Líder del Club de Emprendimiento",
-        description: "Liderazgo de equipo y organización de eventos de emprendimiento",
-        date: "2022-2023",
-      },
-    ],
-  });
+  const { data: profile, loading, error } = useCurrentProfile();
+  const [localProfile, setLocalProfile] = useState<Profile>(mockProfile);
+  const [localAchievements, setLocalAchievements] = useState<Achievement[]>(mockAchievements);
+
+  // Use profile data if available, otherwise use mock data
+  const currentProfile = profile || localProfile;
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="container mx-auto py-6">
+        <div className="animate-pulse space-y-6">
+          <div className="h-32 bg-gray-200 rounded-lg"></div>
+          <div className="h-64 bg-gray-200 rounded-lg"></div>
+          <div className="h-48 bg-gray-200 rounded-lg"></div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="container mx-auto py-6">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold text-red-600">Error al cargar el perfil</h2>
+          <p className="text-gray-600 mt-2">No se pudo cargar la información del perfil</p>
+        </div>
+      </div>
+    );
+  }
 
   const handleAddInterest = () => {
     if (newInterest.trim()) {
-      setProfile({
-        ...profile,
-        interests: [...profile.interests, newInterest.trim()],
+      const updatedInterests = [...(currentProfile.interests || []), newInterest.trim()];
+      setLocalProfile({
+        ...currentProfile,
+        interests: updatedInterests,
       });
       setNewInterest("");
     }
   };
 
   const handleRemoveInterest = (interest: string) => {
-    setProfile({
-      ...profile,
-      interests: profile.interests.filter((i) => i !== interest),
+    const updatedInterests = (currentProfile.interests || []).filter((i: string) => i !== interest);
+    setLocalProfile({
+      ...currentProfile,
+      interests: updatedInterests,
     });
   };
 
   const handleAddAchievement = () => {
     if (newAchievement.title && newAchievement.description) {
-      setProfile({
-        ...profile,
-        achievements: [
-          ...profile.achievements,
-          { ...newAchievement, id: Date.now().toString() },
-        ],
-      });
+      setLocalAchievements([
+        ...localAchievements,
+        { ...newAchievement, id: Date.now().toString() },
+      ]);
       setNewAchievement({ id: "", title: "", description: "", date: "" });
     }
   };
@@ -129,13 +178,13 @@ export default function ProfilePage() {
           <div className="flex justify-between items-start mb-6">
             <div className="flex items-center gap-4">
               <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center text-2xl font-semibold">
-                {profile.name
+                {`${currentProfile.firstName || ''} ${currentProfile.lastName || ''}`
                   .split(" ")
-                  .map((n) => n[0])
+                  .map((n: string) => n[0])
                   .join("")}
               </div>
               <div>
-                <h1 className="text-2xl font-bold">{profile.name}</h1>
+                <h1 className="text-2xl font-bold">{`${currentProfile.firstName || ''} ${currentProfile.lastName || ''}`}</h1>
                 <p className="text-muted-foreground">Perfil Joven</p>
               </div>
             </div>
@@ -151,52 +200,52 @@ export default function ProfilePage() {
                 <Mail className="h-4 w-4 text-muted-foreground" />
                 {isEditing ? (
                   <Input
-                    value={profile.email}
+                    value={currentProfile.email || ''}
                     onChange={(e) =>
-                      setProfile({ ...profile, email: e.target.value })
+                      setLocalProfile({ ...currentProfile, email: e.target.value })
                     }
                   />
                 ) : (
-                  <span>{profile.email}</span>
+                  <span>{currentProfile.email || 'No especificado'}</span>
                 )}
               </div>
               <div className="flex items-center gap-2">
                 <Phone className="h-4 w-4 text-muted-foreground" />
                 {isEditing ? (
                   <Input
-                    value={profile.phone}
+                    value={currentProfile.phone || ''}
                     onChange={(e) =>
-                      setProfile({ ...profile, phone: e.target.value })
+                      setLocalProfile({ ...currentProfile, phone: e.target.value })
                     }
                   />
                 ) : (
-                  <span>{profile.phone}</span>
+                  <span>{currentProfile.phone || 'No especificado'}</span>
                 )}
               </div>
               <div className="flex items-center gap-2">
                 <MapPin className="h-4 w-4 text-muted-foreground" />
                 {isEditing ? (
                   <Input
-                    value={profile.location}
+                    value={`${currentProfile.address || ''}, ${currentProfile.municipality || ''}`}
                     onChange={(e) =>
-                      setProfile({ ...profile, location: e.target.value })
+                      setLocalProfile({ ...currentProfile, address: e.target.value })
                     }
                   />
                 ) : (
-                  <span>{profile.location}</span>
+                  <span>{`${currentProfile.address || 'No especificado'}, ${currentProfile.municipality || ''}`}</span>
                 )}
               </div>
               <div className="flex items-center gap-2">
                 <School className="h-4 w-4 text-muted-foreground" />
                 {isEditing ? (
                   <Input
-                    value={profile.education}
+                    value={currentProfile.currentInstitution || ''}
                     onChange={(e) =>
-                      setProfile({ ...profile, education: e.target.value })
+                      setLocalProfile({ ...currentProfile, currentInstitution: e.target.value })
                     }
                   />
                 ) : (
-                  <span>{profile.education}</span>
+                  <span>{currentProfile.currentInstitution || 'No especificado'}</span>
                 )}
               </div>
             </div>
@@ -204,8 +253,8 @@ export default function ProfilePage() {
             <div className="space-y-6">
               <div>
                 <h3 className="text-lg font-semibold mb-2">Intereses</h3>
-                <div className="flex flex-wrap gap-2">
-                  {profile.interests.map((interest) => (
+                                <div className="flex flex-wrap gap-2">
+                  {(currentProfile.interests || []).map((interest: string) => (
                     <Badge
                       key={interest}
                       variant="secondary"
@@ -311,7 +360,7 @@ export default function ProfilePage() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {profile.achievements.map((achievement) => (
+            {localAchievements.map((achievement: Achievement) => (
               <div
                 key={achievement.id}
                 className="border rounded-lg p-4 hover:bg-accent/5 transition-colors"

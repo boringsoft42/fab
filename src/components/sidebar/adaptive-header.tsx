@@ -1,199 +1,99 @@
 "use client";
 
-import React from "react";
-import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Separator } from "@/components/ui/separator";
-import { useCurrentUser } from "@/hooks/use-current-user";
-import { Search } from "./search";
-import { ThemeSwitch } from "./theme-switch";
-import { ProfileDropdown } from "./profile-dropdown";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { User, Users, Building2, BookOpen, Target, Shield } from "lucide-react";
-
-type UserRole =
-  | "YOUTH"
-  | "ADOLESCENTS"
-  | "COMPANIES"
-  | "MUNICIPAL_GOVERNMENTS"
-  | "TRAINING_CENTERS"
-  | "NGOS_AND_FOUNDATIONS"
-  | "SUPERADMIN";
+import { Separator } from "@/components/ui/separator";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { useAuthContext } from "@/hooks/use-auth";
+import { useUserColors } from "@/hooks/use-user-colors";
+import { ProfileDropdown } from "./profile-dropdown";
 
 interface AdaptiveHeaderProps {
-  className?: string;
-  fixed?: boolean;
-  children?: React.ReactNode;
+  title: string;
+  breadcrumbs?: string[];
+  userRole?: string;
+  showSearch?: boolean;
+  showThemeSwitch?: boolean;
+  showProfileDropdown?: boolean;
 }
 
 export function AdaptiveHeader({
-  className,
-  fixed,
-  children,
-  ...props
+  title,
+  breadcrumbs = [],
+  userRole,
+  showSearch = true,
+  showThemeSwitch = true,
+  showProfileDropdown = true,
 }: AdaptiveHeaderProps) {
-  const [offset, setOffset] = React.useState(0);
-  const pathname = usePathname();
-  const { profile, isLoading } = useCurrentUser();
-
-  React.useEffect(() => {
-    const onScroll = () => {
-      setOffset(document.body.scrollTop || document.documentElement.scrollTop);
-    };
-
-    document.addEventListener("scroll", onScroll, { passive: true });
-    return () => document.removeEventListener("scroll", onScroll);
-  }, []);
-
-  // Get role-specific breadcrumb formatting
-  const getRoleBreadcrumb = (pathname: string, role?: UserRole | null) => {
-    const segments = pathname.split("/").filter(Boolean);
-
-    if (segments.length === 0 || segments[0] === "dashboard") {
-      switch (role) {
-        case "YOUTH":
-          return "Dashboard Personal";
-        case "ADOLESCENTS":
-          return "Dashboard Estudiantil";
-        case "COMPANIES":
-          return "Dashboard Empresarial";
-        case "MUNICIPAL_GOVERNMENTS":
-          return "Dashboard Administrativo";
-        case "TRAINING_CENTERS":
-          return "Dashboard Educativo";
-        case "NGOS_AND_FOUNDATIONS":
-          return "Dashboard Social";
-        default:
-          return "Dashboard";
-      }
-    }
-
-    // Format other pages based on role context
-    const formattedSegments = segments.map((segment) => {
-      switch (segment) {
-        case "jobs":
-          return role === "COMPANIES" ? "Mis Empleos" : "Empleos";
-        case "my-applications":
-          return "Mis Postulaciones";
-        case "training":
-          return role === "COMPANIES" ? "Capacitación" : "Mis Cursos";
-        case "entrepreneurship":
-          return "Emprendimiento";
-        case "reports":
-          return role === "COMPANIES" ? "Reportes Empresariales" : "Reportes";
-        case "profile":
-          return role === "COMPANIES" ? "Perfil Empresarial" : "Mi Perfil";
-        case "candidates":
-          return "Candidatos";
-        case "admin":
-          return "Administración";
-        default:
-          return segment.charAt(0).toUpperCase() + segment.slice(1);
-      }
-    });
-
-    return formattedSegments.join(" / ");
-  };
-
-  // Get role-specific icon and label
-  const getRoleInfo = (role?: UserRole | null) => {
-    switch (role) {
-      case "YOUTH":
-        return {
-          icon: User,
-          label: "Joven",
-          color: "bg-blue-100 text-blue-800",
-        };
-      case "ADOLESCENTS":
-        return {
-          icon: Users,
-          label: "Adolescente",
-          color: "bg-purple-100 text-purple-800",
-        };
-      case "COMPANIES":
-        return {
-          icon: Building2,
-          label: "Empresa",
-          color: "bg-green-100 text-green-800",
-        };
-      case "MUNICIPAL_GOVERNMENTS":
-        return {
-          icon: Shield,
-          label: "Gobierno",
-          color: "bg-red-100 text-red-800",
-        };
-      case "TRAINING_CENTERS":
-        return {
-          icon: BookOpen,
-          label: "Centro",
-          color: "bg-orange-100 text-orange-800",
-        };
-      case "NGOS_AND_FOUNDATIONS":
-        return {
-          icon: Target,
-          label: "ONG",
-          color: "bg-teal-100 text-teal-800",
-        };
-      default:
-        return {
-          icon: User,
-          label: "Usuario",
-          color: "bg-gray-100 text-gray-800",
-        };
-    }
-  };
-
-  // Check if search should be shown for this role
-  const shouldShowSearch = (role?: UserRole | null) => {
-    return ["YOUTH", "ADOLESCENTS", "COMPANIES"].includes(role || "");
-  };
-
-  const formattedPath = getRoleBreadcrumb(pathname, profile?.role as UserRole);
-  const roleInfo = getRoleInfo(profile?.role as UserRole);
-  const showSearch = shouldShowSearch(profile?.role as UserRole);
+  const { user } = useAuthContext();
+  
+  // Usar el hook para aplicar las variables CSS automáticamente
+  useUserColors();
 
   return (
-    <header
-      className={cn(
-        "flex h-16 items-center gap-3 bg-background p-4 sm:gap-4 border-b",
-        fixed && "header-fixed peer/header fixed z-50 w-[inherit] rounded-md",
-        offset > 10 && fixed ? "shadow-md" : "shadow-none",
-        className
-      )}
-      {...props}
-    >
-      <SidebarTrigger variant="outline" className="scale-125 sm:scale-100" />
-      <Separator orientation="vertical" className="h-6" />
-
-      {/* Role-specific breadcrumb */}
-      <div className="flex items-center gap-2 flex-1">
-        <span className="text-sm font-medium text-muted-foreground">
-          {formattedPath}
-        </span>
-
-        {/* Role badge */}
-        {!isLoading && profile && (
-          <Badge className={cn("ml-2 text-xs", roleInfo.color)}>
-            {React.createElement(roleInfo.icon, { className: "w-3 h-3 mr-1" })}
-            {roleInfo.label}
+    <header className="flex h-16 shrink-0 items-center gap-2 border-b bg-background px-4">
+      <SidebarTrigger className="-ml-1" />
+      <Separator orientation="vertical" className="mr-2 h-4" />
+      
+      <div className="flex items-center gap-2 text-sm">
+        {breadcrumbs.map((crumb, index) => (
+          <span key={index} className="text-muted-foreground">
+            {crumb}
+          </span>
+        ))}
+        {breadcrumbs.length > 0 && (
+          <span className="text-muted-foreground">/</span>
+        )}
+        <span className="font-medium">{title}</span>
+      </div>
+      
+      <div className="ml-auto flex items-center gap-2">
+        {userRole && (
+          <Badge variant="secondary" className="ml-2">
+            {userRole}
           </Badge>
         )}
+        
+        {showSearch && (
+          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+            <svg
+              className="h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </Button>
+        )}
+        
+        {showThemeSwitch && (
+          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+            <svg
+              className="h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+              />
+            </svg>
+          </Button>
+        )}
+        
+        {showProfileDropdown && user && (
+          <ProfileDropdown />
+        )}
       </div>
-
-      {/* Role-specific actions */}
-      <div className="ml-auto flex items-center space-x-4">
-        {/* Show search only for roles that need it */}
-        {showSearch && <Search />}
-
-        {/* Always show theme switch */}
-        <ThemeSwitch />
-
-        {/* Always show profile dropdown */}
-        <ProfileDropdown />
-      </div>
-
-      {children}
     </header>
   );
 }

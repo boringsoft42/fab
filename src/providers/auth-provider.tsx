@@ -14,6 +14,7 @@ type AuthContextType = {
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
+  getCurrentUser: () => Promise<any>;
 };
 
 const AuthContext = createContext<AuthContextType>({
@@ -24,6 +25,7 @@ const AuthContext = createContext<AuthContextType>({
   signIn: async () => {},
   signUp: async () => {},
   signOut: async () => {},
+  getCurrentUser: async () => null,
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -109,9 +111,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     router.push("/sign-in");
   };
 
+  const getCurrentUser = async () => {
+    try {
+      const response = await fetch('/api/auth/me');
+      if (!response.ok) throw new Error('Failed to get current user');
+      const data = await response.json();
+      return data.user;
+    } catch (error) {
+      console.error('Error getting current user:', error);
+      return null;
+    }
+  };
+
   return (
     <AuthContext.Provider
-      value={{ user, session, profile, isLoading, signIn, signUp, signOut }}
+      value={{ user, session, profile, isLoading, signIn, signUp, signOut, getCurrentUser }}
     >
       {children}
     </AuthContext.Provider>

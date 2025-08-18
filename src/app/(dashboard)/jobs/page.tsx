@@ -10,11 +10,13 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { JobSearchFilters } from "@/components/jobs/job-search-filters";
 import { JobCard } from "@/components/jobs/job-card";
-import { JobOffer, JobSearchFilters as JobFilters } from "@/types/jobs";
+import { JobSearchFilters as JobFilters } from "@/types/jobs";
+import { JobOffer } from "@/types/api";
+import { useJobOfferSearch } from "@/hooks/useJobOfferApi";
 
 export default function JobsPage() {
+  const { search, loading, error } = useJobOfferSearch();
   const [jobs, setJobs] = useState<JobOffer[]>([]);
-  const [loading, setLoading] = useState(true);
   const [totalJobs, setTotalJobs] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -23,70 +25,115 @@ export default function JobsPage() {
 
   const searchParams = useSearchParams();
 
-  const fetchJobs = async (searchFilters: JobFilters) => {
-    setLoading(true);
-    try {
-      const params = new URLSearchParams();
-      if (searchFilters.query) params.append("query", searchFilters.query);
-      if (searchFilters.location) {
-        searchFilters.location.forEach((loc) => params.append("location", loc));
-      }
-      if (searchFilters.contractType) {
-        searchFilters.contractType.forEach((type) =>
-          params.append("contractType", type)
-        );
-      }
-      if (searchFilters.workModality) {
-        searchFilters.workModality.forEach((modality) =>
-          params.append("workModality", modality)
-        );
-      }
-      if (searchFilters.experienceLevel) {
-        searchFilters.experienceLevel.forEach((level) =>
-          params.append("experienceLevel", level)
-        );
-      }
-      if (searchFilters.salaryMin)
-        params.append("salaryMin", searchFilters.salaryMin.toString());
-      if (searchFilters.salaryMax)
-        params.append("salaryMax", searchFilters.salaryMax.toString());
-      if (searchFilters.publishedInDays)
-        params.append(
-          "publishedInDays",
-          searchFilters.publishedInDays.toString()
-        );
-      if (searchFilters.sector) {
-        searchFilters.sector.forEach((sector) =>
-          params.append("sector", sector)
-        );
-      }
-
-      const response = await fetch(`/api/jobs?${params.toString()}`);
-      const data = await response.json();
-
-      setJobs(data.jobs || []);
-      setTotalJobs(data.total || 0);
-    } catch (error) {
-      console.error("Error fetching jobs:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // Initialize search query from URL params
   useEffect(() => {
-    // Initialize search query from URL params
     const query = searchParams.get("q") || "";
     setSearchQuery(query);
-    setFilters((prev) => ({ ...prev, query }));
+    // Only set filters if there's actually a query
+    if (query) {
+      setFilters((prev) => ({ ...prev, query }));
+    }
   }, [searchParams]);
 
+  // Trigger initial search when component mounts
   useEffect(() => {
-    fetchJobs(filters);
-  }, [filters]);
+    const performInitialSearch = async () => {
+      try {
+        console.log("🔍 JobsPage - Performing initial search");
+        const results = await search({});
+        console.log("🔍 JobsPage - Initial search results:", results);
+        
+        if (Array.isArray(results)) {
+          setJobs(results);
+          setTotalJobs(results.length);
+          
+          if (results.length > 0 && results[0].id === "1") {
+            console.log("🔧 JobsPage - Using mock data (API not available)");
+          }
+        }
+      } catch (error) {
+        console.error("🔍 JobsPage - Initial search error:", error);
+      }
+    };
+
+    performInitialSearch();
+  }, [search]);
+
+  // Debounced search effect - only trigger on filter changes, not on searchQuery changes
+  useEffect(() => {
+    // Don't trigger search if only searchQuery changed (without being submitted)
+    const hasRealFilters = filters.location || filters.contractType || filters.workModality || filters.experienceLevel || filters.salaryMin || filters.salaryMax;
+    const hasSubmittedQuery = filters.query;
+    
+    if (!hasRealFilters && !hasSubmittedQuery) {
+      return; // Don't search if no real filters are applied
+    }
+    
+    const timeoutId = setTimeout(() => {
+      const performSearch = async () => {
+        try {
+          console.log("🔍 JobsPage - Performing search with filters:", filters);
+          
+          const searchFilters = {
+            query: filters.query,
+            location: filters.location,
+            contractType: filters.contractType,
+            workModality: filters.workModality,
+            experienceLevel: filters.experienceLevel,
+            salaryMin: filters.salaryMin,
+            salaryMax: filters.salaryMax,
+          };
+          
+          // Remove undefined values
+          const cleanFilters = Object.fromEntries(
+            Object.entries(searchFilters).filter(([_, value]) => 
+              value !== undefined && 
+              (Array.isArray(value) ? value.length > 0 : true)
+            )
+          );
+          
+          console.log("🔍 JobsPage - Clean filters:", cleanFilters);
+          
+          const results = await search(cleanFilters);
+          console.log("🔍 JobsPage - Search results:", results);
+          
+          if (Array.isArray(results)) {
+            setJobs(results);
+            setTotalJobs(results.length);
+            
+            // Show notification if using mock data (when API is not available)
+            if (results.length > 0 && results[0].id === "1") {
+              console.log("🔧 JobsPage - Using mock data (API not available)");
+            }
+          } else {
+            setJobs([]);
+            setTotalJobs(0);
+          }
+        } catch (error) {
+          console.error("🔍 JobsPage - Search error:", error);
+          setJobs([]);
+          setTotalJobs(0);
+        }
+      };
+
+      performSearch();
+    }, 300); // Reduced delay to 300ms
+
+    return () => clearTimeout(timeoutId);
+  }, [filters, search]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    setFilters((prev) => ({ ...prev, query: searchQuery }));
+    if (searchQuery.trim()) {
+      setFilters((prev) => ({ ...prev, query: searchQuery.trim() }));
+    } else {
+      // If search query is empty, remove it from filters
+      setFilters((prev) => {
+        const newFilters = { ...prev };
+        delete newFilters.query;
+        return newFilters;
+      });
+    }
   };
 
   const handleFiltersChange = (newFilters: JobFilters) => {
@@ -94,7 +141,8 @@ export default function JobsPage() {
   };
 
   const clearFilters = () => {
-    setFilters({ query: searchQuery });
+    setFilters({});
+    setSearchQuery("");
   };
 
   return (
@@ -185,6 +233,12 @@ export default function JobsPage() {
                     Limpiar filtros
                   </Button>
                 )}
+                {/* Mock data indicator */}
+                {jobs.length > 0 && jobs[0]?.id === "1" && (
+                  <Badge variant="outline" className="text-xs text-orange-600 border-orange-300">
+                    Datos de ejemplo
+                  </Badge>
+                )}
               </div>
               <div className="flex items-center space-x-2">
                 <SortDesc className="w-4 h-4 text-gray-400" />
@@ -261,7 +315,7 @@ export default function JobsPage() {
                   </Card>
                 ))}
               </div>
-            ) : jobs.length > 0 ? (
+            ) : jobs && jobs.length > 0 ? (
               <div
                 className={
                   viewMode === "grid"
@@ -269,7 +323,7 @@ export default function JobsPage() {
                     : "space-y-4"
                 }
               >
-                {jobs.map((job) => (
+                {jobs?.map((job) => (
                   <JobCard key={job.id} job={job} viewMode={viewMode} />
                 ))}
               </div>

@@ -151,6 +151,19 @@ export interface QuizAnswer {
   timeSpent: number;
 }
 
+export interface QuizAttempt {
+  id: string;
+  enrollmentId?: string;
+  quizId: string;
+  studentId: string;
+  startedAt: Date;
+  completedAt?: Date;
+  score?: number;
+  passed?: boolean;
+  timeSpent: number; // in minutes
+  answers?: QuizAnswer[];
+}
+
 export interface CourseSection {
   id: string;
   title: string;
@@ -251,20 +264,20 @@ export interface Discussion {
 
 // Enums
 export enum CourseCategory {
-  SOFT_SKILLS = "soft_skills",
-  BASIC_COMPETENCIES = "basic_competencies",
-  JOB_PLACEMENT = "job_placement",
-  ENTREPRENEURSHIP = "entrepreneurship",
-  TECHNICAL_SKILLS = "technical_skills",
-  DIGITAL_LITERACY = "digital_literacy",
-  COMMUNICATION = "communication",
-  LEADERSHIP = "leadership",
+  SOFT_SKILLS = "SOFT_SKILLS",
+  BASIC_COMPETENCIES = "BASIC_COMPETENCIES",
+  JOB_PLACEMENT = "JOB_PLACEMENT",
+  ENTREPRENEURSHIP = "ENTREPRENEURSHIP",
+  TECHNICAL_SKILLS = "TECHNICAL_SKILLS",
+  DIGITAL_LITERACY = "DIGITAL_LITERACY",
+  COMMUNICATION = "COMMUNICATION",
+  LEADERSHIP = "LEADERSHIP",
 }
 
 export enum CourseLevel {
-  BEGINNER = "beginner",
-  INTERMEDIATE = "intermediate",
-  ADVANCED = "advanced",
+  BEGINNER = "BEGINNER",
+  INTERMEDIATE = "INTERMEDIATE",
+  ADVANCED = "ADVANCED",
 }
 
 export enum LessonType {
@@ -366,3 +379,14 @@ export const MANDATORY_COURSES = {
   ENTREPRENEURSHIP: "entrepreneurship-fundamentals",
   TECHNICAL_SKILLS: "technical-skills-digital",
 } as const;
+
+export interface LessonProgress {
+  id: string;
+  enrollmentId: string;
+  lessonId: string;
+  isCompleted: boolean;
+  completedAt?: Date;
+  timeSpent: number; // in minutes
+  enrollment?: CourseEnrollment;
+  lesson?: Lesson;
+}

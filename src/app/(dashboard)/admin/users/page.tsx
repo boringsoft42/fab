@@ -73,6 +73,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useProfiles } from "@/hooks/useProfileApi";
 
 interface Company {
   id: string;
@@ -97,8 +98,7 @@ interface Company {
 }
 
 export default function CompaniesManagementPage() {
-  const [companies, setCompanies] = useState<Company[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: companies, loading, error } = useProfiles();
   const [searchTerm, setSearchTerm] = useState("");
   const [industryFilter, setIndustryFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -139,127 +139,6 @@ export default function CompaniesManagementPage() {
 
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState("");
-
-  const fetchCompanies = useCallback(async () => {
-    try {
-      setLoading(true);
-      // Simulated data
-      const mockCompanies: Company[] = [
-        {
-          id: "1",
-          name: "Cemse Innovación",
-          description:
-            "Empresa líder en desarrollo de soluciones tecnológicas innovadoras",
-          logo: "/placeholder.svg?height=60&width=60",
-          industry: "Tecnología",
-          size: "51-200 empleados",
-          founded: "2018",
-          website: "https://cemse.com.bo",
-          email: "contacto@cemse.com.bo",
-          phone: "+591 2 2345678",
-          address: "Av. Arce 2345, Torre Empresarial",
-          city: "La Paz",
-          country: "Bolivia",
-          status: "ACTIVE",
-          employees: 127,
-          revenue: 2500000,
-          growth: 35,
-          createdAt: "2024-01-15",
-          updatedAt: "2024-01-20",
-        },
-        {
-          id: "2",
-          name: "TechSolutions Bolivia",
-          description: "Consultoría en transformación digital para empresas",
-          logo: "/placeholder.svg?height=60&width=60",
-          industry: "Tecnología",
-          size: "11-50 empleados",
-          founded: "2020",
-          website: "https://techsolutions.bo",
-          email: "info@techsolutions.bo",
-          phone: "+591 4 4567890",
-          address: "Calle Comercio 123",
-          city: "Cochabamba",
-          country: "Bolivia",
-          status: "ACTIVE",
-          employees: 45,
-          revenue: 850000,
-          growth: 28,
-          createdAt: "2024-01-10",
-          updatedAt: "2024-01-18",
-        },
-        {
-          id: "3",
-          name: "FinanceGroup SA",
-          description: "Servicios financieros y consultoría empresarial",
-          logo: "/placeholder.svg?height=60&width=60",
-          industry: "Finanzas",
-          size: "201-500 empleados",
-          founded: "2015",
-          website: "https://financegroup.bo",
-          email: "contacto@financegroup.bo",
-          phone: "+591 3 3456789",
-          address: "Av. San Martín 456",
-          city: "Santa Cruz",
-          country: "Bolivia",
-          status: "ACTIVE",
-          employees: 289,
-          revenue: 4200000,
-          growth: 15,
-          createdAt: "2024-01-05",
-          updatedAt: "2024-01-15",
-        },
-        {
-          id: "4",
-          name: "EcoVerde Ltda",
-          description: "Soluciones ambientales y energías renovables",
-          logo: "/placeholder.svg?height=60&width=60",
-          industry: "Medio Ambiente",
-          size: "11-50 empleados",
-          founded: "2021",
-          website: "https://ecoverde.bo",
-          email: "info@ecoverde.bo",
-          phone: "+591 2 2987654",
-          address: "Zona Sur, Calle 21",
-          city: "La Paz",
-          country: "Bolivia",
-          status: "PENDING",
-          employees: 23,
-          revenue: 320000,
-          growth: 45,
-          createdAt: "2024-01-01",
-          updatedAt: "2024-01-12",
-        },
-      ];
-
-      const filteredCompanies = mockCompanies.filter((company) => {
-        const matchesIndustry =
-          industryFilter === "all" || company.industry === industryFilter;
-        const matchesStatus =
-          statusFilter === "all" ||
-          company.status.toLowerCase() === statusFilter;
-        return matchesIndustry && matchesStatus;
-      });
-
-      setCompanies(filteredCompanies);
-      setStats({
-        total: mockCompanies.length,
-        active: mockCompanies.filter((c) => c.status === "ACTIVE").length,
-        inactive: mockCompanies.filter((c) => c.status === "INACTIVE").length,
-        pending: mockCompanies.filter((c) => c.status === "PENDING").length,
-        totalEmployees: mockCompanies.reduce((sum, c) => sum + c.employees, 0),
-        totalRevenue: mockCompanies.reduce((sum, c) => sum + c.revenue, 0),
-      });
-    } catch (error) {
-      console.error("Error fetching companies:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, [industryFilter, statusFilter]);
-
-  useEffect(() => {
-    fetchCompanies();
-  }, [fetchCompanies]);
 
   const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -353,7 +232,7 @@ export default function CompaniesManagementPage() {
 
       setShowCreateDialog(false); // cierra el modal de creación
       resetForm();
-      fetchCompanies();
+      // fetchCompanies(); // This line is no longer needed as data is fetched by useProfiles
       setSuccessDialogOpen(true); // abre el modal de éxito
       setTimeout(() => {
         setShowCreateDialog(true);
@@ -382,7 +261,7 @@ export default function CompaniesManagementPage() {
       setShowEditDialog(false);
       setSelectedCompany(null);
       resetForm();
-      fetchCompanies();
+      // fetchCompanies(); // This line is no longer needed
     } catch (error) {
       console.error("Error updating company:", error);
     }
@@ -393,7 +272,7 @@ export default function CompaniesManagementPage() {
       console.log("Deleting company:", selectedCompany?.id);
       setShowDeleteDialog(false);
       setSelectedCompany(null);
-      fetchCompanies();
+      // fetchCompanies(); // This line is no longer needed
     } catch (error) {
       console.error("Error deleting company:", error);
     }
@@ -425,12 +304,18 @@ export default function CompaniesManagementPage() {
     }
   };
 
-  const filteredCompanies = companies.filter(
-    (company) =>
-      company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      company.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      company.city.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredCompanies = (companies || []).filter((company) => {
+    if (!company) return false;
+    
+    const searchLower = (searchTerm || '').toLowerCase();
+    const companyName = (company.name || '').toLowerCase();
+    const companyDescription = (company.description || '').toLowerCase();
+    const companyCity = (company.city || '').toLowerCase();
+    
+    return companyName.includes(searchLower) ||
+           companyDescription.includes(searchLower) ||
+           companyCity.includes(searchLower);
+  });
 
   return (
     <div className="space-y-6">
@@ -932,14 +817,14 @@ export default function CompaniesManagementPage() {
                     Cargando empresas...
                   </TableCell>
                 </TableRow>
-              ) : filteredCompanies.length === 0 ? (
+              ) : filteredCompanies?.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={7} className="text-center py-8">
                     No se encontraron empresas
                   </TableCell>
                 </TableRow>
               ) : (
-                filteredCompanies.map((company) => (
+                filteredCompanies?.map((company) => (
                   <TableRow key={company.id}>
                     <TableCell>
                       <div className="flex items-center gap-3">

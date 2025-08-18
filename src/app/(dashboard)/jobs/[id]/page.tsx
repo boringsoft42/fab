@@ -22,10 +22,18 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { JobApplicationModal } from "@/components/jobs/job-application-modal";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import JobApplicationForm from "@/components/jobs/job-application-form";
 import { JobOffer } from "@/types/jobs";
 import { CompanyGallery } from "@/components/jobs/company-gallery";
 import { LocationMap } from "@/components/jobs/location-map";
+import { useAuthContext } from "@/hooks/use-auth";
 
 export default function JobDetailPage() {
   const [job, setJob] = useState<JobOffer | null>(null);
@@ -33,26 +41,63 @@ export default function JobDetailPage() {
   const [isSaved, setIsSaved] = useState(false);
   const [showApplicationModal, setShowApplicationModal] = useState(false);
   const [similarJobs, setSimilarJobs] = useState<JobOffer[]>([]);
+  const { user, loading: authLoading } = useAuthContext();
 
   const params = useParams();
   const router = useRouter();
   const jobId = params.id as string;
 
+  // Check if current user is the company that created this job
+  // Temporarily show owner actions for any company user for testing
+  const isJobOwner = user && job && (
+    user.id === job.companyId || 
+    (user.role === 'EMPRESAS' && user.id === job.companyId) ||
+    user.role === 'EMPRESAS' // Temporary: show for any company user
+  );
+  
+  // Debug logging
+  console.log('🔍 Debug isJobOwner:', {
+    userId: user?.id,
+    userRole: user?.role,
+    userCompany: user?.company,
+    userCompanyId: user?.company?.id,
+    jobCompanyId: job?.companyId,
+    jobCompanyName: job?.company?.name,
+    isJobOwner,
+    isAuthenticated: !!user,
+    comparison1: user?.id === job?.companyId,
+    comparison2: user?.role === 'EMPRESAS' && user?.id === job?.companyId,
+    fullUserObject: user
+  });
+
   useEffect(() => {
     const fetchJobDetail = async () => {
       try {
-        const response = await fetch(`/api/jobs/${jobId}`);
+        const token = localStorage.getItem('token');
+        const headers: Record<string, string> = {
+          'Content-Type': 'application/json',
+        };
+        
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+
+        const response = await fetch(`/api/joboffer/${jobId}`, {
+          headers,
+        });
+        
         if (response.ok) {
           const jobData = await response.json();
           setJob(jobData);
 
           // Fetch similar jobs (simplified - in real app would use better matching)
           const similarResponse = await fetch(
-            `/api/jobs?limit=3&exclude=${jobId}`
+            `/api/joboffer?limit=3&exclude=${jobId}`,
+            { headers }
           );
           if (similarResponse.ok) {
             const similarData = await similarResponse.json();
-            setSimilarJobs(similarData.jobs?.slice(0, 3) || []);
+            setSimilarJobs(Array.isArray(similarData) ? similarData.slice(0, 3) : []);
           }
         } else {
           console.error("Job not found");
@@ -137,7 +182,7 @@ export default function JobDetailPage() {
     if (navigator.share) {
       navigator.share({
         title: job?.title,
-        text: `Mira esta oportunidad laboral: ${job?.title} en ${job?.company.name}`,
+        text: `Mira esta oportunidad laboral: ${job?.title} en ${job?.company?.name || 'Empresa'}`,
         url: window.location.href,
       });
     } else {
@@ -146,7 +191,7 @@ export default function JobDetailPage() {
     }
   };
 
-  if (loading) {
+  if (loading || authLoading) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -209,11 +254,11 @@ export default function JobDetailPage() {
                 <div className="flex items-start space-x-4">
                   <Avatar className="w-16 h-16">
                     <AvatarImage
-                      src={job.company.logo}
-                      alt={job.company.name}
+                      src={job.company?.logo}
+                      alt={job.company?.name || 'Empresa'}
                     />
                     <AvatarFallback>
-                      {job.company.name.charAt(0)}
+                      {job.company?.name?.charAt(0) || 'E'}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
@@ -225,9 +270,9 @@ export default function JobDetailPage() {
                     </h1>
                     <div className="flex items-center space-x-4 text-gray-600 mb-3">
                       <span className="font-medium text-lg">
-                        {job.company.name}
+                        {job.company?.name || 'Empresa'}
                       </span>
-                      {job.company.rating && (
+                      {job.company?.rating && (
                         <div className="flex items-center space-x-1">
                           <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                           <span>{job.company.rating}</span>
@@ -246,11 +291,11 @@ export default function JobDetailPage() {
                       </div>
                       <div className="flex items-center space-x-1">
                         <Users className="w-4 h-4" />
-                        <span>{job.applicationCount} aplicaciones</span>
+                        <span>{job.applicationsCount} aplicaciones</span>
                       </div>
                       <div className="flex items-center space-x-1">
                         <Eye className="w-4 h-4" />
-                        <span>{job.viewCount} vistas</span>
+                        <span>{job.viewsCount} vistas</span>
                       </div>
                     </div>
                   </div>
@@ -290,10 +335,10 @@ export default function JobDetailPage() {
                   <Calendar className="w-4 h-4" />
                   <span>Publicado el {formatDate(job.publishedAt)}</span>
                 </div>
-                {job.closingDate && (
+                {job.applicationDeadline && (
                   <div className="flex items-center space-x-1">
                     <Calendar className="w-4 h-4" />
-                    <span>Cierra el {formatDate(job.closingDate)}</span>
+                    <span>Cierra el {formatDate(job.applicationDeadline)}</span>
                   </div>
                 )}
               </div>
@@ -307,7 +352,7 @@ export default function JobDetailPage() {
             </CardHeader>
             <CardContent>
               <div className="prose max-w-none">
-                {job.description.split("\n").map((paragraph, index) => (
+                {job.description && job.description.split("\n").map((paragraph, index) => (
                   <p key={index} className="mb-4 text-gray-700">
                     {paragraph}
                   </p>
@@ -316,40 +361,20 @@ export default function JobDetailPage() {
             </CardContent>
           </Card>
 
-          {/* Responsibilities */}
-          {job.responsibilities.length > 0 && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Responsabilidades</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-2">
-                  {job.responsibilities.map((responsibility, index) => (
-                    <li key={index} className="flex items-start space-x-2">
-                      <span className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0" />
-                      <span className="text-gray-700">{responsibility}</span>
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-            </Card>
-          )}
-
           {/* Requirements */}
-          {job.requirements.length > 0 && (
+          {job.requirements && (
             <Card>
               <CardHeader>
                 <CardTitle>Requisitos</CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="space-y-2">
-                  {job.requirements.map((requirement, index) => (
-                    <li key={index} className="flex items-start space-x-2">
-                      <span className="w-2 h-2 bg-green-600 rounded-full mt-2 flex-shrink-0" />
-                      <span className="text-gray-700">{requirement}</span>
-                    </li>
+                <div className="prose max-w-none">
+                  {job.requirements.split("\n").map((requirement, index) => (
+                    <p key={index} className="mb-4 text-gray-700">
+                      {requirement}
+                    </p>
                   ))}
-                </ul>
+                </div>
               </CardContent>
             </Card>
           )}
@@ -366,7 +391,7 @@ export default function JobDetailPage() {
                     Habilidades esenciales
                   </h4>
                   <div className="flex flex-wrap gap-2">
-                    {job.requiredSkills.map((skill) => (
+                    {job.skillsRequired && job.skillsRequired.map((skill) => (
                       <Badge key={skill} variant="default">
                         {skill}
                       </Badge>
@@ -392,20 +417,19 @@ export default function JobDetailPage() {
           </Card>
 
           {/* Benefits */}
-          {job.benefits.length > 0 && (
+          {job.benefits && (
             <Card>
               <CardHeader>
                 <CardTitle>Beneficios</CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="space-y-2">
-                  {job.benefits.map((benefit, index) => (
-                    <li key={index} className="flex items-start space-x-2">
-                      <span className="w-2 h-2 bg-purple-600 rounded-full mt-2 flex-shrink-0" />
-                      <span className="text-gray-700">{benefit}</span>
-                    </li>
+                <div className="prose max-w-none">
+                  {job.benefits.split("\n").map((benefit, index) => (
+                    <p key={index} className="mb-4 text-gray-700">
+                      {benefit}
+                    </p>
                   ))}
-                </ul>
+                </div>
               </CardContent>
             </Card>
           )}
@@ -413,74 +437,115 @@ export default function JobDetailPage() {
 
         {/* Sidebar */}
         <div className="space-y-6">
-          {/* Apply Button */}
-          <Card>
-            <CardContent className="p-6">
-              <Button
-                onClick={() => setShowApplicationModal(true)}
-                className="w-full mb-4"
-                size="lg"
-              >
-                Aplicar a este empleo
-              </Button>
-              <div className="text-center">
-                <p className="text-sm text-gray-600">
-                  {job.applicationCount} personas ya aplicaron
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+          {/* Apply Button - Only show if user is not the job owner */}
+          {!isJobOwner && (
+            <Card>
+              <CardContent className="p-6">
+                <Button
+                  onClick={() => setShowApplicationModal(true)}
+                  className="w-full mb-4"
+                  size="lg"
+                >
+                  Aplicar a este empleo
+                </Button>
+                <div className="text-center">
+                  <p className="text-sm text-gray-600">
+                    {job.applicationsCount} personas ya aplicaron
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Job Owner Actions */}
+          {isJobOwner && (
+            <Card>
+              <CardContent className="p-6">
+                <div className="space-y-3">
+                                     <Button
+                     onClick={() => router.push(`/jobs/${jobId}/edit`)}
+                     className="w-full"
+                     variant="outline"
+                   >
+                     Editar Empleo
+                   </Button>
+                                                         <Button
+                      onClick={() => router.push(`/jobs/${jobId}/candidates`)}
+                      className="w-full"
+                    >
+                      Ver Candidatos
+                    </Button>
+                    <Button
+                      onClick={() => router.push(`/jobs/${jobId}/questions`)}
+                      className="w-full"
+                      variant="outline"
+                    >
+                      Gestionar Preguntas
+                    </Button>
+                  <div className="text-center">
+                    <p className="text-sm text-gray-600">
+                      {job.applicationsCount} aplicaciones recibidas
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           {/* Company Info */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Building className="w-5 h-5" />
-                <span>Sobre la empresa</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-center space-x-3">
-                  <Avatar className="w-12 h-12">
-                    <AvatarImage
-                      src={job.company.logo}
-                      alt={job.company.name}
-                    />
-                    <AvatarFallback>
-                      {job.company.name.charAt(0)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <h3 className="font-medium">{job.company.name}</h3>
-                    <p className="text-sm text-gray-600">{job.company.size}</p>
+          {job.company && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Building className="w-5 h-5" />
+                  <span>Sobre la empresa</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex items-center space-x-3">
+                    <Avatar className="w-12 h-12">
+                      <AvatarImage
+                        src={job.company.logo}
+                        alt={job.company.name}
+                      />
+                      <AvatarFallback>
+                        {job.company.name.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <h3 className="font-medium">{job.company.name}</h3>
+                      <p className="text-sm text-gray-600">{job.company.size}</p>
+                    </div>
                   </div>
-                </div>
 
-                {job.company.images && job.company.images.length > 0 && (
+                  {job.company.images && job.company.images.length > 0 && (
+                    <div className="mt-4">
+                      <CompanyGallery images={job.company.images} />
+                    </div>
+                  )}
+
                   <div className="mt-4">
-                    <CompanyGallery images={job.company.images} />
+                    <p className="text-gray-700">{job.company.description}</p>
                   </div>
-                )}
 
-                <div className="mt-4">
-                  <p className="text-gray-700">{job.company.description}</p>
+                  {job.company.website && (
+                    <div className="flex items-center space-x-2 text-sm">
+                      <Globe className="w-4 h-4" />
+                      <a
+                        href={job.company.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:underline"
+                      >
+                        {job.company.website.replace(/^https?:\/\//, "")}
+                      </a>
+                    </div>
+                  )}
                 </div>
-
-                <div className="flex items-center space-x-2 text-sm">
-                  <Globe className="w-4 h-4" />
-                  <a
-                    href={job.company.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 hover:underline"
-                  >
-                    {job.company.website.replace(/^https?:\/\//, "")}
-                  </a>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          )}
 
           {/* Location Map */}
           <Card>
@@ -504,16 +569,24 @@ export default function JobDetailPage() {
       </div>
 
       {/* Application Modal */}
-      {showApplicationModal && (
-        <JobApplicationModal
-          job={job}
-          onClose={() => setShowApplicationModal(false)}
-          onSuccess={() => {
-            setShowApplicationModal(false);
-            // TODO: Show success message
-          }}
-        />
-      )}
+      <Dialog open={showApplicationModal} onOpenChange={setShowApplicationModal}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Aplicar a: {job.title}</DialogTitle>
+            <DialogDescription>
+              Completa el formulario para aplicar a este empleo
+            </DialogDescription>
+          </DialogHeader>
+          
+          {job && (
+            <JobApplicationForm
+              jobOffer={job}
+              onSuccess={() => setShowApplicationModal(false)}
+              onCancel={() => setShowApplicationModal(false)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

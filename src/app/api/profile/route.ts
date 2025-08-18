@@ -1,57 +1,76 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 
-// GET: Fetch mock profile data since we're using mock authentication
-export async function GET() {
+// GET /api/profile - Obtener perfil del usuario actual
+export async function GET(request: NextRequest) {
   try {
-    // Return mock profile data for development
-    const mockProfile = {
-      id: "mock-profile-id",
-      userId: "mock-user-id",
-      firstName: "John",
-      lastName: "Doe",
-      role: "YOUTH",
-      avatarUrl: null,
-      active: true,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      completionPercentage: 25,
-    };
+    const session = await getServerSession(authOptions);
+    
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: "No autorizado" },
+        { status: 401 }
+      );
+    }
 
-    return NextResponse.json(mockProfile);
+    const profile = await prisma.profile.findUnique({
+      where: { userId: session.user.id },
+      include: {
+        user: {
+          select: {
+            email: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+    if (!profile) {
+      return NextResponse.json(
+        { error: "Perfil no encontrado" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(profile);
   } catch (error) {
-    console.error("Error fetching profile:", error);
+    console.error("Error al obtener perfil:", error);
     return NextResponse.json(
-      { error: "Failed to fetch profile" },
+      { error: "Error interno del servidor" },
       { status: 500 }
     );
   }
 }
 
-// PUT: Update mock profile data since we're using mock authentication
+// PUT /api/profile - Actualizar perfil del usuario actual
 export async function PUT(request: NextRequest) {
   try {
-    const data = await request.json();
-    const { firstName, lastName, avatarUrl, active } = data;
+    const session = await getServerSession(authOptions);
+    
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: "No autorizado" },
+        { status: 401 }
+      );
+    }
 
-    // Return mock updated profile data for development
-    const updatedProfile = {
-      id: "mock-profile-id",
-      userId: "mock-user-id",
-      firstName: firstName || "John",
-      lastName: lastName || "Doe",
-      role: "YOUTH",
-      avatarUrl: avatarUrl || null,
-      active: active !== undefined ? active : true,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      completionPercentage: 50,
-    };
+    const body = await request.json();
+    
+    const updatedProfile = await prisma.profile.update({
+      where: { userId: session.user.id },
+      data: body,
+    });
 
-    return NextResponse.json(updatedProfile);
+    return NextResponse.json({
+      message: "Perfil actualizado exitosamente",
+      profile: updatedProfile,
+    });
   } catch (error) {
-    console.error("Error updating profile:", error);
+    console.error("Error al actualizar perfil:", error);
     return NextResponse.json(
-      { error: "Failed to update profile" },
+      { error: "Error interno del servidor" },
       { status: 500 }
     );
   }

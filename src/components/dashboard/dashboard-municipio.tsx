@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useAuthContext } from "@/hooks/use-auth";
 import {
   Card,
   CardContent,
@@ -68,6 +69,24 @@ interface Company {
 
 export function DashboardMunicipio() {
   const [showCreateDialog, setShowCreateDialog] = useState(false);
+  
+  // Obtener colores del usuario actual desde el contexto
+  const { user } = useAuthContext();
+  const primaryColor = user?.primaryColor || "#1E40AF";
+  const secondaryColor = user?.secondaryColor || "#F59E0B";
+  
+  // Función para calcular el contraste de colores
+  const getContrastColor = (hexColor: string): string => {
+    const hex = hexColor.replace('#', '');
+    const r = parseInt(hex.substr(0, 2), 16);
+    const g = parseInt(hex.substr(2, 2), 16);
+    const b = parseInt(hex.substr(4, 2), 16);
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    return luminance > 0.5 ? '#000000' : '#FFFFFF';
+  };
+  
+  const primaryTextColor = getContrastColor(primaryColor);
+  const secondaryTextColor = getContrastColor(secondaryColor);
   const [companies, setCompanies] = useState<Company[]>([
     {
       id: "1",
@@ -164,22 +183,36 @@ export function DashboardMunicipio() {
 
   return (
     <div className="space-y-6 px-4">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">
-            Dashboard Municipio{" "}
-          </h1>
-          <p className="text-muted-foreground">
-            Gestión y análisis de empresas registradas
-          </p>
-        </div>
-        <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="w-4 h-4 mr-2" />
-              Crear Empresa
-            </Button>
-          </DialogTrigger>
+      {/* Header con colores personalizados */}
+      <div 
+        className="rounded-lg p-6 mb-6"
+        style={{ backgroundColor: primaryColor }}
+      >
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 
+              className="text-3xl font-bold tracking-tight"
+              style={{ color: primaryTextColor }}
+            >
+              Dashboard Institución
+            </h1>
+            <p style={{ color: primaryTextColor, opacity: 0.9 }}>
+              Gestión y análisis de empresas registradas
+            </p>
+          </div>
+                    <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
+            <DialogTrigger asChild>
+              <Button
+                style={{ 
+                  backgroundColor: secondaryColor,
+                  color: secondaryTextColor,
+                  border: 'none'
+                }}
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Crear Empresa
+              </Button>
+            </DialogTrigger>
           <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Crear Nueva Empresa</DialogTitle>

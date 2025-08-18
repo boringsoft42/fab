@@ -13,6 +13,11 @@ import {
   XCircle,
   AlertCircle,
   Users,
+  MessageSquare,
+  Send,
+  X,
+  FileText,
+  ExternalLink,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,8 +33,20 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 import { JobApplication, ApplicationStatus } from "@/types/jobs";
 import { useToast } from "@/components/ui/use-toast";
+import { useMyJobApplications } from "@/hooks/useJobApplicationApi";
+import { useProfiles } from "@/hooks/useProfileApi";
+import { useJobMessages } from "@/hooks/use-job-messages";
+import { useAuthContext } from "@/hooks/use-auth";
 
 interface ApplicationStats {
   total: number;
@@ -42,7 +59,7 @@ interface ApplicationStats {
 
 export default function MyApplicationsPage() {
   const router = useRouter();
-  const [applications, setApplications] = useState<JobApplication[]>([]);
+  const { data: applications, loading, error } = useMyJobApplications();
   const [filteredApplications, setFilteredApplications] = useState<
     JobApplication[]
   >([]);
@@ -54,53 +71,54 @@ export default function MyApplicationsPage() {
     rejected: 0,
     hired: 0,
   });
-  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<ApplicationStatus | "ALL">(
     "ALL"
   );
   const [companyFilter, setCompanyFilter] = useState("");
+  const [selectedApplication, setSelectedApplication] = useState<JobApplication | null>(null);
+  const [showChatModal, setShowChatModal] = useState(false);
+  const [newMessage, setNewMessage] = useState("");
 
   const { toast } = useToast();
+  const { user } = useAuthContext();
+
+  // Chat hook for the selected application
+  const {
+    messages,
+    loading: messagesLoading,
+    sending: messageSending,
+    error: messageError,
+    sendMessage: sendJobMessage,
+    markAsRead,
+    refreshMessages,
+  } = useJobMessages(selectedApplication?.id || "");
+
+  // Update chat when application changes - REMOVED to prevent multiple requests
+  // useEffect(() => {
+  //   if (selectedApplication) {
+  //     refreshMessages();
+  //   }
+  // }, [selectedApplication, refreshMessages]);
 
   useEffect(() => {
-    fetchApplications();
-  }, []);
-
-  useEffect(() => {
+    console.log("🔍 MyApplicationsPage - applications data:", applications);
+    console.log("🔍 MyApplicationsPage - applications is array:", Array.isArray(applications));
     filterApplications();
   }, [applications, searchQuery, statusFilter, companyFilter]);
 
-  const fetchApplications = async () => {
-    try {
-      const response = await fetch("/api/my-applications");
-      if (response.ok) {
-        const data = await response.json();
-        setApplications(data.applications || []);
-        setStats(data.stats || {});
-      }
-    } catch (error) {
-      console.error("Error fetching applications:", error);
-      toast({
-        title: "Error",
-        description: "No se pudieron cargar las aplicaciones",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const filterApplications = () => {
-    let filtered = [...applications];
+    // Ensure applications is an array
+    const applicationsArray = Array.isArray(applications) ? applications : [];
+    let filtered = [...applicationsArray];
 
     // Text search
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(
         (app) =>
-          app.jobTitle.toLowerCase().includes(query) ||
-          app.companyName.toLowerCase().includes(query)
+          app.jobOffer?.title?.toLowerCase().includes(query) ||
+          app.jobOffer?.company?.name?.toLowerCase().includes(query)
       );
     }
 
@@ -112,7 +130,7 @@ export default function MyApplicationsPage() {
     // Company filter
     if (companyFilter) {
       filtered = filtered.filter((app) =>
-        app.companyName.toLowerCase().includes(companyFilter.toLowerCase())
+        app.jobOffer?.company?.name?.toLowerCase().includes(companyFilter.toLowerCase())
       );
     }
 
@@ -129,9 +147,9 @@ export default function MyApplicationsPage() {
       );
 
       if (response.ok) {
-        setApplications((prev) =>
-          prev.filter((app) => app.id !== applicationId)
-        );
+        // setApplications((prev) => // This line is no longer needed as data is managed by hook
+        //   prev.filter((app) => app.id !== applicationId)
+        // );
         toast({
           title: "Aplicación retirada",
           description: "Tu aplicación ha sido retirada exitosamente",
@@ -216,6 +234,52 @@ export default function MyApplicationsPage() {
     return status === "SENT";
   };
 
+  const handleOpenChat = (application: JobApplication) => {
+    setSelectedApplication(application);
+    setShowChatModal(true);
+    // Load messages only when opening the chat
+    refreshMessages();
+  };
+
+  const handleCloseChat = () => {
+    setShowChatModal(false);
+    setSelectedApplication(null);
+    setNewMessage("");
+  };
+
+  const handleSendMessage = async () => {
+    if (!newMessage.trim() || !selectedApplication) return;
+
+    try {
+      await sendJobMessage({
+        content: newMessage.trim(),
+        messageType: "TEXT",
+      });
+      setNewMessage("");
+      toast({
+        title: "Mensaje enviado",
+        description: "Tu mensaje ha sido enviado exitosamente",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "No se pudo enviar el mensaje",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const formatMessageTime = (dateString: string) => {
+    return new Date(dateString).toLocaleTimeString("es-ES", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  const isOwnMessage = (message: any) => {
+    return message.senderType === "USER" || message.senderId === user?.id;
+  };
+
   if (loading) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -267,21 +331,23 @@ export default function MyApplicationsPage() {
         <Card>
           <CardContent className="p-4 text-center">
             <div className="text-2xl font-bold text-gray-900">
-              {stats.total}
+              {Array.isArray(applications) ? applications.length : 0}
             </div>
             <div className="text-sm text-gray-600">Total</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-blue-600">{stats.sent}</div>
+            <div className="text-2xl font-bold text-blue-600">
+              {Array.isArray(applications) ? applications.filter(app => app.status === "SENT").length : 0}
+            </div>
             <div className="text-sm text-gray-600">Enviadas</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
             <div className="text-2xl font-bold text-orange-600">
-              {stats.underReview}
+              {Array.isArray(applications) ? applications.filter(app => app.status === "UNDER_REVIEW").length : 0}
             </div>
             <div className="text-sm text-gray-600">En revisión</div>
           </CardContent>
@@ -289,7 +355,7 @@ export default function MyApplicationsPage() {
         <Card>
           <CardContent className="p-4 text-center">
             <div className="text-2xl font-bold text-green-600">
-              {stats.preSelected}
+              {Array.isArray(applications) ? applications.filter(app => app.status === "PRE_SELECTED").length : 0}
             </div>
             <div className="text-sm text-gray-600">Preseleccionado</div>
           </CardContent>
@@ -297,7 +363,7 @@ export default function MyApplicationsPage() {
         <Card>
           <CardContent className="p-4 text-center">
             <div className="text-2xl font-bold text-red-600">
-              {stats.rejected}
+              {Array.isArray(applications) ? applications.filter(app => app.status === "REJECTED").length : 0}
             </div>
             <div className="text-sm text-gray-600">Rechazadas</div>
           </CardContent>
@@ -359,12 +425,8 @@ export default function MyApplicationsPage() {
                 <div className="flex items-start justify-between">
                   <div className="flex items-start space-x-4 flex-1">
                     <Avatar className="w-12 h-12">
-                      <AvatarImage
-                        src={application.companyLogo}
-                        alt={application.companyName}
-                      />
                       <AvatarFallback>
-                        {application.companyName.charAt(0)}
+                        {application.jobOffer?.company?.name?.charAt(0) || 'C'}
                       </AvatarFallback>
                     </Avatar>
 
@@ -374,13 +436,13 @@ export default function MyApplicationsPage() {
                           <h3
                             className="text-lg font-semibold text-gray-900 cursor-pointer hover:text-blue-600"
                             onClick={() =>
-                              router.push(`/jobs/${application.jobId}`)
+                              router.push(`/jobs/${application.jobOffer?.id}`)
                             }
                           >
-                            {application.jobTitle}
+                            {application.jobOffer?.title || 'Sin título'}
                           </h3>
                           <p className="text-gray-600">
-                            {application.companyName}
+                            {application.jobOffer?.company?.name || 'Sin empresa'}
                           </p>
                         </div>
                         <div className="flex items-center space-x-2">
@@ -404,7 +466,7 @@ export default function MyApplicationsPage() {
                           <span className="font-medium">
                             Última actualización:
                           </span>{" "}
-                          {formatDate(application.updatedAt)}
+                          {formatDate(application.appliedAt)}
                         </div>
                         {application.rating && (
                           <div>
@@ -413,6 +475,28 @@ export default function MyApplicationsPage() {
                           </div>
                         )}
                       </div>
+
+                       {/* Información adicional del trabajo */}
+                       <div className="bg-blue-50 rounded-lg p-3 mb-4">
+                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                           <div>
+                             <span className="font-medium text-blue-800">Empresa:</span>{" "}
+                             <span className="text-gray-700">{application.jobOffer?.company?.name}</span>
+                           </div>
+                           <div>
+                             <span className="font-medium text-blue-800">Email de la empresa:</span>{" "}
+                             <span className="text-gray-700">{application.jobOffer?.company?.email}</span>
+                           </div>
+                           <div>
+                             <span className="font-medium text-blue-800">Título del trabajo:</span>{" "}
+                             <span className="text-gray-700">{application.jobOffer?.title}</span>
+                           </div>
+                           <div>
+                             <span className="font-medium text-blue-800">ID del trabajo:</span>{" "}
+                             <span className="text-gray-700">{application.jobOffer?.id}</span>
+                           </div>
+                         </div>
+                       </div>
 
                       {application.notes && (
                         <div className="bg-gray-50 rounded-lg p-3 mb-4">
@@ -430,26 +514,33 @@ export default function MyApplicationsPage() {
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() =>
-                              router.push(`/jobs/${application.jobId}`)
-                            }
+                            onClick={() => handleOpenChat(application)}
                           >
-                            <Eye className="w-4 h-4 mr-2" />
-                            Ver oferta
+                            <MessageSquare className="w-4 h-4 mr-2" />
+                            Chat
                           </Button>
 
-                          {/* {application.cvUrl && (
+                          {application.cvFile && (
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() =>
-                                window.open(application.cvUrl, "_blank")
-                              }
+                              onClick={() => window.open(`http://localhost:3001${application.cvFile}`, '_blank')}
                             >
                               <Download className="w-4 h-4 mr-2" />
                               Ver CV
                             </Button>
-                          )} */}
+                          )}
+
+                          {application.coverLetterFile && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => window.open(`http://localhost:3001${application.coverLetterFile}`, '_blank')}
+                            >
+                              <Download className="w-4 h-4 mr-2" />
+                              Ver Carta
+                            </Button>
+                          )}
                         </div>
 
                         {canWithdraw(application.status) && (
@@ -478,23 +569,108 @@ export default function MyApplicationsPage() {
           <CardContent className="flex flex-col items-center justify-center py-12 text-center">
             <Search className="w-12 h-12 text-gray-400 mb-4" />
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              {applications.length === 0
+              {Array.isArray(applications) && applications.length === 0
                 ? "No has aplicado a ningún empleo"
                 : "No se encontraron aplicaciones"}
             </h3>
             <p className="text-gray-600 mb-6">
-              {applications.length === 0
+              {Array.isArray(applications) && applications.length === 0
                 ? "Comienza explorando oportunidades laborales que se ajusten a tu perfil."
                 : "Intenta ajustar tus filtros de búsqueda."}
             </p>
             <Button onClick={() => router.push("/jobs")}>
-              {applications.length === 0
+              {Array.isArray(applications) && applications.length === 0
                 ? "Explorar empleos"
                 : "Ver todos los empleos"}
             </Button>
           </CardContent>
         </Card>
       )}
+
+      {/* Chat Modal */}
+      <Dialog open={showChatModal} onOpenChange={setShowChatModal}>
+        <DialogContent className="max-w-2xl h-[90vh] flex flex-col">
+          <DialogHeader className="p-6 pb-4 border-b">
+            <div className="flex items-center justify-between">
+              <div>
+                <DialogTitle className="text-lg font-semibold text-gray-900">
+                  Chat con {selectedApplication?.jobOffer?.company?.name || "Empresa"}
+                </DialogTitle>
+                <DialogDescription className="text-sm text-gray-600">
+                  {selectedApplication?.jobOffer?.title || "Sin título"}
+                </DialogDescription>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={refreshMessages}
+                disabled={messagesLoading}
+              >
+                <MessageSquare className="w-4 h-4 mr-2" />
+                {messagesLoading ? 'Cargando...' : 'Recargar'}
+              </Button>
+            </div>
+          </DialogHeader>
+          <div className="flex-1 overflow-y-auto p-6">
+            {messagesLoading ? (
+              <div className="flex justify-center items-center h-full">
+                <Skeleton className="h-10 w-10" />
+              </div>
+            ) : messages.length === 0 ? (
+              <div className="text-center py-12 text-gray-600">
+                <MessageSquare className="w-12 h-12 text-gray-400 mb-4" />
+                <p>No hay mensajes en esta conversación.</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {messages.map((message) => (
+                  <div
+                    key={message.id}
+                    className={`flex ${isOwnMessage(message) ? 'justify-end' : 'justify-start'}`}
+                  >
+                    <div
+                      className={`max-w-[70%] p-3 rounded-lg ${
+                        isOwnMessage(message)
+                          ? 'bg-blue-500 text-white'
+                          : 'bg-gray-200 text-gray-800'
+                      }`}
+                    >
+                      <p className="text-sm">{message.content}</p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        {formatMessageTime(message.createdAt)}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          <div className="p-6 pt-0 border-t">
+            <Textarea
+              placeholder="Escribe un mensaje..."
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSendMessage();
+                }
+              }}
+              className="min-h-[50px] max-h-[150px] resize-none"
+            />
+            <div className="flex justify-end mt-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleSendMessage}
+                disabled={messageSending || !newMessage.trim()}
+              >
+                {messageSending ? 'Enviando...' : 'Enviar'}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

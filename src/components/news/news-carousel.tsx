@@ -18,12 +18,14 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { NewsArticle } from "@/types/news";
+import { useNewsArticles } from "@/hooks/useNewsArticleApi";
 
 interface NewsCarouselProps {
   className?: string;
 }
 
 export function NewsCarousel({ className }: NewsCarouselProps) {
+  const { data: newsArticles, loading, error } = useNewsArticles();
   const [companyNews, setCompanyNews] = useState<NewsArticle[]>([]);
   const [governmentNews, setGovernmentNews] = useState<NewsArticle[]>([]);
   const [loading, setLoading] = useState(true);

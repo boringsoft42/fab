@@ -1,96 +1,147 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter, usePathname } from "next/navigation";
-import { useMockAuth } from "@/context/mock-auth-context";
-import { LoadingScreen } from "@/components/ui/loading-screen";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
+import { ReactNode } from 'react';
+import { useAuthContext } from '@/hooks/use-auth';
+import { UserRole } from '@/types/api';
+import { Permission, hasPermission, hasAnyPermission } from '@/lib/permissions';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Card, CardContent } from '@/components/ui/card';
+import { Shield, Lock } from 'lucide-react';
 
 interface RoleGuardProps {
-  children: React.ReactNode;
+  children: ReactNode;
+  // Allow access to specific roles
+  allowedRoles?: UserRole[];
+  // Require specific permissions
+  requiredPermissions?: Permission[];
+  // Require ANY of the permissions (OR logic)
+  anyPermissions?: Permission[];
+  // Require ALL permissions (AND logic)
+  allPermissions?: Permission[];
+  // Custom fallback component
+  fallback?: ReactNode;
+  // Show loading while checking auth
+  showLoading?: boolean;
 }
 
-export function RoleGuard({ children }: RoleGuardProps) {
-  const { user, isLoading, error } = useMockAuth();
-  const pathname = usePathname();
-  const router = useRouter();
-  const [isRedirecting, setIsRedirecting] = useState(false);
+export default function RoleGuard({
+  children,
+  allowedRoles,
+  requiredPermissions,
+  anyPermissions,
+  allPermissions,
+  fallback,
+  showLoading = true,
+}: RoleGuardProps) {
+  const { user, loading, isAuthenticated } = useAuthContext();
 
-  useEffect(() => {
-    // Don't do anything while loading or already redirecting
-    if (isLoading || isRedirecting) return;
-
-    // If no user, redirect to login
-    if (!user) {
-      setIsRedirecting(true);
-      router.replace("/login");
-      return;
-    }
-
-    // If user has a role, ensure they're not on role selection page
-    if (user && user.role) {
-      if (pathname === "/select-role") {
-        setIsRedirecting(true);
-        router.replace("/dashboard");
-        return;
-      }
-      // User has role and is not on role selection page, stop redirecting
-      setIsRedirecting(false);
-      return;
-    }
-
-    // If user exists but has no role
-    if (user && !user.role) {
-      // Only redirect to role selection if not already there
-      if (pathname !== "/select-role") {
-        setIsRedirecting(true);
-        router.replace("/select-role");
-        return;
-      }
-      // If already on role selection page, stop redirecting
-      setIsRedirecting(false);
-      return;
-    }
-
-    // If we reach here, everything is fine, stop redirecting
-    setIsRedirecting(false);
-  }, [user, isLoading, router, pathname, isRedirecting]);
-
-  // Show loading screen while checking user or redirecting
-  if (isLoading || isRedirecting) {
-    return <LoadingScreen />;
-  }
-
-  // Show error if failed to load user
-  if (error) {
+  // Show loading state
+  if (loading && showLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <Alert variant="destructive" className="max-w-md">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>
-            Error al verificar el usuario: {error.message}
-          </AlertDescription>
-        </Alert>
+      <div className="flex items-center justify-center p-8">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
       </div>
     );
   }
 
-  // If no user (should be redirecting to login)
-  if (!user) {
-    return <LoadingScreen />;
+  // User not authenticated
+  if (!isAuthenticated || !user) {
+    return fallback || (
+      <Card className="max-w-md mx-auto mt-8">
+        <CardContent className="p-6 text-center">
+          <Lock className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+          <h3 className="text-lg font-semibold mb-2">Acceso Restringido</h3>
+          <p className="text-muted-foreground mb-4">
+            Debes iniciar sesión para acceder a esta sección.
+          </p>
+        </CardContent>
+      </Card>
+    );
   }
 
-  // If user has role but is on role selection page (should be redirecting to dashboard)
-  if (user.role && pathname === "/select-role") {
-    return <LoadingScreen />;
+  // Check role-based access
+  if (allowedRoles && !allowedRoles.includes(user.role)) {
+    return fallback || (
+      <Card className="max-w-md mx-auto mt-8">
+        <CardContent className="p-6 text-center">
+          <Shield className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+          <h3 className="text-lg font-semibold mb-2">Acceso Denegado</h3>
+          <p className="text-muted-foreground mb-4">
+            No tienes permisos para acceder a esta sección.
+          </p>
+          <Alert>
+            <AlertDescription>
+              Tu rol actual: <strong>{user.role}</strong>
+              <br />
+              Roles permitidos: <strong>{allowedRoles.join(', ')}</strong>
+            </AlertDescription>
+          </Alert>
+        </CardContent>
+      </Card>
+    );
   }
 
-  // If user has no role and not on role selection page (should be redirecting to role selection)
-  if (!user.role && pathname !== "/select-role") {
-    return <LoadingScreen />;
+  // Check individual permissions
+  if (requiredPermissions) {
+    const hasRequiredPermissions = requiredPermissions.every(permission =>
+      hasPermission(user.role, permission)
+    );
+
+    if (!hasRequiredPermissions) {
+      return fallback || (
+        <Card className="max-w-md mx-auto mt-8">
+          <CardContent className="p-6 text-center">
+            <Shield className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Permisos Insuficientes</h3>
+            <p className="text-muted-foreground mb-4">
+              No tienes los permisos necesarios para realizar esta acción.
+            </p>
+          </CardContent>
+        </Card>
+      );
+    }
   }
 
-  // All checks passed, show the protected content
+  // Check ANY permissions (OR logic)
+  if (anyPermissions) {
+    const hasAnyRequiredPermission = hasAnyPermission(user.role, anyPermissions);
+
+    if (!hasAnyRequiredPermission) {
+      return fallback || (
+        <Card className="max-w-md mx-auto mt-8">
+          <CardContent className="p-6 text-center">
+            <Shield className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Permisos Insuficientes</h3>
+            <p className="text-muted-foreground mb-4">
+              No tienes ninguno de los permisos requeridos para esta acción.
+            </p>
+          </CardContent>
+        </Card>
+      );
+    }
+  }
+
+  // Check ALL permissions (AND logic)
+  if (allPermissions) {
+    const hasAllRequiredPermissions = allPermissions.every(permission =>
+      hasPermission(user.role, permission)
+    );
+
+    if (!hasAllRequiredPermissions) {
+      return fallback || (
+        <Card className="max-w-md mx-auto mt-8">
+          <CardContent className="p-6 text-center">
+            <Shield className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Permisos Insuficientes</h3>
+            <p className="text-muted-foreground mb-4">
+              No tienes todos los permisos necesarios para esta acción.
+            </p>
+          </CardContent>
+        </Card>
+      );
+    }
+  }
+
+  // All checks passed, render children
   return <>{children}</>;
 }

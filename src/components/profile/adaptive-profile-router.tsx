@@ -16,6 +16,7 @@ import type {
 import { YouthAdolescentProfile } from "./role-specific/youth-adolescent-profile";
 import { CompanyProfile as CompanyProfileComponent } from "./role-specific/company-profile";
 import { InstitutionalProfile } from "./role-specific/institutional-profile";
+import { SuperAdminProfile } from "./role-specific/super-admin-profile";
 
 export function AdaptiveProfileRouter() {
   const { profile, isLoading, error } = useCurrentUser();
@@ -63,6 +64,9 @@ export function AdaptiveProfileRouter() {
 
   // Route to appropriate profile form based on user role
   switch (profile.role) {
+    case "SUPERADMIN":
+      return <SuperAdminProfile profile={profile} />;
+
     case "YOUTH":
     case "ADOLESCENTS":
       return (

@@ -26,6 +26,7 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
           ref={ref}
           disabled={disabled}
           onChange={handleChange}
+          suppressHydrationWarning={true}
           {...props}
         />
         <Button

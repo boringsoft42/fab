@@ -4,7 +4,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import 'leaflet/dist/leaflet.css';
 import { QueryProvider } from "@/lib/providers/QueryProvider";
-import { MockAuthProvider } from "@/context/mock-auth-context";
+import { AuthProvider } from "@/hooks/use-auth";
 import { ThemeProvider } from "@/context/theme-context";
 
 const APP_NAME = "POSITIVE-NEXT";
@@ -30,9 +30,9 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className}>
-        <ThemeProvider defaultTheme="system" storageKey="app-theme">
+        <ThemeProvider defaultTheme="light" storageKey="app-theme">
           <QueryProvider>
-            <MockAuthProvider>{children}</MockAuthProvider>
+            <AuthProvider>{children}</AuthProvider>
           </QueryProvider>
         </ThemeProvider>
       </body>

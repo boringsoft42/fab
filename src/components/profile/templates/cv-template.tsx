@@ -11,7 +11,7 @@ import {
   DialogTitle,
   DialogContent,
 } from "@/components/ui/dialog";
-import { Plus, Trash2, Download, Printer } from "lucide-react";
+import { Plus, Trash2, Download, Printer, Trophy } from "lucide-react";
 import { useState } from "react";
 
 interface Section {
@@ -68,6 +68,11 @@ export function CVTemplate() {
   const [skills, setSkills] = useState<Section>({
     id: "skills",
     items: [{ id: "skill-1", content: "" }],
+  });
+
+  const [achievements, setAchievements] = useState<Section>({
+    id: "achievements",
+    items: [{ id: "achievement-1", content: "" }],
   });
 
   const handlePrint = () => {
@@ -238,6 +243,45 @@ export function CVTemplate() {
                     variant="ghost"
                     size="icon"
                     onClick={() => removeItem(skills, setSkills, item.id)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
+            </div>
+
+            <Separator />
+
+            {/* Achievements */}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold flex items-center gap-2">
+                  <Trophy className="h-5 w-5 text-yellow-600" />
+                  Logros
+                </h3>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => addItem(achievements, setAchievements)}
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Agregar
+                </Button>
+              </div>
+              {achievements.items.map((item) => (
+                <div key={item.id} className="flex gap-2">
+                  <Textarea
+                    value={item.content}
+                    onChange={(e) =>
+                      updateItem(achievements, setAchievements, item.id, e.target.value)
+                    }
+                    placeholder="Ej: Primer lugar en Hackathon 2023 - Gané el primer lugar en el hackathon de desarrollo web organizado por la universidad"
+                    className="flex-1 h-24"
+                  />
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => removeItem(achievements, setAchievements, item.id)}
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>

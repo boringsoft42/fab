@@ -2,23 +2,19 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useMockAuth } from "@/context/mock-auth-context";
+import { useAuthContext } from "@/hooks/use-auth";
 import { LoadingScreen } from "@/components/ui/loading-screen";
 
 export function RootRedirect() {
   const router = useRouter();
-  const { user, isLoading } = useMockAuth();
+  const { user, loading, isAuthenticated } = useAuthContext();
 
   useEffect(() => {
     const handleRedirect = async () => {
-      if (!isLoading) {
-        if (user) {
-          // Usuario autenticado
-          if (user.role) {
-            await router.replace("/dashboard");
-          } else {
-            await router.replace("/select-role");
-          }
+      if (!loading) {
+        if (isAuthenticated && user) {
+          // Usuario autenticado - redirigir directamente al dashboard
+          await router.replace("/dashboard");
         } else {
           // Usuario NO autenticado → redirigir a landing
           await router.replace("/landing");
@@ -27,7 +23,7 @@ export function RootRedirect() {
     };
 
     handleRedirect();
-  }, [user, isLoading, router]);
+  }, [user, loading, isAuthenticated, router]);
 
   return <LoadingScreen />;
 }

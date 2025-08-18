@@ -1,36 +1,13 @@
-import { Metadata } from "next";
+"use client";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Award, Download, Calendar, CheckCircle } from "lucide-react";
-
-export const metadata: Metadata = {
-  title: "Mis Certificados",
-  description: "Certificados obtenidos de cursos completados",
-};
+import { useCertificates } from "@/hooks/useCertificateApi";
 
 export default function CertificatesPage() {
-  // Mock certificates data
-  const certificates = [
-    {
-      id: "1",
-      courseName: "Habilidades Laborales Básicas",
-      instructor: "Dra. Ana Pérez",
-      completedDate: "2024-12-15",
-      certificateUrl: "/certificates/cert-1.pdf",
-      grade: "90%",
-      credentialId: "CEMSE-2024-001",
-    },
-    {
-      id: "2",
-      courseName: "Comunicación Efectiva",
-      instructor: "Lic. Carlos López",
-      completedDate: "2024-11-28",
-      certificateUrl: "/certificates/cert-2.pdf",
-      grade: "85%",
-      credentialId: "CEMSE-2024-002",
-    },
-  ];
+  const { data: certificates, loading, error } = useCertificates();
 
   return (
     <div className="space-y-6">
@@ -46,12 +23,24 @@ export default function CertificatesPage() {
         <div className="flex gap-4">
           <Badge variant="secondary" className="text-lg px-3 py-1">
             <Award className="mr-2 h-4 w-4" />
-            {certificates.length} Certificados
+            {certificates?.length || 0} Certificados
           </Badge>
         </div>
       </div>
 
-      {certificates.length === 0 ? (
+      {loading ? (
+        <Card>
+          <CardContent className="flex flex-col items-center justify-center py-12">
+            <p>Cargando certificados...</p>
+          </CardContent>
+        </Card>
+      ) : error ? (
+        <Card>
+          <CardContent className="flex flex-col items-center justify-center py-12">
+            <p>Error al cargar los certificados: {error.message}</p>
+          </CardContent>
+        </Card>
+      ) : certificates?.length === 0 ? (
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
             <Award className="h-12 w-12 text-muted-foreground mb-4" />
@@ -67,7 +56,7 @@ export default function CertificatesPage() {
         </Card>
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {certificates.map((certificate) => (
+          {certificates?.map((certificate) => (
             <Card key={certificate.id} className="relative overflow-hidden">
               <div className="absolute top-2 right-2">
                 <Badge
@@ -116,7 +105,7 @@ export default function CertificatesPage() {
         </div>
       )}
 
-      {certificates.length > 0 && (
+      {certificates?.length > 0 && (
         <div className="mt-8 p-6 bg-muted/50 rounded-lg">
           <h3 className="font-semibold mb-2">
             💡 Consejos para tus certificados

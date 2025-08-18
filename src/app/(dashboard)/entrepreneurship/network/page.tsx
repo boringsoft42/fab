@@ -22,274 +22,229 @@ import {
   Share2,
   Clock,
   TrendingUp,
+  Check,
+  X,
+  RefreshCw,
 } from "lucide-react";
 
-interface Entrepreneur {
-  id: string;
-  name: string;
-  avatar: string;
-  businessName: string;
-  category: string;
-  location: string;
-  bio: string;
+interface ContactUser {
+  userId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  avatarUrl?: string;
+  currentInstitution?: string;
   skills: string[];
-  interests: string[];
-  experience: string;
-  rating: number;
-  reviewCount: number;
-  connections: number;
-  isOnline: boolean;
-  lastActive: Date;
-  lookingFor: string[];
-  offering: string[];
+  department?: string;
+  municipality?: string;
+  contactStatus?: string | null;
+  contactId?: string | null;
 }
 
-interface NetworkingEvent {
+interface ContactRequest {
   id: string;
-  title: string;
-  description: string;
-  date: Date;
-  time: string;
-  location: string;
-  type: "virtual" | "presencial" | "hybrid";
-  category: string;
-  organizer: string;
-  attendees: number;
-  maxAttendees: number;
-  price: number;
-  image: string;
-  tags: string[];
+  status: string;
+  message?: string;
+  createdAt: string;
+  user: ContactUser;
 }
 
-interface Discussion {
-  id: string;
-  title: string;
-  content: string;
-  author: {
-    name: string;
-    avatar: string;
-    businessName: string;
-  };
-  category: string;
-  replies: number;
-  views: number;
-  likes: number;
-  createdAt: Date;
-  tags: string[];
-  isSticky: boolean;
+interface ContactStats {
+  totalContacts: number;
+  pendingSent: number;
+  pendingReceived: number;
+  totalSent: number;
+  totalReceived: number;
+  totalRequests: number;
 }
 
 export default function NetworkingPage() {
-  const [entrepreneurs, setEntrepreneurs] = useState<Entrepreneur[]>([]);
-  const [events, setEvents] = useState<NetworkingEvent[]>([]);
-  const [discussions, setDiscussions] = useState<Discussion[]>([]);
+  const [users, setUsers] = useState<ContactUser[]>([]);
+  const [requests, setRequests] = useState<ContactRequest[]>([]);
+     const [contacts, setContacts] = useState<ContactUser[]>([]);
+   const [stats, setStats] = useState<ContactStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("entrepreneurs");
 
+  // Cargar datos cuando se cambie de pestaña
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    if (tab === "requests") {
+      getReceivedRequests();
+    } else if (tab === "contacts") {
+      getContacts();
+    }
+  };
+
+  // Buscar usuarios jóvenes
+  const searchUsers = async (query?: string) => {
+    try {
+      const params = new URLSearchParams();
+      if (query) params.append('query', query);
+      
+             const response = await fetch(`/api/contacts/search?${params}`, {
+         headers: {
+           'Authorization': `Bearer ${localStorage.getItem('token')}`
+         }
+       });
+      
+      if (!response.ok) throw new Error('Error searching users');
+      
+                     const data = await response.json();
+        console.log('Search response:', data); // Debug
+        
+        // Filtrar usuarios que ya son contactos aceptados
+        const filteredUsers = (data.users || []).filter((user: any) => 
+          user.contactStatus !== "ACCEPTED"
+        );
+        
+        console.log('Filtered users:', filteredUsers); // Debug
+        setUsers(filteredUsers);
+        return data;
+    } catch (err) {
+      console.error('Error searching users:', err);
+    }
+  };
+
+  // Enviar solicitud de contacto
+  const sendRequest = async (contactId: string, message?: string) => {
+    try {
+             const response = await fetch('/api/contacts/request', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({ contactId, message })
+      });
+      
+      if (!response.ok) throw new Error('Error sending request');
+      
+      const data = await response.json();
+      // Actualizar la lista de usuarios para mostrar el estado
+      await searchUsers(searchQuery);
+      return data;
+    } catch (err) {
+      console.error('Error sending request:', err);
+      throw err;
+    }
+  };
+
+  // Obtener solicitudes recibidas
+  const getReceivedRequests = async () => {
+    try {
+             const response = await fetch('/api/contacts/requests/received', {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      
+      if (!response.ok) throw new Error('Error getting requests');
+      
+             const data = await response.json();
+       setRequests(data.requests || []);
+       return data;
+    } catch (err) {
+      console.error('Error getting requests:', err);
+    }
+  };
+
+  // Aceptar solicitud
+  const acceptRequest = async (requestId: string) => {
+    try {
+             const response = await fetch(`/api/contacts/requests/${requestId}/accept`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      
+      if (!response.ok) throw new Error('Error accepting request');
+      
+      const data = await response.json();
+      // Actualizar listas
+      await Promise.all([getReceivedRequests(), getContacts(), getStats()]);
+      return data;
+    } catch (err) {
+      console.error('Error accepting request:', err);
+      throw err;
+    }
+  };
+
+  // Rechazar solicitud
+  const rejectRequest = async (requestId: string) => {
+    try {
+             const response = await fetch(`/api/contacts/requests/${requestId}/reject`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      
+      if (!response.ok) throw new Error('Error rejecting request');
+      
+      const data = await response.json();
+      await getReceivedRequests();
+      return data;
+    } catch (err) {
+      console.error('Error rejecting request:', err);
+      throw err;
+    }
+  };
+
+     // Obtener contactos
+   const getContacts = async () => {
+     try {
+       const response = await fetch('/api/contacts', {
+         headers: {
+           'Authorization': `Bearer ${localStorage.getItem('token')}`
+         }
+       });
+       
+       if (!response.ok) throw new Error('Error getting contacts');
+       
+               const data = await response.json();
+        console.log('Contacts response:', data); // Debug
+        // Los contactos ya vienen con los datos del usuario directamente
+        setContacts(data.contacts || []);
+       
+       return data;
+     } catch (err) {
+       console.error('Error getting contacts:', err);
+     }
+   };
+
+  // Obtener estadísticas
+  const getStats = async () => {
+    try {
+             const response = await fetch('/api/contacts/stats', {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      
+      if (!response.ok) throw new Error('Error getting stats');
+      
+             const data = await response.json();
+       console.log('Stats response:', data); // Debug
+       setStats(data.stats);
+       return data;
+    } catch (err) {
+      console.error('Error getting stats:', err);
+    }
+  };
+
+  // Cargar datos iniciales
   const fetchNetworkingData = useCallback(async () => {
     try {
       setLoading(true);
-
-      // Mock data for demonstration
-      const mockEntrepreneurs: Entrepreneur[] = [
-        {
-          id: "ent-1",
-          name: "María González",
-          avatar: "/api/placeholder/100/100",
-          businessName: "EcoTech Bolivia",
-          category: "AgTech",
-          location: "Santa Cruz",
-          bio: "Ingeniera en sistemas especializada en soluciones tecnológicas para el agro. Busco colaboraciones en proyectos de sostenibilidad.",
-          skills: ["Desarrollo de Software", "IoT", "Agricultura Digital"],
-          interests: ["Sostenibilidad", "Tecnología Verde", "Innovación Rural"],
-          experience: "5 años",
-          rating: 4.9,
-          reviewCount: 47,
-          connections: 234,
-          isOnline: true,
-          lastActive: new Date(),
-          lookingFor: ["Inversionistas", "Socios Técnicos", "Mentores"],
-          offering: [
-            "Consultoría AgTech",
-            "Desarrollo de Prototipos",
-            "Capacitación",
-          ],
-        },
-        {
-          id: "ent-2",
-          name: "Carlos Mamani",
-          avatar: "/api/placeholder/100/100",
-          businessName: "Artesanías Digitales",
-          category: "E-commerce",
-          location: "La Paz",
-          bio: "Emprendedor social enfocado en digitalizar el comercio de artesanías bolivianas y conectar artesanos con mercados globales.",
-          skills: ["Marketing Digital", "E-commerce", "Fotografía"],
-          interests: [
-            "Comercio Justo",
-            "Cultura Boliviana",
-            "Emprendimiento Social",
-          ],
-          experience: "3 años",
-          rating: 4.7,
-          reviewCount: 31,
-          connections: 189,
-          isOnline: false,
-          lastActive: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
-          lookingFor: [
-            "Artesanos",
-            "Mercados Internacionales",
-            "Financiamiento",
-          ],
-          offering: [
-            "Marketing Digital",
-            "Fotografía de Producto",
-            "Asesoría E-commerce",
-          ],
-        },
-        {
-          id: "ent-3",
-          name: "Ana Gutiérrez",
-          avatar: "/api/placeholder/100/100",
-          businessName: "FoodTech Express",
-          category: "FoodTech",
-          location: "Cochabamba",
-          bio: "CEO y fundadora de startup de delivery de comida casera. Experta en logística y operaciones de delivery urbano.",
-          skills: ["Operaciones", "Logística", "Desarrollo de Apps"],
-          interests: [
-            "Gastronomía Local",
-            "Logística Urbana",
-            "Tecnología Móvil",
-          ],
-          experience: "4 años",
-          rating: 4.8,
-          reviewCount: 56,
-          connections: 312,
-          isOnline: true,
-          lastActive: new Date(),
-          lookingFor: ["Inversionistas Serie A", "CTO", "Expansión Regional"],
-          offering: [
-            "Mentoría en Operaciones",
-            "Consultoría Logística",
-            "Networking",
-          ],
-        },
-      ];
-
-      const mockEvents: NetworkingEvent[] = [
-        {
-          id: "event-1",
-          title: "Startup Pitch Night Cochabamba",
-          description:
-            "Noche de pitches para startups emergentes. Oportunidad de presentar tu idea ante inversionistas y mentores.",
-          date: new Date("2024-03-15"),
-          time: "19:00 - 22:00",
-          location: "Centro de Convenciones Cochabamba",
-          type: "presencial",
-          category: "Pitch",
-          organizer: "Startup Hub Bolivia",
-          attendees: 67,
-          maxAttendees: 100,
-          price: 0,
-          image: "/api/placeholder/400/200",
-          tags: ["Pitch", "Inversión", "Networking"],
-        },
-        {
-          id: "event-2",
-          title: "Workshop: Marketing Digital para Emprendedores",
-          description:
-            "Aprende estrategias efectivas de marketing digital para hacer crecer tu emprendimiento.",
-          date: new Date("2024-03-20"),
-          time: "14:00 - 17:00",
-          location: "Online - Zoom",
-          type: "virtual",
-          category: "Workshop",
-          organizer: "Digital Entrepreneurs BO",
-          attendees: 134,
-          maxAttendees: 200,
-          price: 50,
-          image: "/api/placeholder/400/200",
-          tags: ["Marketing", "Digital", "Capacitación"],
-        },
-        {
-          id: "event-3",
-          title: "Feria de Emprendimientos Sostenibles",
-          description:
-            "Exposición de emprendimientos con enfoque en sostenibilidad y responsabilidad social.",
-          date: new Date("2024-03-25"),
-          time: "09:00 - 18:00",
-          location: "Plaza Murillo, La Paz",
-          type: "presencial",
-          category: "Feria",
-          organizer: "EcoEmprende Bolivia",
-          attendees: 89,
-          maxAttendees: 150,
-          price: 0,
-          image: "/api/placeholder/400/200",
-          tags: ["Sostenibilidad", "Expo", "Verde"],
-        },
-      ];
-
-      const mockDiscussions: Discussion[] = [
-        {
-          id: "disc-1",
-          title: "¿Cómo conseguir financiamiento para startups en Bolivia?",
-          content:
-            "Hola emprendedores! Estoy buscando consejos sobre las mejores formas de conseguir financiamiento para mi startup de AgTech...",
-          author: {
-            name: "María González",
-            avatar: "/api/placeholder/50/50",
-            businessName: "EcoTech Bolivia",
-          },
-          category: "Financiamiento",
-          replies: 23,
-          views: 456,
-          likes: 78,
-          createdAt: new Date("2024-02-20"),
-          tags: ["Financiamiento", "Startups", "Inversión"],
-          isSticky: true,
-        },
-        {
-          id: "disc-2",
-          title: "Experiencias con marketplaces internacionales",
-          content:
-            "¿Alguien ha tenido experiencia vendiendo en Amazon, eBay o Etsy desde Bolivia? Me gustaría conocer sus experiencias...",
-          author: {
-            name: "Carlos Mamani",
-            avatar: "/api/placeholder/50/50",
-            businessName: "Artesanías Digitales",
-          },
-          category: "E-commerce",
-          replies: 15,
-          views: 289,
-          likes: 34,
-          createdAt: new Date("2024-02-18"),
-          tags: ["E-commerce", "Internacional", "Marketplaces"],
-          isSticky: false,
-        },
-        {
-          id: "disc-3",
-          title: "Herramientas gratuitas para gestionar emprendimientos",
-          content:
-            "Comparto una lista de herramientas gratuitas que uso para gestionar mi startup de delivery...",
-          author: {
-            name: "Ana Gutiérrez",
-            avatar: "/api/placeholder/50/50",
-            businessName: "FoodTech Express",
-          },
-          category: "Herramientas",
-          replies: 42,
-          views: 678,
-          likes: 156,
-          createdAt: new Date("2024-02-15"),
-          tags: ["Herramientas", "Productividad", "Gestión"],
-          isSticky: false,
-        },
-      ];
-
-      setEntrepreneurs(mockEntrepreneurs);
-      setEvents(mockEvents);
-      setDiscussions(mockDiscussions);
+      await Promise.all([
+        searchUsers(),
+        getReceivedRequests(),
+        getContacts(),
+        getStats()
+      ]);
     } catch (error) {
       console.error("Error fetching networking data:", error);
     } finally {
@@ -300,6 +255,20 @@ export default function NetworkingPage() {
   useEffect(() => {
     fetchNetworkingData();
   }, [fetchNetworkingData]);
+
+  // Manejar búsqueda
+  const handleSearch = () => {
+    searchUsers(searchQuery);
+  };
+
+  // Manejar envío de solicitud
+  const handleSendRequest = async (userId: string) => {
+    try {
+      await sendRequest(userId, '¡Hola! Me gustaría conectar contigo para colaborar en proyectos.');
+    } catch (error) {
+      console.error('Error sending request:', error);
+    }
+  };
 
   if (loading) {
     return (
@@ -326,26 +295,69 @@ export default function NetworkingPage() {
         </p>
       </div>
 
+      {/* Estadísticas */}
+      {stats && (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          <Card>
+            <CardContent className="p-4 text-center">
+              <div className="text-2xl font-bold text-blue-600">{stats.totalContacts}</div>
+              <div className="text-sm text-muted-foreground">Contactos</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4 text-center">
+              <div className="text-2xl font-bold text-orange-600">{stats.pendingReceived}</div>
+              <div className="text-sm text-muted-foreground">Solicitudes Pendientes</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4 text-center">
+              <div className="text-2xl font-bold text-green-600">{stats.pendingSent}</div>
+              <div className="text-sm text-muted-foreground">Enviadas</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4 text-center">
+              <div className="text-2xl font-bold text-purple-600">{stats.totalRequests}</div>
+              <div className="text-sm text-muted-foreground">Total Solicitudes</div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
       <Tabs
         value={activeTab}
-        onValueChange={setActiveTab}
+        onValueChange={handleTabChange}
         className="space-y-6"
       >
-        <TabsList className="grid w-full grid-cols-3">
+                 <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="entrepreneurs">Emprendedores</TabsTrigger>
-          <TabsTrigger value="events">Eventos</TabsTrigger>
+           <TabsTrigger value="requests" className="relative">
+             Solicitudes
+             {(requests || []).length > 0 && (
+               <Badge 
+                 variant="destructive" 
+                 className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs"
+                                >
+                   {(requests || []).length > 9 ? '9+' : (requests || []).length}
+                 </Badge>
+             )}
+           </TabsTrigger>
+           <TabsTrigger value="contacts">Mis Contactos</TabsTrigger>
           <TabsTrigger value="discussions">Discusiones</TabsTrigger>
+           <TabsTrigger value="organizations">Fundaciones</TabsTrigger>
         </TabsList>
 
-        {/* Entrepreneurs Tab */}
+        {/* Emprendedores Tab */}
         <TabsContent value="entrepreneurs" className="space-y-6">
           <div className="flex items-center justify-between">
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Buscar emprendedores por nombre, negocio o habilidades..."
+                 placeholder="Buscar emprendedores por nombre, email o habilidades..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                 onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                 className="pl-10"
               />
             </div>
@@ -354,307 +366,488 @@ export default function NetworkingPage() {
                 <Filter className="h-4 w-4 mr-2" />
                 Filtros
               </Button>
-              <Button asChild>
-                <Link href="/profile">
-                  <UserPlus className="h-4 w-4 mr-2" />
-                  Completar mi Perfil
-                </Link>
+               <Button onClick={handleSearch}>
+                 <Search className="h-4 w-4 mr-2" />
+                 Buscar
               </Button>
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {entrepreneurs.map((entrepreneur) => (
+             {(users || []).filter(user => user && user.userId).map((user) => (
               <Card
-                key={entrepreneur.id}
+                 key={user?.userId || Math.random().toString()}
                 className="overflow-hidden hover:shadow-lg transition-shadow"
               >
                 <CardContent className="p-6">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="relative">
                       <Avatar className="h-12 w-12">
-                        <AvatarImage
-                          src={entrepreneur.avatar}
-                          alt={entrepreneur.name}
-                        />
+                       <AvatarImage src={user?.avatarUrl} alt={`${user?.firstName || ''} ${user?.lastName || ''}`} />
                         <AvatarFallback>
-                          {entrepreneur.name.charAt(0)}
+                         {user?.firstName?.[0] || ''}{user?.lastName?.[0] || ''}
                         </AvatarFallback>
                       </Avatar>
-                      {entrepreneur.isOnline && (
-                        <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white" />
-                      )}
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold">{entrepreneur.name}</h3>
-                      <p className="text-sm text-muted-foreground">
-                        {entrepreneur.businessName}
-                      </p>
+                                         <div className="flex-1">
+                       <h3 className="font-semibold">{user?.firstName || 'Sin nombre'} {user?.lastName || ''}</h3>
+                       <p className="text-sm text-muted-foreground">{user?.email || 'Sin email'}</p>
+                       {user?.currentInstitution && (
+                         <p className="text-sm text-muted-foreground">{user.currentInstitution}</p>
+                       )}
                       <div className="flex items-center gap-1 text-xs text-muted-foreground">
                         <MapPin className="h-3 w-3" />
-                        {entrepreneur.location}
+                         {user?.municipality || 'Sin ubicación'}, {user?.department || ''}
                       </div>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2 mb-3">
-                    <Badge variant="secondary">{entrepreneur.category}</Badge>
-                    <div className="flex items-center gap-1 text-xs">
-                      <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                      {entrepreneur.rating}
+                                     {user?.skills && user.skills.length > 0 && (
+                     <div className="mb-4">
+                       <p className="text-sm font-medium mb-2">Habilidades:</p>
+                       <div className="flex flex-wrap gap-1">
+                         {user.skills.slice(0, 3).map((skill) => (
+                           <Badge key={skill} variant="secondary" className="text-xs">
+                             {skill}
+                           </Badge>
+                         ))}
+                         {user.skills.length > 3 && (
+                           <Badge variant="outline" className="text-xs">
+                             +{user.skills.length - 3} más
+                           </Badge>
+                         )}
                     </div>
-                  </div>
+                     </div>
+                   )}
 
-                  <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                    {entrepreneur.bio}
-                  </p>
-
-                  <div className="space-y-3">
-                    <div>
-                      <p className="text-xs font-medium text-muted-foreground mb-1">
-                        Habilidades
-                      </p>
-                      <div className="flex flex-wrap gap-1">
-                        {entrepreneur.skills.slice(0, 3).map((skill) => (
-                          <Badge
-                            key={skill}
-                            variant="outline"
-                            className="text-xs"
-                          >
-                            {skill}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div>
-                      <p className="text-xs font-medium text-muted-foreground mb-1">
-                        Busca
-                      </p>
-                      <div className="flex flex-wrap gap-1">
-                        {entrepreneur.lookingFor.slice(0, 2).map((item) => (
-                          <Badge
-                            key={item}
-                            variant="outline"
-                            className="text-xs bg-blue-50 text-blue-700"
-                          >
-                            {item}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between mt-4 pt-4 border-t">
-                    <div className="text-xs text-muted-foreground">
-                      {entrepreneur.connections} conexiones
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      Disponible para networking
-                    </div>
-                  </div>
+                                     {user?.contactStatus === 'PENDING' ? (
+                     <div className="flex items-center gap-2">
+                       <Badge variant="outline">
+                         Solicitud enviada
+                       </Badge>
+                     </div>
+                   ) : (
+                     <Button 
+                       size="sm" 
+                       onClick={() => handleSendRequest(user?.userId || '')}
+                       className="w-full"
+                     >
+                       <UserPlus className="w-4 h-4 mr-2" />
+                       Conectar
+                     </Button>
+                   )}
                 </CardContent>
               </Card>
             ))}
-          </div>
-        </TabsContent>
-
-        {/* Events Tab */}
-        <TabsContent value="events" className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold">Próximos Eventos</h2>
-            <Button asChild>
-              <Link href="/entrepreneurship/create-event">
-                <Plus className="h-4 w-4 mr-2" />
-                Crear Evento
-              </Link>
-            </Button>
-          </div>
-
-          <div className="space-y-4">
-            {events.map((event) => (
-              <Card key={event.id} className="overflow-hidden">
-                <div className="flex">
-                  <div className="w-48 h-32 bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center flex-shrink-0">
-                    <Calendar className="h-16 w-16 text-blue-600" />
                   </div>
-                  <CardContent className="p-6 flex-1">
-                    <div className="flex items-start justify-between mb-2">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h3 className="text-lg font-semibold">
-                            {event.title}
-                          </h3>
-                          <Badge
-                            variant={
-                              event.type === "virtual"
-                                ? "secondary"
-                                : event.type === "presencial"
-                                  ? "default"
-                                  : "outline"
-                            }
-                          >
-                            {event.type === "virtual"
-                              ? "Virtual"
-                              : event.type === "presencial"
-                                ? "Presencial"
-                                : "Híbrido"}
-                          </Badge>
-                        </div>
-                        <p className="text-sm text-muted-foreground mb-3">
-                          {event.description}
-                        </p>
 
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                          <div className="flex items-center gap-1">
-                            <Calendar className="h-4 w-4 text-muted-foreground" />
-                            <span>{event.date.toLocaleDateString()}</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Clock className="h-4 w-4 text-muted-foreground" />
-                            <span>{event.time}</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <MapPin className="h-4 w-4 text-muted-foreground" />
-                            <span>{event.location}</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Users className="h-4 w-4 text-muted-foreground" />
-                            <span>
-                              {event.attendees}/{event.maxAttendees}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="text-right">
-                        <div className="text-sm text-muted-foreground mb-2">
-                          {event.price === 0
-                            ? "Gratuito"
-                            : `Bs. ${event.price}`}
-                        </div>
-                        <Button>Registrarse</Button>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-between mt-4">
-                      <div className="flex flex-wrap gap-1">
-                        {event.tags.map((tag) => (
-                          <Badge
-                            key={tag}
-                            variant="outline"
-                            className="text-xs"
-                          >
-                            {tag}
-                          </Badge>
-                        ))}
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        Organizado por: {event.organizer}
-                      </div>
-                    </div>
-                  </CardContent>
-                </div>
-              </Card>
-            ))}
-          </div>
+                     {(users || []).filter(user => user && user.userId).length === 0 && (
+            <div className="text-center py-12">
+              <Users className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+              <h3 className="text-lg font-medium mb-2">No se encontraron emprendedores</h3>
+              <p className="text-muted-foreground">
+                Intenta con otros términos de búsqueda o completa tu perfil para aparecer en la red.
+              </p>
+            </div>
+          )}
         </TabsContent>
 
-        {/* Discussions Tab */}
-        <TabsContent value="discussions" className="space-y-6">
+        {/* Solicitudes Tab */}
+        <TabsContent value="requests" className="space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold">
-              Discusiones de la Comunidad
-            </h2>
-            <Button asChild>
-              <Link href="/entrepreneurship/create-discussion">
-                <Plus className="h-4 w-4 mr-2" />
-                Nueva Discusión
-              </Link>
+                    <div>
+              <h2 className="text-xl font-semibold">Solicitudes de Conexión</h2>
+              <p className="text-sm text-muted-foreground">
+                Gestiona las solicitudes que otros jóvenes te han enviado
+              </p>
+            </div>
+            <Button variant="outline" onClick={getReceivedRequests}>
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Actualizar
             </Button>
           </div>
 
-          <div className="space-y-4">
-            {discussions.map((discussion) => (
-              <Card
-                key={discussion.id}
-                className={
-                  discussion.isSticky ? "border-blue-200 bg-blue-50/50" : ""
-                }
-              >
+          {/* Contador de solicitudes */}
+          {requests.length > 0 && (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="flex items-center gap-2">
+                <MessageCircle className="h-5 w-5 text-blue-600" />
+                                 <span className="font-medium text-blue-900">
+                   Tienes {(requests || []).length} solicitud{(requests || []).length !== 1 ? 'es' : ''} pendiente{(requests || []).length !== 1 ? 's' : ''}
+                 </span>
+                      </div>
+                    </div>
+          )}
+
+                     <div className="space-y-4">
+             {(requests || []).filter(request => request && request.id).map((request) => (
+               <Card key={request?.id || Math.random().toString()} className="border-l-4 border-l-orange-500">
                 <CardContent className="p-6">
                   <div className="flex items-start gap-4">
-                    <Avatar className="h-10 w-10 flex-shrink-0">
-                      <AvatarImage
-                        src={discussion.author.avatar}
-                        alt={discussion.author.name}
-                      />
-                      <AvatarFallback>
-                        {discussion.author.name.charAt(0)}
-                      </AvatarFallback>
-                    </Avatar>
+                                         <Avatar className="h-16 w-16">
+                       <AvatarImage src={request.user?.avatarUrl} alt={`${request.user?.firstName || ''} ${request.user?.lastName || ''}`} />
+                       <AvatarFallback className="text-lg">
+                         {request.user?.firstName?.[0] || ''}{request.user?.lastName?.[0] || ''}
+                       </AvatarFallback>
+                     </Avatar>
+                    
+                    <div className="flex-1 space-y-3">
+                                             {/* Información del usuario */}
+                    <div>
+                         <h3 className="font-semibold text-lg">{request.user?.firstName || 'Sin nombre'} {request.user?.lastName || ''}</h3>
+                         <p className="text-sm text-muted-foreground">{request.user?.email || 'Sin email'}</p>
+                         {request.user?.currentInstitution && (
+                           <p className="text-sm text-muted-foreground">
+                             <MapPin className="h-3 w-3 inline mr-1" />
+                             {request.user.currentInstitution} • {request.user?.municipality || ''}, {request.user?.department || ''}
+                           </p>
+                         )}
+                       </div>
 
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        {discussion.isSticky && (
-                          <Badge variant="secondary" className="text-xs">
-                            Fijado
+                                             {/* Habilidades */}
+                       {request.user?.skills && request.user.skills.length > 0 && (
+                         <div>
+                           <p className="text-sm font-medium mb-1">Habilidades:</p>
+                      <div className="flex flex-wrap gap-1">
+                             {request.user.skills.slice(0, 4).map((skill) => (
+                               <Badge key={skill} variant="secondary" className="text-xs">
+                                 {skill}
                           </Badge>
-                        )}
-                        <h3 className="font-semibold text-lg">
-                          {discussion.title}
-                        </h3>
+                        ))}
+                             {request.user.skills.length > 4 && (
+                               <Badge variant="outline" className="text-xs">
+                                 +{request.user.skills.length - 4} más
+                               </Badge>
+                             )}
                       </div>
+                    </div>
+                       )}
 
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
-                        <span>{discussion.author.name}</span>
-                        <span>•</span>
-                        <span>{discussion.author.businessName}</span>
-                        <span>•</span>
-                        <Badge variant="outline" className="text-xs">
-                          {discussion.category}
-                        </Badge>
-                        <span>•</span>
-                        <span>{discussion.createdAt.toLocaleDateString()}</span>
-                      </div>
+                      {/* Mensaje personalizado */}
+                      {request.message && (
+                        <div className="bg-gray-50 rounded-lg p-3">
+                          <p className="text-sm italic text-gray-700">"{request.message}"</p>
+                        </div>
+                      )}
 
-                      <p className="text-muted-foreground mb-4 line-clamp-2">
-                        {discussion.content}
+                      {/* Fecha */}
+                      <p className="text-xs text-muted-foreground">
+                        <Clock className="h-3 w-3 inline mr-1" />
+                        Solicitud enviada el {new Date(request.createdAt).toLocaleDateString('es-ES', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
                       </p>
+                  </div>
 
-                      <div className="flex items-center justify-between">
-                        <div className="flex flex-wrap gap-1">
-                          {discussion.tags.map((tag) => (
-                            <Badge
-                              key={tag}
-                              variant="outline"
-                              className="text-xs"
-                            >
-                              {tag}
-                            </Badge>
-                          ))}
-                        </div>
-
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                          <div className="flex items-center gap-1">
-                            <Heart className="h-4 w-4" />
-                            {discussion.likes}
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <MessageCircle className="h-4 w-4" />
-                            {discussion.replies}
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <TrendingUp className="h-4 w-4" />
-                            {discussion.views}
-                          </div>
-                        </div>
-                      </div>
+                    {/* Botones de acción */}
+                    <div className="flex flex-col gap-2 min-w-[120px]">
+                      <Button 
+                        size="sm" 
+                        onClick={() => acceptRequest(request.id)}
+                        className="bg-green-600 hover:bg-green-700 text-white"
+                      >
+                        <Check className="h-4 w-4 mr-1" />
+                        Aceptar
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant="outline"
+                        onClick={() => rejectRequest(request.id)}
+                        className="border-red-200 text-red-600 hover:bg-red-50"
+                      >
+                        <X className="h-4 w-4 mr-1" />
+                        Rechazar
+                      </Button>
                     </div>
                   </div>
                 </CardContent>
               </Card>
             ))}
+
+                         {(requests || []).length === 0 && (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <MessageCircle className="h-8 w-8 text-gray-400" />
+                </div>
+                <h3 className="text-lg font-medium mb-2">No tienes solicitudes pendientes</h3>
+                <p className="text-muted-foreground mb-4">
+                  Cuando otros jóvenes te envíen solicitudes de conexión, aparecerán aquí para que puedas revisarlas y decidir si las aceptas.
+                </p>
+                <Button variant="outline" onClick={() => setActiveTab("entrepreneurs")}>
+                  <Search className="h-4 w-4 mr-2" />
+                  Buscar Emprendedores
+                </Button>
+              </div>
+            )}
+          </div>
+        </TabsContent>
+
+        {/* Contactos Tab */}
+        <TabsContent value="contacts" className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-semibold">Mis Contactos</h2>
+            <Button variant="outline" onClick={getContacts}>
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Actualizar
+            </Button>
+          </div>
+
+                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+             {(contacts || []).filter(contact => contact && contact.userId).map((contact) => (
+               <Card
+                 key={contact?.userId || Math.random().toString()}
+                 className="overflow-hidden hover:shadow-lg transition-shadow"
+               >
+                <CardContent className="p-6">
+                                     <div className="flex items-center gap-3 mb-4">
+                     <Avatar className="h-12 w-12">
+                       <AvatarImage src={contact?.avatarUrl} alt={`${contact?.firstName || ''} ${contact?.lastName || ''}`} />
+                       <AvatarFallback>
+                         {contact?.firstName?.[0] || ''}{contact?.lastName?.[0] || ''}
+                       </AvatarFallback>
+                     </Avatar>
+                      <div className="flex-1">
+                       <h3 className="font-semibold">{contact?.firstName || 'Sin nombre'} {contact?.lastName || ''}</h3>
+                       <p className="text-sm text-muted-foreground">{contact?.email || 'Sin email'}</p>
+                       {contact?.currentInstitution && (
+                         <p className="text-sm text-muted-foreground">{contact.currentInstitution}</p>
+                       )}
+                       <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                         <MapPin className="h-3 w-3" />
+                         {contact?.municipality || 'Sin ubicación'}, {contact?.department || ''}
+                          </div>
+                        </div>
+                      </div>
+
+                                     {contact?.skills && contact.skills.length > 0 && (
+                     <div className="mb-4">
+                       <p className="text-sm font-medium mb-2">Habilidades:</p>
+                      <div className="flex flex-wrap gap-1">
+                         {contact.skills.slice(0, 3).map((skill) => (
+                           <Badge key={skill} variant="secondary" className="text-xs">
+                             {skill}
+                          </Badge>
+                        ))}
+                         {contact.skills.length > 3 && (
+                           <Badge variant="outline" className="text-xs">
+                             +{contact.skills.length - 3} más
+                           </Badge>
+                         )}
+                      </div>
+                     </div>
+                   )}
+
+                                     <div className="flex gap-2">
+                     <Button 
+                       size="sm" 
+                       variant="outline" 
+                       className="flex-1"
+                       onClick={() => {
+                         // Aquí podrías abrir un modal o navegar a la página de mensajería
+                         window.location.href = '/entrepreneurship/messaging';
+                       }}
+                     >
+                       <MessageCircle className="h-4 w-4 mr-2" />
+                       Mensaje
+                     </Button>
+                     <Button size="sm" variant="outline">
+                       <Share2 className="h-4 w-4" />
+                     </Button>
+                    </div>
+                  </CardContent>
+              </Card>
+            ))}
+          </div>
+
+                     {(contacts || []).length === 0 && (
+            <div className="text-center py-12">
+              <Users className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+              <h3 className="text-lg font-medium mb-2">No tienes contactos aún</h3>
+              <p className="text-muted-foreground">
+                Busca emprendedores y envíales solicitudes para empezar a construir tu red.
+              </p>
+            </div>
+                     )}
+        </TabsContent>
+
+         {/* Discusiones Tab */}
+        <TabsContent value="discussions" className="space-y-6">
+          <div className="flex items-center justify-between">
+             <div>
+               <h2 className="text-xl font-semibold">Discusiones y Foros</h2>
+               <p className="text-sm text-muted-foreground">
+                 Participa en conversaciones sobre emprendimiento e innovación
+               </p>
+             </div>
+             <Button>
+                <Plus className="h-4 w-4 mr-2" />
+                Nueva Discusión
+            </Button>
+          </div>
+
+           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+             {/* Discusiones de ejemplo */}
+             <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                <CardContent className="p-6">
+                 <div className="flex items-center gap-3 mb-4">
+                   <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                     <MessageCircle className="h-5 w-5 text-blue-600" />
+                   </div>
+                   <div className="flex-1">
+                     <h3 className="font-semibold">¿Cómo financiar mi startup?</h3>
+                     <p className="text-sm text-muted-foreground">por Juan Pérez</p>
+                   </div>
+                 </div>
+                 <p className="text-sm text-muted-foreground mb-4">
+                   Estoy buscando opciones de financiamiento para mi startup de tecnología. ¿Alguien tiene experiencia con inversores ángeles en Bolivia?
+                 </p>
+                 <div className="flex items-center justify-between text-xs text-muted-foreground">
+                   <span>15 respuestas</span>
+                   <span>Hace 2 horas</span>
+                 </div>
+               </CardContent>
+             </Card>
+
+             <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+               <CardContent className="p-6">
+                 <div className="flex items-center gap-3 mb-4">
+                   <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                     <TrendingUp className="h-5 w-5 text-green-600" />
+                   </div>
+                    <div className="flex-1">
+                     <h3 className="font-semibold">Tendencias en e-commerce</h3>
+                     <p className="text-sm text-muted-foreground">por María García</p>
+                   </div>
+                 </div>
+                 <p className="text-sm text-muted-foreground mb-4">
+                   Compartamos experiencias sobre las últimas tendencias en comercio electrónico y cómo aplicarlas en Bolivia.
+                 </p>
+                 <div className="flex items-center justify-between text-xs text-muted-foreground">
+                   <span>8 respuestas</span>
+                   <span>Hace 1 día</span>
+                      </div>
+               </CardContent>
+             </Card>
+
+             <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+               <CardContent className="p-6">
+                 <div className="flex items-center gap-3 mb-4">
+                   <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                     <Star className="h-5 w-5 text-purple-600" />
+                   </div>
+                   <div className="flex-1">
+                     <h3 className="font-semibold">Networking efectivo</h3>
+                     <p className="text-sm text-muted-foreground">por Carlos López</p>
+                   </div>
+                      </div>
+                 <p className="text-sm text-muted-foreground mb-4">
+                   Tips y estrategias para hacer networking efectivo en eventos de emprendimiento.
+                 </p>
+                 <div className="flex items-center justify-between text-xs text-muted-foreground">
+                   <span>12 respuestas</span>
+                   <span>Hace 3 días</span>
+                 </div>
+               </CardContent>
+             </Card>
+           </div>
+         </TabsContent>
+
+         {/* Fundaciones Tab */}
+         <TabsContent value="organizations" className="space-y-6">
+                      <div className="flex items-center justify-between">
+             <div>
+               <h2 className="text-xl font-semibold">Fundaciones y Organizaciones</h2>
+               <p className="text-sm text-muted-foreground">
+                 Conecta con organizaciones que apoyan el emprendimiento juvenil
+               </p>
+             </div>
+             <Button variant="outline">
+               <Filter className="h-4 w-4 mr-2" />
+               Filtrar
+             </Button>
+                        </div>
+
+           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+             {/* Organizaciones de ejemplo */}
+             <Card className="hover:shadow-lg transition-shadow">
+               <CardContent className="p-6">
+                 <div className="flex items-center gap-3 mb-4">
+                   <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                     <Heart className="h-6 w-6 text-red-600" />
+                   </div>
+                   <div className="flex-1">
+                     <h3 className="font-semibold">Fundación Emprender</h3>
+                     <p className="text-sm text-muted-foreground">Cochabamba, Bolivia</p>
+                   </div>
+                 </div>
+                 <p className="text-sm text-muted-foreground mb-4">
+                   Apoyamos a jóvenes emprendedores con programas de incubación, mentoría y financiamiento.
+                 </p>
+                 <div className="flex gap-2">
+                   <Badge variant="secondary">Incubación</Badge>
+                   <Badge variant="secondary">Mentoría</Badge>
+                   <Badge variant="secondary">Financiamiento</Badge>
+                          </div>
+                 <Button size="sm" className="w-full mt-4">
+                   <MessageCircle className="h-4 w-4 mr-2" />
+                   Contactar
+                 </Button>
+               </CardContent>
+             </Card>
+
+             <Card className="hover:shadow-lg transition-shadow">
+               <CardContent className="p-6">
+                 <div className="flex items-center gap-3 mb-4">
+                   <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                     <TrendingUp className="h-6 w-6 text-blue-600" />
+                          </div>
+                   <div className="flex-1">
+                     <h3 className="font-semibold">Innovate Bolivia</h3>
+                     <p className="text-sm text-muted-foreground">La Paz, Bolivia</p>
+                          </div>
+                        </div>
+                 <p className="text-sm text-muted-foreground mb-4">
+                   Organización dedicada a promover la innovación tecnológica y el emprendimiento digital.
+                 </p>
+                 <div className="flex gap-2">
+                   <Badge variant="secondary">Tecnología</Badge>
+                   <Badge variant="secondary">Innovación</Badge>
+                   <Badge variant="secondary">Digital</Badge>
+                 </div>
+                 <Button size="sm" className="w-full mt-4">
+                   <MessageCircle className="h-4 w-4 mr-2" />
+                   Contactar
+                 </Button>
+               </CardContent>
+             </Card>
+
+             <Card className="hover:shadow-lg transition-shadow">
+               <CardContent className="p-6">
+                 <div className="flex items-center gap-3 mb-4">
+                   <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                     <Users className="h-6 w-6 text-green-600" />
+                   </div>
+                   <div className="flex-1">
+                     <h3 className="font-semibold">Jóvenes Emprendedores</h3>
+                     <p className="text-sm text-muted-foreground">Santa Cruz, Bolivia</p>
+                      </div>
+                    </div>
+                 <p className="text-sm text-muted-foreground mb-4">
+                   Red de jóvenes emprendedores que se apoyan mutuamente para crecer y desarrollar sus proyectos.
+                 </p>
+                 <div className="flex gap-2">
+                   <Badge variant="secondary">Red</Badge>
+                   <Badge variant="secondary">Colaboración</Badge>
+                   <Badge variant="secondary">Crecimiento</Badge>
+                  </div>
+                 <Button size="sm" className="w-full mt-4">
+                   <MessageCircle className="h-4 w-4 mr-2" />
+                   Contactar
+                 </Button>
+                </CardContent>
+              </Card>
           </div>
         </TabsContent>
       </Tabs>

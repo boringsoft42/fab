@@ -131,202 +131,192 @@ export default function CourseStudentsPage() {
   });
 
   useEffect(() => {
-    fetchStudentData();
+    // TODO: Integrar hook real para estudiantes del curso (useCourseStudents) cuando esté disponible
+    // Reemplazar fetchStudentData y mockStudents por datos reales de la API
+    // Mock data for demonstration
+    const mockStudents: StudentEnrollment[] = [
+      {
+        id: "enrollment-1",
+        student: {
+          id: "student-1",
+          name: "María González",
+          email: "maria.gonzalez@email.com",
+          avatar: "/api/placeholder/40/40",
+          age: 19,
+          location: "La Paz",
+        },
+        enrollmentDate: new Date("2024-01-15"),
+        lastAccessed: new Date("2024-02-28"),
+        progressPercentage: 85,
+        completedLessons: 13,
+        totalLessons: 15,
+        timeSpent: 420, // 7 hours
+        status: "active",
+        certificateIssued: false,
+        finalGrade: 88,
+        moduleProgress: [
+          {
+            moduleId: "mod-1",
+            moduleName: "Introducción",
+            completedLessons: 3,
+            totalLessons: 3,
+            progressPercentage: 100,
+            lastAccessed: new Date("2024-02-20"),
+          },
+          {
+            moduleId: "mod-2",
+            moduleName: "Desarrollo de Habilidades",
+            completedLessons: 7,
+            totalLessons: 8,
+            progressPercentage: 87,
+            lastAccessed: new Date("2024-02-28"),
+          },
+        ],
+        quizResults: [
+          {
+            quizId: "quiz-1",
+            quizName: "Evaluación Módulo 1",
+            score: 85,
+            maxScore: 100,
+            attempts: 1,
+            completedAt: new Date("2024-02-20"),
+            passed: true,
+          },
+        ],
+      },
+      {
+        id: "enrollment-2",
+        student: {
+          id: "student-2",
+          name: "Carlos Mamani",
+          email: "carlos.mamani@email.com",
+          age: 22,
+          location: "El Alto",
+        },
+        enrollmentDate: new Date("2024-01-20"),
+        lastAccessed: new Date("2024-02-25"),
+        progressPercentage: 60,
+        completedLessons: 9,
+        totalLessons: 15,
+        timeSpent: 310,
+        status: "active",
+        certificateIssued: false,
+        moduleProgress: [
+          {
+            moduleId: "mod-1",
+            moduleName: "Introducción",
+            completedLessons: 3,
+            totalLessons: 3,
+            progressPercentage: 100,
+            lastAccessed: new Date("2024-02-15"),
+          },
+          {
+            moduleId: "mod-2",
+            moduleName: "Desarrollo de Habilidades",
+            completedLessons: 4,
+            totalLessons: 8,
+            progressPercentage: 50,
+            lastAccessed: new Date("2024-02-25"),
+          },
+        ],
+        quizResults: [
+          {
+            quizId: "quiz-1",
+            quizName: "Evaluación Módulo 1",
+            score: 75,
+            maxScore: 100,
+            attempts: 2,
+            completedAt: new Date("2024-02-16"),
+            passed: true,
+          },
+        ],
+      },
+      {
+        id: "enrollment-3",
+        student: {
+          id: "student-3",
+          name: "Ana Quispe",
+          email: "ana.quispe@email.com",
+          age: 18,
+          location: "Cochabamba",
+        },
+        enrollmentDate: new Date("2024-01-10"),
+        lastAccessed: new Date("2024-02-29"),
+        progressPercentage: 100,
+        completedLessons: 15,
+        totalLessons: 15,
+        timeSpent: 480,
+        status: "completed",
+        certificateIssued: true,
+        finalGrade: 95,
+        moduleProgress: [
+          {
+            moduleId: "mod-1",
+            moduleName: "Introducción",
+            completedLessons: 3,
+            totalLessons: 3,
+            progressPercentage: 100,
+            lastAccessed: new Date("2024-02-10"),
+          },
+          {
+            moduleId: "mod-2",
+            moduleName: "Desarrollo de Habilidades",
+            completedLessons: 8,
+            totalLessons: 8,
+            progressPercentage: 100,
+            lastAccessed: new Date("2024-02-29"),
+          },
+        ],
+        quizResults: [
+          {
+            quizId: "quiz-1",
+            quizName: "Evaluación Módulo 1",
+            score: 95,
+            maxScore: 100,
+            attempts: 1,
+            completedAt: new Date("2024-02-10"),
+            passed: true,
+          },
+          {
+            quizId: "quiz-2",
+            quizName: "Evaluación Final",
+            score: 90,
+            maxScore: 100,
+            attempts: 1,
+            completedAt: new Date("2024-02-29"),
+            passed: true,
+          },
+        ],
+      },
+    ];
+
+    setStudents(mockStudents);
+
+    // Calculate stats
+    const stats: CourseStats = {
+      totalEnrolled: mockStudents.length,
+      activeStudents: mockStudents.filter((s) => s.status === "active")
+        .length,
+      completedStudents: mockStudents.filter((s) => s.status === "completed")
+        .length,
+      averageProgress:
+        mockStudents.reduce((acc, s) => acc + s.progressPercentage, 0) /
+        mockStudents.length,
+      averageTimeSpent:
+        mockStudents.reduce((acc, s) => acc + s.timeSpent, 0) /
+        mockStudents.length,
+      completionRate:
+        (mockStudents.filter((s) => s.status === "completed").length /
+          mockStudents.length) *
+        100,
+      averageGrade:
+        mockStudents.reduce((acc, s) => acc + (s.finalGrade || 0), 0) /
+        mockStudents.length,
+      certificatesIssued: mockStudents.filter((s) => s.certificateIssued)
+        .length,
+    };
+    setStats(stats);
   }, [courseId]);
-
-  const fetchStudentData = async () => {
-    try {
-      setLoading(true);
-
-      // Mock data for demonstration
-      const mockStudents: StudentEnrollment[] = [
-        {
-          id: "enrollment-1",
-          student: {
-            id: "student-1",
-            name: "María González",
-            email: "maria.gonzalez@email.com",
-            avatar: "/api/placeholder/40/40",
-            age: 19,
-            location: "La Paz",
-          },
-          enrollmentDate: new Date("2024-01-15"),
-          lastAccessed: new Date("2024-02-28"),
-          progressPercentage: 85,
-          completedLessons: 13,
-          totalLessons: 15,
-          timeSpent: 420, // 7 hours
-          status: "active",
-          certificateIssued: false,
-          finalGrade: 88,
-          moduleProgress: [
-            {
-              moduleId: "mod-1",
-              moduleName: "Introducción",
-              completedLessons: 3,
-              totalLessons: 3,
-              progressPercentage: 100,
-              lastAccessed: new Date("2024-02-20"),
-            },
-            {
-              moduleId: "mod-2",
-              moduleName: "Desarrollo de Habilidades",
-              completedLessons: 7,
-              totalLessons: 8,
-              progressPercentage: 87,
-              lastAccessed: new Date("2024-02-28"),
-            },
-          ],
-          quizResults: [
-            {
-              quizId: "quiz-1",
-              quizName: "Evaluación Módulo 1",
-              score: 85,
-              maxScore: 100,
-              attempts: 1,
-              completedAt: new Date("2024-02-20"),
-              passed: true,
-            },
-          ],
-        },
-        {
-          id: "enrollment-2",
-          student: {
-            id: "student-2",
-            name: "Carlos Mamani",
-            email: "carlos.mamani@email.com",
-            age: 22,
-            location: "El Alto",
-          },
-          enrollmentDate: new Date("2024-01-20"),
-          lastAccessed: new Date("2024-02-25"),
-          progressPercentage: 60,
-          completedLessons: 9,
-          totalLessons: 15,
-          timeSpent: 310,
-          status: "active",
-          certificateIssued: false,
-          moduleProgress: [
-            {
-              moduleId: "mod-1",
-              moduleName: "Introducción",
-              completedLessons: 3,
-              totalLessons: 3,
-              progressPercentage: 100,
-              lastAccessed: new Date("2024-02-15"),
-            },
-            {
-              moduleId: "mod-2",
-              moduleName: "Desarrollo de Habilidades",
-              completedLessons: 4,
-              totalLessons: 8,
-              progressPercentage: 50,
-              lastAccessed: new Date("2024-02-25"),
-            },
-          ],
-          quizResults: [
-            {
-              quizId: "quiz-1",
-              quizName: "Evaluación Módulo 1",
-              score: 75,
-              maxScore: 100,
-              attempts: 2,
-              completedAt: new Date("2024-02-16"),
-              passed: true,
-            },
-          ],
-        },
-        {
-          id: "enrollment-3",
-          student: {
-            id: "student-3",
-            name: "Ana Quispe",
-            email: "ana.quispe@email.com",
-            age: 18,
-            location: "Cochabamba",
-          },
-          enrollmentDate: new Date("2024-01-10"),
-          lastAccessed: new Date("2024-02-29"),
-          progressPercentage: 100,
-          completedLessons: 15,
-          totalLessons: 15,
-          timeSpent: 480,
-          status: "completed",
-          certificateIssued: true,
-          finalGrade: 95,
-          moduleProgress: [
-            {
-              moduleId: "mod-1",
-              moduleName: "Introducción",
-              completedLessons: 3,
-              totalLessons: 3,
-              progressPercentage: 100,
-              lastAccessed: new Date("2024-02-10"),
-            },
-            {
-              moduleId: "mod-2",
-              moduleName: "Desarrollo de Habilidades",
-              completedLessons: 8,
-              totalLessons: 8,
-              progressPercentage: 100,
-              lastAccessed: new Date("2024-02-29"),
-            },
-          ],
-          quizResults: [
-            {
-              quizId: "quiz-1",
-              quizName: "Evaluación Módulo 1",
-              score: 95,
-              maxScore: 100,
-              attempts: 1,
-              completedAt: new Date("2024-02-10"),
-              passed: true,
-            },
-            {
-              quizId: "quiz-2",
-              quizName: "Evaluación Final",
-              score: 90,
-              maxScore: 100,
-              attempts: 1,
-              completedAt: new Date("2024-02-29"),
-              passed: true,
-            },
-          ],
-        },
-      ];
-
-      setStudents(mockStudents);
-
-      // Calculate stats
-      const stats: CourseStats = {
-        totalEnrolled: mockStudents.length,
-        activeStudents: mockStudents.filter((s) => s.status === "active")
-          .length,
-        completedStudents: mockStudents.filter((s) => s.status === "completed")
-          .length,
-        averageProgress:
-          mockStudents.reduce((acc, s) => acc + s.progressPercentage, 0) /
-          mockStudents.length,
-        averageTimeSpent:
-          mockStudents.reduce((acc, s) => acc + s.timeSpent, 0) /
-          mockStudents.length,
-        completionRate:
-          (mockStudents.filter((s) => s.status === "completed").length /
-            mockStudents.length) *
-          100,
-        averageGrade:
-          mockStudents.reduce((acc, s) => acc + (s.finalGrade || 0), 0) /
-          mockStudents.length,
-        certificatesIssued: mockStudents.filter((s) => s.certificateIssued)
-          .length,
-      };
-      setStats(stats);
-    } catch (error) {
-      console.error("Error fetching student data:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const filteredStudents = students.filter((enrollment) => {
     const matchesSearch =

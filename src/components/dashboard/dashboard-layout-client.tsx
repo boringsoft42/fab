@@ -6,15 +6,21 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { AdaptiveAppSidebar } from "@/components/sidebar/adaptive-app-sidebar";
 import SkipToMain from "@/components/skip-to-main";
 import { AdaptiveHeader } from "@/components/sidebar/adaptive-header";
-import { RoleGuard } from "@/components/auth/role-guard";
+import RoleGuard from "@/components/auth/role-guard";
+import { AuthRedirect } from "@/components/auth/auth-redirect";
+import { useUserColors } from "@/hooks/use-user-colors";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
 }
 
 export function DashboardLayoutClient({ children }: DashboardLayoutProps) {
+  // Aplicar colores del usuario globalmente
+  useUserColors();
+
   return (
     <RoleGuard>
+      <AuthRedirect />
       <SearchProvider>
         <SidebarProvider defaultOpen={true}>
           <SkipToMain />

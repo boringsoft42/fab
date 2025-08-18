@@ -38,6 +38,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useBusinessPlans } from "@/hooks/useBusinessPlanApi";
 
 interface BusinessPlan {
   tripleImpactAssessment: {
@@ -73,6 +74,7 @@ interface FinancialData {
 }
 
 export default function BusinessPlanSimulatorPage() {
+  const { data: businessPlans, loading, error } = useBusinessPlans();
   const [currentStep, setCurrentStep] = useState(0);
   const [impacts, setImpacts] = useState({
     economic: false,

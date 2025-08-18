@@ -8,6 +8,8 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Mic, MicOff, ArrowRight } from "lucide-react";
+import { useJobOffers } from "@/hooks/useJobOfferApi";
+import { useProfiles } from "@/hooks/useProfileApi";
 
 const interviewQuestions = [
   "Cuéntame sobre ti.",

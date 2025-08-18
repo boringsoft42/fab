@@ -89,167 +89,157 @@ export default function CourseAnalyticsPage() {
   const [activeTab, setActiveTab] = useState("overview");
 
   useEffect(() => {
-    fetchAnalyticsData();
+    // TODO: Integrar hook real para analytics (useCourseAnalytics) cuando esté disponible
+    // Reemplazar fetchAnalyticsData y mockData por datos reales de la API
+    // Mock analytics data
+    const mockData: AnalyticsData = {
+      overview: {
+        totalEnrollments: 2847,
+        activeStudents: 1923,
+        completionRate: 78.3,
+        averageRating: 4.8,
+        totalViewTime: 15240, // hours
+        certificatesIssued: 2234,
+      },
+      engagement: {
+        dailyActiveUsers: [
+          { date: "2024-02-01", users: 145 },
+          { date: "2024-02-02", users: 132 },
+          { date: "2024-02-03", users: 156 },
+          { date: "2024-02-04", users: 189 },
+          { date: "2024-02-05", users: 167 },
+          { date: "2024-02-06", users: 143 },
+          { date: "2024-02-07", users: 178 },
+        ],
+        lessonCompletionRates: [
+          {
+            lessonId: "lesson-1",
+            title: "Bienvenida al curso",
+            completionRate: 95.2,
+          },
+          {
+            lessonId: "lesson-2",
+            title: "Comunicación efectiva",
+            completionRate: 87.5,
+          },
+          {
+            lessonId: "lesson-3",
+            title: "Trabajo en equipo",
+            completionRate: 82.1,
+          },
+          {
+            lessonId: "lesson-4",
+            title: "Resolución de problemas",
+            completionRate: 76.8,
+          },
+          {
+            lessonId: "lesson-5",
+            title: "Liderazgo básico",
+            completionRate: 71.3,
+          },
+        ],
+        dropoffPoints: [
+          { moduleId: "mod-1", moduleName: "Introducción", dropoffRate: 8.2 },
+          {
+            moduleId: "mod-2",
+            moduleName: "Habilidades Básicas",
+            dropoffRate: 15.7,
+          },
+          {
+            moduleId: "mod-3",
+            moduleName: "Desarrollo Avanzado",
+            dropoffRate: 23.4,
+          },
+        ],
+        timeSpentDistribution: [
+          { range: "0-1h", percentage: 12 },
+          { range: "1-3h", percentage: 28 },
+          { range: "3-6h", percentage: 35 },
+          { range: "6-10h", percentage: 18 },
+          { range: "10+h", percentage: 7 },
+        ],
+      },
+      performance: {
+        quizResults: [
+          {
+            quizId: "quiz-1",
+            title: "Evaluación Módulo 1",
+            averageScore: 84.5,
+            passRate: 91.2,
+          },
+          {
+            quizId: "quiz-2",
+            title: "Evaluación Módulo 2",
+            averageScore: 78.3,
+            passRate: 83.7,
+          },
+          {
+            quizId: "quiz-3",
+            title: "Evaluación Final",
+            averageScore: 81.7,
+            passRate: 87.9,
+          },
+        ],
+        modulePerformance: [
+          {
+            moduleId: "mod-1",
+            name: "Introducción",
+            averageTime: 45,
+            completionRate: 92.8,
+          },
+          {
+            moduleId: "mod-2",
+            name: "Habilidades Básicas",
+            averageTime: 120,
+            completionRate: 84.3,
+          },
+          {
+            moduleId: "mod-3",
+            name: "Desarrollo Avanzado",
+            averageTime: 180,
+            completionRate: 76.6,
+          },
+        ],
+        strugglingStudents: 234,
+        topPerformers: 428,
+      },
+      feedback: {
+        averageRating: 4.8,
+        ratingDistribution: [
+          { stars: 5, count: 1456 },
+          { stars: 4, count: 892 },
+          { stars: 3, count: 234 },
+          { stars: 2, count: 67 },
+          { stars: 1, count: 23 },
+        ],
+        commonFeedback: [
+          {
+            theme: "Contenido claro y útil",
+            mentions: 342,
+            sentiment: "positive",
+          },
+          {
+            theme: "Buena organización",
+            mentions: 278,
+            sentiment: "positive",
+          },
+          {
+            theme: "Videos de calidad",
+            mentions: 234,
+            sentiment: "positive",
+          },
+          {
+            theme: "Necesita más ejemplos prácticos",
+            mentions: 156,
+            sentiment: "negative",
+          },
+          { theme: "Ritmo algo lento", mentions: 89, sentiment: "negative" },
+        ],
+      },
+    };
+
+    setAnalyticsData(mockData);
   }, [courseId, timeRange]);
-
-  const fetchAnalyticsData = async () => {
-    try {
-      setLoading(true);
-
-      // Mock analytics data
-      const mockData: AnalyticsData = {
-        overview: {
-          totalEnrollments: 2847,
-          activeStudents: 1923,
-          completionRate: 78.3,
-          averageRating: 4.8,
-          totalViewTime: 15240, // hours
-          certificatesIssued: 2234,
-        },
-        engagement: {
-          dailyActiveUsers: [
-            { date: "2024-02-01", users: 145 },
-            { date: "2024-02-02", users: 132 },
-            { date: "2024-02-03", users: 156 },
-            { date: "2024-02-04", users: 189 },
-            { date: "2024-02-05", users: 167 },
-            { date: "2024-02-06", users: 143 },
-            { date: "2024-02-07", users: 178 },
-          ],
-          lessonCompletionRates: [
-            {
-              lessonId: "lesson-1",
-              title: "Bienvenida al curso",
-              completionRate: 95.2,
-            },
-            {
-              lessonId: "lesson-2",
-              title: "Comunicación efectiva",
-              completionRate: 87.5,
-            },
-            {
-              lessonId: "lesson-3",
-              title: "Trabajo en equipo",
-              completionRate: 82.1,
-            },
-            {
-              lessonId: "lesson-4",
-              title: "Resolución de problemas",
-              completionRate: 76.8,
-            },
-            {
-              lessonId: "lesson-5",
-              title: "Liderazgo básico",
-              completionRate: 71.3,
-            },
-          ],
-          dropoffPoints: [
-            { moduleId: "mod-1", moduleName: "Introducción", dropoffRate: 8.2 },
-            {
-              moduleId: "mod-2",
-              moduleName: "Habilidades Básicas",
-              dropoffRate: 15.7,
-            },
-            {
-              moduleId: "mod-3",
-              moduleName: "Desarrollo Avanzado",
-              dropoffRate: 23.4,
-            },
-          ],
-          timeSpentDistribution: [
-            { range: "0-1h", percentage: 12 },
-            { range: "1-3h", percentage: 28 },
-            { range: "3-6h", percentage: 35 },
-            { range: "6-10h", percentage: 18 },
-            { range: "10+h", percentage: 7 },
-          ],
-        },
-        performance: {
-          quizResults: [
-            {
-              quizId: "quiz-1",
-              title: "Evaluación Módulo 1",
-              averageScore: 84.5,
-              passRate: 91.2,
-            },
-            {
-              quizId: "quiz-2",
-              title: "Evaluación Módulo 2",
-              averageScore: 78.3,
-              passRate: 83.7,
-            },
-            {
-              quizId: "quiz-3",
-              title: "Evaluación Final",
-              averageScore: 81.7,
-              passRate: 87.9,
-            },
-          ],
-          modulePerformance: [
-            {
-              moduleId: "mod-1",
-              name: "Introducción",
-              averageTime: 45,
-              completionRate: 92.8,
-            },
-            {
-              moduleId: "mod-2",
-              name: "Habilidades Básicas",
-              averageTime: 120,
-              completionRate: 84.3,
-            },
-            {
-              moduleId: "mod-3",
-              name: "Desarrollo Avanzado",
-              averageTime: 180,
-              completionRate: 76.6,
-            },
-          ],
-          strugglingStudents: 234,
-          topPerformers: 428,
-        },
-        feedback: {
-          averageRating: 4.8,
-          ratingDistribution: [
-            { stars: 5, count: 1456 },
-            { stars: 4, count: 892 },
-            { stars: 3, count: 234 },
-            { stars: 2, count: 67 },
-            { stars: 1, count: 23 },
-          ],
-          commonFeedback: [
-            {
-              theme: "Contenido claro y útil",
-              mentions: 342,
-              sentiment: "positive",
-            },
-            {
-              theme: "Buena organización",
-              mentions: 278,
-              sentiment: "positive",
-            },
-            {
-              theme: "Videos de calidad",
-              mentions: 234,
-              sentiment: "positive",
-            },
-            {
-              theme: "Necesita más ejemplos prácticos",
-              mentions: 156,
-              sentiment: "negative",
-            },
-            { theme: "Ritmo algo lento", mentions: 89, sentiment: "negative" },
-          ],
-        },
-      };
-
-      setAnalyticsData(mockData);
-    } catch (error) {
-      console.error("Error fetching analytics:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const exportReport = () => {
     // Implementation for exporting analytics report

@@ -56,6 +56,8 @@ export interface Profile {
   serviceArea?: string;
   specialization?: string[];
   institutionDescription?: string;
+  primaryColor?: string;
+  secondaryColor?: string;
 
   // Profile Completion
   profileCompletion: number;

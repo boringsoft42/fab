@@ -34,6 +34,23 @@ interface InstitutionalProfileProps {
   profile: Profile;
 }
 
+// Función para calcular el contraste de colores
+const getContrastColor = (hexColor: string): string => {
+  // Remover el # si está presente
+  const hex = hexColor.replace('#', '');
+  
+  // Convertir a RGB
+  const r = parseInt(hex.substr(0, 2), 16);
+  const g = parseInt(hex.substr(2, 2), 16);
+  const b = parseInt(hex.substr(4, 2), 16);
+  
+  // Calcular luminancia
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  
+  // Retornar blanco para colores oscuros, negro para colores claros
+  return luminance > 0.5 ? '#000000' : '#FFFFFF';
+};
+
 export function InstitutionalProfile({
   userRole,
   profile,
@@ -44,34 +61,42 @@ export function InstitutionalProfile({
     setActiveSection(sectionId);
   };
 
+  // Obtener colores del perfil (simulando datos del login)
+  const primaryColor = profile.primaryColor || "#1E40AF";
+  const secondaryColor = profile.secondaryColor || "#F59E0B";
+  
+  // Calcular colores de texto basados en el contraste
+  const primaryTextColor = getContrastColor(primaryColor);
+  const secondaryTextColor = getContrastColor(secondaryColor);
+
   const getRoleInfo = () => {
     switch (userRole) {
       case "MUNICIPAL_GOVERNMENTS":
         return {
-          title: "Perfil de Gobierno Municipal",
-          description: "Gestion de programas de empleabilidad y emprendimiento municipal",
-          badge: "Gobierno Municipal",
+          title: "Perfil de Institución",
+          description: "Gestión de programas de empleabilidad y emprendimiento institucional",
+          badge: "Institución",
           icon: Building,
         };
       case "TRAINING_CENTERS":
         return {
-          title: "Perfil de Centro de Capacitacion",
-          description: "Administracion de programas educativos y de formacion",
-          badge: "Centro de Capacitacion",
+          title: "Perfil de Centro de Capacitación",
+          description: "Administración de programas educativos y de formación",
+          badge: "Centro de Capacitación",
           icon: Award,
         };
       case "NGOS_AND_FOUNDATIONS":
         return {
-          title: "Perfil de ONG/Fundacion",
-          description: "Gestion de programas sociales y de desarrollo",
-          badge: "ONG/Fundacion",
+          title: "Perfil de ONG/Fundación",
+          description: "Gestión de programas sociales y de desarrollo",
+          badge: "ONG/Fundación",
           icon: Target,
         };
       default:
         return {
           title: "Perfil Institucional",
-          description: "Gestion institucional",
-          badge: "Institucion",
+          description: "Gestión institucional",
+          badge: "Institución",
           icon: Building,
         };
     }
@@ -82,12 +107,12 @@ export function InstitutionalProfile({
       { id: "overview", label: "Resumen Institucional", icon: Building },
       {
         id: "institutional",
-        label: "Informacion Institucional",
+        label: "Información Institucional",
         icon: Building,
       },
-      { id: "services", label: "Areas de Servicio", icon: Target },
-      { id: "contact", label: "Informacion de Contacto", icon: Phone },
-      { id: "description", label: "Descripcion Institucional", icon: Globe },
+      { id: "services", label: "Áreas de Servicio", icon: Target },
+      { id: "contact", label: "Información de Contacto", icon: Phone },
+      { id: "description", label: "Descripción Institucional", icon: Globe },
     ];
   };
 
@@ -96,21 +121,48 @@ export function InstitutionalProfile({
 
   return (
     <div className="max-w-7xl mx-auto p-6 space-y-6">
-      <div className="flex items-center justify-between">
-        <div className="space-y-1">
-          <h1 className="text-3xl font-bold">{roleInfo.title}</h1>
-          <p className="text-muted-foreground">{roleInfo.description}</p>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <Badge variant="default">{roleInfo.badge}</Badge>
-          {profile.profileCompletion !== undefined && (
-            <Badge
-              variant={profile.profileCompletion >= 80 ? "default" : "outline"}
+      {/* Header con colores personalizados */}
+      <div 
+        className="rounded-lg p-6"
+        style={{ backgroundColor: primaryColor }}
+      >
+        <div className="flex items-center justify-between">
+          <div className="space-y-1">
+            <h1 
+              className="text-3xl font-bold"
+              style={{ color: primaryTextColor }}
             >
-              {profile.profileCompletion}% Completo
+              {roleInfo.title}
+            </h1>
+            <p style={{ color: primaryTextColor, opacity: 0.9 }}>
+              {roleInfo.description}
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Badge 
+              variant="default"
+              style={{ 
+                backgroundColor: secondaryColor,
+                color: secondaryTextColor,
+                border: 'none'
+              }}
+            >
+              {roleInfo.badge}
             </Badge>
-          )}
+            {profile.profileCompletion !== undefined && (
+              <Badge
+                variant={profile.profileCompletion >= 80 ? "default" : "outline"}
+                style={{ 
+                  backgroundColor: profile.profileCompletion >= 80 ? secondaryColor : 'transparent',
+                  color: profile.profileCompletion >= 80 ? secondaryTextColor : primaryTextColor,
+                  borderColor: primaryTextColor
+                }}
+              >
+                {profile.profileCompletion}% Completo
+              </Badge>
+            )}
+          </div>
         </div>
       </div>
 
@@ -132,6 +184,11 @@ export function InstitutionalProfile({
                       variant={isActive ? "secondary" : "ghost"}
                       className="w-full justify-start text-left h-auto p-3"
                       onClick={() => setActiveSection(section.id)}
+                      style={{
+                        backgroundColor: isActive ? secondaryColor : 'transparent',
+                        color: isActive ? secondaryTextColor : 'inherit',
+                        border: 'none'
+                      }}
                     >
                       <Icon className="h-4 w-4 mr-3 flex-shrink-0" />
                       <span className="truncate">{section.label}</span>
@@ -157,7 +214,7 @@ export function InstitutionalProfile({
                 }}
                 type="logo"
                 maxSize={5}
-                placeholder="Logo de la institucion"
+                placeholder="Logo de la institución"
               />
             </CardContent>
           </Card>
@@ -177,10 +234,13 @@ export function InstitutionalProfile({
                   <Card>
                     <CardContent className="p-4">
                       <div className="flex items-center gap-2">
-                        <Building className="h-5 w-5 text-blue-500" />
+                        <Building 
+                          className="h-5 w-5" 
+                          style={{ color: primaryColor }}
+                        />
                         <div>
                           <p className="text-sm text-muted-foreground">
-                            Institucion
+                            Institución
                           </p>
                           <p className="font-medium">
                             {profile.institutionName || "Nombre no registrado"}
@@ -193,10 +253,13 @@ export function InstitutionalProfile({
                   <Card>
                     <CardContent className="p-4">
                       <div className="flex items-center gap-2">
-                        <Target className="h-5 w-5 text-green-500" />
+                        <Target 
+                          className="h-5 w-5" 
+                          style={{ color: secondaryColor }}
+                        />
                         <div>
                           <p className="text-sm text-muted-foreground">
-                            Area de Servicio
+                            Área de Servicio
                           </p>
                           <p className="font-medium">
                             {profile.serviceArea || "No especificado"}
@@ -212,9 +275,9 @@ export function InstitutionalProfile({
             {activeSection === "institutional" && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Informacion Institucional</CardTitle>
+                  <CardTitle>Información Institucional</CardTitle>
                   <CardDescription>
-                    Datos basicos de la institucion y tipo de organizacion
+                    Datos básicos de la institución y tipo de organización
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -228,9 +291,9 @@ export function InstitutionalProfile({
             {activeSection === "services" && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Areas de Servicio</CardTitle>
+                  <CardTitle>Áreas de Servicio</CardTitle>
                   <CardDescription>
-                    Servicios ofrecidos y areas de especializacion
+                    Servicios ofrecidos y áreas de especialización
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -245,7 +308,7 @@ export function InstitutionalProfile({
               <div className="space-y-6">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Informacion de Contacto</CardTitle>
+                    <CardTitle>Información de Contacto</CardTitle>
                     <CardDescription>
                       Datos de contacto institucional
                     </CardDescription>
@@ -274,14 +337,14 @@ export function InstitutionalProfile({
             {activeSection === "description" && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Descripcion Institucional</CardTitle>
+                  <CardTitle>Descripción Institucional</CardTitle>
                   <CardDescription>
-                    Mision, vision y descripcion de la institucion
+                    Misión, visión y descripción de la institución
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground">
-                    Editor de descripcion institucional en desarrollo...
+                    Editor de descripción institucional en desarrollo...
                   </p>
                 </CardContent>
               </Card>

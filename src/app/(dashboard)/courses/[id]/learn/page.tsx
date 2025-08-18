@@ -38,8 +38,8 @@ import type {
   ResourceType,
   Module,
   Lesson,
-  Course,
 } from "@/types/courses";
+import type { Course } from "@/types/api";
 import {
   CourseCategory,
   CourseLevel,
@@ -54,6 +54,7 @@ import {
   CollapsibleTrigger,
   CollapsibleContent,
 } from "@/components/ui/collapsible";
+import { useCourse } from "@/hooks/useCourseApi";
 
 interface Resource {
   id: string;
@@ -92,9 +93,25 @@ interface PageProps {
   }>;
 }
 
-export default async function CourseLeanPage({ params }: PageProps) {
+export default function CourseLearnPage({ params }: PageProps) {
+  return <CourseLearnClient params={params} />;
+}
+
+// Client component to handle state and hooks
+function CourseLearnClient({ params }: PageProps) {
   const router = useRouter();
-  const { id: courseId } = await params;
+  const [courseId, setCourseId] = useState<string>("");
+  
+  // Resolve params on mount
+  useEffect(() => {
+    const resolveParams = async () => {
+      const resolvedParams = await params;
+      setCourseId(resolvedParams.id);
+    };
+    resolveParams();
+  }, [params]);
+
+  const { data: courseData, loading, error } = useCourse(courseId);
 
   const [course, setCourse] = useState<ExtendedCourse | null>(null);
   const [currentModuleId, setCurrentModuleId] = useState<string>("");
@@ -106,129 +123,22 @@ export default async function CourseLeanPage({ params }: PageProps) {
   const [showMotivationModal, setShowMotivationModal] = useState(false);
   const [motivationMessage, setMotivationMessage] = useState("");
 
-  // Video player state
-  // 10 minutes for demo
-  // Mock course data
+  // Update local course state when data is loaded
   useEffect(() => {
-    const mockCourse: ExtendedCourse = {
-      id: "1",
-      title: "Introducción al Emprendimiento",
-      description: "Curso básico de emprendimiento",
-      shortDescription: "Aprende los fundamentos del emprendimiento",
-      thumbnail: "/images/course1.jpg",
-      instructor: {
-        id: "i1",
-        name: "Dr. Juan Pérez",
-        title: "Emprendedor y Mentor",
-        avatar: "/images/instructor1.jpg",
-        bio: "Experto en emprendimiento con más de 10 años de experiencia",
-        rating: 4.8,
-        totalStudents: 1000,
-        totalCourses: 5,
-      },
-      institution: "Universidad Emprendedora",
-      category: CourseCategory.ENTREPRENEURSHIP,
-      level: CourseLevel.BEGINNER,
-      duration: 120,
-      totalLessons: 10,
-      rating: 4.5,
-      studentCount: 500,
-      price: 0,
-      isMandatory: false,
-      isActive: true,
-      objectives: [
-        "Aprender conceptos básicos",
-        "Desarrollar mentalidad emprendedora",
-      ],
-      prerequisites: [],
-      includedMaterials: ["Guías PDF", "Videos descargables"],
-      certification: true,
-      tags: ["emprendimiento", "negocios"],
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      sections: [],
-      totalQuizzes: 2,
-      totalResources: 5,
-      totalProgress: 0,
-      slug: "introduccion-al-emprendimiento",
-      certificate: {
-        id: "cert-1",
-        url: "/certificates/cert-1.pdf",
-        issuedAt: new Date(),
-      },
-      modules: [
-        {
-          id: "m1",
-          courseId: "1",
-          title: "Fundamentos del Emprendimiento",
-          description: "Conceptos básicos y mentalidad emprendedora",
-          order: 1,
-          duration: 60,
-          isLocked: false,
-          lessons: [
-            {
-              id: "l1",
-              moduleId: "m1",
-              title: "¿Qué es el emprendimiento?",
-              description: "Introducción a los conceptos básicos",
-              type: LessonType.VIDEO,
-              content: {
-                video: {
-                  url: "https://example.com/video1.mp4",
-                  duration: 15,
-                },
-              },
-              duration: 15,
-              order: 1,
-              isPreview: true,
-              completed: false,
-            },
-            {
-              id: "l2",
-              moduleId: "m1",
-              title: "Evaluación de Conceptos",
-              description: "Prueba tus conocimientos",
-              type: LessonType.QUIZ,
-              content: {},
-              duration: 20,
-              order: 2,
-              isPreview: false,
-              completed: false,
-              quiz: {
-                id: "q1",
-                title: "Evaluación de Conceptos",
-                description: "Prueba tus conocimientos sobre emprendimiento",
-                passingScore: 70,
-                showCorrectAnswers: true,
-                questions: [
-                  {
-                    id: "q1-1",
-                    type: QuestionType.MULTIPLE_CHOICE,
-                    question: "¿Qué es el emprendimiento?",
-                    options: [
-                      "Un hobby",
-                      "Un proceso de crear un negocio",
-                      "Una forma de inversión",
-                      "Un tipo de empleo",
-                    ],
-                    correctAnswer: "Un proceso de crear un negocio",
-                    explanation:
-                      "El emprendimiento es el proceso de identificar, desarrollar y llevar a cabo una visión de negocio",
-                    points: 10,
-                    order: 1,
-                  },
-                ],
-              },
-            },
-          ],
-        },
-      ],
-    };
+    if (courseData) {
+      setCourse(courseData as ExtendedCourse);
+    }
+  }, [courseData]);
 
-    setCourse(mockCourse);
-    setCurrentModuleId(mockCourse.modules[0].id);
-    setCurrentLessonId(mockCourse.modules[0].lessons[0].id);
-  }, [courseId]);
+  // Initialize current module and lesson when course is loaded
+  useEffect(() => {
+    if (course && course.modules.length > 0) {
+      setCurrentModuleId(course.modules[0].id);
+      if (course.modules[0].lessons.length > 0) {
+        setCurrentLessonId(course.modules[0].lessons[0].id);
+      }
+    }
+  }, [course]);
 
   const hasPreviousLesson = () => {
     if (!course || !currentModuleId || !currentLessonId) return false;
@@ -423,12 +333,50 @@ export default async function CourseLeanPage({ params }: PageProps) {
   const currentLesson = getCurrentLesson();
   const currentModule = getCurrentModule();
 
-  if (!course || !currentLesson) {
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
           <p className="mt-4 text-muted-foreground">Cargando curso...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-red-500 mb-4">
+            <BookOpen className="h-16 w-16 mx-auto" />
+          </div>
+          <h2 className="text-xl font-bold mb-2">Error al cargar el curso</h2>
+          <p className="text-muted-foreground mb-4">
+            {error instanceof Error ? error.message : "Error desconocido"}
+          </p>
+          <Button onClick={() => router.back()}>
+            Volver
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!course || !currentLesson) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-muted-foreground mb-4">
+            <BookOpen className="h-16 w-16 mx-auto" />
+          </div>
+          <h2 className="text-xl font-bold mb-2">Curso no encontrado</h2>
+          <p className="text-muted-foreground mb-4">
+            El curso que buscas no existe o no tienes acceso a él.
+          </p>
+          <Button onClick={() => router.back()}>
+            Volver
+          </Button>
         </div>
       </div>
     );

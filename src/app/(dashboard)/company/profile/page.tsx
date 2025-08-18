@@ -45,6 +45,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import MapMarker from "@/components/MapMarker";
 import Image from "next/image";
+import { useProfile } from "@/hooks/useProfileApi";
 
 interface CompanyProfile {
   id: string;
@@ -84,62 +85,25 @@ interface CompanyProfile {
 }
 
 export default function CompanyProfilePage() {
-  const [profile, setProfile] = useState<CompanyProfile>({
-    id: "company-1",
-    name: "Cemse Innovación",
-    description:
-      "Empresa líder en desarrollo de soluciones tecnológicas innovadoras para el sector empresarial boliviano. Nos especializamos en transformación digital y consultoría estratégica.",
-    logo: "/placeholder.svg?height=100&width=100",
-    coverImage: "/placeholder.svg?height=300&width=800",
-    industry: "Tecnología",
-    size: "51-200 empleados",
-    founded: "2018",
-    website: "https://cemse.com.bo",
-    email: "contacto@cemse.com.bo",
-    phone: "+591 2 2345678",
-    address: "Av. Arce 2345, Edificio Torre Empresarial, Piso 12",
-    city: "La Paz",
-    country: "Bolivia",
-    mission:
-      "Impulsar la transformación digital de las empresas bolivianas mediante soluciones tecnológicas innovadoras y consultoría especializada.",
-    vision:
-      "Ser la empresa de tecnología más reconocida de Bolivia, liderando la innovación y el desarrollo empresarial en la región.",
-    values: [
-      "Innovación",
-      "Excelencia",
-      "Integridad",
-      "Colaboración",
-      "Sostenibilidad",
-    ],
-    metrics: {
-      employees: 127,
-      revenue: 2500000,
-      growth: 35,
-      projects: 89,
-    },
-    socialMedia: {
-      linkedin: "https://linkedin.com/company/cemse",
-      twitter: "https://twitter.com/cemse_bo",
-      facebook: "https://facebook.com/cemse.bolivia",
-    },
-    settings: {
-      publicProfile: true,
-      showMetrics: false,
-      allowMessages: true,
-      emailNotifications: true,
-    },
-  });
+  const { data: profile, loading, error } = useProfile("current");
 
   const [isEditing, setIsEditing] = useState(false);
-  const [editedProfile, setEditedProfile] = useState<CompanyProfile>(profile);
+  const [editedProfile, setEditedProfile] = useState<CompanyProfile | null>(null);
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [coverFile, setCoverFile] = useState<File | null>(null);
+
+  // Update editedProfile when profile data is loaded
+  React.useEffect(() => {
+    if (profile) {
+      setEditedProfile(profile);
+    }
+  }, [profile]);
 
   const handleSave = async () => {
     try {
       // Simulate API call
       console.log("Saving profile:", editedProfile);
-      setProfile(editedProfile);
+      // setProfile(editedProfile); // This function doesn't exist, removing
       setIsEditing(false);
     } catch (error) {
       console.error("Error saving profile:", error);
@@ -147,7 +111,9 @@ export default function CompanyProfilePage() {
   };
 
   const handleCancel = () => {
-    setEditedProfile(profile);
+    if (profile) {
+      setEditedProfile(profile);
+    }
     setIsEditing(false);
     setLogoFile(null);
     setCoverFile(null);
@@ -155,7 +121,7 @@ export default function CompanyProfilePage() {
 
   const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file) {
+    if (file && editedProfile) {
       setLogoFile(file);
       const reader = new FileReader();
       reader.onload = () => {
@@ -167,7 +133,7 @@ export default function CompanyProfilePage() {
 
   const handleCoverUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file) {
+    if (file && editedProfile) {
       setCoverFile(file);
       const reader = new FileReader();
       reader.onload = () => {
@@ -179,6 +145,46 @@ export default function CompanyProfilePage() {
       reader.readAsDataURL(file);
     }
   };
+
+  // Show loading state
+  if (loading || !profile || !editedProfile) {
+    return (
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold">Perfil de la Empresa</h1>
+            <p className="text-muted-foreground">
+              Gestiona la información y configuración de tu empresa
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center justify-center p-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold">Perfil de la Empresa</h1>
+            <p className="text-muted-foreground">
+              Gestiona la información y configuración de tu empresa
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center justify-center p-8">
+          <div className="text-center">
+            <p className="text-red-600">Error al cargar el perfil: {error.message}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -222,7 +228,7 @@ export default function CompanyProfilePage() {
             <CardContent className="p-0">
               <div className="relative h-48 w-full overflow-hidden rounded-t-lg">
                 <Image
-                  src={editedProfile.coverImage || "/placeholder.svg"}
+                  src={editedProfile?.coverImage || "/placeholder.svg"}
                   alt="Portada de la empresa"
                   fill
                   className="object-cover"
@@ -258,10 +264,10 @@ export default function CompanyProfilePage() {
                 <div className="flex items-start gap-4">
                   <div className="relative">
                     <Avatar className="w-20 h-20">
-                      <AvatarImage
-                        src={editedProfile.logo || "/placeholder.svg"}
-                        alt={editedProfile.name}
-                      />
+                                          <AvatarImage
+                      src={editedProfile?.logo || "/placeholder.svg"}
+                      alt={editedProfile?.name || "Empresa"}
+                    />
                       <AvatarFallback>
                         <Building2 className="w-8 h-8" />
                       </AvatarFallback>
@@ -285,21 +291,21 @@ export default function CompanyProfilePage() {
                   <div className="flex-1 space-y-2">
                     {isEditing ? (
                       <Input
-                        value={editedProfile.name}
+                        value={editedProfile?.name || ""}
                         onChange={(e) =>
                           setEditedProfile({
-                            ...editedProfile,
+                            ...editedProfile!,
                             name: e.target.value,
                           })
                         }
                         className="text-2xl font-bold"
                       />
                     ) : (
-                      <h2 className="text-2xl font-bold">{profile.name}</h2>
+                      <h2 className="text-2xl font-bold">{profile?.name || "Empresa"}</h2>
                     )}
                     <div className="flex gap-2">
-                      <Badge variant="secondary">{profile.industry}</Badge>
-                      <Badge variant="outline">{profile.size}</Badge>
+                      <Badge variant="secondary">{profile?.industry || "Sector"}</Badge>
+                      <Badge variant="outline">{profile?.size || "Tamaño"}</Badge>
                     </div>
                   </div>
                 </div>

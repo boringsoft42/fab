@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { CourseCategory, CourseLevel } from "@/types/courses";
+import { useCreateCourse } from "@/hooks/useCourseApi";
+import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -69,6 +71,8 @@ interface CourseFormData {
 
 export default function CreateCoursePage() {
   const router = useRouter();
+  const { toast } = useToast();
+  const createCourseMutation = useCreateCourse();
   const [certificateDialogOpen, setCertificateDialogOpen] = useState(false);
   const [certificateFile, setCertificateFile] = useState<File | null>(null);
 
@@ -184,20 +188,55 @@ export default function CreateCoursePage() {
 
   const handleSubmit = async (isDraft: boolean = false) => {
     try {
+      console.log("📚 CreateCoursePage - handleSubmit called with isDraft:", isDraft);
+      console.log("📚 CreateCoursePage - formData:", formData);
+      
+      // Validate required fields
+      if (!formData.title || !formData.category || !formData.level) {
+        console.log("❌ CreateCoursePage - Validation failed");
+        toast({
+          title: "Error",
+          description: "Por favor complete todos los campos requeridos",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Destructure formData to exclude instructor object
+      const { instructor, ...courseDataWithoutInstructor } = formData;
+      
       const courseData = {
-        ...formData,
+        ...courseDataWithoutInstructor,
         isActive: isDraft ? false : formData.isActive,
         publishedAt: isDraft ? null : new Date(),
+        // Filter out empty objectives, prerequisites, and materials
+        objectives: formData.objectives.filter(obj => obj.trim() !== ""),
+        prerequisites: formData.prerequisites.filter(prereq => prereq.trim() !== ""),
+        includedMaterials: formData.includedMaterials.filter(material => material.trim() !== ""),
       };
 
-      console.log("Saving course:", courseData);
+      console.log("📚 CreateCoursePage - Creating course with data:", courseData);
+      console.log("📚 CreateCoursePage - Using createCourseMutation");
 
-      // Here you would make an API call to save the course
-      // await fetch('/api/admin/courses', { method: 'POST', body: JSON.stringify(courseData) });
+      await createCourseMutation.mutateAsync(courseData);
+
+      console.log("✅ CreateCoursePage - Course created successfully");
+
+      toast({
+        title: "Éxito",
+        description: isDraft 
+          ? "Curso guardado como borrador" 
+          : "Curso creado y publicado exitosamente",
+      });
 
       router.push("/admin/courses");
     } catch (error) {
-      console.error("Error saving course:", error);
+      console.error("❌ CreateCoursePage - Error creating course:", error);
+      toast({
+        title: "Error",
+        description: "Error al crear el curso. Por favor intente nuevamente.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -233,13 +272,26 @@ export default function CreateCoursePage() {
         </div>
 
         <div className="flex gap-2">
-          <Button variant="outline" onClick={() => handleSubmit(true)}>
+          <Button 
+            variant="outline" 
+            onClick={() => {
+              console.log("📚 CreateCoursePage - Save Draft button clicked");
+              handleSubmit(true);
+            }}
+            disabled={createCourseMutation.isPending}
+          >
             <Save className="h-4 w-4 mr-2" />
-            Guardar Borrador
+            {createCourseMutation.isPending ? "Guardando..." : "Guardar Borrador"}
           </Button>
-          <Button onClick={() => handleSubmit(false)}>
+          <Button 
+            onClick={() => {
+              console.log("📚 CreateCoursePage - Publish Course button clicked");
+              handleSubmit(false);
+            }}
+            disabled={createCourseMutation.isPending}
+          >
             <Eye className="h-4 w-4 mr-2" />
-            Publicar Curso
+            {createCourseMutation.isPending ? "Publicando..." : "Publicar Curso"}
           </Button>
         </div>
       </div>

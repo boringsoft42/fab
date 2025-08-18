@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search, Filter, Download, ExternalLink } from "lucide-react";
+import { useResources } from "@/hooks/useResourceApi";
 
 interface Resource {
   id: string;
@@ -69,8 +70,7 @@ const mockResources: Resource[] = [
 ];
 
 export default function ResourcesPage() {
-  const [resources, setResources] = useState<Resource[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: resources, loading, error } = useResources();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("all");
   const [filters, setFilters] = useState<ResourceFilter>({
@@ -78,22 +78,6 @@ export default function ResourcesPage() {
     category: "",
     format: "",
   });
-
-  const fetchResources = useCallback(async () => {
-    try {
-      setLoading(true);
-      // In a real app, we would fetch this data from an API
-      setResources(mockResources);
-    } catch (error) {
-      console.error("Error fetching resources:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchResources();
-  }, [fetchResources]);
 
   const handleDownload = async (resource: Resource) => {
     // In a real app, we would handle the download process

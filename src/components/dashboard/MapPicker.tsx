@@ -20,10 +20,18 @@ const markerIcon = new L.Icon({
 
 function LocationMarker({
   onChange,
+  initialPosition,
 }: {
   onChange: (latlng: [number, number]) => void;
+  initialPosition?: [number, number] | null;
 }) {
-  const [position, setPosition] = useState<[number, number] | null>(null);
+  const [position, setPosition] = useState<[number, number] | null>(initialPosition || null);
+
+  useEffect(() => {
+    if (initialPosition) {
+      setPosition(initialPosition);
+    }
+  }, [initialPosition]);
 
   useMapEvents({
     click(e: LeafletMouseEvent) {
@@ -52,10 +60,12 @@ function ForceResize() {
 
 export default function MapPicker({
   onChange,
+  initialCoordinates,
 }: {
   onChange: (latlng: [number, number]) => void;
+  initialCoordinates?: [number, number] | null;
 }) {
-  const center: L.LatLngExpression = [-17.3935, -66.157]; // Cochabamba
+  const center: L.LatLngExpression = initialCoordinates || [-17.3935, -66.157]; // Cochabamba
 
   return (
     <MapContainer
@@ -69,7 +79,7 @@ export default function MapPicker({
         attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <LocationMarker onChange={onChange} />
+      <LocationMarker onChange={onChange} initialPosition={initialCoordinates} />
     </MapContainer>
   );
 }

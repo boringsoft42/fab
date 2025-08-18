@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Course, CourseCatalogResponse, CourseFilters } from "@/types/courses";
+import { Course, CourseFilters } from "@/types/courses";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -17,12 +17,18 @@ import {
 import { Search, Filter, Grid3X3, List, X, BookOpen } from "lucide-react";
 import { CourseCard } from "@/components/courses/course-card";
 import { CourseFilters as CourseFiltersComponent } from "@/components/courses/course-filters";
+import { useCourses } from "@/hooks/useCourseApi";
+import { useCourseEnrollments } from "@/hooks/useCourseEnrollments";
 
 export default function CoursesPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: courses, isLoading: coursesLoading, error: coursesError } = useCourses();
+  const { enrollments, loading: enrollmentsLoading, error: enrollmentsError } = useCourseEnrollments();
+  
+  console.log('🔍 CoursesPage - courses:', courses);
+  console.log('🔍 CoursesPage - enrollments:', enrollments);
+  console.log('🔍 CoursesPage - enrolled course IDs:', enrollments.map(e => e.courseId));
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [searchQuery, setSearchQuery] = useState(
     searchParams.get("query") || ""
@@ -31,58 +37,95 @@ export default function CoursesPage() {
     searchParams.get("sortBy") || "popularity"
   );
   const [showFilters, setShowFilters] = useState(false);
-  const [totalCourses, setTotalCourses] = useState(0);
-  const [page, setPage] = useState(1);
   const [activeFilters, setActiveFilters] = useState<CourseFilters>({});
 
-  // Fetch courses
-  const fetchCourses = async () => {
-    try {
-      setLoading(true);
-      const params = new URLSearchParams();
-      if (searchQuery) params.append("query", searchQuery);
-      if (sortBy) params.append("sortBy", sortBy);
-      if (page > 1) params.append("page", page.toString());
-
-      // Add filters to params
-      if (activeFilters.category?.length) {
-        params.append("category", activeFilters.category.join(","));
-      }
-      if (activeFilters.level?.length) {
-        params.append("level", activeFilters.level.join(","));
-      }
-      if (activeFilters.isFree !== undefined) {
-        params.append("isFree", activeFilters.isFree.toString());
-      }
-      if (activeFilters.isMandatory !== undefined) {
-        params.append("isMandatory", activeFilters.isMandatory.toString());
-      }
-
-      const response = await fetch(`/api/courses?${params.toString()}`);
-      const data: CourseCatalogResponse = await response.json();
-
-      setCourses(data.courses);
-      setTotalCourses(data.total);
-    } catch (error) {
-      console.error("Error fetching courses:", error);
-    } finally {
-      setLoading(false);
+  // Filter and sort courses based on search and filters
+  const filteredCourses = (courses && enrollments) ? courses.filter((course) => {
+    // Filter out courses where user is already enrolled
+    const isEnrolled = enrollments.some(enrollment => enrollment.courseId === course.id);
+    if (isEnrolled) {
+      return false;
     }
-  };
 
-  useEffect(() => {
-    fetchCourses();
-  }, [searchQuery, sortBy, activeFilters, page]);
+    // Search filter
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      const matchesSearch = 
+        course.title?.toLowerCase().includes(query) ||
+        course.description?.toLowerCase().includes(query) ||
+        course.instructor?.name?.toLowerCase().includes(query);
+      
+      if (!matchesSearch) return false;
+    }
+
+    // Category filter
+    if (activeFilters.category?.length) {
+      if (!course.category || !activeFilters.category.includes(course.category)) {
+        return false;
+      }
+    }
+
+    // Level filter
+    if (activeFilters.level?.length) {
+      if (!course.level || !activeFilters.level.includes(course.level)) {
+        return false;
+      }
+    }
+
+    // Free filter
+    if (activeFilters.isFree !== undefined) {
+      const isFree = course.price === 0;
+      if (activeFilters.isFree !== isFree) {
+        return false;
+      }
+    }
+
+    // Mandatory filter
+    if (activeFilters.isMandatory !== undefined) {
+      if (course.isMandatory !== activeFilters.isMandatory) {
+        return false;
+      }
+    }
+
+    return true;
+  }) : [];
+
+  console.log('🔍 CoursesPage - filtered courses count:', filteredCourses.length);
+  console.log('🔍 CoursesPage - filtered course IDs:', filteredCourses.map(c => c.id));
+
+  // Sort courses
+  const sortedCourses = [...filteredCourses].sort((a, b) => {
+    switch (sortBy) {
+      case "rating":
+        return (b.rating || 0) - (a.rating || 0);
+      case "date":
+        return new Date(b.publishedAt || "").getTime() - new Date(a.publishedAt || "").getTime();
+      case "title":
+        return (a.title || "").localeCompare(b.title || "");
+      case "duration":
+        return (a.duration || 0) - (b.duration || 0);
+      case "popularity":
+      default:
+        return (b.studentsCount || 0) - (a.studentsCount || 0);
+    }
+  });
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-    setPage(1);
     updateURL({ query });
+  };
+
+  const handleEnroll = async (courseId: string) => {
+    try {
+      // Redirigir directamente a la página de inscripción
+      router.push(`/development/courses/${courseId}/enroll`);
+    } catch (error) {
+      console.error('Error enrolling in course:', error);
+    }
   };
 
   const handleFilterChange = (filters: CourseFilters) => {
     setActiveFilters(filters);
-    setPage(1);
   };
 
   const updateURL = (params: Record<string, string>) => {
@@ -100,7 +143,6 @@ export default function CoursesPage() {
   const clearFilters = () => {
     setActiveFilters({});
     setSearchQuery("");
-    setPage(1);
     router.push("/courses");
   };
 
@@ -113,7 +155,7 @@ export default function CoursesPage() {
     return count;
   };
 
-  if (loading) {
+  if (coursesLoading || enrollmentsLoading) {
     return (
       <div className="container mx-auto p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -312,11 +354,11 @@ export default function CoursesPage() {
         <div className={showFilters ? "lg:col-span-3" : "lg:col-span-4"}>
           <div className="mb-4 flex justify-between items-center">
             <p className="text-sm text-muted-foreground">
-              {totalCourses} cursos encontrados
+              {sortedCourses.length} cursos encontrados
             </p>
           </div>
 
-          {courses.length === 0 ? (
+          {sortedCourses.length === 0 ? (
             <div className="text-center py-12">
               <BookOpen className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
               <h3 className="text-lg font-semibold mb-2">
@@ -335,24 +377,33 @@ export default function CoursesPage() {
                   : "space-y-4"
               }
             >
-              {courses.map((course) => (
+                        {sortedCourses.map((course) => {
+              const enrollment = enrollments.find(e => e.courseId === course.id);
+              return (
                 <CourseCard
                   key={course.id}
                   course={course}
                   viewMode={viewMode}
+                  enrollment={{
+                    isEnrolled: !!enrollment,
+                    progress: enrollment?.progress || 0,
+                    status: enrollment?.status || 'not_enrolled',
+                    enrollmentId: enrollment?.id
+                  }}
                 />
-              ))}
+              );
+            })}
             </div>
           )}
 
-          {/* Load More / Pagination */}
-          {courses.length > 0 && courses.length < totalCourses && (
-            <div className="text-center mt-8">
-              <Button onClick={() => setPage(page + 1)} disabled={loading}>
-                Cargar más cursos
-              </Button>
-            </div>
-          )}
+                     {/* Error Display */}
+           {(coursesError || enrollmentsError) && (
+             <div className="text-center py-8">
+               <p className="text-red-600">
+                 Error al cargar los cursos: {coursesError?.message || enrollmentsError || 'Error desconocido'}
+               </p>
+             </div>
+           )}
         </div>
       </div>
     </div>

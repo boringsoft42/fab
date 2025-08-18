@@ -63,14 +63,39 @@ export default function ManageJobsPage() {
 
   const fetchCompanyJobs = async () => {
     try {
-      // In real app, this would filter by company ID
-      const response = await fetch("/api/jobs");
+      // Get user token for authentication
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+
+      // Get user info to filter by company ID
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      const companyId = user.id;
+
+      if (!companyId) {
+        throw new Error('No company ID found');
+      }
+
+      console.log('🔍 fetchCompanyJobs - Fetching jobs for company:', companyId);
+      
+      const response = await fetch(`/api/joboffer?companyId=${companyId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
       if (response.ok) {
         const data = await response.json();
-        setJobs(data.jobs || []);
+        console.log('✅ fetchCompanyJobs - Jobs fetched:', data);
+        
+        // Handle both array and object with jobs property
+        const jobsArray = Array.isArray(data) ? data : (data.jobs || []);
+        setJobs(jobsArray);
 
         // Calculate stats
-        const jobStats = data.jobs.reduce(
+        const jobStats = jobsArray.reduce(
           (acc: JobStats, job: JobOffer) => ({
             total: acc.total + 1,
             active: acc.active + (job.status === "ACTIVE" ? 1 : 0),
@@ -82,6 +107,10 @@ export default function ManageJobsPage() {
         );
 
         setStats(jobStats);
+      } else {
+        const errorText = await response.text();
+        console.error('❌ fetchCompanyJobs - HTTP Error:', response.status, errorText);
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
       }
     } catch (error) {
       console.error("Error fetching company jobs:", error);
@@ -97,9 +126,15 @@ export default function ManageJobsPage() {
 
   const handleStatusChange = async (jobId: string, newStatus: JobStatus) => {
     try {
-      const response = await fetch(`/api/jobs/${jobId}`, {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+
+      const response = await fetch(`/api/joboffer/${jobId}`, {
         method: "PUT",
         headers: {
+          'Authorization': `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ status: newStatus }),
@@ -116,8 +151,12 @@ export default function ManageJobsPage() {
           title: "Estado actualizado",
           description: `El empleo ha sido ${getStatusLabel(newStatus).toLowerCase()}`,
         });
+      } else {
+        const errorText = await response.text();
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
       }
     } catch (error) {
+      console.error('Error updating job status:', error);
       toast({
         title: "Error",
         description: "No se pudo actualizar el estado del empleo",
@@ -128,18 +167,32 @@ export default function ManageJobsPage() {
 
   const handleDuplicateJob = async (job: JobOffer) => {
     try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      const companyId = user.id;
+
+      if (!companyId) {
+        throw new Error('No company ID found');
+      }
+
       const duplicatedJob = {
         ...job,
         title: `${job.title} (Copia)`,
         status: "DRAFT" as JobStatus,
+        companyId: companyId,
         publishedAt: undefined,
         applicationCount: 0,
         viewCount: 0,
       };
 
-      const response = await fetch("/api/jobs", {
+      const response = await fetch("/api/joboffer", {
         method: "POST",
         headers: {
+          'Authorization': `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(duplicatedJob),
@@ -153,8 +206,12 @@ export default function ManageJobsPage() {
           title: "Empleo duplicado",
           description: "Se ha creado una copia del empleo como borrador",
         });
+      } else {
+        const errorText = await response.text();
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
       }
     } catch (error) {
+      console.error('Error duplicating job:', error);
       toast({
         title: "Error",
         description: "No se pudo duplicar el empleo",

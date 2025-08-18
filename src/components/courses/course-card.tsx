@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Course } from "@/types/courses";
+import { Course } from "@/types/api";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -19,6 +19,8 @@ import {
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { es } from "date-fns/locale";
+import { getCourseThumbnail, getCourseVideoPreview, isYouTubeVideo, getYouTubeThumbnail } from "@/lib/utils/image-utils";
+import { VideoPreview } from "./video-preview";
 
 interface CourseCardProps {
   course: Course;
@@ -27,6 +29,7 @@ interface CourseCardProps {
     isEnrolled: boolean;
     progress?: number;
     status?: string;
+    enrollmentId?: string;
   };
 }
 
@@ -36,45 +39,56 @@ export const CourseCard = ({
   enrollment,
 }: CourseCardProps) => {
   const [imageError, setImageError] = useState(false);
+  const [currentImageSrc, setCurrentImageSrc] = useState(() => {
+    // If course has a YouTube video preview, use its thumbnail
+    if (course.videoPreview && isYouTubeVideo(course.videoPreview)) {
+      console.log("Using YouTube thumbnail for course:", course.title);
+      return getYouTubeThumbnail(course.videoPreview);
+    }
+    // Otherwise use the course thumbnail
+    console.log("Using course thumbnail for course:", course.title);
+    return getCourseThumbnail(course);
+  });
 
   const formatDuration = (hours: number) => {
     if (hours < 1) return `${Math.round(hours * 60)} min`;
     return `${hours}h`;
   };
 
-  const formatPrice = (price: number) => {
-    if (price === 0) return "Gratis";
-    return `$${price.toLocaleString()} BOB`;
+  const formatPrice = (price: number | string) => {
+    const numPrice = typeof price === 'string' ? parseFloat(price) : price;
+    if (numPrice === 0) return "Gratis";
+    return `$${numPrice.toLocaleString()} BOB`;
   };
 
   const getCategoryLabel = (category: string) => {
     const labels: Record<string, string> = {
-      soft_skills: "Habilidades Blandas",
-      basic_competencies: "Competencias Básicas",
-      job_placement: "Inserción Laboral",
-      entrepreneurship: "Emprendimiento",
-      technical_skills: "Habilidades Técnicas",
-      digital_literacy: "Alfabetización Digital",
-      communication: "Comunicación",
-      leadership: "Liderazgo",
+      SOFT_SKILLS: "Habilidades Blandas",
+      BASIC_COMPETENCIES: "Competencias Básicas",
+      JOB_PLACEMENT: "Inserción Laboral",
+      ENTREPRENEURSHIP: "Emprendimiento",
+      TECHNICAL_SKILLS: "Habilidades Técnicas",
+      DIGITAL_LITERACY: "Alfabetización Digital",
+      COMMUNICATION: "Comunicación",
+      LEADERSHIP: "Liderazgo",
     };
     return labels[category] || category;
   };
 
   const getLevelColor = (level: string) => {
     const colors: Record<string, string> = {
-      beginner: "bg-green-100 text-green-800",
-      intermediate: "bg-yellow-100 text-yellow-800",
-      advanced: "bg-red-100 text-red-800",
+      BEGINNER: "bg-green-100 text-green-800",
+      INTERMEDIATE: "bg-yellow-100 text-yellow-800",
+      ADVANCED: "bg-red-100 text-red-800",
     };
     return colors[level] || "bg-gray-100 text-gray-800";
   };
 
   const getLevelLabel = (level: string) => {
     const labels: Record<string, string> = {
-      beginner: "Principiante",
-      intermediate: "Intermedio",
-      advanced: "Avanzado",
+      BEGINNER: "Principiante",
+      INTERMEDIATE: "Intermedio",
+      ADVANCED: "Avanzado",
     };
     return labels[level] || level;
   };
@@ -87,26 +101,29 @@ export const CourseCard = ({
             {/* Course Image */}
             <div className="relative lg:w-80 h-48 lg:h-auto">
               <Link href={`/courses/${course.id}`}>
-                {!imageError ? (
-                  <Image
-                    src={course.thumbnail}
-                    alt={course.title}
-                    fill
-                    className="object-cover rounded-l-lg"
-                    onError={() => setImageError(true)}
-                  />
+                                 {!imageError ? (
+                   <Image
+                     src={currentImageSrc}
+                     alt={course.title}
+                     fill
+                     className="object-cover rounded-l-lg"
+                     onError={() => setImageError(true)}
+                   />
                 ) : (
                   <div className="w-full h-full bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center rounded-l-lg">
                     <BookOpen className="h-12 w-12 text-blue-600" />
                   </div>
                 )}
-                {course.videoPreview && (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="bg-black bg-opacity-50 rounded-full p-3 hover:bg-opacity-70 transition-opacity">
-                      <Play className="h-6 w-6 text-white fill-current" />
-                    </div>
-                  </div>
-                )}
+                                 {course.videoPreview && (
+                   <>
+                     {console.log("Rendering VideoPreview for course:", course.title, "URL:", course.videoPreview)}
+                     <VideoPreview 
+                       videoUrl={course.videoPreview} 
+                       title={course.title}
+                       className="opacity-100 transition-opacity"
+                     />
+                   </>
+                 )}
               </Link>
 
               {/* Badges */}
@@ -175,8 +192,10 @@ export const CourseCard = ({
                   </div>
                   {enrollment?.isEnrolled && (
                     <Badge variant="secondary" className="mb-2">
-                      {enrollment.status === "completed"
+                      {enrollment.status === "COMPLETED"
                         ? "Completado"
+                        : enrollment.status === "IN_PROGRESS"
+                        ? "En Progreso"
                         : "Inscrito"}
                     </Badge>
                   )}
@@ -203,7 +222,7 @@ export const CourseCard = ({
                 <div className="flex items-center gap-1">
                   <Users className="h-4 w-4" />
                   <span>
-                    {course.studentCount.toLocaleString()} estudiantes
+                    {(course.studentCount || course.enrollmentCount || 0).toLocaleString()} estudiantes
                   </span>
                 </div>
                 <div className="flex items-center gap-1">
@@ -212,7 +231,7 @@ export const CourseCard = ({
                 </div>
                 <div className="flex items-center gap-1">
                   <BookOpen className="h-4 w-4" />
-                  <span>{course.totalLessons} lecciones</span>
+                  <span>{course.modules?.length || 0} módulos</span>
                 </div>
                 {course.certification && (
                   <div className="flex items-center gap-1">
@@ -224,12 +243,12 @@ export const CourseCard = ({
 
               {/* Tags */}
               <div className="flex flex-wrap gap-2 mb-4">
-                {course.tags.slice(0, 3).map((tag) => (
+                {course.tags?.slice(0, 3).map((tag) => (
                   <Badge key={tag} variant="secondary" className="text-xs">
                     {tag}
                   </Badge>
                 ))}
-                {course.tags.length > 3 && (
+                {course.tags && course.tags.length > 3 && (
                   <Badge variant="secondary" className="text-xs">
                     +{course.tags.length - 3} más
                   </Badge>
@@ -238,17 +257,33 @@ export const CourseCard = ({
 
               {/* Action Buttons */}
               <div className="flex gap-3">
-                {enrollment?.isEnrolled ? (
+                                 {enrollment?.isEnrolled ? (
+                   <Button asChild className="flex-1">
+                     <Link href={`/development/courses/${enrollment.enrollmentId || course.id}`}>
+                       {enrollment.status === "COMPLETED" ? (
+                         <>
+                           <CheckCircle className="h-4 w-4 mr-2" />
+                           Ver Certificado
+                         </>
+                       ) : enrollment.status === "IN_PROGRESS" ? (
+                         <>
+                           <Play className="h-4 w-4 mr-2" />
+                           Continuar
+                         </>
+                       ) : (
+                         <>
+                           <BookOpen className="h-4 w-4 mr-2" />
+                           Ir al Curso
+                         </>
+                       )}
+                     </Link>
+                   </Button>
+                 ) : (
                   <Button asChild className="flex-1">
-                    <Link href={`/courses/${course.id}/learn`}>
-                      {enrollment.status === "completed"
-                        ? "Revisar curso"
-                        : "Continuar"}
+                    <Link href={`/courses/${course.id}`}>
+                      <BookOpen className="h-4 w-4 mr-2" />
+                      Ver curso
                     </Link>
-                  </Button>
-                ) : (
-                  <Button asChild className="flex-1">
-                    <Link href={`/courses/${course.id}`}>Ver curso</Link>
                   </Button>
                 )}
               </div>
@@ -264,27 +299,27 @@ export const CourseCard = ({
     <Card className="group hover:shadow-lg transition-all duration-200 overflow-hidden">
       <div className="relative">
         <Link href={`/courses/${course.id}`}>
-          {!imageError ? (
-            <Image
-              src={course.thumbnail}
-              alt={course.title}
-              width={400}
-              height={250}
-              className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-200"
-              onError={() => setImageError(true)}
-            />
+                     {!imageError ? (
+             <Image
+               src={currentImageSrc}
+               alt={course.title}
+               width={400}
+               height={250}
+               className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-200"
+               onError={() => setImageError(true)}
+             />
           ) : (
             <div className="w-full h-48 bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center">
               <BookOpen className="h-12 w-12 text-blue-600" />
             </div>
           )}
-          {course.videoPreview && (
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-              <div className="bg-black bg-opacity-50 rounded-full p-3">
-                <Play className="h-6 w-6 text-white fill-current" />
-              </div>
-            </div>
-          )}
+                     {course.videoPreview && (
+             <VideoPreview 
+               videoUrl={course.videoPreview} 
+               title={course.title}
+               className="opacity-100 transition-opacity"
+             />
+           )}
         </Link>
 
         {/* Badges */}
@@ -391,23 +426,34 @@ export const CourseCard = ({
           )}
         </div>
 
-        {/* Action Button */}
-        {enrollment?.isEnrolled ? (
+                 {/* Action Button */}
+         {enrollment?.isEnrolled ? (
+           <Button asChild className="w-full" size="sm">
+             <Link href={`/development/courses/${enrollment.enrollmentId || course.id}`}>
+               {enrollment.status === "COMPLETED" ? (
+                 <>
+                   <CheckCircle className="h-4 w-4 mr-2" />
+                   Ver Certificado
+                 </>
+               ) : enrollment.status === "IN_PROGRESS" ? (
+                 <>
+                   <Play className="h-4 w-4 mr-2" />
+                   Continuar
+                 </>
+               ) : (
+                 <>
+                   <BookOpen className="h-4 w-4 mr-2" />
+                   Ir al Curso
+                 </>
+               )}
+             </Link>
+           </Button>
+         ) : (
           <Button asChild className="w-full" size="sm">
-            <Link href={`/courses/${course.id}/learn`}>
-              {enrollment.status === "completed" ? (
-                <>
-                  <CheckCircle className="h-4 w-4 mr-2" />
-                  Completado
-                </>
-              ) : (
-                "Continuar"
-              )}
+            <Link href={`/courses/${course.id}`}>
+              <BookOpen className="h-4 w-4 mr-2" />
+              Ver curso
             </Link>
-          </Button>
-        ) : (
-          <Button asChild className="w-full" size="sm">
-            <Link href={`/courses/${course.id}`}>Ver curso</Link>
           </Button>
         )}
       </CardContent>

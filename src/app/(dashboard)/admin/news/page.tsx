@@ -1,28 +1,18 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import {
-  Plus,
-  MoreVertical,
-  Eye,
-  Edit,
-  Trash2,
-  Calendar,
-  TrendingUp,
-  Upload,
-  X,
-  Image as ImageIcon,
-} from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
@@ -30,12 +20,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -45,15 +32,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Plus, Search, Eye, Edit, Trash2, Calendar, Tag, Image as ImageIcon, Upload, TrendingUp, MoreVertical, X } from "lucide-react";
+import { NewsArticleService } from "@/services/newsarticle.service";
+import { useToast } from "@/hooks/use-toast";
 
 interface NewsArticle {
   id: string;
@@ -83,6 +69,7 @@ export default function AdminNewsPage() {
     totalViews: 0,
     totalLikes: 0,
   });
+  const { toast } = useToast();
 
   // News creation form state
   const [newNews, setNewNews] = useState({
@@ -104,22 +91,36 @@ export default function AdminNewsPage() {
   const fetchNews = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await fetch(
-        `/api/admin/news?status=${statusFilter}&organizationId=gov-1`
-      );
-      const data = await response.json();
-      setNews(data.news || []);
-      setStats(data.stats || {});
+      console.log("📰 AdminNewsPage - Fetching news...");
+      console.log("📰 AdminNewsPage - Using NewsArticleService.getAll()");
+      const result = await NewsArticleService.getAll();
+      console.log("✅ AdminNewsPage - News fetched:", result);
+      setNews(result || []);
+      
+      // Calculate stats from the fetched news
+      const stats = {
+        total: result.length,
+        published: result.filter(n => n.status === "PUBLISHED").length,
+        draft: result.filter(n => n.status === "DRAFT").length,
+        totalViews: result.reduce((sum, n) => sum + n.viewCount, 0),
+        totalLikes: result.reduce((sum, n) => sum + n.likeCount, 0),
+      };
+      setStats(stats);
     } catch (error) {
-      console.error("Error fetching news:", error);
+      console.error("❌ AdminNewsPage - Error fetching news:", error);
+      toast({
+        title: "Error",
+        description: "Error al cargar las noticias",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
-  }, [statusFilter]);
+  }, []); // Remove toast dependency to prevent unnecessary re-renders
 
   useEffect(() => {
     fetchNews();
-  }, [fetchNews]);
+  }, []); // Only run once on mount
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -139,46 +140,73 @@ export default function AdminNewsPage() {
     setNewNews({ ...newNews, imageUrl: "" });
   };
 
-  const handleCreateNews = async () => {
+  const handleCreateNews = useCallback(async () => {
     try {
+      console.log("📰 AdminNewsPage - Creating news with data:", newNews);
+      console.log("📰 AdminNewsPage - Using NewsArticleService.create()");
+      
+      // Validate required fields
+      if (!newNews.title || !newNews.summary || !newNews.content || !newNews.category) {
+        console.log("❌ AdminNewsPage - Validation failed - missing required fields");
+        toast({
+          title: "Error",
+          description: "Por favor complete todos los campos requeridos (título, resumen, contenido y categoría)",
+          variant: "destructive",
+        });
+        return;
+      }
+      
       const newsData = {
-        ...newNews,
-        organizationId: "gov-1",
-        organizationName: "Gobierno Municipal de Cochabamba",
-        organizationLogo: "/api/placeholder/60/60",
-        imageUrl: newNews.imageUrl || defaultBannerImage, // Use default if no image uploaded
+        title: newNews.title,
+        summary: newNews.summary,
+        content: newNews.content,
+        category: newNews.category,
+        priority: newNews.priority,
+        imageUrl: newNews.imageUrl,
+        status: newNews.status,
+        authorId: "gov-1", // Default government ID
+        authorName: "Gobierno Municipal de Cochabamba", // Default government name
+        authorType: "GOVERNMENT", // Default government type
         tags: newNews.tags
           .split(",")
           .map((tag) => tag.trim())
           .filter(Boolean),
       };
 
-      const response = await fetch("/api/admin/news", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newsData),
-      });
+      console.log("📰 AdminNewsPage - Sending data to service:", newsData);
+      const result = await NewsArticleService.create(newsData);
+      console.log("✅ AdminNewsPage - News created:", result);
 
-      if (response.ok) {
-        setShowCreateDialog(false);
-        setNewNews({
-          title: "",
-          summary: "",
-          content: "",
-          category: "",
-          tags: "",
-          priority: "MEDIUM",
-          imageUrl: "",
-          status: "DRAFT",
-          targetAudience: ["YOUTH"],
-        });
-        setImagePreview("");
-        fetchNews();
-      }
+      setShowCreateDialog(false);
+      setNewNews({
+        title: "",
+        summary: "",
+        content: "",
+        category: "",
+        tags: "",
+        priority: "MEDIUM",
+        imageUrl: "",
+        status: "DRAFT",
+        targetAudience: ["YOUTH"],
+      });
+      setImagePreview("");
+      
+      toast({
+        title: "Éxito",
+        description: "Noticia creada exitosamente",
+      });
+      
+      // Fetch news only after successful creation
+      fetchNews();
     } catch (error) {
-      console.error("Error creating news:", error);
+      console.error("❌ AdminNewsPage - Error creating news:", error);
+      toast({
+        title: "Error",
+        description: "Error al crear la noticia",
+        variant: "destructive",
+      });
     }
-  };
+  }, [newNews, fetchNews, toast]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -208,11 +236,18 @@ export default function AdminNewsPage() {
     }
   };
 
-  const filteredNews = news.filter(
-    (article) =>
-      article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      article.summary.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredNews = useMemo(() => {
+    return (news || []).filter((article) => {
+      if (!article) return false;
+      
+      const searchLower = (searchTerm || '').toLowerCase();
+      const articleTitle = (article.title || '').toLowerCase();
+      const articleSummary = (article.summary || '').toLowerCase();
+      
+      return articleTitle.includes(searchLower) ||
+             articleSummary.includes(searchLower);
+    });
+  }, [news, searchTerm]);
 
   return (
     <div className="space-y-6">
@@ -330,7 +365,7 @@ export default function AdminNewsPage() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="grid gap-2">
-                  <Label htmlFor="category">Categoría</Label>
+                  <Label htmlFor="category">Categoría *</Label>
                   <Select
                     value={newNews.category}
                     onValueChange={(value) =>
@@ -395,7 +430,7 @@ export default function AdminNewsPage() {
                 <Button
                   onClick={handleCreateNews}
                   disabled={
-                    !newNews.title || !newNews.summary || !newNews.content
+                    !newNews.title || !newNews.summary || !newNews.content || !newNews.category
                   }
                 >
                   Crear como Borrador
@@ -407,7 +442,7 @@ export default function AdminNewsPage() {
                     handleCreateNews();
                   }}
                   disabled={
-                    !newNews.title || !newNews.summary || !newNews.content
+                    !newNews.title || !newNews.summary || !newNews.content || !newNews.category
                   }
                 >
                   Publicar Ahora

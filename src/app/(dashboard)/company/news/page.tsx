@@ -57,6 +57,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { useNewsArticles } from "@/hooks/useNewsArticleApi";
 
 interface NewsArticle {
   id: string;
@@ -74,8 +75,7 @@ interface NewsArticle {
 }
 
 export default function CompanyNewsPage() {
-  const [news, setNews] = useState<NewsArticle[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: newsArticles, loading, error } = useNewsArticles();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [showCreateDialog, setShowCreateDialog] = useState(false);
@@ -215,7 +215,7 @@ export default function CompanyNewsPage() {
     }
   };
 
-  const filteredNews = news.filter(
+  const filteredNews = newsArticles?.filter(
     (article) =>
       article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       article.summary.toLowerCase().includes(searchTerm.toLowerCase())
@@ -528,14 +528,14 @@ export default function CompanyNewsPage() {
                     Cargando noticias...
                   </TableCell>
                 </TableRow>
-              ) : filteredNews.length === 0 ? (
+              ) : filteredNews?.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={7} className="text-center py-8">
                     No se encontraron noticias
                   </TableCell>
                 </TableRow>
               ) : (
-                filteredNews.map((article) => (
+                filteredNews?.map((article) => (
                   <TableRow key={article.id}>
                     <TableCell>
                       <div className="flex gap-3">

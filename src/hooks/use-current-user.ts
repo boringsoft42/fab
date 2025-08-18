@@ -1,7 +1,9 @@
 "use client";
 
-import { useMockAuth } from "@/context/mock-auth-context";
-import type { UserRole } from "@prisma/client";
+import { useEffect } from "react";
+import { useAuthContext } from "@/hooks/use-auth";
+import { UserRole } from "@/types/api";
+import { mapBackendRoleToFrontend } from "@/lib/utils";
 
 type Profile = {
   id: string;
@@ -10,6 +12,8 @@ type Profile = {
   lastName?: string;
   profilePicture?: string | null;
   completionPercentage?: number;
+  primaryColor?: string;
+  secondaryColor?: string;
 };
 
 type CurrentUserData = {
@@ -21,30 +25,63 @@ type CurrentUserData = {
 };
 
 export function useCurrentUser(): CurrentUserData {
-  const { user, isLoading, error } = useMockAuth();
+  const { user, loading } = useAuthContext();
 
-  // Transform mock user to match expected profile structure
+  console.log('🔍 useCurrentUser: Auth state:', { 
+    user: !!user, 
+    loading, 
+    userId: user?.id,
+    userRole: user?.role,
+    userType: typeof user?.role
+  });
+
+  // Log when user changes
+  useEffect(() => {
+    console.log('🔍 useCurrentUser: User changed:', { 
+      user: !!user, 
+      userId: user?.id,
+      userRole: user?.role,
+      userType: typeof user?.role
+    });
+  }, [user]);
+
+
+
+  // Transform real user to match expected profile structure
   const profile: Profile | null = user
     ? {
         id: user.id,
-        role: user.role,
-        firstName: user.profile?.firstName || user.name.split(" ")[0],
-        lastName: user.profile?.lastName || user.name.split(" ")[1] || "",
-        profilePicture: user.profile?.profilePicture || null,
-        completionPercentage: user.profile?.completionPercentage || 0,
+        role: (mapBackendRoleToFrontend(user.role) as UserRole) || null,
+        firstName: user.firstName || user.username || '',
+        lastName: user.lastName || '',
+        profilePicture: user.profilePicture || null,
+        completionPercentage: 0,
+        primaryColor: user.primaryColor,
+        secondaryColor: user.secondaryColor,
       }
     : null;
 
+  console.log('🔍 useCurrentUser: Profile:', profile);
+  console.log('🔍 useCurrentUser: Raw user data:', {
+    id: user?.id,
+    role: user?.role,
+    firstName: user?.firstName,
+    lastName: user?.lastName,
+    username: user?.username,
+    profilePicture: user?.profilePicture
+  });
+
   const refetch = async () => {
-    // Mock refetch - in real app this would refetch from API
+    // In real app this would refetch from API
+    // For now, just return a resolved promise
     return Promise.resolve();
   };
 
   return {
-    user,
+    user: user,
     profile,
-    isLoading,
-    error,
+    isLoading: loading,
+    error: null, // No error handling for now
     refetch,
   };
 }

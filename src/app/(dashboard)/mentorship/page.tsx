@@ -105,212 +105,202 @@ export default function MentorshipPage() {
   const [activeTab, setActiveTab] = useState("mentors");
 
   useEffect(() => {
-    fetchMentorshipData();
+    // TODO: Integrar hooks reales para mentorship (useMentors, useMentorshipSessions, useMentorshipPrograms) cuando estén disponibles
+    // Reemplazar fetchMentorshipData y mockMentors, mockSessions, mockPrograms por datos reales de la API
+    // Mock data for demonstration
+    const mockMentors: Mentor[] = [
+      {
+        id: "mentor-1",
+        name: "Dr. Roberto Silva",
+        avatar: "/api/placeholder/100/100",
+        title: "CEO & Fundador",
+        company: "TechBolivia",
+        location: "La Paz, Bolivia",
+        bio: "Emprendedor serial con más de 15 años de experiencia en tecnología. He fundado 3 startups exitosas y actualmente mentor jóvenes emprendedores.",
+        expertise: [
+          "Tecnología",
+          "Startups",
+          "Liderazgo",
+          "Estrategia de Negocio",
+        ],
+        experience: "15+ años",
+        rating: 4.9,
+        reviewCount: 89,
+        mentees: 156,
+        responseTime: "2 horas",
+        languages: ["Español", "Inglés"],
+        price: { type: "free" },
+        availability: {
+          timezone: "GMT-4",
+          schedule: "Lunes a Viernes 14:00-18:00",
+        },
+        achievements: [
+          "Fundador Exitoso",
+          "Mentor del Año 2023",
+          "Experto en AI",
+        ],
+        isVerified: true,
+        isOnline: true,
+      },
+      {
+        id: "mentor-2",
+        name: "Lic. Carmen Rodriguez",
+        avatar: "/api/placeholder/100/100",
+        title: "Directora de Marketing",
+        company: "Grupo Boliviano",
+        location: "Santa Cruz, Bolivia",
+        bio: "Especialista en marketing digital y desarrollo de marcas. He ayudado a más de 100 emprendimientos a posicionarse en el mercado.",
+        expertise: [
+          "Marketing Digital",
+          "Branding",
+          "Redes Sociales",
+          "Ventas",
+        ],
+        experience: "12+ años",
+        rating: 4.8,
+        reviewCount: 67,
+        mentees: 98,
+        responseTime: "4 horas",
+        languages: ["Español", "Portugués"],
+        price: { type: "paid", amount: 150 },
+        availability: {
+          timezone: "GMT-4",
+          schedule: "Martes y Jueves 16:00-20:00",
+        },
+        achievements: [
+          "Top Marketer 2022",
+          "Certificación Google",
+          "Especialista en Growth",
+        ],
+        isVerified: true,
+        isOnline: false,
+      },
+      {
+        id: "mentor-3",
+        name: "Ing. Luis Mamani",
+        avatar: "/api/placeholder/100/100",
+        title: "Consultor Financiero",
+        company: "FinanzasPro",
+        location: "Cochabamba, Bolivia",
+        bio: "Contador público y consultor financiero especializado en startups. Ayudo a emprendedores a estructurar sus finanzas y conseguir inversión.",
+        expertise: [
+          "Finanzas",
+          "Contabilidad",
+          "Inversión",
+          "Planificación Financiera",
+        ],
+        experience: "10+ años",
+        rating: 4.7,
+        reviewCount: 43,
+        mentees: 72,
+        responseTime: "6 horas",
+        languages: ["Español", "Inglés"],
+        price: { type: "paid", amount: 100 },
+        availability: {
+          timezone: "GMT-4",
+          schedule: "Miércoles a Viernes 10:00-14:00",
+        },
+        achievements: [
+          "CPA Certificado",
+          "Especialista en Startups",
+          "Mentor Fundación Emprende",
+        ],
+        isVerified: true,
+        isOnline: true,
+      },
+    ];
+
+    const mockSessions: MentorshipSession[] = [
+      {
+        id: "session-1",
+        mentorId: "mentor-1",
+        mentorName: "Dr. Roberto Silva",
+        mentorAvatar: "/api/placeholder/50/50",
+        date: new Date("2024-03-15T15:00:00"),
+        duration: 60,
+        status: "scheduled",
+        topic: "Estrategia de Crecimiento para Startup",
+        type: "video",
+      },
+      {
+        id: "session-2",
+        mentorId: "mentor-2",
+        mentorName: "Lic. Carmen Rodriguez",
+        mentorAvatar: "/api/placeholder/50/50",
+        date: new Date("2024-02-28T16:30:00"),
+        duration: 45,
+        status: "completed",
+        topic: "Plan de Marketing Digital",
+        type: "video",
+        feedback: {
+          rating: 5,
+          comment:
+            "Excelente sesión, muy práctica y útil para mi emprendimiento.",
+        },
+      },
+    ];
+
+    const mockPrograms: MentorshipProgram[] = [
+      {
+        id: "program-1",
+        title: "Acelerador de Startups Tecnológicas",
+        description:
+          "Programa intensivo de 8 semanas para acelerar el crecimiento de startups tecnológicas. Incluye mentoría personalizada, workshops y networking.",
+        duration: "8 semanas",
+        level: "intermediate",
+        mentorId: "mentor-1",
+        mentorName: "Dr. Roberto Silva",
+        mentorAvatar: "/api/placeholder/50/50",
+        participants: 12,
+        maxParticipants: 15,
+        price: 0,
+        startDate: new Date("2024-04-01"),
+        topics: [
+          "Modelo de Negocio",
+          "Tecnología",
+          "Fundraising",
+          "Escalabilidad",
+        ],
+        objectives: [
+          "Definir propuesta de valor única",
+          "Desarrollar MVP funcional",
+          "Preparar pitch para inversionistas",
+          "Establecer métricas clave",
+        ],
+      },
+      {
+        id: "program-2",
+        title: "Marketing Digital para Emprendedores",
+        description:
+          "Aprende a crear y ejecutar estrategias de marketing digital efectivas para hacer crecer tu emprendimiento.",
+        duration: "6 semanas",
+        level: "beginner",
+        mentorId: "mentor-2",
+        mentorName: "Lic. Carmen Rodriguez",
+        mentorAvatar: "/api/placeholder/50/50",
+        participants: 8,
+        maxParticipants: 20,
+        price: 0,
+        startDate: new Date("2024-03-20"),
+        topics: [
+          "Estrategia Digital",
+          "Redes Sociales",
+          "Content Marketing",
+          "Analytics",
+        ],
+        objectives: [
+          "Crear plan de marketing digital",
+          "Dominar redes sociales principales",
+          "Medir ROI de campañas",
+          "Automatizar procesos de marketing",
+        ],
+      },
+    ];
+
+    setMentors(mockMentors);
+    setSessions(mockSessions);
+    setPrograms(mockPrograms);
   }, []);
-
-  const fetchMentorshipData = async () => {
-    try {
-      setLoading(true);
-
-      // Mock data for demonstration
-      const mockMentors: Mentor[] = [
-        {
-          id: "mentor-1",
-          name: "Dr. Roberto Silva",
-          avatar: "/api/placeholder/100/100",
-          title: "CEO & Fundador",
-          company: "TechBolivia",
-          location: "La Paz, Bolivia",
-          bio: "Emprendedor serial con más de 15 años de experiencia en tecnología. He fundado 3 startups exitosas y actualmente mentor jóvenes emprendedores.",
-          expertise: [
-            "Tecnología",
-            "Startups",
-            "Liderazgo",
-            "Estrategia de Negocio",
-          ],
-          experience: "15+ años",
-          rating: 4.9,
-          reviewCount: 89,
-          mentees: 156,
-          responseTime: "2 horas",
-          languages: ["Español", "Inglés"],
-          price: { type: "free" },
-          availability: {
-            timezone: "GMT-4",
-            schedule: "Lunes a Viernes 14:00-18:00",
-          },
-          achievements: [
-            "Fundador Exitoso",
-            "Mentor del Año 2023",
-            "Experto en AI",
-          ],
-          isVerified: true,
-          isOnline: true,
-        },
-        {
-          id: "mentor-2",
-          name: "Lic. Carmen Rodriguez",
-          avatar: "/api/placeholder/100/100",
-          title: "Directora de Marketing",
-          company: "Grupo Boliviano",
-          location: "Santa Cruz, Bolivia",
-          bio: "Especialista en marketing digital y desarrollo de marcas. He ayudado a más de 100 emprendimientos a posicionarse en el mercado.",
-          expertise: [
-            "Marketing Digital",
-            "Branding",
-            "Redes Sociales",
-            "Ventas",
-          ],
-          experience: "12+ años",
-          rating: 4.8,
-          reviewCount: 67,
-          mentees: 98,
-          responseTime: "4 horas",
-          languages: ["Español", "Portugués"],
-          price: { type: "paid", amount: 150 },
-          availability: {
-            timezone: "GMT-4",
-            schedule: "Martes y Jueves 16:00-20:00",
-          },
-          achievements: [
-            "Top Marketer 2022",
-            "Certificación Google",
-            "Especialista en Growth",
-          ],
-          isVerified: true,
-          isOnline: false,
-        },
-        {
-          id: "mentor-3",
-          name: "Ing. Luis Mamani",
-          avatar: "/api/placeholder/100/100",
-          title: "Consultor Financiero",
-          company: "FinanzasPro",
-          location: "Cochabamba, Bolivia",
-          bio: "Contador público y consultor financiero especializado en startups. Ayudo a emprendedores a estructurar sus finanzas y conseguir inversión.",
-          expertise: [
-            "Finanzas",
-            "Contabilidad",
-            "Inversión",
-            "Planificación Financiera",
-          ],
-          experience: "10+ años",
-          rating: 4.7,
-          reviewCount: 43,
-          mentees: 72,
-          responseTime: "6 horas",
-          languages: ["Español", "Inglés"],
-          price: { type: "paid", amount: 100 },
-          availability: {
-            timezone: "GMT-4",
-            schedule: "Miércoles a Viernes 10:00-14:00",
-          },
-          achievements: [
-            "CPA Certificado",
-            "Especialista en Startups",
-            "Mentor Fundación Emprende",
-          ],
-          isVerified: true,
-          isOnline: true,
-        },
-      ];
-
-      const mockSessions: MentorshipSession[] = [
-        {
-          id: "session-1",
-          mentorId: "mentor-1",
-          mentorName: "Dr. Roberto Silva",
-          mentorAvatar: "/api/placeholder/50/50",
-          date: new Date("2024-03-15T15:00:00"),
-          duration: 60,
-          status: "scheduled",
-          topic: "Estrategia de Crecimiento para Startup",
-          type: "video",
-        },
-        {
-          id: "session-2",
-          mentorId: "mentor-2",
-          mentorName: "Lic. Carmen Rodriguez",
-          mentorAvatar: "/api/placeholder/50/50",
-          date: new Date("2024-02-28T16:30:00"),
-          duration: 45,
-          status: "completed",
-          topic: "Plan de Marketing Digital",
-          type: "video",
-          feedback: {
-            rating: 5,
-            comment:
-              "Excelente sesión, muy práctica y útil para mi emprendimiento.",
-          },
-        },
-      ];
-
-      const mockPrograms: MentorshipProgram[] = [
-        {
-          id: "program-1",
-          title: "Acelerador de Startups Tecnológicas",
-          description:
-            "Programa intensivo de 8 semanas para acelerar el crecimiento de startups tecnológicas. Incluye mentoría personalizada, workshops y networking.",
-          duration: "8 semanas",
-          level: "intermediate",
-          mentorId: "mentor-1",
-          mentorName: "Dr. Roberto Silva",
-          mentorAvatar: "/api/placeholder/50/50",
-          participants: 12,
-          maxParticipants: 15,
-          price: 0,
-          startDate: new Date("2024-04-01"),
-          topics: [
-            "Modelo de Negocio",
-            "Tecnología",
-            "Fundraising",
-            "Escalabilidad",
-          ],
-          objectives: [
-            "Definir propuesta de valor única",
-            "Desarrollar MVP funcional",
-            "Preparar pitch para inversionistas",
-            "Establecer métricas clave",
-          ],
-        },
-        {
-          id: "program-2",
-          title: "Marketing Digital para Emprendedores",
-          description:
-            "Aprende a crear y ejecutar estrategias de marketing digital efectivas para hacer crecer tu emprendimiento.",
-          duration: "6 semanas",
-          level: "beginner",
-          mentorId: "mentor-2",
-          mentorName: "Lic. Carmen Rodriguez",
-          mentorAvatar: "/api/placeholder/50/50",
-          participants: 8,
-          maxParticipants: 20,
-          price: 0,
-          startDate: new Date("2024-03-20"),
-          topics: [
-            "Estrategia Digital",
-            "Redes Sociales",
-            "Content Marketing",
-            "Analytics",
-          ],
-          objectives: [
-            "Crear plan de marketing digital",
-            "Dominar redes sociales principales",
-            "Medir ROI de campañas",
-            "Automatizar procesos de marketing",
-          ],
-        },
-      ];
-
-      setMentors(mockMentors);
-      setSessions(mockSessions);
-      setPrograms(mockPrograms);
-    } catch (error) {
-      console.error("Error fetching mentorship data:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const expertiseAreas = [
     "Tecnología",

@@ -69,6 +69,8 @@ export default function EntrepreneurshipPage() {
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
+    // TODO: Integrar hooks reales para recursos, programas y historias de éxito (useResources, useBusinessPlans, useProfiles, etc.) cuando estén disponibles
+    // Reemplazar fetchEntrepreneurshipData y mockResources, mockPrograms, mockStories por datos reales de la API
     fetchEntrepreneurshipData();
   }, []);
 
@@ -314,10 +316,9 @@ export default function EntrepreneurshipPage() {
       </div>
 
       <Tabs defaultValue="resources" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="resources">Recursos Destacados</TabsTrigger>
           <TabsTrigger value="programs">Programas Disponibles</TabsTrigger>
-          <TabsTrigger value="stories">Historias de Éxito</TabsTrigger>
         </TabsList>
 
         {/* Featured Resources */}
@@ -436,46 +437,7 @@ export default function EntrepreneurshipPage() {
         </TabsContent>
 
         {/* Success Stories */}
-        <TabsContent value="stories" className="space-y-6">
-          <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-bold">Historias de Éxito Locales</h2>
-            <Button asChild variant="outline">
-              <Link href="/entrepreneurship/network">
-                Conectar con Emprendedores
-                <ArrowRight className="h-4 w-4 ml-2" />
-              </Link>
-            </Button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {stories.map((story) => (
-              <Card key={story.id} className="overflow-hidden">
-                <div className="flex">
-                  <div className="w-32 h-32 bg-gradient-to-br from-green-100 to-blue-100 flex items-center justify-center flex-shrink-0">
-                    <Store className="h-16 w-16 text-green-600" />
-                  </div>
-                  <CardContent className="p-4 flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Badge variant="outline">{story.industry}</Badge>
-                      <Badge variant="secondary">{story.location}</Badge>
-                    </div>
-                    <h3 className="font-semibold text-lg">
-                      {story.businessName}
-                    </h3>
-                    <p className="text-sm text-muted-foreground mb-3">
-                      por {story.entrepreneur}
-                    </p>
-                    <p className="text-sm mb-3">{story.description}</p>
-                    <div className="flex justify-between text-xs text-muted-foreground">
-                      <span>Ingresos: {story.revenue}</span>
-                      <span>{story.employees} empleados</span>
-                    </div>
-                  </CardContent>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
+     
       </Tabs>
 
       {/* Call to Action */}

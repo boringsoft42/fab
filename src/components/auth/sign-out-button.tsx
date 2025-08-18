@@ -1,19 +1,13 @@
 'use client';
 
-import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
-import { LogOut } from "lucide-react";
+import { useAuthContext } from "@/hooks/use-auth";
 
 export function SignOutButton() {
-  const { signOut } = useAuth();
+  const { signOut } = useAuthContext();
 
   return (
-    <Button
-      variant="outline"
-      onClick={() => signOut()}
-      className="flex items-center gap-2"
-    >
-      <LogOut className="h-4 w-4" />
+    <Button variant="outline" onClick={signOut}>
       Sign Out
     </Button>
   );

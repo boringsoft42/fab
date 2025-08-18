@@ -16,7 +16,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { JobOffer } from "@/types/jobs";
+import { JobOffer } from "@/types/api";
 import { Calendar } from "lucide-react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
@@ -125,11 +125,11 @@ export const JobCard = ({ job, viewMode }: JobCardProps) => {
                 <div className="flex items-start space-x-4">
                   <Avatar className="w-12 h-12 flex-shrink-0">
                     <AvatarImage
-                      src={job.company.logo}
-                      alt={job.company.name}
+                      src={job.company?.logo || "/images/companies/default-logo.png"}
+                      alt={job.company?.name || "Empresa"}
                     />
                     <AvatarFallback>
-                      {job.company.name.charAt(0)}
+                      {job.company?.name?.charAt(0) || "E"}
                     </AvatarFallback>
                   </Avatar>
 
@@ -145,13 +145,13 @@ export const JobCard = ({ job, viewMode }: JobCardProps) => {
 
                         <div className="flex items-center space-x-4 text-sm text-gray-600 mb-2">
                           <span className="font-medium">
-                            {job.company.name}
+                            {job.company?.name || "Empresa"}
                           </span>
-                          {job.company.rating && (
+                          {job.company?.rating && (
                             <div className="flex items-center space-x-1">
                               <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
                               <span>{job.company.rating}</span>
-                              <span>({job.company.reviewCount})</span>
+                              <span>({job.company.reviewCount || 0})</span>
                             </div>
                           )}
                         </div>
@@ -167,11 +167,11 @@ export const JobCard = ({ job, viewMode }: JobCardProps) => {
                           </div>
                           <div className="flex items-center space-x-1">
                             <Users className="w-4 h-4" />
-                            <span>{job.applicationCount} aplicaciones</span>
+                            <span>{job.applicationCount || 0} aplicaciones</span>
                           </div>
                           <div className="flex items-center space-x-1">
                             <Eye className="w-4 h-4" />
-                            <span>{job.viewCount} vistas</span>
+                            <span>{job.viewCount || 0} vistas</span>
                           </div>
                         </div>
 
@@ -186,7 +186,7 @@ export const JobCard = ({ job, viewMode }: JobCardProps) => {
                           <Badge variant="outline">
                             {getExperienceLabel(job.experienceLevel)}
                           </Badge>
-                          {job.requiredSkills.slice(0, 3).map((skill) => (
+                          {job.requiredSkills?.slice(0, 3).map((skill) => (
                             <Badge
                               key={skill}
                               variant="outline"
@@ -195,7 +195,7 @@ export const JobCard = ({ job, viewMode }: JobCardProps) => {
                               {skill}
                             </Badge>
                           ))}
-                          {job.requiredSkills.length > 3 && (
+                          {job.requiredSkills && job.requiredSkills.length > 3 && (
                             <Badge variant="outline" className="text-xs">
                               +{job.requiredSkills.length - 3} más
                             </Badge>
@@ -266,8 +266,8 @@ export const JobCard = ({ job, viewMode }: JobCardProps) => {
           <div className="flex items-start justify-between">
             <div className="flex items-start space-x-3">
               <Avatar className="w-10 h-10">
-                <AvatarImage src={job.company.logo} alt={job.company.name} />
-                <AvatarFallback>{job.company.name.charAt(0)}</AvatarFallback>
+                <AvatarImage src={job.company?.logo || "/images/companies/default-logo.png"} alt={job.company?.name || "Empresa"} />
+                <AvatarFallback>{job.company?.name?.charAt(0) || "E"}</AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
                 <h3 className="font-semibold text-gray-900 line-clamp-1">
@@ -276,15 +276,15 @@ export const JobCard = ({ job, viewMode }: JobCardProps) => {
                     <Star className="inline-block w-4 h-4 text-yellow-500 ml-1" />
                   )}
                 </h3>
-                <div className="flex items-center space-x-2 text-sm text-gray-600">
-                  <span>{job.company.name}</span>
-                  {job.company.rating && (
-                    <div className="flex items-center space-x-1">
-                      <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                      <span>{job.company.rating}</span>
-                    </div>
-                  )}
+                            <div className="flex items-center space-x-2 text-sm text-gray-600">
+              <span>{job.company?.name || "Empresa"}</span>
+              {job.company?.rating && (
+                <div className="flex items-center space-x-1">
+                  <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                  <span>{job.company.rating}</span>
                 </div>
+              )}
+            </div>
               </div>
             </div>
             <Button
@@ -329,12 +329,12 @@ export const JobCard = ({ job, viewMode }: JobCardProps) => {
             </div>
 
             <div className="flex flex-wrap gap-1">
-              {job.requiredSkills.slice(0, 4).map((skill) => (
+              {job.requiredSkills?.slice(0, 4).map((skill) => (
                 <Badge key={skill} variant="outline" className="text-xs">
                   {skill}
                 </Badge>
               ))}
-              {job.requiredSkills.length > 4 && (
+              {job.requiredSkills && job.requiredSkills.length > 4 && (
                 <Badge variant="outline" className="text-xs">
                   +{job.requiredSkills.length - 4}
                 </Badge>
@@ -361,11 +361,11 @@ export const JobCard = ({ job, viewMode }: JobCardProps) => {
               <div className="flex items-center space-x-3 text-xs text-gray-500">
                 <div className="flex items-center space-x-1">
                   <Users className="w-3 h-3" />
-                  <span>{job.applicationCount}</span>
+                  <span>{job.applicationCount || 0}</span>
                 </div>
                 <div className="flex items-center space-x-1">
                   <Eye className="w-3 h-3" />
-                  <span>{job.viewCount}</span>
+                  <span>{job.viewCount || 0}</span>
                 </div>
               </div>
             </div>

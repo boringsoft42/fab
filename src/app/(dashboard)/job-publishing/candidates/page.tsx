@@ -69,6 +69,8 @@ import { useToast } from "@/components/ui/use-toast";
 import { JobApplication, ApplicationStatus } from "@/types/jobs";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useRef } from "react";
+import { useJobOffers } from "@/hooks/useJobOfferApi";
+import { useProfiles } from "@/hooks/useProfileApi";
 
 interface CandidatesData {
   candidates: JobApplication[];

@@ -1,406 +1,216 @@
-import type { UserRole } from "@prisma/client";
-import type { UserPermissions } from "@/types/profile";
+import { UserRole } from '@/types/api';
 
-/**
- * CORRECTED PERMISSIONS MATRIX FROM TASKS.MD
- *
- * | USER TYPE              | JOB SEARCH | PUBLISH OFFERS | TRAINING | ENTREPRENEURSHIP | REPORTS |
- * |------------------------|------------|----------------|----------|------------------|---------|
- * | YOUTH                  | ✓          | ✗              | ✓        | ✓                | ✓       |
- * | ADOLESCENTS            | ✓          | ✗              | ✓        | ✓                | ✗       |
- * | COMPANIES              | ✗          | ✓              | ✗        | ✗                | ✓       |
- * | MUNICIPAL_GOVERNMENTS  | ✗          | ✗              | ✓        | ✓                | ✓       |
- * | TRAINING_CENTERS       | ✗          | ✗              | ✓        | ✓                | ✓       |
- * | NGOS_AND_FOUNDATIONS   | ✗          | ✗              | ✓        | ✓                | ✓       |
- */
+// Define permissions enum
+export enum Permission {
+  // Course permissions
+  VIEW_COURSES = 'VIEW_COURSES',
+  CREATE_COURSES = 'CREATE_COURSES',
+  DELETE_COURSES = 'DELETE_COURSES',
+  
+  // Lesson permissions
+  VIEW_LESSONS = 'VIEW_LESSONS',
+  CREATE_LESSONS = 'CREATE_LESSONS',
+  
+  // Quiz permissions
+  VIEW_QUIZZES = 'VIEW_QUIZZES',
+  CREATE_QUIZZES = 'CREATE_QUIZZES',
+  
+  // Job permissions
+  VIEW_JOB_OFFERS = 'VIEW_JOB_OFFERS',
+  CREATE_JOB_OFFERS = 'CREATE_JOB_OFFERS',
+  
+  // User management
+  USER_MANAGEMENT = 'USER_MANAGEMENT',
+  
+  // Additional permissions
+  VIEW_ANALYTICS = 'VIEW_ANALYTICS',
+  MANAGE_CONTENT = 'MANAGE_CONTENT',
+  MODERATE_CONTENT = 'MODERATE_CONTENT',
+}
 
-const PERMISSIONS_MATRIX: Record<UserRole, UserPermissions> = {
-  YOUTH: {
-    canSearchJobs: true,
-    canPublishJobs: false,
-    canAccessTraining: true,
-    canManageTraining: false,
-    canAccessEntrepreneurship: true,
-    canManageEntrepreneurship: false,
-    canViewReports: true,
-    canViewAdvancedReports: false,
-    canManageUsers: false,
-    requiresParentalConsent: false,
-  },
-  ADOLESCENTS: {
-    canSearchJobs: true,
-    canPublishJobs: false,
-    canAccessTraining: true,
-    canManageTraining: false,
-    canAccessEntrepreneurship: true,
-    canManageEntrepreneurship: false,
-    canViewReports: false, // Key difference from YOUTH
-    canViewAdvancedReports: false,
-    canManageUsers: false,
-    requiresParentalConsent: true, // Key difference from YOUTH
-  },
-  COMPANIES: {
-    canSearchJobs: false,
-    canPublishJobs: true,
-    canAccessTraining: false,
-    canManageTraining: false,
-    canAccessEntrepreneurship: false,
-    canManageEntrepreneurship: false,
-    canViewReports: true,
-    canViewAdvancedReports: false,
-    canManageUsers: false,
-    requiresParentalConsent: false,
-  },
-  MUNICIPAL_GOVERNMENTS: {
-    canSearchJobs: false,
-    canPublishJobs: false,
-    canAccessTraining: true,
-    canManageTraining: true,
-    canAccessEntrepreneurship: true,
-    canManageEntrepreneurship: true,
-    canViewReports: true,
-    canViewAdvancedReports: true,
-    canManageUsers: true,
-    requiresParentalConsent: false,
-  },
-  TRAINING_CENTERS: {
-    canSearchJobs: false,
-    canPublishJobs: false,
-    canAccessTraining: true,
-    canManageTraining: true,
-    canAccessEntrepreneurship: true,
-    canManageEntrepreneurship: true,
-    canViewReports: true,
-    canViewAdvancedReports: true,
-    canManageUsers: false,
-    requiresParentalConsent: false,
-  },
-  NGOS_AND_FOUNDATIONS: {
-    canSearchJobs: false,
-    canPublishJobs: false,
-    canAccessTraining: true,
-    canManageTraining: true,
-    canAccessEntrepreneurship: true,
-    canManageEntrepreneurship: true,
-    canViewReports: true,
-    canViewAdvancedReports: true,
-    canManageUsers: false,
-    requiresParentalConsent: false,
-  },
-  SUPERADMIN: {
-    canSearchJobs: true,
-    canPublishJobs: true,
-    canAccessTraining: true,
-    canManageTraining: true,
-    canAccessEntrepreneurship: true,
-    canManageEntrepreneurship: true,
-    canViewReports: true,
-    canViewAdvancedReports: true,
-    canManageUsers: true,
-    requiresParentalConsent: false,
-  },
+// Role-based permissions mapping
+export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
+  JOVENES: [
+    Permission.VIEW_COURSES,
+    Permission.VIEW_LESSONS,
+    Permission.VIEW_QUIZZES,
+    Permission.VIEW_JOB_OFFERS,
+  ],
+  
+  ADOLESCENTES: [
+    Permission.VIEW_COURSES,
+    Permission.VIEW_LESSONS,
+    Permission.VIEW_QUIZZES,
+    Permission.VIEW_JOB_OFFERS,
+  ],
+  
+  EMPRESAS: [
+    Permission.VIEW_COURSES,
+    Permission.CREATE_COURSES,
+    Permission.VIEW_LESSONS,
+    Permission.CREATE_LESSONS,
+    Permission.VIEW_QUIZZES,
+    Permission.CREATE_QUIZZES,
+    Permission.VIEW_JOB_OFFERS,
+    Permission.CREATE_JOB_OFFERS,
+    Permission.VIEW_ANALYTICS,
+    Permission.MANAGE_CONTENT,
+  ],
+  
+  GOBIERNOS_MUNICIPALES: [
+    Permission.VIEW_COURSES,
+    Permission.CREATE_COURSES,
+    Permission.VIEW_LESSONS,
+    Permission.CREATE_LESSONS,
+    Permission.VIEW_QUIZZES,
+    Permission.CREATE_QUIZZES,
+    Permission.VIEW_JOB_OFFERS,
+    Permission.CREATE_JOB_OFFERS,
+    Permission.VIEW_ANALYTICS,
+    Permission.MANAGE_CONTENT,
+  ],
+  
+  CENTROS_DE_FORMACION: [
+    Permission.VIEW_COURSES,
+    Permission.CREATE_COURSES,
+    Permission.VIEW_LESSONS,
+    Permission.CREATE_LESSONS,
+    Permission.VIEW_QUIZZES,
+    Permission.CREATE_QUIZZES,
+    Permission.VIEW_JOB_OFFERS,
+    Permission.CREATE_JOB_OFFERS,
+    Permission.VIEW_ANALYTICS,
+    Permission.MANAGE_CONTENT,
+  ],
+  
+  ONGS_Y_FUNDACIONES: [
+    Permission.VIEW_COURSES,
+    Permission.CREATE_COURSES,
+    Permission.VIEW_LESSONS,
+    Permission.CREATE_LESSONS,
+    Permission.VIEW_QUIZZES,
+    Permission.CREATE_QUIZZES,
+    Permission.VIEW_JOB_OFFERS,
+    Permission.CREATE_JOB_OFFERS,
+    Permission.VIEW_ANALYTICS,
+    Permission.MANAGE_CONTENT,
+  ],
+  
+  CLIENT: [
+    Permission.VIEW_COURSES,
+    Permission.VIEW_LESSONS,
+    Permission.VIEW_QUIZZES,
+    Permission.VIEW_JOB_OFFERS,
+  ],
+  
+  AGENT: [
+    Permission.VIEW_COURSES,
+    Permission.VIEW_LESSONS,
+    Permission.VIEW_QUIZZES,
+    Permission.VIEW_JOB_OFFERS,
+  ],
+  
+  SUPER_ADMIN: [
+    Permission.VIEW_COURSES,
+    Permission.CREATE_COURSES,
+    Permission.DELETE_COURSES,
+    Permission.VIEW_LESSONS,
+    Permission.CREATE_LESSONS,
+    Permission.VIEW_QUIZZES,
+    Permission.CREATE_QUIZZES,
+    Permission.VIEW_JOB_OFFERS,
+    Permission.CREATE_JOB_OFFERS,
+    Permission.USER_MANAGEMENT,
+    Permission.VIEW_ANALYTICS,
+    Permission.MANAGE_CONTENT,
+    Permission.MODERATE_CONTENT,
+  ],
 };
 
-/**
- * Get permissions for a specific user role
- */
-export function getPermissions(role: UserRole): UserPermissions {
-  return PERMISSIONS_MATRIX[role];
-}
+// Organization roles (can create content)
+export const ORGANIZATION_ROLES: UserRole[] = [
+  'EMPRESAS',
+  'GOBIERNOS_MUNICIPALES',
+  'CENTROS_DE_FORMACION',
+  'ONGS_Y_FUNDACIONES',
+];
 
-/**
- * Check if a user has a specific permission
- */
-export function hasPermission(
-  role: UserRole,
-  permission: keyof UserPermissions
-): boolean {
-  return PERMISSIONS_MATRIX[role][permission];
-}
+// Student roles
+export const STUDENT_ROLES: UserRole[] = [
+  'JOVENES',
+  'ADOLESCENTES',
+];
 
-/**
- * Check if user can access job search functionality
- */
-export function canSearchJobs(role: UserRole): boolean {
-  return hasPermission(role, "canSearchJobs");
-}
+// Utility functions
+export const hasPermission = (userRole: UserRole, permission: Permission): boolean => {
+  return ROLE_PERMISSIONS[userRole]?.includes(permission) || false;
+};
 
-/**
- * Check if user can publish job offers
- */
-export function canPublishJobs(role: UserRole): boolean {
-  return hasPermission(role, "canPublishJobs");
-}
+export const hasAnyPermission = (userRole: UserRole, permissions: Permission[]): boolean => {
+  return permissions.some(permission => hasPermission(userRole, permission));
+};
 
-/**
- * Check if user can access training/courses
- */
-export function canAccessTraining(role: UserRole): boolean {
-  return hasPermission(role, "canAccessTraining");
-}
+export const hasAllPermissions = (userRole: UserRole, permissions: Permission[]): boolean => {
+  return permissions.every(permission => hasPermission(userRole, permission));
+};
 
-/**
- * Check if user can manage training content (create/edit courses)
- */
-export function canManageTraining(role: UserRole): boolean {
-  return hasPermission(role, "canManageTraining");
-}
+export const isOrganization = (userRole: UserRole): boolean => {
+  return ORGANIZATION_ROLES.includes(userRole);
+};
 
-/**
- * Check if user can access entrepreneurship tools
- */
-export function canAccessEntrepreneurship(role: UserRole): boolean {
-  return hasPermission(role, "canAccessEntrepreneurship");
-}
+export const isStudent = (userRole: UserRole): boolean => {
+  return STUDENT_ROLES.includes(userRole);
+};
 
-/**
- * Check if user can manage entrepreneurship content
- */
-export function canManageEntrepreneurship(role: UserRole): boolean {
-  return hasPermission(role, "canManageEntrepreneurship");
-}
+export const isAdmin = (userRole: UserRole): boolean => {
+  return userRole === 'SUPER_ADMIN';
+};
 
-/**
- * Check if user can view personal/basic reports
- */
-export function canViewReports(role: UserRole): boolean {
-  return hasPermission(role, "canViewReports");
-}
+export const canCreateCourses = (userRole: UserRole): boolean => {
+  return hasPermission(userRole, Permission.CREATE_COURSES);
+};
 
-/**
- * Check if user can view advanced/administrative reports
- */
-export function canViewAdvancedReports(role: UserRole): boolean {
-  return hasPermission(role, "canViewAdvancedReports");
-}
+export const canCreateJobOffers = (userRole: UserRole): boolean => {
+  return hasPermission(userRole, Permission.CREATE_JOB_OFFERS);
+};
 
-/**
- * Check if user can manage other users
- */
-export function canManageUsers(role: UserRole): boolean {
-  return hasPermission(role, "canManageUsers");
-}
+export const canManageUsers = (userRole: UserRole): boolean => {
+  return hasPermission(userRole, Permission.USER_MANAGEMENT);
+};
 
-/**
- * Check if user requires parental consent
- */
-export function requiresParentalConsent(role: UserRole): boolean {
-  return hasPermission(role, "requiresParentalConsent");
-}
+export const canViewAnalytics = (userRole: UserRole): boolean => {
+  return hasPermission(userRole, Permission.VIEW_ANALYTICS);
+};
 
-/**
- * Get user type display name
- */
-export function getUserTypeDisplayName(role: UserRole): string {
-  const displayNames: Record<UserRole, string> = {
-    YOUTH: "Joven",
-    ADOLESCENTS: "Adolescente",
-    COMPANIES: "Empresa",
-    MUNICIPAL_GOVERNMENTS: "Gobierno Municipal",
-    TRAINING_CENTERS: "Centro de Formación",
-    NGOS_AND_FOUNDATIONS: "ONG y Fundaciones",
-    SUPERADMIN: "Super Administrador",
+// Role display helpers
+export const getRoleDisplayName = (role: UserRole): string => {
+  const roleNames: Record<UserRole, string> = {
+    JOVENES: 'Joven',
+    ADOLESCENTES: 'Adolescente',
+    EMPRESAS: 'Empresa',
+    GOBIERNOS_MUNICIPALES: 'Gobierno Municipal',
+    CENTROS_DE_FORMACION: 'Centro de Formación',
+    ONGS_Y_FUNDACIONES: 'ONG/Fundación',
+    CLIENT: 'Cliente',
+    AGENT: 'Agente',
+    SUPER_ADMIN: 'Administrador',
   };
+  
+  return roleNames[role] || role;
+};
 
-  return displayNames[role];
-}
-
-/**
- * Get default dashboard route based on user role
- */
-export function getDefaultDashboardRoute(role: UserRole): string {
-  const dashboardRoutes: Record<UserRole, string> = {
-    YOUTH: "/dashboard",
-    ADOLESCENTS: "/dashboard",
-    COMPANIES: "/dashboard/company",
-    MUNICIPAL_GOVERNMENTS: "/dashboard/admin",
-    TRAINING_CENTERS: "/dashboard/training-center",
-    NGOS_AND_FOUNDATIONS: "/dashboard/ngo",
-    SUPERADMIN: "/dashboard/admin",
+export const getRoleColor = (role: UserRole): string => {
+  const roleColors: Record<UserRole, string> = {
+    JOVENES: 'bg-blue-100 text-blue-800',
+    ADOLESCENTES: 'bg-green-100 text-green-800',
+    EMPRESAS: 'bg-purple-100 text-purple-800',
+    GOBIERNOS_MUNICIPALES: 'bg-red-100 text-red-800',
+    CENTROS_DE_FORMACION: 'bg-orange-100 text-orange-800',
+    ONGS_Y_FUNDACIONES: 'bg-pink-100 text-pink-800',
+    CLIENT: 'bg-gray-100 text-gray-800',
+    AGENT: 'bg-yellow-100 text-yellow-800',
+    SUPER_ADMIN: 'bg-black text-white',
   };
-
-  return dashboardRoutes[role];
-}
-
-/**
- * Get navigation menu items based on user role
- */
-export function getNavigationItems(role: UserRole) {
-  const permissions = getPermissions(role);
-  const items = [];
-
-  // Dashboard (always available)
-  items.push({
-    title: "Dashboard",
-    href: getDefaultDashboardRoute(role),
-    icon: "LayoutDashboard",
-  });
-
-  // Job Search (YOUTH, ADOLESCENTS)
-  if (permissions.canSearchJobs) {
-    items.push(
-      {
-        title: "Buscar Empleos",
-        href: "/jobs",
-        icon: "Search",
-      },
-      {
-        title: "Mis Postulaciones",
-        href: "/my-applications",
-        icon: "FileText",
-      }
-    );
-  }
-
-  // Job Management (COMPANIES)
-  if (permissions.canPublishJobs) {
-    items.push(
-      {
-        title: "Publicar Empleo",
-        href: "/jobs/create",
-        icon: "Plus",
-      },
-      {
-        title: "Mis Empleos",
-        href: "/my-jobs",
-        icon: "Briefcase",
-      },
-      {
-        title: "Candidatos",
-        href: "/candidates",
-        icon: "Users",
-      }
-    );
-  }
-
-  // Training (All except COMPANIES)
-  if (permissions.canAccessTraining) {
-    items.push({
-      title: permissions.canManageTraining ? "Gestión de Cursos" : "Cursos",
-      href: "/courses",
-      icon: "BookOpen",
-    });
-
-    if (!permissions.canManageTraining) {
-      items.push({
-        title: "Mis Cursos",
-        href: "/my-courses",
-        icon: "GraduationCap",
-      });
-    }
-  }
-
-  // Entrepreneurship (All except COMPANIES)
-  if (permissions.canAccessEntrepreneurship) {
-    items.push(
-      {
-        title: "Emprendimiento",
-        href: "/entrepreneurship",
-        icon: "Lightbulb",
-      },
-      {
-        title: "Simulador de Plan de Negocio",
-        href: "/business-plan-simulator",
-        icon: "Calculator",
-      },
-      {
-        title: "Escaparate Virtual",
-        href: "/marketplace",
-        icon: "Store",
-      }
-    );
-  }
-
-  // Reports
-  if (permissions.canViewReports) {
-    items.push({
-      title: permissions.canViewAdvancedReports
-        ? "Reportes Avanzados"
-        : "Mis Reportes",
-      href: "/reports",
-      icon: "BarChart3",
-    });
-  }
-
-  // User Management (MUNICIPAL_GOVERNMENTS, SUPERADMIN)
-  if (permissions.canManageUsers) {
-    items.push({
-      title: "Gestión de Usuarios",
-      href: "/admin/users",
-      icon: "UserCog",
-    });
-  }
-
-  // Profile and Settings (always available)
-  items.push({
-    title: "Mi Perfil",
-    href: "/profile",
-    icon: "User",
-  });
-
-  return items;
-}
-
-/**
- * Check if user should be redirected to complete profile
- */
-export function shouldCompleteProfile(
-  role: UserRole,
-  profileCompletion: number
-): boolean {
-  // Different completion thresholds based on role
-  const completionThresholds: Record<UserRole, number> = {
-    YOUTH: 70,
-    ADOLESCENTS: 60, // Lower threshold for adolescents
-    COMPANIES: 80,
-    MUNICIPAL_GOVERNMENTS: 85,
-    TRAINING_CENTERS: 85,
-    NGOS_AND_FOUNDATIONS: 85,
-    SUPERADMIN: 50,
-  };
-
-  return profileCompletion < completionThresholds[role];
-}
-
-/**
- * Get required profile fields based on user role
- */
-export function getRequiredProfileFields(role: UserRole): string[] {
-  const baseFields = ["firstName", "lastName", "email", "municipality"];
-
-  switch (role) {
-    case "YOUTH":
-    case "ADOLESCENTS":
-      return [
-        ...baseFields,
-        "birthDate",
-        "educationLevel",
-        "skills",
-        "interests",
-        ...(role === "ADOLESCENTS" ? ["parentEmail"] : []),
-      ];
-
-    case "COMPANIES":
-      return [
-        ...baseFields,
-        "companyName",
-        "businessSector",
-        "companyDescription",
-        "legalRepresentative",
-      ];
-
-    case "MUNICIPAL_GOVERNMENTS":
-    case "TRAINING_CENTERS":
-    case "NGOS_AND_FOUNDATIONS":
-      return [
-        ...baseFields,
-        "institutionName",
-        "institutionType",
-        "serviceArea",
-        "institutionDescription",
-      ];
-
-    default:
-      return baseFields;
-  }
-}
+  
+  return roleColors[role] || 'bg-gray-100 text-gray-800';
+};

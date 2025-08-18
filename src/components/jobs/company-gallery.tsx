@@ -29,6 +29,8 @@ export function CompanyGallery({ images }: CompanyGalleryProps) {
       <Image
         src={images[currentIndex]}
         alt={`Company image ${currentIndex + 1}`}
+        width={800}
+        height={400}
         className="w-full h-full object-cover transition-opacity duration-300"
       />
       {images.length > 1 && (

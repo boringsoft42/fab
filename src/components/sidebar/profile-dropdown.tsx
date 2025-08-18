@@ -1,97 +1,60 @@
 "use client";
 
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { BadgeCheck, LogOut, Settings, User } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useState } from "react";
+import { useAuthContext } from "@/hooks/use-auth";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { useCurrentUser } from "@/hooks/use-current-user";
-import { useMockAuth } from "@/context/mock-auth-context";
-import { Badge } from "@/components/ui/badge";
-
-interface AppUser {
-  email?: string;
-  name?: string;
-}
-
-type UserRole =
-  | "YOUTH"
-  | "ADOLESCENTS"
-  | "COMPANIES"
-  | "MUNICIPAL_GOVERNMENTS"
-  | "TRAINING_CENTERS"
-  | "NGOS_AND_FOUNDATIONS"
-  | "SUPERADMIN";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { User, Settings, LogOut, Loader2 } from "lucide-react";
+import Link from "next/link";
 
 export function ProfileDropdown() {
-  const router = useRouter();
-  const { profile, user, isLoading } = useCurrentUser();
-  const { signOut } = useMockAuth();
-  const appUser = user as AppUser;
+  const { user, signOut, loading } = useAuthContext();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  if (isLoading) {
+  const handleSignOut = async () => {
+    setIsLoggingOut(true);
+    try {
+      await signOut();
+    } catch (error) {
+      console.error("Error signing out:", error);
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
+
+  if (loading) {
     return (
-      <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-        <div className="h-8 w-8 rounded-full bg-primary/10 animate-pulse" />
-      </Button>
+      <div className="flex items-center space-x-2">
+        <Loader2 className="h-4 w-4 animate-spin" />
+        <span className="text-sm">Loading...</span>
+      </div>
     );
   }
 
-  if (!profile || !appUser) return null;
+  if (!user) {
+    return null;
+  }
 
-  const displayName =
-    [profile?.firstName, profile?.lastName].filter(Boolean).join(" ") ||
-    appUser?.name ||
-    appUser?.email?.split("@")[0] ||
-    "Usuario";
-
-  // Get initials for avatar fallback
-  const getInitials = () => {
-    if (profile?.firstName || profile?.lastName) {
-      return [profile.firstName?.[0], profile.lastName?.[0]]
-        .filter(Boolean)
-        .join("")
-        .toUpperCase();
-    }
-    if (appUser?.name) {
-      return appUser.name
-        .split(" ")
-        .map((n: string) => n[0])
-        .join("")
-        .toUpperCase();
-    }
-    return appUser?.email?.[0]?.toUpperCase() || "U";
-  };
-
-  // Get role display name
-  const getRoleDisplay = (role?: UserRole | null) => {
-    if (!role) return "Sin rol";
-    return role
-      .toString()
-      .replace("_", " ")
-      .replace(/\b\w/g, (l) => l.toUpperCase());
+  const getInitials = (firstName: string, lastName: string) => {
+    return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
   };
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-          <Avatar className="h-8 w-8 ring-2 ring-primary/10">
-            <AvatarImage
-              src={profile?.profilePicture || ""}
-              alt={displayName || appUser?.email || "User"}
-            />
-            <AvatarFallback className="bg-primary/10">
-              {getInitials()}
+          <Avatar className="h-8 w-8">
+            <AvatarImage src={user.profilePicture || ""} alt={user.username} />
+            <AvatarFallback>
+              {getInitials(user.firstName || "", user.lastName || "")}
             </AvatarFallback>
           </Avatar>
         </Button>
@@ -99,49 +62,39 @@ export function ProfileDropdown() {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <div className="flex items-center justify-between">
-              <p className="text-sm font-medium leading-none">{displayName}</p>
-              <Badge variant="outline" className="ml-2 text-xs">
-                {getRoleDisplay(profile?.role)}
-              </Badge>
-            </div>
+            <p className="text-sm font-medium leading-none">
+              {user.firstName} {user.lastName}
+            </p>
             <p className="text-xs leading-none text-muted-foreground">
-              {appUser?.email}
+              {user.email}
             </p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem asChild>
-            <Link href="/profile">
-              <User className="mr-2 h-4 w-4" />
-              Profile
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href="/settings">
-              <Settings className="mr-2 h-4 w-4" />
-              Settings
-            </Link>
-          </DropdownMenuItem>
-          {profile?.role === "SUPERADMIN" && (
-            <DropdownMenuItem asChild>
-              <Link href="/admin">
-                <BadgeCheck className="mr-2 h-4 w-4" />
-                Admin
-              </Link>
-            </DropdownMenuItem>
-          )}
-        </DropdownMenuGroup>
+        <DropdownMenuItem asChild>
+          <Link href="/profile" className="flex items-center">
+            <User className="mr-2 h-4 w-4" />
+            <span>Profile</span>
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href="/settings" className="flex items-center">
+            <Settings className="mr-2 h-4 w-4" />
+            <span>Settings</span>
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          onClick={() => {
-            signOut();
-            router.replace("/login");
-          }}
+          onClick={handleSignOut}
+          disabled={isLoggingOut}
+          className="flex items-center"
         >
-          <LogOut className="mr-2 h-4 w-4" />
-          Log out
+          {isLoggingOut ? (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <LogOut className="mr-2 h-4 w-4" />
+          )}
+          <span>{isLoggingOut ? "Signing out..." : "Sign out"}</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

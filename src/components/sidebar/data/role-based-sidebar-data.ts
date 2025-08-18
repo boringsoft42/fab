@@ -17,9 +17,11 @@ import {
   AudioWaveform,
   Newspaper,
   UserCircle,
+  MessageCircle,
+  Calendar,
 } from "lucide-react";
 import type { SidebarData, SidebarItem } from "../types";
-import type { UserRole } from "@prisma/client";
+import type { UserRole } from "@/types/api";
 
 const commonTeams = [
   {
@@ -66,11 +68,7 @@ export const youthSidebarData: SidebarData = {
           url: "/my-applications",
           icon: FileText,
         },
-        {
-          title: "Mis Entrevistas",
-          url: "/my-interviews",
-          icon: FileText,
-        },
+        
       ],
     },
     {
@@ -114,10 +112,7 @@ export const youthSidebarData: SidebarData = {
               title: "Publicar mi Emprendimiento",
               url: "/publish-entrepreneurship",
             },
-            {
-              title: "Mentorías",
-              url: "/mentorship",
-            },
+          
           ],
         },
       ],
@@ -133,6 +128,36 @@ export const youthSidebarData: SidebarData = {
         {
           title: "Red de Contactos",
           url: "/entrepreneurship/network",
+          icon: Users,
+        },
+        {
+          title: "Mensajería",
+          url: "/entrepreneurship/messaging",
+          icon: MessageCircle,
+        },
+      ],
+    },
+    {
+      title: "Conectar con Emprendedores",
+      items: [
+        {
+          title: "Buscar Emprendedores",
+          url: "/entrepreneurship/entrepreneurs",
+          icon: Users,
+        },
+        {
+          title: "Mentoría",
+          url: "/mentorship",
+          icon: UserCog,
+        },
+        {
+          title: "Eventos de Networking",
+          url: "/entrepreneurship/events",
+          icon: Calendar,
+        },
+        {
+          title: "Grupos de Interés",
+          url: "/entrepreneurship/groups",
           icon: Users,
         },
       ],
@@ -154,6 +179,11 @@ export const youthSidebarData: SidebarData = {
           title: "Mi Perfil",
           url: "/profile",
           icon: User,
+        },
+        {
+          title: "CV Builder",
+          url: "/cv-builder",
+          icon: FileText,
         },
         // {
         //   title: "Reportes Personales",
@@ -245,9 +275,11 @@ export const adolescentSidebarData: SidebarData = {
             //   url: "/entrepreneurship/network",
             // },
             {
-              title: "Mentorías",
-              url: "/mentorship",
+              title: "Mensajería",
+              url: "/entrepreneurship/messaging",
+              icon: MessageCircle,
             },
+           
           ],
         },
       ],
@@ -290,7 +322,7 @@ export const companySidebarData: SidebarData = {
         },
         {
           title: "Mis Empleos",
-          url: "/jobs/manage",
+          url: "/company/jobs",
           icon: Building2,
         },
         {
@@ -351,9 +383,9 @@ export const municipalGovernmentSidebarData: SidebarData = {
           icon: LayoutDashboard,
         },
         {
-          title: "Gestión de Usuarios",
-          url: "/admin/users",
-          icon: UserCog,
+          title: "Gestión de Empresas",
+          url: "/admin/companies",
+          icon: Building2,
         },
       ],
     },
@@ -368,10 +400,10 @@ export const municipalGovernmentSidebarData: SidebarData = {
               title: "Gestión de Cursos",
               url: "/admin/courses",
             },
-            // {
-            //   title: "Crear Curso",
-            //   url: "/admin/courses/create",
-            // },
+            {
+              title: "Crear Curso",
+              url: "/admin/courses/create",
+            },
             {
               title: "Estudiantes",
               url: "/admin/students",
@@ -386,10 +418,10 @@ export const municipalGovernmentSidebarData: SidebarData = {
               title: "Gestión de Contenido",
               url: "/admin/youth-content",
             },
-            // {
-            //   title: "Gestión de Eventos",
-            //   url: "/admin/entrepreneurship/events",
-            // },
+            {
+              title: "Gestión de Eventos",
+              url: "/admin/entrepreneurship/events",
+            },
           ],
         },
       ],
@@ -400,6 +432,11 @@ export const municipalGovernmentSidebarData: SidebarData = {
         {
           title: "Gestión de Noticias",
           url: "/admin/news",
+          icon: FileText,
+        },
+        {
+          title: "Crear Noticia",
+          url: "/admin/news/create",
           icon: FileText,
         },
       ],
@@ -615,22 +652,169 @@ export const ngoFoundationSidebarData: SidebarData = {
   ],
 };
 
+// SUPERADMIN navigation
+export const superAdminSidebarData: SidebarData = {
+  user: {
+    name: "Super Administrador",
+    email: "admin@cemse.com",
+    avatar: "/avatars/admin.jpg",
+  },
+  teams: commonTeams,
+  navGroups: [
+    {
+      title: "Administración",
+      items: [
+        {
+          title: "Dashboard Administrativo",
+          url: "/dashboard",
+          icon: LayoutDashboard,
+        },
+        {
+          title: "Gestión de Usuarios",
+          url: "/admin/users",
+          icon: UserCog,
+        },
+        {
+          title: "Gestión de Instituciones",
+          url: "/admin/municipalities",
+          icon: Building2,
+        },
+        {
+          title: "Gestión de Empresas",
+          url: "/admin/companies",
+          icon: Building2,
+        },
+        {
+          title: "Gestión de Roles",
+          url: "/admin/roles",
+          icon: Users,
+        },
+      ],
+    },
+    {
+      title: "Capacitación",
+      items: [
+        {
+          title: "Gestión de Cursos",
+          url: "/admin/courses",
+          icon: GraduationCap,
+        },
+        {
+          title: "Crear Curso",
+          url: "/admin/courses/create",
+          icon: GraduationCap,
+        },
+        {
+          title: "Estudiantes",
+          url: "/admin/students",
+          icon: Users,
+        },
+      ],
+    },
+    {
+      title: "Empleos",
+      items: [
+        {
+          title: "Gestión de Empleos",
+          url: "/admin/job-offers",
+          icon: Briefcase,
+        },
+        {
+          title: "Candidatos",
+          url: "/admin/job-applications",
+          icon: Users,
+        },
+      ],
+    },
+    {
+      title: "Emprendimiento",
+      items: [
+        {
+          title: "Gestión de Contenido",
+          url: "/admin/entrepreneurship",
+          icon: Lightbulb,
+        },
+        {
+          title: "Gestión de Eventos",
+          url: "/admin/events",
+          icon: Lightbulb,
+        },
+      ],
+    },
+    {
+      title: "Comunicación",
+      items: [
+        {
+          title: "Gestión de Noticias",
+          url: "/admin/news",
+          icon: FileText,
+        },
+        {
+          title: "Anuncios del Sistema",
+          url: "/admin/announcements",
+          icon: Newspaper,
+        },
+      ],
+    },
+    {
+      title: "Análisis",
+      items: [
+        {
+          title: "Reportes del Sistema",
+          url: "/admin/reports",
+          icon: BarChart3,
+        },
+        {
+          title: "Analytics",
+          url: "/admin/analytics",
+          icon: PieChart,
+        },
+      ],
+    },
+    {
+      title: "Configuración",
+      items: [
+        {
+          title: "Configuración del Sistema",
+          url: "/admin/settings",
+          icon: Settings,
+        },
+        {
+          title: "Mi Perfil",
+          url: "/profile",
+          icon: User,
+        },
+      ],
+    },
+  ],
+};
+
 export function getSidebarDataByRole(role: UserRole): SidebarData {
+  console.log("🔍 getSidebarDataByRole - Role:", role);
+  
   switch (role) {
-    case "YOUTH":
+    case "JOVENES":
       return youthSidebarData;
-    case "ADOLESCENTS":
+    case "ADOLESCENTES":
       return adolescentSidebarData;
-    case "COMPANIES":
+    case "EMPRESAS":
       return companySidebarData;
-    case "MUNICIPAL_GOVERNMENTS":
+    case "GOBIERNOS_MUNICIPALES":
       return municipalGovernmentSidebarData;
-    case "TRAINING_CENTERS":
+    case "CENTROS_DE_FORMACION":
       return trainingCenterSidebarData;
-    case "NGOS_AND_FOUNDATIONS":
+    case "ONGS_Y_FUNDACIONES":
       return ngoFoundationSidebarData;
+    case "SUPER_ADMIN":
+    case "SUPERADMIN":
+      return superAdminSidebarData;
     default:
-      return youthSidebarData; // fallback
+      console.log("🔍 getSidebarDataByRole - No match for role:", role, "using superAdminSidebarData as fallback for admin roles");
+      // For any unknown role, check if it contains "ADMIN" and return super admin data
+      if (role && typeof role === 'string' && role.toUpperCase().includes('ADMIN')) {
+        return superAdminSidebarData;
+      }
+      return youthSidebarData; // Default fallback to youth data
   }
 }
 

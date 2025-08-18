@@ -8,9 +8,13 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { FileText, Link, Settings } from "lucide-react";
+import { useNewsArticles } from "@/hooks/useNewsArticleApi";
+import { useResources } from "@/hooks/useResourceApi";
 
 export default function YouthContentPage() {
   const [activeTab, setActiveTab] = useState("content");
+  const { data: newsArticles, loading: newsLoading, error: newsError } = useNewsArticles();
+  const { data: resources, loading: resourcesLoading, error: resourcesError } = useResources();
 
   return (
     <div className="container mx-auto py-6">
