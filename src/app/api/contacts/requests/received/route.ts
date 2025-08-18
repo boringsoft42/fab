@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { API_BASE } from '@/lib/api';
 
 export async function GET(request: NextRequest) {
   try {
@@ -6,7 +7,7 @@ export async function GET(request: NextRequest) {
     const page = searchParams.get('page');
     const limit = searchParams.get('limit');
     
-    const url = new URL('http://localhost:3001/api/contacts/requests/received');
+    const url = new URL(`${API_BASE}/contacts/requests/received`);
     if (page) url.searchParams.set('page', page);
     if (limit) url.searchParams.set('limit', limit);
 

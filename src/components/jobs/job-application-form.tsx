@@ -28,6 +28,7 @@ import { JobQuestion, JobOffer } from "@/types/jobs";
 import { useCVStatus } from "@/hooks/use-cv-status";
 import CVCheckModal from "./cv-check-modal";
 import { extractFilePath, buildFileUrl } from "@/lib/utils";
+import { API_BASE } from "@/lib/api";
 
 interface JobApplicationFormProps {
   jobOffer: JobOffer;
@@ -177,7 +178,7 @@ export default function JobApplicationForm({ jobOffer, onSuccess, onCancel }: Jo
 
 
 
-      const response = await fetch('http://localhost:3001/api/jobapplication', {
+      const response = await fetch(`${API_BASE}/jobapplication`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -143,7 +143,7 @@ export class ProfileService {g
     try {
       console.log("👤 ProfileService.getCurrentProfile - Attempting API call");
       
-      // Try the external API first (localhost:3001) - using the new /profile/me endpoint
+      // Try the external API first - using the new /profile/me endpoint
       try {
         const result = await apiCall('/profile/me');
         console.log("👤 ProfileService.getCurrentProfile - External API call successful:", result);

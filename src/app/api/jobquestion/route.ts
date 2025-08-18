@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { API_BASE } from '@/lib/api';
 
 export async function GET(request: NextRequest) {
   try {
@@ -6,7 +7,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     
     // Forward all search parameters to backend
-    const url = new URL('http://localhost:3001/api/jobquestion');
+    const url = new URL(`${API_BASE}/jobquestion`);
     searchParams.forEach((value, key) => {
       url.searchParams.set(key, value);
     });
@@ -49,10 +50,10 @@ export async function POST(request: NextRequest) {
     console.log('🔍 API: Received POST request for job questions');
     const body = await request.json();
     
-    console.log('🔍 API: Forwarding to backend:', 'http://localhost:3001/api/jobquestion');
+    console.log('🔍 API: Forwarding to backend:', `${API_BASE}/jobquestion`);
     console.log('🔍 API: Authorization header:', request.headers.get('authorization') ? 'Present' : 'Missing');
 
-    const response = await fetch('http://localhost:3001/api/jobquestion', {
+    const response = await fetch(`${API_BASE}/jobquestion`, {
       method: 'POST',
       headers: {
         'Authorization': request.headers.get('authorization') || '',

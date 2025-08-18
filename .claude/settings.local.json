@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(for file in \"src/app/api/contacts/requests/[id]/accept/route.ts\" \"src/app/api/contacts/requests/[id]/reject/route.ts\" \"src/app/api/contacts/route.ts\" \"src/app/api/contacts/search/route.ts\" \"src/app/api/contacts/stats/route.ts\")",
+      "Bash(do echo \"Processing: $file\")",
+      "Bash(sed:*)",
+      "Bash(done)"
+    ],
+    "defaultMode": "acceptEdits"
+  }
+}

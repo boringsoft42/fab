@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { API_BASE } from '@/lib/api';
 
 export async function GET(
   request: NextRequest,
@@ -8,7 +9,7 @@ export async function GET(
     const jobId = params.id;
     console.log('🔍 API: Received GET request for job offer:', jobId);
     
-    const response = await fetch(`http://localhost:3001/api/joboffer/${jobId}`, {
+    const response = await fetch(`${API_BASE}/joboffer/${jobId}`, {
       headers: {
         'Authorization': request.headers.get('authorization') || '',
         'Content-Type': 'application/json',
@@ -71,10 +72,10 @@ export async function PUT(
        console.log('🔍 API: FormData received for update:', formDataObj);
       
              // Forward FormData directly to backend
-       console.log('🔍 API: Sending FormData to backend at:', `http://localhost:3001/api/joboffer/${jobId}`);
+       console.log('🔍 API: Sending FormData to backend at:', `${API_BASE}/joboffer/${jobId}`);
        console.log('🔍 API: Authorization header present:', !!request.headers.get('authorization'));
        
-       const response = await fetch(`http://localhost:3001/api/joboffer/${jobId}`, {
+       const response = await fetch(`${API_BASE}/joboffer/${jobId}`, {
          method: 'PUT',
          headers: {
            'Authorization': request.headers.get('authorization') || '',
@@ -102,10 +103,10 @@ export async function PUT(
       console.log('🔍 API: Processing JSON update request');
       body = await request.json();
       
-      console.log('🔍 API: Forwarding to backend:', `http://localhost:3001/api/joboffer/${jobId}`);
+      console.log('🔍 API: Forwarding to backend:', `${API_BASE}/joboffer/${jobId}`);
       console.log('🔍 API: Authorization header:', request.headers.get('authorization') ? 'Present' : 'Missing');
 
-      const response = await fetch(`http://localhost:3001/api/joboffer/${jobId}`, {
+      const response = await fetch(`${API_BASE}/joboffer/${jobId}`, {
         method: 'PUT',
         headers: {
           'Authorization': request.headers.get('authorization') || '',
@@ -146,7 +147,7 @@ export async function DELETE(
     const resolvedParams = await params;
     console.log('🔍 API: Received DELETE request for job offer:', resolvedParams.id);
     
-    const url = new URL(`http://localhost:3001/api/joboffer/${resolvedParams.id}`);
+    const url = new URL(`${API_BASE}/joboffer/${resolvedParams.id}`);
 
     console.log('🔍 API: Forwarding to backend:', url.toString());
     console.log('🔍 API: Authorization header:', request.headers.get('authorization') ? 'Present' : 'Missing');

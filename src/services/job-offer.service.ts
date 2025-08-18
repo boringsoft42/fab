@@ -296,7 +296,7 @@ export class JobOfferService {
       }
       
       console.log('🏢 JobOfferService.getJobOffersByCompany - Final URL:', url);
-      console.log('🏢 JobOfferService.getJobOffersByCompany - Expected full URL: http://localhost:3001/api' + url);
+      console.log('🏢 JobOfferService.getJobOffersByCompany - Expected full URL:', API_BASE + url);
       
       const response = await apiCall(url, {
         method: 'GET',

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-const BACKEND_BASE_URL = process.env.BACKEND_BASE_URL || 'http://localhost:3001';
+import { API_BASE } from '@/lib/api';
 
 export async function GET(request: NextRequest) {
   try {
@@ -11,7 +10,7 @@ export async function GET(request: NextRequest) {
     }
 
     const response = await fetch(
-      `${BACKEND_BASE_URL}/api/jobapplication-messages/unread-count`,
+      `${API_BASE}/jobapplication-messages/unread-count`,
       {
         headers: {
           'Authorization': token,

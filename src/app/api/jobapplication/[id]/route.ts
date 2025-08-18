@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { API_BASE } from '@/lib/api';
 
 export async function GET(
   request: NextRequest,
@@ -8,7 +9,7 @@ export async function GET(
     const resolvedParams = await params;
     console.log('🔍 API: Received request for job application:', resolvedParams.id);
     
-    const url = new URL(`http://localhost:3001/api/jobapplication/${resolvedParams.id}`);
+    const url = new URL(`${API_BASE}/jobapplication/${resolvedParams.id}`);
 
     console.log('🔍 API: Forwarding to backend:', url.toString());
     console.log('🔍 API: Authorization header:', request.headers.get('authorization') ? 'Present' : 'Missing');
@@ -52,7 +53,7 @@ export async function PUT(
     const body = await request.json();
     console.log('🔍 API: Received PUT request for job application:', resolvedParams.id);
     
-    const url = new URL(`http://localhost:3001/api/jobapplication/${resolvedParams.id}`);
+    const url = new URL(`${API_BASE}/jobapplication/${resolvedParams.id}`);
 
     console.log('🔍 API: Forwarding to backend:', url.toString());
     console.log('🔍 API: Authorization header:', request.headers.get('authorization') ? 'Present' : 'Missing');
@@ -97,7 +98,7 @@ export async function DELETE(
     const resolvedParams = await params;
     console.log('🔍 API: Received DELETE request for job application:', resolvedParams.id);
     
-    const url = new URL(`http://localhost:3001/api/jobapplication/${resolvedParams.id}`);
+    const url = new URL(`${API_BASE}/jobapplication/${resolvedParams.id}`);
 
     console.log('🔍 API: Forwarding to backend:', url.toString());
     console.log('🔍 API: Authorization header:', request.headers.get('authorization') ? 'Present' : 'Missing');

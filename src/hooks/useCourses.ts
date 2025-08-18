@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { API_BASE } from '@/lib/api';
 
 interface Course {
   id: string;
@@ -83,7 +84,7 @@ export const useCourses = () => {
         throw new Error('No authentication token available');
       }
 
-      const response = await fetch('http://localhost:3001/api/course', {
+      const response = await fetch(`${API_BASE}/course`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { API_BASE } from '@/lib/api';
 
 export async function GET(request: NextRequest) {
   try {
@@ -6,7 +7,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     
     // Forward all search parameters to backend
-    const url = new URL('http://localhost:3001/api/joboffer');
+    const url = new URL(`${API_BASE}/joboffer`);
     searchParams.forEach((value, key) => {
       url.searchParams.set(key, value);
     });
@@ -73,10 +74,10 @@ export async function POST(request: NextRequest) {
        console.log('🔍 API: FormData received:', formDataObj);
       
              // Forward FormData directly to backend
-       console.log('🔍 API: Sending FormData to backend at: http://localhost:3001/api/joboffer');
+       console.log('🔍 API: Sending FormData to backend at:', `${API_BASE}/joboffer`);
        console.log('🔍 API: Authorization header present:', !!request.headers.get('authorization'));
        
-       const response = await fetch('http://localhost:3001/api/joboffer', {
+       const response = await fetch(`${API_BASE}/joboffer`, {
          method: 'POST',
          headers: {
            'Authorization': request.headers.get('authorization') || '',
@@ -104,10 +105,10 @@ export async function POST(request: NextRequest) {
       console.log('🔍 API: Processing JSON request');
       body = await request.json();
       
-      console.log('🔍 API: Forwarding to backend:', 'http://localhost:3001/api/joboffer');
+      console.log('🔍 API: Forwarding to backend:', `${API_BASE}/joboffer`);
       console.log('🔍 API: Authorization header:', request.headers.get('authorization') ? 'Present' : 'Missing');
 
-      const response = await fetch('http://localhost:3001/api/joboffer', {
+      const response = await fetch(`${API_BASE}/joboffer`, {
         method: 'POST',
         headers: {
           'Authorization': request.headers.get('authorization') || '',

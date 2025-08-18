@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { API_BASE } from '@/lib/api';
 
 export async function PUT(
   request: NextRequest,
@@ -6,7 +7,7 @@ export async function PUT(
 ) {
   try {
     const resolvedParams = await params;
-    const response = await fetch(`http://localhost:3001/api/messages/${resolvedParams.id}/read`, {
+    const response = await fetch(`${API_BASE}/messages/${resolvedParams.id}/read`, {
       method: 'PUT',
       headers: {
         'Authorization': request.headers.get('authorization') || '',

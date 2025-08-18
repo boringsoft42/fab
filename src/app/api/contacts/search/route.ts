@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { API_BASE } from '@/lib/api';
 
 export async function GET(request: NextRequest) {
   try {
@@ -7,8 +8,8 @@ export async function GET(request: NextRequest) {
     const query = searchParams.get('query');
     
     const url = query 
-      ? `http://localhost:3001/api/contacts/search?query=${encodeURIComponent(query)}`
-      : 'http://localhost:3001/api/contacts/search';
+      ? `${API_BASE}/contacts/search?query=${encodeURIComponent(query)}`
+      : `${API_BASE}/contacts/search`;
 
     console.log('Calling backend URL:', url); // Debug
     const response = await fetch(url, {

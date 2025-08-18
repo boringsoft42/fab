@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { API_BASE } from '@/lib/api';
 
 export async function GET(request: NextRequest) {
   try {
     console.log('🔍 API: Received request for stats');
     console.log('🔍 API: Authorization header:', request.headers.get('authorization') ? 'Present' : 'Missing');
 
-    const response = await fetch('http://localhost:3001/api/messages/stats', {
+    const response = await fetch(`${API_BASE}/messages/stats`, {
       headers: {
         'Authorization': request.headers.get('authorization') || '',
         'Content-Type': 'application/json',

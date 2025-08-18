@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuthContext } from './use-auth';
-import { apiCall } from '@/lib/api';
+import { apiCall, API_BASE } from '@/lib/api';
 import { buildFileUrl, checkFileAccess } from '@/lib/utils';
 
 interface CVStatus {
@@ -179,7 +179,7 @@ export function useCVStatus() {
         throw new Error('No se encontró token de autorización. Por favor, inicia sesión nuevamente.');
       }
 
-      const response = await fetch('http://localhost:3001/api/files/upload/cv', {
+      const response = await fetch(`${API_BASE}/files/upload/cv`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -225,7 +225,7 @@ export function useCVStatus() {
         throw new Error('No se encontró token de autorización. Por favor, inicia sesión nuevamente.');
       }
 
-      const response = await fetch('http://localhost:3001/api/files/upload/cover-letter', {
+      const response = await fetch(`${API_BASE}/files/upload/cover-letter`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

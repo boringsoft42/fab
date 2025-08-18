@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-const BACKEND_BASE_URL = process.env.BACKEND_BASE_URL || 'http://localhost:3001';
+import { API_BASE } from '@/lib/api';
 
 export async function GET(
   request: NextRequest,
@@ -23,7 +22,7 @@ export async function GET(
     const cleanToken = token.replace('Bearer ', '');
     console.log('🔑 Clean token:', cleanToken ? `${cleanToken.substring(0, 20)}...` : 'Empty');
 
-    const backendUrl = `${BACKEND_BASE_URL}/api/jobapplication-messages/${resolvedParams.applicationId}/messages`;
+    const backendUrl = `${API_BASE}/jobapplication-messages/${resolvedParams.applicationId}/messages`;
     console.log('🌐 Backend URL:', backendUrl);
 
     const response = await fetch(backendUrl, {
@@ -67,7 +66,7 @@ export async function POST(
     }
 
     const response = await fetch(
-      `${BACKEND_BASE_URL}/api/jobapplication-messages/${resolvedParams.applicationId}/messages`,
+      `${API_BASE}/jobapplication-messages/${resolvedParams.applicationId}/messages`,
       {
         method: 'POST',
         headers: {

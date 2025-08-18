@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { API_BASE } from '@/lib/api';
 
 // GET: Get current user's applications
 export async function GET(request: NextRequest) {
@@ -7,7 +8,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     
     // Forward all search parameters to backend
-    const url = new URL('http://localhost:3001/api/my-applications');
+    const url = new URL(`${API_BASE}/my-applications`);
     searchParams.forEach((value, key) => {
       url.searchParams.set(key, value);
     });
@@ -59,7 +60,7 @@ export async function DELETE(request: NextRequest) {
       );
     }
     
-    const url = new URL(`http://localhost:3001/api/my-applications?applicationId=${applicationId}`);
+    const url = new URL(`${API_BASE}/my-applications?applicationId=${applicationId}`);
 
     console.log('🔍 API: Forwarding to backend:', url.toString());
     console.log('🔍 API: Authorization header:', request.headers.get('authorization') ? 'Present' : 'Missing');

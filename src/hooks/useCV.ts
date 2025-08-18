@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getAuthHeaders } from "@/lib/api";
+import { getAuthHeaders, API_BASE } from "@/lib/api";
 
 export interface CVData {
   personalInfo: {
@@ -117,7 +117,7 @@ export function useCV() {
   const fetchCVData = async () => {
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:3001/api/cv", {
+      const response = await fetch(`${API_BASE}/cv`, {
         headers: getAuthHeaders(),
       });
       
@@ -141,7 +141,7 @@ export function useCV() {
   const updateCVData = async (data: Partial<CVData>) => {
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:3001/api/cv", {
+      const response = await fetch(`${API_BASE}/cv`, {
         method: "PUT",
         headers: {
           ...getAuthHeaders(),
@@ -170,7 +170,7 @@ export function useCV() {
   const fetchCoverLetterData = async () => {
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:3001/api/cv/cover-letter", {
+      const response = await fetch(`${API_BASE}/cv/cover-letter`, {
         headers: getAuthHeaders(),
       });
       
@@ -205,7 +205,7 @@ export function useCV() {
   ) => {
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:3001/api/cv/cover-letter", {
+      const response = await fetch(`${API_BASE}/cv/cover-letter`, {
         method: "POST",
         headers: {
           ...getAuthHeaders(),
@@ -234,7 +234,7 @@ export function useCV() {
   const generateCVForApplication = async (jobOfferId: string) => {
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:3001/api/cv/generate-for-application", {
+      const response = await fetch(`${API_BASE}/cv/generate-for-application`, {
         method: "POST",
         headers: {
           ...getAuthHeaders(),

@@ -1,5 +1,9 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { API_BASE } from '@/lib/api';
+
+// Define the backend base URL
+const BACKEND_BASE_URL = API_BASE;
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -8,7 +12,7 @@ export function cn(...inputs: ClassValue[]) {
 /**
  * Construye la URL completa para un archivo según su tipo
  */
-export function buildFileUrl(filePath: string, baseUrl: string = 'http://localhost:3001'): string {
+export function buildFileUrl(filePath: string, baseUrl: string = API_BASE.replace('/api', '')): string {
   if (filePath.startsWith('http')) {
     return filePath;
   }

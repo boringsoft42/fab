@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { API_BASE } from '@/lib/api';
 
 export async function PUT(
   request: NextRequest,
@@ -9,7 +10,7 @@ export async function PUT(
     const body = await request.json();
     console.log('🔍 API: Received PUT request for job question:', resolvedParams.id);
     
-    const url = new URL(`http://localhost:3001/api/jobquestion/${resolvedParams.id}`);
+    const url = new URL(`${API_BASE}/jobquestion/${resolvedParams.id}`);
 
     console.log('🔍 API: Forwarding to backend:', url.toString());
     console.log('🔍 API: Authorization header:', request.headers.get('authorization') ? 'Present' : 'Missing');
@@ -54,7 +55,7 @@ export async function DELETE(
     const resolvedParams = await params;
     console.log('🔍 API: Received DELETE request for job question:', resolvedParams.id);
     
-    const url = new URL(`http://localhost:3001/api/jobquestion/${resolvedParams.id}`);
+    const url = new URL(`${API_BASE}/jobquestion/${resolvedParams.id}`);
 
     console.log('🔍 API: Forwarding to backend:', url.toString());
     console.log('🔍 API: Authorization header:', request.headers.get('authorization') ? 'Present' : 'Missing');

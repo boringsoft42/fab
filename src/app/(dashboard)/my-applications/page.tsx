@@ -47,6 +47,7 @@ import { useMyJobApplications } from "@/hooks/useJobApplicationApi";
 import { useProfiles } from "@/hooks/useProfileApi";
 import { useJobMessages } from "@/hooks/use-job-messages";
 import { useAuthContext } from "@/hooks/use-auth";
+import { API_BASE } from "@/lib/api";
 
 interface ApplicationStats {
   total: number;
@@ -524,7 +525,7 @@ export default function MyApplicationsPage() {
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => window.open(`http://localhost:3001${application.cvFile}`, '_blank')}
+                              onClick={() => window.open(`${API_BASE.replace('/api', '')}${application.cvFile}`, '_blank')}
                             >
                               <Download className="w-4 h-4 mr-2" />
                               Ver CV
@@ -535,7 +536,7 @@ export default function MyApplicationsPage() {
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => window.open(`http://localhost:3001${application.coverLetterFile}`, '_blank')}
+                              onClick={() => window.open(`${API_BASE.replace('/api', '')}${application.coverLetterFile}`, '_blank')}
                             >
                               <Download className="w-4 h-4 mr-2" />
                               Ver Carta

@@ -82,7 +82,7 @@ export class AuthService {
     } catch (error) {
       console.error('Login error:', error);
       if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
-        throw new Error('No se pudo conectar al servidor. Verifica que el backend esté ejecutándose en http://localhost:3001');
+        throw new Error(`No se pudo conectar al servidor. Verifica que el backend esté ejecutándose en ${API_BASE.replace('/api', '')}`);
       }
       throw error;
     }
@@ -119,7 +119,7 @@ export class AuthService {
     } catch (error) {
       console.error('Registration error:', error);
       if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
-        throw new Error('No se pudo conectar al servidor. Verifica que el backend esté ejecutándose en http://localhost:3001');
+        throw new Error(`No se pudo conectar al servidor. Verifica que el backend esté ejecutándose en ${API_BASE.replace('/api', '')}`);
       }
       throw error;
     }

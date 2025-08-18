@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { API_BASE } from "@/lib/api";
 
 export default function TestApiPage() {
   const [username, setUsername] = useState("superadmin");
@@ -21,7 +22,7 @@ export default function TestApiPage() {
     try {
       console.log("Testing login with:", { username, password: "***" });
       
-      const response = await fetch("http://localhost:3001/api/auth/login", {
+      const response = await fetch(`${API_BASE}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -57,7 +58,7 @@ export default function TestApiPage() {
     try {
       console.log("Testing health endpoint");
       
-      const response = await fetch("http://localhost:3001/health");
+      const response = await fetch(`${API_BASE.replace('/api', '')}/health`);
       console.log("Health response status:", response.status);
 
       if (!response.ok) {
@@ -80,7 +81,7 @@ export default function TestApiPage() {
       <div>
         <h1 className="text-3xl font-bold">Prueba de API</h1>
         <p className="text-muted-foreground">
-          Página para probar la conexión con el backend en localhost:3001
+          Página para probar la conexión con el backend en {API_BASE.replace('/api', '')}
         </p>
       </div>
 

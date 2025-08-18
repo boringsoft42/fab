@@ -14,6 +14,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { JobOffer, ContractType, WorkModality, ExperienceLevel, JobStatus } from "@/types/jobs";
 import { useUpdateJobOffer } from "@/hooks/use-job-offers";
 import { useAuthContext } from "@/hooks/use-auth";
+import { API_BASE } from "@/lib/api";
 import dynamic from "next/dynamic";
 
 const MapPicker = dynamic(() => import("@/components/dashboard/MapPicker"), {
@@ -137,7 +138,7 @@ export default function EditJobPage() {
          if (jobData.images && jobData.images.length > 0) {
            // Convert backend URLs to full URLs
            const fullImageUrls = jobData.images.map((img: string) => 
-             img.startsWith('http') ? img : `http://localhost:3001${img}`
+             img.startsWith('http') ? img : `${API_BASE.replace('/api', '')}${img}`
            );
            setImageUrls(fullImageUrls);
            console.log('🔍 Loaded existing images:', fullImageUrls);

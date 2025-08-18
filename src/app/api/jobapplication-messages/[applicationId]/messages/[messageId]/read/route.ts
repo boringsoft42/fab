@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-const BACKEND_BASE_URL = process.env.BACKEND_BASE_URL || 'http://localhost:3001';
+import { API_BASE } from '@/lib/api';
 
 export async function PUT(
   request: NextRequest,
@@ -14,7 +13,7 @@ export async function PUT(
     }
 
     const response = await fetch(
-      `${BACKEND_BASE_URL}/api/jobapplication-messages/${params.applicationId}/messages/${params.messageId}/read`,
+      `${API_BASE}/jobapplication-messages/${params.applicationId}/messages/${params.messageId}/read`,
       {
         method: 'PUT',
         headers: {

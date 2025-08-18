@@ -50,7 +50,7 @@ import {
 import { toast } from "sonner";
 import { JobApplicationForm } from "./components/JobApplicationForm";
 import { JobApplicationDetails } from "./components/JobApplicationDetails";
-import { getAuthHeaders } from "@/lib/api";
+import { getAuthHeaders, API_BASE } from "@/lib/api";
 
 interface JobApplication {
   id: string;
@@ -110,7 +110,7 @@ export default function JobApplicationsPage() {
         ...(statusFilter && statusFilter !== "all" && { status: statusFilter }),
       });
 
-      const response = await fetch(`http://localhost:3001/api/jobapplication?${params}`, {
+      const response = await fetch(`${API_BASE}/jobapplication?${params}`, {
         headers: getAuthHeaders(),
       });
       if (!response.ok) {
@@ -134,7 +134,7 @@ export default function JobApplicationsPage() {
   // Delete job application mutation
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      const response = await fetch(`http://localhost:3001/api/jobapplication/${id}`, {
+      const response = await fetch(`${API_BASE}/jobapplication/${id}`, {
         method: "DELETE",
         headers: getAuthHeaders(),
       });
@@ -156,7 +156,7 @@ export default function JobApplicationsPage() {
   // Create job application mutation
   const createMutation = useMutation({
     mutationFn: async (applicationData: any) => {
-      const response = await fetch("http://localhost:3001/api/jobapplication", {
+      const response = await fetch(`${API_BASE}/jobapplication`, {
         method: "POST",
         headers: getAuthHeaders(),
         body: JSON.stringify(applicationData),
@@ -180,7 +180,7 @@ export default function JobApplicationsPage() {
   // Update job application mutation
   const updateMutation = useMutation({
     mutationFn: async ({ id, data }: { id: string; data: any }) => {
-      const response = await fetch(`http://localhost:3001/api/jobapplication/${id}`, {
+      const response = await fetch(`${API_BASE}/jobapplication/${id}`, {
         method: "PUT",
         headers: getAuthHeaders(),
         body: JSON.stringify(data),

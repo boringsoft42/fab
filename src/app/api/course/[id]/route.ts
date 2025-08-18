@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { API_BASE } from '@/lib/api';
 
 export async function GET(
   request: NextRequest,
@@ -7,7 +8,7 @@ export async function GET(
   try {
          const resolvedParams = await params;
      
-     const url = new URL(`http://localhost:3001/api/course/${resolvedParams.id}`);
+     const url = new URL(`${API_BASE}/course/${resolvedParams.id}`);
 
     const response = await fetch(url.toString(), {
       headers: {

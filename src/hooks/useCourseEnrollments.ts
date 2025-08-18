@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getUserFromToken } from '@/lib/api';
+import { getUserFromToken, API_BASE } from '@/lib/api';
 
 interface CourseEnrollment {
   id: string;
@@ -55,8 +55,8 @@ export const useCourseEnrollments = () => {
         throw new Error('No authentication token available');
       }
 
-      console.log('🔍 fetchEnrollments - Making request to http://localhost:3001/api/course-enrollments');
-      const response = await fetch('http://localhost:3001/api/course-enrollments', {
+      console.log('🔍 fetchEnrollments - Making request to', `${API_BASE}/course-enrollments`);
+      const response = await fetch(`${API_BASE}/course-enrollments`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -117,7 +117,7 @@ export const useCourseEnrollments = () => {
       console.log('🔍 Enrolling in course with data:', requestBody);
       console.log('🔍 Request body JSON:', JSON.stringify(requestBody));
 
-      const response = await fetch('http://localhost:3001/api/course-enrollments', {
+      const response = await fetch(`${API_BASE}/course-enrollments`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -153,7 +153,7 @@ export const useCourseEnrollments = () => {
         throw new Error('No authentication token available');
       }
 
-      const response = await fetch(`http://localhost:3001/api/course-enrollments/${enrollmentId}`, {
+      const response = await fetch(`${API_BASE}/course-enrollments/${enrollmentId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -189,7 +189,7 @@ export const useCourseEnrollments = () => {
         throw new Error('No authentication token available');
       }
 
-      const response = await fetch(`http://localhost:3001/api/course-enrollments/${enrollmentId}`, {
+      const response = await fetch(`${API_BASE}/course-enrollments/${enrollmentId}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -226,7 +226,7 @@ export const useCourseEnrollments = () => {
         throw new Error('No authentication token available');
       }
 
-      const response = await fetch(`http://localhost:3001/api/course-enrollments/${enrollmentId}`, {
+      const response = await fetch(`${API_BASE}/course-enrollments/${enrollmentId}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,

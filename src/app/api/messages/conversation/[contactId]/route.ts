@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { API_BASE } from '@/lib/api';
 
 export async function GET(
   request: NextRequest,
@@ -10,7 +11,7 @@ export async function GET(
     const limit = searchParams.get('limit');
     
     const resolvedParams = await params;
-    const url = new URL(`http://localhost:3001/api/messages/conversation/${resolvedParams.contactId}`);
+    const url = new URL(`${API_BASE}/messages/conversation/${resolvedParams.contactId}`);
     if (page) url.searchParams.set('page', page);
     if (limit) url.searchParams.set('limit', limit);
 
