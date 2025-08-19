@@ -1,111 +1,171 @@
-import { useState, useEffect } from "react";
-import { CourseModuleService } from "@/services/coursemodule.service";
-import { CourseModule } from "@/types/api";
+import { useState, useEffect } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { getAuthHeaders } from '@/lib/api';
 
-export function useCourseModules() {
-  const [data, setData] = useState<CourseModule[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-  
-  useEffect(() => {
-    CourseModuleService.getAll()
-      .then(setData)
-      .catch(setError)
-      .finally(() => setLoading(false));
-  }, []);
-  
-  return { data, loading, error };
+export interface CourseModule {
+  id: string;
+  courseId: string;
+  title: string;
+  description?: string;
+  orderIndex: number;
+  estimatedDuration: number;
+  isLocked: boolean;
+  prerequisites: string[];
+  hasCertificate: boolean;
+  certificateTemplate?: string;
+  lessons: any[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-export function useCourseModule(id: string) {
-  const [data, setData] = useState<CourseModule | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-  
-  useEffect(() => {
-    if (!id) return;
-    CourseModuleService.getById(id)
-      .then(setData)
-      .catch(setError)
-      .finally(() => setLoading(false));
-  }, [id]);
-  
-  return { data, loading, error };
+export interface CreateModuleData {
+  courseId: string;
+  title: string;
+  description?: string;
+  orderIndex: number;
+  estimatedDuration: number;
+  prerequisites?: string[];
+  hasCertificate?: boolean;
+  certificateTemplate?: string;
 }
 
-export function useCreateCourseModule() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-  
-  const create = async (data: Partial<CourseModule>): Promise<CourseModule> => {
-    setLoading(true);
-    setError(null);
-    try {
-      return await CourseModuleService.create(data);
-    } catch (e) {
-      setError(e as Error);
-      throw e;
-    } finally {
-      setLoading(false);
-    }
-  };
-  
-  return { create, loading, error };
+export interface UpdateModuleData {
+  id: string;
+  title?: string;
+  description?: string;
+  orderIndex?: number;
+  estimatedDuration?: number;
+  isLocked?: boolean;
+  prerequisites?: string[];
+  hasCertificate?: boolean;
+  certificateTemplate?: string;
 }
 
-export function useUpdateCourseModule() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-  
-  const update = async (id: string, data: Partial<CourseModule>): Promise<CourseModule> => {
-    setLoading(true);
-    setError(null);
-    try {
-      return await CourseModuleService.update(id, data);
-    } catch (e) {
-      setError(e as Error);
-      throw e;
-    } finally {
-      setLoading(false);
-    }
-  };
-  
-  return { update, loading, error };
-}
+// Fetch modules for a course
+export const useCourseModules = (courseId?: string) => {
+  return useQuery({
+    queryKey: ['courseModules', courseId],
+    queryFn: async () => {
+      if (!courseId) return { modules: [] };
+      
+      const params = new URLSearchParams({ courseId });
+      const response = await fetch(`http://localhost:3001/api/coursemodule?${params}`, {
+        headers: getAuthHeaders(),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch course modules');
+      }
+      
+      return response.json();
+    },
+    enabled: !!courseId,
+  });
+};
 
-export function useDeleteCourseModule() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-  
-  const remove = async (id: string): Promise<void> => {
-    setLoading(true);
-    setError(null);
-    try {
-      return await CourseModuleService.delete(id);
-    } catch (e) {
-      setError(e as Error);
-      throw e;
-    } finally {
-      setLoading(false);
-    }
-  };
-  
-  return { remove, loading, error };
-}
+// Fetch a single module
+export const useCourseModule = (moduleId?: string) => {
+  return useQuery({
+    queryKey: ['courseModule', moduleId],
+    queryFn: async () => {
+      if (!moduleId) return null;
+      
+      const params = new URLSearchParams({ id: moduleId });
+      const response = await fetch(`http://localhost:3001/api/coursemodule?${params}`, {
+        headers: getAuthHeaders(),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch course module');
+      }
+      
+      const data = await response.json();
+      return data.module;
+    },
+    enabled: !!moduleId,
+  });
+};
 
-// Hook específico para módulos de un curso
-export function useCourseModulesByCourse(courseId: string) {
-  const [data, setData] = useState<CourseModule[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+// Create module mutation
+export const useCreateModule = () => {
+  const queryClient = useQueryClient();
   
-  useEffect(() => {
-    if (!courseId) return;
-    CourseModuleService.getModulesByCourse(courseId)
-      .then(setData)
-      .catch(setError)
-      .finally(() => setLoading(false));
-  }, [courseId]);
+  return useMutation({
+    mutationFn: async (moduleData: CreateModuleData) => {
+      const response = await fetch('http://localhost:3001/api/coursemodule', {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(moduleData),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to create module');
+      }
+      
+      return response.json();
+    },
+    onSuccess: (data, variables) => {
+      // Invalidate and refetch modules for the course
+      queryClient.invalidateQueries({
+        queryKey: ['courseModules', variables.courseId],
+      });
+    },
+  });
+};
+
+// Update module mutation
+export const useUpdateModule = () => {
+  const queryClient = useQueryClient();
   
-  return { data, loading, error };
-} 
+  return useMutation({
+    mutationFn: async (moduleData: UpdateModuleData) => {
+      const response = await fetch('http://localhost:3001/api/coursemodule', {
+        method: 'PUT',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(moduleData),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to update module');
+      }
+      
+      return response.json();
+    },
+    onSuccess: (data, variables) => {
+      // Invalidate and refetch modules for the course
+      queryClient.invalidateQueries({
+        queryKey: ['courseModules'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['courseModule', variables.id],
+      });
+    },
+  });
+};
+
+// Delete module mutation
+export const useDeleteModule = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async (moduleId: string) => {
+      const params = new URLSearchParams({ id: moduleId });
+      const response = await fetch(`http://localhost:3001/api/coursemodule?${params}`, {
+        method: 'DELETE',
+        headers: getAuthHeaders(),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to delete module');
+      }
+      
+      return response.json();
+    },
+    onSuccess: () => {
+      // Invalidate and refetch all modules
+      queryClient.invalidateQueries({
+        queryKey: ['courseModules'],
+      });
+    },
+  });
+}; 

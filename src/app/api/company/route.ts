@@ -1,9 +1,67 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { API_BASE } from '@/lib/api';
 
+// Mock data for companies
+const getMockCompanies = () => ({
+  companies: [
+    {
+      id: '1',
+      name: 'TechCorp',
+      description: 'Empresa de tecnología innovadora',
+      location: 'Buenos Aires',
+      industry: 'Tecnología',
+      website: 'https://techcorp.com',
+      email: 'contact@techcorp.com'
+    },
+    {
+      id: '2',
+      name: 'DesignStudio',
+      description: 'Estudio de diseño creativo',
+      location: 'Córdoba',
+      industry: 'Diseño',
+      website: 'https://designstudio.com',
+      email: 'hello@designstudio.com'
+    }
+  ]
+});
+
+// Mock data for companies
+const getMockCompanies = () => ({
+  companies: [
+    {
+      id: '1',
+      name: 'TechCorp',
+      description: 'Empresa de tecnología innovadora',
+      location: 'Buenos Aires',
+      industry: 'Tecnología',
+      website: 'https://techcorp.com',
+      email: 'contact@techcorp.com'
+    },
+    {
+      id: '2',
+      name: 'DesignStudio',
+      description: 'Estudio de diseño creativo',
+      location: 'Córdoba',
+      industry: 'Diseño',
+      website: 'https://designstudio.com',
+      email: 'hello@designstudio.com'
+    }
+  ]
+});
+
 export async function GET(request: NextRequest) {
   try {
     console.log('🔍 API: Received request for companies');
+    
+    // Check if backend should be used
+    const useBackend = process.env.NEXT_PUBLIC_USE_BACKEND !== 'false';
+    
+    if (!useBackend) {
+      console.log('🔍 API: Backend disabled, returning mock data');
+      const mockData = getMockCompanies();
+      return NextResponse.json(mockData, { status: 200 });
+    }
+    
     const { searchParams } = new URL(request.url);
     
     // Forward all search parameters to backend
@@ -38,6 +96,14 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
     console.error('Error in companies route:', error);
+    
+    // If backend is not available, return mock data
+    if (error instanceof Error && error.message.includes('fetch failed')) {
+      console.log('🔍 API: Backend not available, returning mock data');
+      const mockData = getMockCompanies();
+      return NextResponse.json(mockData, { status: 200 });
+    }
+    
     return NextResponse.json(
       { message: 'Internal server error' },
       { status: 500 }

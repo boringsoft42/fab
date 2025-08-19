@@ -1,200 +1,109 @@
-import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { decodeToken } from "@/lib/api";
+import { NextRequest, NextResponse } from 'next/server';
+import { getAuthHeaders } from '@/lib/api';
 
-// GET /api/entrepreneurship/[id] - Get specific entrepreneurship
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
-    console.log("🔍 GET /api/entrepreneurship/[id] - Request started");
-    const { id } = await params;
-    console.log("🔍 GET /api/entrepreneurship/[id] - ID:", id);
-
-    const entrepreneurship = await prisma.entrepreneurship.findUnique({
-      where: { id },
-      include: {
-        owner: {
-          select: {
-            id: true,
-            firstName: true,
-            lastName: true,
-            email: true,
-            avatarUrl: true,
-          },
-        },
-      },
+    const backendUrl = process.env.BACKEND_URL || 'http://localhost:3001';
+    const url = `${backendUrl}/api/entrepreneurship/${params.id}`;
+    
+    console.log('🔍 API Route - Getting entrepreneurship:', params.id);
+    
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        ...getAuthHeaders()
+      }
     });
 
-    if (!entrepreneurship) {
-      console.log("🔍 GET /api/entrepreneurship/[id] - Entrepreneurship not found");
-      return NextResponse.json({ error: "Emprendimiento no encontrado" }, { status: 404 });
+    if (!response.ok) {
+      console.error('🔍 API Route - Backend error:', response.status, response.statusText);
+      throw new Error(`Backend responded with status: ${response.status}`);
     }
 
-    // Increment view count
-    await prisma.entrepreneurship.update({
-      where: { id },
-      data: { viewsCount: { increment: 1 } },
-    });
-
-    console.log("🔍 GET /api/entrepreneurship/[id] - Entrepreneurship found:", entrepreneurship.id);
-    return NextResponse.json(entrepreneurship);
+    const data = await response.json();
+    console.log('🔍 API Route - Entrepreneurship data:', data);
+    
+    return NextResponse.json(data);
   } catch (error) {
-    console.error("🔍 GET /api/entrepreneurship/[id] - Error:", error);
-    return NextResponse.json({ error: "Error al obtener emprendimiento" }, { status: 500 });
+    console.error('🔍 API Route - Error:', error);
+    return NextResponse.json(
+      { error: 'Error al cargar emprendimiento' },
+      { status: 500 }
+    );
   }
 }
 
-// PUT /api/entrepreneurship/[id] - Update entrepreneurship
 export async function PUT(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
-    console.log("🔍 PUT /api/entrepreneurship/[id] - Request started");
-    const { id } = await params;
-    console.log("🔍 PUT /api/entrepreneurship/[id] - ID:", id);
-
-    // Get the Authorization header
-    const authHeader = request.headers.get('authorization');
-    console.log("🔍 PUT /api/entrepreneurship/[id] - Auth header:", authHeader);
+    const body = await request.json();
+    const backendUrl = process.env.BACKEND_URL || 'http://localhost:3001';
+    const url = `${backendUrl}/api/entrepreneurship/${params.id}`;
     
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      console.log("🔍 PUT /api/entrepreneurship/[id] - No valid auth header, returning 401");
-      return NextResponse.json(
-        { error: "No autorizado. Token de autenticación requerido." },
-        { status: 401 }
-      );
-    }
-
-    // Extract and decode the JWT token
-    const token = authHeader.substring(7);
-    const decodedToken = decodeToken(token);
-    console.log("🔍 PUT /api/entrepreneurship/[id] - Decoded token:", decodedToken);
+    console.log('🔍 API Route - Updating entrepreneurship:', params.id, body);
     
-    if (!decodedToken || !decodedToken.id) {
-      console.log("🔍 PUT /api/entrepreneurship/[id] - Invalid token, returning 401");
-      return NextResponse.json(
-        { error: "Token inválido o expirado." },
-        { status: 401 }
-      );
-    }
-
-    const data = await request.json();
-    console.log("🔍 PUT /api/entrepreneurship/[id] - Request data:", data);
-
-    const existingEntrepreneurship = await prisma.entrepreneurship.findUnique({
-      where: { id },
-    });
-
-    if (!existingEntrepreneurship) {
-      console.log("🔍 PUT /api/entrepreneurship/[id] - Entrepreneurship not found");
-      return NextResponse.json({ error: "Emprendimiento no encontrado" }, { status: 404 });
-    }
-
-    if (existingEntrepreneurship.ownerId !== decodedToken.id) {
-      console.log("🔍 PUT /api/entrepreneurship/[id] - Unauthorized access");
-      return NextResponse.json(
-        { error: "No autorizado. Solo puedes editar tu propio emprendimiento." },
-        { status: 403 }
-      );
-    }
-
-    const updatedEntrepreneurship = await prisma.entrepreneurship.update({
-      where: { id },
-      data: {
-        ...data,
-        founded: data.founded ? new Date(data.founded) : null,
-        employees: data.employees ? parseInt(data.employees) : null,
-        annualRevenue: data.annualRevenue ? parseFloat(data.annualRevenue) : null,
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        ...getAuthHeaders()
       },
-      include: {
-        owner: {
-          select: {
-            id: true,
-            firstName: true,
-            lastName: true,
-            email: true,
-            avatarUrl: true,
-          },
-        },
-      },
+      body: JSON.stringify(body)
     });
 
-    console.log("🔍 PUT /api/entrepreneurship/[id] - Entrepreneurship updated:", updatedEntrepreneurship.id);
-    return NextResponse.json({
-      message: "Emprendimiento actualizado exitosamente",
-      entrepreneurship: updatedEntrepreneurship,
-    });
+    if (!response.ok) {
+      console.error('🔍 API Route - Backend error:', response.status, response.statusText);
+      throw new Error(`Backend responded with status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log('🔍 API Route - Updated entrepreneurship:', data);
+    
+    return NextResponse.json(data);
   } catch (error) {
-    console.error("🔍 PUT /api/entrepreneurship/[id] - Error:", error);
-    return NextResponse.json({ error: "Error al actualizar emprendimiento" }, { status: 500 });
+    console.error('🔍 API Route - Error updating entrepreneurship:', error);
+    return NextResponse.json(
+      { error: 'Error al actualizar emprendimiento' },
+      { status: 500 }
+    );
   }
 }
 
-// DELETE /api/entrepreneurship/[id] - Delete entrepreneurship
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
-    console.log("🔍 DELETE /api/entrepreneurship/[id] - Request started");
-    const { id } = await params;
-    console.log("🔍 DELETE /api/entrepreneurship/[id] - ID:", id);
-
-    // Get the Authorization header
-    const authHeader = request.headers.get('authorization');
-    console.log("🔍 DELETE /api/entrepreneurship/[id] - Auth header:", authHeader);
+    const backendUrl = process.env.BACKEND_URL || 'http://localhost:3001';
+    const url = `${backendUrl}/api/entrepreneurship/${params.id}`;
     
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      console.log("🔍 DELETE /api/entrepreneurship/[id] - No valid auth header, returning 401");
-      return NextResponse.json(
-        { error: "No autorizado. Token de autenticación requerido." },
-        { status: 401 }
-      );
-    }
-
-    // Extract and decode the JWT token
-    const token = authHeader.substring(7);
-    const decodedToken = decodeToken(token);
-    console.log("🔍 DELETE /api/entrepreneurship/[id] - Decoded token:", decodedToken);
+    console.log('🔍 API Route - Deleting entrepreneurship:', params.id);
     
-    if (!decodedToken || !decodedToken.id) {
-      console.log("🔍 DELETE /api/entrepreneurship/[id] - Invalid token, returning 401");
-      return NextResponse.json(
-        { error: "Token inválido o expirado." },
-        { status: 401 }
-      );
-    }
-
-    const existingEntrepreneurship = await prisma.entrepreneurship.findUnique({
-      where: { id },
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        ...getAuthHeaders()
+      }
     });
 
-    if (!existingEntrepreneurship) {
-      console.log("🔍 DELETE /api/entrepreneurship/[id] - Entrepreneurship not found");
-      return NextResponse.json({ error: "Emprendimiento no encontrado" }, { status: 404 });
+    if (!response.ok) {
+      console.error('🔍 API Route - Backend error:', response.status, response.statusText);
+      throw new Error(`Backend responded with status: ${response.status}`);
     }
 
-    if (existingEntrepreneurship.ownerId !== decodedToken.id) {
-      console.log("🔍 DELETE /api/entrepreneurship/[id] - Unauthorized access");
-      return NextResponse.json(
-        { error: "No autorizado. Solo puedes eliminar tu propio emprendimiento." },
-        { status: 403 }
-      );
-    }
-
-    // Soft delete by setting isActive to false
-    await prisma.entrepreneurship.update({
-      where: { id },
-      data: { isActive: false },
-    });
-
-    console.log("🔍 DELETE /api/entrepreneurship/[id] - Entrepreneurship deleted (soft delete)");
-    return NextResponse.json({ message: "Emprendimiento eliminado exitosamente" });
+    const data = await response.json();
+    console.log('🔍 API Route - Deleted entrepreneurship:', data);
+    
+    return NextResponse.json(data);
   } catch (error) {
-    console.error("🔍 DELETE /api/entrepreneurship/[id] - Error:", error);
-    return NextResponse.json({ error: "Error al eliminar emprendimiento" }, { status: 500 });
+    console.error('🔍 API Route - Error deleting entrepreneurship:', error);
+    return NextResponse.json(
+      { error: 'Error al eliminar emprendimiento' },
+      { status: 500 }
+    );
   }
 }

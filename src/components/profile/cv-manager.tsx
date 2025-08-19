@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -9,23 +9,33 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { X, Plus, ChevronDown, ChevronRight } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
 import { 
+  Upload, 
   FileText, 
-  Mail, 
   Download, 
-  Printer, 
-  Image as ImageIcon,
-  Edit3,
-  Save,
-  Eye,
+  Trash2, 
+  Edit, 
+  Save, 
+  X,
   User,
+  Mail,
+  Phone,
+  MapPin,
+  Calendar,
   GraduationCap,
   Briefcase,
-  Code,
+  Award,
+  Languages,
   Globe,
-  Camera
+  Printer,
+  Edit3,
+  ChevronRight,
+  ChevronDown,
+  Plus,
+  Code
 } from "lucide-react";
+import { BACKEND_ENDPOINTS } from "@/lib/backend-config";
 import { useCV } from "@/hooks/useCV";
 import { CVTemplateSelector } from "./templates/cv-templates";
 import { CoverLetterTemplateSelector } from "./templates/cover-letter-templates";
@@ -45,6 +55,10 @@ export function CVManager() {
   const [isEditing, setIsEditing] = useState(false);
   const [newSkill, setNewSkill] = useState("");
   const [newInterest, setNewInterest] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const [profileImage, setProfileImage] = useState(cvData?.personalInfo?.profileImage || "");
+  const [showImageUpload, setShowImageUpload] = useState(false);
+  const [uploadError, setUploadError] = useState("");
   
   // Estado para secciones colapsables
   const [collapsedSections, setCollapsedSections] = useState({
@@ -64,69 +78,55 @@ export function CVManager() {
     }));
   };
 
-  const handleImageUpload = async (file: File) => {
+  const uploadProfileImage = async (file: File) => {
     try {
+      setUploading(true);
       const formData = new FormData();
-      formData.append('avatar', file);
-      
-      const response = await fetch('/api/files/upload/profile-image', {
+      formData.append('image', file);
+
+      const response = await fetch(BACKEND_ENDPOINTS.FILES_UPLOAD_PROFILE_IMAGE, {
         method: 'POST',
-        body: formData,
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: formData
       });
 
       if (!response.ok) {
-        throw new Error('Error uploading image');
+        throw new Error('Error al subir la imagen');
       }
 
-      const result = await response.json();
-      
-      // Update CV data with new image
-      await updateCVData({
-        personalInfo: {
-          firstName: cvData?.personalInfo?.firstName || "",
-          lastName: cvData?.personalInfo?.lastName || "",
-          email: cvData?.personalInfo?.email || "",
-          phone: cvData?.personalInfo?.phone || "",
-          address: cvData?.personalInfo?.address || "",
-          municipality: cvData?.personalInfo?.municipality || "",
-          department: cvData?.personalInfo?.department || "",
-          country: cvData?.personalInfo?.country || "",
-          profileImage: result.avatarUrl
-        }
-      });
+      const data = await response.json();
+      setProfileImage(data.imageUrl);
+      setShowImageUpload(false);
     } catch (error) {
       console.error('Error uploading image:', error);
-      throw error;
+      setUploadError('Error al subir la imagen');
+    } finally {
+      setUploading(false);
     }
   };
 
-  const handleImageRemove = async () => {
+  const updateProfileAvatar = async (imageUrl: string | null) => {
     try {
-      const response = await fetch('/api/profile/avatar', {
-        method: 'DELETE',
+      const response = await fetch(BACKEND_ENDPOINTS.PROFILE_AVATAR, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({ avatarUrl: imageUrl })
       });
 
       if (!response.ok) {
-        throw new Error('Error removing image');
+        throw new Error('Error al actualizar el avatar');
       }
 
-      // Update CV data to remove image
-      await updateCVData({
-        personalInfo: {
-          firstName: cvData?.personalInfo?.firstName || "",
-          lastName: cvData?.personalInfo?.lastName || "",
-          email: cvData?.personalInfo?.email || "",
-          phone: cvData?.personalInfo?.phone || "",
-          address: cvData?.personalInfo?.address || "",
-          municipality: cvData?.personalInfo?.municipality || "",
-          department: cvData?.personalInfo?.department || "",
-          country: cvData?.personalInfo?.country || "",
-          profileImage: undefined
-        }
-      });
+      const data = await response.json();
+      console.log('Avatar updated:', data);
     } catch (error) {
-      console.error('Error removing image:', error);
-      throw error;
+      console.error('Error updating avatar:', error);
+      setUploadError('Error al actualizar el avatar');
     }
   };
 
@@ -253,7 +253,7 @@ export function CVManager() {
           <Button variant="outline" onClick={() => setIsEditing(!isEditing)}>
             {isEditing ? (
               <>
-                <Eye className="h-4 w-4 mr-2" />
+                <Edit3 className="h-4 w-4 mr-2" />
                 Vista Previa
               </>
             ) : (
@@ -327,15 +327,15 @@ export function CVManager() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Camera className="h-5 w-5" />
+                  <Upload className="h-5 w-5" />
                   Foto de Perfil
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <ImageUpload
                   currentImage={cvData?.personalInfo?.profileImage}
-                  onImageUpload={handleImageUpload}
-                  onImageRemove={handleImageRemove}
+                  onImageUpload={uploadProfileImage}
+                  onImageRemove={() => updateProfileAvatar(null)}
                 />
               </CardContent>
             </Card>

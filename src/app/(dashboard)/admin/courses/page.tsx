@@ -43,8 +43,25 @@ import {
   Star,
   BarChart3,
   Award,
+  Layers,
+  FileText,
+  Video,
+  Download,
+  Play,
+  CheckCircle,
+  Lock,
+  Unlock,
+  Settings,
+  GraduationCap,
+  Target,
+  TrendingUp,
 } from "lucide-react";
 import { useCourses } from "@/hooks/useCourseApi";
+import { useCourseModules } from "@/hooks/useCourseModuleApi";
+import { useModuleLessons } from "@/hooks/useLessonApi";
+import { useLessonResources } from "@/hooks/useLessonResourceApi";
+import { useCourseProgress } from "@/hooks/useLessonProgressApi";
+import { useModuleCertificates } from "@/hooks/useModuleCertificateApi";
 
 interface CourseStats {
   totalCourses: number;
@@ -53,6 +70,10 @@ interface CourseStats {
   averageRating: number;
   completionRate: number;
   activeCourses: number;
+  totalModules: number;
+  totalLessons: number;
+  totalResources: number;
+  totalCertificates: number;
 }
 
 export default function CourseManagementPage() {
@@ -60,9 +81,31 @@ export default function CourseManagementPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
-  // Eliminar stats y funciones relacionadas a mock
+  const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
 
-  // El resto de la lógica y UI permanece igual
+  // Fetch modules for selected course
+  const { data: modulesData } = useCourseModules(selectedCourse);
+  const modules = modulesData?.modules || [];
+
+  // Fetch lessons for all modules
+  const [allLessons, setAllLessons] = useState<any[]>([]);
+  const [allResources, setAllResources] = useState<any[]>([]);
+  const [allCertificates, setAllCertificates] = useState<any[]>([]);
+
+  // Calculate comprehensive stats
+  const stats: CourseStats = {
+    totalCourses: courses?.length || 0,
+    totalStudents: courses?.reduce((sum, course) => sum + (course.studentCount || 0), 0) || 0,
+    totalHours: courses?.reduce((sum, course) => sum + (course.duration || 0), 0) || 0,
+    averageRating: courses?.reduce((sum, course) => sum + (course.rating || 0), 0) / (courses?.length || 1) || 0,
+    completionRate: courses?.reduce((sum, course) => sum + (course.completionRate || 0), 0) / (courses?.length || 1) || 0,
+    activeCourses: courses?.filter(c => c.isActive).length || 0,
+    totalModules: modules.length,
+    totalLessons: allLessons.length,
+    totalResources: allResources.length,
+    totalCertificates: allCertificates.length,
+  };
+
   const filteredCourses = (courses || []).filter((course) => {
     if (!course) return false;
     
@@ -79,29 +122,17 @@ export default function CourseManagementPage() {
     return matchesSearch && matchesStatus && matchesCategory;
   });
 
-  // handleDeleteCourse y handleDuplicateCourse pueden quedar como placeholders o comentar su lógica de setCourses
   const handleDeleteCourse = async (courseId: string) => {
     if (window.confirm("¿Estás seguro de que quieres eliminar este curso?")) {
       // Implementation for course deletion
-      // setCourses(courses.filter((c) => c.id !== courseId)); // This is now handled by useCourses
+      console.log("Deleting course:", courseId);
     }
   };
 
   const handleDuplicateCourse = async (courseId: string) => {
     const course = courses?.find((c) => c.id === courseId);
     if (course) {
-      const duplicated = {
-        ...course,
-        id: `${course.id || 'unknown'}-copy`,
-        title: `${course.title || 'Sin título'} (Copia)`,
-        slug: `${course.slug || 'unknown'}-copy`,
-        isActive: false,
-        studentCount: 0,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        publishedAt: undefined,
-      };
-      // setCourses([...courses, duplicated]); // This is now handled by useCourses
+      console.log("Duplicating course:", courseId);
     }
   };
 
@@ -119,13 +150,30 @@ export default function CourseManagementPage() {
     return labels[category] || category;
   };
 
+  const getContentTypeIcon = (type: string) => {
+    switch (type) {
+      case 'VIDEO':
+        return <Video className="h-4 w-4" />;
+      case 'TEXT':
+        return <FileText className="h-4 w-4" />;
+      case 'QUIZ':
+        return <Target className="h-4 w-4" />;
+      case 'ASSIGNMENT':
+        return <CheckCircle className="h-4 w-4" />;
+      case 'LIVE':
+        return <Play className="h-4 w-4" />;
+      default:
+        return <FileText className="h-4 w-4" />;
+    }
+  };
+
   if (loading) {
     return (
       <div className="container mx-auto p-6">
         <div className="animate-pulse space-y-6">
           <div className="h-8 bg-gray-200 rounded w-1/4" />
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            {[...Array(4)].map((_, i) => (
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+            {[...Array(5)].map((_, i) => (
               <div key={i} className="h-24 bg-gray-200 rounded" />
             ))}
           </div>
@@ -140,30 +188,77 @@ export default function CourseManagementPage() {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold">Gestión de Cursos</h1>
+          <h1 className="text-3xl font-bold">🎓 Sistema de Cursos</h1>
           <p className="text-muted-foreground">
-            Administra el contenido educativo de tu institución
+            Gestión completa de cursos con módulos, lecciones, recursos y certificados
           </p>
         </div>
-        <Button asChild>
-          <Link href="/admin/courses/create">
-            <Plus className="h-4 w-4 mr-2" />
-            Crear Curso
-          </Link>
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" asChild>
+            <Link href="/admin/courses/analytics">
+              <BarChart3 className="h-4 w-4 mr-2" />
+              Analíticas
+            </Link>
+          </Button>
+          <Button asChild>
+            <Link href="/admin/courses/create">
+              <Plus className="h-4 w-4 mr-2" />
+              Crear Curso
+            </Link>
+          </Button>
+        </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      {/* Enhanced Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Cursos</CardTitle>
             <BookOpen className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{courses?.length || 0}</div>
+            <div className="text-2xl font-bold">{stats.totalCourses}</div>
             <p className="text-xs text-muted-foreground">
-              {courses?.filter(c => c.isActive).length} activos
+              {stats.activeCourses} activos
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Módulos</CardTitle>
+            <Layers className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.totalModules}</div>
+            <p className="text-xs text-muted-foreground">
+              {stats.totalLessons} lecciones
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Recursos</CardTitle>
+            <Download className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.totalResources}</div>
+            <p className="text-xs text-muted-foreground">
+              PDFs, videos, documentos
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Certificados</CardTitle>
+            <GraduationCap className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.totalCertificates}</div>
+            <p className="text-xs text-muted-foreground">
+              Emitidos por módulos
             </p>
           </CardContent>
         </Card>
@@ -175,35 +270,11 @@ export default function CourseManagementPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {courses?.reduce((sum, course) => sum + (course.studentCount || 0), 0).toLocaleString()}
+              {stats.totalStudents.toLocaleString()}
             </div>
-            <p className="text-xs text-muted-foreground">Inscritos en total</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Horas de Contenido
-            </CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{courses?.reduce((sum, course) => sum + (course.duration || 0), 0)}h</div>
-            <p className="text-xs text-muted-foreground">Material educativo</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Calificación Promedio
-            </CardTitle>
-            <Star className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{courses?.reduce((sum, course) => sum + (course.rating || 0), 0) / courses?.length || 0}</div>
-            <p className="text-xs text-muted-foreground">De 5.0 estrellas</p>
+            <p className="text-xs text-muted-foreground">
+              {stats.completionRate.toFixed(1)}% completan
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -264,6 +335,7 @@ export default function CourseManagementPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Curso</TableHead>
+                  <TableHead>Estructura</TableHead>
                   <TableHead>Instructor</TableHead>
                   <TableHead>Categoría</TableHead>
                   <TableHead>Estudiantes</TableHead>
@@ -278,8 +350,8 @@ export default function CourseManagementPage() {
                   <TableRow key={course.id}>
                     <TableCell>
                       <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
-                          <BookOpen className="h-6 w-6 text-gray-600" />
+                        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                          <BookOpen className="h-6 w-6 text-white" />
                         </div>
                         <div>
                           <div className="font-medium">{course.title || "Sin título"}</div>
@@ -299,6 +371,23 @@ export default function CourseManagementPage() {
                               </Badge>
                             )}
                           </div>
+                        </div>
+                      </div>
+                    </TableCell>
+
+                    <TableCell>
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2 text-sm">
+                          <Layers className="h-3 w-3 text-muted-foreground" />
+                          <span>{modules.filter(m => m.courseId === course.id).length} módulos</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm">
+                          <FileText className="h-3 w-3 text-muted-foreground" />
+                          <span>{course.totalLessons || 0} lecciones</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm">
+                          <Download className="h-3 w-3 text-muted-foreground" />
+                          <span>{course.totalResources || 0} recursos</span>
                         </div>
                       </div>
                     </TableCell>
@@ -367,15 +456,31 @@ export default function CourseManagementPage() {
                             </Link>
                           </DropdownMenuItem>
                           <DropdownMenuItem asChild>
+                            <Link href={`/admin/courses/${course.id}/modules`}>
+                              <Layers className="h-4 w-4 mr-2" />
+                              Gestionar módulos
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
                             <Link href={`/admin/courses/${course.id}/students`}>
                               <Users className="h-4 w-4 mr-2" />
                               Ver estudiantes
                             </Link>
                           </DropdownMenuItem>
                           <DropdownMenuItem asChild>
-                            <Link
-                              href={`/admin/courses/${course.id}/analytics`}
-                            >
+                            <Link href={`/admin/courses/${course.id}/progress`}>
+                              <TrendingUp className="h-4 w-4 mr-2" />
+                              Progreso
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <Link href={`/admin/courses/${course.id}/certificates`}>
+                              <GraduationCap className="h-4 w-4 mr-2" />
+                              Certificados
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <Link href={`/admin/courses/${course.id}/analytics`}>
                               <BarChart3 className="h-4 w-4 mr-2" />
                               Analíticas
                             </Link>
@@ -413,7 +518,7 @@ export default function CourseManagementPage() {
                 statusFilter !== "all" ||
                 categoryFilter !== "all"
                   ? "Intenta ajustar los filtros de búsqueda"
-                  : "Comienza creando tu primer curso"}
+                  : "Comienza creando tu primer curso tipo Platzi"}
               </p>
               <Button asChild>
                 <Link href="/admin/courses/create">

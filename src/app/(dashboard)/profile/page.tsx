@@ -37,6 +37,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useCurrentProfile } from "@/hooks/useProfileApi";
 import { Profile } from "@/types/profile";
+import { StudentProfile } from "@/components/profile/StudentProfile";
+import { ProfileDetails } from "@/components/profile/ProfileDetails";
 
 interface Achievement {
   id: string;
@@ -68,6 +70,77 @@ const mockProfile: Profile = {
   parentalConsent: false,
   createdAt: new Date(),
   updatedAt: new Date(),
+};
+
+// Extended mock data for new components
+const mockStudentProfileData = {
+  ...mockProfile,
+  avatar: null,
+  joinDate: "Enero 2023",
+  achievements: [
+    {
+      id: "1",
+      title: "Primer lugar en Hackathon 2023",
+      description: "Gané el primer lugar en el hackathon de desarrollo web organizado por la universidad",
+      date: "2023",
+      type: "project" as const
+    },
+    {
+      id: "2", 
+      title: "Certificación en JavaScript",
+      description: "Completé exitosamente el curso avanzado de JavaScript",
+      date: "2023",
+      type: "certificate" as const
+    },
+    {
+      id: "3",
+      title: "Proyecto de voluntariado",
+      description: "Participé en un proyecto de enseñanza de programación a niños",
+      date: "2022",
+      type: "volunteer" as const
+    }
+  ],
+  certificates: [
+    {
+      id: "1",
+      title: "Certificado de JavaScript Avanzado",
+      course: "JavaScript para Desarrolladores",
+      issueDate: "15 Mar 2023",
+      status: "active" as const,
+      downloadUrl: "#"
+    },
+    {
+      id: "2",
+      title: "Certificado de React Fundamentals",
+      course: "React desde Cero",
+      issueDate: "20 Feb 2023",
+      status: "active" as const,
+      downloadUrl: "#"
+    }
+  ],
+  courses: [
+    {
+      id: "1",
+      title: "Desarrollo Web Full Stack",
+      progress: 75,
+      status: "in_progress" as const,
+      lastAccessed: "Hace 2 días"
+    },
+    {
+      id: "2",
+      title: "Python para Principiantes",
+      progress: 100,
+      status: "completed" as const,
+      lastAccessed: "Hace 1 semana"
+    },
+    {
+      id: "3",
+      title: "Machine Learning Básico",
+      progress: 25,
+      status: "enrolled" as const,
+      lastAccessed: "Hace 3 días"
+    }
+  ]
 };
 
 const mockAchievements: Achievement[] = [
@@ -116,6 +189,23 @@ export default function ProfilePage() {
 
   // Use profile data if available, otherwise use mock data
   const currentProfile = profile || localProfile;
+
+  const handleProfileUpdate = async (data: any) => {
+    // TODO: Implement actual profile update
+    console.log('Profile update:', data);
+    // For now, just update local state
+    setLocalProfile(prev => ({ ...prev, ...data }));
+  };
+
+  const handleDownloadCertificate = (certificateId: string) => {
+    // TODO: Implement certificate download
+    console.log('Download certificate:', certificateId);
+  };
+
+  const handleViewCourse = (courseId: string) => {
+    // TODO: Navigate to course
+    console.log('View course:', courseId);
+  };
 
   // Show loading state
   if (loading) {
@@ -172,306 +262,11 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="container mx-auto py-6 space-y-6">
-      <Card>
-        <CardContent className="pt-6">
-          <div className="flex justify-between items-start mb-6">
-            <div className="flex items-center gap-4">
-              <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center text-2xl font-semibold">
-                {`${currentProfile.firstName || ''} ${currentProfile.lastName || ''}`
-                  .split(" ")
-                  .map((n: string) => n[0])
-                  .join("")}
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold">{`${currentProfile.firstName || ''} ${currentProfile.lastName || ''}`}</h1>
-                <p className="text-muted-foreground">Perfil Joven</p>
-              </div>
-            </div>
-            <Button onClick={() => setIsEditing(!isEditing)}>
-              <Pencil className="h-4 w-4 mr-2" />
-              Editar Perfil
-            </Button>
-          </div>
-
-          <div className="grid grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-muted-foreground" />
-                {isEditing ? (
-                  <Input
-                    value={currentProfile.email || ''}
-                    onChange={(e) =>
-                      setLocalProfile({ ...currentProfile, email: e.target.value })
-                    }
-                  />
-                ) : (
-                  <span>{currentProfile.email || 'No especificado'}</span>
-                )}
-              </div>
-              <div className="flex items-center gap-2">
-                <Phone className="h-4 w-4 text-muted-foreground" />
-                {isEditing ? (
-                  <Input
-                    value={currentProfile.phone || ''}
-                    onChange={(e) =>
-                      setLocalProfile({ ...currentProfile, phone: e.target.value })
-                    }
-                  />
-                ) : (
-                  <span>{currentProfile.phone || 'No especificado'}</span>
-                )}
-              </div>
-              <div className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-muted-foreground" />
-                {isEditing ? (
-                  <Input
-                    value={`${currentProfile.address || ''}, ${currentProfile.municipality || ''}`}
-                    onChange={(e) =>
-                      setLocalProfile({ ...currentProfile, address: e.target.value })
-                    }
-                  />
-                ) : (
-                  <span>{`${currentProfile.address || 'No especificado'}, ${currentProfile.municipality || ''}`}</span>
-                )}
-              </div>
-              <div className="flex items-center gap-2">
-                <School className="h-4 w-4 text-muted-foreground" />
-                {isEditing ? (
-                  <Input
-                    value={currentProfile.currentInstitution || ''}
-                    onChange={(e) =>
-                      setLocalProfile({ ...currentProfile, currentInstitution: e.target.value })
-                    }
-                  />
-                ) : (
-                  <span>{currentProfile.currentInstitution || 'No especificado'}</span>
-                )}
-              </div>
-            </div>
-
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-lg font-semibold mb-2">Intereses</h3>
-                                <div className="flex flex-wrap gap-2">
-                  {(currentProfile.interests || []).map((interest: string) => (
-                    <Badge
-                      key={interest}
-                      variant="secondary"
-                      className="flex items-center gap-1"
-                    >
-                      {interest}
-                      {isEditing && (
-                        <button
-                          onClick={() => handleRemoveInterest(interest)}
-                          className="ml-1 hover:text-destructive"
-                        >
-                          <X className="h-3 w-3" />
-                        </button>
-                      )}
-                    </Badge>
-                  ))}
-                  {isEditing && (
-                    <div className="flex items-center gap-2">
-                      <Input
-                        value={newInterest}
-                        onChange={(e) => setNewInterest(e.target.value)}
-                        placeholder="Nuevo interés"
-                        className="w-32"
-                      />
-                      <Button size="sm" onClick={handleAddInterest}>
-                        <Plus className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <div className="flex justify-between items-center">
-            <CardTitle className="flex items-center gap-2">
-              <Trophy className="h-5 w-5" />
-              Logros
-            </CardTitle>
-            {isEditing && (
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button>
-                    <Plus className="h-4 w-4 mr-2" />
-                    Agregar Logro
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Nuevo Logro</DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-4">
-                    <div>
-                      <Label htmlFor="title">Título</Label>
-                      <Input
-                        id="title"
-                        value={newAchievement.title}
-                        onChange={(e) =>
-                          setNewAchievement({
-                            ...newAchievement,
-                            title: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="description">Descripción</Label>
-                      <Textarea
-                        id="description"
-                        value={newAchievement.description}
-                        onChange={(e) =>
-                          setNewAchievement({
-                            ...newAchievement,
-                            description: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="date">Fecha</Label>
-                      <Input
-                        id="date"
-                        value={newAchievement.date}
-                        onChange={(e) =>
-                          setNewAchievement({
-                            ...newAchievement,
-                            date: e.target.value,
-                          })
-                        }
-                        placeholder="Ej: 2023 o 2022-2023"
-                      />
-                    </div>
-                    <Button onClick={handleAddAchievement}>Guardar</Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
-            )}
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {localAchievements.map((achievement: Achievement) => (
-              <div
-                key={achievement.id}
-                className="border rounded-lg p-4 hover:bg-accent/5 transition-colors"
-              >
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h4 className="font-semibold">{achievement.title}</h4>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      {achievement.description}
-                    </p>
-                  </div>
-                  <Badge variant="outline">{achievement.date}</Badge>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Professional Documents */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Documentos Profesionales</CardTitle>
-          <CardDescription>
-            Prepara tu CV y carta de presentación
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <Button
-            variant="outline"
-            className="w-full justify-start"
-            onClick={() => setShowCVDialog(true)}
-          >
-            <FileText className="h-4 w-4 mr-2" />
-            Curriculum Vitae
-          </Button>
-          <Button
-            variant="outline"
-            className="w-full justify-start"
-            onClick={() => setShowCoverLetterDialog(true)}
-          >
-            <Mail className="h-4 w-4 mr-2" />
-            Carta de Presentación
-          </Button>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg flex items-center gap-2">
-            <Award className="h-5 w-5" />
-            Certificados de mis cursos
-          </CardTitle>
-          <CardDescription>
-            Visualiza y descarga tus certificados técnicos completados.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {[
-            {
-              nombre: "Fundamentos de Programación en JavaScript",
-              fecha: "15 de abril de 2024",
-            },
-            {
-              nombre: "Diseño Gráfico con Canva y Photoshop",
-              fecha: "2 de marzo de 2024",
-            },
-            {
-              nombre: "Manejo de Redes Sociales para Emprendimientos",
-              fecha: "20 de febrero de 2024",
-            },
-            {
-              nombre: "Microsoft Excel Básico e Intermedio",
-              fecha: "10 de enero de 2024",
-            },
-          ].map((cert, index) => (
-            <div
-              key={index}
-              className="flex items-center justify-between border rounded-lg p-3"
-            >
-              <div>
-                <p className="font-medium">{cert.nombre}</p>
-                <p className="text-sm text-muted-foreground">
-                  Finalizado el {cert.fecha}
-                </p>
-              </div>
-              <Button variant="outline" size="sm">
-                <FileText className="h-4 w-4 mr-2" />
-                Descargar Pdf
-              </Button>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
-
-      {/* CV Dialog */}
-      <Dialog open={showCVDialog} onOpenChange={setShowCVDialog}>
-        <DialogContent className="max-w-4xl">
-          <CVTemplate />
-        </DialogContent>
-      </Dialog>
-
-      {/* Cover Letter Dialog */}
-      <Dialog
-        open={showCoverLetterDialog}
-        onOpenChange={setShowCoverLetterDialog}
-      >
-        <DialogContent className="max-w-4xl">
-          <CoverLetterTemplate />
-        </DialogContent>
-      </Dialog>
+    <div className="container mx-auto py-6">
+      <StudentProfile
+        profile={mockStudentProfileData}
+        onProfileUpdate={handleProfileUpdate}
+      />
     </div>
   );
 }

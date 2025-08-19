@@ -1,244 +1,204 @@
-import { useState, useEffect } from "react";
-import { LessonProgressService } from "@/services/lessonprogress.service";
-import { LessonProgress } from "@/types/courses";
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { getAuthHeaders } from '@/lib/api';
 
-export function useLessonProgresses() {
-  const [data, setData] = useState<LessonProgress[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-
-  useEffect(() => {
-    LessonProgressService.getAll()
-      .then(setData)
-      .catch(setError)
-      .finally(() => setLoading(false));
-  }, []);
-
-  return { data, loading, error };
+export interface LessonProgress {
+  id: string;
+  enrollmentId: string;
+  lessonId: string;
+  isCompleted: boolean;
+  completedAt?: Date;
+  timeSpent: number; // in minutes
+  videoProgress: number; // 0.0 to 1.0 (0% to 100%)
+  lastWatchedAt?: Date;
 }
 
-export function useLessonProgress(id: string) {
-  const [data, setData] = useState<LessonProgress | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-
-  useEffect(() => {
-    if (!id) return;
-    LessonProgressService.getById(id)
-      .then(setData)
-      .catch(setError)
-      .finally(() => setLoading(false));
-  }, [id]);
-
-  return { data, loading, error };
+export interface CreateProgressData {
+  enrollmentId: string;
+  lessonId: string;
+  isCompleted?: boolean;
+  timeSpent?: number;
+  videoProgress?: number;
 }
 
-export function useCreateLessonProgress() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-
-  const create = async (data: Partial<LessonProgress>): Promise<LessonProgress> => {
-    setLoading(true);
-    setError(null);
-    try {
-      return await LessonProgressService.create(data);
-    } catch (e) {
-      setError(e as Error);
-      throw e;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return { create, loading, error };
+export interface UpdateProgressData {
+  id: string;
+  isCompleted?: boolean;
+  timeSpent?: number;
+  videoProgress?: number;
 }
 
-export function useUpdateLessonProgress() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-
-  const update = async (id: string, data: Partial<LessonProgress>): Promise<LessonProgress> => {
-    setLoading(true);
-    setError(null);
-    try {
-      return await LessonProgressService.update(id, data);
-    } catch (e) {
-      setError(e as Error);
-      throw e;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return { update, loading, error };
-}
-
-export function useDeleteLessonProgress() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-
-  const remove = async (id: string): Promise<void> => {
-    setLoading(true);
-    setError(null);
-    try {
-      return await LessonProgressService.delete(id);
-    } catch (e) {
-      setError(e as Error);
-      throw e;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return { remove, loading, error };
-}
-
-// Hooks específicos para lesson progress
-export function useLessonProgressesByEnrollment(enrollmentId: string) {
-  const [data, setData] = useState<LessonProgress[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-
-  useEffect(() => {
-    if (!enrollmentId) return;
-    LessonProgressService.getByEnrollment(enrollmentId)
-      .then(setData)
-      .catch(setError)
-      .finally(() => setLoading(false));
-  }, [enrollmentId]);
-
-  return { data, loading, error };
-}
-
-export function useLessonProgressesByLesson(lessonId: string) {
-  const [data, setData] = useState<LessonProgress[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-
-  useEffect(() => {
-    if (!lessonId) return;
-    LessonProgressService.getByLesson(lessonId)
-      .then(setData)
-      .catch(setError)
-      .finally(() => setLoading(false));
-  }, [lessonId]);
-
-  return { data, loading, error };
-}
-
-export function useMyLessonProgresses() {
-  const [data, setData] = useState<LessonProgress[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-
-  useEffect(() => {
-    LessonProgressService.getMyProgress()
-      .then(setData)
-      .catch(setError)
-      .finally(() => setLoading(false));
-  }, []);
-
-  return { data, loading, error };
-}
-
-export function useLessonProgressesByCourse(courseId: string) {
-  const [data, setData] = useState<LessonProgress[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-
-  useEffect(() => {
-    if (!courseId) return;
-    LessonProgressService.getByCourse(courseId)
-      .then(setData)
-      .catch(setError)
-      .finally(() => setLoading(false));
-  }, [courseId]);
-
-  return { data, loading, error };
-}
-
-export function useMarkLessonAsCompleted() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-
-  const markAsCompleted = async (lessonId: string, enrollmentId: string): Promise<LessonProgress> => {
-    setLoading(true);
-    setError(null);
-    try {
-      return await LessonProgressService.markAsCompleted(lessonId, enrollmentId);
-    } catch (e) {
-      setError(e as Error);
-      throw e;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return { markAsCompleted, loading, error };
-}
-
-export function useUpdateLessonTimeSpent() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-
-  const updateTimeSpent = async (lessonId: string, enrollmentId: string, timeSpent: number): Promise<LessonProgress> => {
-    setLoading(true);
-    setError(null);
-    try {
-      return await LessonProgressService.updateTimeSpent(lessonId, enrollmentId, timeSpent);
-    } catch (e) {
-      setError(e as Error);
-      throw e;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return { updateTimeSpent, loading, error };
-}
-
-export function useLessonProgressStats(enrollmentId: string) {
-  const [data, setData] = useState<{
-    totalLessons: number;
+export interface CourseProgress {
+  totalLessons: number;
+  completedLessons: number;
+  overallProgress: number;
+  timeSpent: number;
+  lastActivity: Date;
+  modules: {
+    moduleId: string;
+    title: string;
+    progress: number;
     completedLessons: number;
-    totalTimeSpent: number;
-    completionPercentage: number;
-  } | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-
-  useEffect(() => {
-    if (!enrollmentId) return;
-    LessonProgressService.getProgressStats(enrollmentId)
-      .then(setData)
-      .catch(setError)
-      .finally(() => setLoading(false));
-  }, [enrollmentId]);
-
-  return { data, loading, error };
+    totalLessons: number;
+  }[];
 }
 
-export function useBulkUpdateLessonProgress() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+// Fetch progress for a specific lesson
+export const useLessonProgress = (enrollmentId?: string, lessonId?: string) => {
+  return useQuery({
+    queryKey: ['lessonProgress', enrollmentId, lessonId],
+    queryFn: async () => {
+      if (!enrollmentId || !lessonId) return null;
+      
+      const params = new URLSearchParams({ 
+        enrollmentId, 
+        lessonId 
+      });
+      const response = await fetch(`http://localhost:3001/api/lessonprogress?${params}`, {
+        headers: getAuthHeaders(),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch lesson progress');
+      }
+      
+      const data = await response.json();
+      return data.progress;
+    },
+    enabled: !!enrollmentId && !!lessonId,
+  });
+};
 
-  const bulkUpdate = async (progressUpdates: Array<{
-    lessonId: string;
-    enrollmentId: string;
-    isCompleted?: boolean;
-    timeSpent?: number;
-  }>): Promise<LessonProgress[]> => {
-    setLoading(true);
-    setError(null);
-    try {
-      return await LessonProgressService.bulkUpdateProgress(progressUpdates);
-    } catch (e) {
-      setError(e as Error);
-      throw e;
-    } finally {
-      setLoading(false);
-    }
-  };
+// Fetch all progress for an enrollment
+export const useEnrollmentProgress = (enrollmentId?: string) => {
+  return useQuery({
+    queryKey: ['enrollmentProgress', enrollmentId],
+    queryFn: async () => {
+      if (!enrollmentId) return { progress: [] };
+      
+      const params = new URLSearchParams({ enrollmentId });
+      const response = await fetch(`http://localhost:3001/api/lessonprogress?${params}`, {
+        headers: getAuthHeaders(),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch enrollment progress');
+      }
+      
+      return response.json();
+    },
+    enabled: !!enrollmentId,
+  });
+};
 
-  return { bulkUpdate, loading, error };
-} 
+// Fetch course progress overview
+export const useCourseProgress = (courseId?: string) => {
+  return useQuery({
+    queryKey: ['courseProgress', courseId],
+    queryFn: async () => {
+      if (!courseId) return null;
+      
+      const params = new URLSearchParams({ courseId });
+      const response = await fetch(`http://localhost:3001/api/lessonprogress?${params}`, {
+        headers: getAuthHeaders(),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch course progress');
+      }
+      
+      const data = await response.json();
+      return data.courseProgress as CourseProgress;
+    },
+    enabled: !!courseId,
+  });
+};
+
+// Create/Update progress mutation
+export const useUpdateProgress = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async (progressData: CreateProgressData) => {
+      const response = await fetch('http://localhost:3001/api/lessonprogress', {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(progressData),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to update progress');
+      }
+      
+      return response.json();
+    },
+    onSuccess: (data, variables) => {
+      // Invalidate and refetch progress
+      queryClient.invalidateQueries({
+        queryKey: ['lessonProgress', variables.enrollmentId, variables.lessonId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['enrollmentProgress', variables.enrollmentId],
+      });
+    },
+  });
+};
+
+// Update specific progress record
+export const useUpdateProgressRecord = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async (progressData: UpdateProgressData) => {
+      const response = await fetch('http://localhost:3001/api/lessonprogress', {
+        method: 'PUT',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(progressData),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to update progress record');
+      }
+      
+      return response.json();
+    },
+    onSuccess: (data, variables) => {
+      // Invalidate and refetch progress
+      queryClient.invalidateQueries({
+        queryKey: ['lessonProgress'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['enrollmentProgress'],
+      });
+    },
+  });
+};
+
+// Delete progress mutation
+export const useDeleteProgress = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async (progressId: string) => {
+      const params = new URLSearchParams({ id: progressId });
+      const response = await fetch(`http://localhost:3001/api/lessonprogress?${params}`, {
+        method: 'DELETE',
+        headers: getAuthHeaders(),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to delete progress');
+      }
+      
+      return response.json();
+    },
+    onSuccess: () => {
+      // Invalidate and refetch all progress
+      queryClient.invalidateQueries({
+        queryKey: ['lessonProgress'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['enrollmentProgress'],
+      });
+    },
+  });
+}; 

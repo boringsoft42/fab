@@ -23,7 +23,17 @@ const MUNICIPALITY_KEYS = {
 export const useMunicipalities = () => {
   return useQuery({
     queryKey: MUNICIPALITY_KEYS.lists(),
-    queryFn: MunicipalityService.getAll,
+    queryFn: async () => {
+      console.log("🏛️ useMunicipalities - Calling MunicipalityService.getAll()");
+      try {
+        const result = await MunicipalityService.getAll();
+        console.log("✅ useMunicipalities - Success:", result);
+        return result;
+      } catch (error) {
+        console.error("❌ useMunicipalities - Error:", error);
+        throw error;
+      }
+    },
   });
 };
 

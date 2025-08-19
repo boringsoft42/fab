@@ -337,4 +337,43 @@ export class JobApplicationService {
       throw error;
     }
   }
+
+  /**
+   * Check if user has already applied to a specific job offer
+   */
+  static async checkIfApplied(jobOfferId: string): Promise<{ hasApplied: boolean; application?: any }> {
+    try {
+      console.log('🔍 JobApplicationService.checkIfApplied - Checking application for job offer:', jobOfferId);
+      
+      const response = await apiCall(`/jobapplication/check-application/${jobOfferId}`, {
+        method: 'GET',
+        headers: getAuthHeaders()
+      });
+
+      console.log('✅ JobApplicationService.checkIfApplied - Response:', response);
+      return response;
+    } catch (error) {
+      console.error('❌ JobApplicationService.checkIfApplied - Error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete/Cancel a job application (only for the applicant or super admin)
+   */
+  static async deleteApplication(applicationId: string): Promise<void> {
+    try {
+      console.log('🗑️ JobApplicationService.deleteApplication - Deleting application:', applicationId);
+      
+      await apiCall(`/jobapplication/${applicationId}`, {
+        method: 'DELETE',
+        headers: getAuthHeaders()
+      });
+
+      console.log('✅ JobApplicationService.deleteApplication - Application deleted successfully');
+    } catch (error) {
+      console.error('❌ JobApplicationService.deleteApplication - Error:', error);
+      throw error;
+    }
+  }
 }

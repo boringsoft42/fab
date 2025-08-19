@@ -1,21 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import Image from "next/image";
-import {
-  Plus,
-  Search,
-  Filter,
-  MoreVertical,
-  Eye,
-  Edit,
-  Trash2,
-  Calendar,
-  TrendingUp,
-  Upload,
-  X,
-  Image as ImageIcon,
-} from "lucide-react";
+import { useState } from "react";
+import { Plus, Search, Filter, TrendingUp, Users, MessageSquare, FileText } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -24,7 +10,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -34,20 +19,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -55,581 +26,341 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { useNewsArticles } from "@/hooks/useNewsArticleApi";
-
-interface NewsArticle {
-  id: string;
-  title: string;
-  summary: string;
-  status: "PUBLISHED" | "DRAFT" | "ARCHIVED";
-  priority: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
-  publishedAt: string;
-  viewCount: number;
-  likeCount: number;
-  commentCount: number;
-  category: string;
-  tags: string[];
-  imageUrl?: string;
-}
+import { useToast } from "@/hooks/use-toast";
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { 
+  useNewsByAuthor, 
+  useCreateNewsArticleWithImage, 
+  useUpdateNewsArticleWithImage, 
+  useDeleteNewsArticle 
+} from "@/hooks/useNewsArticleApi";
+import { NewsArticle } from "@/types/news";
+import { NewsForm } from "@/components/news/news-form";
+import { NewsTable } from "@/components/news/news-table";
+import { NewsDetail } from "@/components/news/news-detail";
 
 export default function CompanyNewsPage() {
-  const { data: newsArticles, loading, error } = useNewsArticles();
+  const { profile } = useCurrentUser();
+  const { toast } = useToast();
+  
+  // Estados
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [showCreateDialog, setShowCreateDialog] = useState(false);
-  const [stats, setStats] = useState({
-    total: 0,
-    published: 0,
-    draft: 0,
-    totalViews: 0,
-    totalLikes: 0,
+  const [showEditDialog, setShowEditDialog] = useState(false);
+  const [showDetailDialog, setShowDetailDialog] = useState(false);
+  const [selectedNews, setSelectedNews] = useState<NewsArticle | null>(null);
+
+  // Hooks de React Query
+  const { data: newsData, isLoading, error, refetch } = useNewsByAuthor(profile?.id || "");
+  const createNewsMutation = useCreateNewsArticleWithImage();
+  const updateNewsMutation = useUpdateNewsArticleWithImage();
+  const deleteNewsMutation = useDeleteNewsArticle();
+
+  const newsArticles = newsData || [];
+
+  // Filtrar noticias
+  const filteredNews = newsArticles.filter((news) => {
+    const matchesSearch = news.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         news.summary.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter === "all" || news.status === statusFilter.toUpperCase();
+    return matchesSearch && matchesStatus;
   });
 
-  // News creation form state
-  const [newNews, setNewNews] = useState({
-    title: "",
-    summary: "",
-    content: "",
-    category: "",
-    tags: "",
-    priority: "MEDIUM",
-    imageUrl: "",
-    status: "DRAFT",
-    targetAudience: ["YOUTH"],
-  });
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState("");
-
-  // Default company banner image
-  const defaultBannerImage = "/api/placeholder/800/400";
-
-  const fetchNews = useCallback(async () => {
-    try {
-      setLoading(true);
-      const response = await fetch(
-        `/api/company/news?status=${statusFilter}&companyId=company-1`
-      );
-      const data = await response.json();
-      setNews(data.news || []);
-      setStats(data.stats || {});
-    } catch (error) {
-      console.error("Error fetching news:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, [statusFilter]);
-
-  useEffect(() => {
-    fetchNews();
-  }, [fetchNews]);
-
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setImageFile(file);
-      const reader = new FileReader();
-      reader.onload = () => {
-        const result = reader.result as string;
-        setImagePreview(result);
-        setNewNews({ ...newNews, imageUrl: result });
-      };
-      reader.readAsDataURL(file);
-    }
+  // Calcular estadísticas
+  const stats = {
+    total: newsArticles.length,
+    published: newsArticles.filter(n => n.status === "PUBLISHED").length,
+    draft: newsArticles.filter(n => n.status === "DRAFT").length,
+    archived: newsArticles.filter(n => n.status === "ARCHIVED").length,
+    totalViews: newsArticles.reduce((sum, n) => sum + n.viewCount, 0),
+    totalLikes: newsArticles.reduce((sum, n) => sum + n.likeCount, 0),
+    totalComments: newsArticles.reduce((sum, n) => sum + n.commentCount, 0),
   };
 
-  const removeImage = () => {
-    setImageFile(null);
-    setImagePreview("");
-    setNewNews({ ...newNews, imageUrl: "" });
-  };
-
-  const handleCreateNews = async () => {
+  // Handlers
+  const handleCreateNews = async (data: any, imageFile?: File) => {
     try {
-      const newsData = {
-        ...newNews,
-        companyId: "company-1",
-        companyName: "TechCorp Bolivia",
-        companyLogo: "/logos/techcorp.svg",
-        imageUrl: newNews.imageUrl || defaultBannerImage, // Use default if no image uploaded
-        tags: newNews.tags
-          .split(",")
-          .map((tag) => tag.trim())
-          .filter(Boolean),
-      };
-
-      const response = await fetch("/api/company/news", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newsData),
+      const formData = new FormData();
+      
+      // Agregar campos de texto
+      Object.keys(data).forEach(key => {
+        if (data[key] !== undefined && data[key] !== null && data[key] !== "") {
+          formData.append(key, data[key].toString());
+        }
       });
 
-      if (response.ok) {
-        setShowCreateDialog(false);
-        setNewNews({
-          title: "",
-          summary: "",
-          content: "",
-          category: "",
-          tags: "",
-          priority: "MEDIUM",
-          imageUrl: "",
-          status: "DRAFT",
-          targetAudience: ["YOUTH"],
-        });
-        setImageFile(null);
-        setImagePreview("");
-        fetchNews();
+      // Agregar imagen si existe
+      if (imageFile) {
+        formData.append('image', imageFile);
       }
+
+      await createNewsMutation.mutateAsync(formData);
+      
+      setShowCreateDialog(false);
+      toast({
+        title: "Éxito",
+        description: "Noticia creada exitosamente",
+      });
     } catch (error) {
       console.error("Error creating news:", error);
+      toast({
+        title: "Error",
+        description: "Error al crear la noticia",
+        variant: "destructive",
+      });
     }
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "PUBLISHED":
-        return "bg-green-100 text-green-800";
-      case "DRAFT":
-        return "bg-yellow-100 text-yellow-800";
-      case "ARCHIVED":
-        return "bg-gray-100 text-gray-800";
-      default:
-        return "bg-gray-100 text-gray-800";
+  const handleEditNews = (news: NewsArticle) => {
+    setSelectedNews(news);
+    setShowEditDialog(true);
+  };
+
+  const handleUpdateNews = async (data: any, imageFile?: File) => {
+    if (!selectedNews) return;
+
+    try {
+      const formData = new FormData();
+      
+      // Agregar campos de texto
+      Object.keys(data).forEach(key => {
+        if (data[key] !== undefined && data[key] !== null && data[key] !== "") {
+          formData.append(key, data[key].toString());
+        }
+      });
+
+      // Agregar imagen si existe
+      if (imageFile) {
+        formData.append('image', imageFile);
+      }
+
+      await updateNewsMutation.mutateAsync({ id: selectedNews.id, formData });
+      
+      setShowEditDialog(false);
+      setSelectedNews(null);
+      toast({
+        title: "Éxito",
+        description: "Noticia actualizada exitosamente",
+      });
+    } catch (error) {
+      console.error("Error updating news:", error);
+      toast({
+        title: "Error",
+        description: "Error al actualizar la noticia",
+        variant: "destructive",
+      });
     }
   };
 
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case "URGENT":
-        return "bg-red-100 text-red-800";
-      case "HIGH":
-        return "bg-orange-100 text-orange-800";
-      case "MEDIUM":
-        return "bg-blue-100 text-blue-800";
-      case "LOW":
-        return "bg-gray-100 text-gray-800";
-      default:
-        return "bg-gray-100 text-gray-800";
+  const handleDeleteNews = async (id: string) => {
+    try {
+      await deleteNewsMutation.mutateAsync(id);
+      toast({
+        title: "Éxito",
+        description: "Noticia eliminada exitosamente",
+      });
+    } catch (error) {
+      console.error("Error deleting news:", error);
+      toast({
+        title: "Error",
+        description: "Error al eliminar la noticia",
+        variant: "destructive",
+      });
+      throw error; // Re-throw para que el componente maneje el estado de loading
     }
   };
 
-  const filteredNews = newsArticles?.filter(
-    (article) =>
-      article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      article.summary.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const handleViewNews = (news: NewsArticle) => {
+    setSelectedNews(news);
+    setShowDetailDialog(true);
+  };
+
+  if (error) {
+    return (
+      <div className="p-6">
+        <Card>
+          <CardContent className="pt-6">
+            <div className="text-center text-red-600">
+              Error al cargar las noticias. Por favor, intenta de nuevo.
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-6 px-4">
+    <div className="p-6 space-y-6">
       {/* Header */}
-      <div className="flex justify-between items-center">
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Gestión de Noticias</h1>
-          <p className="text-muted-foreground">
-            Crea y gestiona noticias que aparecerán en el feed de los jóvenes
+          <h1 className="text-3xl font-bold text-gray-900">Gestión de Noticias</h1>
+          <p className="text-gray-600 mt-2">
+            Administra las noticias de tu empresa
           </p>
         </div>
         <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
           <DialogTrigger asChild>
             <Button>
-              <Plus className="w-4 h-4 mr-2" />
+              <Plus className="h-4 w-4 mr-2" />
               Crear Noticia
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-3xl px-4">
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Crear Nueva Noticia</DialogTitle>
               <DialogDescription>
-                Crea una noticia que será visible para los jóvenes en la
-                plataforma
+                Completa el formulario para crear una nueva noticia para tu empresa.
               </DialogDescription>
             </DialogHeader>
-            <div className="grid gap-4 py-4 max-h-[70vh] overflow-y-auto">
-              {/* Image Upload Section */}
-              <div className="grid gap-2">
-                <Label>Imagen de Portada</Label>
-                {imagePreview ? (
-                  <div className="relative">
-                    <img
-                      src={imagePreview}
-                      alt="Vista previa"
-                      className="w-full h-48 object-cover rounded-lg border-2 border-dashed border-gray-300"
-                    />
-                    <Button
-                      size="sm"
-                      variant="destructive"
-                      className="absolute top-2 right-2"
-                      onClick={removeImage}
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="relative">
-                    <div className="w-full h-48 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center bg-gray-50">
-                      <div className="text-center">
-                        <ImageIcon className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-                        <p className="text-sm text-gray-500 mb-2">
-                          Sube una imagen de portada para tu noticia
-                        </p>
-                        <p className="text-xs text-gray-400">
-                          Se usará una imagen por defecto si no subes ninguna
-                        </p>
-                        <Input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleImageUpload}
-                          className="hidden"
-                          id="image-upload"
-                        />
-                        <Label
-                          htmlFor="image-upload"
-                          className="cursor-pointer inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:bg-primary/90 mt-2"
-                        >
-                          <Upload className="w-4 h-4 mr-2" />
-                          Subir Imagen
-                        </Label>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <div className="grid gap-2 px-4">
-                <Label htmlFor="title">Título *</Label>
-                <Input
-                  id="title"
-                  value={newNews.title}
-                  onChange={(e) =>
-                    setNewNews({ ...newNews, title: e.target.value })
-                  }
-                  placeholder="Título de la noticia..."
-                />
-              </div>
-              <div className="grid gap-2 px-4">
-                <Label htmlFor="summary">Resumen *</Label>
-                <Textarea
-                  id="summary"
-                  value={newNews.summary}
-                  onChange={(e) =>
-                    setNewNews({ ...newNews, summary: e.target.value })
-                  }
-                  placeholder="Breve resumen de la noticia..."
-                  rows={2}
-                />
-              </div>
-              <div className="grid gap-2 px-4">
-                <Label htmlFor="content">Contenido *</Label>
-                <Textarea
-                  id="content"
-                  value={newNews.content}
-                  onChange={(e) =>
-                    setNewNews({ ...newNews, content: e.target.value })
-                  }
-                  placeholder="Contenido completo de la noticia..."
-                  rows={6}
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4 px-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="category">Categoría</Label>
-                  <Select
-                    value={newNews.category}
-                    onValueChange={(value) =>
-                      setNewNews({ ...newNews, category: value })
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Seleccionar categoría" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Empleo">Empleo</SelectItem>
-                      <SelectItem value="Educación y Becas">
-                        Educación y Becas
-                      </SelectItem>
-                      <SelectItem value="Capacitación">Capacitación</SelectItem>
-                      <SelectItem value="Responsabilidad Social">
-                        Responsabilidad Social
-                      </SelectItem>
-                      <SelectItem value="Innovación">Innovación</SelectItem>
-                      <SelectItem value="Anuncios Corporativos">
-                        Anuncios Corporativos
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="grid gap-2 px-4">
-                  <Label htmlFor="priority">Prioridad</Label>
-                  <Select
-                    value={newNews.priority}
-                    onValueChange={(value) =>
-                      setNewNews({ ...newNews, priority: value })
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="LOW">Baja</SelectItem>
-                      <SelectItem value="MEDIUM">Media</SelectItem>
-                      <SelectItem value="HIGH">Alta</SelectItem>
-                      <SelectItem value="URGENT">Urgente</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              <div className="grid gap-2 px-4">
-                <Label htmlFor="tags">Etiquetas</Label>
-                <Input
-                  id="tags"
-                  value={newNews.tags}
-                  onChange={(e) =>
-                    setNewNews({ ...newNews, tags: e.target.value })
-                  }
-                  placeholder="empleo, tecnología, jóvenes (separadas por comas)"
-                />
-              </div>
-              <div className="flex gap-2 pt-4 px-4 ">
-                <Button
-                  onClick={handleCreateNews}
-                  disabled={
-                    !newNews.title || !newNews.summary || !newNews.content
-                  }
-                >
-                  Crear como Borrador
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setNewNews({ ...newNews, status: "PUBLISHED" });
-                    handleCreateNews();
-                  }}
-                  disabled={
-                    !newNews.title || !newNews.summary || !newNews.content
-                  }
-                >
-                  Publicar Ahora
-                </Button>
-              </div>
-            </div>
+            <NewsForm
+              mode="create"
+              onSubmit={handleCreateNews}
+              isLoading={createNewsMutation.isPending}
+            />
           </DialogContent>
         </Dialog>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+      {/* Estadísticas */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Total Noticias
-            </CardTitle>
+            <CardTitle className="text-sm font-medium">Total Noticias</CardTitle>
+            <FileText className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.total}</div>
+            <p className="text-xs text-muted-foreground">
+              {stats.published} publicadas, {stats.draft} borradores
+            </p>
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Publicadas</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-600">
-              {stats.published}
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Borradores</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-yellow-600">
-              {stats.draft}
-            </div>
-          </CardContent>
-        </Card>
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Vistas</CardTitle>
-            <Eye className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.totalViews}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Likes</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.totalLikes}</div>
+            <div className="text-2xl font-bold">{stats.totalViews.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">
+              Promedio: {stats.total > 0 ? Math.round(stats.totalViews / stats.total) : 0} por noticia
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Me Gusta</CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.totalLikes.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">
+              {stats.total > 0 ? Math.round(stats.totalLikes / stats.total) : 0} por noticia
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Comentarios</CardTitle>
+            <MessageSquare className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.totalComments.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">
+              {stats.total > 0 ? Math.round(stats.totalComments / stats.total) : 0} por noticia
+            </p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Filters */}
+      {/* Filtros */}
       <Card>
         <CardHeader>
-          <CardTitle>Filtros y Búsqueda</CardTitle>
+          <CardTitle>Filtros</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex gap-4">
+          <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
-              <Input
-                placeholder="Buscar noticias..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="max-w-sm"
-              />
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                <Input
+                  placeholder="Buscar noticias..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
             </div>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Estado" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos</SelectItem>
-                <SelectItem value="published">Publicados</SelectItem>
-                <SelectItem value="draft">Borradores</SelectItem>
-                <SelectItem value="archived">Archivados</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="w-full sm:w-48">
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Filtrar por estado" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos los estados</SelectItem>
+                  <SelectItem value="published">Publicadas</SelectItem>
+                  <SelectItem value="draft">Borradores</SelectItem>
+                  <SelectItem value="archived">Archivadas</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* News Table */}
+      {/* Tabla de noticias */}
       <Card>
         <CardHeader>
-          <CardTitle>Mis Noticias</CardTitle>
+          <CardTitle>Noticias ({filteredNews.length})</CardTitle>
           <CardDescription>
-            Gestiona todas tus noticias publicadas y borradores
+            Lista de todas las noticias de tu empresa
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Noticia</TableHead>
-                <TableHead>Estado</TableHead>
-                <TableHead>Prioridad</TableHead>
-                <TableHead>Categoría</TableHead>
-                <TableHead>Publicado</TableHead>
-                <TableHead>Engagement</TableHead>
-                <TableHead>Acciones</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {loading ? (
-                <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8">
-                    Cargando noticias...
-                  </TableCell>
-                </TableRow>
-              ) : filteredNews?.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8">
-                    No se encontraron noticias
-                  </TableCell>
-                </TableRow>
-              ) : (
-                filteredNews?.map((article) => (
-                  <TableRow key={article.id}>
-                    <TableCell>
-                      <div className="flex gap-3">
-                        <Image
-                          src={article.imageUrl || defaultBannerImage}
-                          alt={article.title}
-                          className="w-16 h-12 object-cover rounded"
-                          width={64}
-                          height={48}
-                        />
-                        <div>
-                          <div className="font-medium line-clamp-1">
-                            {article.title}
-                          </div>
-                          <div className="text-sm text-muted-foreground line-clamp-1">
-                            {article.summary}
-                          </div>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge className={getStatusColor(article.status)}>
-                        {article.status === "PUBLISHED"
-                          ? "Publicado"
-                          : article.status === "DRAFT"
-                            ? "Borrador"
-                            : "Archivado"}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge className={getPriorityColor(article.priority)}>
-                        {article.priority === "URGENT"
-                          ? "Urgente"
-                          : article.priority === "HIGH"
-                            ? "Alta"
-                            : article.priority === "MEDIUM"
-                              ? "Media"
-                              : "Baja"}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>{article.category}</TableCell>
-                    <TableCell>
-                      {article.publishedAt ? (
-                        <div className="flex items-center gap-1">
-                          <Calendar className="w-3 h-3" />
-                          {new Date(article.publishedAt).toLocaleDateString(
-                            "es-ES"
-                          )}
-                        </div>
-                      ) : (
-                        <span className="text-muted-foreground">
-                          No publicado
-                        </span>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      <div className="text-sm">
-                        <div>{article.viewCount} vistas</div>
-                        <div>
-                          {article.likeCount} likes, {article.commentCount}{" "}
-                          comentarios
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="sm">
-                            <MoreVertical className="w-4 h-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                          <DropdownMenuItem>
-                            <Eye className="w-4 h-4 mr-2" />
-                            Ver
-                          </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            <Edit className="w-4 h-4 mr-2" />
-                            Editar
-                          </DropdownMenuItem>
-                          <DropdownMenuItem className="text-red-600">
-                            <Trash2 className="w-4 h-4 mr-2" />
-                            Eliminar
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
+          <NewsTable
+            news={filteredNews}
+            onEdit={handleEditNews}
+            onDelete={handleDeleteNews}
+            onView={handleViewNews}
+            isLoading={isLoading}
+          />
         </CardContent>
       </Card>
+
+      {/* Diálogo de edición */}
+      <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Editar Noticia</DialogTitle>
+            <DialogDescription>
+              Modifica los datos de la noticia seleccionada.
+            </DialogDescription>
+          </DialogHeader>
+          {selectedNews && (
+            <NewsForm
+              mode="edit"
+              initialData={selectedNews}
+              onSubmit={handleUpdateNews}
+              isLoading={updateNewsMutation.isPending}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Diálogo de detalle */}
+      <NewsDetail
+        news={selectedNews}
+        isOpen={showDetailDialog}
+        onClose={() => {
+          setShowDetailDialog(false);
+          setSelectedNews(null);
+        }}
+      />
     </div>
   );
 }

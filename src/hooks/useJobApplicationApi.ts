@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { JobApplicationService } from "@/services/jobapplication.service";
+import { JobApplicationService } from "@/services/job-application.service";
 import { JobApplication } from "@/types/jobs";
 
 export function useJobApplications() {
@@ -149,7 +149,7 @@ export function useMyJobApplications() {
 
   useEffect(() => {
     console.log("🔍 useMyJobApplications - Starting to fetch data...");
-    JobApplicationService.getMyApplications()
+    JobApplicationService.getUserApplications()
       .then((result) => {
         console.log("🔍 useMyJobApplications - Raw result:", result);
         

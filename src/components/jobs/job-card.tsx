@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -11,15 +11,29 @@ import {
   Star,
   Bookmark,
   BookmarkCheck,
+  CheckCircle,
+  XCircle,
+  AlertCircle,
+  Loader2,
 } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { JobOffer } from "@/types/api";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import JobApplicationForm from "@/components/jobs/job-application-form";
+import { JobOffer } from "@/types/jobs";
 import { Calendar } from "lucide-react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
+import { JobApplicationService } from "@/services/job-application.service";
+import { useToast } from "@/hooks/use-toast";
 
 interface JobCardProps {
   job: JobOffer;
@@ -28,7 +42,37 @@ interface JobCardProps {
 
 export const JobCard = ({ job, viewMode }: JobCardProps) => {
   const [isSaved, setIsSaved] = useState(false);
+  const [showApplicationModal, setShowApplicationModal] = useState(false);
+  const [applicationStatus, setApplicationStatus] = useState<{
+    hasApplied: boolean;
+    application?: any;
+    loading: boolean;
+  }>({ hasApplied: false, loading: true });
   const router = useRouter();
+  const { toast } = useToast();
+
+  // Verificar si ya aplicaste a este trabajo
+  useEffect(() => {
+    const checkApplicationStatus = async () => {
+      try {
+        const result = await JobApplicationService.checkIfApplied(job.id);
+        setApplicationStatus({
+          hasApplied: result.hasApplied,
+          application: result.application,
+          loading: false
+        });
+      } catch (error) {
+        console.error('Error checking application status:', error);
+        setApplicationStatus({
+          hasApplied: false,
+          loading: false
+        });
+      }
+    };
+
+    checkApplicationStatus();
+  }, [job.id]);
+
   const expiresAt = job.expiresAt
     ? new Date(job.expiresAt)
     : new Date(new Date(job.publishedAt).getTime() + 15 * 24 * 60 * 60 * 1000);
@@ -107,7 +151,78 @@ export const JobCard = ({ job, viewMode }: JobCardProps) => {
   const handleApplyClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    router.push(`/jobs/${job.id}/apply`);
+    setShowApplicationModal(true);
+  };
+
+  const handleCancelApplication = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!applicationStatus.application?.id) {
+      toast({
+        title: "Error",
+        description: "No se pudo cancelar la aplicación",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      await JobApplicationService.deleteApplication(applicationStatus.application.id);
+      
+      toast({
+        title: "¡Aplicación cancelada!",
+        description: "Tu aplicación ha sido cancelada exitosamente"
+      });
+
+      // Actualizar el estado
+      setApplicationStatus({
+        hasApplied: false,
+        application: undefined,
+        loading: false
+      });
+    } catch (error) {
+      console.error('Error canceling application:', error);
+      toast({
+        title: "Error",
+        description: "No se pudo cancelar la aplicación",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const getApplicationStatusLabel = (status: string) => {
+    switch (status) {
+      case 'SENT':
+        return 'Enviada';
+      case 'UNDER_REVIEW':
+        return 'En Revisión';
+      case 'PRE_SELECTED':
+        return 'Preseleccionado';
+      case 'REJECTED':
+        return 'Rechazado';
+      case 'HIRED':
+        return 'Contratado';
+      default:
+        return status;
+    }
+  };
+
+  const getApplicationStatusColor = (status: string) => {
+    switch (status) {
+      case 'SENT':
+        return 'bg-blue-100 text-blue-800';
+      case 'UNDER_REVIEW':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'PRE_SELECTED':
+        return 'bg-orange-100 text-orange-800';
+      case 'REJECTED':
+        return 'bg-red-100 text-red-800';
+      case 'HIRED':
+        return 'bg-green-100 text-green-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
   };
 
   const truncateText = (text: string, maxLength: number) => {
@@ -238,13 +353,35 @@ export const JobCard = ({ job, viewMode }: JobCardProps) => {
                               <Bookmark className="w-4 h-4" />
                             )}
                           </Button>
-                          <Button
-                            onClick={handleApplyClick}
-                            size="sm"
-                            className="min-w-[80px]"
-                          >
-                            Aplicar
-                          </Button>
+                          
+                          {applicationStatus.loading ? (
+                            <Button size="sm" className="min-w-[80px]" disabled>
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                            </Button>
+                          ) : applicationStatus.hasApplied ? (
+                            <div className="flex flex-col space-y-1">
+                              <Badge className={`text-xs ${getApplicationStatusColor(applicationStatus.application?.status)}`}>
+                                {getApplicationStatusLabel(applicationStatus.application?.status)}
+                              </Badge>
+                              <Button
+                                onClick={handleCancelApplication}
+                                size="sm"
+                                variant="outline"
+                                className="min-w-[80px] text-xs"
+                              >
+                                <XCircle className="w-3 h-3 mr-1" />
+                                Cancelar
+                              </Button>
+                            </div>
+                          ) : (
+                            <Button
+                              onClick={handleApplyClick}
+                              size="sm"
+                              className="min-w-[80px]"
+                            >
+                              Aplicar
+                            </Button>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -260,122 +397,176 @@ export const JobCard = ({ job, viewMode }: JobCardProps) => {
 
   // Grid view
   return (
-    <Link href={`/jobs/${job.id}`}>
-      <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full">
-        <CardHeader className="pb-3">
-          <div className="flex items-start justify-between">
-            <div className="flex items-start space-x-3">
-              <Avatar className="w-10 h-10">
-                <AvatarImage src={job.company?.logo || "/images/companies/default-logo.png"} alt={job.company?.name || "Empresa"} />
-                <AvatarFallback>{job.company?.name?.charAt(0) || "E"}</AvatarFallback>
-              </Avatar>
-              <div className="flex-1 min-w-0">
-                <h3 className="font-semibold text-gray-900 line-clamp-1">
-                  {job.title}
-                  {job.featured && (
-                    <Star className="inline-block w-4 h-4 text-yellow-500 ml-1" />
-                  )}
-                </h3>
-                            <div className="flex items-center space-x-2 text-sm text-gray-600">
-              <span>{job.company?.name || "Empresa"}</span>
-              {job.company?.rating && (
-                <div className="flex items-center space-x-1">
-                  <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                  <span>{job.company.rating}</span>
+    <>
+      <Link href={`/jobs/${job.id}`}>
+        <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full">
+          <CardHeader className="pb-3">
+            <div className="flex items-start justify-between">
+              <div className="flex items-start space-x-3">
+                <Avatar className="w-10 h-10">
+                  <AvatarImage src={job.company?.logo || "/images/companies/default-logo.png"} alt={job.company?.name || "Empresa"} />
+                  <AvatarFallback>{job.company?.name?.charAt(0) || "E"}</AvatarFallback>
+                </Avatar>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-gray-900 mb-1 line-clamp-1">
+                        {job.title}
+                        {job.featured && (
+                          <Star className="inline-block w-4 h-4 text-yellow-500 ml-2" />
+                        )}
+                      </h3>
+                      <p className="text-sm text-gray-600 mb-2">
+                        {job.company?.name || "Empresa"}
+                      </p>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleSaveJob}
+                      className="w-8 h-8 p-0 ml-2"
+                    >
+                      {isSaved ? (
+                        <BookmarkCheck className="w-4 h-4 text-blue-600" />
+                      ) : (
+                        <Bookmark className="w-4 h-4" />
+                      )}
+                    </Button>
+                  </div>
                 </div>
-              )}
-            </div>
               </div>
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleSaveJob}
-              className="w-8 h-8 p-0 flex-shrink-0"
-            >
-              {isSaved ? (
-                <BookmarkCheck className="w-4 h-4 text-blue-600" />
-              ) : (
-                <Bookmark className="w-4 h-4" />
-              )}
-            </Button>
-          </div>
-        </CardHeader>
-
-        <CardContent className="pt-0">
-          <div className="space-y-3">
-            <div className="flex items-center flex-wrap gap-2 text-sm text-gray-600">
-              <div className="flex items-center space-x-1">
-                <MapPin className="w-3 h-3" />
-                <span>{job.location}</span>
+          </CardHeader>
+          <CardContent className="pt-0">
+            <div className="space-y-3">
+              <div className="flex items-center flex-wrap gap-2 text-sm text-gray-600">
+                <div className="flex items-center space-x-1">
+                  <MapPin className="w-3 h-3" />
+                  <span>{job.location}</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <Clock className="w-3 h-3" />
+                  <span>{getModalityLabel(job.workModality)}</span>
+                </div>
               </div>
-              <div className="flex items-center space-x-1">
-                <Clock className="w-3 h-3" />
-                <span>{getModalityLabel(job.workModality)}</span>
-              </div>
-            </div>
 
-            <p className="text-gray-700 text-sm line-clamp-3">
-              {truncateText(job.description, 120)}
-            </p>
+              <p className="text-gray-700 text-sm line-clamp-3">
+                {truncateText(job.description, 120)}
+              </p>
 
-            <div className="flex flex-wrap gap-1">
-              <Badge variant="secondary" className="text-xs">
-                {getContractTypeLabel(job.contractType)}
-              </Badge>
-              <Badge variant="outline" className="text-xs">
-                {getExperienceLabel(job.experienceLevel)}
-              </Badge>
-            </div>
-
-            <div className="flex flex-wrap gap-1">
-              {job.requiredSkills?.slice(0, 4).map((skill) => (
-                <Badge key={skill} variant="outline" className="text-xs">
-                  {skill}
+              <div className="flex flex-wrap gap-1">
+                <Badge variant="secondary" className="text-xs">
+                  {getContractTypeLabel(job.contractType)}
                 </Badge>
-              ))}
-              {job.requiredSkills && job.requiredSkills.length > 4 && (
                 <Badge variant="outline" className="text-xs">
-                  +{job.requiredSkills.length - 4}
+                  {getExperienceLabel(job.experienceLevel)}
                 </Badge>
+              </div>
+
+              <div className="flex flex-wrap gap-1">
+                {job.requiredSkills?.slice(0, 4).map((skill) => (
+                  <Badge key={skill} variant="outline" className="text-xs">
+                    {skill}
+                  </Badge>
+                ))}
+                {job.requiredSkills && job.requiredSkills.length > 4 && (
+                  <Badge variant="outline" className="text-xs">
+                    +{job.requiredSkills.length - 4}
+                  </Badge>
+                )}
+              </div>
+
+              <div className="flex items-center justify-between pt-2 border-t">
+                <div>
+                  <p className="font-semibold text-gray-900 text-sm">
+                    {formatSalary(
+                      job.salaryMin,
+                      job.salaryMax,
+                    )}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    {formatDate(job.publishedAt)}
+                  </p>
+                  <p className="text-xs text-gray-400 flex items-center">
+                    <Calendar className="w-3 h-3 mr-1" />
+                    Vence el {format(expiresAt, "dd 'de' MMMM", { locale: es })}
+                  </p>
+                </div>
+
+                <div className="flex items-center space-x-3 text-xs text-gray-500">
+                  <div className="flex items-center space-x-1">
+                    <Users className="w-3 h-3" />
+                    <span>{job.applicationCount || 0}</span>
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <Eye className="w-3 h-3" />
+                    <span>{job.viewCount || 0}</span>
+                  </div>
+                </div>
+              </div>
+
+              {applicationStatus.loading ? (
+                <Button className="w-full" size="sm" disabled>
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                  Cargando...
+                </Button>
+              ) : applicationStatus.hasApplied ? (
+                <div className="space-y-2">
+                  <Badge className={`w-full justify-center ${getApplicationStatusColor(applicationStatus.application?.status)}`}>
+                    <CheckCircle className="w-3 h-3 mr-1" />
+                    {getApplicationStatusLabel(applicationStatus.application?.status)}
+                  </Badge>
+                  <Button 
+                    onClick={handleCancelApplication} 
+                    className="w-full" 
+                    size="sm" 
+                    variant="outline"
+                  >
+                    <XCircle className="w-4 h-4 mr-2" />
+                    Cancelar Aplicación
+                  </Button>
+                </div>
+              ) : (
+                <Button onClick={handleApplyClick} className="w-full" size="sm">
+                  Aplicar ahora
+                </Button>
               )}
             </div>
+          </CardContent>
+        </Card>
+      </Link>
 
-            <div className="flex items-center justify-between pt-2 border-t">
-              <div>
-                <p className="font-semibold text-gray-900 text-sm">
-                  {formatSalary(
-                    job.salaryMin,
-                    job.salaryMax,
-                  )}
-                </p>
-                <p className="text-xs text-gray-500">
-                  {formatDate(job.publishedAt)}
-                </p>
-                <p className="text-xs text-gray-400 flex items-center">
-                  <Calendar className="w-3 h-3 mr-1" />
-                  Vence el {format(expiresAt, "dd 'de' MMMM", { locale: es })}
-                </p>
-              </div>
-
-              <div className="flex items-center space-x-3 text-xs text-gray-500">
-                <div className="flex items-center space-x-1">
-                  <Users className="w-3 h-3" />
-                  <span>{job.applicationCount || 0}</span>
-                </div>
-                <div className="flex items-center space-x-1">
-                  <Eye className="w-3 h-3" />
-                  <span>{job.viewCount || 0}</span>
-                </div>
-              </div>
-            </div>
-
-            <Button onClick={handleApplyClick} className="w-full" size="sm">
-              Aplicar ahora
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    </Link>
+      {/* Job Application Modal */}
+      <Dialog open={showApplicationModal} onOpenChange={setShowApplicationModal}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Aplicar a: {job.title}</DialogTitle>
+            <DialogDescription>
+              Completa el formulario para aplicar a este empleo
+            </DialogDescription>
+          </DialogHeader>
+          
+          <JobApplicationForm
+            jobOffer={job}
+            onSuccess={() => {
+              setShowApplicationModal(false);
+              toast({
+                title: "¡Aplicación enviada!",
+                description: "Tu aplicación ha sido enviada exitosamente."
+              });
+              // Refresh application status after successful application
+              JobApplicationService.checkIfApplied(job.id).then(result => {
+                setApplicationStatus({
+                  hasApplied: result.hasApplied,
+                  application: result.application,
+                  loading: false
+                });
+              });
+            }}
+            onCancel={() => setShowApplicationModal(false)}
+          />
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };

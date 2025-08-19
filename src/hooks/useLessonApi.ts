@@ -1,238 +1,126 @@
-import { useState, useEffect } from "react";
-import { LessonService } from "@/services/lesson.service";
-import { Lesson } from "@/types/courses";
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { getAuthHeaders } from '@/lib/api';
 
-export function useLessons() {
-  const [data, setData] = useState<Lesson[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-
-  useEffect(() => {
-    LessonService.getAll()
-      .then(setData)
-      .catch(setError)
-      .finally(() => setLoading(false));
-  }, []);
-
-  return { data, loading, error };
+export interface Lesson {
+  id: string;
+  moduleId: string;
+  title: string;
+  description?: string;
+  content: string;
+  contentType: 'VIDEO' | 'TEXT' | 'QUIZ' | 'ASSIGNMENT' | 'LIVE';
+  videoUrl?: string;
+  duration?: number;
+  orderIndex: number;
+  isRequired: boolean;
+  isPreview: boolean;
+  attachments: any[];
+  resources: any[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-export function useLesson(id: string) {
-  const [data, setData] = useState<Lesson | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-
-  useEffect(() => {
-    if (!id) return;
-    LessonService.getById(id)
-      .then(setData)
-      .catch(setError)
-      .finally(() => setLoading(false));
-  }, [id]);
-
-  return { data, loading, error };
+export interface CreateLessonData {
+  moduleId: string;
+  title: string;
+  description?: string;
+  content: string;
+  contentType: 'VIDEO' | 'TEXT' | 'QUIZ' | 'ASSIGNMENT' | 'LIVE';
+  videoUrl?: string;
+  duration?: number;
+  orderIndex: number;
+  isRequired?: boolean;
+  isPreview?: boolean;
+  attachments?: any[];
 }
 
-export function useCreateLesson() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-
-  const create = async (data: Partial<Lesson>): Promise<Lesson> => {
-    setLoading(true);
-    setError(null);
-    try {
-      return await LessonService.create(data);
-    } catch (e) {
-      setError(e as Error);
-      throw e;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return { create, loading, error };
+export interface UpdateLessonData extends Partial<CreateLessonData> {
+  id: string;
 }
 
-export function useUpdateLesson() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+// API functions
+const fetchLessons = async (moduleId: string): Promise<{ lessons: Lesson[] }> => {
+  const response = await fetch(`http://localhost:3001/api/lesson?moduleId=${moduleId}`, {
+    headers: getAuthHeaders(),
+  });
+  if (!response.ok) {
+    throw new Error('Failed to fetch lessons');
+  }
+  return response.json();
+};
 
-  const update = async (id: string, data: Partial<Lesson>): Promise<Lesson> => {
-    setLoading(true);
-    setError(null);
-    try {
-      return await LessonService.update(id, data);
-    } catch (e) {
-      setError(e as Error);
-      throw e;
-    } finally {
-      setLoading(false);
-    }
-  };
+const createLesson = async (data: CreateLessonData): Promise<Lesson> => {
+  const response = await fetch('http://localhost:3001/api/lesson', {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    body: JSON.stringify(data),
+  });
+  if (!response.ok) {
+    throw new Error('Failed to create lesson');
+  }
+  return response.json();
+};
 
-  return { update, loading, error };
-}
+const updateLesson = async (data: UpdateLessonData): Promise<Lesson> => {
+  const response = await fetch(`http://localhost:3001/api/lesson/${data.id}`, {
+    method: 'PUT',
+    headers: getAuthHeaders(),
+    body: JSON.stringify(data),
+  });
+  if (!response.ok) {
+    throw new Error('Failed to update lesson');
+  }
+  return response.json();
+};
 
-export function useDeleteLesson() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+const deleteLesson = async (id: string): Promise<void> => {
+  const response = await fetch(`http://localhost:3001/api/lesson/${id}`, {
+    method: 'DELETE',
+    headers: getAuthHeaders(),
+  });
+  if (!response.ok) {
+    throw new Error('Failed to delete lesson');
+  }
+};
 
-  const remove = async (id: string): Promise<void> => {
-    setLoading(true);
-    setError(null);
-    try {
-      return await LessonService.delete(id);
-    } catch (e) {
-      setError(e as Error);
-      throw e;
-    } finally {
-      setLoading(false);
-    }
-  };
+// React Query hooks
+export const useModuleLessons = (moduleId: string) => {
+  return useQuery({
+    queryKey: ['lessons', moduleId],
+    queryFn: () => fetchLessons(moduleId),
+    enabled: !!moduleId,
+  });
+};
 
-  return { remove, loading, error };
-}
+export const useCreateLesson = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: createLesson,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['lessons', data.moduleId] });
+    },
+  });
+};
 
-// Hooks específicos para lessons
-export function useLessonsByModule(moduleId: string) {
-  const [data, setData] = useState<Lesson[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+export const useUpdateLesson = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: updateLesson,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['lessons', data.moduleId] });
+    },
+  });
+};
 
-  useEffect(() => {
-    if (!moduleId) return;
-    LessonService.getByModule(moduleId)
-      .then(setData)
-      .catch(setError)
-      .finally(() => setLoading(false));
-  }, [moduleId]);
-
-  return { data, loading, error };
-}
-
-export function useLessonsByCourse(courseId: string) {
-  const [data, setData] = useState<Lesson[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-
-  useEffect(() => {
-    if (!courseId) return;
-    LessonService.getByCourse(courseId)
-      .then(setData)
-      .catch(setError)
-      .finally(() => setLoading(false));
-  }, [courseId]);
-
-  return { data, loading, error };
-}
-
-export function useLessonsByType(type: string) {
-  const [data, setData] = useState<Lesson[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-
-  useEffect(() => {
-    if (!type) return;
-    LessonService.getByType(type)
-      .then(setData)
-      .catch(setError)
-      .finally(() => setLoading(false));
-  }, [type]);
-
-  return { data, loading, error };
-}
-
-export function usePreviewLessons() {
-  const [data, setData] = useState<Lesson[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-
-  useEffect(() => {
-    LessonService.getPreviewLessons()
-      .then(setData)
-      .catch(setError)
-      .finally(() => setLoading(false));
-  }, []);
-
-  return { data, loading, error };
-}
-
-export function useReorderLessons() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-
-  const reorder = async (moduleId: string, lessonIds: string[]): Promise<Lesson[]> => {
-    setLoading(true);
-    setError(null);
-    try {
-      return await LessonService.reorderLessons(moduleId, lessonIds);
-    } catch (e) {
-      setError(e as Error);
-      throw e;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return { reorder, loading, error };
-}
-
-export function useDuplicateLesson() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-
-  const duplicate = async (id: string): Promise<Lesson> => {
-    setLoading(true);
-    setError(null);
-    try {
-      return await LessonService.duplicateLesson(id);
-    } catch (e) {
-      setError(e as Error);
-      throw e;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return { duplicate, loading, error };
-}
-
-export function useToggleLessonPreview() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-
-  const toggle = async (id: string): Promise<Lesson> => {
-    setLoading(true);
-    setError(null);
-    try {
-      return await LessonService.togglePreview(id);
-    } catch (e) {
-      setError(e as Error);
-      throw e;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return { toggle, loading, error };
-}
-
-export function useLessonProgress(lessonId: string) {
-  const [data, setData] = useState<{
-    completed: boolean;
-    timeSpent: number;
-    lastAccessedAt: string;
-  } | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-
-  useEffect(() => {
-    if (!lessonId) return;
-    LessonService.getLessonProgress(lessonId)
-      .then(setData)
-      .catch(setError)
-      .finally(() => setLoading(false));
-  }, [lessonId]);
-
-  return { data, loading, error };
-} 
+export const useDeleteLesson = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: deleteLesson,
+    onSuccess: (_, variables) => {
+      // Invalidate all lesson queries since we don't know the moduleId
+      queryClient.invalidateQueries({ queryKey: ['lessons'] });
+    },
+  });
+}; 

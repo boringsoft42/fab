@@ -1,10 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useCompaniesByMunicipality, useCreateCompany, useUpdateCompany, useDeleteCompany, useCompanyStats } from "@/hooks/useCompanyApi";
+import { useCompanies, useCompaniesByMunicipality, useCreateCompany, useUpdateCompany, useDeleteCompany, useCompanyStats } from "@/hooks/useCompanyApi";
 import { useCurrentMunicipality } from "@/hooks/useMunicipalityApi";
-import { useUserColors } from "@/hooks/use-user-colors";
-import { TestColorTheme } from "@/components/test-color-theme";
+import { useCurrentUser } from "@/hooks/use-current-user";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -50,21 +49,36 @@ export default function CompaniesPage() {
   const [credentials, setCredentials] = useState<{ username: string; password: string }>({ username: '', password: '' });
   const [copiedField, setCopiedField] = useState<string | null>(null);
 
-  // Usar el hook para aplicar las variables CSS automáticamente
-  const colors = useUserColors();
-  
-  console.log('🏢 CompaniesPage - Colors applied:', {
-    primaryColor: colors.primaryColor,
-    secondaryColor: colors.secondaryColor
-  });
+  // Removido useUserColors() para usar colores por defecto
 
-  // Obtener el municipio actual del usuario
+  // Obtener el usuario actual y su rol
+  const { profile } = useCurrentUser();
+  const isSuperAdmin = profile?.role === "SUPERADMIN" || profile?.role === "SUPER_ADMIN";
+  
+  // Obtener el municipio actual del usuario (solo si no es super admin)
   const { data: currentMunicipality, isLoading: municipalityLoading } = useCurrentMunicipality();
 
-  // Hooks de datos - usar empresas del municipio actual
-  const { data: companies = [], isLoading: companiesLoading } = useCompaniesByMunicipality(
+  // Hooks de datos - usar empresas según el rol del usuario
+  const { data: companiesByMunicipality = [], isLoading: companiesByMunicipalityLoading } = useCompaniesByMunicipality(
     currentMunicipality?.id || ""
   );
+  const { data: allCompanies = [], isLoading: allCompaniesLoading } = useCompanies();
+  
+  // Usar todas las empresas si es super admin, o empresas del municipio si no
+  const companies = isSuperAdmin ? allCompanies : companiesByMunicipality;
+  const companiesLoading = isSuperAdmin ? allCompaniesLoading : companiesByMunicipalityLoading;
+  
+  console.log('🏢 CompaniesPage - Debug info:', {
+    userRole: profile?.role,
+    isSuperAdmin,
+    currentMunicipalityId: currentMunicipality?.id,
+    companiesByMunicipalityCount: companiesByMunicipality.length,
+    allCompaniesCount: allCompanies.length,
+    finalCompaniesCount: companies.length,
+    companiesLoading,
+    allCompaniesLoading,
+    companiesByMunicipalityLoading
+  });
   const { data: stats } = useCompanyStats();
   const createCompanyMutation = useCreateCompany();
   const updateCompanyMutation = useUpdateCompany();
@@ -77,7 +91,7 @@ export default function CompaniesPage() {
     businessSector: "",
     companySize: "",
     foundedYear: new Date().getFullYear(),
-    municipalityId: currentMunicipality?.id || "",
+    municipalityId: isSuperAdmin ? "" : (currentMunicipality?.id || ""),
     email: "",
     phone: "",
     website: "",
@@ -117,7 +131,7 @@ export default function CompaniesPage() {
     
     createCompanyMutation.mutate({
       ...formData,
-      municipalityId: currentMunicipality?.id || "",
+      municipalityId: isSuperAdmin ? formData.municipalityId : (currentMunicipality?.id || ""),
       foundedYear: parseInt(formData.foundedYear.toString()),
       username: finalCredentials.username,
       password: finalCredentials.password
@@ -130,7 +144,7 @@ export default function CompaniesPage() {
           businessSector: "",
           companySize: "",
           foundedYear: new Date().getFullYear(),
-          municipalityId: currentMunicipality?.id || "",
+          municipalityId: isSuperAdmin ? "" : (currentMunicipality?.id || ""),
           email: "",
           phone: "",
           website: "",
@@ -148,7 +162,7 @@ export default function CompaniesPage() {
       id: editingCompany.id,
       data: {
         ...formData,
-        municipalityId: currentMunicipality?.id || "",
+        municipalityId: isSuperAdmin ? formData.municipalityId : (currentMunicipality?.id || ""),
         foundedYear: parseInt(formData.foundedYear.toString())
       }
     }, {
@@ -160,7 +174,7 @@ export default function CompaniesPage() {
           businessSector: "",
           companySize: "",
           foundedYear: new Date().getFullYear(),
-          municipalityId: currentMunicipality?.id || "",
+          municipalityId: isSuperAdmin ? "" : (currentMunicipality?.id || ""),
           email: "",
           phone: "",
           website: "",
@@ -182,7 +196,7 @@ export default function CompaniesPage() {
       businessSector: company.businessSector || "",
       companySize: company.companySize || "",
       foundedYear: company.foundedYear || new Date().getFullYear(),
-      municipalityId: currentMunicipality?.id || "",
+      municipalityId: isSuperAdmin ? (company.municipalityId || "") : (currentMunicipality?.id || ""),
       email: company.email || "",
       phone: company.phone || "",
       website: company.website || "",
@@ -222,21 +236,15 @@ export default function CompaniesPage() {
 
   return (
     <div className="space-y-6 p-6">
-      {/* Test Component - Solo para verificar colores */}
-      <TestColorTheme />
-      
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 
-            className="text-3xl font-bold"
-            style={{ color: colors.primaryColor }}
-          >
+          <h1 className="text-3xl font-bold text-foreground">
             Gestión de Empresas
           </h1>
           <p className="text-muted-foreground">
             Administra las empresas registradas en{' '}
-            <span style={{ color: colors.secondaryColor, fontWeight: '600' }}>
+            <span className="font-semibold text-primary">
               {currentMunicipality?.name || 'tu municipio'}
             </span>
           </p>
@@ -250,13 +258,7 @@ export default function CompaniesPage() {
            }
          }}>
           <DialogTrigger asChild>
-            <Button 
-              style={{
-                backgroundColor: colors.primaryColor,
-                borderColor: colors.primaryColor
-              }}
-              className="hover:opacity-90 transition-opacity"
-            >
+                         <Button className="hover:opacity-90 transition-opacity">
               <Plus className="mr-2 h-4 w-4" />
               Crear Empresa
             </Button>
@@ -447,20 +449,14 @@ export default function CompaniesPage() {
       {/* Estadísticas */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="border-2 hover:shadow-lg transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Empresas</CardTitle>
-            <Building2 
-              className="h-4 w-4" 
-              style={{ color: colors.primaryColor }}
-            />
-          </CardHeader>
-          <CardContent>
-            <div 
-              className="text-2xl font-bold"
-              style={{ color: colors.primaryColor }}
-            >
-              {calculatedStats.totalCompanies}
-            </div>
+                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+             <CardTitle className="text-sm font-medium">Total Empresas</CardTitle>
+             <Building2 className="h-4 w-4 text-primary" />
+           </CardHeader>
+           <CardContent>
+             <div className="text-2xl font-bold text-primary">
+               {calculatedStats.totalCompanies}
+             </div>
             <p className="text-xs text-muted-foreground">
               Empresas registradas en el sistema
             </p>
@@ -468,20 +464,14 @@ export default function CompaniesPage() {
         </Card>
         
         <Card className="border-2 hover:shadow-lg transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Empresas Activas</CardTitle>
-            <CheckCircle 
-              className="h-4 w-4" 
-              style={{ color: colors.secondaryColor }}
-            />
-          </CardHeader>
-          <CardContent>
-            <div 
-              className="text-2xl font-bold"
-              style={{ color: colors.secondaryColor }}
-            >
-              {calculatedStats.activeCompanies}
-            </div>
+                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+             <CardTitle className="text-sm font-medium">Empresas Activas</CardTitle>
+             <CheckCircle className="h-4 w-4 text-green-600" />
+           </CardHeader>
+           <CardContent>
+             <div className="text-2xl font-bold text-green-600">
+               {calculatedStats.activeCompanies}
+             </div>
             <p className="text-xs text-muted-foreground">
               Empresas operativas
             </p>
@@ -517,14 +507,11 @@ export default function CompaniesPage() {
 
       {/* Filtros */}
       <Card className="border-2 hover:shadow-lg transition-shadow">
-        <CardHeader>
-          <CardTitle 
-            className="text-lg font-semibold"
-            style={{ color: colors.primaryColor }}
-          >
-            Filtros y Búsqueda
-          </CardTitle>
-        </CardHeader>
+                 <CardHeader>
+           <CardTitle className="text-lg font-semibold text-foreground">
+             Filtros y Búsqueda
+           </CardTitle>
+         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
@@ -560,14 +547,11 @@ export default function CompaniesPage() {
 
       {/* Tabla de Empresas */}
       <Card className="border-2 hover:shadow-lg transition-shadow">
-        <CardHeader>
-          <CardTitle 
-            className="text-lg font-semibold"
-            style={{ color: colors.secondaryColor }}
-          >
-            Lista de Empresas ({filteredCompanies.length})
-          </CardTitle>
-        </CardHeader>
+                 <CardHeader>
+           <CardTitle className="text-lg font-semibold text-foreground">
+             Lista de Empresas ({filteredCompanies.length})
+           </CardTitle>
+         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
@@ -598,45 +582,30 @@ export default function CompaniesPage() {
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell>
-                    <Badge 
-                      variant="outline"
-                      style={{
-                        borderColor: colors.primaryColor,
-                        color: colors.primaryColor
-                      }}
-                    >
-                      {company.businessSector || 'N/A'}
-                    </Badge>
-                  </TableCell>
+                                     <TableCell>
+                     <Badge variant="outline" className="text-primary border-primary">
+                       {company.businessSector || 'N/A'}
+                     </Badge>
+                   </TableCell>
                   <TableCell>
                     <div className="flex items-center space-x-1">
                       <MapPin className="h-3 w-3 text-muted-foreground" />
                       <span>{company.municipality.name}</span>
                     </div>
                   </TableCell>
-                  <TableCell>
-                    <Badge 
-                      variant="secondary"
-                      style={{
-                        backgroundColor: `${colors.secondaryColor}20`,
-                        color: colors.secondaryColor
-                      }}
-                    >
-                      {company.companySize || 'N/A'}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <Badge 
-                      variant={company.isActive ? "default" : "destructive"}
-                      style={{
-                        backgroundColor: company.isActive ? colors.secondaryColor : undefined,
-                        color: company.isActive ? 'white' : undefined
-                      }}
-                    >
-                      {company.isActive ? "Activa" : "Inactiva"}
-                    </Badge>
-                  </TableCell>
+                                     <TableCell>
+                     <Badge variant="secondary" className="bg-orange-100 text-orange-800">
+                       {company.companySize || 'N/A'}
+                     </Badge>
+                   </TableCell>
+                                     <TableCell>
+                     <Badge 
+                       variant={company.isActive ? "default" : "destructive"}
+                       className={company.isActive ? "bg-green-600 text-white" : ""}
+                     >
+                       {company.isActive ? "Activa" : "Inactiva"}
+                     </Badge>
+                   </TableCell>
                   <TableCell>
                     <div className="space-y-1">
                       <div className="flex items-center space-x-1 text-sm">
@@ -725,10 +694,10 @@ export default function CompaniesPage() {
                   <SelectValue placeholder="Seleccione el tamaño" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="micro">Micro (1-10 empleados)</SelectItem>
-                  <SelectItem value="small">Pequeña (11-50 empleados)</SelectItem>
-                  <SelectItem value="medium">Mediana (51-250 empleados)</SelectItem>
-                  <SelectItem value="large">Grande (250+ empleados)</SelectItem>
+                  <SelectItem value="MICRO">Micro (1-10 empleados)</SelectItem>
+                  <SelectItem value="SMALL">Pequeña (11-50 empleados)</SelectItem>
+                  <SelectItem value="MEDIUM">Mediana (51-250 empleados)</SelectItem>
+                  <SelectItem value="LARGE">Grande (250+ empleados)</SelectItem>
                 </SelectContent>
               </Select>
             </div>

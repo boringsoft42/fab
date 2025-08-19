@@ -6,6 +6,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
+import { DashboardYouth } from "./role-specific/dashboard-youth";
+import { DashboardAdolescent } from "./role-specific/dashboard-adolescent";
 
 export function AdaptiveDashboard() {
   const { profile, isLoading, error } = useCurrentUser();
@@ -106,163 +108,401 @@ export function AdaptiveDashboard() {
     return roleMap[role] || role;
   };
 
-  // Check if user role should have custom colors (only municipalities and institutions)
-  const shouldUseCustomColors = profile.role === 'GOBIERNOS_MUNICIPALES' || 
-                               profile.role === 'CENTROS_DE_FORMACION' || 
-                               profile.role === 'ONGS_Y_FUNDACIONES';
+  // Render role-specific dashboards
+  switch (profile.role) {
+    case 'JOVENES':
+      return <DashboardYouth />;
+    
+    case 'ADOLESCENTES':
+      return <DashboardAdolescent />;
+    
+    case 'GOBIERNOS_MUNICIPALES':
+    case 'CENTROS_DE_FORMACION':
+    case 'ONGS_Y_FUNDACIONES':
+      // For institutions, use the generic dashboard with custom colors
+      return (
+        <div className="space-y-6">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+            <p className="text-muted-foreground">
+              Bienvenido al sistema CEMSE - {getRoleDisplayName(profile.role)}
+            </p>
+          </div>
+          
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <Card className="border-2 hover:shadow-lg transition-shadow">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Cursos</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div 
+                  className="text-2xl font-bold"
+                  style={{ color: colors.primaryColor }}
+                >
+                  0
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Cursos disponibles
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="border-2 hover:shadow-lg transition-shadow">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Empleos</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div 
+                  className="text-2xl font-bold"
+                  style={{ color: colors.secondaryColor }}
+                >
+                  0
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Ofertas de trabajo
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="border-2 hover:shadow-lg transition-shadow">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Noticias</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div 
+                  className="text-2xl font-bold"
+                  style={{ color: colors.primaryColor }}
+                >
+                  0
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Artículos disponibles
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="border-2 hover:shadow-lg transition-shadow">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Progreso</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div 
+                  className="text-2xl font-bold"
+                  style={{ color: colors.secondaryColor }}
+                >
+                  {profile.completionPercentage || 0}%
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Completado
+                </p>
+              </CardContent>
+            </Card>
+          </div>
 
-  // Simple dashboard for now
-  return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-        <p className="text-muted-foreground">
-          Bienvenido al sistema CEMSE - {getRoleDisplayName(profile.role)}
-        </p>
-       
-      </div>
-      
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="border-2 hover:shadow-lg transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Cursos</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div 
-              className="text-2xl font-bold"
-              style={shouldUseCustomColors ? { color: colors.primaryColor } : { color: '#3b82f6' }}
-            >
-              0
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Cursos disponibles
-            </p>
-          </CardContent>
-        </Card>
-        
-        <Card className="border-2 hover:shadow-lg transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Empleos</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div 
-              className="text-2xl font-bold"
-              style={shouldUseCustomColors ? { color: colors.secondaryColor } : { color: '#f97316' }}
-            >
-              0
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Ofertas de trabajo
-            </p>
-          </CardContent>
-        </Card>
-        
-        <Card className="border-2 hover:shadow-lg transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Noticias</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div 
-              className="text-2xl font-bold"
-              style={shouldUseCustomColors ? { color: colors.primaryColor } : { color: '#3b82f6' }}
-            >
-              0
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Artículos disponibles
-            </p>
-          </CardContent>
-        </Card>
-        
-        <Card className="border-2 hover:shadow-lg transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Progreso</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div 
-              className="text-2xl font-bold"
-              style={shouldUseCustomColors ? { color: colors.secondaryColor } : { color: '#f97316' }}
-            >
-              {profile.completionPercentage || 0}%
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Completado
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card className="border-2 hover:shadow-lg transition-shadow">
-          <CardHeader>
-            <CardTitle 
-              className="text-lg font-semibold"
-              style={shouldUseCustomColors ? { color: colors.primaryColor } : { color: '#3b82f6' }}
-            >
-              Información del Usuario
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="flex justify-between items-center p-2 rounded bg-gray-50">
-              <strong>ID:</strong> 
-              <span className="font-mono text-sm">{profile.id}</span>
-            </div>
-            <div className="flex justify-between items-center p-2 rounded bg-gray-50">
-              <strong>Usuario:</strong> 
-              <span style={shouldUseCustomColors ? { color: colors.primaryColor } : { color: '#3b82f6' }}>{profile.firstName}</span>
-            </div>
-            <div className="flex justify-between items-center p-2 rounded bg-gray-50">
-              <strong>Rol:</strong> 
-              <span style={shouldUseCustomColors ? { color: colors.secondaryColor } : { color: '#f97316' }}>{getRoleDisplayName(profile.role)}</span>
-            </div>
-            <div className="flex justify-between items-center p-2 rounded bg-gray-50">
-              <strong>Rol Original:</strong> 
-              <span className="font-mono text-sm">"{profile.role}"</span>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="border-2 hover:shadow-lg transition-shadow">
-          <CardHeader>
-            <CardTitle 
-              className="text-lg font-semibold"
-              style={shouldUseCustomColors ? { color: colors.secondaryColor } : { color: '#f97316' }}
-            >
-              Acciones Rápidas
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div 
-              className="p-4 rounded-lg border-2 border-dashed"
-              style={shouldUseCustomColors ? {
-                borderColor: colors.primaryColor,
-                backgroundColor: `${colors.primaryColor}08`
-              } : {
-                borderColor: '#3b82f6',
-                backgroundColor: '#eff6ff'
-              }}
-            >
-              <p className="text-muted-foreground text-center">
-                Aquí aparecerán las acciones específicas para tu rol.
-              </p>
-              <div className="mt-3 text-center">
-                <span 
-                  className="text-xs px-2 py-1 rounded-full"
-                  style={shouldUseCustomColors ? {
-                    backgroundColor: colors.secondaryColor,
-                    color: 'white'
-                  } : {
-                    backgroundColor: '#f97316',
-                    color: 'white'
+          <div className="grid gap-6 md:grid-cols-2">
+            <Card className="border-2 hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <CardTitle 
+                  className="text-lg font-semibold"
+                  style={{ color: colors.primaryColor }}
+                >
+                  Información del Usuario
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex justify-between items-center p-2 rounded bg-gray-50">
+                  <strong>ID:</strong> 
+                  <span className="font-mono text-sm">{profile.id}</span>
+                </div>
+                <div className="flex justify-between items-center p-2 rounded bg-gray-50">
+                  <strong>Usuario:</strong> 
+                  <span style={{ color: colors.primaryColor }}>{profile.firstName}</span>
+                </div>
+                <div className="flex justify-between items-center p-2 rounded bg-gray-50">
+                  <strong>Rol:</strong> 
+                  <span style={{ color: colors.secondaryColor }}>{getRoleDisplayName(profile.role)}</span>
+                </div>
+                <div className="flex justify-between items-center p-2 rounded bg-gray-50">
+                  <strong>Rol Original:</strong> 
+                  <span className="font-mono text-sm">"{profile.role}"</span>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="border-2 hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <CardTitle 
+                  className="text-lg font-semibold"
+                  style={{ color: colors.secondaryColor }}
+                >
+                  Acciones Rápidas
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div 
+                  className="p-4 rounded-lg border-2 border-dashed"
+                  style={{
+                    borderColor: colors.primaryColor,
+                    backgroundColor: `${colors.primaryColor}08`
                   }}
                 >
-                  {shouldUseCustomColors ? 'Personalizado con colores del municipio' : 'Acciones disponibles'}
-                </span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
-  );
+                  <p className="text-muted-foreground text-center">
+                    Aquí aparecerán las acciones específicas para tu rol.
+                  </p>
+                  <div className="mt-3 text-center">
+                    <span 
+                      className="text-xs px-2 py-1 rounded-full"
+                      style={{
+                        backgroundColor: colors.secondaryColor,
+                        color: 'white'
+                      }}
+                    >
+                      Personalizado con colores del municipio
+                    </span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      );
+    
+    case 'EMPRESAS':
+      // Generic dashboard for companies with neutral colors
+      return (
+        <div className="space-y-6">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+            <p className="text-muted-foreground">
+              Bienvenido al sistema CEMSE - {getRoleDisplayName(profile.role)}
+            </p>
+          </div>
+          
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <Card className="border-2 hover:shadow-lg transition-shadow">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Cursos</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-gray-700">
+                  0
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Cursos disponibles
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="border-2 hover:shadow-lg transition-shadow">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Empleos</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-gray-700">
+                  0
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Ofertas de trabajo
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="border-2 hover:shadow-lg transition-shadow">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Noticias</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-gray-700">
+                  0
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Artículos disponibles
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="border-2 hover:shadow-lg transition-shadow">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Progreso</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-gray-700">
+                  {profile.completionPercentage || 0}%
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Completado
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2">
+            <Card className="border-2 hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <CardTitle className="text-lg font-semibold text-gray-700">
+                  Información del Usuario
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex justify-between items-center p-2 rounded bg-gray-50">
+                  <strong>ID:</strong> 
+                  <span className="font-mono text-sm">{profile.id}</span>
+                </div>
+                <div className="flex justify-between items-center p-2 rounded bg-gray-50">
+                  <strong>Usuario:</strong> 
+                  <span className="text-gray-700">{profile.firstName}</span>
+                </div>
+                <div className="flex justify-between items-center p-2 rounded bg-gray-50">
+                  <strong>Rol:</strong> 
+                  <span className="text-gray-700">{getRoleDisplayName(profile.role)}</span>
+                </div>
+                <div className="flex justify-between items-center p-2 rounded bg-gray-50">
+                  <strong>Rol Original:</strong> 
+                  <span className="font-mono text-sm">"{profile.role}"</span>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="border-2 hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <CardTitle className="text-lg font-semibold text-gray-700">
+                  Acciones Rápidas
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="p-4 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50">
+                  <p className="text-muted-foreground text-center">
+                    Aquí aparecerán las acciones específicas para tu rol.
+                  </p>
+                  <div className="mt-3 text-center">
+                    <span className="text-xs px-2 py-1 rounded-full bg-gray-600 text-white">
+                      Acciones disponibles
+                    </span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      );
+    
+    default:
+      // Generic dashboard for other roles (companies, etc.)
+      return (
+        <div className="space-y-6">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+            <p className="text-muted-foreground">
+              Bienvenido al sistema CEMSE - {getRoleDisplayName(profile.role)}
+            </p>
+          </div>
+          
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <Card className="border-2 hover:shadow-lg transition-shadow">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Cursos</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-blue-600">
+                  0
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Cursos disponibles
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="border-2 hover:shadow-lg transition-shadow">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Empleos</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-orange-600">
+                  0
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Ofertas de trabajo
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="border-2 hover:shadow-lg transition-shadow">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Noticias</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-blue-600">
+                  0
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Artículos disponibles
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="border-2 hover:shadow-lg transition-shadow">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Progreso</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-orange-600">
+                  {profile.completionPercentage || 0}%
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Completado
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2">
+            <Card className="border-2 hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <CardTitle className="text-lg font-semibold text-blue-600">
+                  Información del Usuario
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex justify-between items-center p-2 rounded bg-gray-50">
+                  <strong>ID:</strong> 
+                  <span className="font-mono text-sm">{profile.id}</span>
+                </div>
+                <div className="flex justify-between items-center p-2 rounded bg-gray-50">
+                  <strong>Usuario:</strong> 
+                  <span className="text-blue-600">{profile.firstName}</span>
+                </div>
+                <div className="flex justify-between items-center p-2 rounded bg-gray-50">
+                  <strong>Rol:</strong> 
+                  <span className="text-orange-600">{getRoleDisplayName(profile.role)}</span>
+                </div>
+                <div className="flex justify-between items-center p-2 rounded bg-gray-50">
+                  <strong>Rol Original:</strong> 
+                  <span className="font-mono text-sm">"{profile.role}"</span>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="border-2 hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <CardTitle className="text-lg font-semibold text-orange-600">
+                  Acciones Rápidas
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="p-4 rounded-lg border-2 border-dashed border-blue-600 bg-blue-50">
+                  <p className="text-muted-foreground text-center">
+                    Aquí aparecerán las acciones específicas para tu rol.
+                  </p>
+                  <div className="mt-3 text-center">
+                    <span className="text-xs px-2 py-1 rounded-full bg-orange-600 text-white">
+                      Acciones disponibles
+                    </span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      );
+  }
 }

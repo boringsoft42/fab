@@ -293,7 +293,7 @@ export function DashboardYouth() {
       description: "¡Encuentra tu trabajo ideal!",
       icon: Rocket,
       href: "/jobs",
-      color: "bg-blue-500",
+      color: "bg-gray-600",
       metric: { label: "Ofertas", value: "156", icon: Sparkles },
       actions: [
         { label: "Explorar", href: "/jobs/browse" },
@@ -305,7 +305,7 @@ export function DashboardYouth() {
       description: "¡Aprende algo nuevo!",
       icon: GraduationCap,
       href: "/training",
-      color: "bg-green-500",
+      color: "bg-gray-600",
       metric: { label: "En curso", value: "2", icon: Play },
       actions: [
         { label: "Ver Cursos", href: "/training/courses" },
@@ -317,11 +317,23 @@ export function DashboardYouth() {
       description: "¡Crea tu negocio!",
       icon: Zap,
       href: "/entrepreneurship",
-      color: "bg-purple-500",
+      color: "bg-gray-600",
       metric: { label: "Proyectos", value: "1", icon: Target },
       actions: [
         { label: "Empezar", href: "/entrepreneurship/ideas" },
         { label: "Mi Proyecto", href: "/entrepreneurship/my-project" },
+      ],
+    },
+    {
+      title: "Instituciones",
+      description: "¡Conoce las instituciones disponibles!",
+      icon: Building2,
+      href: "/institutions",
+      color: "bg-gray-600",
+      metric: { label: "Disponibles", value: "25", icon: Shield },
+      actions: [
+        { label: "Ver Directorio", href: "/institutions" },
+        { label: "Municipios", href: "/municipalities" },
       ],
     },
   ];
@@ -333,7 +345,7 @@ export function DashboardYouth() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white shadow-lg"
+        className="bg-gradient-to-r from-gray-600 to-gray-700 rounded-2xl p-8 text-white shadow-lg"
       >
         <div className="flex items-center justify-between">
           <div className="space-y-2">
@@ -349,7 +361,7 @@ export function DashboardYouth() {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3, duration: 0.5 }}
-              className="text-xl text-blue-100"
+              className="text-xl text-gray-200"
             >
               ¿Qué quieres hacer hoy?
             </motion.p>
@@ -360,7 +372,7 @@ export function DashboardYouth() {
             transition={{ delay: 0.4, type: "spring", stiffness: 200 }}
             className="hidden md:block"
           >
-            <BrainCircuit className="w-24 h-24 text-blue-200" />
+            <BrainCircuit className="w-24 h-24 text-gray-200" />
           </motion.div>
         </div>
       </motion.div>
@@ -375,7 +387,7 @@ export function DashboardYouth() {
       </motion.div>
 
       {/* Quick Stats with Animation - Single Row */}
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
         {modules.map((module, index) => (
           <motion.div
             key={module.title}
@@ -400,7 +412,7 @@ export function DashboardYouth() {
       </div>
 
       {/* Main Modules with Animation */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {modules.map((module, index) => {
           const Icon = module.icon;
           return (
@@ -473,29 +485,26 @@ export function DashboardYouth() {
                   icon: Briefcase,
                   text: "¡Postulaste a un trabajo!",
                   time: "Hace 2 días",
-                  color: "blue",
                 },
                 {
                   icon: BookOpen,
                   text: "¡Completaste un curso!",
                   time: "Hace 5 días",
-                  color: "green",
                 },
                 {
                   icon: Target,
                   text: "¡Nueva idea de negocio!",
                   time: "Hace 1 semana",
-                  color: "purple",
                 },
               ].map((activity, index) => (
                 <motion.div
                   key={index}
                   whileHover={{ x: 5 }}
-                  className={`flex items-center justify-between p-4 bg-${activity.color}-50 rounded-xl`}
+                  className="flex items-center justify-between p-4 bg-gray-50 rounded-xl"
                 >
                   <div className="flex items-center gap-3">
                     <activity.icon
-                      className={`w-6 h-6 text-${activity.color}-600`}
+                      className="w-6 h-6 text-gray-600"
                     />
                     <span className="text-lg">{activity.text}</span>
                   </div>

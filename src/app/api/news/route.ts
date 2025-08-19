@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { NewsArticle } from "@/types/news";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
-// Mock news data
-const mockNews: NewsArticle[] = [
+// Mock news data - esto se reemplazará con Prisma
+let mockNews: NewsArticle[] = [
   {
     id: "news-1",
     title: "TechCorp Bolivia Lanza Programa de Becas 2024",
@@ -65,279 +67,212 @@ const mockNews: NewsArticle[] = [
     targetAudience: ["YOUTH", "COMPANIES"],
     region: "Cochabamba",
   },
-  {
-    id: "news-3",
-    title: "Innovate Labs Busca 20 Desarrolladores Junior",
-    content:
-      "Innovate Labs, startup líder en desarrollo de aplicaciones móviles, anuncia la apertura de 20 posiciones para desarrolladores junior. La empresa ofrece un ambiente de trabajo dinámico y oportunidades de crecimiento profesional acelerado.\n\nBeneficios ofrecidos:\n• Salario competitivo desde 4,500 BOB\n• Horarios flexibles y trabajo híbrido\n• Capacitación continua en nuevas tecnologías\n• Seguro médico privado\n• Ambiente de startup con proyectos desafiantes\n\nLa empresa busca recién graduados o personas con máximo 2 años de experiencia en React, React Native o Flutter.",
-    summary:
-      "Innovate Labs ofrece 20 empleos para desarrolladores junior con salarios competitivos y ambiente de startup.",
-    imageUrl: "/api/placeholder/800/400",
-    authorId: "company-2",
-    authorName: "Innovate Labs",
-    authorType: "COMPANY",
-    authorLogo: "/logos/innovatelabs.svg",
-    status: "PUBLISHED",
-    priority: "MEDIUM",
-    featured: false,
-    tags: ["empleo", "desarrollo", "tecnología", "startup"],
-    category: "Ofertas de Empleo",
-    publishedAt: "2024-02-26T16:30:00Z",
-    createdAt: "2024-02-25T11:45:00Z",
-    updatedAt: "2024-02-26T16:30:00Z",
-    viewCount: 890,
-    likeCount: 67,
-    commentCount: 12,
-    targetAudience: ["YOUTH"],
-    region: "Santa Cruz",
-  },
-  {
-    id: "news-4",
-    title: "ONG Futuro Verde Lanza Programa de Educación Ambiental",
-    content:
-      "La ONG Futuro Verde presenta su nuevo programa de educación ambiental dirigido a jóvenes de 15 a 25 años. El programa tiene como objetivo formar líderes ambientales que promuevan el desarrollo sostenible en sus comunidades.\n\nEl programa incluye:\n• 40 horas de capacitación en sostenibilidad\n• Proyectos prácticos de conservación\n• Certificación internacional en gestión ambiental\n• Red de contactos con organizaciones ambientales\n• Oportunidades de voluntariado remunerado\n\nLas inscripciones están abiertas hasta el 15 de marzo. El programa es completamente gratuito y se desarrollará los fines de semana durante 3 meses.",
-    summary:
-      "ONG Futuro Verde ofrece programa gratuito de educación ambiental para formar líderes jóvenes en sostenibilidad.",
-    imageUrl: "/api/placeholder/800/400",
-    authorId: "ngo-1",
-    authorName: "ONG Futuro Verde",
-    authorType: "NGO",
-    authorLogo: "/api/placeholder/60/60",
-    status: "PUBLISHED",
-    priority: "MEDIUM",
-    featured: true,
-    tags: ["medio ambiente", "educación", "sostenibilidad", "liderazgo"],
-    category: "Programas Sociales",
-    publishedAt: "2024-02-25T12:00:00Z",
-    createdAt: "2024-02-24T09:20:00Z",
-    updatedAt: "2024-02-25T12:00:00Z",
-    viewCount: 760,
-    likeCount: 94,
-    commentCount: 18,
-    targetAudience: ["YOUTH"],
-    region: "La Paz",
-  },
-  {
-    id: "news-5",
-    title: "Ministerio de Educación Anuncia Nueva Plataforma Digital",
-    content:
-      "El Ministerio de Educación presenta la nueva plataforma digital 'Educa Bolivia' que revolucionará el acceso a la educación técnica y superior en el país. La plataforma ofrecerá más de 200 cursos gratuitos certificados.\n\nCaracterísticas principales:\n• Cursos en línea completamente gratuitos\n• Certificaciones reconocidas oficialmente\n• Modalidad asíncrona para estudiar a tu ritmo\n• Tutores especializados disponibles\n• Contenido actualizado con estándares internacionales\n\nLa plataforma estará disponible a partir del 1 de abril y beneficiará a más de 100,000 estudiantes en todo el territorio nacional.",
-    summary:
-      "Nueva plataforma 'Educa Bolivia' ofrecerá 200 cursos técnicos gratuitos con certificación oficial.",
-    imageUrl: "/api/placeholder/800/400",
-    authorId: "gov-2",
-    authorName: "Ministerio de Educación",
-    authorType: "GOVERNMENT",
-    authorLogo: "/api/placeholder/60/60",
-    status: "PUBLISHED",
-    priority: "HIGH",
-    featured: true,
-    tags: ["educación", "tecnología", "cursos gratuitos", "certificación"],
-    category: "Educación Digital",
-    publishedAt: "2024-02-24T10:00:00Z",
-    createdAt: "2024-02-23T14:30:00Z",
-    updatedAt: "2024-02-24T10:00:00Z",
-    viewCount: 3200,
-    likeCount: 245,
-    commentCount: 67,
-    targetAudience: ["YOUTH", "ALL"],
-    region: "Nacional",
-  },
-  {
-    id: "news-6",
-    title: "FutureWorks Implementa Programa de Diversidad e Inclusión",
-    content:
-      "FutureWorks, empresa consultora líder en transformación digital, anuncia la implementación de su programa de diversidad e inclusión con enfoque especial en la contratación de jóvenes talentos de comunidades rurales.\n\nIniciativas del programa:\n• Becas de capacitación para jóvenes rurales\n• Mentoring con profesionales experimentados\n• Programa de pasantías remuneradas\n• Flexibilidad laboral para estudiantes\n• Capacitación en habilidades digitales\n\nLa empresa se compromete a que el 30% de sus nuevas contrataciones sean jóvenes de áreas rurales, proporcionando oportunidades equitativas de desarrollo profesional.",
-    summary:
-      "FutureWorks lanza programa de inclusión con becas y empleos especiales para jóvenes de comunidades rurales.",
-    imageUrl: "/api/placeholder/800/400",
-    authorId: "company-3",
-    authorName: "FutureWorks",
-    authorType: "COMPANY",
-    authorLogo: "/logos/futureworks.svg",
-    status: "PUBLISHED",
-    priority: "MEDIUM",
-    featured: false,
-    tags: ["diversidad", "inclusión", "empleo rural", "oportunidades"],
-    category: "Responsabilidad Social",
-    publishedAt: "2024-02-23T13:15:00Z",
-    createdAt: "2024-02-22T16:00:00Z",
-    updatedAt: "2024-02-23T13:15:00Z",
-    viewCount: 650,
-    likeCount: 78,
-    commentCount: 15,
-    targetAudience: ["YOUTH"],
-    region: "Cochabamba",
-  },
 ];
 
-// GET /api/news - Fetch news articles
+// Helper function to generate unique ID
+const generateId = () => `news-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+// Helper function to validate news data
+const validateNewsData = (data: any) => {
+  const requiredFields = ['title', 'content', 'summary', 'category'];
+  for (const field of requiredFields) {
+    if (!data[field]) {
+      throw new Error(`Campo requerido: ${field}`);
+    }
+  }
+  
+  if (data.priority && !['LOW', 'MEDIUM', 'HIGH', 'URGENT'].includes(data.priority)) {
+    throw new Error('Prioridad inválida');
+  }
+  
+  if (data.status && !['DRAFT', 'PUBLISHED', 'ARCHIVED'].includes(data.status)) {
+    throw new Error('Estado inválido');
+  }
+  
+  return true;
+};
+
+// Helper function to check permissions
+const checkPermissions = (user: any, authorId: string) => {
+  if (!user) {
+    throw new Error('No autenticado');
+  }
+  
+  // SuperAdmin puede editar cualquier noticia
+  if (user.role === 'SUPERADMIN') {
+    return true;
+  }
+  
+  // El autor puede editar sus propias noticias
+  if (user.id === authorId) {
+    return true;
+  }
+  
+  // Companies pueden editar noticias de su empresa
+  if (user.role === 'COMPANIES' && user.companyId === authorId) {
+    return true;
+  }
+  
+  // Municipal governments pueden editar noticias de su municipio
+  if (user.role === 'MUNICIPAL_GOVERNMENTS' && user.municipalityId === authorId) {
+    return true;
+  }
+  
+  throw new Error('Sin permisos para editar esta noticia');
+};
+
 export async function GET(request: NextRequest) {
   try {
+    const session = await getServerSession(authOptions);
     const { searchParams } = new URL(request.url);
-    const type = searchParams.get("type");
-    const featured = searchParams.get("featured");
-    const limit = parseInt(searchParams.get("limit") || "10");
-    const page = parseInt(searchParams.get("page") || "1");
-    const category = searchParams.get("category");
-    const targetAudience = searchParams.get("targetAudience");
-    const region = searchParams.get("region");
-    const search = searchParams.get("search");
-
-    let filtered = mockNews.filter((news) => news.status === "PUBLISHED");
-
-    // Apply filters
-    if (type && type !== "all") {
-      filtered = filtered.filter(
-        (news) => news.authorType === type.toUpperCase()
-      );
+    
+    const status = searchParams.get('status');
+    const category = searchParams.get('category');
+    const authorType = searchParams.get('authorType');
+    const authorId = searchParams.get('authorId');
+    
+    let filteredNews = [...mockNews];
+    
+    // Si no está autenticado, solo mostrar noticias públicas
+    if (!session) {
+      filteredNews = filteredNews.filter(news => news.status === 'PUBLISHED');
+    } else {
+      // Si está autenticado, filtrar por autor si se especifica
+      if (authorId) {
+        filteredNews = filteredNews.filter(news => news.authorId === authorId);
+      }
     }
-
-    if (featured === "true") {
-      filtered = filtered.filter((news) => news.featured);
+    
+    // Aplicar filtros adicionales
+    if (status) {
+      filteredNews = filteredNews.filter(news => news.status === status.toUpperCase());
     }
-
-    if (category && category !== "all") {
-      filtered = filtered.filter((news) => news.category === category);
+    
+    if (category) {
+      filteredNews = filteredNews.filter(news => news.category === category);
     }
-
-    if (targetAudience && targetAudience !== "all") {
-      filtered = filtered.filter(
-        (news) =>
-          news.targetAudience.includes(targetAudience.toUpperCase()) ||
-          news.targetAudience.includes("ALL")
-      );
+    
+    if (authorType) {
+      filteredNews = filteredNews.filter(news => news.authorType === authorType.toUpperCase());
     }
-
-    if (region && region !== "all") {
-      filtered = filtered.filter(
-        (news) => news.region === region || news.region === "Nacional"
-      );
-    }
-
-    if (search) {
-      const searchLower = search.toLowerCase();
-      filtered = filtered.filter(
-        (news) =>
-          news.title.toLowerCase().includes(searchLower) ||
-          news.summary.toLowerCase().includes(searchLower) ||
-          news.tags.some((tag) => tag.toLowerCase().includes(searchLower))
-      );
-    }
-
-    // Sort by priority and date
-    filtered.sort((a, b) => {
-      const priorityOrder = { URGENT: 4, HIGH: 3, MEDIUM: 2, LOW: 1 };
-      const priorityDiff =
-        priorityOrder[b.priority] - priorityOrder[a.priority];
-      if (priorityDiff !== 0) return priorityDiff;
-
-      return (
-        new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-      );
-    });
-
-    // Apply pagination
-    const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + limit;
-    const paginatedNews = filtered.slice(startIndex, endIndex);
-
-    // Calculate stats
-    const stats = {
-      total: filtered.length,
-      published: mockNews.filter((n) => n.status === "PUBLISHED").length,
-      draft: mockNews.filter((n) => n.status === "DRAFT").length,
-      byType: {
-        company: mockNews.filter((n) => n.authorType === "COMPANY").length,
-        government: mockNews.filter((n) => n.authorType === "GOVERNMENT")
-          .length,
-        ngo: mockNews.filter((n) => n.authorType === "NGO").length,
-      },
-      byPriority: {
-        low: mockNews.filter((n) => n.priority === "LOW").length,
-        medium: mockNews.filter((n) => n.priority === "MEDIUM").length,
-        high: mockNews.filter((n) => n.priority === "HIGH").length,
-        urgent: mockNews.filter((n) => n.priority === "URGENT").length,
-      },
-      totalViews: mockNews.reduce((sum, n) => sum + n.viewCount, 0),
-      totalLikes: mockNews.reduce((sum, n) => sum + n.likeCount, 0),
-      totalComments: mockNews.reduce((sum, n) => sum + n.commentCount, 0),
-    };
-
-    return NextResponse.json({
-      news: paginatedNews,
-      pagination: {
-        total: filtered.length,
-        page,
-        limit,
-        totalPages: Math.ceil(filtered.length / limit),
-      },
-      stats,
-    });
+    
+    return NextResponse.json(filteredNews);
   } catch (error) {
-    console.error("Error fetching news:", error);
+    console.error('Error getting news:', error);
     return NextResponse.json(
-      { error: "Error al obtener noticias" },
+      { error: 'Error interno del servidor' },
       { status: 500 }
     );
   }
 }
 
-// POST /api/news - Create new news article
 export async function POST(request: NextRequest) {
   try {
-    const newsData = await request.json();
-
-    // Validate required fields
-    const requiredFields = [
-      "title",
-      "content",
-      "summary",
-      "authorId",
-      "authorName",
-      "authorType",
-    ];
-    for (const field of requiredFields) {
-      if (!newsData[field]) {
-        return NextResponse.json(
-          { error: `El campo ${field} es requerido` },
-          { status: 400 }
-        );
-      }
+    const session = await getServerSession(authOptions);
+    
+    if (!session) {
+      return NextResponse.json(
+        { error: 'No autenticado' },
+        { status: 401 }
+      );
     }
-
+    
+    // Verificar permisos para crear noticias
+    if (!['COMPANIES', 'MUNICIPAL_GOVERNMENTS', 'SUPERADMIN'].includes(session.user.role)) {
+      return NextResponse.json(
+        { error: 'Sin permisos para crear noticias' },
+        { status: 403 }
+      );
+    }
+    
+    let newsData: any = {};
+    let imageFile: File | null = null;
+    
+    // Verificar si es multipart/form-data
+    const contentType = request.headers.get('content-type') || '';
+    console.log('🔍 Content-Type:', contentType);
+    
+    if (contentType.includes('multipart/form-data')) {
+      const formData = await request.formData();
+      
+      // Debug: mostrar todos los campos del FormData
+      console.log('🔍 FormData entries:');
+      for (let [key, value] of formData.entries()) {
+        console.log(`  ${key}: ${value}`);
+      }
+      
+      // Extraer campos de texto
+      newsData = {
+        title: formData.get('title') as string,
+        content: formData.get('content') as string,
+        summary: formData.get('summary') as string,
+        category: formData.get('category') as string,
+        status: formData.get('status') as string || 'DRAFT',
+        priority: formData.get('priority') as string || 'MEDIUM',
+        tags: formData.get('tags') as string,
+        featured: formData.get('featured') === 'true',
+        targetAudience: formData.get('targetAudience') as string,
+        region: formData.get('region') as string,
+        videoUrl: formData.get('videoUrl') as string,
+        relatedLinks: formData.get('relatedLinks') as string,
+      };
+      
+      console.log('🔍 Extracted newsData:', newsData);
+      
+      // Extraer archivo de imagen
+      const image = formData.get('image') as File;
+      if (image) {
+        imageFile = image;
+        // En una implementación real, aquí se subiría la imagen a un servicio de almacenamiento
+        newsData.imageUrl = `/uploads/news/${Date.now()}-${image.name}`;
+      }
+    } else {
+      // JSON data
+      newsData = await request.json();
+    }
+    
+    console.log('🔍 About to validate newsData:', newsData);
+    
+    // Validar datos
+    validateNewsData(newsData);
+    
+    // Crear nueva noticia
     const newNews: NewsArticle = {
-      id: `news-${Date.now()}`,
-      ...newsData,
-      status: newsData.status || "DRAFT",
-      priority: newsData.priority || "MEDIUM",
+      id: generateId(),
+      title: newsData.title,
+      content: newsData.content,
+      summary: newsData.summary,
+      imageUrl: newsData.imageUrl || '/api/placeholder/800/400',
+      videoUrl: newsData.videoUrl,
+      authorId: session.user.id,
+      authorName: session.user.firstName || session.user.name || 'Autor',
+      authorType: session.user.role === 'COMPANIES' ? 'COMPANY' : 
+                  session.user.role === 'MUNICIPAL_GOVERNMENTS' ? 'GOVERNMENT' : 'COMPANY',
+      authorLogo: session.user.avatar || '/api/placeholder/60/60',
+      status: newsData.status || 'DRAFT',
+      priority: newsData.priority || 'MEDIUM',
       featured: newsData.featured || false,
-      tags: newsData.tags || [],
-      publishedAt:
-        newsData.status === "PUBLISHED" ? new Date().toISOString() : "",
+      tags: newsData.tags ? newsData.tags.split(',').map((tag: string) => tag.trim()) : [],
+      category: newsData.category,
+      publishedAt: newsData.status === 'PUBLISHED' ? new Date().toISOString() : '',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       viewCount: 0,
       likeCount: 0,
       commentCount: 0,
-      targetAudience: newsData.targetAudience || ["ALL"],
+      targetAudience: newsData.targetAudience ? newsData.targetAudience.split(',').map((audience: string) => audience.trim()) : ['YOUTH'],
+      region: newsData.region,
+      relatedLinks: newsData.relatedLinks ? JSON.parse(newsData.relatedLinks) : [],
     };
-
-    // In real app, this would save to database using Prisma
-    mockNews.unshift(newNews);
-
-    return NextResponse.json(
-      {
-        message: "Noticia creada exitosamente",
-        news: newNews,
-      },
-      { status: 201 }
-    );
+    
+    mockNews.push(newNews);
+    
+    return NextResponse.json(newNews, { status: 201 });
   } catch (error) {
-    console.error("Error creating news:", error);
+    console.error('Error creating news:', error);
     return NextResponse.json(
-      { error: "Error al crear noticia" },
-      { status: 500 }
+      { error: error instanceof Error ? error.message : 'Error interno del servidor' },
+      { status: 400 }
     );
   }
 }

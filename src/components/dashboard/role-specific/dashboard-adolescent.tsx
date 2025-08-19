@@ -599,13 +599,13 @@ export function DashboardAdolescent() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold mb-2">¡Bienvenido Joven!</h1>
-            <p className="text-green-100">
+            <p className="text-gray-200">
               Explora oportunidades, desarrolla tus habilidades y construye tu
               futuro profesional
             </p>
           </div>
           <div className="hidden md:flex">
-            <GraduationCap className="w-16 h-16 text-green-200" />
+            <GraduationCap className="w-16 h-16 text-gray-200" />
           </div>
         </div>
       </div>
@@ -634,7 +634,7 @@ export function DashboardAdolescent() {
         <Card className="hover:shadow-lg transition-shadow cursor-pointer">
           <CardHeader className="pb-3">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-gray-600 rounded-lg flex items-center justify-center">
                 <Search className="w-5 h-5 text-white" />
               </div>
               <CardTitle className="text-lg">Búsqueda de Empleo</CardTitle>
@@ -656,7 +656,7 @@ export function DashboardAdolescent() {
         <Card className="hover:shadow-lg transition-shadow cursor-pointer">
           <CardHeader className="pb-3">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-gray-600 rounded-lg flex items-center justify-center">
                 <GraduationCap className="w-5 h-5 text-white" />
               </div>
               <CardTitle className="text-lg">Capacitación</CardTitle>
@@ -678,7 +678,7 @@ export function DashboardAdolescent() {
         <Card className="hover:shadow-lg transition-shadow cursor-pointer">
           <CardHeader className="pb-3">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-gray-600 rounded-lg flex items-center justify-center">
                 <Target className="w-5 h-5 text-white" />
               </div>
               <CardTitle className="text-lg">Emprendimiento</CardTitle>
@@ -708,9 +708,9 @@ export function DashboardAdolescent() {
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
               <div className="flex items-center gap-3">
-                <CheckCircle className="w-4 h-4 text-green-600" />
+                <CheckCircle className="w-4 h-4 text-gray-600" />
                 <span className="text-sm">
                   Completaste &quot;Orientación Vocacional - Módulo 1&quot;
                 </span>
@@ -718,9 +718,9 @@ export function DashboardAdolescent() {
               <Badge variant="secondary">Hace 1 día</Badge>
             </div>
 
-            <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
+            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
               <div className="flex items-center gap-3">
-                <Target className="w-4 h-4 text-purple-600" />
+                <Target className="w-4 h-4 text-gray-600" />
                 <span className="text-sm">
                   Participaste en taller &quot;Educación Financiera Básica&quot;
                 </span>
@@ -728,9 +728,9 @@ export function DashboardAdolescent() {
               <Badge variant="secondary">Hace 3 días</Badge>
             </div>
 
-            <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
               <div className="flex items-center gap-3">
-                <Bookmark className="w-4 h-4 text-blue-600" />
+                <Bookmark className="w-4 h-4 text-gray-600" />
                 <span className="text-sm">
                   Guardaste oferta de trabajo de medio tiempo
                 </span>
@@ -742,11 +742,11 @@ export function DashboardAdolescent() {
       </Card>
 
       {/* Enhanced Personal Metrics */}
-      <Card className="border border-blue-200 bg-gradient-to-br from-blue-50/50 to-purple-50/50">
+      <Card className="border border-gray-200 bg-gradient-to-br from-gray-50/50 to-gray-100/50">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+              <div className="w-12 h-12 bg-gradient-to-br from-gray-500 to-gray-600 rounded-full flex items-center justify-center">
                 <TrendingUp className="w-6 h-6 text-white" />
               </div>
               <div>
@@ -765,17 +765,17 @@ export function DashboardAdolescent() {
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             <div className="text-center space-y-3">
-              <div className="flex items-center justify-center w-16 h-16 bg-blue-100 rounded-xl mx-auto">
-                <Search className="w-8 h-8 text-blue-600" />
+              <div className="flex items-center justify-center w-16 h-16 bg-gray-100 rounded-xl mx-auto">
+                <Search className="w-8 h-8 text-gray-600" />
               </div>
               <div>
                 <div className="text-3xl font-bold text-gray-900">3</div>
                 <p className="text-sm font-medium text-gray-600">
                   Postulaciones Activas
                 </p>
-                <div className="w-full bg-blue-100 rounded-full h-2 mt-2">
+                <div className="w-full bg-gray-100 rounded-full h-2 mt-2">
                   <div
-                    className="bg-blue-500 h-2 rounded-full"
+                    className="bg-gray-500 h-2 rounded-full"
                     style={{ width: "60%" }}
                   ></div>
                 </div>
@@ -786,17 +786,17 @@ export function DashboardAdolescent() {
             </div>
 
             <div className="text-center space-y-3">
-              <div className="flex items-center justify-center w-16 h-16 bg-green-100 rounded-xl mx-auto">
-                <GraduationCap className="w-8 h-8 text-green-600" />
+              <div className="flex items-center justify-center w-16 h-16 bg-gray-100 rounded-xl mx-auto">
+                <GraduationCap className="w-8 h-8 text-gray-600" />
               </div>
               <div>
                 <div className="text-3xl font-bold text-gray-900">2</div>
                 <p className="text-sm font-medium text-gray-600">
                   Cursos en Progreso
                 </p>
-                <div className="w-full bg-green-100 rounded-full h-2 mt-2">
+                <div className="w-full bg-gray-100 rounded-full h-2 mt-2">
                   <div
-                    className="bg-green-500 h-2 rounded-full"
+                    className="bg-gray-500 h-2 rounded-full"
                     style={{ width: "75%" }}
                   ></div>
                 </div>

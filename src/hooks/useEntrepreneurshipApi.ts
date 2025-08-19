@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { EntrepreneurshipService } from '@/services/entrepreneurship.service';
 import { Entrepreneurship } from '@/types/profile';
 
@@ -25,19 +25,16 @@ export const useCreateEntrepreneurship = () => {
 
 export const useMyEntrepreneurships = () => {
   const [entrepreneurships, setEntrepreneurships] = useState<Entrepreneurship[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchMyEntrepreneurships = async () => {
-    console.log("🔍 useMyEntrepreneurships - Starting fetch");
+  const fetchMyEntrepreneurships = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      console.log("🔍 useMyEntrepreneurships - Calling EntrepreneurshipService.getMyEntrepreneurships()");
       const result = await EntrepreneurshipService.getMyEntrepreneurships();
-      console.log("🔍 useMyEntrepreneurships - Service result:", result);
-      console.log("🔍 useMyEntrepreneurships - Result items:", result.items);
-      setEntrepreneurships(result.items || []);
+      // El backend devuelve directamente el array, no con propiedad 'items'
+      setEntrepreneurships(Array.isArray(result) ? result : result.items || []);
       return result;
     } catch (err: any) {
       console.error("🔍 useMyEntrepreneurships - Error:", err);
@@ -46,7 +43,12 @@ export const useMyEntrepreneurships = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  // Auto-fetch on mount
+  useEffect(() => {
+    fetchMyEntrepreneurships();
+  }, [fetchMyEntrepreneurships]);
 
   return { entrepreneurships, loading, error, fetchMyEntrepreneurships };
 };
@@ -56,12 +58,13 @@ export const useAllEntrepreneurships = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchAllEntrepreneurships = async (filters?: any) => {
+  const fetchAllEntrepreneurships = useCallback(async (filters?: any) => {
     setLoading(true);
     setError(null);
     try {
       const result = await EntrepreneurshipService.getAllEntrepreneurships(filters);
-      setEntrepreneurships(result.items || []);
+      // El backend devuelve directamente el array, no con propiedad 'items'
+      setEntrepreneurships(Array.isArray(result) ? result : result.items || []);
       return result;
     } catch (err: any) {
       setError(err.message || 'Error al cargar emprendimientos');
@@ -69,7 +72,7 @@ export const useAllEntrepreneurships = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   return { entrepreneurships, loading, error, fetchAllEntrepreneurships };
 };
@@ -79,7 +82,7 @@ export const useEntrepreneurship = (id: string) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchEntrepreneurship = async () => {
+  const fetchEntrepreneurship = useCallback(async () => {
     if (!id) return;
     setLoading(true);
     setError(null);
@@ -93,7 +96,7 @@ export const useEntrepreneurship = (id: string) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
 
   return { entrepreneurship, loading, error, fetchEntrepreneurship };
 };
@@ -194,10 +197,21 @@ export function usePublicEntrepreneurships() {
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    EntrepreneurshipService.getPublic()
-      .then(setData)
-      .catch(setError)
-      .finally(() => setLoading(false));
+    const fetchPublicEntrepreneurships = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        // Usar el método específico para emprendimientos públicos
+        const result = await EntrepreneurshipService.getPublicEntrepreneurships();
+        setData(Array.isArray(result) ? result : result.items || []);
+      } catch (err) {
+        setError(err as Error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPublicEntrepreneurships();
   }, []);
 
   return { data, loading, error };

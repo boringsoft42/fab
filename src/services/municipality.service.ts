@@ -4,78 +4,78 @@ import type {
   CreateMunicipalityRequest, 
   UpdateMunicipalityRequest,
   MunicipalityAuthRequest,
-  MunicipalityAuthResponse,
   MunicipalityChangePasswordRequest
 } from '@/types/municipality';
 
 export class MunicipalityService {
-  /**
-   * Get all municipalities
-   */
+  // Get public municipalities
+  static async getPublicMunicipalities(): Promise<Municipality[]> {
+    return await apiCall('/municipality/public');
+  }
+
+  // Get all municipalities (admin only)
   static async getAll(): Promise<Municipality[]> {
-    return apiCall('/municipality');
+    console.log("🏛️ MunicipalityService.getAll - Making API call to /municipality");
+    const response = await apiCall('/municipality');
+    console.log("🏛️ MunicipalityService.getAll - Raw response:", response);
+    // Handle the response format: { municipalities: [...] }
+    const result = response.municipalities || response;
+    console.log("🏛️ MunicipalityService.getAll - Processed result:", result);
+    return result;
   }
 
-  /**
-   * Get municipality by ID
-   */
+  // Get municipality by ID
   static async getById(id: string): Promise<Municipality> {
-    return apiCall(`/municipality/${id}`);
+    const response = await apiCall(`/municipality/${id}`);
+    // Handle the response format: { municipality: {...} } or direct object
+    return response.municipality || response;
   }
 
-  /**
-   * Create new municipality
-   */
+  // Create municipality
   static async create(data: CreateMunicipalityRequest): Promise<Municipality> {
-    return apiCall('/municipality', {
+    const response = await apiCall('/municipality', {
       method: 'POST',
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
     });
+    // Handle the response format: { municipality: {...} }
+    return response.municipality || response;
   }
 
-  /**
-   * Update municipality
-   */
+  // Update municipality
   static async update(id: string, data: UpdateMunicipalityRequest): Promise<Municipality> {
-    return apiCall(`/municipality/${id}`, {
+    const response = await apiCall(`/municipality/${id}`, {
       method: 'PUT',
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
     });
+    // Handle the response format: { municipality: {...} }
+    return response.municipality || response;
   }
 
-  /**
-   * Delete municipality
-   */
+  // Delete municipality
   static async delete(id: string): Promise<void> {
-    return apiCall(`/municipality/${id}`, {
-      method: 'DELETE'
+    return await apiCall(`/municipality/${id}`, {
+      method: 'DELETE',
     });
   }
 
-  /**
-   * Municipality authentication
-   */
-  static async login(credentials: MunicipalityAuthRequest): Promise<MunicipalityAuthResponse> {
-    return apiCall('/municipality/auth/login', {
+  // Municipality authentication
+  static async login(credentials: MunicipalityAuthRequest): Promise<any> {
+    return await apiCall('/municipality/auth/login', {
       method: 'POST',
-      body: JSON.stringify(credentials)
+      body: JSON.stringify(credentials),
     });
   }
 
-  /**
-   * Get current municipality profile
-   */
+  // Get current municipality
   static async getCurrentMunicipality(): Promise<Municipality> {
-    return apiCall('/municipality/auth/me');
+    return await apiCall('/municipality/me');
   }
 
-  /**
-   * Change municipality password
-   */
-  static async changePassword(data: MunicipalityChangePasswordRequest): Promise<{ message: string }> {
-    return apiCall('/municipality/auth/change-password', {
+  // Change municipality password
+  static async changePassword(data: MunicipalityChangePasswordRequest): Promise<void> {
+    return await apiCall('/municipality/change-password', {
       method: 'POST',
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
     });
   }
 } 

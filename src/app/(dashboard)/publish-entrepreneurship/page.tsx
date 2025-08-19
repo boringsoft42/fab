@@ -374,20 +374,19 @@ export default function PublishEntrepreneurshipPage() {
     try {
       setLoading(true);
 
-      // Prepare data for API
+      // Prepare data for API according to the backend specification
       const entrepreneurshipData = {
-        ownerId: user.id, // Explicitly include the user ID
         name: formData.basicInfo.businessName,
         description: formData.basicInfo.description,
         category: formData.basicInfo.category,
         subcategory: formData.basicInfo.subcategory || undefined,
         businessStage: "IDEA" as const, // Default stage
+        municipality: formData.basicInfo.municipality,
+        department: "Cochabamba", // Default department
         website: formData.basicInfo.website || undefined,
         email: formData.contact.email,
         phone: formData.contact.phone,
         address: formData.basicInfo.location,
-        municipality: formData.basicInfo.municipality,
-        department: "Cochabamba", // Default department
         socialMedia: {
           facebook: formData.basicInfo.socialMedia.facebook || undefined,
           instagram: formData.basicInfo.socialMedia.instagram || undefined,
@@ -397,7 +396,9 @@ export default function PublishEntrepreneurshipPage() {
         businessModel: formData.services.serviceDetails || undefined,
         targetMarket: "General", // Default target market
         isPublic: formData.visibility.isPublic,
-        isActive: true,
+        // Additional fields from the form
+        employees: undefined, // Could be added to form later
+        annualRevenue: undefined, // Could be added to form later
       };
 
       console.log("Submitting entrepreneurship data:", entrepreneurshipData);
@@ -455,8 +456,8 @@ export default function PublishEntrepreneurshipPage() {
         },
       });
 
-             // Redirect to my entrepreneurships
-       router.push("/my-entrepreneurships");
+      // Redirect to my entrepreneurships
+      router.push("/my-entrepreneurships");
     } catch (error) {
       console.error("Error submitting form:", error);
       toast({

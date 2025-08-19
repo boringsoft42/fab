@@ -13,6 +13,16 @@ export type ApplicationStatus =
   | "REJECTED"
   | "HIRED";
 
+export interface JobSearchFilters {
+  query?: string;
+  location?: string[];
+  contractType?: string[];
+  workModality?: string[];
+  experienceLevel?: string[];
+  salaryMin?: number;
+  salaryMax?: number;
+}
+
 export interface Company {
   id: string;
   name: string;
@@ -49,6 +59,8 @@ export interface JobOffer {
   educationRequired?: string;
   skillsRequired: string[];
   desiredSkills: string[];
+  requiredSkills: string[]; // Added for compatibility
+  responsibilities: string[]; // Added for compatibility
   applicationDeadline?: string;
   startDate?: string;
   endDate?: string;
@@ -61,6 +73,8 @@ export interface JobOffer {
   status: JobStatus;
   viewsCount: number;
   applicationsCount: number;
+  applicationCount: number; // Added for compatibility
+  viewCount: number; // Added for compatibility
   featured: boolean;
   expiresAt?: string;
   publishedAt: string;

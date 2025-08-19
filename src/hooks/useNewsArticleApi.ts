@@ -10,9 +10,11 @@ const NEWS_KEYS = {
   details: () => [...NEWS_KEYS.all, 'detail'] as const,
   detail: (id: string) => [...NEWS_KEYS.details(), id] as const,
   stats: () => [...NEWS_KEYS.all, 'stats'] as const,
+  public: () => [...NEWS_KEYS.all, 'public'] as const,
+  author: (authorId: string) => [...NEWS_KEYS.all, 'author', authorId] as const,
 };
 
-// Get all news articles
+// Get all news articles (mis noticias para empresas/municipios)
 export const useNewsArticles = () => {
   return useQuery({
     queryKey: NEWS_KEYS.lists(),
@@ -72,6 +74,31 @@ export const useCreateNewsArticle = () => {
   });
 };
 
+// Create news article with image
+export const useCreateNewsArticleWithImage = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async (formData: FormData) => {
+      console.log("📰 useCreateNewsArticleWithImage - Calling NewsArticleService.createWithImage()");
+      try {
+        const result = await NewsArticleService.createWithImage(formData);
+        console.log("✅ useCreateNewsArticleWithImage - Success:", result);
+        return result;
+      } catch (error) {
+        console.error("❌ useCreateNewsArticleWithImage - Error:", error);
+        throw error;
+      }
+    },
+    onSuccess: () => {
+      console.log("🔄 useCreateNewsArticleWithImage - Invalidating queries");
+      queryClient.invalidateQueries({ queryKey: NEWS_KEYS.lists() });
+      // Invalidate all author queries to refresh the table
+      queryClient.invalidateQueries({ queryKey: NEWS_KEYS.all });
+    },
+  });
+};
+
 // Update news article
 export const useUpdateNewsArticle = () => {
   const queryClient = useQueryClient();
@@ -96,6 +123,32 @@ export const useUpdateNewsArticle = () => {
   });
 };
 
+// Update news article with image
+export const useUpdateNewsArticleWithImage = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async ({ id, formData }: { id: string; formData: FormData }) => {
+      console.log("📰 useUpdateNewsArticleWithImage - Calling NewsArticleService.updateWithImage() with id:", id);
+      try {
+        const result = await NewsArticleService.updateWithImage(id, formData);
+        console.log("✅ useUpdateNewsArticleWithImage - Success:", result);
+        return result;
+      } catch (error) {
+        console.error("❌ useUpdateNewsArticleWithImage - Error:", error);
+        throw error;
+      }
+    },
+    onSuccess: (_, { id }) => {
+      console.log("🔄 useUpdateNewsArticleWithImage - Invalidating queries");
+      queryClient.invalidateQueries({ queryKey: NEWS_KEYS.lists() });
+      queryClient.invalidateQueries({ queryKey: NEWS_KEYS.detail(id) });
+      // Invalidate all author queries to refresh the table
+      queryClient.invalidateQueries({ queryKey: NEWS_KEYS.all });
+    },
+  });
+};
+
 // Delete news article
 export const useDeleteNewsArticle = () => {
   const queryClient = useQueryClient();
@@ -114,6 +167,8 @@ export const useDeleteNewsArticle = () => {
     onSuccess: () => {
       console.log("🔄 useDeleteNewsArticle - Invalidating queries");
       queryClient.invalidateQueries({ queryKey: NEWS_KEYS.lists() });
+      // Invalidate all author queries to refresh the table
+      queryClient.invalidateQueries({ queryKey: NEWS_KEYS.all });
     },
   });
 };
@@ -153,6 +208,25 @@ export const useNewsByCategory = (category: string) => {
       }
     },
     enabled: !!category,
+  });
+};
+
+// Get news by status
+export const useNewsByStatus = (status: string) => {
+  return useQuery({
+    queryKey: [...NEWS_KEYS.lists(), 'status', status],
+    queryFn: async () => {
+      console.log("📰 useNewsByStatus - Calling NewsArticleService.getByStatus() with status:", status);
+      try {
+        const result = await NewsArticleService.getByStatus(status);
+        console.log("✅ useNewsByStatus - Success:", result);
+        return result;
+      } catch (error) {
+        console.error("❌ useNewsByStatus - Error:", error);
+        throw error;
+      }
+    },
+    enabled: !!status,
   });
 };
 
@@ -214,7 +288,7 @@ export const useSearchNews = (query: string) => {
 // Get news by author
 export const useNewsByAuthor = (authorId: string) => {
   return useQuery({
-    queryKey: [...NEWS_KEYS.lists(), 'author', authorId],
+    queryKey: NEWS_KEYS.author(authorId),
     queryFn: async () => {
       console.log("📰 useNewsByAuthor - Calling NewsArticleService.getByAuthor() with authorId:", authorId);
       try {
@@ -227,6 +301,24 @@ export const useNewsByAuthor = (authorId: string) => {
       }
     },
     enabled: !!authorId,
+  });
+};
+
+// Get public news (para jóvenes)
+export const usePublicNews = () => {
+  return useQuery({
+    queryKey: NEWS_KEYS.public(),
+    queryFn: async () => {
+      console.log("📰 usePublicNews - Calling NewsArticleService.getPublicNews()");
+      try {
+        const result = await NewsArticleService.getPublicNews();
+        console.log("✅ usePublicNews - Success:", result);
+        return result;
+      } catch (error) {
+        console.error("❌ usePublicNews - Error:", error);
+        throw error;
+      }
+    },
   });
 };
 
@@ -291,6 +383,8 @@ export const useToggleFeatured = () => {
       console.log("🔄 useToggleFeatured - Invalidating queries");
       queryClient.invalidateQueries({ queryKey: NEWS_KEYS.lists() });
       queryClient.invalidateQueries({ queryKey: NEWS_KEYS.detail(id) });
+      // Invalidate all author queries to refresh the table
+      queryClient.invalidateQueries({ queryKey: NEWS_KEYS.all });
     },
   });
 };
@@ -315,6 +409,8 @@ export const useUpdateNewsStatus = () => {
       console.log("🔄 useUpdateNewsStatus - Invalidating queries");
       queryClient.invalidateQueries({ queryKey: NEWS_KEYS.lists() });
       queryClient.invalidateQueries({ queryKey: NEWS_KEYS.detail(id) });
+      // Invalidate all author queries to refresh the table
+      queryClient.invalidateQueries({ queryKey: NEWS_KEYS.all });
     },
   });
 }; 

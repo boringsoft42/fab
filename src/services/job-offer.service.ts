@@ -71,24 +71,14 @@ export class JobOfferService {
     try {
       console.log('🏢 JobOfferService.createJobOffer - Creating job offer:', data);
       
-      const token = getToken();
-      const response = await fetch('/api/joboffer', {
+      const response = await apiCall('/joboffer', {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify(data)
       });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`HTTP ${response.status}: ${errorText}`);
-      }
-
-      const result = await response.json();
-      console.log('✅ JobOfferService.createJobOffer - Job offer created:', result);
-      return result;
+      console.log('✅ JobOfferService.createJobOffer - Job offer created:', response);
+      return response;
     } catch (error) {
       console.error('❌ JobOfferService.createJobOffer - Error:', error);
       throw error;
@@ -260,23 +250,27 @@ export class JobOfferService {
     try {
       console.log('🔍 JobOfferService.getJobOffers - Fetching job offers');
       
-      const token = getToken();
-      const response = await fetch('/api/joboffer', {
+      const response = await apiCall('/joboffer', {
         method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
+        headers: getAuthHeaders()
       });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`HTTP ${response.status}: ${errorText}`);
+      console.log('✅ JobOfferService.getJobOffers - Job offers fetched:', response);
+      
+      // Handle both backend response format and mock data format
+      if (response && typeof response === 'object') {
+        if (Array.isArray(response)) {
+          // Backend returns array directly
+          return response;
+        } else if (response.jobOffers && Array.isArray(response.jobOffers)) {
+          // Mock data format: { jobOffers: [...] }
+          return response.jobOffers;
+        }
       }
-
-      const data = await response.json();
-      console.log('✅ JobOfferService.getJobOffers - Job offers fetched:', data);
-      return data;
+      
+      // Fallback: return empty array if response is unexpected
+      console.warn('⚠️ JobOfferService.getJobOffers - Unexpected response format:', response);
+      return [];
     } catch (error) {
       console.error('❌ JobOfferService.getJobOffers - Error:', error);
       throw error;
@@ -321,19 +315,10 @@ export class JobOfferService {
     try {
       console.log('🏢 JobOfferService.deleteJobOffer - Deleting job offer:', id);
       
-      const token = getToken();
-      const response = await fetch(`/api/joboffer/${id}`, {
+      await apiCall(`/joboffer/${id}`, {
         method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
+        headers: getAuthHeaders()
       });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`HTTP ${response.status}: ${errorText}`);
-      }
 
       console.log('✅ JobOfferService.deleteJobOffer - Job offer deleted');
     } catch (error) {

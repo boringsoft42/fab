@@ -1,31 +1,15 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import Link from "next/link";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Search,
-  Users,
-  MessageCircle,
-  Calendar,
-  MapPin,
-  Star,
-  Plus,
-  UserPlus,
-  Filter,
-  Heart,
-  Share2,
-  Clock,
-  TrendingUp,
-  Check,
-  X,
-  RefreshCw,
-} from "lucide-react";
+import { Search, Filter, UserPlus, MessageCircle, Check, X, Users, UserCheck, Clock, MapPin, Mail, Phone, RefreshCw, Share2, Plus, TrendingUp, Star, Heart } from "lucide-react";
+import { BACKEND_ENDPOINTS } from "@/lib/backend-config";
 
 interface ContactUser {
   userId: string;
@@ -83,25 +67,25 @@ export default function NetworkingPage() {
       const params = new URLSearchParams();
       if (query) params.append('query', query);
       
-             const response = await fetch(`/api/contacts/search?${params}`, {
-         headers: {
-           'Authorization': `Bearer ${localStorage.getItem('token')}`
-         }
-       });
+      const response = await fetch(`${BACKEND_ENDPOINTS.CONTACTS_SEARCH}?${params}`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
       
       if (!response.ok) throw new Error('Error searching users');
       
-                     const data = await response.json();
-        console.log('Search response:', data); // Debug
-        
-        // Filtrar usuarios que ya son contactos aceptados
-        const filteredUsers = (data.users || []).filter((user: any) => 
-          user.contactStatus !== "ACCEPTED"
-        );
-        
-        console.log('Filtered users:', filteredUsers); // Debug
-        setUsers(filteredUsers);
-        return data;
+      const data = await response.json();
+      console.log('Search response:', data); // Debug
+      
+      // Filtrar usuarios que ya son contactos aceptados
+      const filteredUsers = (data.users || []).filter((user: any) => 
+        user.contactStatus !== "ACCEPTED"
+      );
+      
+      console.log('Filtered users:', filteredUsers); // Debug
+      setUsers(filteredUsers);
+      return data;
     } catch (err) {
       console.error('Error searching users:', err);
     }
@@ -110,7 +94,7 @@ export default function NetworkingPage() {
   // Enviar solicitud de contacto
   const sendRequest = async (contactId: string, message?: string) => {
     try {
-             const response = await fetch('/api/contacts/request', {
+      const response = await fetch(BACKEND_ENDPOINTS.CONTACTS_REQUEST, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -134,7 +118,7 @@ export default function NetworkingPage() {
   // Obtener solicitudes recibidas
   const getReceivedRequests = async () => {
     try {
-             const response = await fetch('/api/contacts/requests/received', {
+      const response = await fetch(BACKEND_ENDPOINTS.CONTACTS_REQUESTS_RECEIVED, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -142,9 +126,9 @@ export default function NetworkingPage() {
       
       if (!response.ok) throw new Error('Error getting requests');
       
-             const data = await response.json();
-       setRequests(data.requests || []);
-       return data;
+      const data = await response.json();
+      setRequests(data.requests || []);
+      return data;
     } catch (err) {
       console.error('Error getting requests:', err);
     }
@@ -153,7 +137,7 @@ export default function NetworkingPage() {
   // Aceptar solicitud
   const acceptRequest = async (requestId: string) => {
     try {
-             const response = await fetch(`/api/contacts/requests/${requestId}/accept`, {
+      const response = await fetch(`${BACKEND_ENDPOINTS.CONTACTS}/requests/${requestId}/accept`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -175,7 +159,7 @@ export default function NetworkingPage() {
   // Rechazar solicitud
   const rejectRequest = async (requestId: string) => {
     try {
-             const response = await fetch(`/api/contacts/requests/${requestId}/reject`, {
+      const response = await fetch(`${BACKEND_ENDPOINTS.CONTACTS}/requests/${requestId}/reject`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -185,7 +169,8 @@ export default function NetworkingPage() {
       if (!response.ok) throw new Error('Error rejecting request');
       
       const data = await response.json();
-      await getReceivedRequests();
+      // Actualizar listas
+      await Promise.all([getReceivedRequests(), getContacts(), getStats()]);
       return data;
     } catch (err) {
       console.error('Error rejecting request:', err);
@@ -196,7 +181,7 @@ export default function NetworkingPage() {
      // Obtener contactos
    const getContacts = async () => {
      try {
-       const response = await fetch('/api/contacts', {
+       const response = await fetch(BACKEND_ENDPOINTS.CONTACTS, {
          headers: {
            'Authorization': `Bearer ${localStorage.getItem('token')}`
          }
@@ -218,7 +203,7 @@ export default function NetworkingPage() {
   // Obtener estadísticas
   const getStats = async () => {
     try {
-             const response = await fetch('/api/contacts/stats', {
+             const response = await fetch(BACKEND_ENDPOINTS.CONTACTS_STATS, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -236,7 +221,7 @@ export default function NetworkingPage() {
   };
 
   // Cargar datos iniciales
-  const fetchNetworkingData = useCallback(async () => {
+  const fetchNetworkingData = async () => {
     try {
       setLoading(true);
       await Promise.all([
@@ -250,11 +235,11 @@ export default function NetworkingPage() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  };
 
   useEffect(() => {
     fetchNetworkingData();
-  }, [fetchNetworkingData]);
+  }, []);
 
   // Manejar búsqueda
   const handleSearch = () => {

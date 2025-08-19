@@ -34,6 +34,10 @@ import { JobOffer } from "@/types/jobs";
 import { CompanyGallery } from "@/components/jobs/company-gallery";
 import { LocationMap } from "@/components/jobs/location-map";
 import { useAuthContext } from "@/hooks/use-auth";
+import { JobApplicationService } from "@/services/job-application.service";
+import { useToast } from "@/hooks/use-toast";
+import { CheckCircle, XCircle, Loader2 } from "lucide-react";
+import { BACKEND_ENDPOINTS } from "@/lib/backend-config";
 
 export default function JobDetailPage() {
   const [job, setJob] = useState<JobOffer | null>(null);
@@ -41,7 +45,13 @@ export default function JobDetailPage() {
   const [isSaved, setIsSaved] = useState(false);
   const [showApplicationModal, setShowApplicationModal] = useState(false);
   const [similarJobs, setSimilarJobs] = useState<JobOffer[]>([]);
+  const [applicationStatus, setApplicationStatus] = useState<{
+    hasApplied: boolean;
+    application?: any;
+    loading: boolean;
+  }>({ hasApplied: false, loading: true });
   const { user, loading: authLoading } = useAuthContext();
+  const { toast } = useToast();
 
   const params = useParams();
   const router = useRouter();
@@ -70,6 +80,30 @@ export default function JobDetailPage() {
     fullUserObject: user
   });
 
+  // Verificar si ya aplicaste a este trabajo
+  useEffect(() => {
+    const checkApplicationStatus = async () => {
+      if (!user || !job) return;
+      
+      try {
+        const result = await JobApplicationService.checkIfApplied(job.id);
+        setApplicationStatus({
+          hasApplied: result.hasApplied,
+          application: result.application,
+          loading: false
+        });
+      } catch (error) {
+        console.error('Error checking application status:', error);
+        setApplicationStatus({
+          hasApplied: false,
+          loading: false
+        });
+      }
+    };
+
+    checkApplicationStatus();
+  }, [user, job]);
+
   useEffect(() => {
     const fetchJobDetail = async () => {
       try {
@@ -82,7 +116,7 @@ export default function JobDetailPage() {
           headers['Authorization'] = `Bearer ${token}`;
         }
 
-        const response = await fetch(`/api/joboffer/${jobId}`, {
+        const response = await fetch(`${BACKEND_ENDPOINTS.JOB_OFFERS}/${jobId}`, {
           headers,
         });
         
@@ -92,7 +126,7 @@ export default function JobDetailPage() {
 
           // Fetch similar jobs (simplified - in real app would use better matching)
           const similarResponse = await fetch(
-            `/api/joboffer?limit=3&exclude=${jobId}`,
+            `${BACKEND_ENDPOINTS.JOB_OFFERS}?limit=3&exclude=${jobId}`,
             { headers }
           );
           if (similarResponse.ok) {
@@ -176,6 +210,74 @@ export default function JobDetailPage() {
   const handleSaveJob = () => {
     setIsSaved(!isSaved);
     // TODO: Implement save/unsave job functionality
+  };
+
+  const handleCancelApplication = async () => {
+    if (!applicationStatus.application?.id) {
+      toast({
+        title: "Error",
+        description: "No se pudo cancelar la aplicación",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      await JobApplicationService.deleteApplication(applicationStatus.application.id);
+      
+      toast({
+        title: "¡Aplicación cancelada!",
+        description: "Tu aplicación ha sido cancelada exitosamente"
+      });
+
+      // Actualizar el estado
+      setApplicationStatus({
+        hasApplied: false,
+        application: undefined,
+        loading: false
+      });
+    } catch (error) {
+      console.error('Error canceling application:', error);
+      toast({
+        title: "Error",
+        description: "No se pudo cancelar la aplicación",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const getApplicationStatusLabel = (status: string) => {
+    switch (status) {
+      case 'SENT':
+        return 'Enviada';
+      case 'UNDER_REVIEW':
+        return 'En Revisión';
+      case 'PRE_SELECTED':
+        return 'Preseleccionado';
+      case 'REJECTED':
+        return 'Rechazado';
+      case 'HIRED':
+        return 'Contratado';
+      default:
+        return status;
+    }
+  };
+
+  const getApplicationStatusColor = (status: string) => {
+    switch (status) {
+      case 'SENT':
+        return 'bg-blue-100 text-blue-800';
+      case 'UNDER_REVIEW':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'PRE_SELECTED':
+        return 'bg-orange-100 text-orange-800';
+      case 'REJECTED':
+        return 'bg-red-100 text-red-800';
+      case 'HIRED':
+        return 'bg-green-100 text-green-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
   };
 
   const handleShare = () => {
@@ -441,13 +543,41 @@ export default function JobDetailPage() {
           {!isJobOwner && (
             <Card>
               <CardContent className="p-6">
-                <Button
-                  onClick={() => setShowApplicationModal(true)}
-                  className="w-full mb-4"
-                  size="lg"
-                >
-                  Aplicar a este empleo
-                </Button>
+                {applicationStatus.loading ? (
+                  <Button className="w-full mb-4" size="lg" disabled>
+                    <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                    Verificando aplicación...
+                  </Button>
+                ) : applicationStatus.hasApplied ? (
+                  <div className="space-y-4">
+                    <div className="text-center">
+                      <Badge className={`text-sm ${getApplicationStatusColor(applicationStatus.application?.status)}`}>
+                        <CheckCircle className="w-4 h-4 mr-1" />
+                        {getApplicationStatusLabel(applicationStatus.application?.status)}
+                      </Badge>
+                      <p className="text-sm text-gray-600 mt-2">
+                        Aplicaste el {new Date(applicationStatus.application?.appliedAt).toLocaleDateString('es-ES')}
+                      </p>
+                    </div>
+                    <Button
+                      onClick={handleCancelApplication}
+                      className="w-full"
+                      size="lg"
+                      variant="outline"
+                    >
+                      <XCircle className="w-5 h-5 mr-2" />
+                      Cancelar Aplicación
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
+                    onClick={() => setShowApplicationModal(true)}
+                    className="w-full mb-4"
+                    size="lg"
+                  >
+                    Aplicar a este empleo
+                  </Button>
+                )}
                 <div className="text-center">
                   <p className="text-sm text-gray-600">
                     {job.applicationsCount} personas ya aplicaron
@@ -568,11 +698,11 @@ export default function JobDetailPage() {
         </div>
       </div>
 
-      {/* Application Modal */}
+      {/* Job Application Modal */}
       <Dialog open={showApplicationModal} onOpenChange={setShowApplicationModal}>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Aplicar a: {job.title}</DialogTitle>
+            <DialogTitle>Aplicar a: {job?.title}</DialogTitle>
             <DialogDescription>
               Completa el formulario para aplicar a este empleo
             </DialogDescription>
@@ -581,7 +711,21 @@ export default function JobDetailPage() {
           {job && (
             <JobApplicationForm
               jobOffer={job}
-              onSuccess={() => setShowApplicationModal(false)}
+              onSuccess={() => {
+                setShowApplicationModal(false);
+                toast({
+                  title: "¡Aplicación enviada!",
+                  description: "Tu aplicación ha sido enviada exitosamente."
+                });
+                // Refresh application status after successful application
+                JobApplicationService.checkIfApplied(job.id).then(result => {
+                  setApplicationStatus({
+                    hasApplied: result.hasApplied,
+                    application: result.application,
+                    loading: false
+                  });
+                });
+              }}
               onCancel={() => setShowApplicationModal(false)}
             />
           )}

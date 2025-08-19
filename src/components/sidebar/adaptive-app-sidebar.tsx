@@ -42,17 +42,8 @@ export function AdaptiveAppSidebar({ className }: AdaptiveAppSidebarProps) {
     switch (userRole) {
 
       case "GOBIERNOS_MUNICIPALES":
-        return [
-          {
-            title: "Administración",
-            items: [
-              { title: "Dashboard Municipal", url: "/dashboard", icon: Home },
-              { title: "Gestión de Empresas", url: "/admin/companies", icon: Building2 },
-              { title: "Reportes Municipales", url: "/admin/reports", icon: BarChart3 },
-              { title: "Configuración", url: "/admin/settings", icon: Settings },
-            ]
-          }
-        ];
+        // Usar la estructura definida en role-based-sidebar-data.ts
+        return sidebarData.navGroups;
 
       case "EMPRESAS":
         // Usar la estructura definida en role-based-sidebar-data.ts

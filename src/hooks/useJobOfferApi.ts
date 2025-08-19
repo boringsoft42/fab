@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { JobOfferService } from "@/services/job-offer.service";
 import { JobOffer } from "@/types/jobs";
@@ -207,7 +207,7 @@ export function useJobOfferSearch() {
   const [error, setError] = useState<Error | null>(null);
   const [cachedResults, setCachedResults] = useState<{ [key: string]: JobOffer[] }>({});
 
-  const search = async (filters: {
+  const search = useCallback(async (filters: {
     query?: string;
     location?: string[];
     contractType?: string[];
@@ -231,6 +231,16 @@ export function useJobOfferSearch() {
     try {
       console.log("🔍 useJobOfferSearch - Performing client-side search with filters:", filters);
       const allJobs = await JobOfferService.getJobOffers();
+      
+      console.log("🔍 useJobOfferSearch - allJobs type:", typeof allJobs);
+      console.log("🔍 useJobOfferSearch - allJobs is array:", Array.isArray(allJobs));
+      console.log("🔍 useJobOfferSearch - allJobs value:", allJobs);
+      
+      // Ensure allJobs is an array
+      if (!Array.isArray(allJobs)) {
+        console.error("🔍 useJobOfferSearch - allJobs is not an array:", allJobs);
+        return [];
+      }
       
       // Apply client-side filtering
       const result = allJobs.filter(job => {
@@ -309,7 +319,7 @@ export function useJobOfferSearch() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [cachedResults]);
 
   return { search, loading, error };
 }

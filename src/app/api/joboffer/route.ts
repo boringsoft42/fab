@@ -1,9 +1,75 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { API_BASE } from '@/lib/api';
 
+// Mock data for job offers
+const getMockJobOffers = () => ({
+  jobOffers: [
+    {
+      id: '1',
+      title: 'Desarrollador Frontend',
+      company: 'TechCorp',
+      location: 'Buenos Aires',
+      salary: '$3000 - $5000',
+      description: 'Buscamos un desarrollador frontend con experiencia en React',
+      requirements: ['React', 'TypeScript', '3+ años de experiencia'],
+      createdAt: new Date().toISOString(),
+      status: 'active'
+    },
+    {
+      id: '2',
+      title: 'Diseñador UX/UI',
+      company: 'DesignStudio',
+      location: 'Córdoba',
+      salary: '$2500 - $4000',
+      description: 'Diseñador creativo para proyectos digitales',
+      requirements: ['Figma', 'Adobe Creative Suite', '2+ años de experiencia'],
+      createdAt: new Date().toISOString(),
+      status: 'active'
+    }
+  ]
+});
+
+// Mock data for job offers
+const getMockJobOffers = () => ({
+  jobOffers: [
+    {
+      id: '1',
+      title: 'Desarrollador Frontend',
+      company: 'TechCorp',
+      location: 'Buenos Aires',
+      salary: '$3000 - $5000',
+      description: 'Buscamos un desarrollador frontend con experiencia en React',
+      requirements: ['React', 'TypeScript', '3+ años de experiencia'],
+      createdAt: new Date().toISOString(),
+      status: 'active'
+    },
+    {
+      id: '2',
+      title: 'Diseñador UX/UI',
+      company: 'DesignStudio',
+      location: 'Córdoba',
+      salary: '$2500 - $4000',
+      description: 'Diseñador creativo para proyectos digitales',
+      requirements: ['Figma', 'Adobe Creative Suite', '2+ años de experiencia'],
+      createdAt: new Date().toISOString(),
+      status: 'active'
+    }
+  ]
+});
+
 export async function GET(request: NextRequest) {
   try {
     console.log('🔍 API: Received request for job offers');
+    
+    // Check if backend should be used
+    const useBackend = process.env.NEXT_PUBLIC_USE_BACKEND !== 'false';
+    
+    if (!useBackend) {
+      console.log('🔍 API: Backend disabled, returning mock data');
+      const mockData = getMockJobOffers();
+      return NextResponse.json(mockData, { status: 200 });
+    }
+    
     const { searchParams } = new URL(request.url);
     
     // Forward all search parameters to backend
@@ -13,13 +79,23 @@ export async function GET(request: NextRequest) {
     });
 
     console.log('🔍 API: Forwarding to backend:', url.toString());
-    console.log('🔍 API: Authorization header:', request.headers.get('authorization') ? 'Present' : 'Missing');
+    
+    // Get authorization header
+    const authHeader = request.headers.get('authorization');
+    console.log('🔍 API: Authorization header:', authHeader ? 'Present' : 'Missing');
+
+    // Prepare headers
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+    
+    // Only add Authorization header if it exists
+    if (authHeader) {
+      headers['Authorization'] = authHeader;
+    }
 
     const response = await fetch(url.toString(), {
-      headers: {
-        'Authorization': request.headers.get('authorization') || '',
-        'Content-Type': 'application/json',
-      },
+      headers,
     });
 
     console.log('🔍 API: Backend response status:', response.status);
@@ -27,6 +103,14 @@ export async function GET(request: NextRequest) {
     if (!response.ok) {
       const errorText = await response.text();
       console.error('🔍 API: Backend error:', errorText);
+      
+      // If it's an auth error and we don't have a token, return mock data
+      if (response.status === 401 && !authHeader) {
+        console.log('🔍 API: No auth token, returning mock data');
+        const mockData = getMockJobOffers();
+        return NextResponse.json(mockData, { status: 200 });
+      }
+      
       return NextResponse.json(
         { message: `Backend error: ${response.status} ${errorText}` },
         { status: response.status }
@@ -38,6 +122,14 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
     console.error('Error in job offers route:', error);
+    
+    // If backend is not available, return mock data
+    if (error instanceof Error && error.message.includes('fetch failed')) {
+      console.log('🔍 API: Backend not available, returning mock data');
+      const mockData = getMockJobOffers();
+      return NextResponse.json(mockData, { status: 200 });
+    }
+    
     return NextResponse.json(
       { message: 'Internal server error' },
       { status: 500 }

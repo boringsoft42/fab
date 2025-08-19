@@ -1,85 +1,71 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import React from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   Search,
   MapPin,
+  Users,
+  Building,
+  Phone,
+  Mail,
   Globe,
-  Facebook,
-  Instagram,
-  Linkedin,
-  Twitter,
+  Calendar,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { BACKEND_ENDPOINTS } from "@/lib/backend-config";
 
 interface Institution {
   id: string;
   name: string;
-  description: string;
-  location: string;
-  logo: string;
-  coverImage: string;
-  website: string;
-  socialMedia: {
-    facebook?: string;
-    instagram?: string;
-    linkedin?: string;
-    twitter?: string;
-  };
-  postCount: number;
+  department: string;
+  region: string;
+  institutionType: string;
+  customType?: string;
 }
-
-// Mock data - replace with actual API call
-const mockInstitutions: Institution[] = [
-  {
-    id: "1",
-    name: "TechCorp Academy",
-    description: "Centro de formación tecnológica líder en Bolivia",
-    location: "La Paz, Bolivia",
-    logo: "/logos/techcorp.svg",
-    coverImage: "/images/institutions/techcorp-cover.jpg",
-    website: "https://techcorp.edu.bo",
-    socialMedia: {
-      facebook: "https://facebook.com/techcorp",
-      instagram: "https://instagram.com/techcorp",
-      linkedin: "https://linkedin.com/company/techcorp",
-    },
-    postCount: 12,
-  },
-  {
-    id: "2",
-    name: "Innovate Labs",
-    description: "Espacio de innovación y emprendimiento",
-    location: "Santa Cruz, Bolivia",
-    logo: "/logos/innovatelabs.svg",
-    coverImage: "/images/institutions/innovate-cover.jpg",
-    website: "https://innovatelabs.bo",
-    socialMedia: {
-      facebook: "https://facebook.com/innovatelabs",
-      twitter: "https://twitter.com/innovatelabs",
-      linkedin: "https://linkedin.com/company/innovatelabs",
-    },
-    postCount: 8,
-  },
-  // Add more mock institutions...
-];
 
 export default function InstitutionsDirectoryPage() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [institutions, setInstitutions] =
-    useState<Institution[]>(mockInstitutions);
+  const [institutions, setInstitutions] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch institutions from the backend
+  const fetchInstitutions = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await fetch(BACKEND_ENDPOINTS.INSTITUTIONS_PUBLIC);
+      if (!response.ok) {
+        throw new Error('Error al cargar las instituciones');
+      }
+      const data = await response.json();
+      setInstitutions(data);
+    } catch (err) {
+      console.error('Error fetching institutions:', err);
+      setError(err instanceof Error ? err.message : 'Error desconocido');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Load institutions on component mount
+  React.useEffect(() => {
+    fetchInstitutions();
+  }, []);
 
   const filteredInstitutions = institutions.filter(
     (institution) =>
       institution.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      institution.description
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase()) ||
-      institution.location.toLowerCase().includes(searchQuery.toLowerCase())
+      institution.department.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      institution.region.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      institution.institutionType.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -110,7 +96,7 @@ export default function InstitutionsDirectoryPage() {
         <div className="relative max-w-2xl mx-auto">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
           <Input
-            placeholder="Buscar instituciones por nombre, descripción o ubicación..."
+            placeholder="Buscar instituciones por nombre, departamento, región o tipo..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10 py-6 text-lg"
@@ -118,65 +104,87 @@ export default function InstitutionsDirectoryPage() {
         </div>
       </div>
 
+      {/* Loading State */}
+      {loading && (
+        <div className="text-center py-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Cargando instituciones...</p>
+        </div>
+      )}
+
+      {/* Error State */}
+      {error && (
+        <div className="text-center py-12">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md mx-auto">
+            <p className="text-red-600 font-medium mb-2">Error al cargar las instituciones</p>
+            <p className="text-red-500 text-sm">{error}</p>
+            <Button 
+              onClick={fetchInstitutions} 
+              variant="outline" 
+              className="mt-4"
+            >
+              Intentar nuevamente
+            </Button>
+          </div>
+        </div>
+      )}
+
       {/* Institutions Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredInstitutions.map((institution) => (
-          <Link
-            key={institution.id}
-            href={`/institutions/${institution.id}`}
-            className="block group"
-          >
-            <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-200">
-              <div className="relative h-48">
-                <Image
-                  src={institution.coverImage}
-                  alt={institution.name}
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
-                  <div className="relative h-16 w-16 mb-2">
-                    <Image
-                      src={institution.logo}
-                      alt={`${institution.name} logo`}
-                      fill
-                      className="object-contain rounded-lg bg-white p-2"
-                    />
-                  </div>
-                </div>
-              </div>
-              <CardContent className="p-6">
-                <h3 className="text-xl font-semibold mb-2 group-hover:text-blue-600 transition-colors">
-                  {institution.name}
-                </h3>
-                <p className="text-muted-foreground mb-4">
-                  {institution.description}
+      {!loading && !error && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredInstitutions.length === 0 ? (
+            <div className="col-span-full text-center py-12">
+              <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 max-w-md mx-auto">
+                <p className="text-gray-600 font-medium mb-2">
+                  {searchQuery ? 'No se encontraron instituciones' : 'No hay instituciones disponibles'}
                 </p>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center text-sm text-muted-foreground">
-                    <MapPin className="h-4 w-4 mr-1" />
-                    {institution.location}
+                <p className="text-gray-500 text-sm">
+                  {searchQuery ? 'Intenta con otros términos de búsqueda' : 'Las instituciones aparecerán aquí cuando estén disponibles'}
+                </p>
+              </div>
+            </div>
+          ) : (
+            filteredInstitutions.map((institution) => (
+              <Card key={institution.id} className="overflow-hidden hover:shadow-lg transition-shadow duration-200">
+                <CardContent className="p-6">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex-1">
+                      <h3 className="text-xl font-semibold mb-2 text-gray-900">
+                        {institution.name}
+                      </h3>
+                      <div className="space-y-2">
+                        <div className="flex items-center text-sm text-muted-foreground">
+                          <MapPin className="h-4 w-4 mr-2" />
+                          <span>{institution.department}, {institution.region}</span>
+                        </div>
+                        <div className="flex items-center text-sm">
+                          <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">
+                            {institution.institutionType}
+                          </span>
+                          {institution.customType && (
+                            <span className="ml-2 bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs">
+                              {institution.customType}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    {institution.socialMedia.facebook && (
-                      <Facebook className="h-4 w-4 text-muted-foreground" />
-                    )}
-                    {institution.socialMedia.instagram && (
-                      <Instagram className="h-4 w-4 text-muted-foreground" />
-                    )}
-                    {institution.socialMedia.linkedin && (
-                      <Linkedin className="h-4 w-4 text-muted-foreground" />
-                    )}
-                    {institution.socialMedia.twitter && (
-                      <Twitter className="h-4 w-4 text-muted-foreground" />
-                    )}
+                  
+                  <div className="flex justify-between items-center pt-4 border-t border-gray-100">
+                    <div className="text-sm text-muted-foreground">
+                      ID: {institution.id}
+                    </div>
+                    <Button variant="outline" size="sm">
+                      Ver detalles
+                    </Button>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
-        ))}
-      </div>
+                </CardContent>
+              </Card>
+            ))
+          )}
+        </div>
+      )}
     </div>
   );
 }

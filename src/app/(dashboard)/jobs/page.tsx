@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import { useSearchParams } from "next/navigation";
-import { Search, Filter, Grid, List, SortDesc } from "lucide-react";
+import { Search, MapPin, Building, Clock, DollarSign, Filter, Grid, List, SortDesc } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,7 +10,6 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { JobSearchFilters } from "@/components/jobs/job-search-filters";
 import { JobCard } from "@/components/jobs/job-card";
-import { JobSearchFilters as JobFilters } from "@/types/jobs";
 import { JobOffer } from "@/types/api";
 import { useJobOfferSearch } from "@/hooks/useJobOfferApi";
 
@@ -21,7 +20,7 @@ export default function JobsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showFilters, setShowFilters] = useState(false);
-  const [filters, setFilters] = useState<JobFilters>({});
+  const [filters, setFilters] = useState<any>({}); // Changed to any as JobFilters is removed
 
   const searchParams = useSearchParams();
 
@@ -35,7 +34,7 @@ export default function JobsPage() {
     }
   }, [searchParams]);
 
-  // Trigger initial search when component mounts
+  // Initial search effect - only run once on mount
   useEffect(() => {
     const performInitialSearch = async () => {
       try {
@@ -53,20 +52,19 @@ export default function JobsPage() {
         }
       } catch (error) {
         console.error("🔍 JobsPage - Initial search error:", error);
+        setJobs([]);
+        setTotalJobs(0);
       }
     };
 
     performInitialSearch();
-  }, [search]);
+  }, []); // Empty dependency array - only run once
 
-  // Debounced search effect - only trigger on filter changes, not on searchQuery changes
+  // Handle filter changes with debouncing
   useEffect(() => {
-    // Don't trigger search if only searchQuery changed (without being submitted)
-    const hasRealFilters = filters.location || filters.contractType || filters.workModality || filters.experienceLevel || filters.salaryMin || filters.salaryMax;
-    const hasSubmittedQuery = filters.query;
-    
-    if (!hasRealFilters && !hasSubmittedQuery) {
-      return; // Don't search if no real filters are applied
+    // Skip if this is the initial load (no filters applied yet)
+    if (Object.keys(filters).length === 0) {
+      return;
     }
     
     const timeoutId = setTimeout(() => {
@@ -117,10 +115,10 @@ export default function JobsPage() {
       };
 
       performSearch();
-    }, 300); // Reduced delay to 300ms
+    }, 500); // Increased delay to reduce frequency
 
     return () => clearTimeout(timeoutId);
-  }, [filters, search]);
+  }, [filters]); // Only depend on filters, not search function
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -136,7 +134,7 @@ export default function JobsPage() {
     }
   };
 
-  const handleFiltersChange = (newFilters: JobFilters) => {
+  const handleFiltersChange = (newFilters: any) => { // Changed to any as JobFilters is removed
     setFilters(newFilters);
   };
 

@@ -106,9 +106,19 @@ enum LessonType {
   VIDEO
   TEXT
   QUIZ
-  EXERCISE
+  ASSIGNMENT
+  LIVE
+}
+
+enum ResourceType {
+  PDF
   DOCUMENT
-  INTERACTIVE
+  VIDEO
+  AUDIO
+  IMAGE
+  LINK
+  ZIP
+  OTHER
 }
 
 enum QuestionType {
@@ -416,9 +426,12 @@ model CourseModule {
   estimatedDuration  Int                  @map("estimated_duration") // in minutes
   isLocked           Boolean              @default(false) @map("is_locked")
   prerequisites      String[]             // module IDs
+  hasCertificate     Boolean              @default(true) @map("has_certificate")
+  certificateTemplate String?             @map("certificate_template")
   
   // Content
   lessons            Lesson[]
+  moduleCertificates ModuleCertificate[]
   
   // Relations
   course             Course               @relation(fields: [courseId], references: [id], onDelete: Cascade)
@@ -444,6 +457,7 @@ model Lesson {
   
   // Relations
   module             CourseModule         @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  resources          LessonResource[]
   progress           LessonProgress[]
   notes              StudentNote[]
   discussions        Discussion[]
@@ -700,8 +714,12 @@ model BusinessPlan {
   id                     String               @id @default(cuid())
   entrepreneurshipId     String               @unique @map("entrepreneurship_id")
   
+  // Triple Impact Assessment
+  tripleImpactAssessment Json?                @map("triple_impact_assessment")
+  
   // Executive Summary
   executiveSummary       String?              @map("executive_summary")
+  businessDescription    String?              @map("business_description")
   missionStatement       String?              @map("mission_statement")
   visionStatement        String?              @map("vision_statement")
   
@@ -717,6 +735,7 @@ model BusinessPlan {
   
   // Marketing Plan
   marketingStrategy      String?              @map("marketing_strategy")
+  marketingPlan          String?              @map("marketing_plan")
   pricingStrategy        String?              @map("pricing_strategy")
   salesStrategy          String?              @map("sales_strategy")
   
@@ -727,13 +746,16 @@ model BusinessPlan {
   breakEvenPoint         Int?                 @map("break_even_point") // in months
   roi                    Decimal?             // Return on Investment
   
+  // Financial Calculator
+  financialCalculator    Json?                @map("financial_calculator")
+  
   // Risk Analysis
   riskAnalysis           String?              @map("risk_analysis")
   mitigationStrategies   String[]             @map("mitigation_strategies")
   
   // Operational Plan
   operationalPlan        String?              @map("operational_plan")
-  managementTeam         Json?                @map("management_team")
+  managementTeam         String?              @map("management_team")
   
   // Status
   isCompleted            Boolean              @default(false) @map("is_completed")

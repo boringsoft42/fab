@@ -1,23 +1,14 @@
 "use client";
 
-import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { getUserFromToken } from '@/lib/api';
+import { useState, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { 
-  BookOpen, 
-  Clock, 
-  User, 
-  Building2, 
-  CheckCircle,
-  ArrowLeft,
-  Loader2
-} from "lucide-react";
-import Link from "next/link";
-import { toast } from "sonner";
+import { CheckCircle, Clock, Users, BookOpen, Award, Calendar, MapPin, DollarSign, Star } from "lucide-react";
+import { BACKEND_ENDPOINTS } from "@/lib/backend-config";
+import { getUserFromToken } from '@/lib/api';
 
 interface Course {
   id: string;
@@ -61,6 +52,11 @@ export default function CourseEnrollPage() {
   const [loading, setLoading] = useState(true);
   const [enrolling, setEnrolling] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [enrollmentSuccess, setEnrollmentSuccess] = useState(false);
+  const [enrollmentError, setEnrollmentError] = useState<string | null>(null);
+  const [alreadyEnrolled, setAlreadyEnrolled] = useState(false);
+  const [enrollmentId, setEnrollmentId] = useState<string | null>(null);
+  const [course, setCourse] = useState<Course | null>(null);
 
   const getToken = () => {
     return localStorage.getItem('token');
@@ -102,58 +98,75 @@ export default function CourseEnrollPage() {
     return `${mins}m`;
   };
 
-  const handleEnroll = async () => {
-    if (!enrollment?.course) return;
-
-    setEnrolling(true);
+  const enrollInCourse = async () => {
     try {
-      const token = getToken();
-      if (!token) {
-        throw new Error('No authentication token available');
-      }
-
-      // Get current user ID from token
-      const userInfo = getUserFromToken();
-      
-      if (!userInfo || !userInfo.id) {
-        throw new Error('No authenticated user found');
-      }
-
-      const userId = userInfo.id;
-      console.log('🔍 Current user ID:', userId);
-
-      const requestBody = {
-        courseId: enrollment.course.id,
-        studentId: userId
-      };
-
-      console.log('🔍 Enrolling in course with data:', requestBody);
-
-      const response = await fetch('/api/course-enrollments', {
+      setEnrolling(true);
+      const response = await fetch(BACKEND_ENDPOINTS.COURSE_ENROLLMENTS, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify(requestBody),
+        body: JSON.stringify({
+          courseId: courseId,
+          enrollmentDate: new Date().toISOString()
+        })
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Error al inscribirse al curso');
+        throw new Error('Error al inscribirse en el curso');
       }
 
       const data = await response.json();
-      toast.success('¡Te has inscrito exitosamente al curso!');
+      console.log('Enrollment successful:', data);
+      setEnrollmentSuccess(true);
       
-      // Redirigir al curso
-      router.push(`/development/courses/${data.enrollment.id}`);
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Error desconocido';
-      setError(errorMessage);
-      toast.error(errorMessage);
+      // Redirect to course content after a short delay
+      setTimeout(() => {
+        router.push(`/development/courses/${data.enrollmentId}/content`);
+      }, 2000);
+    } catch (error) {
+      console.error('Enrollment error:', error);
+      setEnrollmentError(error instanceof Error ? error.message : 'Error desconocido');
     } finally {
       setEnrolling(false);
+    }
+  };
+
+  const fetchCourseDetails = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(BACKEND_ENDPOINTS.COURSES + `/${courseId}`);
+      if (!response.ok) {
+        throw new Error('Error al cargar los detalles del curso');
+      }
+      const data = await response.json();
+      setCourse(data);
+    } catch (error) {
+      console.error('Error fetching course details:', error);
+      setError(error instanceof Error ? error.message : 'Error desconocido');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const checkEnrollment = async () => {
+    try {
+      const enrollmentResponse = await fetch(BACKEND_ENDPOINTS.COURSE_ENROLLMENTS + `?courseId=${courseId}`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      if (enrollmentResponse.ok) {
+        const enrollmentData = await enrollmentResponse.json();
+        if (enrollmentData.enrollments && enrollmentData.enrollments.length > 0) {
+          setAlreadyEnrolled(true);
+          setEnrollmentId(enrollmentData.enrollments[0].id);
+        }
+      }
+    } catch (error) {
+      console.error('Error checking enrollment:', error);
     }
   };
 

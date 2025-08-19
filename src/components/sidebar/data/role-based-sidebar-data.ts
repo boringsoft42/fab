@@ -112,6 +112,10 @@ export const youthSidebarData: SidebarData = {
               title: "Publicar mi Emprendimiento",
               url: "/publish-entrepreneurship",
             },
+            {
+              title: "Mis Emprendimientos",
+              url: "/my-entrepreneurships",
+            },
           
           ],
         },
@@ -125,16 +129,7 @@ export const youthSidebarData: SidebarData = {
           url: "/entrepreneurship/directory",
           icon: Building2,
         },
-        {
-          title: "Red de Contactos",
-          url: "/entrepreneurship/network",
-          icon: Users,
-        },
-        {
-          title: "Mensajería",
-          url: "/entrepreneurship/messaging",
-          icon: MessageCircle,
-        },
+       
       ],
     },
     {
@@ -142,24 +137,10 @@ export const youthSidebarData: SidebarData = {
       items: [
         {
           title: "Buscar Emprendedores",
-          url: "/entrepreneurship/entrepreneurs",
+          url: "/entrepreneurship/network",
           icon: Users,
         },
-        {
-          title: "Mentoría",
-          url: "/mentorship",
-          icon: UserCog,
-        },
-        {
-          title: "Eventos de Networking",
-          url: "/entrepreneurship/events",
-          icon: Calendar,
-        },
-        {
-          title: "Grupos de Interés",
-          url: "/entrepreneurship/groups",
-          icon: Users,
-        },
+       
       ],
     },
     {
@@ -269,6 +250,10 @@ export const adolescentSidebarData: SidebarData = {
             {
               title: "Publicar mi Emprendimiento",
               url: "/publish-entrepreneurship",
+            },
+            {
+              title: "Mis Emprendimientos",
+              url: "/my-entrepreneurships",
             },
             // {
             //   title: "Red de Contactos",
@@ -431,12 +416,7 @@ export const municipalGovernmentSidebarData: SidebarData = {
       items: [
         {
           title: "Gestión de Noticias",
-          url: "/admin/news",
-          icon: FileText,
-        },
-        {
-          title: "Crear Noticia",
-          url: "/admin/news/create",
+          url: "/admin/municipalities/news",
           icon: FileText,
         },
       ],

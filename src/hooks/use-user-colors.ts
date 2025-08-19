@@ -14,7 +14,7 @@ export function useUserColors() {
         return { primary: "#059669", secondary: "#7C3AED" }; // Verde municipal y púrpura
       case 'JOVENES':
       case 'ADOLESCENTES':
-        return { primary: "#DC2626", secondary: "#EA580C" }; // Rojo y naranja para jóvenes
+        return { primary: "#6B7280", secondary: "#9CA3AF" }; // Colores neutros para jóvenes
       case 'CENTROS_DE_FORMACION':
         return { primary: "#0891B2", secondary: "#059669" }; // Azul y verde para educación
       case 'ONGS_Y_FUNDACIONES':
