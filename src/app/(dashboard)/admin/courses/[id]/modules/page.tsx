@@ -92,8 +92,15 @@ export default function CourseModulesPage() {
   });
 
   // Hooks
-  const { data: modulesData, isLoading: modulesLoading } = useCourseModules(courseId);
+  const { data: modulesData, isLoading: modulesLoading, error } = useCourseModules(courseId);
   const modules = modulesData?.modules || [];
+  
+  // Debug logs
+  console.log('Course ID:', courseId);
+  console.log('Modules Data:', modulesData);
+  console.log('Modules:', modules);
+  console.log('Loading:', modulesLoading);
+  console.log('Error:', error);
   const createModule = useCreateModule();
   const updateModule = useUpdateModule();
   const deleteModule = useDeleteModule();
@@ -194,6 +201,25 @@ export default function CourseModulesPage() {
         <div className="animate-pulse space-y-6">
           <div className="h-8 bg-gray-200 rounded w-1/4" />
           <div className="h-96 bg-gray-200 rounded" />
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto p-6">
+        <div className="text-center py-12">
+          <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+          <h3 className="text-lg font-semibold mb-2 text-red-600">
+            Error al cargar los módulos
+          </h3>
+          <p className="text-muted-foreground mb-4">
+            {error.message || 'Ha ocurrido un error inesperado'}
+          </p>
+          <Button onClick={() => window.location.reload()}>
+            Reintentar
+          </Button>
         </div>
       </div>
     );

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Star,
   Clock,
@@ -21,6 +22,7 @@ import { formatDistanceToNow } from "date-fns";
 import { es } from "date-fns/locale";
 import { getCourseThumbnail, getCourseVideoPreview, isYouTubeVideo, getYouTubeThumbnail } from "@/lib/utils/image-utils";
 import { VideoPreview } from "./video-preview";
+import { getCourseUrl, getCourseLearnUrl } from "@/lib/utils/url-utils";
 
 interface CourseCardProps {
   course: Course;
@@ -100,7 +102,7 @@ export const CourseCard = ({
           <div className="flex flex-col lg:flex-row">
             {/* Course Image */}
             <div className="relative lg:w-80 h-48 lg:h-auto">
-              <Link href={`/courses/${course.id}`}>
+              <Link href={getCourseUrl(course.id)}>
                                  {!imageError ? (
                    <Image
                      src={currentImageSrc}
@@ -157,7 +159,7 @@ export const CourseCard = ({
                     </Badge>
                   </div>
 
-                  <Link href={`/courses/${course.id}`}>
+                  <Link href={getCourseUrl(course.id)}>
                     <h3 className="text-xl font-bold mb-2 hover:text-blue-600 transition-colors line-clamp-2">
                       {course.title}
                     </h3>
@@ -168,22 +170,24 @@ export const CourseCard = ({
                   </p>
 
                   {/* Instructor */}
-                  {/* <div className="flex items-center gap-3 mb-4">
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src={course.instructor.avatar} />
-                      <AvatarFallback>
-                        {course.instructor.name.charAt(0)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className="font-medium text-sm">
-                        {course.instructor.name}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {course.instructor.title}
-                      </p>
+                  {course.instructor && (
+                    <div className="flex items-center gap-3 mb-4">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src={course.instructor.avatar} />
+                        <AvatarFallback>
+                          {course.instructor.name.charAt(0)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="font-medium text-sm">
+                          {course.instructor.name}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {course.instructor.title}
+                        </p>
+                      </div>
                     </div>
-                  </div> */}
+                  )}
                 </div>
 
                 <div className="text-right ml-4">
@@ -259,7 +263,7 @@ export const CourseCard = ({
               <div className="flex gap-3">
                                  {enrollment?.isEnrolled ? (
                    <Button asChild className="flex-1">
-                     <Link href={`/development/courses/${enrollment.enrollmentId || course.id}`}>
+                     <Link href={getCourseLearnUrl(enrollment.enrollmentId || course.id)}>
                        {enrollment.status === "COMPLETED" ? (
                          <>
                            <CheckCircle className="h-4 w-4 mr-2" />
@@ -280,7 +284,7 @@ export const CourseCard = ({
                    </Button>
                  ) : (
                   <Button asChild className="flex-1">
-                    <Link href={`/courses/${course.id}`}>
+                    <Link href={getCourseUrl(course.id)} prefetch={false}>
                       <BookOpen className="h-4 w-4 mr-2" />
                       Ver curso
                     </Link>
@@ -298,7 +302,7 @@ export const CourseCard = ({
   return (
     <Card className="group hover:shadow-lg transition-all duration-200 overflow-hidden">
       <div className="relative">
-        <Link href={`/courses/${course.id}`}>
+        <Link href={getCourseUrl(course.id)}>
                      {!imageError ? (
              <Image
                src={currentImageSrc}
@@ -357,7 +361,7 @@ export const CourseCard = ({
           </Badge>
         </div>
 
-        <Link href={`/courses/${course.id}`}>
+        <Link href={getCourseUrl(course.id)}>
           <h3 className="font-bold mb-2 hover:text-blue-600 transition-colors line-clamp-2">
             {course.title}
           </h3>
@@ -429,7 +433,7 @@ export const CourseCard = ({
                  {/* Action Button */}
          {enrollment?.isEnrolled ? (
            <Button asChild className="w-full" size="sm">
-             <Link href={`/development/courses/${enrollment.enrollmentId || course.id}`}>
+             <Link href={getCourseLearnUrl(enrollment.enrollmentId || course.id)}>
                {enrollment.status === "COMPLETED" ? (
                  <>
                    <CheckCircle className="h-4 w-4 mr-2" />
@@ -450,7 +454,7 @@ export const CourseCard = ({
            </Button>
          ) : (
           <Button asChild className="w-full" size="sm">
-            <Link href={`/courses/${course.id}`}>
+            <Link href={getCourseUrl(course.id)} prefetch={false}>
               <BookOpen className="h-4 w-4 mr-2" />
               Ver curso
             </Link>

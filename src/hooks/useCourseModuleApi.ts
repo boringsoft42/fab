@@ -57,7 +57,12 @@ export const useCourseModules = (courseId?: string) => {
         throw new Error('Failed to fetch course modules');
       }
       
-      return response.json();
+      const data = await response.json();
+      // Si la respuesta es un array directo, lo envuelvo en el formato esperado
+      if (Array.isArray(data)) {
+        return { modules: data };
+      }
+      return data;
     },
     enabled: !!courseId,
   });

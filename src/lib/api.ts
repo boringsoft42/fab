@@ -1,5 +1,5 @@
 // Base API configuration and utilities
-const API_BASE_DEV = process.env.NEXT_PUBLIC_API_BASE_DEV || "http://192.168.0.87:3001/api";
+const API_BASE_DEV = process.env.NEXT_PUBLIC_API_BASE_DEV || "http://localhost:3001/api";
 const API_BASE_PROD = process.env.NEXT_PUBLIC_API_BASE_PROD || "https://back-end-production-17b6.up.railway.app/api";
 
 // Use development URL for now, switch based on environment

@@ -41,6 +41,15 @@ export const CourseDetail = ({ course, onEnroll, enrollment }: CourseDetailProps
     return getCourseThumbnail(course);
   });
 
+  // Debug logs
+  console.log('🔍 CourseDetail - course data:', course);
+  console.log('🔍 CourseDetail - studentsCount:', course.studentsCount);
+  console.log('🔍 CourseDetail - totalLessons:', course.totalLessons);
+  console.log('🔍 CourseDetail - totalQuizzes:', course.totalQuizzes);
+  console.log('🔍 CourseDetail - totalResources:', course.totalResources);
+  console.log('🔍 CourseDetail - completionRate:', course.completionRate);
+  console.log('🔍 CourseDetail - rating:', course.rating);
+
   const formatDuration = (hours: number) => {
     if (hours < 1) return `${Math.round(hours * 60)} min`;
     return `${hours}h`;

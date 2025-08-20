@@ -1,196 +1,106 @@
-import { useState, useEffect } from 'react';
+import { useState, useCallback } from 'react';
+import { apiCall } from '@/lib/api';
 
-interface LessonProgress {
+export interface LessonProgress {
   id: string;
   enrollmentId: string;
   lessonId: string;
   isCompleted: boolean;
   completedAt?: string;
-  timeSpent: number; // en segundos
-  lastAccessedAt: string;
-  notes?: string;
-  lesson: {
-    id: string;
-    title: string;
-    type: 'VIDEO' | 'TEXT' | 'INTERACTIVE' | 'DOCUMENT';
-    duration: number;
-    order: number;
-  };
+  timeSpent: number;
+  videoProgress?: number;
+  lastWatchedAt?: string;
 }
 
-export const useLessonProgress = () => {
-  const [lessonProgress, setLessonProgress] = useState<LessonProgress[]>([]);
+export interface ProgressUpdate {
+  lessonId: string;
+  isCompleted?: boolean;
+  timeSpent?: number;
+  videoProgress?: number;
+}
+
+export const useLessonProgress = (enrollmentId: string) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const getToken = () => {
-    return localStorage.getItem('token');
-  };
-
-  const fetchLessonProgress = async (enrollmentId: string) => {
+  const updateLessonProgress = useCallback(async (progressData: ProgressUpdate) => {
     try {
       setLoading(true);
       setError(null);
 
-      const token = getToken();
-      if (!token) {
-        throw new Error('No authentication token available');
-      }
-
-      const response = await fetch(`/api/lesson-progress?enrollmentId=${enrollmentId}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Error fetching lesson progress: ${response.status} ${errorText}`);
-      }
-
-      const data = await response.json();
-      setLessonProgress(data.lessonProgress || []);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
-      console.error('Error in fetchLessonProgress:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const markLessonAsCompleted = async (
-    enrollmentId: string,
-    lessonId: string,
-    timeSpent: number = 0,
-    notes?: string
-  ) => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const token = getToken();
-      if (!token) {
-        throw new Error('No authentication token available');
-      }
-
-      const response = await fetch('/api/lesson-progress', {
+      const response = await apiCall('/lesson-progress', {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
         body: JSON.stringify({
           enrollmentId,
-          lessonId,
-          isCompleted: true,
-          completedAt: new Date().toISOString(),
-          timeSpent,
-          notes
+          ...progressData
         })
       });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Error marking lesson as completed: ${response.status} ${errorText}`);
-      }
-
-      const data = await response.json();
-      
-      // Add or update lesson progress in the list
-      setLessonProgress(prev => {
-        const existingIndex = prev.findIndex(p => p.lessonId === lessonId);
-        if (existingIndex >= 0) {
-          return prev.map((p, index) => 
-            index === existingIndex ? data.lessonProgress : p
-          );
-        } else {
-          return [...prev, data.lessonProgress];
-        }
-      });
-      
-      return data.lessonProgress;
+      return response;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
-      console.error('Error in markLessonAsCompleted:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Error al actualizar progreso';
+      setError(errorMessage);
       throw err;
     } finally {
       setLoading(false);
     }
-  };
+  }, [enrollmentId]);
 
-  const updateLessonProgress = async (
-    enrollmentId: string,
-    lessonId: string,
-    updates: {
-      isCompleted?: boolean;
-      timeSpent?: number;
-      notes?: string;
-    }
-  ) => {
+  const markLessonAsCompleted = useCallback(async (lessonId: string, timeSpent: number = 0) => {
+    return updateLessonProgress({
+      lessonId,
+      isCompleted: true,
+      timeSpent
+    });
+  }, [updateLessonProgress]);
+
+  const updateVideoProgress = useCallback(async (lessonId: string, videoProgress: number, timeSpent: number) => {
+    return updateLessonProgress({
+      lessonId,
+      videoProgress,
+      timeSpent
+    });
+  }, [updateLessonProgress]);
+
+  const getLessonProgress = useCallback(async (lessonId: string): Promise<LessonProgress | null> => {
     try {
-      const token = getToken();
-      if (!token) {
-        throw new Error('No authentication token available');
-      }
+      setLoading(true);
+      setError(null);
 
-      const response = await fetch(`/api/lesson-progress/${enrollmentId}/${lessonId}`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(updates)
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Error updating lesson progress: ${response.status} ${errorText}`);
-      }
-
-      const data = await response.json();
-      
-      // Update lesson progress in the list
-      setLessonProgress(prev => 
-        prev.map(p => 
-          p.lessonId === lessonId ? data.lessonProgress : p
-        )
-      );
-      
-      return data.lessonProgress;
+      const response = await apiCall(`/lesson-progress?enrollmentId=${enrollmentId}&lessonId=${lessonId}`);
+      return response.progress || null;
     } catch (err) {
-      console.error('Error in updateLessonProgress:', err);
-      throw err;
+      const errorMessage = err instanceof Error ? err.message : 'Error al obtener progreso';
+      setError(errorMessage);
+      return null;
+    } finally {
+      setLoading(false);
     }
-  };
+  }, [enrollmentId]);
 
-  const getLessonProgress = (lessonId: string): LessonProgress | undefined => {
-    return lessonProgress.find(p => p.lessonId === lessonId);
-  };
+  const getEnrollmentProgress = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
 
-  const isLessonCompleted = (lessonId: string): boolean => {
-    const progress = getLessonProgress(lessonId);
-    return progress?.isCompleted || false;
-  };
-
-  const getCompletedLessonsCount = (): number => {
-    return lessonProgress.filter(p => p.isCompleted).length;
-  };
-
-  const getTotalTimeSpent = (): number => {
-    return lessonProgress.reduce((total, p) => total + p.timeSpent, 0);
-  };
+      const response = await apiCall(`/lesson-progress?enrollmentId=${enrollmentId}`);
+      return response.progress || [];
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Error al obtener progreso de inscripción';
+      setError(errorMessage);
+      return [];
+    } finally {
+      setLoading(false);
+    }
+  }, [enrollmentId]);
 
   return {
-    lessonProgress,
     loading,
     error,
-    fetchLessonProgress,
-    markLessonAsCompleted,
     updateLessonProgress,
+    markLessonAsCompleted,
+    updateVideoProgress,
     getLessonProgress,
-    isLessonCompleted,
-    getCompletedLessonsCount,
-    getTotalTimeSpent
+    getEnrollmentProgress
   };
 };

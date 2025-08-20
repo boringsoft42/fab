@@ -63,9 +63,12 @@ export default function CourseProgressPage() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [progressFilter, setProgressFilter] = useState("all");
 
-  // Hooks
-  const { data: progressData, isLoading: progressLoading } = useCourseProgress(courseId);
-  const courseProgress = progressData?.courseProgress;
+  // Hooks - Temporalmente deshabilitado para evitar múltiples llamadas
+  // const { data: progressData, isLoading: progressLoading } = useCourseProgress(courseId);
+  // const courseProgress = progressData?.courseProgress;
+  
+  const progressLoading = false;
+  const courseProgress = null;
 
   // Mock student data - in real implementation, fetch from API
   const mockStudents = [

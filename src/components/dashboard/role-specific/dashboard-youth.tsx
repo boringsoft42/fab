@@ -304,12 +304,12 @@ export function DashboardYouth() {
       title: "Cursos",
       description: "¡Aprende algo nuevo!",
       icon: GraduationCap,
-      href: "/training",
+      href: "/courses",
       color: "bg-gray-600",
       metric: { label: "En curso", value: "2", icon: Play },
       actions: [
-        { label: "Ver Cursos", href: "/training/courses" },
-        { label: "Mis Cursos", href: "/training/my-courses" },
+        { label: "Explorar Cursos", href: "/courses" },
+        { label: "Mis Cursos", href: "/my-courses" },
       ],
     },
     {

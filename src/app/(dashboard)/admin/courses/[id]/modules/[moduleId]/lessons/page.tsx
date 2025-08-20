@@ -64,6 +64,7 @@ import {
   Settings,
   Eye as Preview,
   Upload,
+  HelpCircle,
 } from "lucide-react";
 import { useModuleLessons, useCreateLesson, useUpdateLesson, useDeleteLesson } from "@/hooks/useLessonApi";
 import { useQueryClient } from "@tanstack/react-query";
@@ -662,6 +663,12 @@ export default function ModuleLessonsPage() {
                               <Link href={`/admin/courses/${courseId}/modules/${moduleId}/lessons/${lesson.id}/resources`}>
                                 <Download className="h-4 w-4 mr-2" />
                                 Gestionar recursos
+                              </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem asChild>
+                              <Link href={`/admin/courses/${courseId}/modules/${moduleId}/lessons/${lesson.id}/quizzes`}>
+                                <HelpCircle className="h-4 w-4 mr-2" />
+                                Gestionar quizzes
                               </Link>
                             </DropdownMenuItem>
                             <DropdownMenuItem asChild>

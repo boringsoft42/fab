@@ -6,9 +6,11 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-         const resolvedParams = await params;
-     
-     const url = new URL(`${API_BASE}/course/${resolvedParams.id}`);
+    const resolvedParams = await params;
+    console.log('🔍 API: Fetching course with ID:', resolvedParams.id);
+    
+    const url = new URL(`${API_BASE}/course/${resolvedParams.id}`);
+    console.log('🔍 API: Backend URL:', url.toString());
 
     const response = await fetch(url.toString(), {
       headers: {
@@ -17,19 +19,23 @@ export async function GET(
       },
     });
 
-         if (!response.ok) {
-       const errorText = await response.text();
-       console.error('🔍 API: Backend error:', errorText);
+    console.log('🔍 API: Backend response status:', response.status);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('🔍 API: Backend error:', errorText);
       return NextResponse.json(
         { message: `Backend error: ${response.status} ${errorText}` },
         { status: response.status }
       );
     }
 
-         const data = await response.json();
-     
-     // Si el backend devuelve el curso directamente, envolverlo en un objeto course
-     const responseData = data.course ? data : { course: data };
+    const data = await response.json();
+    console.log('🔍 API: Backend data received:', data);
+    
+    // Si el backend devuelve el curso directamente, envolverlo en un objeto course
+    const responseData = data.course ? data : { course: data };
+    console.log('🔍 API: Final response data:', responseData);
     
     return NextResponse.json(responseData, { status: response.status });
   } catch (error) {

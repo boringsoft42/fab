@@ -2,13 +2,15 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { CheckCircle, Clock, Users, BookOpen, Award, Calendar, MapPin, DollarSign, Star } from "lucide-react";
+import { CheckCircle, Clock, Users, BookOpen, Award, Calendar, MapPin, DollarSign, Star, Loader2, ArrowLeft, User, Building2 } from "lucide-react";
 import { BACKEND_ENDPOINTS } from "@/lib/backend-config";
-import { getUserFromToken } from '@/lib/api';
+import { getUserFromToken, apiCall } from '@/lib/api';
+import { toast } from "sonner";
 
 interface Course {
   id: string;
@@ -98,7 +100,7 @@ export default function CourseEnrollPage() {
     return `${mins}m`;
   };
 
-  const enrollInCourse = async () => {
+  const handleEnroll = async () => {
     try {
       setEnrolling(true);
       const response = await fetch(BACKEND_ENDPOINTS.COURSE_ENROLLMENTS, {
@@ -180,47 +182,33 @@ export default function CourseEnrollPage() {
         }
 
         // Primero intentamos obtener el curso por ID
-        const response = await fetch(`/api/course/${courseId}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error('Curso no encontrado');
-        }
-
-        const data = await response.json();
-        const course = data.course;
+        const data = await apiCall(`/course/${courseId}`);
+        const course = data.course || data;
 
         // Verificar si ya está inscrito
-        const enrollmentResponse = await fetch(`/api/course-enrollments?courseId=${course.id}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
-
-        if (enrollmentResponse.ok) {
-          const enrollmentData = await enrollmentResponse.json();
+        try {
+          const enrollmentData = await apiCall(`/course-enrollments?courseId=${course.id}`);
           if (enrollmentData.enrollments && enrollmentData.enrollments.length > 0) {
             // Ya está inscrito, redirigir al curso
             router.push(`/development/courses/${enrollmentData.enrollments[0].id}`);
             return;
           }
+        } catch (error) {
+          // Si no hay inscripciones, continuar con el proceso de inscripción
+          console.log('No existing enrollments found');
         }
 
-        // Crear un objeto de enrollment temporal para mostrar la información
-        setEnrollment({
-          id: courseId,
-          courseId: course.id,
-          userId: '',
-          status: 'ENROLLED',
-          progress: 0,
-          enrolledAt: new Date().toISOString(),
-          course: course,
-        });
+                 // Crear un objeto de enrollment temporal para mostrar la información
+         console.log('🔍 CourseEnrollPage - course.isActive:', course.isActive);
+         setEnrollment({
+           id: courseId,
+           courseId: course.id,
+           userId: '',
+           status: 'ENROLLED',
+           progress: 0,
+           enrolledAt: new Date().toISOString(),
+           course: course,
+         });
 
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Error desconocido';
@@ -381,12 +369,12 @@ export default function CourseEnrollPage() {
                   </div>
                 </div>
 
-                <Button 
-                  onClick={handleEnroll}
-                  disabled={enrolling || !enrollment.course.isActive}
-                  className="w-full"
-                  size="lg"
-                >
+                                 <Button 
+                   onClick={handleEnroll}
+                   disabled={enrolling}
+                   className="w-full"
+                   size="lg"
+                 >
                   {enrolling ? (
                     <>
                       <Loader2 className="h-4 w-4 mr-2 animate-spin" />

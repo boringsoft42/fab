@@ -62,6 +62,11 @@ import {
   Share,
 } from "lucide-react";
 import { useLessonResources, useCreateResource, useUpdateResource, useDeleteResource } from "@/hooks/useLessonResourceApi";
+
+
+import { ResourceViewer } from "@/components/resources/ResourceViewer";
+import { ResourceStats } from "@/components/resources/ResourceStats";
+import { FileUpload } from "@/components/resources/FileUpload";
 import { toast } from "sonner";
 
 export default function LessonResourcesPage() {
@@ -87,6 +92,9 @@ export default function LessonResourcesPage() {
     orderIndex: 1,
     isDownloadable: true,
   });
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [viewingResource, setViewingResource] = useState<any>(null);
 
   // Hooks
   const { data: resourcesData, isLoading: resourcesLoading } = useLessonResources(lessonId);
@@ -102,9 +110,12 @@ export default function LessonResourcesPage() {
 
   const handleCreateResource = async () => {
     try {
+      setIsUploading(true);
+      
       await createResource.mutateAsync({
         lessonId,
         ...formData,
+        file: selectedFile || undefined,
       });
       
       setIsCreateDialogOpen(false);
@@ -118,9 +129,12 @@ export default function LessonResourcesPage() {
         orderIndex: 1,
         isDownloadable: true,
       });
+      setSelectedFile(null);
       toast.success("Recurso creado exitosamente");
     } catch (error) {
       toast.error("Error al crear el recurso");
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -320,12 +334,37 @@ export default function LessonResourcesPage() {
                 </Select>
               </div>
               <div className="grid gap-2">
-                <label htmlFor="url">URL del Recurso</label>
+                <label htmlFor="url">URL del Recurso (opcional si subes un archivo)</label>
                 <Input
                   id="url"
                   value={formData.url}
                   onChange={(e) => setFormData({ ...formData, url: e.target.value })}
                   placeholder="https://example.com/resource.pdf"
+                  disabled={!!selectedFile}
+                />
+              </div>
+              <div className="grid gap-2">
+                <label>Archivo (opcional)</label>
+                <FileUpload
+                  selectedFile={selectedFile}
+                  onFileSelect={(file) => {
+                    setSelectedFile(file);
+                    // Auto-detect type based on file extension
+                    const extension = file.name.split('.').pop()?.toLowerCase();
+                    let detectedType = formData.type;
+                    
+                    if (extension === 'pdf') detectedType = 'PDF';
+                    else if (['doc', 'docx'].includes(extension || '')) detectedType = 'DOCUMENT';
+                    else if (['mp4', 'webm', 'ogg'].includes(extension || '')) detectedType = 'VIDEO';
+                    else if (['mp3', 'wav'].includes(extension || '')) detectedType = 'AUDIO';
+                    else if (['jpg', 'jpeg', 'png', 'gif'].includes(extension || '')) detectedType = 'IMAGE';
+                    else if (extension === 'zip') detectedType = 'ZIP';
+                    else detectedType = 'OTHER';
+                    
+                    setFormData({ ...formData, type: detectedType });
+                  }}
+                  onFileRemove={() => setSelectedFile(null)}
+                  maxSize={50 * 1024 * 1024} // 50MB
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
@@ -364,13 +403,16 @@ export default function LessonResourcesPage() {
               <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
                 Cancelar
               </Button>
-              <Button onClick={handleCreateResource} disabled={createResource.isPending}>
-                {createResource.isPending ? "Creando..." : "Crear Recurso"}
+              <Button onClick={handleCreateResource} disabled={createResource.isPending || isUploading}>
+                {createResource.isPending || isUploading ? "Subiendo..." : "Crear Recurso"}
               </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
       </div>
+
+      {/* Resource Statistics */}
+      <ResourceStats resources={resources} />
 
       {/* Search and Filters */}
       <Card>
@@ -475,11 +517,9 @@ export default function LessonResourcesPage() {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem asChild>
-                              <a href={resource.url} target="_blank" rel="noopener noreferrer">
-                                <Eye className="h-4 w-4 mr-2" />
-                                Ver recurso
-                              </a>
+                            <DropdownMenuItem onClick={() => setViewingResource(resource)}>
+                              <Eye className="h-4 w-4 mr-2" />
+                              Vista previa
                             </DropdownMenuItem>
                             {resource.isDownloadable && (
                               <DropdownMenuItem asChild>
@@ -640,6 +680,14 @@ export default function LessonResourcesPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Resource Viewer Modal */}
+      {viewingResource && (
+        <ResourceViewer
+          resource={viewingResource}
+          onClose={() => setViewingResource(null)}
+        />
+      )}
     </div>
   );
 }

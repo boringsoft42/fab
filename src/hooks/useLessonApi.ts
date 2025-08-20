@@ -45,7 +45,12 @@ const fetchLessons = async (moduleId: string): Promise<{ lessons: Lesson[] }> =>
   if (!response.ok) {
     throw new Error('Failed to fetch lessons');
   }
-  return response.json();
+  const data = await response.json();
+  // Si la respuesta es un array directo, lo envuelvo en el formato esperado
+  if (Array.isArray(data)) {
+    return { lessons: data };
+  }
+  return data;
 };
 
 const createLesson = async (data: CreateLessonData): Promise<Lesson> => {

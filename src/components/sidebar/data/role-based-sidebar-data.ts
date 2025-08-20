@@ -79,7 +79,7 @@ export const youthSidebarData: SidebarData = {
           icon: GraduationCap,
           items: [
             {
-              title: "Cursos Disponibles",
+              title: "Explorar Cursos",
               url: "/courses",
             },
             {

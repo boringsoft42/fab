@@ -1,89 +1,56 @@
-import { useState, useEffect } from 'react';
-import { getUserFromToken, API_BASE } from '@/lib/api';
+import { useState, useEffect, useCallback } from 'react';
+import { apiCall } from '@/lib/api';
 
-interface CourseEnrollment {
+export interface CourseEnrollment {
   id: string;
-  studentId: string;
   courseId: string;
-  enrolledAt: string;
+  userId: string;
   status: 'ENROLLED' | 'IN_PROGRESS' | 'COMPLETED' | 'DROPPED' | 'SUSPENDED';
-  progress: number; // 0-100
-  currentModuleId?: string;
-  currentLessonId?: string;
-  timeSpent: number; // en segundos
-  certificateIssued: boolean;
-  certificateUrl?: string;
+  progress: number;
+  enrolledAt: string;
   completedAt?: string;
-  finalGrade?: number;
   course: {
     id: string;
     title: string;
+    description: string;
     thumbnail?: string;
-    modules: any[];
-  };
-  moduleProgress: {
-    [moduleId: string]: {
-      completed: boolean;
-      lessonsCompleted: number;
-      totalLessons: number;
-      quizPassed?: boolean;
-    };
+    duration: number;
+    level: 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
+    category: string;
+    instructor?: {
+      id: string;
+      name: string;
+      avatar?: string;
+    } | null;
+    organization?: {
+      id: string;
+      name: string;
+    } | null;
+    totalLessons: number;
+    totalQuizzes: number;
+    isActive: boolean;
+    studentCount?: number;
+    rating?: number;
   };
 }
 
 export const useCourseEnrollments = () => {
-  console.log('🔍 useCourseEnrollments - Hook initialized');
-  console.log('🔍 useCourseEnrollments - Hook called at:', new Date().toISOString());
-  
   const [enrollments, setEnrollments] = useState<CourseEnrollment[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const getToken = () => {
-    return localStorage.getItem('token');
-  };
-
   const fetchEnrollments = async () => {
-    console.log('🔍 fetchEnrollments - Function called');
     try {
       setLoading(true);
       setError(null);
-
-      const token = getToken();
-      console.log('🔍 fetchEnrollments - Token available:', !!token);
-      if (!token) {
-        throw new Error('No authentication token available');
-      }
-
-      console.log('🔍 fetchEnrollments - Making request to', `${API_BASE}/course-enrollments`);
-      const response = await fetch(`${API_BASE}/course-enrollments`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Error fetching enrollments: ${response.status} ${errorText}`);
-      }
-
-      const data = await response.json();
-      console.log('🔍 Fetched enrollments data:', data);
-      console.log('🔍 Enrollments count:', data.length || 0);
       
-      // The backend already returns enrollments with course data included
-      const enrollmentsWithCourses = (data || []).map((enrollment: any) => ({
-        ...enrollment,
-        progress: typeof enrollment.progress === 'string' ? parseInt(enrollment.progress) : enrollment.progress,
-        moduleProgress: enrollment.moduleProgress || {}
-      }));
-
-      console.log('🔍 Enrollments with courses:', enrollmentsWithCourses);
-      setEnrollments(enrollmentsWithCourses);
+      console.log('🔍 useCourseEnrollments: Fetching enrollments...');
+      const data = await apiCall('/course-enrollments');
+      console.log('🔍 useCourseEnrollments: Response received:', data);
+      setEnrollments(data.enrollments || data || []);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
-      console.error('Error in fetchEnrollments:', err);
+      setError(err instanceof Error ? err.message : 'Error al cargar inscripciones');
+      console.error('Error fetching enrollments:', err);
     } finally {
       setLoading(false);
     }
@@ -91,189 +58,154 @@ export const useCourseEnrollments = () => {
 
   const enrollInCourse = async (courseId: string) => {
     try {
-      setLoading(true);
-      setError(null);
-
-      const token = getToken();
-      if (!token) {
-        throw new Error('No authentication token available');
-      }
-
-      // Get current user ID from token
-      const userInfo = getUserFromToken();
-      
-      if (!userInfo || !userInfo.id) {
-        throw new Error('No authenticated user found');
-      }
-
-      const userId = userInfo.id;
-      console.log('🔍 Current user ID:', userId);
-
-      const requestBody = {
-        courseId,
-        studentId: userId
-      };
-
-      console.log('🔍 Enrolling in course with data:', requestBody);
-      console.log('🔍 Request body JSON:', JSON.stringify(requestBody));
-
-      const response = await fetch(`${API_BASE}/course-enrollments`, {
+      const data = await apiCall('/course-enrollments', {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(requestBody)
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Error enrolling in course: ${response.status} ${errorText}`);
-      }
-
-      const data = await response.json();
-      
-      // Add new enrollment to the list
-      setEnrollments(prev => [...prev, data.enrollment]);
-      
-      return data.enrollment;
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
-      console.error('Error in enrollInCourse:', err);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getEnrollmentById = async (enrollmentId: string): Promise<CourseEnrollment | null> => {
-    try {
-      const token = getToken();
-      if (!token) {
-        throw new Error('No authentication token available');
-      }
-
-      const response = await fetch(`${API_BASE}/course-enrollments/${enrollmentId}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Error fetching enrollment: ${response.status} ${errorText}`);
-      }
-
-      const data = await response.json();
-      return data.enrollment;
-    } catch (err) {
-      console.error('Error in getEnrollmentById:', err);
-      return null;
-    }
-  };
-
-  const updateEnrollmentProgress = async (
-    enrollmentId: string, 
-    updates: {
-      progress?: number;
-      currentModuleId?: string;
-      currentLessonId?: string;
-      status?: string;
-      timeSpent?: number;
-    }
-  ) => {
-    try {
-      const token = getToken();
-      if (!token) {
-        throw new Error('No authentication token available');
-      }
-
-      const response = await fetch(`${API_BASE}/course-enrollments/${enrollmentId}`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(updates)
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Error updating enrollment: ${response.status} ${errorText}`);
-      }
-
-      const data = await response.json();
-      
-      // Update enrollment in the list
-      setEnrollments(prev => 
-        prev.map(enrollment => 
-          enrollment.id === enrollmentId ? data.enrollment : enrollment
-        )
-      );
-      
-      return data.enrollment;
-    } catch (err) {
-      console.error('Error in updateEnrollmentProgress:', err);
-      throw err;
-    }
-  };
-
-  const completeCourse = async (enrollmentId: string, finalGrade: number) => {
-    try {
-      const token = getToken();
-      if (!token) {
-        throw new Error('No authentication token available');
-      }
-
-      const response = await fetch(`${API_BASE}/course-enrollments/${enrollmentId}`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
         body: JSON.stringify({
-          status: 'COMPLETED',
-          completedAt: new Date().toISOString(),
-          progress: 100,
-          finalGrade,
-          certificateIssued: true
+          courseId,
+          enrollmentDate: new Date().toISOString()
         })
       });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Error completing course: ${response.status} ${errorText}`);
-      }
-
-      const data = await response.json();
       
-      // Update enrollment in the list
-      setEnrollments(prev => 
-        prev.map(enrollment => 
-          enrollment.id === enrollmentId ? data.enrollment : enrollment
-        )
-      );
+      // Actualizar la lista de inscripciones
+      await fetchEnrollments();
       
-      return data.enrollment;
+      return data;
     } catch (err) {
-      console.error('Error in completeCourse:', err);
-      throw err;
+      throw err instanceof Error ? err : new Error('Error al inscribirse en el curso');
     }
   };
 
-  // Load initial data
+  const updateProgress = async (enrollmentId: string, progress: number) => {
+    try {
+      const data = await apiCall(`/course-enrollments/${enrollmentId}`, {
+        method: 'PUT',
+        body: JSON.stringify({ progress })
+      });
+      
+      // Actualizar la lista de inscripciones
+      await fetchEnrollments();
+      
+      return data;
+    } catch (err) {
+      throw err instanceof Error ? err : new Error('Error al actualizar progreso');
+    }
+  };
+
+  const updateEnrollmentProgress = async (enrollmentId: string, progressData: any) => {
+    try {
+      const data = await apiCall(`/course-enrollments/${enrollmentId}`, {
+        method: 'PUT',
+        body: JSON.stringify(progressData)
+      });
+      
+      // Actualizar la lista de inscripciones
+      await fetchEnrollments();
+      
+      return data;
+    } catch (err) {
+      throw err instanceof Error ? err : new Error('Error al actualizar progreso de inscripción');
+    }
+  };
+
+  const completeCourse = async (enrollmentId: string) => {
+    try {
+      const data = await apiCall(`/course-enrollments/${enrollmentId}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          status: 'COMPLETED',
+          progress: 100,
+          completedAt: new Date().toISOString()
+        })
+      });
+      
+      // Actualizar la lista de inscripciones
+      await fetchEnrollments();
+      
+      return data;
+    } catch (err) {
+      throw err instanceof Error ? err : new Error('Error al completar el curso');
+    }
+  };
+
+  const dropCourse = async (enrollmentId: string) => {
+    try {
+      const data = await apiCall(`/course-enrollments/${enrollmentId}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          status: 'DROPPED'
+        })
+      });
+      
+      // Actualizar la lista de inscripciones
+      await fetchEnrollments();
+      
+      return data;
+    } catch (err) {
+      throw err instanceof Error ? err : new Error('Error al abandonar el curso');
+    }
+  };
+
+  const getEnrollmentById = useCallback(async (enrollmentId: string): Promise<CourseEnrollment | null> => {
+    try {
+      console.log('🔍 useCourseEnrollments: Fetching enrollment with ID:', enrollmentId);
+      
+      // Solicitar datos completos incluyendo resources y quizzes
+      const data = await apiCall(`/course-enrollments/${enrollmentId}?include=course.modules.lessons.resources,course.modules.lessons.quizzes`);
+      
+      console.log('🔍 useCourseEnrollments: Enrollment data received:', data);
+      return data.enrollment || data;
+    } catch (err) {
+      console.error('Error fetching enrollment by ID:', err);
+      return null;
+    }
+  }, []);
+
+  // Solo cargar enrollments automáticamente para la página de "Mis Cursos"
   useEffect(() => {
-    console.log('🔍 useCourseEnrollments: useEffect triggered');
-    
-    // Check if we have a token before making the request
-    const token = getToken();
-    console.log('🔍 useCourseEnrollments: Token in useEffect:', !!token);
-    
-    if (token) {
-      fetchEnrollments();
-    } else {
-      console.log('🔍 useCourseEnrollments: No token available, skipping fetch');
+    fetchEnrollments();
+  }, []);
+
+  const getEnrollmentForLearning = useCallback(async (enrollmentId: string): Promise<any | null> => {
+    try {
+      console.log('🔍 useCourseEnrollments: Fetching enrollment for learning with ID:', enrollmentId);
+      
+      // Intentar varios endpoints posibles
+      const endpoints = [
+        `/course-enrollments/${enrollmentId}/learning`, // Endpoint específico para aprendizaje
+        `/course-enrollments/${enrollmentId}?include=resources,quizzes`, // Con parámetro include
+        `/course-enrollments/${enrollmentId}/full`, // Endpoint full
+        `/course-enrollments/${enrollmentId}` // Endpoint normal como fallback
+      ];
+      
+      for (const endpoint of endpoints) {
+        try {
+          console.log(`🔍 Trying endpoint: ${endpoint}`);
+          const data = await apiCall(endpoint);
+          console.log(`🔍 Response from ${endpoint}:`, data);
+          
+          // Verificar si la respuesta incluye resources y quizzes
+          const enrollment = data.enrollment || data;
+          const hasResourcesAndQuizzes = enrollment?.course?.modules?.some(
+            (module: any) => module.lessons?.some(
+              (lesson: any) => lesson.resources !== undefined || lesson.quizzes !== undefined
+            )
+          );
+          
+          if (hasResourcesAndQuizzes) {
+            console.log('✅ Found enrollment with resources and quizzes');
+            return enrollment;
+          }
+        } catch (err) {
+          console.log(`❌ Endpoint ${endpoint} failed:`, err);
+          continue;
+        }
+      }
+      
+      console.warn('⚠️ No endpoint returned complete data with resources and quizzes');
+      return null;
+    } catch (err) {
+      console.error('Error fetching enrollment for learning:', err);
+      return null;
     }
   }, []);
 
@@ -283,8 +215,11 @@ export const useCourseEnrollments = () => {
     error,
     fetchEnrollments,
     enrollInCourse,
-    getEnrollmentById,
+    updateProgress,
     updateEnrollmentProgress,
-    completeCourse
+    completeCourse,
+    dropCourse,
+    getEnrollmentById,
+    getEnrollmentForLearning
   };
 };
