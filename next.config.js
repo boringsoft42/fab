@@ -2,7 +2,7 @@
 const nextConfig = {
   env: {
     NEXT_PUBLIC_USE_BACKEND: 'true',
-    NEXT_PUBLIC_BACKEND_URL: 'http://localhost:3001',
+    NEXT_PUBLIC_BACKEND_URL: 'http://192.168.0.87:3001',
   },
   // Ensure proper URL resolution
   basePath: '',
@@ -16,6 +16,7 @@ const nextConfig = {
       "img.youtube.com",
       "placehold.co",
       "localhost",
+      "192.168.0.87",
     ],
     remotePatterns: [
       {
@@ -33,6 +34,11 @@ const nextConfig = {
       {
         protocol: "http",
         hostname: "localhost",
+        port: "3001",
+      },
+      {
+        protocol: "http",
+        hostname: "192.168.0.87",
         port: "3001",
       },
     ],
@@ -73,7 +79,7 @@ const nextConfig = {
           {
             key: "Content-Security-Policy",
             value:
-              "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://*.supabase.co; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.stripe.com http://localhost:3001; style-src 'self' 'unsafe-inline' https://unpkg.com; img-src 'self' data: https://*.supabase.co https://* http://localhost:3001 blob:; font-src 'self' data:; frame-src 'self' https://js.stripe.com; media-src 'self' http://127.0.0.1:9000 http://localhost:9000 blob:; object-src 'none'",
+              "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://*.supabase.co; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.stripe.com http://localhost:3001 http://localhost:3000 http://192.168.0.87:3001; style-src 'self' 'unsafe-inline' https://unpkg.com; img-src 'self' data: https://*.supabase.co https://* http://localhost:3001 http://192.168.0.87:3001 blob:; font-src 'self' data:; frame-src 'self' https://js.stripe.com; object-src 'none'",
           },
         ],
       },
