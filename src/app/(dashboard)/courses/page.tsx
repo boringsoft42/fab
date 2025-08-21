@@ -120,7 +120,7 @@ export default function CoursesPage() {
             ))}
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {[...Array(6)].map((_, i) => (
+          {[...Array(6)].map((_, i) => (
               <div key={i} className="h-64 bg-gray-200 rounded" />
             ))}
           </div>
@@ -135,10 +135,10 @@ export default function CoursesPage() {
       <div className="flex flex-col gap-4">
         <div>
           <h1 className="text-3xl font-bold">Explorar Cursos</h1>
-          <p className="text-muted-foreground">
+        <p className="text-muted-foreground">
             Descubre cursos para desarrollar tus habilidades y competencias
-          </p>
-        </div>
+        </p>
+      </div>
 
         {/* Estadísticas */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -198,16 +198,16 @@ export default function CoursesPage() {
           <div className="flex flex-col lg:flex-row gap-4">
             {/* Búsqueda */}
             <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-                <Input
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+          <Input
                   placeholder="Buscar cursos..."
-                  value={searchQuery}
+            value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10"
-                />
-              </div>
-            </div>
+          />
+        </div>
+          </div>
 
             {/* Filtros */}
             <div className="flex gap-2">
@@ -238,34 +238,34 @@ export default function CoursesPage() {
               </Select>
 
               {/* Vista */}
-              <div className="flex border rounded-md">
-                <Button
-                  variant={viewMode === "grid" ? "default" : "ghost"}
-                  size="sm"
-                  onClick={() => setViewMode("grid")}
-                >
-                  <Grid3X3 className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant={viewMode === "list" ? "default" : "ghost"}
-                  size="sm"
-                  onClick={() => setViewMode("list")}
-                >
-                  <List className="h-4 w-4" />
-                </Button>
-              </div>
+            <div className="flex border rounded-md">
+              <Button
+                variant={viewMode === "grid" ? "default" : "ghost"}
+                size="sm"
+                onClick={() => setViewMode("grid")}
+              >
+                <Grid3X3 className="h-4 w-4" />
+              </Button>
+              <Button
+                variant={viewMode === "list" ? "default" : "ghost"}
+                size="sm"
+                onClick={() => setViewMode("list")}
+              >
+                <List className="h-4 w-4" />
+              </Button>
             </div>
           </div>
+        </div>
         </CardContent>
       </Card>
 
       {/* Resultados */}
       <div className="space-y-4">
         <div className="flex justify-between items-center">
-          <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
             {filteredCourses.length} cursos encontrados
-          </p>
-        </div>
+            </p>
+          </div>
 
         {error && (
           <Card>
@@ -286,10 +286,10 @@ export default function CoursesPage() {
 
         <div className="grid gap-6">
           {filteredCourses.map((course) => (
-            <CourseCard
-              key={course.id}
-              course={course}
-              viewMode={viewMode}
+                <CourseCard
+                  key={course.id}
+                  course={course}
+                  viewMode={viewMode}
             />
           ))}
         </div>

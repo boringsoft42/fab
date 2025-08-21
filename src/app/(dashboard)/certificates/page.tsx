@@ -1,321 +1,368 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Award,
-  Download,
-  Search,
-  Filter,
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { 
+  Award, 
+  Download, 
+  FileText, 
+  GraduationCap, 
   Calendar,
-  BookOpen,
   Star,
   CheckCircle,
-  FileText,
-  Share2,
+  Loader2,
+  ExternalLink
 } from "lucide-react";
-import { useCourseEnrollments } from "@/hooks/useCourseEnrollments";
-import Link from "next/link";
+import { useCertificates } from "@/hooks/useCertificates";
 
-interface Certificate {
+interface ModuleCertificate {
   id: string;
-  courseId: string;
-  courseTitle: string;
-  courseCategory: string;
+  moduleId: string;
+  studentId: string;
+  certificateUrl: string;
   issuedAt: string;
   grade: number;
-  status: "ISSUED" | "PENDING" | "EXPIRED";
-  downloadUrl?: string;
-  certificateNumber: string;
+  completedAt: string;
+  module: {
+    id: string;
+    title: string;
+    course: {
+      id: string;
+      title: string;
+    };
+  };
+  student: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
+}
+
+interface CourseCertificate {
+  id: string;
+  userId: string;
+  courseId: string;
+  template: string;
+  issuedAt: string;
+  verificationCode: string;
+  digitalSignature: string;
+  isValid: boolean;
+  url: string;
+  course: {
+    id: string;
+    title: string;
+  };
+  user: {
+    id: string;
+    firstName: string;
+    lastName: string;
+  };
 }
 
 export default function CertificatesPage() {
-  const { enrollments, loading, error } = useCourseEnrollments();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("all");
+  const {
+    loading,
+    error,
+    downloading,
+    loadModuleCertificates,
+    loadCourseCertificates,
+    downloadCertificate,
+    setError
+  } = useCertificates();
 
-  // Filtrar solo cursos completados para generar certificados
-  const completedEnrollments = enrollments?.filter(e => e.status === "COMPLETED") || [];
-  
-  // Simular certificados basados en inscripciones completadas
-  const certificates: Certificate[] = completedEnrollments.map(enrollment => ({
-    id: `cert_${enrollment.id}`,
-    courseId: enrollment.course.id,
-    courseTitle: enrollment.course.title,
-    courseCategory: enrollment.course.category,
-    issuedAt: enrollment.completedAt || new Date().toISOString(),
-    grade: Math.floor(Math.random() * 20) + 80, // Simular calificación entre 80-100
-    status: "ISSUED" as const,
-    certificateNumber: `CERT-${enrollment.id.slice(-8).toUpperCase()}`,
-  }));
+  const [moduleCertificates, setModuleCertificates] = useState<ModuleCertificate[]>([]);
+  const [courseCertificates, setCourseCertificates] = useState<CourseCertificate[]>([]);
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [debugInfo, setDebugInfo] = useState<string>('');
 
-  // Estadísticas
-  const stats = {
-    total: certificates.length,
-    thisMonth: certificates.filter(c => {
-      const issuedDate = new Date(c.issuedAt);
-      const now = new Date();
-      return issuedDate.getMonth() === now.getMonth() && 
-             issuedDate.getFullYear() === now.getFullYear();
-    }).length,
-    averageGrade: certificates.length > 0 
-      ? Math.round(certificates.reduce((sum, c) => sum + c.grade, 0) / certificates.length)
-      : 0,
+  useEffect(() => {
+    loadCertificates();
+  }, []);
+
+  const loadCertificates = async () => {
+    try {
+      setIsInitialized(true);
+      setDebugInfo('Iniciando carga de certificados...');
+      
+      // Cargar certificados de módulos
+      setDebugInfo('Cargando certificados de módulos...');
+      const moduleCerts = await loadModuleCertificates();
+      setModuleCertificates(moduleCerts);
+      setDebugInfo(`Módulos cargados: ${moduleCerts.length}`);
+
+      // Cargar certificados de cursos
+      setDebugInfo('Cargando certificados de cursos...');
+      const courseCerts = await loadCourseCertificates();
+      setCourseCertificates(courseCerts);
+      setDebugInfo(`Cursos cargados: ${courseCerts.length}`);
+
+    } catch (err) {
+      console.error('Error loading certificates:', err);
+      setError('Error al cargar los certificados. Inténtalo de nuevo.');
+      setDebugInfo(`Error: ${err instanceof Error ? err.message : 'Error desconocido'}`);
+    }
   };
 
-  const getCategoryLabel = (category: string) => {
-    const labels: Record<string, string> = {
-      SOFT_SKILLS: "Habilidades Blandas",
-      BASIC_COMPETENCIES: "Competencias Básicas",
-      JOB_PLACEMENT: "Inserción Laboral",
-      ENTREPRENEURSHIP: "Emprendimiento",
-      TECHNICAL_SKILLS: "Habilidades Técnicas",
-      DIGITAL_LITERACY: "Alfabetización Digital",
-      COMMUNICATION: "Comunicación",
-      LEADERSHIP: "Liderazgo",
-    };
-    return labels[category] || category;
+  const handleDownload = async (certificate: ModuleCertificate | CourseCertificate) => {
+    try {
+      const success = await downloadCertificate(certificate);
+      if (!success) {
+        alert('Error al descargar el certificado. Inténtalo de nuevo.');
+      }
+    } catch (err) {
+      console.error('Error downloading certificate:', err);
+      alert('Error al descargar el certificado. Inténtalo de nuevo.');
+    }
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
   };
 
   const getGradeColor = (grade: number) => {
-    if (grade >= 90) return "bg-green-100 text-green-800";
-    if (grade >= 80) return "bg-blue-100 text-blue-800";
-    if (grade >= 70) return "bg-yellow-100 text-yellow-800";
-    return "bg-red-100 text-red-800";
+    if (grade >= 90) return 'bg-green-100 text-green-800 border-green-200';
+    if (grade >= 80) return 'bg-blue-100 text-blue-800 border-blue-200';
+    if (grade >= 70) return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+    return 'bg-red-100 text-red-800 border-red-200';
   };
 
-  const getGradeLabel = (grade: number) => {
-    if (grade >= 90) return "Excelente";
-    if (grade >= 80) return "Muy Bueno";
-    if (grade >= 70) return "Bueno";
-    return "Aceptable";
-  };
-
-  const filteredCertificates = certificates.filter((certificate) => {
-    const matchesSearch = certificate.courseTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      certificate.certificateNumber.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    const matchesCategory = categoryFilter === "all" || certificate.courseCategory === categoryFilter;
-    
-    return matchesSearch && matchesCategory;
-  });
-
-  const categories = [
-    { value: "all", label: "Todas las categorías" },
-    { value: "SOFT_SKILLS", label: "Habilidades Blandas" },
-    { value: "BASIC_COMPETENCIES", label: "Competencias Básicas" },
-    { value: "JOB_PLACEMENT", label: "Inserción Laboral" },
-    { value: "ENTREPRENEURSHIP", label: "Emprendimiento" },
-    { value: "TECHNICAL_SKILLS", label: "Habilidades Técnicas" },
-    { value: "DIGITAL_LITERACY", label: "Alfabetización Digital" },
-    { value: "COMMUNICATION", label: "Comunicación" },
-    { value: "LEADERSHIP", label: "Liderazgo" },
-  ];
-
-  if (loading) {
-    return (
-      <div className="container mx-auto p-6">
-        <div className="animate-pulse space-y-6">
-          <div className="h-8 bg-gray-200 rounded w-1/4" />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {[...Array(3)].map((_, i) => (
-              <div key={i} className="h-24 bg-gray-200 rounded" />
-            ))}
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="h-48 bg-gray-200 rounded" />
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const totalCertificates = moduleCertificates.length + courseCertificates.length;
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="flex flex-col gap-4">
-        <div>
-          <h1 className="text-3xl font-bold">Mis Certificados</h1>
-          <p className="text-muted-foreground">
-            Descarga y comparte tus certificados de cursos completados
-          </p>
-        </div>
-
-        {/* Estadísticas */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center gap-2">
-                <Award className="h-5 w-5 text-blue-600" />
-                <div>
-                  <p className="text-2xl font-bold">{stats.total}</p>
-                  <p className="text-sm text-muted-foreground">Certificados Obtenidos</p>
-                </div>
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="py-8">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-600 rounded-lg flex items-center justify-center">
+                <Award className="h-6 w-6 text-white" />
               </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center gap-2">
-                <Calendar className="h-5 w-5 text-green-600" />
-                <div>
-                  <p className="text-2xl font-bold">{stats.thisMonth}</p>
-                  <p className="text-sm text-muted-foreground">Este Mes</p>
-                </div>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">Mis Certificados</h1>
+                <p className="text-gray-600 mt-1">
+                  {totalCertificates} certificado{totalCertificates !== 1 ? 's' : ''} obtenido{totalCertificates !== 1 ? 's' : ''}
+                </p>
+                {debugInfo && (
+                  <p className="text-xs text-blue-600 mt-1">Debug: {debugInfo}</p>
+                )}
               </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center gap-2">
-                <Star className="h-5 w-5 text-yellow-600" />
-                <div>
-                  <p className="text-2xl font-bold">{stats.averageGrade}%</p>
-                  <p className="text-sm text-muted-foreground">Promedio General</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Filtros */}
-      <Card>
-        <CardContent className="p-4">
-          <div className="flex flex-col lg:flex-row gap-4">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-                <Input
-                  placeholder="Buscar certificados..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
-                />
+      {/* Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Loading State */}
+        {loading && (
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-center py-12">
+                <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+                <p>Cargando certificados...</p>
+                <p className="text-sm text-gray-500 mt-2">{debugInfo}</p>
               </div>
-            </div>
+            </CardContent>
+          </Card>
+        )}
 
-            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-              <SelectTrigger className="w-48">
-                <SelectValue placeholder="Categoría" />
-              </SelectTrigger>
-              <SelectContent>
-                {categories.map((category) => (
-                  <SelectItem key={category.value} value={category.value}>
-                    {category.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Resultados */}
-      <div className="space-y-4">
-        <div className="flex justify-between items-center">
-          <p className="text-sm text-muted-foreground">
-            {filteredCertificates.length} certificados encontrados
-          </p>
-        </div>
-
+        {/* Error State */}
         {error && (
           <Card>
-            <CardContent className="p-6 text-center">
-              <p className="text-red-600">Error al cargar los certificados: {error}</p>
-            </CardContent>
-          </Card>
-        )}
-
-        {filteredCertificates.length === 0 && !loading && (
-          <Card>
-            <CardContent className="p-6 text-center">
-              <Award className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-              <p className="text-muted-foreground mb-4">
-                {stats.total === 0 
-                  ? "Aún no has completado ningún curso para obtener certificados" 
-                  : "No se encontraron certificados con los filtros aplicados"
-                }
-              </p>
-              {stats.total === 0 && (
-                <Button asChild>
-                  <Link href="/courses">
-                    Explorar Cursos
-                  </Link>
+            <CardContent className="pt-6">
+              <div className="text-center py-12">
+                <p className="text-red-600 mb-4">{error}</p>
+                <Button onClick={loadCertificates}>
+                  Reintentar
                 </Button>
-              )}
+              </div>
             </CardContent>
           </Card>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {filteredCertificates.map((certificate) => (
-            <Card key={certificate.id} className="hover:shadow-lg transition-shadow">
-              <CardContent className="p-6">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold mb-2">
-                      {certificate.courseTitle}
-                    </h3>
-                    <p className="text-sm text-muted-foreground mb-3">
-                      {getCategoryLabel(certificate.courseCategory)}
-                    </p>
-                    <div className="flex items-center gap-2 mb-3">
-                      <Badge className={getGradeColor(certificate.grade)}>
-                        {certificate.grade}% - {getGradeLabel(certificate.grade)}
-                      </Badge>
-                      <Badge variant="outline">
-                        {certificate.certificateNumber}
-                      </Badge>
+        {/* Success State */}
+        {!loading && !error && (
+          <Tabs defaultValue="modules" className="space-y-6">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="modules" className="flex items-center gap-2">
+                <FileText className="h-4 w-4" />
+                Módulos ({moduleCertificates.length})
+              </TabsTrigger>
+              <TabsTrigger value="courses" className="flex items-center gap-2">
+                <GraduationCap className="h-4 w-4" />
+                Cursos Completos ({courseCertificates.length})
+              </TabsTrigger>
+            </TabsList>
+
+            {/* Certificados de Módulos */}
+            <TabsContent value="modules" className="space-y-6">
+              {moduleCertificates.length === 0 ? (
+                <Card>
+                  <CardContent className="pt-6">
+                    <div className="text-center py-12">
+                      <FileText className="h-16 w-16 mx-auto mb-4 text-gray-400" />
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                        No tienes certificados de módulos aún
+                      </h3>
+                      <p className="text-gray-600">
+                        Completa módulos de cursos para obtener certificados
+                      </p>
                     </div>
-                  </div>
-                  <Award className="h-8 w-8 text-yellow-600" />
+                  </CardContent>
+                </Card>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {moduleCertificates.map((certificate) => (
+                    <Card key={certificate.id} className="hover:shadow-lg transition-shadow">
+                      <CardHeader>
+                        <div className="flex items-start justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center">
+                              <FileText className="h-5 w-5 text-white" />
+                            </div>
+                            <div>
+                              <CardTitle className="text-lg">{certificate.module.title}</CardTitle>
+                              <p className="text-sm text-gray-600">{certificate.module.course.title}</p>
+                            </div>
+                          </div>
+                          <Badge className={getGradeColor(certificate.grade)}>
+                            {certificate.grade}%
+                          </Badge>
+                        </div>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <Calendar className="h-4 w-4" />
+                            <span>Emitido: {formatDate(certificate.issuedAt)}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <CheckCircle className="h-4 w-4" />
+                            <span>Completado: {formatDate(certificate.completedAt)}</span>
+                          </div>
+                        </div>
+                        
+                        <Button 
+                          onClick={() => handleDownload(certificate)}
+                          disabled={downloading === certificate.id}
+                          className="w-full"
+                        >
+                          {downloading === certificate.id ? (
+                            <>
+                              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                              Descargando...
+                            </>
+                          ) : (
+                            <>
+                              <Download className="h-4 w-4 mr-2" />
+                              Descargar Certificado
+                            </>
+                          )}
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  ))}
                 </div>
+              )}
+            </TabsContent>
 
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Emitido el:</span>
-                    <span>
-                      {new Date(certificate.issuedAt).toLocaleDateString()}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Estado:</span>
-                    <Badge className="bg-green-100 text-green-800">
-                      <CheckCircle className="h-3 w-3 mr-1" />
-                      Emitido
-                    </Badge>
-                  </div>
+            {/* Certificados de Cursos */}
+            <TabsContent value="courses" className="space-y-6">
+              {courseCertificates.length === 0 ? (
+                <Card>
+                  <CardContent className="pt-6">
+                    <div className="text-center py-12">
+                      <GraduationCap className="h-16 w-16 mx-auto mb-4 text-gray-400" />
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                        No tienes certificados de cursos completos aún
+                      </h3>
+                      <p className="text-gray-600">
+                        Completa cursos enteros para obtener certificados de graduación
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {courseCertificates.map((certificate) => (
+                    <Card key={certificate.id} className="hover:shadow-lg transition-shadow">
+                      <CardHeader>
+                        <div className="flex items-start justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-600 rounded-lg flex items-center justify-center">
+                              <GraduationCap className="h-5 w-5 text-white" />
+                            </div>
+                            <div>
+                              <CardTitle className="text-lg">{certificate.course.title}</CardTitle>
+                              <p className="text-sm text-gray-600">Curso Completo</p>
+                            </div>
+                          </div>
+                          <Badge variant={certificate.isValid ? "default" : "destructive"}>
+                            {certificate.isValid ? "Válido" : "Inválido"}
+                          </Badge>
+                        </div>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <Calendar className="h-4 w-4" />
+                            <span>Emitido: {formatDate(certificate.issuedAt)}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <Star className="h-4 w-4" />
+                            <span>Código: {certificate.verificationCode}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <FileText className="h-4 w-4" />
+                            <span>Plantilla: {certificate.template}</span>
+                          </div>
+                        </div>
+                        
+                        <div className="flex gap-2">
+                          <Button 
+                            onClick={() => handleDownload(certificate)}
+                            disabled={downloading === certificate.id}
+                            className="flex-1"
+                          >
+                            {downloading === certificate.id ? (
+                              <>
+                                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                Descargando...
+                              </>
+                            ) : (
+                              <>
+                                <Download className="h-4 w-4 mr-2" />
+                                Descargar
+                              </>
+                            )}
+                          </Button>
+                          
+                          <Button 
+                            variant="outline"
+                            onClick={() => window.open(certificate.url, '_blank')}
+                            className="px-3"
+                            title="Ver en navegador"
+                          >
+                            <ExternalLink className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
                 </div>
-
-                <div className="flex gap-2 mt-4">
-                  <Button size="sm" className="flex-1">
-                    <Download className="h-4 w-4 mr-2" />
-                    Descargar PDF
-                  </Button>
-                  <Button variant="outline" size="sm">
-                    <Share2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+              )}
+            </TabsContent>
+          </Tabs>
+        )}
       </div>
     </div>
   );

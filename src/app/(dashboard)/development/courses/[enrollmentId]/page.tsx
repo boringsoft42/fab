@@ -353,9 +353,9 @@ export default function CoursePage() {
                         Comenzar Aprendizaje
                       </Button>
                       
-                      <Button variant="outline" className="w-full">
+                      <Button variant="outline" className="w-full" disabled>
                         <BookOpen className="h-4 w-4 mr-2" />
-                        Ver Detalles del Curso
+                        Ya estás en los detalles del curso
                       </Button>
                       
                       {enrollment.certificateIssued && (

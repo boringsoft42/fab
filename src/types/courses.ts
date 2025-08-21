@@ -149,6 +149,8 @@ export interface QuizAnswer {
   answer: string | string[];
   isCorrect: boolean;
   timeSpent: number;
+  correctAnswer?: string;
+  explanation?: string;
 }
 
 export interface QuizAttempt {

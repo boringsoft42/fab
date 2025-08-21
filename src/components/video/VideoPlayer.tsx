@@ -37,6 +37,42 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   className
 }) => {
   const videoSrc = getVideoUrl(src);
+  
+  // Resetear estados cuando cambia la fuente del video
+  useEffect(() => {
+    setIsLoading(true);
+    setIsInitialLoading(true);
+    setError(null);
+    setCurrentTime(0);
+    setDuration(0);
+    setBuffered(0);
+    setIsPlaying(false);
+    setShowControls(true);
+    
+    // Forzar recarga del video element
+    if (videoRef.current) {
+      videoRef.current.load();
+    }
+  }, [src]);
+  
+  // Validar que tengamos una URL válida
+  if (!src || !videoSrc) {
+    return (
+      <div className={cn("bg-gradient-to-br from-gray-900 to-black flex items-center justify-center", className)}>
+        <div className="text-white text-center p-8">
+          <div className="mb-6">
+            <div className="w-16 h-16 mx-auto bg-gray-600 rounded-full flex items-center justify-center">
+              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+              </svg>
+            </div>
+          </div>
+          <h3 className="text-xl font-semibold mb-2">Video No Disponible</h3>
+          <p className="text-gray-300 mb-4">No se pudo cargar el contenido de video</p>
+        </div>
+      </div>
+    );
+  }
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   
@@ -50,6 +86,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const [showControls, setShowControls] = useState(true);
   const [buffered, setBuffered] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // Estados de UI
@@ -89,14 +126,15 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
         onTimeUpdate?.(current);
       }
     }
-  }, [onProgress, onTimeUpdate]);
+  }, [onProgress, onTimeUpdate, videoSrc]);
 
   const handleLoadedMetadata = useCallback(() => {
     if (videoRef.current) {
       setDuration(videoRef.current.duration);
       setIsLoading(false);
+      setIsInitialLoading(false);
     }
-  }, []);
+  }, [videoSrc]); // Dependencia en videoSrc para que se ejecute cuando cambia
 
   const handleProgress = useCallback(() => {
     if (videoRef.current && videoRef.current.buffered.length > 0) {
@@ -104,7 +142,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
       const duration = videoRef.current.duration;
       setBuffered((bufferedEnd / duration) * 100);
     }
-  }, []);
+  }, [videoSrc]);
 
   const handleSeek = useCallback((value: number[]) => {
     if (videoRef.current) {
@@ -177,8 +215,31 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
       setIsPlaying(false);
       onEnded?.();
     };
-    const handleError = () => {
-      setError('Error al cargar el video');
+    const handleError = (e: Event) => {
+      const video = e.target as HTMLVideoElement;
+      const error = video.error;
+      
+      let errorMessage = 'Error al cargar el video';
+      if (error) {
+        switch (error.code) {
+          case MediaError.MEDIA_ERR_ABORTED:
+            errorMessage = 'La reproducción del video fue cancelada';
+            break;
+          case MediaError.MEDIA_ERR_NETWORK:
+            errorMessage = 'Error de red al cargar el video';
+            break;
+          case MediaError.MEDIA_ERR_DECODE:
+            errorMessage = 'Error al decodificar el video';
+            break;
+          case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED:
+            errorMessage = 'El formato de video no es compatible';
+            break;
+          default:
+            errorMessage = `Error de video (código: ${error.code})`;
+        }
+      }
+      
+      setError(errorMessage);
       setIsLoading(false);
     };
 
@@ -199,7 +260,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
       video.removeEventListener('timeupdate', handleTimeUpdate);
       video.removeEventListener('progress', handleProgress);
     };
-  }, [handleTimeUpdate, handleLoadedMetadata, handleProgress, onEnded]);
+  }, [handleTimeUpdate, handleLoadedMetadata, handleProgress, onEnded, videoSrc]);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -249,14 +310,41 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
         clearTimeout(controlsTimeoutRef.current);
       }
     };
-  }, []);
+  }, [src]); // Limpiar timeout cuando cambia la fuente
 
   if (error) {
     return (
-      <div className={cn("bg-black flex items-center justify-center", className)}>
-        <div className="text-white text-center">
-          <p className="text-red-400 mb-2">Error al cargar el video</p>
-          <p className="text-sm text-gray-400">{error}</p>
+      <div className={cn("bg-gradient-to-br from-gray-900 to-black flex items-center justify-center", className)}>
+        <div className="text-white text-center p-8">
+          <div className="mb-6">
+            <div className="relative">
+              <div className="w-16 h-16 mx-auto bg-orange-500 rounded-full flex items-center justify-center">
+                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                </svg>
+              </div>
+              <div className="absolute inset-0 animate-ping bg-orange-400 rounded-full opacity-20"></div>
+            </div>
+          </div>
+          <h3 className="text-xl font-semibold mb-2">Error al Cargar Video</h3>
+          <p className="text-gray-300 mb-4">No se pudo cargar el contenido multimedia</p>
+          
+          {/* Botón de reintento */}
+          <Button
+            onClick={() => {
+              setError(null);
+              setIsLoading(true);
+              setIsInitialLoading(true);
+              // Forzar recarga del video
+              if (videoRef.current) {
+                videoRef.current.load();
+              }
+            }}
+            className="bg-white text-gray-900 hover:bg-gray-100 transition-colors"
+          >
+            <RotateCcw className="h-4 w-4 mr-2" />
+            Reintentar
+          </Button>
         </div>
       </div>
     );
@@ -265,7 +353,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   return (
     <div
       ref={containerRef}
-      className={cn("relative bg-black group", className)}
+      className={cn("relative bg-black group h-full min-h-[400px]", className)}
       onMouseMove={showControlsTemporarily}
       onMouseLeave={() => {
         if (isPlaying) {
@@ -273,40 +361,63 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
         }
       }}
     >
-      {/* Video Element */}
-      <video
-        ref={videoRef}
-        src={videoSrc}
-        className="w-full h-full object-contain"
-        preload="metadata"
-        playsInline
-        onDoubleClick={toggleFullscreen}
-      />
+             {/* Video Element */}
+       <video
+         ref={videoRef}
+         src={videoSrc}
+         key={videoSrc} // Forzar re-render cuando cambia la fuente
+         className={cn(
+           "w-full h-full object-cover transition-opacity duration-500",
+           isInitialLoading ? "opacity-0" : "opacity-100"
+         )}
+         preload="metadata"
+         playsInline
+         onDoubleClick={toggleFullscreen}
+       />
 
-      {/* Loading Overlay */}
-      {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
-        </div>
-      )}
+             {/* Initial Loading Overlay */}
+       {isInitialLoading && (
+         <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-900 via-purple-900 to-black">
+           <div className="text-center">
+             <div className="relative mb-6">
+               <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-600 border-t-purple-400"></div>
+               <div className="absolute inset-0 animate-ping rounded-full h-16 w-16 border-2 border-purple-300 opacity-30"></div>
+             </div>
+             <div className="space-y-3">
+               <h3 className="text-white font-semibold text-lg">Preparando Video</h3>
+               <p className="text-purple-200 text-sm">Cargando contenido multimedia...</p>
+             </div>
+           </div>
+         </div>
+       )}
 
-      {/* Play Button Overlay */}
+             {/* Buffering Overlay */}
+       {isLoading && !isInitialLoading && (
+         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+           <div className="text-center">
+             <div className="animate-spin rounded-full h-10 w-10 border-3 border-gray-600 border-t-purple-500 mb-3"></div>
+             <p className="text-white text-sm font-medium">Cargando...</p>
+           </div>
+         </div>
+       )}
+
+                   {/* Play Button Overlay */}
       {!isPlaying && !isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <Button
+        <div className="absolute inset-0 flex items-center justify-center z-10">
+                     <Button
             onClick={togglePlay}
             size="lg"
-            className="bg-white bg-opacity-20 hover:bg-opacity-30 text-white border-0"
+            className="bg-white/30 backdrop-blur-md hover:bg-white/40 text-white border border-white/40 transition-all duration-200 shadow-xl"
           >
-            <Play className="h-8 w-8 ml-1" />
-          </Button>
-        </div>
-      )}
+             <Play className="h-8 w-8 ml-1" />
+           </Button>
+         </div>
+       )}
 
-      {/* Controls Overlay */}
+                   {/* Controls Overlay */}
       <div
         className={cn(
-          "absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 transition-opacity duration-300",
+          "absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/95 via-black/70 to-transparent p-4 transition-opacity duration-300 backdrop-blur-md z-10",
           showControls ? "opacity-100" : "opacity-0"
         )}
       >
@@ -438,12 +549,14 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
         </div>
       </div>
 
-      {/* Title Overlay */}
-      {title && (
-        <div className="absolute top-4 left-4 right-4">
-          <h2 className="text-white text-lg font-semibold drop-shadow-lg">{title}</h2>
-        </div>
-      )}
+             {/* Title Overlay */}
+       {title && (
+         <div className="absolute top-4 left-4 right-4">
+           <div className="bg-black/60 backdrop-blur-sm px-4 py-2 rounded-lg border border-white/20 inline-block">
+             <h2 className="text-white text-lg font-semibold drop-shadow-lg">{title}</h2>
+           </div>
+         </div>
+       )}
     </div>
   );
 };

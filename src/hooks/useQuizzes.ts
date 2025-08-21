@@ -44,7 +44,7 @@ export const useQuizzes = () => {
       setLoading(true);
       setError(null);
       
-      const response = await apiCall(`/quizzes/lesson/${lessonId}`, {
+      const response = await apiCall(`/quizzes/${lessonId}`, {
         method: 'GET'
       });
       
@@ -70,7 +70,7 @@ export const useQuizzes = () => {
         answers
       });
       
-      const response = await apiCall(`/quizattempt/complete`, {
+      const response = await apiCall(`/quiz-attempts/complete`, {
         method: 'POST',
         body: JSON.stringify({
           quizId,

@@ -37,7 +37,7 @@ export const useQuizAttempts = () => {
         answersCount: answers.length
       });
       
-      const response = await apiCall('/quizattempt/complete', {
+      const response = await apiCall('/quiz-attempts/complete', {
         method: 'POST',
         body: JSON.stringify({
           quizId,

@@ -21,7 +21,7 @@ import {
   Award,
   BookOpen
 } from "lucide-react";
-import { useQuizAttempts } from "@/hooks/useQuizAttempts";
+import { useQuizSystem } from "@/hooks/useQuizSystem";
 
 interface QuizQuestion {
   id: string;
@@ -74,7 +74,7 @@ export const QuizComponent: React.FC<QuizComponentProps> = ({
   onComplete,
   onCancel
 }) => {
-  const { completeQuiz, loading: submittingQuiz } = useQuizAttempts();
+  const { completeQuiz, loading: submittingQuiz } = useQuizSystem();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string | string[]>>({});
   const [timeSpent, setTimeSpent] = useState(0);

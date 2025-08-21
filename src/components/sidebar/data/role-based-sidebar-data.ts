@@ -106,7 +106,7 @@ export const youthSidebarData: SidebarData = {
             },
             {
               title: "Centro de Recursos",
-              url: "/entrepreneurship/resources",
+              url: "/resources",
             },
             {
               title: "Publicar mi Emprendimiento",
@@ -327,6 +327,21 @@ export const companySidebarData: SidebarData = {
         },
       ],
     },
+    {
+      title: "Recursos",
+      items: [
+        {
+          title: "Ver Recursos",
+          url: "/resources",
+          icon: FileText,
+        },
+        {
+          title: "Crear Recurso",
+          url: "/resources/create",
+          icon: FileText,
+        },
+      ],
+    },
     // {
     //   title: "Análisis",
     //   items: [
@@ -406,6 +421,20 @@ export const municipalGovernmentSidebarData: SidebarData = {
             {
               title: "Gestión de Eventos",
               url: "/admin/entrepreneurship/events",
+            },
+          ],
+        },
+        {
+          title: "Recursos",
+          icon: FileText,
+          items: [
+            {
+              title: "Ver Recursos",
+              url: "/resources",
+            },
+            {
+              title: "Crear Recurso",
+              url: "/resources/create",
             },
           ],
         },
@@ -500,6 +529,20 @@ export const trainingCenterSidebarData: SidebarData = {
             {
               title: "Gestión de Eventos",
               url: "/admin/entrepreneurship/events",
+            },
+          ],
+        },
+        {
+          title: "Recursos",
+          icon: FileText,
+          items: [
+            {
+              title: "Ver Recursos",
+              url: "/resources",
+            },
+            {
+              title: "Crear Recurso",
+              url: "/resources/create",
             },
           ],
         },
@@ -606,6 +649,20 @@ export const ngoFoundationSidebarData: SidebarData = {
           title: "Gestión de Noticias",
           url: "/admin/news",
           icon: FileText,
+        },
+        {
+          title: "Recursos",
+          icon: FileText,
+          items: [
+            {
+              title: "Ver Recursos",
+              url: "/resources",
+            },
+            {
+              title: "Crear Recurso",
+              url: "/resources/create",
+            },
+          ],
         },
       ],
     },
@@ -718,6 +775,21 @@ export const superAdminSidebarData: SidebarData = {
           title: "Gestión de Eventos",
           url: "/admin/events",
           icon: Lightbulb,
+        },
+      ],
+    },
+    {
+      title: "Recursos",
+      items: [
+        {
+          title: "Gestión de Recursos",
+          url: "/resources",
+          icon: FileText,
+        },
+        {
+          title: "Crear Recurso",
+          url: "/resources/create",
+          icon: FileText,
         },
       ],
     },

@@ -1,0 +1,203 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Search } from 'lucide-react';
+import { usePublicResources, useSearchResources, useResourcesByType, useResourcesByCategory } from '@/hooks/useResourceApi';
+import { Resource } from '@/types/api';
+import { ResourceCard } from '@/components/resources/ResourceCard';
+
+export default function ResourcesPage() {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedType, setSelectedType] = useState<string>('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [activeTab, setActiveTab] = useState('all');
+
+  // Hooks para obtener recursos
+  const { data: publicResources, isLoading: loadingPublic } = usePublicResources();
+  const { mutateAsync: searchResources, data: searchResults, isLoading: loadingSearch } = useSearchResources();
+  const { data: typeResources, isLoading: loadingType } = useResourcesByType(selectedType);
+  const { data: categoryResources, isLoading: loadingCategory } = useResourcesByCategory(selectedCategory);
+
+  // Función para manejar búsqueda
+  const handleSearch = async () => {
+    if (searchQuery.trim()) {
+      await searchResources(searchQuery);
+    }
+  };
+
+  // Función para descargar recurso
+  const handleDownload = async (resource: Resource) => {
+    try {
+      const response = await fetch(`/api/resources/${resource.id}/download`, {
+        method: 'GET',
+      });
+      
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = resource.title;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      }
+    } catch (error) {
+      console.error('Error downloading resource:', error);
+    }
+  };
+
+  // Función para calificar recurso
+  const handleRate = async (resource: Resource, rating: number) => {
+    try {
+      await fetch(`/api/resources/${resource.id}/rate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ rating }),
+      });
+    } catch (error) {
+      console.error('Error rating resource:', error);
+    }
+  };
+
+  // Obtener recursos según la pestaña activa
+  const getCurrentResources = () => {
+    switch (activeTab) {
+      case 'search':
+        return searchResults || [];
+      case 'type':
+        return typeResources || [];
+      case 'category':
+        return categoryResources || [];
+      default:
+        return publicResources || [];
+    }
+  };
+
+  const currentResources = getCurrentResources();
+  const isLoading = loadingPublic || loadingSearch || loadingType || loadingCategory;
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Recursos Educativos</h1>
+        <p className="text-gray-600">
+          Explora y descarga recursos educativos para tu desarrollo personal y profesional
+        </p>
+      </div>
+
+      {/* Filtros y búsqueda */}
+      <div className="mb-6 space-y-4">
+        <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex-1">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Input
+                placeholder="Buscar recursos..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                className="pl-10"
+              />
+            </div>
+          </div>
+          <Button onClick={handleSearch} disabled={!searchQuery.trim()}>
+            Buscar
+          </Button>
+        </div>
+
+        <div className="flex flex-col sm:flex-row gap-4">
+          <Select value={selectedType} onValueChange={setSelectedType}>
+            <SelectTrigger className="w-full sm:w-48">
+              <SelectValue placeholder="Tipo de recurso" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="">Todos los tipos</SelectItem>
+              <SelectItem value="TEMPLATE">Plantillas</SelectItem>
+              <SelectItem value="GUIDE">Guías</SelectItem>
+              <SelectItem value="VIDEO">Videos</SelectItem>
+              <SelectItem value="TOOL">Herramientas</SelectItem>
+              <SelectItem value="COURSE">Cursos</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+            <SelectTrigger className="w-full sm:w-48">
+              <SelectValue placeholder="Categoría" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="">Todas las categorías</SelectItem>
+              <SelectItem value="EMPRENDIMIENTO">Emprendimiento</SelectItem>
+              <SelectItem value="TECNOLOGIA">Tecnología</SelectItem>
+              <SelectItem value="EDUCACION">Educación</SelectItem>
+              <SelectItem value="SALUD">Salud</SelectItem>
+              <SelectItem value="FINANZAS">Finanzas</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      {/* Pestañas */}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="all">Todos</TabsTrigger>
+          <TabsTrigger value="search">Búsqueda</TabsTrigger>
+          <TabsTrigger value="type">Por Tipo</TabsTrigger>
+          <TabsTrigger value="category">Por Categoría</TabsTrigger>
+        </TabsList>
+      </Tabs>
+
+      {/* Lista de recursos */}
+      {isLoading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[...Array(6)].map((_, i) => (
+            <Card key={i} className="animate-pulse">
+              <CardHeader>
+                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+              </CardHeader>
+              <CardContent>
+                <div className="h-20 bg-gray-200 rounded mb-4"></div>
+                <div className="space-y-2">
+                  <div className="h-3 bg-gray-200 rounded w-full"></div>
+                  <div className="h-3 bg-gray-200 rounded w-2/3"></div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      ) : currentResources.length === 0 ? (
+        <div className="text-center py-12">
+          <div className="text-gray-400 mb-4">
+            <Search className="h-16 w-16 mx-auto" />
+          </div>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">No se encontraron recursos</h3>
+          <p className="text-gray-600">
+            {activeTab === 'search' 
+              ? 'Intenta con otros términos de búsqueda'
+              : 'No hay recursos disponibles en esta categoría'
+            }
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {currentResources.map((resource) => (
+            <ResourceCard
+              key={resource.id}
+              resource={resource}
+              onDownload={handleDownload}
+              onRate={handleRate}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}

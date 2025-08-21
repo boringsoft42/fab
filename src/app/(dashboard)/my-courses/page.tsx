@@ -311,32 +311,32 @@ export default function MyCoursesPage() {
                   <div className="flex flex-col gap-2 lg:w-48">
                     {enrollment.status === "COMPLETED" ? (
                       <Button asChild className="w-full">
-                        <Link href={`/certificates/${enrollment.id}`}>
+                        <Link href="/certificates">
                           <Award className="h-4 w-4 mr-2" />
                           Ver Certificado
                         </Link>
                       </Button>
                     ) : enrollment.status === "IN_PROGRESS" ? (
                       <Button asChild className="w-full">
-                        <Link href={`/development/courses/${enrollment.id}`}>
+                        <Link href={`/development/courses/${enrollment.id}/learn`}>
                           <Play className="h-4 w-4 mr-2" />
                           Continuar
                         </Link>
                       </Button>
                     ) : (
                       <Button asChild className="w-full">
-                        <Link href={`/development/courses/${enrollment.id}`}>
+                        <Link href={`/development/courses/${enrollment.id}/learn`}>
                           <BookOpen className="h-4 w-4 mr-2" />
                           Ir al Curso
                         </Link>
                       </Button>
                     )}
 
-                    <Button variant="outline" asChild className="w-full">
-                      <Link href={`/courses/${enrollment.course.id}`}>
-                        Ver Detalles
-                      </Link>
-                    </Button>
+                                         <Button variant="outline" asChild className="w-full">
+                       <Link href={`/development/courses/${enrollment.id}`}>
+                         Ver Detalles
+                       </Link>
+                     </Button>
                   </div>
                 </div>
               </CardContent>

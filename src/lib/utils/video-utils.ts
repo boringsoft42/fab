@@ -2,7 +2,9 @@
  * Convierte URLs de MinIO a URLs del proxy para evitar problemas de CSP
  */
 export const getVideoUrl = (url: string): string => {
-  if (!url) return '';
+  if (!url) {
+    return '';
+  }
   
   // Si es una URL de MinIO, usar el proxy
   if (url.includes('127.0.0.1:9000') || url.includes('localhost:9000')) {
