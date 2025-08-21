@@ -2,7 +2,7 @@
 const nextConfig = {
   env: {
     NEXT_PUBLIC_USE_BACKEND: 'true',
-    NEXT_PUBLIC_BACKEND_URL: 'http://192.168.0.87:3001',
+    NEXT_PUBLIC_BACKEND_URL: 'https://6d5ba732fe3c.ngrok-free.app',
   },
   // Ensure proper URL resolution
   basePath: '',
@@ -17,6 +17,7 @@ const nextConfig = {
       "placehold.co",
       "localhost",
       "192.168.0.87",
+      "6d5ba732fe3c.ngrok-free.app",
     ],
     remotePatterns: [
       {
@@ -40,6 +41,10 @@ const nextConfig = {
         protocol: "http",
         hostname: "192.168.0.87",
         port: "3001",
+      },
+      {
+        protocol: "https",
+        hostname: "6d5ba732fe3c.ngrok-free.app",
       },
     ],
   },
@@ -79,7 +84,7 @@ const nextConfig = {
           {
             key: "Content-Security-Policy",
             value:
-              "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://*.supabase.co; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.stripe.com http://localhost:3001 http://localhost:3000 http://192.168.0.87:3001; style-src 'self' 'unsafe-inline' https://unpkg.com; img-src 'self' data: https://*.supabase.co https://* http://localhost:3001 http://192.168.0.87:3001 blob:; font-src 'self' data:; frame-src 'self' https://js.stripe.com; object-src 'none'",
+              "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://*.supabase.co; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.stripe.com http://localhost:3001 http://localhost:3000 http://192.168.0.87:3001 https://6d5ba732fe3c.ngrok-free.app; style-src 'self' 'unsafe-inline' https://unpkg.com; img-src 'self' data: https://*.supabase.co https://* http://localhost:3001 http://192.168.0.87:3001 https://6d5ba732fe3c.ngrok-free.app blob:; font-src 'self' data:; frame-src 'self' https://js.stripe.com; object-src 'none'",
           },
         ],
       },
