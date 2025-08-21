@@ -236,6 +236,22 @@ interface CreateApplicationRequest {
 **Method**: DELETE
 **Headers**: Authorization Bearer token
 
+#### GET `/api/check-application/{jobId}` - Check Application Status
+**Purpose**: Check if user has already applied to a specific job
+**Method**: GET
+**Headers**: Authorization Bearer token
+**Response**:
+```typescript
+interface CheckApplicationResponse {
+  hasApplied: boolean;
+  application?: {
+    id: string;
+    status: ApplicationStatus;
+    appliedAt: string;
+  };
+}
+```
+
 ### Job Messages Endpoints
 
 #### GET `/api/jobmessage/{applicationId}` - Get Chat Messages
@@ -261,6 +277,42 @@ interface SendMessageRequest {
 **Purpose**: Fetch custom questions for specific job
 **Method**: GET
 **Headers**: Authorization Bearer token
+**Response**:
+```typescript
+interface JobQuestion {
+  id: string;
+  question: string;
+  type: 'text' | 'multiple_choice' | 'boolean';
+  required: boolean;
+  options?: string[];
+  order: number;
+}
+```
+
+### Profile & Document Endpoints
+
+#### GET `/api/profile/cv-status` - Get CV and Cover Letter Status
+**Purpose**: Check user's document status for applications
+**Method**: GET
+**Headers**: Authorization Bearer token
+**Response**:
+```typescript
+interface CVStatusResponse {
+  hasCV: boolean;
+  hasCoverLetter: boolean;
+  cvUrl?: string;
+  coverLetterUrl?: string;
+  cvData?: any;
+  source?: 'builder' | 'file';
+}
+```
+
+#### POST `/api/profile/upload-document` - Upload Document
+**Purpose**: Upload CV or cover letter PDF
+**Method**: POST
+**Headers**: Authorization Bearer token, multipart/form-data
+**Body**: FormData with file and type ('cv' | 'coverLetter')
+**Response**: Document upload confirmation
 
 ## Data Models & Types
 
@@ -355,6 +407,17 @@ export interface JobApplication {
 }
 ```
 
+### Job Question Answer Model
+```typescript
+export interface JobQuestionAnswer {
+  id?: string;
+  questionId: string;
+  question: string;
+  answer: string;
+  type: 'text' | 'multiple_choice' | 'boolean';
+}
+```
+
 ### Search Filters Model
 ```typescript
 export interface JobSearchFilters {
@@ -367,6 +430,24 @@ export interface JobSearchFilters {
   salaryMax?: number;
   publishedInDays?: number;
   sector?: string[];
+}
+```
+
+### Company Model
+```typescript
+export interface Company {
+  id: string;
+  name: string;
+  logo?: string;
+  description?: string;
+  website?: string;
+  sector?: string;
+  size?: string;
+  rating?: number;
+  reviewCount?: number;
+  images?: string[];
+  location?: string;
+  email?: string;
 }
 ```
 
@@ -2660,6 +2741,32 @@ const handleCancelApplication = async () => {
 - [ ] Token expiration handling and auto-refresh
 - [ ] File access verification and error handling
 - [ ] Offline state management and sync
+
+## Critical Implementation Notes
+
+### Document Requirements
+**CRITICAL**: All job applications MUST have at least one document (CV or cover letter PDF) to be submitted successfully. The mobile app must enforce this requirement and guide users through document upload when missing.
+
+### Application Status Flow
+The complete application lifecycle follows this flow:
+1. **SENT** - Initial application submission
+2. **UNDER_REVIEW** - Company is reviewing the application
+3. **PRE_SELECTED** - Candidate has been shortlisted
+4. **REJECTED** - Application was not successful
+5. **HIRED** - Candidate was selected for the position
+
+### Real-time Features
+The web application implements several real-time features that must be replicated:
+- **Application Status Checking**: Every job card checks if the user has already applied
+- **Chat Auto-refresh**: Messages refresh every 30 seconds
+- **Document Status Verification**: Real-time checking of CV/cover letter availability
+
+### Error Handling Priorities
+1. **Authentication errors** (401) - Redirect to login
+2. **Document validation errors** - Open CV check modal
+3. **Required question errors** - Highlight missing required fields
+4. **Network errors** - Provide retry functionality
+5. **File upload errors** - Clear feedback with retry options
 
 ## Testing Strategy
 
