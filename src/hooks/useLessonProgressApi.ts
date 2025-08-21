@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getAuthHeaders } from '@/lib/api';
+import { apiCall } from '@/lib/api';
 
 export interface LessonProgress {
   id: string;
@@ -53,16 +53,8 @@ export const useLessonProgress = (enrollmentId?: string, lessonId?: string) => {
         enrollmentId, 
         lessonId 
       });
-      const response = await fetch(`http://localhost:3001/api/lessonprogress?${params}`, {
-        headers: getAuthHeaders(),
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch lesson progress');
-      }
-      
-      const data = await response.json();
-      return data.progress;
+      const data = await apiCall(`/lessonprogress?${params}`);
+      return data;
     },
     enabled: !!enrollmentId && !!lessonId,
   });
@@ -76,15 +68,8 @@ export const useEnrollmentProgress = (enrollmentId?: string) => {
       if (!enrollmentId) return { progress: [] };
       
       const params = new URLSearchParams({ enrollmentId });
-      const response = await fetch(`http://localhost:3001/api/lessonprogress?${params}`, {
-        headers: getAuthHeaders(),
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch enrollment progress');
-      }
-      
-      return response.json();
+      const data = await apiCall(`/lessonprogress?${params}`);
+      return data;
     },
     enabled: !!enrollmentId,
   });
@@ -98,15 +83,7 @@ export const useCourseProgress = (courseId?: string) => {
       if (!courseId) return null;
       
       const params = new URLSearchParams({ courseId });
-      const response = await fetch(`http://localhost:3001/api/lessonprogress?${params}`, {
-        headers: getAuthHeaders(),
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch course progress');
-      }
-      
-      const data = await response.json();
+      const data = await apiCall(`/lessonprogress?${params}`);
       return data.courseProgress as CourseProgress;
     },
     enabled: !!courseId,
@@ -119,17 +96,11 @@ export const useUpdateProgress = () => {
   
   return useMutation({
     mutationFn: async (progressData: CreateProgressData) => {
-      const response = await fetch('http://localhost:3001/api/lessonprogress', {
+      const data = await apiCall('/lessonprogress', {
         method: 'POST',
-        headers: getAuthHeaders(),
         body: JSON.stringify(progressData),
       });
-      
-      if (!response.ok) {
-        throw new Error('Failed to update progress');
-      }
-      
-      return response.json();
+      return data;
     },
     onSuccess: (data, variables) => {
       // Invalidate and refetch progress
@@ -149,17 +120,11 @@ export const useUpdateProgressRecord = () => {
   
   return useMutation({
     mutationFn: async (progressData: UpdateProgressData) => {
-      const response = await fetch('http://localhost:3001/api/lessonprogress', {
+      const data = await apiCall('/lessonprogress', {
         method: 'PUT',
-        headers: getAuthHeaders(),
         body: JSON.stringify(progressData),
       });
-      
-      if (!response.ok) {
-        throw new Error('Failed to update progress record');
-      }
-      
-      return response.json();
+      return data;
     },
     onSuccess: (data, variables) => {
       // Invalidate and refetch progress
@@ -180,16 +145,8 @@ export const useDeleteProgress = () => {
   return useMutation({
     mutationFn: async (progressId: string) => {
       const params = new URLSearchParams({ id: progressId });
-      const response = await fetch(`http://localhost:3001/api/lessonprogress?${params}`, {
-        method: 'DELETE',
-        headers: getAuthHeaders(),
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to delete progress');
-      }
-      
-      return response.json();
+      const data = await apiCall(`/lessonprogress?${params}`, { method: 'DELETE' });
+      return data;
     },
     onSuccess: () => {
       // Invalidate and refetch all progress

@@ -2,6 +2,7 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { MunicipalityService } from '@/services/municipality.service';
+import { useAuth } from '@/hooks/use-auth';
 import type { 
   Municipality, 
   CreateMunicipalityRequest, 
@@ -93,9 +94,19 @@ export const useMunicipalityLogin = () => {
 
 // Get current municipality
 export const useCurrentMunicipality = () => {
+  const { user, isAuthenticated } = useAuth();
+  
+  console.log("🏛️ useCurrentMunicipality - Debug info:", {
+    user: !!user,
+    isAuthenticated,
+    userRole: user?.role,
+    shouldEnable: isAuthenticated && (user?.role === 'MUNICIPAL_GOVERNMENTS' || user?.role === 'GOBIERNOS_MUNICIPALES')
+  });
+  
   return useQuery({
     queryKey: ['municipality', 'current'],
     queryFn: MunicipalityService.getCurrentMunicipality,
+    enabled: isAuthenticated && (user?.role === 'MUNICIPAL_GOVERNMENTS' || user?.role === 'GOBIERNOS_MUNICIPALES'),
   });
 };
 

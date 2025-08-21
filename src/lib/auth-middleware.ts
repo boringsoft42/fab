@@ -4,6 +4,7 @@ import { User } from '@/types/api';
 export interface AuthResult {
   success: boolean;
   user?: User;
+  token?: string;
   message?: string;
 }
 
@@ -15,9 +16,12 @@ export interface OrganizationResult {
 // Middleware para autenticación de token
 export async function authenticateToken(request: NextRequest): Promise<AuthResult> {
   try {
+    console.log('🔐 authenticateToken - Iniciando validación');
     const authHeader = request.headers.get('authorization');
+    console.log('🔐 authenticateToken - Auth header:', authHeader);
     
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      console.log('🔐 authenticateToken - Header inválido o faltante');
       return {
         success: false,
         message: 'Authorization header missing or invalid'
@@ -25,21 +29,26 @@ export async function authenticateToken(request: NextRequest): Promise<AuthResul
     }
 
     const token = authHeader.substring(7); // Remove 'Bearer ' prefix
+    console.log('🔐 authenticateToken - Token extraído:', token ? `${token.substring(0, 20)}...` : 'null');
     
     // Aquí deberías validar el token con tu backend
     // Por ahora, simulamos la validación
     const user = await validateToken(token);
+    console.log('🔐 authenticateToken - Usuario validado:', user);
     
     if (!user) {
+      console.log('🔐 authenticateToken - Token inválido o expirado');
       return {
         success: false,
         message: 'Invalid or expired token'
       };
     }
 
+    console.log('🔐 authenticateToken - Autenticación exitosa');
     return {
       success: true,
-      user
+      user,
+      token
     };
 
   } catch (error) {
@@ -134,24 +143,33 @@ export async function requireSuperAdmin(request: NextRequest): Promise<Organizat
 // Función para validar token (simulada)
 async function validateToken(token: string): Promise<User | null> {
   try {
-    // Aquí deberías hacer una llamada a tu backend para validar el token
-    // Por ahora, simulamos la validación
+    // Decodificar el token JWT para obtener información del usuario
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split('')
+        .map(function (c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        })
+        .join('')
+    );
     
-    // Simular una llamada al backend
-    const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001'}/api/auth/validate`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      }
-    });
-
-    if (!response.ok) {
-      return null;
-    }
-
-    const data = await response.json();
-    return data.user;
+    const decoded = JSON.parse(jsonPayload);
+    
+    // Crear un objeto User básico desde el token decodificado
+    const user: User = {
+      id: decoded.id || decoded.sub,
+      username: decoded.username || decoded.email,
+      email: decoded.email,
+      role: decoded.role || decoded.type,
+      type: decoded.type,
+      firstName: decoded.firstName || decoded.given_name,
+      lastName: decoded.lastName || decoded.family_name,
+      // Agregar otros campos según sea necesario
+    };
+    
+    return user;
 
   } catch (error) {
     console.error('Token validation error:', error);

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { API_BASE } from '@/lib/api';
+import { getAuthHeaders } from '@/lib/auth-middleware';
 
 export async function GET(request: NextRequest) {
   try {
@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     
     // Forward all search parameters to backend
-    const url = new URL(`${API_BASE}/lesson-progress`);
+    const url = new URL(`http://localhost:3001/api/lesson-progress`);
     searchParams.forEach((value, key) => {
       url.searchParams.set(key, value);
     });
@@ -47,39 +47,28 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    console.log('🔍 API: Received POST request for lesson progress');
     const body = await request.json();
+    const authHeaders = getAuthHeaders();
     
-    console.log('🔍 API: Forwarding to backend:', `${API_BASE}/lesson-progress`);
-    console.log('🔍 API: Authorization header:', request.headers.get('authorization') ? 'Present' : 'Missing');
-
-    const response = await fetch(`${API_BASE}/lesson-progress`, {
+    const response = await fetch(`http://localhost:3001/api/lesson-progress`, {
       method: 'POST',
       headers: {
-        'Authorization': request.headers.get('authorization') || '',
         'Content-Type': 'application/json',
+        ...authHeaders,
       },
       body: JSON.stringify(body),
     });
 
-    console.log('🔍 API: Backend response status:', response.status);
-
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error('🔍 API: Backend error:', errorText);
-      return NextResponse.json(
-        { message: `Backend error: ${response.status} ${errorText}` },
-        { status: response.status }
-      );
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     const data = await response.json();
-    console.log('🔍 API: Backend data received for lesson progress creation');
-    return NextResponse.json(data, { status: response.status });
+    return NextResponse.json(data);
   } catch (error) {
-    console.error('Error in lesson progress POST route:', error);
+    console.error('Error creating lesson progress:', error);
     return NextResponse.json(
-      { message: 'Internal server error' },
+      { error: 'Error al crear progreso de lección' },
       { status: 500 }
     );
   }

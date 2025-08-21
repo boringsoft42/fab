@@ -355,17 +355,21 @@ export interface Resource {
   id: string;
   title: string;
   description: string;
-  type: 'TEMPLATE' | 'GUIDE' | 'VIDEO' | 'TOOL' | 'COURSE';
+  type: 'DOCUMENT' | 'VIDEO' | 'AUDIO' | 'IMAGE' | 'TEXT';
   category: string;
   format: string;
   url?: string;
   fileUrl?: string;
-  thumbnailUrl?: string;
+  downloadUrl?: string;
+  externalUrl?: string;
+  thumbnail?: string;
   tags: string[];
   downloads: number;
   rating?: number;
   isPublic: boolean;
   authorId: string;
+  author?: string;
+  publishedDate?: string;
   createdAt: string;
   updatedAt: string;
 }

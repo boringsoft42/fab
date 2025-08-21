@@ -1,21 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { API_BASE } from '@/lib/api';
+import { getAuthHeaders } from '@/lib/auth-middleware';
 
 export async function GET(request: NextRequest) {
   try {
-    const response = await fetch(`${API_BASE}/contacts/stats`, {
+    const authHeaders = getAuthHeaders();
+    const response = await fetch(`http://localhost:3001/api/contacts/stats`, {
+      method: 'GET',
       headers: {
-        'Authorization': request.headers.get('authorization') || '',
         'Content-Type': 'application/json',
+        ...authHeaders,
       },
     });
 
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
     const data = await response.json();
-    return NextResponse.json(data, { status: response.status });
+    return NextResponse.json(data);
   } catch (error) {
-    console.error('Error in contacts stats route:', error);
+    console.error('Error fetching contact stats:', error);
     return NextResponse.json(
-      { message: 'Internal server error' },
+      { error: 'Error al cargar estadísticas de contactos' },
       { status: 500 }
     );
   }

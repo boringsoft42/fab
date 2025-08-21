@@ -68,7 +68,15 @@ export class MunicipalityService {
 
   // Get current municipality
   static async getCurrentMunicipality(): Promise<Municipality> {
-    return await apiCall('/municipality/me');
+    console.log("🏛️ MunicipalityService.getCurrentMunicipality - Making API call to /municipality/auth/me");
+    
+    // Use the local API route which will proxy to the backend
+    const response = await apiCall('/municipality/auth/me');
+    console.log("🏛️ MunicipalityService.getCurrentMunicipality - Raw response:", response);
+    // Handle the response format: { municipality: {...} } or direct object
+    const result = response.municipality || response;
+    console.log("🏛️ MunicipalityService.getCurrentMunicipality - Processed result:", result);
+    return result;
   }
 
   // Change municipality password

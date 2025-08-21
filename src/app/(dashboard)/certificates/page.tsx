@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Award, 
@@ -14,9 +15,11 @@ import {
   Star,
   CheckCircle,
   Loader2,
-  ExternalLink
+  ExternalLink,
+  BookOpen
 } from "lucide-react";
 import { useCertificates } from "@/hooks/useCertificates";
+import { useEnrollments } from "@/hooks/useEnrollments";
 
 interface ModuleCertificate {
   id: string;
@@ -55,11 +58,13 @@ interface CourseCertificate {
   course: {
     id: string;
     title: string;
+    description?: string;
   };
   user: {
     id: string;
     firstName: string;
     lastName: string;
+    email?: string;
   };
 }
 
@@ -71,8 +76,11 @@ export default function CertificatesPage() {
     loadModuleCertificates,
     loadCourseCertificates,
     downloadCertificate,
+    previewCertificate,
     setError
   } = useCertificates();
+
+  const { enrollments, loading: enrollmentsLoading } = useEnrollments();
 
   const [moduleCertificates, setModuleCertificates] = useState<ModuleCertificate[]>([]);
   const [courseCertificates, setCourseCertificates] = useState<CourseCertificate[]>([]);
@@ -86,6 +94,7 @@ export default function CertificatesPage() {
   const loadCertificates = async () => {
     try {
       setIsInitialized(true);
+      setError(null);
       setDebugInfo('Iniciando carga de certificados...');
       
       // Cargar certificados de módulos
@@ -102,8 +111,15 @@ export default function CertificatesPage() {
 
     } catch (err) {
       console.error('Error loading certificates:', err);
-      setError('Error al cargar los certificados. Inténtalo de nuevo.');
-      setDebugInfo(`Error: ${err instanceof Error ? err.message : 'Error desconocido'}`);
+      const errorMessage = err instanceof Error ? err.message : 'Error desconocido';
+      
+      if (errorMessage.includes('fetch failed') || errorMessage.includes('Backend not available')) {
+        setError('No se pudo conectar con el servidor. Verificando datos locales...');
+        setDebugInfo('Usando datos de ejemplo mientras el servidor no esté disponible');
+      } else {
+        setError('Error al cargar los certificados. Inténtalo de nuevo.');
+        setDebugInfo(`Error: ${errorMessage}`);
+      }
     }
   };
 
@@ -116,6 +132,60 @@ export default function CertificatesPage() {
     } catch (err) {
       console.error('Error downloading certificate:', err);
       alert('Error al descargar el certificado. Inténtalo de nuevo.');
+    }
+  };
+
+  const handlePreview = async (certificate: ModuleCertificate | CourseCertificate) => {
+    try {
+      const success = await previewCertificate(certificate);
+      if (!success) {
+        alert('Error al previsualizar el certificado. Inténtalo de nuevo.');
+      }
+    } catch (err) {
+      console.error('Error previewing certificate:', err);
+      alert('Error al previsualizar el certificado. Inténtalo de nuevo.');
+    }
+  };
+
+  // Función de prueba para certificados de cursos
+  const testCourseCertificate = async () => {
+    const testCertificate: CourseCertificate = {
+      id: 'test_cert_1',
+      userId: 'user_123',
+      courseId: 'course_1',
+      template: 'default',
+      issuedAt: '2024-01-15T10:00:00Z',
+      verificationCode: 'CERT-TEST-001',
+      digitalSignature: 'sha256-test-signature',
+      isValid: true,
+      url: 'https://example.com/certificates/test-cert.pdf',
+      course: {
+        id: 'course_1',
+        title: 'Curso de Prueba',
+        description: 'Este es un curso de prueba para verificar la generación de PDFs'
+      },
+      user: {
+        id: 'user_123',
+        firstName: 'Juan',
+        lastName: 'Pérez',
+        email: 'juan.perez@example.com'
+      }
+    };
+
+    try {
+      console.log('🧪 Testing course certificate generation...');
+      console.log('🧪 Test certificate data:', JSON.stringify(testCertificate, null, 2));
+      const success = await downloadCertificate(testCertificate);
+      if (success) {
+        console.log('✅ Test certificate generated successfully');
+        alert('✅ Certificado de prueba generado exitosamente');
+      } else {
+        console.log('❌ Test certificate generation failed');
+        alert('❌ Error al generar certificado de prueba. Revisa la consola para más detalles.');
+      }
+    } catch (error) {
+      console.error('❌ Test certificate error:', error);
+      alert('❌ Error en prueba de certificado. Revisa la consola para más detalles.');
     }
   };
 
@@ -135,6 +205,10 @@ export default function CertificatesPage() {
   };
 
   const totalCertificates = moduleCertificates.length + courseCertificates.length;
+  
+  // Información sobre inscripciones
+  const enrolledCourses = enrollments.filter(e => e.status === 'IN_PROGRESS' || e.status === 'COMPLETED');
+  const completedCourses = enrollments.filter(e => e.status === 'COMPLETED');
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -148,11 +222,41 @@ export default function CertificatesPage() {
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">Mis Certificados</h1>
-                <p className="text-gray-600 mt-1">
-                  {totalCertificates} certificado{totalCertificates !== 1 ? 's' : ''} obtenido{totalCertificates !== 1 ? 's' : ''}
-                </p>
+                                 <p className="text-gray-600 mt-1">
+                   {totalCertificates} certificado{totalCertificates !== 1 ? 's' : ''} obtenido{totalCertificates !== 1 ? 's' : ''}
+                 </p>
+                 <Button 
+                   onClick={testCourseCertificate}
+                   variant="outline"
+                   size="sm"
+                   className="mt-2"
+                 >
+                   🧪 Probar Certificado de Curso
+                 </Button>
                 {debugInfo && (
                   <p className="text-xs text-blue-600 mt-1">Debug: {debugInfo}</p>
+                )}
+                {debugInfo && debugInfo.includes('datos de ejemplo') && (
+                  <div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded-md">
+                    <p className="text-xs text-yellow-800">
+                      ⚠️ Mostrando datos de ejemplo. El servidor no está disponible.
+                    </p>
+                  </div>
+                )}
+                
+                {/* Resumen de cursos inscritos */}
+                {enrolledCourses.length > 0 && (
+                  <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-md">
+                    <div className="flex items-center gap-2 mb-2">
+                      <BookOpen className="h-4 w-4 text-blue-600" />
+                      <p className="text-sm font-medium text-blue-800">Resumen de Cursos</p>
+                    </div>
+                    <div className="text-xs text-blue-700 space-y-1">
+                      <p>📚 Inscrito en: {enrolledCourses.length} curso{enrolledCourses.length !== 1 ? 's' : ''}</p>
+                      <p>✅ Completados: {completedCourses.length} curso{completedCourses.length !== 1 ? 's' : ''}</p>
+                      <p>🔄 En progreso: {enrolledCourses.length - completedCourses.length} curso{(enrolledCourses.length - completedCourses.length) !== 1 ? 's' : ''}</p>
+                    </div>
+                  </div>
                 )}
               </div>
             </div>
@@ -180,10 +284,26 @@ export default function CertificatesPage() {
           <Card>
             <CardContent className="pt-6">
               <div className="text-center py-12">
+                <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Award className="h-8 w-8 text-red-600" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  Error al cargar certificados
+                </h3>
                 <p className="text-red-600 mb-4">{error}</p>
-                <Button onClick={loadCertificates}>
-                  Reintentar
-                </Button>
+                <div className="space-y-2">
+                  <Button onClick={loadCertificates} className="bg-red-600 hover:bg-red-700">
+                    Reintentar
+                  </Button>
+                  <Button onClick={testCourseCertificate} variant="outline" className="ml-2">
+                    Probar Generación
+                  </Button>
+                </div>
+                {debugInfo && (
+                  <div className="mt-4 p-3 bg-gray-100 rounded text-sm text-gray-700">
+                    <strong>Debug Info:</strong> {debugInfo}
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -191,6 +311,55 @@ export default function CertificatesPage() {
 
         {/* Success State */}
         {!loading && !error && (
+          <>
+            {/* Resumen de cursos inscritos */}
+            {enrolledCourses.length > 0 && (
+              <Card className="mb-6">
+                <CardContent className="pt-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                      <BookOpen className="h-5 w-5 text-blue-600" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">Mis Cursos</h3>
+                      <p className="text-sm text-gray-600">Progreso de tus inscripciones</p>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {enrolledCourses.map((enrollment) => (
+                      <div key={enrollment.id} className="p-3 border rounded-lg bg-gray-50">
+                        <div className="flex items-center justify-between mb-2">
+                          <h4 className="font-medium text-sm text-gray-900 line-clamp-1">
+                            {enrollment.course.title}
+                          </h4>
+                          <Badge 
+                            variant={enrollment.status === 'COMPLETED' ? 'default' : 'secondary'}
+                            className="text-xs"
+                          >
+                            {enrollment.status === 'COMPLETED' ? 'Completado' : 
+                             enrollment.status === 'IN_PROGRESS' ? 'En Progreso' : 'Pendiente'}
+                          </Badge>
+                        </div>
+                        <div className="space-y-2">
+                          <div className="flex justify-between text-xs text-gray-600">
+                            <span>Progreso</span>
+                            <span>{enrollment.progress}%</span>
+                          </div>
+                          <Progress value={enrollment.progress} className="h-1.5" />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <div className="mt-4 text-center">
+                    <Button variant="outline" onClick={() => window.location.href = '/courses'}>
+                      Ver Todos los Cursos
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
           <Tabs defaultValue="modules" className="space-y-6">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="modules" className="flex items-center gap-2">
@@ -209,13 +378,25 @@ export default function CertificatesPage() {
                 <Card>
                   <CardContent className="pt-6">
                     <div className="text-center py-12">
-                      <FileText className="h-16 w-16 mx-auto mb-4 text-gray-400" />
+                      <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <FileText className="h-8 w-8 text-gray-400" />
+                      </div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">
                         No tienes certificados de módulos aún
                       </h3>
-                      <p className="text-gray-600">
-                        Completa módulos de cursos para obtener certificados
-                      </p>
+                                             <p className="text-gray-600 mb-4">
+                         Completa módulos de cursos para obtener certificados
+                       </p>
+                       <div className="space-y-2">
+                         {enrolledCourses.length > 0 && (
+                           <p className="text-sm text-blue-600">
+                             📚 Ya estás inscrito en {enrolledCourses.length} curso{enrolledCourses.length !== 1 ? 's' : ''}
+                           </p>
+                         )}
+                         <Button variant="outline" onClick={() => window.location.href = '/courses'}>
+                           Explorar Cursos
+                         </Button>
+                       </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -251,23 +432,35 @@ export default function CertificatesPage() {
                           </div>
                         </div>
                         
-                        <Button 
-                          onClick={() => handleDownload(certificate)}
-                          disabled={downloading === certificate.id}
-                          className="w-full"
-                        >
-                          {downloading === certificate.id ? (
-                            <>
-                              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                              Descargando...
-                            </>
-                          ) : (
-                            <>
-                              <Download className="h-4 w-4 mr-2" />
-                              Descargar Certificado
-                            </>
-                          )}
-                        </Button>
+                                                 <div className="flex gap-2">
+                           <Button 
+                             onClick={() => handleDownload(certificate)}
+                             disabled={downloading === certificate.id}
+                             className="flex-1"
+                           >
+                             {downloading === certificate.id ? (
+                               <>
+                                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                 Descargando...
+                               </>
+                             ) : (
+                               <>
+                                 <Download className="h-4 w-4 mr-2" />
+                                 Descargar
+                               </>
+                             )}
+                           </Button>
+                           
+                           <Button 
+                             variant="outline"
+                             onClick={() => handlePreview(certificate)}
+                             disabled={downloading === certificate.id}
+                             className="px-3"
+                             title="Previsualizar"
+                           >
+                             <ExternalLink className="h-4 w-4" />
+                           </Button>
+                         </div>
                       </CardContent>
                     </Card>
                   ))}
@@ -281,13 +474,30 @@ export default function CertificatesPage() {
                 <Card>
                   <CardContent className="pt-6">
                     <div className="text-center py-12">
-                      <GraduationCap className="h-16 w-16 mx-auto mb-4 text-gray-400" />
+                      <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <GraduationCap className="h-8 w-8 text-gray-400" />
+                      </div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">
                         No tienes certificados de cursos completos aún
                       </h3>
-                      <p className="text-gray-600">
-                        Completa cursos enteros para obtener certificados de graduación
-                      </p>
+                                             <p className="text-gray-600 mb-4">
+                         Completa cursos enteros para obtener certificados de graduación
+                       </p>
+                       <div className="space-y-2">
+                         {completedCourses.length > 0 && (
+                           <p className="text-sm text-green-600">
+                             ✅ Has completado {completedCourses.length} curso{completedCourses.length !== 1 ? 's' : ''}
+                           </p>
+                         )}
+                         <div className="flex gap-2 justify-center">
+                           <Button variant="outline" onClick={() => window.location.href = '/courses'}>
+                             Explorar Cursos
+                           </Button>
+                           <Button variant="outline" onClick={testCourseCertificate}>
+                             Probar Generación
+                           </Button>
+                         </div>
+                       </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -348,9 +558,10 @@ export default function CertificatesPage() {
                           
                           <Button 
                             variant="outline"
-                            onClick={() => window.open(certificate.url, '_blank')}
+                            onClick={() => handlePreview(certificate)}
+                            disabled={downloading === certificate.id}
                             className="px-3"
-                            title="Ver en navegador"
+                            title="Previsualizar"
                           >
                             <ExternalLink className="h-4 w-4" />
                           </Button>
@@ -362,6 +573,7 @@ export default function CertificatesPage() {
               )}
             </TabsContent>
           </Tabs>
+          </>
         )}
       </div>
     </div>

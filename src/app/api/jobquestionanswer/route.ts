@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { API_BASE } from '@/lib/api';
+import { getAuthHeaders } from '@/lib/auth-middleware';
 
 export async function GET(request: NextRequest) {
   try {
@@ -47,39 +47,28 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    console.log('🔍 API: Received POST request for job question answers');
     const body = await request.json();
+    const authHeaders = getAuthHeaders();
     
-    console.log('🔍 API: Forwarding to backend:', `${API_BASE}/jobquestionanswer`);
-    console.log('🔍 API: Authorization header:', request.headers.get('authorization') ? 'Present' : 'Missing');
-
-    const response = await fetch(`${API_BASE}/jobquestionanswer`, {
+    const response = await fetch(`http://localhost:3001/api/jobquestionanswer`, {
       method: 'POST',
       headers: {
-        'Authorization': request.headers.get('authorization') || '',
         'Content-Type': 'application/json',
+        ...authHeaders,
       },
       body: JSON.stringify(body),
     });
 
-    console.log('🔍 API: Backend response status:', response.status);
-    
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error('🔍 API: Backend error:', errorText);
-      return NextResponse.json(
-        { message: `Backend error: ${response.status} ${errorText}` },
-        { status: response.status }
-      );
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     const data = await response.json();
-    console.log('🔍 API: Backend data received for job question answers creation');
-    return NextResponse.json(data, { status: response.status });
+    return NextResponse.json(data);
   } catch (error) {
-    console.error('Error in job question answers creation route:', error);
+    console.error('Error creating job question answer:', error);
     return NextResponse.json(
-      { message: 'Internal server error' },
+      { error: 'Error al crear respuesta de pregunta de trabajo' },
       { status: 500 }
     );
   }

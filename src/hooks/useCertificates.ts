@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { apiCall } from '@/lib/api';
+import CertificateGeneratorService from '@/services/certificate-generator.service';
 
 interface ModuleCertificate {
   id: string;
@@ -40,11 +41,13 @@ interface CourseCertificate {
   course: {
     id: string;
     title: string;
+    description?: string;
   };
   user: {
     id: string;
     firstName: string;
     lastName: string;
+    email?: string;
   };
 }
 
@@ -60,6 +63,7 @@ export const useCertificates = () => {
       setError(null);
       
       const response = await apiCall('/modulecertificate');
+      console.log('Module certificates response:', response);
       return response || [];
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error al cargar certificados de módulos';
@@ -77,7 +81,8 @@ export const useCertificates = () => {
       setLoading(true);
       setError(null);
       
-      const response = await apiCall('/certificates');
+      const response = await apiCall('/certificate');
+      console.log('Course certificates response:', response);
       return response || [];
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error al cargar certificados de cursos';
@@ -95,46 +100,33 @@ export const useCertificates = () => {
   ): Promise<boolean> => {
     try {
       setDownloading(certificate.id);
+      setError(null);
       
-      // Determinar la URL del certificado
-      const certificateUrl = 'certificateUrl' in certificate 
-        ? certificate.certificateUrl 
-        : certificate.url;
-
-      // Descargar el PDF
-      const response = await fetch(certificateUrl);
+      console.log('🔍 Downloading certificate:', certificate.id);
+      console.log('🔍 Certificate type:', 'module' in certificate ? 'module' : 'course');
       
-      if (!response.ok) {
-        throw new Error('No se pudo descargar el certificado');
-      }
-
-      const blob = await response.blob();
+      // Primero intentar generar el PDF
+      let success = await CertificateGeneratorService.generateCertificate(certificate);
       
-      // Crear enlace de descarga
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      
-      // Nombre del archivo
-      let fileName = '';
-      if ('module' in certificate) {
-        // Certificado de módulo
-        fileName = `certificado-modulo-${certificate.module.title}.pdf`;
-      } else {
-        // Certificado de curso
-        fileName = `certificado-curso-${certificate.course.title}.pdf`;
+      // Si falla la generación, intentar descargar desde la URL
+      if (!success) {
+        console.log('⚠️ PDF generation failed, trying URL download...');
+        success = await CertificateGeneratorService.downloadFromUrl(certificate);
       }
       
-      link.download = fileName;
-      link.click();
+      if (!success) {
+        const errorMsg = 'No se pudo descargar el certificado. Verifica que todos los datos estén completos.';
+        console.error('❌ Download failed:', errorMsg);
+        setError(errorMsg);
+        return false;
+      }
       
-      // Limpiar
-      window.URL.revokeObjectURL(url);
-      
+      console.log('✅ Certificate downloaded successfully');
       return true;
     } catch (error) {
       console.error('Error descargando certificado:', error);
-      setError('Error al descargar el certificado. Inténtalo de nuevo.');
+      const errorMessage = error instanceof Error ? error.message : 'Error desconocido al descargar';
+      setError(`Error al descargar el certificado: ${errorMessage}`);
       return false;
     } finally {
       setDownloading(null);
@@ -165,7 +157,7 @@ export const useCertificates = () => {
       setLoading(true);
       setError(null);
       
-      const response = await apiCall(`/certificates/${certificateId}`);
+      const response = await apiCall(`/certificate/${certificateId}`);
       return response;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error al obtener certificado de curso';
@@ -183,7 +175,7 @@ export const useCertificates = () => {
       setLoading(true);
       setError(null);
       
-      const response = await apiCall(`/certificates/verify/${verificationCode}`);
+      const response = await apiCall(`/certificate/verify/${verificationCode}`);
       return response;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error al verificar certificado';
@@ -195,6 +187,33 @@ export const useCertificates = () => {
     }
   }, []);
 
+  // Previsualizar certificado
+  const previewCertificate = useCallback(async (
+    certificate: ModuleCertificate | CourseCertificate
+  ): Promise<boolean> => {
+    try {
+      setDownloading(certificate.id);
+      
+      console.log('🔍 Previewing certificate:', certificate.id);
+      
+      // Usar el servicio de previsualización
+      const success = await CertificateGeneratorService.previewCertificate(certificate);
+      
+      if (!success) {
+        throw new Error('No se pudo previsualizar el certificado');
+      }
+      
+      console.log('✅ Certificate preview opened successfully');
+      return true;
+    } catch (error) {
+      console.error('Error previsualizando certificado:', error);
+      setError('Error al previsualizar el certificado. Inténtalo de nuevo.');
+      return false;
+    } finally {
+      setDownloading(null);
+    }
+  }, []);
+
   return {
     loading,
     error,
@@ -202,6 +221,7 @@ export const useCertificates = () => {
     loadModuleCertificates,
     loadCourseCertificates,
     downloadCertificate,
+    previewCertificate,
     getModuleCertificate,
     getCourseCertificate,
     verifyCertificate,

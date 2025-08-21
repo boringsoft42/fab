@@ -66,7 +66,7 @@ import {
   Upload,
   HelpCircle,
 } from "lucide-react";
-import { useModuleLessons, useCreateLesson, useUpdateLesson, useDeleteLesson } from "@/hooks/useLessonApi";
+import { useLessons, useCreateLesson, useUpdateLesson, useDeleteLesson, type Lesson } from "@/hooks/useLessonApi";
 import { useQueryClient } from "@tanstack/react-query";
 import { useLessonResources } from "@/hooks/useLessonResourceApi";
 import { toast } from "sonner";
@@ -102,14 +102,14 @@ export default function ModuleLessonsPage() {
 
   // Hooks
   const queryClient = useQueryClient();
-  const { data: lessonsData, isLoading: lessonsLoading } = useModuleLessons(moduleId);
+  const { data: lessonsData, isLoading: lessonsLoading } = useLessons(moduleId);
   const lessons = lessonsData?.lessons || [];
   const createLesson = useCreateLesson();
   const updateLesson = useUpdateLesson();
   const deleteLesson = useDeleteLesson();
 
   // Filter lessons
-  const filteredLessons = lessons.filter((lesson) =>
+  const filteredLessons = lessons.filter((lesson: Lesson) =>
     lesson.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -575,7 +575,7 @@ export default function ModuleLessonsPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredLessons.map((lesson) => {
+                {filteredLessons.map((lesson: Lesson) => {
                   const stats = getLessonStats(lesson.id);
                   return (
                     <TableRow key={lesson.id}>

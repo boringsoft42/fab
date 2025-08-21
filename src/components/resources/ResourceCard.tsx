@@ -1,33 +1,41 @@
 'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Download, Star, User, Calendar, Eye } from 'lucide-react';
+import { 
+  Download, 
+  Star, 
+  FileText, 
+  Video, 
+  Music, 
+  Image, 
+  File,
+  Calendar,
+  User,
+  Eye
+} from 'lucide-react';
 import { Resource } from '@/types/api';
 
 interface ResourceCardProps {
   resource: Resource;
   onDownload?: (resource: Resource) => void;
   onRate?: (resource: Resource, rating: number) => void;
-  showActions?: boolean;
 }
 
-export function ResourceCard({ 
-  resource, 
-  onDownload, 
-  onRate, 
-  showActions = true 
-}: ResourceCardProps) {
-  const handleDownload = () => {
-    if (onDownload) {
-      onDownload(resource);
-    }
-  };
+export function ResourceCard({ resource, onDownload, onRate }: ResourceCardProps) {
+  const [rating, setRating] = useState(resource.rating || 0);
+  const [userRating, setUserRating] = useState(0);
 
-  const handleRate = (rating: number) => {
-    if (onRate) {
-      onRate(resource, rating);
+  const getTypeIcon = (type: string) => {
+    switch (type) {
+      case 'DOCUMENT': return <FileText className="h-5 w-5" />;
+      case 'VIDEO': return <Video className="h-5 w-5" />;
+      case 'AUDIO': return <Music className="h-5 w-5" />;
+      case 'IMAGE': return <Image className="h-5 w-5" />;
+      case 'TEXT': return <File className="h-5 w-5" />;
+      default: return <FileText className="h-5 w-5" />;
     }
   };
 
@@ -39,87 +47,107 @@ export function ResourceCard({
     });
   };
 
+  const handleDownload = () => {
+    if (onDownload) {
+      onDownload(resource);
+    }
+  };
+
+  const handleRate = (newRating: number) => {
+    setUserRating(newRating);
+    if (onRate) {
+      onRate(resource, newRating);
+    }
+  };
+
   return (
-    <Card className="hover:shadow-lg transition-shadow h-full flex flex-col">
+    <Card className="h-full flex flex-col hover:shadow-lg transition-shadow">
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
-          <div className="flex-1 min-w-0">
-            <CardTitle className="text-lg line-clamp-2 mb-2">
-              {resource.title}
-            </CardTitle>
-            <CardDescription className="flex items-center gap-2 text-sm text-gray-500">
-              <User className="h-4 w-4" />
-              <span>Autor</span>
-              <span>•</span>
-              <Calendar className="h-4 w-4" />
-              <span>{formatDate(resource.createdAt)}</span>
-            </CardDescription>
+          <div className="flex items-center gap-2">
+            {getTypeIcon(resource.type)}
+            <Badge variant="outline" className="text-xs">
+              {resource.type}
+            </Badge>
           </div>
-          <Badge variant="secondary" className="ml-2 flex-shrink-0">
-            {resource.type}
+          <Badge variant="secondary" className="text-xs">
+            {resource.category}
           </Badge>
         </div>
+        <CardTitle className="text-lg line-clamp-2">{resource.title}</CardTitle>
       </CardHeader>
       
       <CardContent className="flex-1 flex flex-col">
-        <p className="text-gray-600 text-sm mb-4 line-clamp-3 flex-1">
+        <p className="text-sm text-muted-foreground line-clamp-3 mb-4">
           {resource.description}
         </p>
         
-        <div className="space-y-3">
-          {/* Estadísticas */}
-          <div className="flex items-center justify-between text-sm text-gray-500">
-            <div className="flex items-center gap-1">
-              <Download className="h-4 w-4" />
-              <span>{resource.downloads || 0}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Star className="h-4 w-4" />
-              <span>{resource.rating || 0}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Eye className="h-4 w-4" />
-              <span>0</span>
-            </div>
+        <div className="space-y-2 mb-4">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <User className="h-3 w-3" />
+            <span>{resource.author || 'Anónimo'}</span>
           </div>
-          
-          {/* Etiquetas */}
-          <div className="flex items-center gap-2 flex-wrap">
-            <Badge variant="outline" className="text-xs">
-              {resource.category}
-            </Badge>
-            <Badge variant="outline" className="text-xs">
-              {resource.format}
-            </Badge>
-            {resource.tags && resource.tags.length > 0 && (
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <Calendar className="h-3 w-3" />
+            <span>{formatDate(resource.createdAt)}</span>
+          </div>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <Download className="h-3 w-3" />
+            <span>{resource.downloads || 0} descargas</span>
+          </div>
+        </div>
+
+        {/* Rating */}
+        <div className="flex items-center gap-1 mb-4">
+          {[1, 2, 3, 4, 5].map((star) => (
+            <button
+              key={star}
+              onClick={() => handleRate(star)}
+              className="text-yellow-400 hover:text-yellow-500 transition-colors"
+            >
+              <Star 
+                className={`h-4 w-4 ${star <= (userRating || rating) ? 'fill-current' : ''}`} 
+              />
+            </button>
+          ))}
+          <span className="text-xs text-muted-foreground ml-2">
+            ({rating.toFixed(1)})
+          </span>
+        </div>
+
+        {/* Tags */}
+        {resource.tags && resource.tags.length > 0 && (
+          <div className="flex flex-wrap gap-1 mb-4">
+            {resource.tags.slice(0, 3).map((tag, index) => (
+              <Badge key={index} variant="outline" className="text-xs">
+                {tag}
+              </Badge>
+            ))}
+            {resource.tags.length > 3 && (
               <Badge variant="outline" className="text-xs">
-                {resource.tags[0]}
-                {resource.tags.length > 1 && ` +${resource.tags.length - 1}`}
+                +{resource.tags.length - 3}
               </Badge>
             )}
           </div>
-          
-          {/* Acciones */}
-          {showActions && (
-            <div className="flex gap-2 pt-2">
-              <Button 
-                size="sm" 
-                className="flex-1"
-                onClick={handleDownload}
-              >
-                <Download className="h-4 w-4 mr-2" />
-                Descargar
-              </Button>
-              <Button 
-                size="sm" 
-                variant="outline"
-                onClick={() => handleRate(5)}
-                title="Calificar con 5 estrellas"
-              >
-                <Star className="h-4 w-4" />
-              </Button>
-            </div>
-          )}
+        )}
+
+        {/* Actions */}
+        <div className="mt-auto flex gap-2">
+          <Button 
+            onClick={handleDownload}
+            size="sm" 
+            className="flex-1"
+          >
+            <Download className="h-4 w-4 mr-2" />
+            Descargar
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => window.open(resource.downloadUrl || resource.fileUrl, '_blank')}
+          >
+            <Eye className="h-4 w-4" />
+          </Button>
         </div>
       </CardContent>
     </Card>

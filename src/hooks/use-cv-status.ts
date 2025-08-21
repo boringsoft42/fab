@@ -174,25 +174,10 @@ export function useCVStatus() {
       const formData = new FormData();
       formData.append('cvFile', file);
 
-      const token = localStorage.getItem('token');
-      if (!token) {
-        throw new Error('No se encontró token de autorización. Por favor, inicia sesión nuevamente.');
-      }
-
-      const response = await fetch(`${API_BASE}/files/upload/cv`, {
+      const result = await apiCall('/files/upload/cv', {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
         body: formData
       });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to upload CV file');
-      }
-
-      const result = await response.json();
       
              // Actualizar el estado con la URL devuelta por el backend
        setStatus(prev => ({
@@ -200,7 +185,8 @@ export function useCVStatus() {
          hasCV: true,
          cvUrl: result.cvUrl, // Usar la URL devuelta por el backend
          cvSource: 'file',
-         loading: false
+         loading: false,
+         hasCoverLetter: prev.hasCoverLetter ?? false
        }));
        
        // Guardar la URL en localStorage para futuras sesiones
@@ -220,25 +206,10 @@ export function useCVStatus() {
       const formData = new FormData();
       formData.append('coverLetterFile', file);
 
-      const token = localStorage.getItem('token');
-      if (!token) {
-        throw new Error('No se encontró token de autorización. Por favor, inicia sesión nuevamente.');
-      }
-
-      const response = await fetch(`${API_BASE}/files/upload/cover-letter`, {
+      const result = await apiCall('/files/upload/cover-letter', {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
         body: formData
       });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to upload cover letter file');
-      }
-
-      const result = await response.json();
       
              // Actualizar el estado con la URL devuelta por el backend
        setStatus(prev => ({

@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getAuthHeaders } from '@/lib/api';
+import { apiCall } from '@/lib/api';
 
 // ===== TIPOS =====
 export interface Quiz {
@@ -117,17 +117,8 @@ export const useLessonQuizzes = (lessonId?: string) => {
       if (!lessonId) return { quizzes: [] };
       
       const params = new URLSearchParams({ lessonId });
-      const response = await fetch(`http://localhost:3001/api/quiz?${params}`, {
-        headers: getAuthHeaders(),
-      });
+      const data = await apiCall(`/quiz?${params}`);
       
-      if (!response.ok) {
-        throw new Error('Failed to fetch lesson quizzes');
-      }
-      
-      const data = await response.json();
-      
-      // Si la respuesta es un array directo, lo envuelvo en el formato esperado
       if (Array.isArray(data)) {
         return { quizzes: data };
       }
@@ -146,15 +137,7 @@ export const useCourseQuizzes = (courseId?: string) => {
       if (!courseId) return { quizzes: [] };
       
       const params = new URLSearchParams({ courseId });
-      const response = await fetch(`http://localhost:3001/api/quiz?${params}`, {
-        headers: getAuthHeaders(),
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch course quizzes');
-      }
-      
-      const data = await response.json();
+      const data = await apiCall(`/quiz?${params}`);
       
       if (Array.isArray(data)) {
         return { quizzes: data };
@@ -173,15 +156,8 @@ export const useQuiz = (quizId?: string) => {
     queryFn: async () => {
       if (!quizId) return null;
       
-      const response = await fetch(`http://localhost:3001/api/quiz/${quizId}`, {
-        headers: getAuthHeaders(),
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch quiz');
-      }
-      
-      return response.json();
+      const data = await apiCall(`/quiz/${quizId}`);
+      return data;
     },
     enabled: !!quizId,
   });
@@ -193,17 +169,12 @@ export const useCreateQuiz = () => {
   
   return useMutation({
     mutationFn: async (quizData: CreateQuizData) => {
-      const response = await fetch('http://localhost:3001/api/quiz', {
+      const data = await apiCall('/quiz', {
         method: 'POST',
-        headers: getAuthHeaders(),
         body: JSON.stringify(quizData),
       });
       
-      if (!response.ok) {
-        throw new Error('Failed to create quiz');
-      }
-      
-      return response.json();
+      return data;
     },
     onSuccess: (data, variables) => {
       // Invalidate relevant queries
@@ -227,17 +198,12 @@ export const useUpdateQuiz = () => {
   
   return useMutation({
     mutationFn: async (quizData: UpdateQuizData) => {
-      const response = await fetch(`http://localhost:3001/api/quiz/${quizData.id}`, {
+      const data = await apiCall(`/quiz/${quizData.id}`, {
         method: 'PUT',
-        headers: getAuthHeaders(),
         body: JSON.stringify(quizData),
       });
       
-      if (!response.ok) {
-        throw new Error('Failed to update quiz');
-      }
-      
-      return response.json();
+      return data;
     },
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({
@@ -253,16 +219,11 @@ export const useDeleteQuiz = () => {
   
   return useMutation({
     mutationFn: async (quizId: string) => {
-      const response = await fetch(`http://localhost:3001/api/quiz/${quizId}`, {
+      const data = await apiCall(`/quiz/${quizId}`, {
         method: 'DELETE',
-        headers: getAuthHeaders(),
       });
       
-      if (!response.ok) {
-        throw new Error('Failed to delete quiz');
-      }
-      
-      return response.json();
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -285,15 +246,7 @@ export const useQuizQuestions = (quizId?: string) => {
       if (!quizId) return { questions: [] };
       
       const params = new URLSearchParams({ quizId });
-      const response = await fetch(`http://localhost:3001/api/quizquestion?${params}`, {
-        headers: getAuthHeaders(),
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch quiz questions');
-      }
-      
-      const data = await response.json();
+      const data = await apiCall(`/quizquestion?${params}`);
       
       if (Array.isArray(data)) {
         return { questions: data };
@@ -311,17 +264,12 @@ export const useCreateQuestion = () => {
   
   return useMutation({
     mutationFn: async (questionData: CreateQuestionData) => {
-      const response = await fetch('http://localhost:3001/api/quizquestion', {
+      const data = await apiCall('/quizquestion', {
         method: 'POST',
-        headers: getAuthHeaders(),
         body: JSON.stringify(questionData),
       });
       
-      if (!response.ok) {
-        throw new Error('Failed to create question');
-      }
-      
-      return response.json();
+      return data;
     },
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({
@@ -337,17 +285,12 @@ export const useUpdateQuestion = () => {
   
   return useMutation({
     mutationFn: async (questionData: UpdateQuestionData) => {
-      const response = await fetch(`http://localhost:3001/api/quizquestion/${questionData.id}`, {
+      const data = await apiCall(`/quizquestion/${questionData.id}`, {
         method: 'PUT',
-        headers: getAuthHeaders(),
         body: JSON.stringify(questionData),
       });
       
-      if (!response.ok) {
-        throw new Error('Failed to update question');
-      }
-      
-      return response.json();
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -363,16 +306,11 @@ export const useDeleteQuestion = () => {
   
   return useMutation({
     mutationFn: async (questionId: string) => {
-      const response = await fetch(`http://localhost:3001/api/quizquestion/${questionId}`, {
+      const data = await apiCall(`/quizquestion/${questionId}`, {
         method: 'DELETE',
-        headers: getAuthHeaders(),
       });
       
-      if (!response.ok) {
-        throw new Error('Failed to delete question');
-      }
-      
-      return response.json();
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -392,15 +330,7 @@ export const useQuizAttempts = (quizId?: string) => {
       if (!quizId) return { attempts: [] };
       
       const params = new URLSearchParams({ quizId });
-      const response = await fetch(`http://localhost:3001/api/quizattempt?${params}`, {
-        headers: getAuthHeaders(),
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch quiz attempts');
-      }
-      
-      const data = await response.json();
+      const data = await apiCall(`/quizattempt?${params}`);
       
       if (Array.isArray(data)) {
         return { attempts: data };
@@ -418,17 +348,12 @@ export const useCreateAttempt = () => {
   
   return useMutation({
     mutationFn: async (attemptData: CreateAttemptData) => {
-      const response = await fetch('http://localhost:3001/api/quizattempt', {
+      const data = await apiCall('/quizattempt', {
         method: 'POST',
-        headers: getAuthHeaders(),
         body: JSON.stringify(attemptData),
       });
       
-      if (!response.ok) {
-        throw new Error('Failed to create attempt');
-      }
-      
-      return response.json();
+      return data;
     },
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({
@@ -444,16 +369,11 @@ export const useCompleteAttempt = () => {
   
   return useMutation({
     mutationFn: async (attemptId: string) => {
-      const response = await fetch(`http://localhost:3001/api/quizattempt/${attemptId}/complete`, {
+      const data = await apiCall(`/quizattempt/${attemptId}/complete`, {
         method: 'PUT',
-        headers: getAuthHeaders(),
       });
       
-      if (!response.ok) {
-        throw new Error('Failed to complete attempt');
-      }
-      
-      return response.json();
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -471,17 +391,12 @@ export const useSubmitAnswer = () => {
   
   return useMutation({
     mutationFn: async (answerData: SubmitAnswerData) => {
-      const response = await fetch('http://localhost:3001/api/quizanswer', {
+      const data = await apiCall('/quizanswer', {
         method: 'POST',
-        headers: getAuthHeaders(),
         body: JSON.stringify(answerData),
       });
       
-      if (!response.ok) {
-        throw new Error('Failed to submit answer');
-      }
-      
-      return response.json();
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({

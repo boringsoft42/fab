@@ -1,25 +1,30 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { API_BASE } from '@/lib/api';
+import { getAuthHeaders } from '@/lib/auth-middleware';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
+    const authHeaders = getAuthHeaders();
     
-    const response = await fetch(`${API_BASE}/contacts/request`, {
+    const response = await fetch(`http://localhost:3001/api/contacts/request`, {
       method: 'POST',
       headers: {
-        'Authorization': request.headers.get('authorization') || '',
         'Content-Type': 'application/json',
+        ...authHeaders,
       },
       body: JSON.stringify(body),
     });
 
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
     const data = await response.json();
-    return NextResponse.json(data, { status: response.status });
+    return NextResponse.json(data);
   } catch (error) {
-    console.error('Error in contacts request route:', error);
+    console.error('Error creating contact request:', error);
     return NextResponse.json(
-      { message: 'Internal server error' },
+      { error: 'Error al crear solicitud de contacto' },
       { status: 500 }
     );
   }

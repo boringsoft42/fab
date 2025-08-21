@@ -1,26 +1,32 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { API_BASE } from '@/lib/api';
+import { getAuthHeaders } from '@/lib/auth-middleware';
 
-export async function PUT(
+export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const resolvedParams = await params;
-    const response = await fetch(`${API_BASE}/messages/${resolvedParams.id}/read`, {
-      method: 'PUT',
+    const authHeaders = getAuthHeaders();
+    
+    const response = await fetch(`http://localhost:3001/api/messages/${resolvedParams.id}/read`, {
+      method: 'POST',
       headers: {
-        'Authorization': request.headers.get('authorization') || '',
         'Content-Type': 'application/json',
+        ...authHeaders,
       },
     });
 
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
     const data = await response.json();
-    return NextResponse.json(data, { status: response.status });
+    return NextResponse.json(data);
   } catch (error) {
-    console.error('Error in messages read route:', error);
+    console.error('Error marking message as read:', error);
     return NextResponse.json(
-      { message: 'Internal server error' },
+      { error: 'Error al marcar mensaje como leído' },
       { status: 500 }
     );
   }

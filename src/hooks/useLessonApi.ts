@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getAuthHeaders } from '@/lib/api';
+import { apiCall } from '@/lib/api';
 
 export interface Lesson {
   id: string;
@@ -37,94 +37,72 @@ export interface UpdateLessonData extends Partial<CreateLessonData> {
   id: string;
 }
 
-// API functions
-const fetchLessons = async (moduleId: string): Promise<{ lessons: Lesson[] }> => {
-  const response = await fetch(`http://localhost:3001/api/lesson?moduleId=${moduleId}`, {
-    headers: getAuthHeaders(),
-  });
-  if (!response.ok) {
-    throw new Error('Failed to fetch lessons');
-  }
-  const data = await response.json();
-  // Si la respuesta es un array directo, lo envuelvo en el formato esperado
-  if (Array.isArray(data)) {
-    return { lessons: data };
-  }
-  return data;
-};
-
-const createLesson = async (data: CreateLessonData): Promise<Lesson> => {
-  const response = await fetch('http://localhost:3001/api/lesson', {
-    method: 'POST',
-    headers: getAuthHeaders(),
-    body: JSON.stringify(data),
-  });
-  if (!response.ok) {
-    throw new Error('Failed to create lesson');
-  }
-  return response.json();
-};
-
-const updateLesson = async (data: UpdateLessonData): Promise<Lesson> => {
-  const response = await fetch(`http://localhost:3001/api/lesson/${data.id}`, {
-    method: 'PUT',
-    headers: getAuthHeaders(),
-    body: JSON.stringify(data),
-  });
-  if (!response.ok) {
-    throw new Error('Failed to update lesson');
-  }
-  return response.json();
-};
-
-const deleteLesson = async (id: string): Promise<void> => {
-  const response = await fetch(`http://localhost:3001/api/lesson/${id}`, {
-    method: 'DELETE',
-    headers: getAuthHeaders(),
-  });
-  if (!response.ok) {
-    throw new Error('Failed to delete lesson');
-  }
-};
-
-// React Query hooks
-export const useModuleLessons = (moduleId: string) => {
+// Fetch lessons for a module
+export const useLessons = (moduleId?: string) => {
   return useQuery({
     queryKey: ['lessons', moduleId],
-    queryFn: () => fetchLessons(moduleId),
+    queryFn: async () => {
+      if (!moduleId) return { lessons: [] };
+      
+      const data = await apiCall(`/lesson?moduleId=${moduleId}`);
+      
+      if (Array.isArray(data)) {
+        return { lessons: data };
+      }
+      return data;
+    },
     enabled: !!moduleId,
   });
 };
 
+// Create lesson mutation
 export const useCreateLesson = () => {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: createLesson,
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['lessons', data.moduleId] });
+    mutationFn: async (lessonData: CreateLessonData) => {
+      const data = await apiCall('/lesson', {
+        method: 'POST',
+        body: JSON.stringify(lessonData),
+      });
+      return data;
+    },
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['lessons', variables.moduleId] });
     },
   });
 };
 
+// Update lesson mutation
 export const useUpdateLesson = () => {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: updateLesson,
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['lessons', data.moduleId] });
+    mutationFn: async (lessonData: UpdateLessonData) => {
+      const data = await apiCall(`/lesson/${lessonData.id}`, {
+        method: 'PUT',
+        body: JSON.stringify(lessonData),
+      });
+      return data;
+    },
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['lessons', variables.moduleId] });
     },
   });
 };
 
+// Delete lesson mutation
 export const useDeleteLesson = () => {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: deleteLesson,
-    onSuccess: (_, variables) => {
-      // Invalidate all lesson queries since we don't know the moduleId
+    mutationFn: async (id: string) => {
+      const data = await apiCall(`/lesson/${id}`, {
+        method: 'DELETE',
+      });
+      return data;
+    },
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['lessons'] });
     },
   });

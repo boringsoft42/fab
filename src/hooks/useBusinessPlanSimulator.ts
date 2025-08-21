@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuthContext } from './use-auth';
-import { API_BASE, getAuthHeaders } from '@/lib/api';
+import { API_BASE, getAuthHeaders, apiCall } from '@/lib/api';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface TripleImpactAssessment {
   problemSolved: string;
@@ -148,25 +149,19 @@ export const useBusinessPlanSimulator = () => {
       setSaving(true);
       setError(null);
 
-      const response = await fetch(`${API_BASE}/businessplan/simulator`, {
+      const response = await apiCall('/businessplan/simulator', {
         method: 'POST',
-        headers: {
-          ...getAuthHeaders(),
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
       });
       
-      const result = await response.json();
-      
-      if (response.ok) {
+      if (response.success) {
         // Update plans list solo si no es guardado silencioso
         if (!options?.silent) {
           await fetchPlans();
         }
-        return { success: true, data: result.data };
+        return { success: true, data: response.data };
       } else {
-        return { success: false, error: result.error || 'Error al guardar el plan' };
+        return { success: false, error: response.error || 'Error al guardar el plan' };
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error de conexión';
@@ -180,19 +175,16 @@ export const useBusinessPlanSimulator = () => {
   const fetchPlans = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE}/businessplan`, {
-        headers: getAuthHeaders()
-      });
-      const result = await response.json();
+      const response = await apiCall('/businessplan');
       
-      if (response.ok) {
+      if (response.success) {
         // El backend devuelve el objeto directamente, no dentro de result.data
         // Si result es un array, usarlo directamente
         // Si result es un objeto, convertirlo en array
-        const plansArray = Array.isArray(result) ? result : [result];
+        const plansArray = Array.isArray(response.data) ? response.data : [response.data];
         setPlans(plansArray);
       } else {
-        setError(result.error || 'Error al cargar los planes');
+        setError(response.error || 'Error al cargar los planes');
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error de conexión';
@@ -205,15 +197,12 @@ export const useBusinessPlanSimulator = () => {
   const getPlan = async (planId: string): Promise<{ success: boolean; data?: BusinessPlan; error?: string }> => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE}/businessplan/${planId}`, {
-        headers: getAuthHeaders()
-      });
-      const result = await response.json();
+      const response = await apiCall(`/businessplan/${planId}`);
       
-      if (response.ok) {
-        return { success: true, data: result.data };
+      if (response.success) {
+        return { success: true, data: response.data };
       } else {
-        return { success: false, error: result.error || 'Error al obtener el plan' };
+        return { success: false, error: response.error || 'Error al obtener el plan' };
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error de conexión';
@@ -226,15 +215,12 @@ export const useBusinessPlanSimulator = () => {
   const getPlanByEntrepreneurship = async (entrepreneurshipId: string): Promise<{ success: boolean; data?: BusinessPlan; error?: string }> => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE}/businessplan/entrepreneurship/${entrepreneurshipId}`, {
-        headers: getAuthHeaders()
-      });
-      const result = await response.json();
+      const response = await apiCall(`/businessplan/entrepreneurship/${entrepreneurshipId}`);
       
-      if (response.ok) {
-        return { success: true, data: result.data };
+      if (response.success) {
+        return { success: true, data: response.data };
       } else {
-        return { success: false, error: result.error || 'Error al obtener el plan' };
+        return { success: false, error: response.error || 'Error al obtener el plan' };
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error de conexión';
@@ -247,22 +233,16 @@ export const useBusinessPlanSimulator = () => {
   const updatePlan = async (planId: string, data: Partial<SimulatorData>): Promise<{ success: boolean; data?: BusinessPlan; error?: string }> => {
     try {
       setSaving(true);
-      const response = await fetch(`${API_BASE}/businessplan/${planId}`, {
+      const response = await apiCall(`/businessplan/${planId}`, {
         method: 'PUT',
-        headers: {
-          ...getAuthHeaders(),
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
       });
       
-      const result = await response.json();
-      
-      if (response.ok) {
+      if (response.success) {
         await fetchPlans(); // Refresh plans list
-        return { success: true, data: result.data };
+        return { success: true, data: response.data };
       } else {
-        return { success: false, error: result.error || 'Error al actualizar el plan' };
+        return { success: false, error: response.error || 'Error al actualizar el plan' };
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error de conexión';
@@ -275,18 +255,15 @@ export const useBusinessPlanSimulator = () => {
   const deletePlan = async (planId: string): Promise<{ success: boolean; error?: string }> => {
     try {
       setSaving(true);
-      const response = await fetch(`${API_BASE}/businessplan/${planId}`, {
+      const response = await apiCall(`/businessplan/${planId}`, {
         method: 'DELETE',
-        headers: getAuthHeaders()
       });
       
-      const result = await response.json();
-      
-      if (response.ok) {
+      if (response.success) {
         await fetchPlans(); // Refresh plans list
         return { success: true };
       } else {
-        return { success: false, error: result.error || 'Error al eliminar el plan' };
+        return { success: false, error: response.error || 'Error al eliminar el plan' };
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error de conexión';

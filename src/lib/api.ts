@@ -160,13 +160,14 @@ export const refreshToken = async () => {
 // Central API call function with automatic token refresh
 export const apiCall = async (endpoint: string, options: RequestInit = {}) => {
   try {
-    // Check if this is a local API route (starts with /auth/me)
-    if (endpoint === "/auth/me") {
-      console.log("🔐 apiCall - Using local API route for auth/me");
+    // Check if this is a local API route (starts with /auth/me or /municipality/auth/me)
+    if (endpoint === "/auth/me" || endpoint === "/municipality/auth/me") {
+      console.log("🔐 apiCall - Using local API route for:", endpoint);
       const authHeaders = getAuthHeaders();
       console.log("🔐 apiCall - Auth headers for local route:", authHeaders);
 
-      const response = await fetch("/api/auth/me", {
+      const localEndpoint = endpoint === "/auth/me" ? "/api/auth/me" : "/api/municipality/auth/me";
+      const response = await fetch(localEndpoint, {
         ...options,
         headers: {
           ...authHeaders,
@@ -334,6 +335,244 @@ const getMockData = (endpoint: string) => {
           instructor: 'María García'
         }
       ]
+    };
+  }
+  
+  if (endpoint.includes('/certificate') && !endpoint.includes('/certificate/')) {
+    return [
+      {
+        id: 'cert_1',
+        userId: 'user_123',
+        courseId: 'course_1',
+        template: 'default',
+        issuedAt: '2024-01-15T10:00:00Z',
+        verificationCode: 'CERT-2024-001',
+        digitalSignature: 'sha256-signature-1',
+        isValid: true,
+        url: 'https://example.com/certificates/course-cert-1.pdf',
+        course: {
+          id: 'course_1',
+          title: 'Desarrollo Web Completo',
+          description: 'Curso completo de desarrollo web con HTML, CSS y JavaScript'
+        },
+        user: {
+          id: 'user_123',
+          firstName: 'Juan',
+          lastName: 'Pérez',
+          email: 'juan.perez@example.com'
+        }
+      },
+      {
+        id: 'cert_2',
+        userId: 'user_123',
+        courseId: 'course_2',
+        template: 'premium',
+        issuedAt: '2024-02-20T14:30:00Z',
+        verificationCode: 'CERT-2024-002',
+        digitalSignature: 'sha256-signature-2',
+        isValid: true,
+        url: 'https://example.com/certificates/course-cert-2.pdf',
+        course: {
+          id: 'course_2',
+          title: 'React Avanzado',
+          description: 'Aprende React desde cero hasta nivel avanzado'
+        },
+        user: {
+          id: 'user_123',
+          firstName: 'Juan',
+          lastName: 'Pérez',
+          email: 'juan.perez@example.com'
+        }
+      }
+    ];
+  }
+  
+  if (endpoint.includes('/modulecertificate') && !endpoint.includes('/modulecertificate/')) {
+    return [
+      {
+        id: 'module_cert_1',
+        moduleId: 'module_1',
+        studentId: 'user_123',
+        certificateUrl: 'https://example.com/certificates/module-cert-1.pdf',
+        issuedAt: '2024-01-10T09:00:00Z',
+        grade: 95,
+        completedAt: '2024-01-10T08:45:00Z',
+        module: {
+          id: 'module_1',
+          title: 'Fundamentos de HTML',
+          course: {
+            id: 'course_1',
+            title: 'Desarrollo Web Completo'
+          }
+        },
+        student: {
+          id: 'user_123',
+          firstName: 'Juan',
+          lastName: 'Pérez',
+          email: 'juan@example.com'
+        }
+      },
+      {
+        id: 'module_cert_2',
+        moduleId: 'module_2',
+        studentId: 'user_123',
+        certificateUrl: 'https://example.com/certificates/module-cert-2.pdf',
+        issuedAt: '2024-01-25T11:30:00Z',
+        grade: 88,
+        completedAt: '2024-01-25T11:15:00Z',
+        module: {
+          id: 'module_2',
+          title: 'CSS y Estilos',
+          course: {
+            id: 'course_1',
+            title: 'Desarrollo Web Completo'
+          }
+        },
+        student: {
+          id: 'user_123',
+          firstName: 'Juan',
+          lastName: 'Pérez',
+          email: 'juan@example.com'
+        }
+      },
+      {
+        id: 'module_cert_3',
+        moduleId: 'module_3',
+        studentId: 'user_123',
+        certificateUrl: 'https://example.com/certificates/module-cert-3.pdf',
+        issuedAt: '2024-02-05T16:20:00Z',
+        grade: 92,
+        completedAt: '2024-02-05T16:05:00Z',
+        module: {
+          id: 'module_3',
+          title: 'JavaScript Básico',
+          course: {
+            id: 'course_1',
+            title: 'Desarrollo Web Completo'
+          }
+        },
+        student: {
+          id: 'user_123',
+          firstName: 'Juan',
+          lastName: 'Pérez',
+          email: 'juan@example.com'
+        }
+      }
+    ];
+  }
+  
+  if (endpoint.includes('/course-enrollments')) {
+    return [
+      {
+        id: 'enrollment_1',
+        courseId: 'course_1',
+        userId: 'user_123',
+        status: 'IN_PROGRESS',
+        progress: 65,
+        enrolledAt: '2024-01-15T10:00:00Z',
+        course: {
+          id: 'course_1',
+          title: 'Desarrollo Web Completo'
+        }
+      },
+      {
+        id: 'enrollment_2',
+        courseId: 'course_2',
+        userId: 'user_123',
+        status: 'COMPLETED',
+        progress: 100,
+        enrolledAt: '2024-01-20T14:30:00Z',
+        completedAt: '2024-02-15T16:45:00Z',
+        course: {
+          id: 'course_2',
+          title: 'React Avanzado'
+        }
+      },
+      {
+        id: 'enrollment_3',
+        courseId: 'course_3',
+        userId: 'user_123',
+        status: 'PENDING',
+        progress: 0,
+        enrolledAt: '2024-02-01T09:15:00Z',
+        course: {
+          id: 'course_3',
+          title: 'Diseño UX/UI'
+        }
+      }
+    ];
+  }
+  
+  // Endpoints específicos de certificados
+  if (endpoint.includes('/modulecertificate/') && !endpoint.includes('/verify/')) {
+    const certificateId = endpoint.split('/').pop();
+    return {
+      id: certificateId,
+      moduleId: 'module_1',
+      studentId: 'user_123',
+      certificateUrl: 'https://example.com/certificates/module-cert-1.pdf',
+      issuedAt: '2024-01-10T09:00:00Z',
+      grade: 95,
+      completedAt: '2024-01-10T08:45:00Z',
+      module: {
+        id: 'module_1',
+        title: 'Fundamentos de HTML',
+        course: {
+          id: 'course_1',
+          title: 'Desarrollo Web Completo'
+        }
+      },
+      student: {
+        id: 'user_123',
+        firstName: 'Juan',
+        lastName: 'Pérez',
+        email: 'juan@example.com'
+      }
+    };
+  }
+  
+  if (endpoint.includes('/certificate/') && !endpoint.includes('/verify/')) {
+    const certificateId = endpoint.split('/').pop();
+    return {
+      id: certificateId,
+      userId: 'user_123',
+      courseId: 'course_1',
+      template: 'default',
+      issuedAt: '2024-01-15T10:00:00Z',
+      verificationCode: 'CERT-2024-001',
+      digitalSignature: 'sha256-signature-1',
+      isValid: true,
+      url: 'https://example.com/certificates/course-cert-1.pdf',
+      course: {
+        id: 'course_1',
+        title: 'Desarrollo Web Completo',
+        description: 'Curso completo de desarrollo web con HTML, CSS y JavaScript'
+      },
+      user: {
+        id: 'user_123',
+        firstName: 'Juan',
+        lastName: 'Pérez',
+        email: 'juan.perez@example.com'
+      }
+    };
+  }
+  
+  if (endpoint.includes('/certificate/verify/')) {
+    const verificationCode = endpoint.split('/').pop();
+    return {
+      isValid: true,
+      certificate: {
+        id: 'cert_1',
+        verificationCode: verificationCode,
+        course: {
+          title: 'Desarrollo Web Completo'
+        },
+        user: {
+          firstName: 'Juan',
+          lastName: 'Pérez'
+        },
+        issuedAt: '2024-01-15T10:00:00Z'
+      }
     };
   }
   

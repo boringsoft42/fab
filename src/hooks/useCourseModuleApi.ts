@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getAuthHeaders } from '@/lib/api';
+import { apiCall } from '@/lib/api';
 
 export interface CourseModule {
   id: string;
@@ -49,15 +49,8 @@ export const useCourseModules = (courseId?: string) => {
       if (!courseId) return { modules: [] };
       
       const params = new URLSearchParams({ courseId });
-      const response = await fetch(`http://localhost:3001/api/coursemodule?${params}`, {
-        headers: getAuthHeaders(),
-      });
+      const data = await apiCall(`/coursemodule?${params}`);
       
-      if (!response.ok) {
-        throw new Error('Failed to fetch course modules');
-      }
-      
-      const data = await response.json();
       // Si la respuesta es un array directo, lo envuelvo en el formato esperado
       if (Array.isArray(data)) {
         return { modules: data };
@@ -76,15 +69,7 @@ export const useCourseModule = (moduleId?: string) => {
       if (!moduleId) return null;
       
       const params = new URLSearchParams({ id: moduleId });
-      const response = await fetch(`http://localhost:3001/api/coursemodule?${params}`, {
-        headers: getAuthHeaders(),
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch course module');
-      }
-      
-      const data = await response.json();
+      const data = await apiCall(`/coursemodule?${params}`);
       return data.module;
     },
     enabled: !!moduleId,
@@ -97,17 +82,11 @@ export const useCreateModule = () => {
   
   return useMutation({
     mutationFn: async (moduleData: CreateModuleData) => {
-      const response = await fetch('http://localhost:3001/api/coursemodule', {
+      const data = await apiCall('/coursemodule', {
         method: 'POST',
-        headers: getAuthHeaders(),
         body: JSON.stringify(moduleData),
       });
-      
-      if (!response.ok) {
-        throw new Error('Failed to create module');
-      }
-      
-      return response.json();
+      return data;
     },
     onSuccess: (data, variables) => {
       // Invalidate and refetch modules for the course
@@ -124,17 +103,11 @@ export const useUpdateModule = () => {
   
   return useMutation({
     mutationFn: async (moduleData: UpdateModuleData) => {
-      const response = await fetch('http://localhost:3001/api/coursemodule', {
+      const data = await apiCall('/coursemodule', {
         method: 'PUT',
-        headers: getAuthHeaders(),
         body: JSON.stringify(moduleData),
       });
-      
-      if (!response.ok) {
-        throw new Error('Failed to update module');
-      }
-      
-      return response.json();
+      return data;
     },
     onSuccess: (data, variables) => {
       // Invalidate and refetch modules for the course
@@ -155,9 +128,8 @@ export const useDeleteModule = () => {
   return useMutation({
     mutationFn: async (moduleId: string) => {
       const params = new URLSearchParams({ id: moduleId });
-      const response = await fetch(`http://localhost:3001/api/coursemodule?${params}`, {
+      const response = await apiCall(`/coursemodule?${params}`, {
         method: 'DELETE',
-        headers: getAuthHeaders(),
       });
       
       if (!response.ok) {

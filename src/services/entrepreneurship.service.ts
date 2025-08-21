@@ -35,18 +35,8 @@ export class EntrepreneurshipService {
     try {
       console.log('🔍 EntrepreneurshipService.getPublicEntrepreneurships - Fetching public entrepreneurships');
       
-      const response = await fetch(`${BACKEND_URL}/api/entrepreneurship/public`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
+      // Use apiCall instead of direct fetch to include auth headers (even for public data)
+      const data = await apiCall('/entrepreneurship/public');
       console.log('✅ EntrepreneurshipService.getPublicEntrepreneurships - Success:', data);
       return data;
     } catch (error) {
@@ -103,18 +93,8 @@ export class EntrepreneurshipService {
     try {
       console.log('🔍 EntrepreneurshipService.getByCategory - Fetching entrepreneurships by category:', category);
       
-      const response = await fetch(`${BACKEND_URL}/api/entrepreneurship?category=${category}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
+      // Use apiCall instead of direct fetch to include auth headers
+      const data = await apiCall(`/entrepreneurship?category=${category}`);
       console.log('✅ EntrepreneurshipService.getByCategory - Success:', data);
       return data;
     } catch (error) {
@@ -128,18 +108,8 @@ export class EntrepreneurshipService {
     try {
       console.log('🔍 EntrepreneurshipService.getByMunicipality - Fetching entrepreneurships by municipality:', municipality);
       
-      const response = await fetch(`${BACKEND_URL}/api/entrepreneurship?municipality=${municipality}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
+      // Use apiCall instead of direct fetch to include auth headers
+      const data = await apiCall(`/entrepreneurship?municipality=${municipality}`);
       console.log('✅ EntrepreneurshipService.getByMunicipality - Success:', data);
       return data;
     } catch (error) {

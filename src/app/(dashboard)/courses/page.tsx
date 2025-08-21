@@ -29,10 +29,12 @@ import {
 } from "lucide-react";
 import { CourseCard } from "@/components/courses/course-card";
 import { useCourses } from "@/hooks/useCourses";
+import { useEnrollments } from "@/hooks/useEnrollments";
 import { Course } from "@/types/api";
 
 export default function CoursesPage() {
   const { courses, loading, error } = useCourses();
+  const { enrollments, loading: enrollmentsLoading, isEnrolledInCourse } = useEnrollments();
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [levelFilter, setLevelFilter] = useState("all");
@@ -43,13 +45,14 @@ export default function CoursesPage() {
   console.log('🔍 CoursesPage - loading:', loading);
   console.log('🔍 CoursesPage - error:', error);
   console.log('🔍 CoursesPage - courses length:', courses?.length || 0);
+  console.log('🔍 CoursesPage - enrollments:', enrollments);
 
   // Estadísticas
   const stats = {
     total: courses?.length || 0,
-    inProgress: 0, // Se calculará con las inscripciones
-    completed: 0,
-    certificates: 0,
+    inProgress: enrollments.filter(e => e.status === 'IN_PROGRESS').length,
+    completed: enrollments.filter(e => e.status === 'COMPLETED').length,
+    certificates: enrollments.filter(e => e.status === 'COMPLETED').length,
   };
 
   const getCategoryLabel = (category: string) => {
@@ -109,7 +112,7 @@ export default function CoursesPage() {
     { value: "ADVANCED", label: "Avanzado" },
   ];
 
-  if (loading) {
+  if (loading || enrollmentsLoading) {
     return (
       <div className="container mx-auto p-6">
         <div className="animate-pulse space-y-6">
@@ -285,13 +288,24 @@ export default function CoursesPage() {
         )}
 
         <div className="grid gap-6">
-          {filteredCourses.map((course) => (
-                <CourseCard
-                  key={course.id}
-                  course={course}
-                  viewMode={viewMode}
-            />
-          ))}
+          {filteredCourses.map((course) => {
+            const enrollment = isEnrolledInCourse(course.id);
+            return (
+              <CourseCard
+                key={course.id}
+                course={course}
+                viewMode={viewMode}
+                enrollment={enrollment ? {
+                  isEnrolled: true,
+                  progress: enrollment.progress,
+                  status: enrollment.status,
+                  enrollmentId: enrollment.id
+                } : {
+                  isEnrolled: false
+                }}
+              />
+            );
+          })}
         </div>
       </div>
     </div>

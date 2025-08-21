@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Search } from 'lucide-react';
@@ -32,7 +33,7 @@ export default function ResourcesPage() {
   // Función para descargar recurso
   const handleDownload = async (resource: Resource) => {
     try {
-      const response = await fetch(`/api/resources/${resource.id}/download`, {
+      const response = await fetch(`/api/resource/${resource.id}/download`, {
         method: 'GET',
       });
       
@@ -55,7 +56,7 @@ export default function ResourcesPage() {
   // Función para calificar recurso
   const handleRate = async (resource: Resource, rating: number) => {
     try {
-      await fetch(`/api/resources/${resource.id}/rate`, {
+      await fetch(`/api/resource/${resource.id}/rate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -120,11 +121,11 @@ export default function ResourcesPage() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="">Todos los tipos</SelectItem>
-              <SelectItem value="TEMPLATE">Plantillas</SelectItem>
-              <SelectItem value="GUIDE">Guías</SelectItem>
+              <SelectItem value="DOCUMENT">Documentos</SelectItem>
               <SelectItem value="VIDEO">Videos</SelectItem>
-              <SelectItem value="TOOL">Herramientas</SelectItem>
-              <SelectItem value="COURSE">Cursos</SelectItem>
+              <SelectItem value="AUDIO">Audio</SelectItem>
+              <SelectItem value="IMAGE">Imágenes</SelectItem>
+              <SelectItem value="TEXT">Texto</SelectItem>
             </SelectContent>
           </Select>
 
@@ -134,11 +135,13 @@ export default function ResourcesPage() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="">Todas las categorías</SelectItem>
-              <SelectItem value="EMPRENDIMIENTO">Emprendimiento</SelectItem>
-              <SelectItem value="TECNOLOGIA">Tecnología</SelectItem>
-              <SelectItem value="EDUCACION">Educación</SelectItem>
-              <SelectItem value="SALUD">Salud</SelectItem>
-              <SelectItem value="FINANZAS">Finanzas</SelectItem>
+              <SelectItem value="PROGRAMMING">Programación</SelectItem>
+              <SelectItem value="DESIGN">Diseño</SelectItem>
+              <SelectItem value="BUSINESS">Negocios</SelectItem>
+              <SelectItem value="EDUCATION">Educación</SelectItem>
+              <SelectItem value="HEALTH">Salud</SelectItem>
+              <SelectItem value="TECHNOLOGY">Tecnología</SelectItem>
+              <SelectItem value="ENTREPRENEURSHIP">Emprendimiento</SelectItem>
             </SelectContent>
           </Select>
         </div>

@@ -6,6 +6,7 @@ import 'leaflet/dist/leaflet.css';
 import { QueryProvider } from "@/lib/providers/QueryProvider";
 import { AuthProvider } from "@/hooks/use-auth";
 import { ThemeProvider } from "@/context/theme-context";
+import { Toaster } from "@/components/ui/toaster";
 
 const APP_NAME = "POSITIVE-NEXT";
 const APP_DESCRIPTION = "Your Mind's Best Friend";
@@ -32,7 +33,10 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider defaultTheme="light" storageKey="app-theme">
           <QueryProvider>
-            <AuthProvider>{children}</AuthProvider>
+            <AuthProvider>
+              {children}
+              <Toaster />
+            </AuthProvider>
           </QueryProvider>
         </ThemeProvider>
       </body>

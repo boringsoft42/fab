@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getAuthHeaders } from '@/lib/api';
+import { apiCall } from '@/lib/api';
 
 export interface LessonResource {
   id: string;
@@ -43,37 +43,19 @@ export interface UpdateResourceData {
 }
 
 // Fetch resources for a lesson
-export const useLessonResources = (lessonId?: string) => {
+export const useLessonResources = (filters?: ResourceFilters) => {
   return useQuery({
-    queryKey: ['lessonResources', lessonId],
+    queryKey: ['lessonResources', filters],
     queryFn: async () => {
-      if (!lessonId) {
-        return { resources: [] };
-      }
+      const params = new URLSearchParams();
+      if (filters?.lessonId) params.append('lessonId', filters.lessonId);
+      if (filters?.moduleId) params.append('moduleId', filters.moduleId);
+      if (filters?.type) params.append('type', filters.type);
+      if (filters?.isPublic !== undefined) params.append('isPublic', filters.isPublic.toString());
       
-      const params = new URLSearchParams({ lessonId });
-      const url = `http://localhost:3001/api/lessonresource?${params}`;
-      
-      const headers = getAuthHeaders();
-      
-      const response = await fetch(url, {
-        headers,
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch lesson resources');
-      }
-      
-      const data = await response.json();
-      
-      // Si la respuesta es un array directo, lo envuelvo en el formato esperado
-      if (Array.isArray(data)) {
-        return { resources: data };
-      }
-      
+      const data = await apiCall(`/lessonresource?${params}`);
       return data;
     },
-    enabled: !!lessonId,
   });
 };
 

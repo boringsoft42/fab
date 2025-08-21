@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getAuthHeaders } from '@/lib/api';
+import { apiCall } from '@/lib/api';
 
 export interface ModuleCertificate {
   id: string;
@@ -24,51 +24,23 @@ export interface UpdateCertificateData {
   grade?: number;
 }
 
-// Fetch certificates for a module
-export const useModuleCertificates = (moduleId?: string) => {
+// Fetch module certificates
+export const useModuleCertificates = (filters?: CertificateFilters) => {
   return useQuery({
-    queryKey: ['moduleCertificates', moduleId],
+    queryKey: ['moduleCertificates', filters],
     queryFn: async () => {
-      if (!moduleId) return { certificates: [] };
+      const params = new URLSearchParams();
+      if (filters?.moduleId) params.append('moduleId', filters.moduleId);
+      if (filters?.studentId) params.append('studentId', filters.studentId);
+      if (filters?.courseId) params.append('courseId', filters.courseId);
       
-      const params = new URLSearchParams({ moduleId });
-      const response = await fetch(`http://localhost:3001/api/modulecertificate?${params}`, {
-        headers: getAuthHeaders(),
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch module certificates');
-      }
-      
-      return response.json();
+      const data = await apiCall(`/modulecertificate?${params}`);
+      return data;
     },
-    enabled: !!moduleId,
   });
 };
 
-// Fetch certificates for a student
-export const useStudentCertificates = (studentId?: string) => {
-  return useQuery({
-    queryKey: ['studentCertificates', studentId],
-    queryFn: async () => {
-      if (!studentId) return { certificates: [] };
-      
-      const params = new URLSearchParams({ studentId });
-      const response = await fetch(`http://localhost:3001/api/modulecertificate?${params}`, {
-        headers: getAuthHeaders(),
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch student certificates');
-      }
-      
-      return response.json();
-    },
-    enabled: !!studentId,
-  });
-};
-
-// Fetch a single certificate
+// Fetch a single module certificate
 export const useModuleCertificate = (certificateId?: string) => {
   return useQuery({
     queryKey: ['moduleCertificate', certificateId],
@@ -76,110 +48,64 @@ export const useModuleCertificate = (certificateId?: string) => {
       if (!certificateId) return null;
       
       const params = new URLSearchParams({ id: certificateId });
-      const response = await fetch(`http://localhost:3001/api/modulecertificate?${params}`, {
-        headers: getAuthHeaders(),
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch module certificate');
-      }
-      
-      const data = await response.json();
-      return data.certificate;
+      const data = await apiCall(`/modulecertificate?${params}`);
+      return data;
     },
     enabled: !!certificateId,
   });
 };
 
-// Create certificate mutation
-export const useCreateCertificate = () => {
+// Create module certificate mutation
+export const useCreateModuleCertificate = () => {
   const queryClient = useQueryClient();
   
   return useMutation({
     mutationFn: async (certificateData: CreateCertificateData) => {
-      const response = await fetch('http://localhost:3001/api/modulecertificate', {
+      const data = await apiCall('/modulecertificate', {
         method: 'POST',
-        headers: getAuthHeaders(),
         body: JSON.stringify(certificateData),
       });
-      
-      if (!response.ok) {
-        throw new Error('Failed to create certificate');
-      }
-      
-      return response.json();
+      return data;
     },
-    onSuccess: (data, variables) => {
-      // Invalidate and refetch certificates
-      queryClient.invalidateQueries({
-        queryKey: ['moduleCertificates', variables.moduleId],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['studentCertificates', variables.studentId],
-      });
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['moduleCertificates'] });
     },
   });
 };
 
-// Update certificate mutation
-export const useUpdateCertificate = () => {
+// Update module certificate mutation
+export const useUpdateModuleCertificate = () => {
   const queryClient = useQueryClient();
   
   return useMutation({
     mutationFn: async (certificateData: UpdateCertificateData) => {
-      const response = await fetch('http://localhost:3001/api/modulecertificate', {
+      const data = await apiCall('/modulecertificate', {
         method: 'PUT',
-        headers: getAuthHeaders(),
         body: JSON.stringify(certificateData),
       });
-      
-      if (!response.ok) {
-        throw new Error('Failed to update certificate');
-      }
-      
-      return response.json();
+      return data;
     },
     onSuccess: (data, variables) => {
-      // Invalidate and refetch certificates
-      queryClient.invalidateQueries({
-        queryKey: ['moduleCertificates'],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['studentCertificates'],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['moduleCertificate', variables.id],
-      });
+      queryClient.invalidateQueries({ queryKey: ['moduleCertificates'] });
+      queryClient.invalidateQueries({ queryKey: ['moduleCertificate', variables.id] });
     },
   });
 };
 
-// Delete certificate mutation
-export const useDeleteCertificate = () => {
+// Delete module certificate mutation
+export const useDeleteModuleCertificate = () => {
   const queryClient = useQueryClient();
   
   return useMutation({
     mutationFn: async (certificateId: string) => {
       const params = new URLSearchParams({ id: certificateId });
-      const response = await fetch(`http://localhost:3001/api/modulecertificate?${params}`, {
+      const data = await apiCall(`/modulecertificate?${params}`, {
         method: 'DELETE',
-        headers: getAuthHeaders(),
       });
-      
-      if (!response.ok) {
-        throw new Error('Failed to delete certificate');
-      }
-      
-      return response.json();
+      return data;
     },
     onSuccess: () => {
-      // Invalidate and refetch all certificates
-      queryClient.invalidateQueries({
-        queryKey: ['moduleCertificates'],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['studentCertificates'],
-      });
+      queryClient.invalidateQueries({ queryKey: ['moduleCertificates'] });
     },
   });
 };
