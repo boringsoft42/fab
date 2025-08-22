@@ -98,12 +98,12 @@ export const useCurrentMunicipality = () => {
 
   // Check if user role indicates municipality (flexible check for backend compatibility)
   const userRoleString = user?.role as string;
-  const isMunicipalityUser = userRoleString && (
+  const isMunicipalityUser = Boolean(userRoleString && (
     userRoleString === 'MUNICIPAL_GOVERNMENTS' ||
     userRoleString === 'GOBIERNOS_MUNICIPALES' ||
     userRoleString === 'municipality' ||
     userRoleString.toLowerCase().includes('municipality')
-  );
+  ));
 
   console.log("🏛️ useCurrentMunicipality - Debug info:", {
     user: !!user,
