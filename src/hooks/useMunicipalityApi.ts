@@ -96,17 +96,28 @@ export const useMunicipalityLogin = () => {
 export const useCurrentMunicipality = () => {
   const { user, isAuthenticated } = useAuth();
 
+  // Check if user role indicates municipality (flexible check for backend compatibility)
+  const userRoleString = user?.role as string;
+  const isMunicipalityUser = userRoleString && (
+    userRoleString === 'MUNICIPAL_GOVERNMENTS' ||
+    userRoleString === 'GOBIERNOS_MUNICIPALES' ||
+    userRoleString === 'municipality' ||
+    userRoleString.toLowerCase().includes('municipality')
+  );
+
   console.log("🏛️ useCurrentMunicipality - Debug info:", {
     user: !!user,
     isAuthenticated,
     userRole: user?.role,
-    shouldEnable: isAuthenticated && (user?.role === 'MUNICIPAL_GOVERNMENTS' || user?.role === 'GOBIERNOS_MUNICIPALES' || user?.role === 'municipality')
+    userRoleString,
+    isMunicipalityUser,
+    shouldEnable: isAuthenticated && isMunicipalityUser
   });
 
   return useQuery({
     queryKey: ['municipality', 'current'],
     queryFn: MunicipalityService.getCurrentMunicipality,
-    enabled: isAuthenticated && (user?.role === 'MUNICIPAL_GOVERNMENTS' || user?.role === 'GOBIERNOS_MUNICIPALES' || user?.role === 'municipality'),
+    enabled: isAuthenticated && isMunicipalityUser,
   });
 };
 
