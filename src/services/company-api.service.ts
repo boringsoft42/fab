@@ -1,4 +1,4 @@
-import { apiCall } from '@/lib/api';
+import { apiCall, getToken } from '@/lib/api';
 
 export interface Company {
   id: string;
@@ -62,6 +62,12 @@ export class CompanyApiService {
    */
   static async getAll(): Promise<Company[]> {
     console.log("📞 CompanyApiService.getAll() - Calling apiCall('/company')");
+
+    // Debug: Check token status
+    const token = getToken();
+    console.log("🔐 CompanyApiService.getAll() - Token exists:", !!token);
+    console.log("🔐 CompanyApiService.getAll() - Token value:", token ? `${token.substring(0, 20)}...` : 'null');
+
     try {
       const result = await apiCall('/company');
       console.log("✅ CompanyApiService.getAll() - Success:", result);
@@ -88,11 +94,25 @@ export class CompanyApiService {
   }
 
   /**
-   * Create new company
-   */
+ * Create new company
+ */
   static async create(data: CreateCompanyRequest): Promise<Company> {
     console.log("📞 CompanyApiService.create() - Calling apiCall('/company') with data:", data);
+
+    // Debug: Check token status
+    const token = getToken();
+    console.log("🔐 CompanyApiService.create() - Token exists:", !!token);
+    console.log("🔐 CompanyApiService.create() - Token value:", token ? `${token.substring(0, 20)}...` : 'null');
+    console.log("🔐 CompanyApiService.create() - Full token:", token);
+    console.log("🔐 CompanyApiService.create() - Authorization header that should be sent:", `Bearer ${token}`);
+
+    // Debug: Check localStorage directly
+    console.log("🔐 CompanyApiService.create() - localStorage token:", localStorage.getItem('token'));
+    console.log("🔐 CompanyApiService.create() - localStorage refreshToken:", localStorage.getItem('refreshToken'));
+    console.log("🔐 CompanyApiService.create() - All localStorage keys:", Object.keys(localStorage));
+
     try {
+      console.log("🔐 CompanyApiService.create() - About to call apiCall");
       const result = await apiCall('/company', {
         method: 'POST',
         body: JSON.stringify(data)

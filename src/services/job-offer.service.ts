@@ -1,4 +1,4 @@
-import { apiCall, getAuthHeaders, getToken } from '@/lib/api';
+import { apiCall, getAuthHeaders, API_BASE } from '@/lib/api';
 import { JobOffer, JobStatus, ContractType, WorkModality, ExperienceLevel } from '@/types/jobs';
 
 export interface CreateJobOfferRequest {
@@ -70,7 +70,7 @@ export class JobOfferService {
   static async createJobOffer(data: CreateJobOfferRequest): Promise<JobOfferResponse> {
     try {
       console.log('🏢 JobOfferService.createJobOffer - Creating job offer:', data);
-      
+
       const response = await apiCall('/joboffer', {
         method: 'POST',
         headers: getAuthHeaders(),
@@ -91,12 +91,12 @@ export class JobOfferService {
   static async getCompanyJobOffers(companyId: string, status?: string): Promise<JobOfferListResponse[]> {
     try {
       console.log('🏢 JobOfferService.getCompanyJobOffers - Fetching company job offers for:', companyId, 'status:', status);
-      
+
       let url = `/joboffer?companyId=${companyId}`;
       if (status) {
         url += `&status=${status}`;
       }
-      
+
       const response = await apiCall(url, {
         method: 'GET',
         headers: getAuthHeaders()
@@ -116,7 +116,7 @@ export class JobOfferService {
   static async getActiveJobOffers(): Promise<JobOffer[]> {
     try {
       console.log('👥 JobOfferService.getActiveJobOffers - Fetching active job offers');
-      
+
       const response = await apiCall('/joboffer', {
         method: 'GET',
         headers: getAuthHeaders()
@@ -136,7 +136,7 @@ export class JobOfferService {
   static async getJobOffer(id: string): Promise<JobOffer> {
     try {
       console.log('🔍 JobOfferService.getJobOffer - Fetching job offer:', id);
-      
+
       const response = await apiCall(`/joboffer/${id}`, {
         method: 'GET',
         headers: getAuthHeaders()
@@ -156,7 +156,7 @@ export class JobOfferService {
   static async updateJobOffer(id: string, data: UpdateJobOfferRequest): Promise<JobOffer> {
     try {
       console.log('🏢 JobOfferService.updateJobOffer - Updating job offer:', id, data);
-      
+
       const response = await apiCall(`/joboffer/${id}`, {
         method: 'PUT',
         headers: getAuthHeaders(),
@@ -177,7 +177,7 @@ export class JobOfferService {
   static async closeJobOffer(id: string): Promise<JobOffer> {
     try {
       console.log('🏢 JobOfferService.closeJobOffer - Closing job offer:', id);
-      
+
       const response = await apiCall(`/joboffer/${id}`, {
         method: 'PUT',
         headers: getAuthHeaders(),
@@ -201,7 +201,7 @@ export class JobOfferService {
   static async pauseJobOffer(id: string): Promise<JobOffer> {
     try {
       console.log('🏢 JobOfferService.pauseJobOffer - Pausing job offer:', id);
-      
+
       const response = await apiCall(`/joboffer/${id}`, {
         method: 'PUT',
         headers: getAuthHeaders(),
@@ -225,7 +225,7 @@ export class JobOfferService {
   static async activateJobOffer(id: string): Promise<JobOffer> {
     try {
       console.log('🏢 JobOfferService.activateJobOffer - Activating job offer:', id);
-      
+
       const response = await apiCall(`/joboffer/${id}`, {
         method: 'PUT',
         headers: getAuthHeaders(),
@@ -249,14 +249,14 @@ export class JobOfferService {
   static async getJobOffers(): Promise<JobOffer[]> {
     try {
       console.log('🔍 JobOfferService.getJobOffers - Fetching job offers');
-      
+
       const response = await apiCall('/joboffer', {
         method: 'GET',
         headers: getAuthHeaders()
       });
 
       console.log('✅ JobOfferService.getJobOffers - Job offers fetched:', response);
-      
+
       // Handle both backend response format and mock data format
       if (response && typeof response === 'object') {
         if (Array.isArray(response)) {
@@ -267,7 +267,7 @@ export class JobOfferService {
           return response.jobOffers;
         }
       }
-      
+
       // Fallback: return empty array if response is unexpected
       console.warn('⚠️ JobOfferService.getJobOffers - Unexpected response format:', response);
       return [];
@@ -283,15 +283,15 @@ export class JobOfferService {
   static async getJobOffersByCompany(companyId: string, status?: JobStatus): Promise<JobOffer[]> {
     try {
       console.log('🏢 JobOfferService.getJobOffersByCompany - Fetching job offers for company:', companyId, 'status:', status);
-      
+
       let url = `/joboffer?companyId=${companyId}`;
       if (status) {
         url += `&status=${status}`;
       }
-      
+
       console.log('🏢 JobOfferService.getJobOffersByCompany - Final URL:', url);
       console.log('🏢 JobOfferService.getJobOffersByCompany - Expected full URL:', API_BASE + url);
-      
+
       const response = await apiCall(url, {
         method: 'GET',
         headers: getAuthHeaders()
@@ -300,7 +300,7 @@ export class JobOfferService {
       console.log('✅ JobOfferService.getJobOffersByCompany - Job offers fetched:', response);
       console.log('✅ JobOfferService.getJobOffersByCompany - Response type:', typeof response);
       console.log('✅ JobOfferService.getJobOffersByCompany - Response length:', Array.isArray(response) ? response.length : 'Not an array');
-      
+
       return response;
     } catch (error) {
       console.error('❌ JobOfferService.getJobOffersByCompany - Error:', error);
@@ -314,7 +314,7 @@ export class JobOfferService {
   static async deleteJobOffer(id: string): Promise<void> {
     try {
       console.log('🏢 JobOfferService.deleteJobOffer - Deleting job offer:', id);
-      
+
       await apiCall(`/joboffer/${id}`, {
         method: 'DELETE',
         headers: getAuthHeaders()

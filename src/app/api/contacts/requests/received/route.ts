@@ -1,27 +1,41 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { API_BASE } from '@/lib/api';
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const page = searchParams.get('page');
-    const limit = searchParams.get('limit');
-    
-    const url = new URL(`${API_BASE}/contacts/requests/received`);
-    if (page) url.searchParams.set('page', page);
-    if (limit) url.searchParams.set('limit', limit);
+    console.log('🔍 Contacts Requests Received API called'); // Debug
+    const authHeader = request.headers.get('authorization');
 
-    const response = await fetch(url.toString(), {
+    // Use the same backend URL structure as institutions
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://192.168.10.91:3001';
+
+    const url = `${backendUrl}/api/contacts/requests/received`;
+
+    console.log('🔍 Contacts Requests Received API - Calling backend URL:', url); // Debug
+    console.log('🔍 Contacts Requests Received API - Authorization header:', authHeader ? 'Present' : 'Missing');
+
+    const response = await fetch(url, {
       headers: {
-        'Authorization': request.headers.get('authorization') || '',
+        'Authorization': authHeader || '',
         'Content-Type': 'application/json',
       },
     });
 
+    console.log('🔍 Contacts Requests Received API - Backend response status:', response.status);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('🔍 Contacts Requests Received API - Backend error:', errorText);
+      return NextResponse.json(
+        { message: `Backend error: ${response.status} ${errorText}` },
+        { status: response.status }
+      );
+    }
+
     const data = await response.json();
+    console.log('🔍 Contacts Requests Received API - Backend data received, requests count:', data.requests?.length || 0);
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
-    console.error('Error in contacts requests received route:', error);
+    console.error('🔍 Contacts Requests Received API - Error:', error);
     return NextResponse.json(
       { message: 'Internal server error' },
       { status: 500 }

@@ -10,11 +10,11 @@ const mockNews: NewsArticle[] = [
       "TechCorp Bolivia anuncia su programa anual de becas dirigido a jóvenes talentos en tecnología. El programa incluye 50 becas completas para estudios superiores en ingeniería de sistemas, desarrollo de software y ciencia de datos.\n\nLos beneficiarios recibirán:\n• Beca completa para estudios universitarios\n• Mentoring personalizado con profesionales de la empresa\n• Oportunidad de prácticas profesionales\n• Acceso a cursos especializados en tecnologías emergentes\n\nLas postulaciones están abiertas hasta el 31 de marzo. Los requisitos incluyen promedio mínimo de 80 puntos en bachillerato y demostrar pasión por la tecnología.",
     summary:
       "TechCorp Bolivia ofrece 50 becas completas para jóvenes interesados en carreras tecnológicas, incluyendo mentoring y oportunidades de prácticas.",
-    imageUrl: "/api/placeholder/800/400",
+    imageUrl: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&h=400&fit=crop",
     authorId: "company-1",
     authorName: "TechCorp Bolivia",
     authorType: "COMPANY",
-    authorLogo: "/logos/techcorp.svg",
+    authorLogo: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=60&h=60&fit=crop",
     status: "PUBLISHED",
     priority: "HIGH",
     featured: true,
@@ -46,11 +46,11 @@ const mockNews: NewsArticle[] = [
       "El Gobierno Municipal de Cochabamba anuncia la implementación de una nueva política integral de empleo juvenil que beneficiará a más de 2,000 jóvenes en los próximos 12 meses.\n\nLa política incluye:\n• Programa de primer empleo con subsidio del 50% del salario mínimo\n• Centros de capacitación laboral en oficios técnicos\n• Bolsa de trabajo municipal con prioridad para jóvenes\n• Programa de emprendimiento juvenil con microcréditos\n• Orientación vocacional y laboral gratuita\n\nLa iniciativa tiene un presupuesto de 15 millones de bolivianos y será ejecutada en coordinación con empresas privadas y organizaciones de la sociedad civil.",
     summary:
       "Nueva política municipal creará 2,000 empleos para jóvenes con subsidios, capacitación y programas de emprendimiento.",
-    imageUrl: "/api/placeholder/800/400",
+    imageUrl: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=800&h=400&fit=crop",
     authorId: "gov-1",
     authorName: "Gobierno Municipal de Cochabamba",
     authorType: "GOVERNMENT",
-    authorLogo: "/api/placeholder/60/60",
+    authorLogo: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=60&h=60&fit=crop",
     status: "PUBLISHED",
     priority: "URGENT",
     featured: true,
@@ -72,11 +72,11 @@ const mockNews: NewsArticle[] = [
       "Innovate Labs, startup líder en desarrollo de aplicaciones móviles, anuncia la apertura de 20 posiciones para desarrolladores junior. La empresa ofrece un ambiente de trabajo dinámico y oportunidades de crecimiento profesional acelerado.\n\nBeneficios ofrecidos:\n• Salario competitivo desde 4,500 BOB\n• Horarios flexibles y trabajo híbrido\n• Capacitación continua en nuevas tecnologías\n• Seguro médico privado\n• Ambiente de startup con proyectos desafiantes\n\nLa empresa busca recién graduados o personas con máximo 2 años de experiencia en React, React Native o Flutter.",
     summary:
       "Innovate Labs ofrece 20 empleos para desarrolladores junior con salarios competitivos y ambiente de startup.",
-    imageUrl: "/api/placeholder/800/400",
+    imageUrl: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop",
     authorId: "company-2",
     authorName: "Innovate Labs",
     authorType: "COMPANY",
-    authorLogo: "/logos/innovatelabs.svg",
+    authorLogo: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=60&h=60&fit=crop",
     status: "PUBLISHED",
     priority: "MEDIUM",
     featured: false,
@@ -97,48 +97,48 @@ const mockNews: NewsArticle[] = [
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    
+
     const category = searchParams.get('category');
     const authorType = searchParams.get('authorType');
     const limit = parseInt(searchParams.get('limit') || '10');
     const page = parseInt(searchParams.get('page') || '1');
     const search = searchParams.get('search');
-    
+
     // Filtrar solo noticias publicadas
     let filteredNews = mockNews.filter(news => news.status === 'PUBLISHED');
-    
+
     // Aplicar filtros adicionales
     if (category) {
       filteredNews = filteredNews.filter(news => news.category === category);
     }
-    
+
     if (authorType) {
       filteredNews = filteredNews.filter(news => news.authorType === authorType.toUpperCase());
     }
-    
+
     if (search) {
       const searchLower = search.toLowerCase();
-      filteredNews = filteredNews.filter(news => 
+      filteredNews = filteredNews.filter(news =>
         news.title.toLowerCase().includes(searchLower) ||
         news.summary.toLowerCase().includes(searchLower) ||
         news.tags.some(tag => tag.toLowerCase().includes(searchLower))
       );
     }
-    
+
     // Ordenar por prioridad y fecha de publicación
     filteredNews.sort((a, b) => {
       const priorityOrder = { URGENT: 4, HIGH: 3, MEDIUM: 2, LOW: 1 };
       const priorityDiff = priorityOrder[b.priority] - priorityOrder[a.priority];
       if (priorityDiff !== 0) return priorityDiff;
-      
+
       return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
     });
-    
+
     // Aplicar paginación
     const startIndex = (page - 1) * limit;
     const endIndex = startIndex + limit;
     const paginatedNews = filteredNews.slice(startIndex, endIndex);
-    
+
     // Calcular estadísticas
     const stats = {
       total: filteredNews.length,
@@ -157,7 +157,7 @@ export async function GET(request: NextRequest) {
       totalLikes: filteredNews.reduce((sum, n) => sum + n.likeCount, 0),
       totalComments: filteredNews.reduce((sum, n) => sum + n.commentCount, 0),
     };
-    
+
     return NextResponse.json({
       news: paginatedNews,
       pagination: {

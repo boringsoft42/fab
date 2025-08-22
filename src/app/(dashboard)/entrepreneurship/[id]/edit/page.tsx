@@ -65,10 +65,19 @@ export default function EditEntrepreneurshipPage() {
   const params = useParams();
   const { toast } = useToast();
   const entrepreneurshipId = params.id as string;
-  
-  const { entrepreneurship, loading: fetchLoading, error: fetchError, fetchEntrepreneurship } = useEntrepreneurship(entrepreneurshipId);
-  const { updateEntrepreneurship, loading: updateLoading, error: updateError } = useUpdateEntrepreneurship();
-  
+
+  const {
+    entrepreneurship,
+    loading: fetchLoading,
+    error: fetchError,
+    fetchEntrepreneurship,
+  } = useEntrepreneurship(entrepreneurshipId);
+  const {
+    updateEntrepreneurship,
+    loading: updateLoading,
+    error: updateError,
+  } = useUpdateEntrepreneurship();
+
   const [formData, setFormData] = useState<EditFormData>({
     name: "",
     description: "",
@@ -109,7 +118,7 @@ export default function EditEntrepreneurshipPage() {
         subcategory: entrepreneurship.subcategory || "",
         businessStage: entrepreneurship.businessStage || "IDEA",
         municipality: entrepreneurship.municipality || "",
-        department: entrepreneurship.department || "Cochabamba",
+        department: "Cochabamba",
         website: entrepreneurship.website || "",
         email: entrepreneurship.email || "",
         phone: entrepreneurship.phone || "",
@@ -119,7 +128,9 @@ export default function EditEntrepreneurshipPage() {
           instagram: (entrepreneurship.socialMedia as any)?.instagram || "",
           linkedin: (entrepreneurship.socialMedia as any)?.linkedin || "",
         },
-        founded: entrepreneurship.founded ? new Date(entrepreneurship.founded).getFullYear().toString() : "",
+        founded: entrepreneurship.founded
+          ? new Date(entrepreneurship.founded).getFullYear().toString()
+          : "",
         employees: entrepreneurship.employees?.toString() || "",
         annualRevenue: entrepreneurship.annualRevenue?.toString() || "",
         businessModel: entrepreneurship.businessModel || "",
@@ -135,14 +146,14 @@ export default function EditEntrepreneurshipPage() {
     { value: "alimentacion", label: "Alimentación" },
     { value: "educacion", label: "Educación" },
     { value: "servicios", label: "Servicios" },
-    { value: "manufactura", label: "Manufactura" }
+    { value: "manufactura", label: "Manufactura" },
   ];
 
   const businessStages = [
     { value: "IDEA", label: "Idea" },
     { value: "STARTUP", label: "Startup" },
     { value: "GROWING", label: "En Crecimiento" },
-    { value: "ESTABLISHED", label: "Establecida" }
+    { value: "ESTABLISHED", label: "Establecida" },
   ];
 
   const departments = [
@@ -154,7 +165,7 @@ export default function EditEntrepreneurshipPage() {
     "Chuquisaca",
     "Tarija",
     "Beni",
-    "Pando"
+    "Pando",
   ];
 
   const municipalities = [
@@ -166,29 +177,32 @@ export default function EditEntrepreneurshipPage() {
     "La Paz",
     "Santa Cruz",
     "Warnes",
-    "Montero"
+    "Montero",
   ];
 
   const updateFormField = (field: keyof EditFormData, value: any) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
-  const updateSocialMedia = (platform: keyof EditFormData['socialMedia'], value: string) => {
-    setFormData(prev => ({
+  const updateSocialMedia = (
+    platform: keyof EditFormData["socialMedia"],
+    value: string
+  ) => {
+    setFormData((prev) => ({
       ...prev,
       socialMedia: {
         ...prev.socialMedia,
-        [platform]: value
-      }
+        [platform]: value,
+      },
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       const updateData = {
         name: formData.name,
@@ -207,21 +221,27 @@ export default function EditEntrepreneurshipPage() {
           instagram: formData.socialMedia.instagram || undefined,
           linkedin: formData.socialMedia.linkedin || undefined,
         },
-        founded: formData.founded ? new Date(parseInt(formData.founded), 0, 1) : undefined,
-        employees: formData.employees ? parseInt(formData.employees) : undefined,
-        annualRevenue: formData.annualRevenue ? parseFloat(formData.annualRevenue) : undefined,
+        founded: formData.founded
+          ? new Date(parseInt(formData.founded), 0, 1)
+          : undefined,
+        employees: formData.employees
+          ? parseInt(formData.employees)
+          : undefined,
+        annualRevenue: formData.annualRevenue
+          ? parseFloat(formData.annualRevenue)
+          : undefined,
         businessModel: formData.businessModel || undefined,
         targetMarket: formData.targetMarket || undefined,
         isPublic: formData.isPublic,
       };
 
       await updateEntrepreneurship(entrepreneurshipId, updateData);
-      
+
       toast({
         title: "Emprendimiento actualizado",
         description: "Los cambios han sido guardados exitosamente",
       });
-      
+
       router.push("/my-entrepreneurships");
     } catch (error) {
       toast({
@@ -234,29 +254,29 @@ export default function EditEntrepreneurshipPage() {
 
   const getBusinessStageColor = (stage: string) => {
     switch (stage) {
-      case 'IDEA':
-        return 'bg-blue-100 text-blue-800';
-      case 'STARTUP':
-        return 'bg-green-100 text-green-800';
-      case 'GROWING':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'ESTABLISHED':
-        return 'bg-purple-100 text-purple-800';
+      case "IDEA":
+        return "bg-blue-100 text-blue-800";
+      case "STARTUP":
+        return "bg-green-100 text-green-800";
+      case "GROWING":
+        return "bg-yellow-100 text-yellow-800";
+      case "ESTABLISHED":
+        return "bg-purple-100 text-purple-800";
       default:
-        return 'bg-gray-100 text-gray-800';
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const getBusinessStageLabel = (stage: string) => {
     switch (stage) {
-      case 'IDEA':
-        return 'Idea';
-      case 'STARTUP':
-        return 'Startup';
-      case 'GROWING':
-        return 'En Crecimiento';
-      case 'ESTABLISHED':
-        return 'Establecida';
+      case "IDEA":
+        return "Idea";
+      case "STARTUP":
+        return "Startup";
+      case "GROWING":
+        return "En Crecimiento";
+      case "ESTABLISHED":
+        return "Establecida";
       default:
         return stage;
     }
@@ -279,11 +299,15 @@ export default function EditEntrepreneurshipPage() {
         <div className="text-center py-12">
           <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md mx-auto">
             <AlertCircle className="h-12 w-12 text-red-600 mx-auto mb-4" />
-            <p className="text-red-600 font-medium mb-2">Error al cargar el emprendimiento</p>
-            <p className="text-red-500 text-sm">{fetchError || "No se encontró el emprendimiento"}</p>
-            <Button 
-              onClick={() => router.push("/my-entrepreneurships")} 
-              variant="outline" 
+            <p className="text-red-600 font-medium mb-2">
+              Error al cargar el emprendimiento
+            </p>
+            <p className="text-red-500 text-sm">
+              {fetchError || "No se encontró el emprendimiento"}
+            </p>
+            <Button
+              onClick={() => router.push("/my-entrepreneurships")}
+              variant="outline"
               className="mt-4"
             >
               Volver a mis emprendimientos
@@ -299,7 +323,10 @@ export default function EditEntrepreneurshipPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-4">
-          <Button variant="outline" onClick={() => router.push("/my-entrepreneurships")}>
+          <Button
+            variant="outline"
+            onClick={() => router.push("/my-entrepreneurships")}
+          >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Volver
           </Button>
@@ -310,7 +337,10 @@ export default function EditEntrepreneurshipPage() {
             </p>
           </div>
         </div>
-        <Button variant="outline" onClick={() => router.push(`/entrepreneurship/${entrepreneurshipId}`)}>
+        <Button
+          variant="outline"
+          onClick={() => router.push(`/entrepreneurship/${entrepreneurshipId}`)}
+        >
           <Eye className="h-4 w-4 mr-2" />
           Ver Público
         </Button>
@@ -325,7 +355,11 @@ export default function EditEntrepreneurshipPage() {
               <div>
                 <h3 className="font-semibold">{entrepreneurship.name}</h3>
                 <div className="flex items-center gap-2 mt-1">
-                  <Badge className={getBusinessStageColor(entrepreneurship.businessStage)}>
+                  <Badge
+                    className={getBusinessStageColor(
+                      entrepreneurship.businessStage
+                    )}
+                  >
                     {getBusinessStageLabel(entrepreneurship.businessStage)}
                   </Badge>
                   {entrepreneurship.isPublic ? (
@@ -381,7 +415,9 @@ export default function EditEntrepreneurshipPage() {
                 <Textarea
                   id="description"
                   value={formData.description}
-                  onChange={(e) => updateFormField("description", e.target.value)}
+                  onChange={(e) =>
+                    updateFormField("description", e.target.value)
+                  }
                   placeholder="Describe tu emprendimiento"
                   className="min-h-[100px]"
                   required
@@ -391,7 +427,12 @@ export default function EditEntrepreneurshipPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="category">Categoría *</Label>
-                  <Select value={formData.category} onValueChange={(value) => updateFormField("category", value)}>
+                  <Select
+                    value={formData.category}
+                    onValueChange={(value) =>
+                      updateFormField("category", value)
+                    }
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Selecciona categoría" />
                     </SelectTrigger>
@@ -407,7 +448,12 @@ export default function EditEntrepreneurshipPage() {
 
                 <div className="space-y-2">
                   <Label htmlFor="businessStage">Etapa del Negocio *</Label>
-                  <Select value={formData.businessStage} onValueChange={(value: any) => updateFormField("businessStage", value)}>
+                  <Select
+                    value={formData.businessStage}
+                    onValueChange={(value: any) =>
+                      updateFormField("businessStage", value)
+                    }
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Selecciona etapa" />
                     </SelectTrigger>
@@ -427,7 +473,9 @@ export default function EditEntrepreneurshipPage() {
                 <Input
                   id="subcategory"
                   value={formData.subcategory}
-                  onChange={(e) => updateFormField("subcategory", e.target.value)}
+                  onChange={(e) =>
+                    updateFormField("subcategory", e.target.value)
+                  }
                   placeholder="Subcategoría específica"
                 />
               </div>
@@ -443,23 +491,22 @@ export default function EditEntrepreneurshipPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="department">Departamento *</Label>
-                  <Select value={formData.department} onValueChange={(value) => updateFormField("department", value)}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecciona departamento" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {departments.map((dept) => (
-                        <SelectItem key={dept} value={dept}>
-                          {dept}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Input
+                    id="department"
+                    value="Cochabamba"
+                    disabled
+                    className="bg-gray-50"
+                  />
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="municipality">Municipio *</Label>
-                  <Select value={formData.municipality} onValueChange={(value) => updateFormField("municipality", value)}>
+                  <Select
+                    value={formData.municipality}
+                    onValueChange={(value) =>
+                      updateFormField("municipality", value)
+                    }
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Selecciona municipio" />
                     </SelectTrigger>
@@ -545,7 +592,9 @@ export default function EditEntrepreneurshipPage() {
                     id="employees"
                     type="number"
                     value={formData.employees}
-                    onChange={(e) => updateFormField("employees", e.target.value)}
+                    onChange={(e) =>
+                      updateFormField("employees", e.target.value)
+                    }
                     placeholder="0"
                     min="0"
                   />
@@ -557,7 +606,9 @@ export default function EditEntrepreneurshipPage() {
                     id="annualRevenue"
                     type="number"
                     value={formData.annualRevenue}
-                    onChange={(e) => updateFormField("annualRevenue", e.target.value)}
+                    onChange={(e) =>
+                      updateFormField("annualRevenue", e.target.value)
+                    }
                     placeholder="0"
                     min="0"
                   />
@@ -569,7 +620,9 @@ export default function EditEntrepreneurshipPage() {
                 <Textarea
                   id="businessModel"
                   value={formData.businessModel}
-                  onChange={(e) => updateFormField("businessModel", e.target.value)}
+                  onChange={(e) =>
+                    updateFormField("businessModel", e.target.value)
+                  }
                   placeholder="Describe tu modelo de negocio"
                   className="min-h-[80px]"
                 />
@@ -580,7 +633,9 @@ export default function EditEntrepreneurshipPage() {
                 <Input
                   id="targetMarket"
                   value={formData.targetMarket}
-                  onChange={(e) => updateFormField("targetMarket", e.target.value)}
+                  onChange={(e) =>
+                    updateFormField("targetMarket", e.target.value)
+                  }
                   placeholder="Tu mercado objetivo"
                 />
               </div>
@@ -598,7 +653,9 @@ export default function EditEntrepreneurshipPage() {
                 <Input
                   id="facebook"
                   value={formData.socialMedia.facebook}
-                  onChange={(e) => updateSocialMedia("facebook", e.target.value)}
+                  onChange={(e) =>
+                    updateSocialMedia("facebook", e.target.value)
+                  }
                   placeholder="@tu-pagina"
                 />
               </div>
@@ -608,7 +665,9 @@ export default function EditEntrepreneurshipPage() {
                 <Input
                   id="instagram"
                   value={formData.socialMedia.instagram}
-                  onChange={(e) => updateSocialMedia("instagram", e.target.value)}
+                  onChange={(e) =>
+                    updateSocialMedia("instagram", e.target.value)
+                  }
                   placeholder="@tu-cuenta"
                 />
               </div>
@@ -618,7 +677,9 @@ export default function EditEntrepreneurshipPage() {
                 <Input
                   id="linkedin"
                   value={formData.socialMedia.linkedin}
-                  onChange={(e) => updateSocialMedia("linkedin", e.target.value)}
+                  onChange={(e) =>
+                    updateSocialMedia("linkedin", e.target.value)
+                  }
                   placeholder="tu-perfil"
                 />
               </div>
@@ -628,10 +689,14 @@ export default function EditEntrepreneurshipPage() {
                   type="checkbox"
                   id="isPublic"
                   checked={formData.isPublic}
-                  onChange={(e) => updateFormField("isPublic", e.target.checked)}
+                  onChange={(e) =>
+                    updateFormField("isPublic", e.target.checked)
+                  }
                   className="rounded"
                 />
-                <Label htmlFor="isPublic">Hacer público este emprendimiento</Label>
+                <Label htmlFor="isPublic">
+                  Hacer público este emprendimiento
+                </Label>
               </div>
             </CardContent>
           </Card>
@@ -646,10 +711,7 @@ export default function EditEntrepreneurshipPage() {
           >
             Cancelar
           </Button>
-          <Button
-            type="submit"
-            disabled={updateLoading}
-          >
+          <Button type="submit" disabled={updateLoading}>
             {updateLoading ? (
               <>
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>

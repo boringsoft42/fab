@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function GET(request: NextRequest) {
   try {
     console.log("🏛️ GET /api/municipality/auth/me - Starting request");
-    
+
     // Get the authorization header
     const authHeader = request.headers.get('authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
     console.log("🏛️ GET /api/municipality/auth/me - Token extracted, calling backend");
 
     // Call the backend directly
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001';
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || '${BACKEND_URL}';
     const response = await fetch(`${backendUrl}/api/municipality/auth/me`, {
       method: 'GET',
       headers: {
@@ -42,14 +42,14 @@ export async function GET(request: NextRequest) {
 
   } catch (error) {
     console.error("❌ GET /api/municipality/auth/me - Error:", error);
-    
+
     if (error instanceof Error) {
       return NextResponse.json(
         { error: error.message },
         { status: 500 }
       );
     }
-    
+
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

@@ -20,7 +20,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Dialog,
@@ -37,17 +36,19 @@ import { useAuthContext } from "@/hooks/use-auth";
 import { JobApplicationService } from "@/services/job-application.service";
 import { useToast } from "@/hooks/use-toast";
 import { CheckCircle, XCircle, Loader2 } from "lucide-react";
-import { BACKEND_ENDPOINTS } from "@/lib/backend-config";
 
 export default function JobDetailPage() {
   const [job, setJob] = useState<JobOffer | null>(null);
   const [loading, setLoading] = useState(true);
   const [isSaved, setIsSaved] = useState(false);
   const [showApplicationModal, setShowApplicationModal] = useState(false);
-  const [similarJobs, setSimilarJobs] = useState<JobOffer[]>([]);
   const [applicationStatus, setApplicationStatus] = useState<{
     hasApplied: boolean;
-    application?: any;
+    application?: {
+      id: string;
+      status: string;
+      appliedAt: string;
+    };
     loading: boolean;
   }>({ hasApplied: false, loading: true });
   const { user, loading: authLoading } = useAuthContext();
@@ -59,14 +60,15 @@ export default function JobDetailPage() {
 
   // Check if current user is the company that created this job
   // Temporarily show owner actions for any company user for testing
-  const isJobOwner = user && job && (
-    user.id === job.companyId || 
-    (user.role === 'EMPRESAS' && user.id === job.companyId) ||
-    user.role === 'EMPRESAS' // Temporary: show for any company user
-  );
-  
+  const isJobOwner =
+    user &&
+    job &&
+    (user.id === job.companyId ||
+      (user.role === "EMPRESAS" && user.id === job.companyId) ||
+      user.role === "EMPRESAS"); // Temporary: show for any company user
+
   // Debug logging
-  console.log('🔍 Debug isJobOwner:', {
+  console.log("🔍 Debug isJobOwner:", {
     userId: user?.id,
     userRole: user?.role,
     userCompany: user?.company,
@@ -76,27 +78,27 @@ export default function JobDetailPage() {
     isJobOwner,
     isAuthenticated: !!user,
     comparison1: user?.id === job?.companyId,
-    comparison2: user?.role === 'EMPRESAS' && user?.id === job?.companyId,
-    fullUserObject: user
+    comparison2: user?.role === "EMPRESAS" && user?.id === job?.companyId,
+    fullUserObject: user,
   });
 
   // Verificar si ya aplicaste a este trabajo
   useEffect(() => {
     const checkApplicationStatus = async () => {
       if (!user || !job) return;
-      
+
       try {
         const result = await JobApplicationService.checkIfApplied(job.id);
         setApplicationStatus({
           hasApplied: result.hasApplied,
           application: result.application,
-          loading: false
+          loading: false,
         });
       } catch (error) {
-        console.error('Error checking application status:', error);
+        console.error("Error checking application status:", error);
         setApplicationStatus({
           hasApplied: false,
-          loading: false
+          loading: false,
         });
       }
     };
@@ -107,32 +109,25 @@ export default function JobDetailPage() {
   useEffect(() => {
     const fetchJobDetail = async () => {
       try {
-        const token = localStorage.getItem('token');
+        console.log("🔍 JobDetailPage: Fetching job with ID:", jobId);
+
+        const token = localStorage.getItem("token");
         const headers: Record<string, string> = {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         };
-        
+
         if (token) {
-          headers['Authorization'] = `Bearer ${token}`;
+          headers["Authorization"] = `Bearer ${token}`;
         }
 
-        const response = await fetch(`${BACKEND_ENDPOINTS.JOB_OFFERS}/${jobId}`, {
+        const response = await fetch(`/api/joboffer/${jobId}`, {
           headers,
         });
-        
+
         if (response.ok) {
           const jobData = await response.json();
+          console.log("🔍 JobDetailPage: Job data received:", jobData);
           setJob(jobData);
-
-          // Fetch similar jobs (simplified - in real app would use better matching)
-          const similarResponse = await fetch(
-            `${BACKEND_ENDPOINTS.JOB_OFFERS}?limit=3&exclude=${jobId}`,
-            { headers }
-          );
-          if (similarResponse.ok) {
-            const similarData = await similarResponse.json();
-            setSimilarJobs(Array.isArray(similarData) ? similarData.slice(0, 3) : []);
-          }
         } else {
           console.error("Job not found");
         }
@@ -146,7 +141,7 @@ export default function JobDetailPage() {
     fetchJobDetail();
   }, [jobId]);
 
-  const formatSalary = (min?: number, max?: number, currency = "BOB") => {
+  const formatSalary = (min?: number, max?: number) => {
     if (!min && !max) return "Salario a convenir";
     if (min && max)
       return `Bs. ${min.toLocaleString()} - ${max.toLocaleString()}`;
@@ -217,47 +212,49 @@ export default function JobDetailPage() {
       toast({
         title: "Error",
         description: "No se pudo cancelar la aplicación",
-        variant: "destructive"
+        variant: "destructive",
       });
       return;
     }
 
     try {
-      await JobApplicationService.deleteApplication(applicationStatus.application.id);
-      
+      await JobApplicationService.deleteApplication(
+        applicationStatus.application.id
+      );
+
       toast({
         title: "¡Aplicación cancelada!",
-        description: "Tu aplicación ha sido cancelada exitosamente"
+        description: "Tu aplicación ha sido cancelada exitosamente",
       });
 
       // Actualizar el estado
       setApplicationStatus({
         hasApplied: false,
         application: undefined,
-        loading: false
+        loading: false,
       });
     } catch (error) {
-      console.error('Error canceling application:', error);
+      console.error("Error canceling application:", error);
       toast({
         title: "Error",
         description: "No se pudo cancelar la aplicación",
-        variant: "destructive"
+        variant: "destructive",
       });
     }
   };
 
   const getApplicationStatusLabel = (status: string) => {
     switch (status) {
-      case 'SENT':
-        return 'Enviada';
-      case 'UNDER_REVIEW':
-        return 'En Revisión';
-      case 'PRE_SELECTED':
-        return 'Preseleccionado';
-      case 'REJECTED':
-        return 'Rechazado';
-      case 'HIRED':
-        return 'Contratado';
+      case "SENT":
+        return "Enviada";
+      case "UNDER_REVIEW":
+        return "En Revisión";
+      case "PRE_SELECTED":
+        return "Preseleccionado";
+      case "REJECTED":
+        return "Rechazado";
+      case "HIRED":
+        return "Contratado";
       default:
         return status;
     }
@@ -265,18 +262,18 @@ export default function JobDetailPage() {
 
   const getApplicationStatusColor = (status: string) => {
     switch (status) {
-      case 'SENT':
-        return 'bg-blue-100 text-blue-800';
-      case 'UNDER_REVIEW':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'PRE_SELECTED':
-        return 'bg-orange-100 text-orange-800';
-      case 'REJECTED':
-        return 'bg-red-100 text-red-800';
-      case 'HIRED':
-        return 'bg-green-100 text-green-800';
+      case "SENT":
+        return "bg-blue-100 text-blue-800";
+      case "UNDER_REVIEW":
+        return "bg-yellow-100 text-yellow-800";
+      case "PRE_SELECTED":
+        return "bg-orange-100 text-orange-800";
+      case "REJECTED":
+        return "bg-red-100 text-red-800";
+      case "HIRED":
+        return "bg-green-100 text-green-800";
       default:
-        return 'bg-gray-100 text-gray-800';
+        return "bg-gray-100 text-gray-800";
     }
   };
 
@@ -284,7 +281,7 @@ export default function JobDetailPage() {
     if (navigator.share) {
       navigator.share({
         title: job?.title,
-        text: `Mira esta oportunidad laboral: ${job?.title} en ${job?.company?.name || 'Empresa'}`,
+        text: `Mira esta oportunidad laboral: ${job?.title} en ${job?.company?.name || "Empresa"}`,
         url: window.location.href,
       });
     } else {
@@ -357,10 +354,10 @@ export default function JobDetailPage() {
                   <Avatar className="w-16 h-16">
                     <AvatarImage
                       src={job.company?.logo}
-                      alt={job.company?.name || 'Empresa'}
+                      alt={job.company?.name || "Empresa"}
                     />
                     <AvatarFallback>
-                      {job.company?.name?.charAt(0) || 'E'}
+                      {job.company?.name?.charAt(0) || "E"}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
@@ -372,7 +369,7 @@ export default function JobDetailPage() {
                     </h1>
                     <div className="flex items-center space-x-4 text-gray-600 mb-3">
                       <span className="font-medium text-lg">
-                        {job.company?.name || 'Empresa'}
+                        {job.company?.name || "Empresa"}
                       </span>
                       {job.company?.rating && (
                         <div className="flex items-center space-x-1">
@@ -425,11 +422,7 @@ export default function JobDetailPage() {
                   {getExperienceLabel(job.experienceLevel)}
                 </Badge>
                 <Badge variant="outline">
-                  {formatSalary(
-                    job.salaryMin,
-                    job.salaryMax,
-                    job.salaryCurrency
-                  )}
+                  {formatSalary(job.salaryMin, job.salaryMax)}
                 </Badge>
               </div>
               <div className="flex items-center space-x-4 text-sm text-gray-600">
@@ -454,11 +447,12 @@ export default function JobDetailPage() {
             </CardHeader>
             <CardContent>
               <div className="prose max-w-none">
-                {job.description && job.description.split("\n").map((paragraph, index) => (
-                  <p key={index} className="mb-4 text-gray-700">
-                    {paragraph}
-                  </p>
-                ))}
+                {job.description &&
+                  job.description.split("\n").map((paragraph, index) => (
+                    <p key={index} className="mb-4 text-gray-700">
+                      {paragraph}
+                    </p>
+                  ))}
               </div>
             </CardContent>
           </Card>
@@ -471,7 +465,7 @@ export default function JobDetailPage() {
               </CardHeader>
               <CardContent>
                 <div className="prose max-w-none">
-                  {job.requirements.split("\n").map((requirement, index) => (
+                  {job.requirements?.split("\n").map((requirement, index) => (
                     <p key={index} className="mb-4 text-gray-700">
                       {requirement}
                     </p>
@@ -493,11 +487,12 @@ export default function JobDetailPage() {
                     Habilidades esenciales
                   </h4>
                   <div className="flex flex-wrap gap-2">
-                    {job.skillsRequired && job.skillsRequired.map((skill) => (
-                      <Badge key={skill} variant="default">
-                        {skill}
-                      </Badge>
-                    ))}
+                    {job.skillsRequired &&
+                      job.skillsRequired.map((skill) => (
+                        <Badge key={skill} variant="default">
+                          {skill}
+                        </Badge>
+                      ))}
                   </div>
                 </div>
                 {job.desiredSkills && job.desiredSkills.length > 0 && (
@@ -551,12 +546,21 @@ export default function JobDetailPage() {
                 ) : applicationStatus.hasApplied ? (
                   <div className="space-y-4">
                     <div className="text-center">
-                      <Badge className={`text-sm ${getApplicationStatusColor(applicationStatus.application?.status)}`}>
+                      <Badge
+                        className={`text-sm ${getApplicationStatusColor(applicationStatus.application?.status || "")}`}
+                      >
                         <CheckCircle className="w-4 h-4 mr-1" />
-                        {getApplicationStatusLabel(applicationStatus.application?.status)}
+                        {getApplicationStatusLabel(
+                          applicationStatus.application?.status || ""
+                        )}
                       </Badge>
                       <p className="text-sm text-gray-600 mt-2">
-                        Aplicaste el {new Date(applicationStatus.application?.appliedAt).toLocaleDateString('es-ES')}
+                        Aplicaste el{" "}
+                        {applicationStatus.application?.appliedAt
+                          ? new Date(
+                              applicationStatus.application.appliedAt
+                            ).toLocaleDateString("es-ES")
+                          : "Fecha no disponible"}
                       </p>
                     </div>
                     <Button
@@ -592,26 +596,26 @@ export default function JobDetailPage() {
             <Card>
               <CardContent className="p-6">
                 <div className="space-y-3">
-                                     <Button
-                     onClick={() => router.push(`/jobs/${jobId}/edit`)}
-                     className="w-full"
-                     variant="outline"
-                   >
-                     Editar Empleo
-                   </Button>
-                                                         <Button
-                      onClick={() => router.push(`/jobs/${jobId}/candidates`)}
-                      className="w-full"
-                    >
-                      Ver Candidatos
-                    </Button>
-                    <Button
-                      onClick={() => router.push(`/jobs/${jobId}/questions`)}
-                      className="w-full"
-                      variant="outline"
-                    >
-                      Gestionar Preguntas
-                    </Button>
+                  <Button
+                    onClick={() => router.push(`/jobs/${jobId}/edit`)}
+                    className="w-full"
+                    variant="outline"
+                  >
+                    Editar Empleo
+                  </Button>
+                  <Button
+                    onClick={() => router.push(`/jobs/${jobId}/candidates`)}
+                    className="w-full"
+                  >
+                    Ver Candidatos
+                  </Button>
+                  <Button
+                    onClick={() => router.push(`/jobs/${jobId}/questions`)}
+                    className="w-full"
+                    variant="outline"
+                  >
+                    Gestionar Preguntas
+                  </Button>
                   <div className="text-center">
                     <p className="text-sm text-gray-600">
                       {job.applicationsCount} aplicaciones recibidas
@@ -645,7 +649,9 @@ export default function JobDetailPage() {
                     </Avatar>
                     <div>
                       <h3 className="font-medium">{job.company.name}</h3>
-                      <p className="text-sm text-gray-600">{job.company.size}</p>
+                      <p className="text-sm text-gray-600">
+                        {job.company.size}
+                      </p>
                     </div>
                   </div>
 
@@ -678,28 +684,20 @@ export default function JobDetailPage() {
           )}
 
           {/* Location Map */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <MapPin className="w-5 h-5" />
-                <span>Ubicación</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center py-8">
-                <MapPin className="h-12 w-12 mx-auto text-gray-400 mb-3" />
-                <p className="text-lg font-medium">{job.location}</p>
-                <p className="text-sm text-gray-600 mt-1">
-                  Ubicación del trabajo
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+          <LocationMap
+            latitude={job.latitude}
+            longitude={job.longitude}
+            location={job.location}
+            companyName={job.company?.name}
+          />
         </div>
       </div>
 
       {/* Job Application Modal */}
-      <Dialog open={showApplicationModal} onOpenChange={setShowApplicationModal}>
+      <Dialog
+        open={showApplicationModal}
+        onOpenChange={setShowApplicationModal}
+      >
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Aplicar a: {job?.title}</DialogTitle>
@@ -707,7 +705,7 @@ export default function JobDetailPage() {
               Completa el formulario para aplicar a este empleo
             </DialogDescription>
           </DialogHeader>
-          
+
           {job && (
             <JobApplicationForm
               jobOffer={job}
@@ -715,14 +713,14 @@ export default function JobDetailPage() {
                 setShowApplicationModal(false);
                 toast({
                   title: "¡Aplicación enviada!",
-                  description: "Tu aplicación ha sido enviada exitosamente."
+                  description: "Tu aplicación ha sido enviada exitosamente.",
                 });
                 // Refresh application status after successful application
-                JobApplicationService.checkIfApplied(job.id).then(result => {
+                JobApplicationService.checkIfApplied(job.id).then((result) => {
                   setApplicationStatus({
                     hasApplied: result.hasApplied,
                     application: result.application,
-                    loading: false
+                    loading: false,
                   });
                 });
               }}

@@ -1,7 +1,7 @@
 // User roles based on the API documentation
-export type UserRole = 
+export type UserRole =
   | 'JOVENES'
-  | 'ADOLESCENTES' 
+  | 'ADOLESCENTES'
   | 'EMPRESAS'
   | 'GOBIERNOS_MUNICIPALES'
   | 'CENTROS_DE_FORMACION'
@@ -27,6 +27,43 @@ export interface LoginResponse {
   token: string;
   refreshToken: string;
   role: UserRole;
+  user?: User;
+  municipality?: {
+    id: string;
+    name: string;
+    department: string;
+    region: string;
+    population: number;
+    mayorName: string;
+    mayorEmail: string;
+    mayorPhone: string;
+    address: string;
+    website: string;
+    isActive: boolean;
+    username: string;
+    email: string;
+    phone: string;
+    createdAt: string;
+    updatedAt: string;
+    primaryColor?: string;
+    secondaryColor?: string;
+  };
+  company?: {
+    id: string;
+    name: string;
+    description: string;
+    businessSector: string;
+    companySize: string;
+    foundedYear: string;
+    website: string;
+    email: string;
+    phone: string;
+    address: string;
+    taxId: string | null;
+    createdAt: string;
+    updatedAt: string;
+    username?: string;
+  };
 }
 
 export interface User {
@@ -78,6 +115,7 @@ export interface User {
     taxId: string | null;
     createdAt: string;
     updatedAt: string;
+    isActive?: boolean;
   };
 }
 

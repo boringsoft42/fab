@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
@@ -8,24 +7,14 @@ import { Eye, Calendar } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
+import { NewsArticle } from "@/types/news";
+
 interface NewsCardProps {
-  news: {
-    id: string;
-    title: string;
-    summary: string;
-    imageUrl: string;
-    authorName: string;
-    authorType: string;
-    authorLogo: string;
-    publishedAt: string;
-    viewCount: number;
-    category: string;
-  };
+  news: NewsArticle;
 }
 
 export function NewsCard({ news }: NewsCardProps) {
   const router = useRouter();
-  const [isHovered, setIsHovered] = useState(false);
 
   const handleClick = () => {
     router.push(`/news/${news.id}`);
@@ -40,23 +29,24 @@ export function NewsCard({ news }: NewsCardProps) {
   };
 
   return (
-    <motion.div
-      whileHover={{ scale: 1.02 }}
-      transition={{ duration: 0.2 }}
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
-    >
+    <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.2 }}>
       <Card
         className="overflow-hidden cursor-pointer group"
         onClick={handleClick}
       >
         <div className="relative h-48">
-          <Image
-            src={news.imageUrl}
-            alt={news.title}
-            fill
-            className="object-cover transition-transform duration-300 group-hover:scale-110"
-          />
+          {news.imageUrl ? (
+            <Image
+              src={news.imageUrl}
+              alt={news.title}
+              fill
+              className="object-cover transition-transform duration-300 group-hover:scale-110"
+            />
+          ) : (
+            <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+              <span className="text-gray-500">Sin imagen</span>
+            </div>
+          )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
           <div className="absolute bottom-4 left-4 right-4">
             <Badge
@@ -70,13 +60,21 @@ export function NewsCard({ news }: NewsCardProps) {
 
         <div className="p-4 space-y-4">
           <div className="flex items-center gap-2 mb-3">
-            <Image
-              src={news.authorLogo}
-              alt={news.authorName}
-              width={24}
-              height={24}
-              className="rounded-full"
-            />
+            {news.authorLogo ? (
+              <Image
+                src={news.authorLogo}
+                alt={news.authorName}
+                width={24}
+                height={24}
+                className="rounded-full"
+              />
+            ) : (
+              <div className="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center">
+                <span className="text-xs text-gray-600">
+                  {news.authorName.charAt(0)}
+                </span>
+              </div>
+            )}
             <span className="text-sm text-gray-600">{news.authorName}</span>
           </div>
 

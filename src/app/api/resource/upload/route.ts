@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateToken } from '@/lib/auth-middleware';
+import { API_BASE } from '@/lib/api';
 
 // POST /api/resource/upload - Subir archivo de recurso
 export async function POST(request: NextRequest) {
@@ -93,7 +94,7 @@ export async function POST(request: NextRequest) {
       backendFormData.append('tags', tags);
     }
 
-    const response = await fetch('http://localhost:3001/api/resource/upload', {
+    const response = await fetch('${API_BASE}/resource/upload', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${authResult.token}`,

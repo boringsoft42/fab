@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAuthHeaders } from "@/lib/api";
+import { getAuthHeaders , API_BASE} from '@/lib/api';
 
 // GET /api/company/news - Fetch company news
 export async function GET(request: NextRequest) {
@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get("limit") || "10");
     const page = parseInt(searchParams.get("page") || "1");
 
-    const backendUrl = process.env.BACKEND_URL || 'http://localhost:3001';
+    const backendUrl = process.env.BACKEND_URL || '${BACKEND_URL}';
     let url = `${backendUrl}/api/newsarticle`;
 
     // Add query parameters
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const backendUrl = process.env.BACKEND_URL || 'http://localhost:3001';
+    const backendUrl = process.env.BACKEND_URL || '${BACKEND_URL}';
     const url = `${backendUrl}/api/newsarticle`;
 
     const newsPayload = {
@@ -130,7 +130,7 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    const backendUrl = process.env.BACKEND_URL || 'http://localhost:3001';
+    const backendUrl = process.env.BACKEND_URL || '${BACKEND_URL}';
     const url = `${backendUrl}/api/newsarticle/${newsId}`;
 
     const response = await fetch(url, {
@@ -170,7 +170,7 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const backendUrl = process.env.BACKEND_URL || 'http://localhost:3001';
+    const backendUrl = process.env.BACKEND_URL || '${BACKEND_URL}';
     const url = `${backendUrl}/api/newsarticle/${newsId}`;
 
     const response = await fetch(url, {

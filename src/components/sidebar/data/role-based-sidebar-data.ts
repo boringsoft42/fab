@@ -64,11 +64,30 @@ export const youthSidebarData: SidebarData = {
           icon: Search,
         },
         {
-          title: "Mis Postulaciones",
-          url: "/my-applications",
+          title: "Mis Aplicaciones",
           icon: FileText,
+          items: [
+            {
+              title: "Ver Mis Aplicaciones",
+              url: "/my-applications",
+            },
+          ],
         },
-        
+        {
+          title: "Mis Postulaciones de Joven",
+          icon: FileText,
+          items: [
+            {
+              title: "Ver Mis Postulaciones",
+              url: "/my-youth-applications",
+            },
+            {
+              title: "Nueva Postulación",
+              url: "/my-applications/new",
+            },
+          ],
+        },
+
       ],
     },
     {
@@ -116,7 +135,7 @@ export const youthSidebarData: SidebarData = {
               title: "Mis Emprendimientos",
               url: "/my-entrepreneurships",
             },
-          
+
           ],
         },
       ],
@@ -129,7 +148,7 @@ export const youthSidebarData: SidebarData = {
           url: "/entrepreneurship/directory",
           icon: Building2,
         },
-       
+
       ],
     },
     {
@@ -140,7 +159,7 @@ export const youthSidebarData: SidebarData = {
           url: "/entrepreneurship/network",
           icon: Users,
         },
-       
+
       ],
     },
     {
@@ -264,7 +283,7 @@ export const adolescentSidebarData: SidebarData = {
               url: "/entrepreneurship/messaging",
               icon: MessageCircle,
             },
-           
+
           ],
         },
       ],
@@ -314,6 +333,11 @@ export const companySidebarData: SidebarData = {
           title: "Gestionar Candidatos",
           url: "/job-publishing/candidates",
           icon: Users,
+        },
+        {
+          title: "Postulaciones de Jóvenes",
+          url: "/company/youth-applications",
+          icon: FileText,
         },
       ],
     },
@@ -843,7 +867,7 @@ export const superAdminSidebarData: SidebarData = {
 
 export function getSidebarDataByRole(role: UserRole): SidebarData {
   console.log("🔍 getSidebarDataByRole - Role:", role);
-  
+
   switch (role) {
     case "JOVENES":
       return youthSidebarData;

@@ -70,7 +70,7 @@ import { useLessons, useCreateLesson, useUpdateLesson, useDeleteLesson, type Les
 import { useQueryClient } from "@tanstack/react-query";
 import { useLessonResources } from "@/hooks/useLessonResourceApi";
 import { toast } from "sonner";
-import { getAuthHeaders } from "@/lib/api";
+import { getAuthHeaders , API_BASE} from '@/lib/api';
 
 export default function ModuleLessonsPage() {
   const params = useParams();
@@ -136,7 +136,7 @@ export default function ModuleLessonsPage() {
         // Add video file
         formDataToSend.append('video', formData.videoFile);
         
-        const response = await fetch('http://localhost:3001/api/lesson/with-video', {
+        const response = await fetch('${API_BASE}/lesson/with-video', {
           method: 'POST',
           headers: getAuthHeaders(true), // excludeContentType = true for FormData
           body: formDataToSend,

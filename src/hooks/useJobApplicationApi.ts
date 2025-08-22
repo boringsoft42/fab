@@ -147,36 +147,43 @@ export function useMyJobApplications() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  useEffect(() => {
+  const fetchData = async () => {
     console.log("🔍 useMyJobApplications - Starting to fetch data...");
-    JobApplicationService.getUserApplications()
-      .then((result) => {
-        console.log("🔍 useMyJobApplications - Raw result:", result);
-        
-        // Handle the correct response structure: {items: [], pagination: {}}
-        let applicationsArray: JobApplication[] = [];
-        
-        if (Array.isArray(result)) {
-          applicationsArray = result;
-        } else if (result && Array.isArray(result.items)) {
-          applicationsArray = result.items;
-        } else if (result && Array.isArray(result.applications)) {
-          applicationsArray = result.applications;
-        } else if (result && Array.isArray(result.data)) {
-          applicationsArray = result.data;
-        }
-        
-        console.log("🔍 useMyJobApplications - Processed array:", applicationsArray);
-        setData(applicationsArray);
-      })
-      .catch((error) => {
-        console.error("🔍 useMyJobApplications - Error:", error);
-        setError(error);
-      })
-      .finally(() => setLoading(false));
+    setLoading(true);
+    setError(null);
+
+    try {
+      const result = await JobApplicationService.getUserApplications();
+      console.log("🔍 useMyJobApplications - Raw result:", result);
+
+      // Handle the correct response structure: {items: [], pagination: {}}
+      let applicationsArray: JobApplication[] = [];
+
+      if (Array.isArray(result)) {
+        applicationsArray = result;
+      } else if (result && Array.isArray(result.items)) {
+        applicationsArray = result.items;
+      } else if (result && Array.isArray(result.applications)) {
+        applicationsArray = result.applications;
+      } else if (result && Array.isArray(result.data)) {
+        applicationsArray = result.data;
+      }
+
+      console.log("🔍 useMyJobApplications - Processed array:", applicationsArray);
+      setData(applicationsArray);
+    } catch (error) {
+      console.error("🔍 useMyJobApplications - Error:", error);
+      setError(error as Error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
   }, []);
 
-  return { data, loading, error };
+  return { data, loading, error, refresh: fetchData };
 }
 
 export function useCompanyJobApplications(companyId: string) {

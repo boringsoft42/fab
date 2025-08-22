@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateToken } from '@/lib/auth-middleware';
+import { API_BASE } from '@/lib/api';
 
 // GET /api/resource - Obtener todos los recursos (público)
 export async function GET(request: NextRequest) {
@@ -15,9 +16,9 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get('q');
 
     // Construir URL con parámetros
-    let url = 'http://localhost:3001/api/resource';
+    let url = `${API_BASE}/resource`;
     const params = new URLSearchParams();
-    
+
     if (type) params.append('type', type);
     if (category) params.append('category', category);
     if (isPublic) params.append('isPublic', isPublic);
@@ -58,11 +59,11 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     console.log('🔐 POST /api/resource - Iniciando autenticación');
-    
+
     // Verificar autenticación
     const authResult = await authenticateToken(request);
     console.log('🔐 POST /api/resource - Resultado autenticación:', authResult);
-    
+
     if (!authResult.success) {
       console.log('🔐 POST /api/resource - Autenticación fallida:', authResult.message);
       return NextResponse.json(
@@ -72,12 +73,12 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    
+
     // Agregar información del autor
     const resourceData = {
       ...body,
-      authorId: authResult.user.id,
-      author: body.author || authResult.user.username,
+      authorId: authResult.user?.id,
+      author: body.author || authResult.user?.username,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       downloads: 0,
@@ -89,7 +90,7 @@ export async function POST(request: NextRequest) {
       tags: body.tags || []
     };
 
-    const response = await fetch('http://localhost:3001/api/resource', {
+    const response = await fetch(`${API_BASE}/resource`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

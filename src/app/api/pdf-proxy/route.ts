@@ -4,20 +4,42 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const pdfPath = searchParams.get('path');
-    
-    if (!pdfPath) {
-      return NextResponse.json({ error: 'PDF path is required' }, { status: 400 });
+    const pdfUrl = searchParams.get('url');
+
+    let targetUrl: string | null = null;
+
+    if (pdfPath) {
+      // Validar que la URL sea de MinIO local
+      if (!pdfPath.startsWith('http://127.0.0.1:9000/') && !pdfPath.startsWith('http://localhost:9000/')) {
+        return NextResponse.json({ error: 'Invalid PDF URL' }, { status: 400 });
+      }
+      targetUrl = pdfPath;
+    } else if (pdfUrl) {
+      // Validar que la URL sea de un dominio permitido para certificados
+      const allowedDomains = [
+        'minio.example.com',
+        'localhost:9000',
+        '127.0.0.1:9000'
+      ];
+
+      const urlObj = new URL(pdfUrl);
+      const isAllowed = allowedDomains.some(domain =>
+        urlObj.hostname === domain || urlObj.host === domain
+      );
+
+      if (!isAllowed) {
+        return NextResponse.json({ error: 'Invalid external URL' }, { status: 400 });
+      }
+
+      targetUrl = pdfUrl;
+    } else {
+      return NextResponse.json({ error: 'PDF path or URL is required' }, { status: 400 });
     }
 
-    // Validar que la URL sea de MinIO local
-    if (!pdfPath.startsWith('http://127.0.0.1:9000/') && !pdfPath.startsWith('http://localhost:9000/')) {
-      return NextResponse.json({ error: 'Invalid PDF URL' }, { status: 400 });
-    }
+    console.log('🔍 PDF Proxy - Fetching from:', targetUrl);
 
-    console.log('🔍 PDF Proxy - Fetching from MinIO:', pdfPath);
-
-    // Hacer la petición a MinIO
-    const response = await fetch(pdfPath, {
+    // Hacer la petición
+    const response = await fetch(targetUrl, {
       method: 'GET',
       headers: {
         'Accept': 'application/pdf',
@@ -25,19 +47,19 @@ export async function GET(request: NextRequest) {
     });
 
     if (!response.ok) {
-      console.error('🔍 PDF Proxy - MinIO response not ok:', response.status, response.statusText);
-      return NextResponse.json({ error: 'Failed to fetch PDF from MinIO' }, { status: response.status });
+      console.error('🔍 PDF Proxy - Response not ok:', response.status, response.statusText);
+      return NextResponse.json({ error: 'Failed to fetch PDF' }, { status: response.status });
     }
 
     const contentType = response.headers.get('content-type') || 'application/pdf';
     const contentLength = response.headers.get('content-length');
-    
+
     console.log('🔍 PDF Proxy - Content-Type:', contentType);
     console.log('🔍 PDF Proxy - Content-Length:', contentLength);
 
     // Crear la respuesta con los headers apropiados
     const pdfBuffer = await response.arrayBuffer();
-    
+
     return new NextResponse(pdfBuffer, {
       status: 200,
       headers: {
@@ -60,18 +82,40 @@ export async function HEAD(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const pdfPath = searchParams.get('path');
-    
-    if (!pdfPath) {
+    const pdfUrl = searchParams.get('url');
+
+    let targetUrl: string | null = null;
+
+    if (pdfPath) {
+      // Validar que la URL sea de MinIO local
+      if (!pdfPath.startsWith('http://127.0.0.1:9000/') && !pdfPath.startsWith('http://localhost:9000/')) {
+        return new NextResponse(null, { status: 400 });
+      }
+      targetUrl = pdfPath;
+    } else if (pdfUrl) {
+      // Validar que la URL sea de un dominio permitido para certificados
+      const allowedDomains = [
+        'minio.example.com',
+        'localhost:9000',
+        '127.0.0.1:9000'
+      ];
+
+      const urlObj = new URL(pdfUrl);
+      const isAllowed = allowedDomains.some(domain =>
+        urlObj.hostname === domain || urlObj.host === domain
+      );
+
+      if (!isAllowed) {
+        return new NextResponse(null, { status: 400 });
+      }
+
+      targetUrl = pdfUrl;
+    } else {
       return new NextResponse(null, { status: 400 });
     }
 
-    // Validar que la URL sea de MinIO local
-    if (!pdfPath.startsWith('http://127.0.0.1:9000/') && !pdfPath.startsWith('http://localhost:9000/')) {
-      return new NextResponse(null, { status: 400 });
-    }
-
-    // Hacer HEAD request a MinIO
-    const response = await fetch(pdfPath, {
+    // Hacer HEAD request
+    const response = await fetch(targetUrl, {
       method: 'HEAD',
     });
 

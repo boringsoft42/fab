@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAuthHeaders } from '@/lib/api';
+import { getAuthHeaders , API_BASE} from '@/lib/api';
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     
-    const backendUrl = process.env.BACKEND_URL || 'http://localhost:3001';
+    const backendUrl = process.env.BACKEND_URL || '${BACKEND_URL}';
     let url = `${backendUrl}/api/entrepreneurship`;
     
     // Add query parameters for filtering
@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const backendUrl = process.env.BACKEND_URL || 'http://localhost:3001';
+    const backendUrl = process.env.BACKEND_URL || '${BACKEND_URL}';
     
     console.log('🔍 API Route - Creating entrepreneurship with data:', body);
     

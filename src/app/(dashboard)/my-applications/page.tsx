@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   Search,
-  Filter,
   Eye,
   Download,
   Trash2,
@@ -14,16 +13,13 @@ import {
   AlertCircle,
   Users,
   MessageSquare,
-  Send,
-  X,
   FileText,
-  ExternalLink,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   Select,
   SelectContent,
@@ -32,7 +28,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Separator } from "@/components/ui/separator";
 import {
   Dialog,
   DialogContent,
@@ -44,10 +39,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { JobApplication, ApplicationStatus } from "@/types/jobs";
 import { useToast } from "@/components/ui/use-toast";
 import { useMyJobApplications } from "@/hooks/useJobApplicationApi";
-import { useProfiles } from "@/hooks/useProfileApi";
 import { useJobMessages } from "@/hooks/use-job-messages";
 import { useAuthContext } from "@/hooks/use-auth";
-import { API_BASE } from "@/lib/api";
+import { API_BASE, getAuthHeaders } from "@/lib/api";
 
 interface ApplicationStats {
   total: number;
@@ -60,7 +54,12 @@ interface ApplicationStats {
 
 export default function MyApplicationsPage() {
   const router = useRouter();
-  const { data: applications, loading, error } = useMyJobApplications();
+  const {
+    data: applications,
+    loading,
+    error,
+    refresh,
+  } = useMyJobApplications();
   const [filteredApplications, setFilteredApplications] = useState<
     JobApplication[]
   >([]);
@@ -77,7 +76,8 @@ export default function MyApplicationsPage() {
     "ALL"
   );
   const [companyFilter, setCompanyFilter] = useState("");
-  const [selectedApplication, setSelectedApplication] = useState<JobApplication | null>(null);
+  const [selectedApplication, setSelectedApplication] =
+    useState<JobApplication | null>(null);
   const [showChatModal, setShowChatModal] = useState(false);
   const [newMessage, setNewMessage] = useState("");
 
@@ -104,7 +104,10 @@ export default function MyApplicationsPage() {
 
   useEffect(() => {
     console.log("🔍 MyApplicationsPage - applications data:", applications);
-    console.log("🔍 MyApplicationsPage - applications is array:", Array.isArray(applications));
+    console.log(
+      "🔍 MyApplicationsPage - applications is array:",
+      Array.isArray(applications)
+    );
     filterApplications();
   }, [applications, searchQuery, statusFilter, companyFilter]);
 
@@ -131,7 +134,9 @@ export default function MyApplicationsPage() {
     // Company filter
     if (companyFilter) {
       filtered = filtered.filter((app) =>
-        app.jobOffer?.company?.name?.toLowerCase().includes(companyFilter.toLowerCase())
+        app.jobOffer?.company?.name
+          ?.toLowerCase()
+          .includes(companyFilter.toLowerCase())
       );
     }
 
@@ -140,21 +145,18 @@ export default function MyApplicationsPage() {
 
   const handleWithdrawApplication = async (applicationId: string) => {
     try {
-      const response = await fetch(
-        `/api/my-applications?applicationId=${applicationId}`,
-        {
-          method: "DELETE",
-        }
-      );
+      const response = await fetch(`/api/jobapplication/${applicationId}`, {
+        method: "DELETE",
+        headers: getAuthHeaders(),
+      });
 
       if (response.ok) {
-        // setApplications((prev) => // This line is no longer needed as data is managed by hook
-        //   prev.filter((app) => app.id !== applicationId)
-        // );
         toast({
           title: "Aplicación retirada",
           description: "Tu aplicación ha sido retirada exitosamente",
         });
+        // Refresh the applications data
+        refresh();
       } else {
         const errorData = await response.json();
         toast({
@@ -340,7 +342,9 @@ export default function MyApplicationsPage() {
         <Card>
           <CardContent className="p-4 text-center">
             <div className="text-2xl font-bold text-blue-600">
-              {Array.isArray(applications) ? applications.filter(app => app.status === "SENT").length : 0}
+              {Array.isArray(applications)
+                ? applications.filter((app) => app.status === "SENT").length
+                : 0}
             </div>
             <div className="text-sm text-gray-600">Enviadas</div>
           </CardContent>
@@ -348,7 +352,10 @@ export default function MyApplicationsPage() {
         <Card>
           <CardContent className="p-4 text-center">
             <div className="text-2xl font-bold text-orange-600">
-              {Array.isArray(applications) ? applications.filter(app => app.status === "UNDER_REVIEW").length : 0}
+              {Array.isArray(applications)
+                ? applications.filter((app) => app.status === "UNDER_REVIEW")
+                    .length
+                : 0}
             </div>
             <div className="text-sm text-gray-600">En revisión</div>
           </CardContent>
@@ -356,7 +363,10 @@ export default function MyApplicationsPage() {
         <Card>
           <CardContent className="p-4 text-center">
             <div className="text-2xl font-bold text-green-600">
-              {Array.isArray(applications) ? applications.filter(app => app.status === "PRE_SELECTED").length : 0}
+              {Array.isArray(applications)
+                ? applications.filter((app) => app.status === "PRE_SELECTED")
+                    .length
+                : 0}
             </div>
             <div className="text-sm text-gray-600">Preseleccionado</div>
           </CardContent>
@@ -364,7 +374,9 @@ export default function MyApplicationsPage() {
         <Card>
           <CardContent className="p-4 text-center">
             <div className="text-2xl font-bold text-red-600">
-              {Array.isArray(applications) ? applications.filter(app => app.status === "REJECTED").length : 0}
+              {Array.isArray(applications)
+                ? applications.filter((app) => app.status === "REJECTED").length
+                : 0}
             </div>
             <div className="text-sm text-gray-600">Rechazadas</div>
           </CardContent>
@@ -427,7 +439,7 @@ export default function MyApplicationsPage() {
                   <div className="flex items-start space-x-4 flex-1">
                     <Avatar className="w-12 h-12">
                       <AvatarFallback>
-                        {application.jobOffer?.company?.name?.charAt(0) || 'C'}
+                        {application.jobOffer?.company?.name?.charAt(0) || "C"}
                       </AvatarFallback>
                     </Avatar>
 
@@ -440,10 +452,11 @@ export default function MyApplicationsPage() {
                               router.push(`/jobs/${application.jobOffer?.id}`)
                             }
                           >
-                            {application.jobOffer?.title || 'Sin título'}
+                            {application.jobOffer?.title || "Sin título"}
                           </h3>
                           <p className="text-gray-600">
-                            {application.jobOffer?.company?.name || 'Sin empresa'}
+                            {application.jobOffer?.company?.name ||
+                              "Sin empresa"}
                           </p>
                         </div>
                         <div className="flex items-center space-x-2">
@@ -477,27 +490,43 @@ export default function MyApplicationsPage() {
                         )}
                       </div>
 
-                       {/* Información adicional del trabajo */}
-                       <div className="bg-blue-50 rounded-lg p-3 mb-4">
-                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                           <div>
-                             <span className="font-medium text-blue-800">Empresa:</span>{" "}
-                             <span className="text-gray-700">{application.jobOffer?.company?.name}</span>
-                           </div>
-                           <div>
-                             <span className="font-medium text-blue-800">Email de la empresa:</span>{" "}
-                             <span className="text-gray-700">{application.jobOffer?.company?.email}</span>
-                           </div>
-                           <div>
-                             <span className="font-medium text-blue-800">Título del trabajo:</span>{" "}
-                             <span className="text-gray-700">{application.jobOffer?.title}</span>
-                           </div>
-                           <div>
-                             <span className="font-medium text-blue-800">ID del trabajo:</span>{" "}
-                             <span className="text-gray-700">{application.jobOffer?.id}</span>
-                           </div>
-                         </div>
-                       </div>
+                      {/* Información adicional del trabajo */}
+                      <div className="bg-blue-50 rounded-lg p-3 mb-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                          <div>
+                            <span className="font-medium text-blue-800">
+                              Empresa:
+                            </span>{" "}
+                            <span className="text-gray-700">
+                              {application.jobOffer?.company?.name}
+                            </span>
+                          </div>
+                          <div>
+                            <span className="font-medium text-blue-800">
+                              Email de la empresa:
+                            </span>{" "}
+                            <span className="text-gray-700">
+                              {application.jobOffer?.company?.email}
+                            </span>
+                          </div>
+                          <div>
+                            <span className="font-medium text-blue-800">
+                              Título del trabajo:
+                            </span>{" "}
+                            <span className="text-gray-700">
+                              {application.jobOffer?.title}
+                            </span>
+                          </div>
+                          <div>
+                            <span className="font-medium text-blue-800">
+                              ID del trabajo:
+                            </span>{" "}
+                            <span className="text-gray-700">
+                              {application.jobOffer?.id}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
 
                       {application.notes && (
                         <div className="bg-gray-50 rounded-lg p-3 mb-4">
@@ -525,7 +554,12 @@ export default function MyApplicationsPage() {
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => window.open(`${API_BASE.replace('/api', '')}${application.cvFile}`, '_blank')}
+                              onClick={() =>
+                                window.open(
+                                  `${API_BASE.replace("/api", "")}${application.cvFile}`,
+                                  "_blank"
+                                )
+                              }
                             >
                               <Download className="w-4 h-4 mr-2" />
                               Ver CV
@@ -536,7 +570,12 @@ export default function MyApplicationsPage() {
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => window.open(`${API_BASE.replace('/api', '')}${application.coverLetterFile}`, '_blank')}
+                              onClick={() =>
+                                window.open(
+                                  `${API_BASE.replace("/api", "")}${application.coverLetterFile}`,
+                                  "_blank"
+                                )
+                              }
                             >
                               <Download className="w-4 h-4 mr-2" />
                               Ver Carta
@@ -595,7 +634,8 @@ export default function MyApplicationsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <DialogTitle className="text-lg font-semibold text-gray-900">
-                  Chat con {selectedApplication?.jobOffer?.company?.name || "Empresa"}
+                  Chat con{" "}
+                  {selectedApplication?.jobOffer?.company?.name || "Empresa"}
                 </DialogTitle>
                 <DialogDescription className="text-sm text-gray-600">
                   {selectedApplication?.jobOffer?.title || "Sin título"}
@@ -608,7 +648,7 @@ export default function MyApplicationsPage() {
                 disabled={messagesLoading}
               >
                 <MessageSquare className="w-4 h-4 mr-2" />
-                {messagesLoading ? 'Cargando...' : 'Recargar'}
+                {messagesLoading ? "Cargando..." : "Recargar"}
               </Button>
             </div>
           </DialogHeader>
@@ -627,13 +667,13 @@ export default function MyApplicationsPage() {
                 {messages.map((message) => (
                   <div
                     key={message.id}
-                    className={`flex ${isOwnMessage(message) ? 'justify-end' : 'justify-start'}`}
+                    className={`flex ${isOwnMessage(message) ? "justify-end" : "justify-start"}`}
                   >
                     <div
                       className={`max-w-[70%] p-3 rounded-lg ${
                         isOwnMessage(message)
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-gray-200 text-gray-800'
+                          ? "bg-blue-500 text-white"
+                          : "bg-gray-200 text-gray-800"
                       }`}
                     >
                       <p className="text-sm">{message.content}</p>
@@ -652,7 +692,7 @@ export default function MyApplicationsPage() {
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               onKeyPress={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
+                if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
                   handleSendMessage();
                 }
@@ -666,7 +706,7 @@ export default function MyApplicationsPage() {
                 onClick={handleSendMessage}
                 disabled={messageSending || !newMessage.trim()}
               >
-                {messageSending ? 'Enviando...' : 'Enviar'}
+                {messageSending ? "Enviando..." : "Enviar"}
               </Button>
             </div>
           </div>

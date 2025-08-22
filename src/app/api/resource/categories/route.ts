@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { API_BASE } from '@/lib/api';
 
 // GET /api/resource/categories - Obtener categorías de recursos
 export async function GET(request: NextRequest) {
   try {
-    const response = await fetch('http://localhost:3001/api/resource/categories', {
+    const response = await fetch('${API_BASE}/resource/categories', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

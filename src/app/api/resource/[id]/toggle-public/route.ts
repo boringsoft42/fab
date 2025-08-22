@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAuthHeaders } from '@/lib/auth-middleware';
+import { getAuthHeaders } from '@/lib/api';
+import { API_BASE } from '@/lib/api';
 
 // POST /api/resource/[id]/toggle-public - Cambiar visibilidad pública de un recurso
 export async function POST(
@@ -8,7 +9,7 @@ export async function POST(
 ) {
   try {
     const authHeaders = getAuthHeaders();
-    const response = await fetch(`http://localhost:3001/api/resource/${params.id}/toggle-public`, {
+    const response = await fetch(`${API_BASE}/resource/${params.id}/toggle-public`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

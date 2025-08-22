@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAuthHeaders } from '@/lib/auth-middleware';
+import { getAuthHeaders, API_BASE } from '@/lib/api';
 
 export async function GET(request: NextRequest) {
   try {
     console.log('🔍 API: Received request for job questions');
     const { searchParams } = new URL(request.url);
-    
+
     // Forward all search parameters to backend
     const url = new URL(`${API_BASE}/jobquestion`);
     searchParams.forEach((value, key) => {
@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
     });
 
     console.log('🔍 API: Backend response status:', response.status);
-    
+
     if (!response.ok) {
       const errorText = await response.text();
       console.error('🔍 API: Backend error:', errorText);
@@ -49,8 +49,8 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const authHeaders = getAuthHeaders();
-    
-    const response = await fetch(`http://localhost:3001/api/jobquestion`, {
+
+    const response = await fetch(`${API_BASE}/jobquestion`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateToken, getAuthHeaders } from '@/lib/auth-middleware';
+import { authenticateToken } from '@/lib/auth-middleware';
+import { getAuthHeaders } from '@/lib/api';
+import { API_BASE } from '@/lib/api';
 
 // GET /api/resource/[id] - Obtener un recurso específico
 export async function GET(
@@ -8,7 +10,7 @@ export async function GET(
 ) {
   try {
     const authHeaders = getAuthHeaders();
-    const response = await fetch(`http://localhost:3001/api/resource/${params.id}`, {
+    const response = await fetch(`${API_BASE}/resource/${params.id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -48,7 +50,7 @@ export async function PUT(
     }
 
     const body = await request.json();
-    
+
     // Agregar información de actualización
     const updateData = {
       ...body,
@@ -56,7 +58,7 @@ export async function PUT(
     };
 
     const authHeaders = getAuthHeaders();
-    const response = await fetch(`http://localhost:3001/api/resource/${params.id}`, {
+    const response = await fetch(`${API_BASE}/resource/${params.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -97,7 +99,7 @@ export async function DELETE(
     }
 
     const authHeaders = getAuthHeaders();
-    const response = await fetch(`http://localhost:3001/api/resource/${params.id}`, {
+    const response = await fetch(`${API_BASE}/resource/${params.id}`, {
       method: 'DELETE',
       headers: {
         ...authHeaders,

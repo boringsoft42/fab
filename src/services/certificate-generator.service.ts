@@ -2,6 +2,10 @@ import { pdf } from '@react-pdf/renderer';
 import React from 'react';
 import ModuleCertificatePDF from '@/components/certificates/ModuleCertificatePDF';
 import CourseCertificatePDF from '@/components/certificates/CourseCertificatePDF';
+import { registerPDFFonts } from '@/lib/pdf-fonts';
+
+// Registrar fuentes al importar el servicio
+registerPDFFonts();
 
 interface ModuleCertificate {
   id: string;
@@ -57,39 +61,39 @@ export class CertificateGeneratorService {
   static async generateModuleCertificate(certificate: ModuleCertificate): Promise<boolean> {
     try {
       console.log('🔍 Generating module certificate for:', certificate.module.title);
-      
+
       // Verificar que el certificado tenga los datos necesarios
       if (!certificate.module?.title || !certificate.student?.firstName) {
         throw new Error('Datos del certificado incompletos');
       }
-      
+
       // Generar el PDF con mejor manejo de errores
       const pdfDoc = await pdf(
         React.createElement(ModuleCertificatePDF, { certificate })
       ).toBlob();
-      
+
       if (!pdfDoc) {
         throw new Error('No se pudo generar el PDF');
       }
-      
+
       // Crear URL del blob
       const url = URL.createObjectURL(pdfDoc);
-      
+
       // Crear enlace de descarga
       const link = document.createElement('a');
       link.href = url;
       link.download = `certificado-modulo-${certificate.module.title.replace(/[^a-zA-Z0-9]/g, '-')}.pdf`;
-      
+
       // Descargar
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      
+
       // Limpiar URL después de un tiempo
       setTimeout(() => {
         URL.revokeObjectURL(url);
       }, 1000);
-      
+
       console.log('✅ Module certificate generated and downloaded successfully');
       return true;
     } catch (error) {
@@ -106,63 +110,63 @@ export class CertificateGeneratorService {
     try {
       console.log('🔍 Generating course certificate for:', certificate.course.title);
       console.log('🔍 Certificate data:', JSON.stringify(certificate, null, 2));
-      
+
       // Verificar que el certificado tenga los datos necesarios
       if (!certificate.course?.title) {
         throw new Error('Título del curso no encontrado');
       }
-      
+
       if (!certificate.user?.firstName) {
         throw new Error('Nombre del usuario no encontrado');
       }
-      
+
       if (!certificate.user?.lastName) {
         throw new Error('Apellido del usuario no encontrado');
       }
-      
+
       console.log('🔍 All required data present, generating PDF...');
-      
+
       // Generar el PDF con mejor manejo de errores
       const pdfDoc = await pdf(
         React.createElement(CourseCertificatePDF, { certificate })
       ).toBlob();
-      
+
       if (!pdfDoc) {
         throw new Error('No se pudo generar el PDF');
       }
-      
+
       console.log('🔍 PDF generated successfully, size:', pdfDoc.size);
-      
+
       // Crear URL del blob
       const url = URL.createObjectURL(pdfDoc);
-      
+
       // Crear enlace de descarga
       const link = document.createElement('a');
       link.href = url;
       link.download = `certificado-curso-${certificate.course.title.replace(/[^a-zA-Z0-9]/g, '-')}.pdf`;
-      
+
       // Descargar
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      
+
       // Limpiar URL después de un tiempo
       setTimeout(() => {
         URL.revokeObjectURL(url);
       }, 1000);
-      
+
       console.log('✅ Course certificate generated and downloaded successfully');
       return true;
     } catch (error) {
       console.error('❌ Error generating course certificate:', error);
       console.error('Certificate data:', certificate);
-      
+
       // Mostrar error más específico
       if (error instanceof Error) {
         console.error('❌ Error details:', error.message);
         console.error('❌ Error stack:', error.stack);
       }
-      
+
       return false;
     }
   }
@@ -175,15 +179,15 @@ export class CertificateGeneratorService {
   ): Promise<Blob | null> {
     try {
       console.log('🔍 Generating certificate blob');
-      
+
       let pdfDoc: Blob;
-      
+
       if ('module' in certificate) {
         // Verificar datos del certificado de módulo
         if (!certificate.module?.title || !certificate.student?.firstName) {
           throw new Error('Datos del certificado de módulo incompletos');
         }
-        
+
         // Es un certificado de módulo
         pdfDoc = await pdf(
           React.createElement(ModuleCertificatePDF, { certificate: certificate as ModuleCertificate })
@@ -193,17 +197,17 @@ export class CertificateGeneratorService {
         if (!certificate.course?.title || !certificate.user?.firstName) {
           throw new Error('Datos del certificado de curso incompletos');
         }
-        
+
         // Es un certificado de curso
         pdfDoc = await pdf(
           React.createElement(CourseCertificatePDF, { certificate: certificate as CourseCertificate })
         ).toBlob();
       }
-      
+
       if (!pdfDoc) {
         throw new Error('No se pudo generar el blob del PDF');
       }
-      
+
       console.log('✅ Certificate blob generated successfully');
       return pdfDoc;
     } catch (error) {
@@ -221,26 +225,26 @@ export class CertificateGeneratorService {
   ): Promise<boolean> {
     try {
       console.log('🔍 Previewing certificate');
-      
+
       const blob = await this.generateCertificateBlob(certificate);
       if (!blob) {
         throw new Error('Failed to generate certificate blob');
       }
-      
+
       // Crear URL del blob
       const url = URL.createObjectURL(blob);
-      
+
       // Abrir en nueva ventana
       const newWindow = window.open(url, '_blank');
       if (!newWindow) {
         throw new Error('Failed to open preview window');
       }
-      
+
       // Limpiar URL después de un tiempo
       setTimeout(() => {
         URL.revokeObjectURL(url);
       }, 5000);
-      
+
       console.log('✅ Certificate preview opened successfully');
       return true;
     } catch (error) {
@@ -258,7 +262,7 @@ export class CertificateGeneratorService {
   ): Promise<boolean> {
     try {
       console.log('🔍 Generating certificate, type:', 'module' in certificate ? 'module' : 'course');
-      
+
       if ('module' in certificate) {
         return await this.generateModuleCertificate(certificate);
       } else {
@@ -277,29 +281,32 @@ export class CertificateGeneratorService {
   static async downloadFromUrl(certificate: ModuleCertificate | CourseCertificate): Promise<boolean> {
     try {
       console.log('🔍 Attempting to download from URL');
-      
-      const certificateUrl = 'certificateUrl' in certificate 
-        ? certificate.certificateUrl 
+
+      const certificateUrl = 'certificateUrl' in certificate
+        ? certificate.certificateUrl
         : certificate.url;
 
       if (!certificateUrl) {
         throw new Error('No URL disponible para descargar');
       }
 
-      // Descargar el PDF desde la URL
-      const response = await fetch(certificateUrl);
-      
+      // Usar el proxy del backend para evitar problemas de CSP
+      const proxyUrl = `/api/pdf-proxy?url=${encodeURIComponent(certificateUrl)}`;
+
+      // Descargar el PDF desde el proxy
+      const response = await fetch(proxyUrl);
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const blob = await response.blob();
-      
+
       // Crear enlace de descarga
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      
+
       // Nombre del archivo
       let fileName = '';
       if ('module' in certificate) {
@@ -307,13 +314,13 @@ export class CertificateGeneratorService {
       } else {
         fileName = `certificado-curso-${certificate.course.title}.pdf`;
       }
-      
+
       link.download = fileName;
       link.click();
-      
+
       // Limpiar
       window.URL.revokeObjectURL(url);
-      
+
       console.log('✅ Certificate downloaded from URL successfully');
       return true;
     } catch (error) {

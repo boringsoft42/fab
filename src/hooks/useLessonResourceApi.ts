@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiCall } from '@/lib/api';
+import { apiCall, API_BASE, getAuthHeaders } from '@/lib/api';
 
 export interface LessonResource {
   id: string;
@@ -42,6 +42,13 @@ export interface UpdateResourceData {
   file?: File; // Para subida de archivos a MinIO
 }
 
+export interface ResourceFilters {
+  lessonId?: string;
+  moduleId?: string;
+  type?: string;
+  isPublic?: boolean;
+}
+
 // Fetch resources for a lesson
 export const useLessonResources = (filters?: ResourceFilters) => {
   return useQuery({
@@ -52,7 +59,7 @@ export const useLessonResources = (filters?: ResourceFilters) => {
       if (filters?.moduleId) params.append('moduleId', filters.moduleId);
       if (filters?.type) params.append('type', filters.type);
       if (filters?.isPublic !== undefined) params.append('isPublic', filters.isPublic.toString());
-      
+
       const data = await apiCall(`/lessonresource?${params}`);
       return data;
     },
@@ -65,16 +72,16 @@ export const useLessonResource = (resourceId?: string) => {
     queryKey: ['lessonResource', resourceId],
     queryFn: async () => {
       if (!resourceId) return null;
-      
+
       const params = new URLSearchParams({ id: resourceId });
-      const response = await fetch(`http://localhost:3001/api/lessonresource?${params}`, {
+      const response = await fetch(`${API_BASE}/lessonresource?${params}`, {
         headers: getAuthHeaders(),
       });
-      
+
       if (!response.ok) {
         throw new Error('Failed to fetch lesson resource');
       }
-      
+
       const data = await response.json();
       return data.resource;
     },
@@ -85,13 +92,13 @@ export const useLessonResource = (resourceId?: string) => {
 // Create resource mutation
 export const useCreateResource = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async (resourceData: CreateResourceData) => {
       // Si hay un archivo, usar FormData
       if (resourceData.file) {
         const formData = new FormData();
-        
+
         // Agregar campos de texto
         formData.append('lessonId', resourceData.lessonId);
         formData.append('title', resourceData.title);
@@ -100,33 +107,33 @@ export const useCreateResource = () => {
         if (resourceData.url) formData.append('url', resourceData.url);
         if (resourceData.orderIndex) formData.append('orderIndex', resourceData.orderIndex.toString());
         if (resourceData.isDownloadable !== undefined) formData.append('isDownloadable', resourceData.isDownloadable.toString());
-        
+
         // Agregar archivo
         formData.append('file', resourceData.file);
-        
-        const response = await fetch('http://localhost:3001/api/lessonresource', {
+
+        const response = await fetch(`${API_BASE}/lessonresource`, {
           method: 'POST',
           headers: getAuthHeaders(true), // true para FormData
           body: formData,
         });
-        
+
         if (!response.ok) {
           throw new Error('Failed to create resource');
         }
-        
+
         return response.json();
       } else {
         // Sin archivo, usar JSON
-        const response = await fetch('http://localhost:3001/api/lessonresource', {
+        const response = await fetch(`${API_BASE}/lessonresource`, {
           method: 'POST',
           headers: getAuthHeaders(),
           body: JSON.stringify(resourceData),
         });
-        
+
         if (!response.ok) {
           throw new Error('Failed to create resource');
         }
-        
+
         return response.json();
       }
     },
@@ -142,13 +149,13 @@ export const useCreateResource = () => {
 // Update resource mutation
 export const useUpdateResource = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async (resourceData: UpdateResourceData) => {
       // Si hay un archivo, usar FormData
       if (resourceData.file) {
         const formData = new FormData();
-        
+
         // Agregar campos de texto
         formData.append('id', resourceData.id);
         if (resourceData.title) formData.append('title', resourceData.title);
@@ -157,33 +164,33 @@ export const useUpdateResource = () => {
         if (resourceData.url) formData.append('url', resourceData.url);
         if (resourceData.orderIndex) formData.append('orderIndex', resourceData.orderIndex.toString());
         if (resourceData.isDownloadable !== undefined) formData.append('isDownloadable', resourceData.isDownloadable.toString());
-        
+
         // Agregar archivo
         formData.append('file', resourceData.file);
-        
-        const response = await fetch(`http://localhost:3001/api/lessonresource/${resourceData.id}`, {
+
+        const response = await fetch(`${API_BASE}/lessonresource/${resourceData.id}`, {
           method: 'PUT',
           headers: getAuthHeaders(true), // true para FormData
           body: formData,
         });
-        
+
         if (!response.ok) {
           throw new Error('Failed to update resource');
         }
-        
+
         return response.json();
       } else {
         // Sin archivo, usar JSON
-        const response = await fetch(`http://localhost:3001/api/lessonresource/${resourceData.id}`, {
+        const response = await fetch(`${API_BASE}/lessonresource/${resourceData.id}`, {
           method: 'PUT',
           headers: getAuthHeaders(),
           body: JSON.stringify(resourceData),
         });
-        
+
         if (!response.ok) {
           throw new Error('Failed to update resource');
         }
-        
+
         return response.json();
       }
     },
@@ -202,18 +209,18 @@ export const useUpdateResource = () => {
 // Delete resource mutation
 export const useDeleteResource = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async (resourceId: string) => {
-      const response = await fetch(`http://localhost:3001/api/lessonresource/${resourceId}`, {
+      const response = await fetch(`${API_BASE}/lessonresource/${resourceId}`, {
         method: 'DELETE',
         headers: getAuthHeaders(),
       });
-      
+
       if (!response.ok) {
         throw new Error('Failed to delete resource');
       }
-      
+
       return response.json();
     },
     onSuccess: () => {

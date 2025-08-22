@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useAuthContext } from "@/hooks/use-auth";
-import { UserRole } from "@/types/api";
+import { UserRole, User } from "@/types/api";
 import { mapBackendRoleToFrontend } from "@/lib/utils";
 
 type Profile = {
@@ -14,10 +14,16 @@ type Profile = {
   completionPercentage?: number;
   primaryColor?: string;
   secondaryColor?: string;
+  company?: {
+    id: string;
+    name: string;
+    email?: string;
+    phone?: string;
+  };
 };
 
 type CurrentUserData = {
-  user: unknown | null;
+  user: User | null;
   profile: Profile | null;
   isLoading: boolean;
   error: Error | null;
@@ -27,9 +33,9 @@ type CurrentUserData = {
 export function useCurrentUser(): CurrentUserData {
   const { user, loading } = useAuthContext();
 
-  console.log('🔍 useCurrentUser: Auth state:', { 
-    user: !!user, 
-    loading, 
+  console.log('🔍 useCurrentUser: Auth state:', {
+    user: !!user,
+    loading,
     userId: user?.id,
     userRole: user?.role,
     userType: typeof user?.role
@@ -37,8 +43,8 @@ export function useCurrentUser(): CurrentUserData {
 
   // Log when user changes
   useEffect(() => {
-    console.log('🔍 useCurrentUser: User changed:', { 
-      user: !!user, 
+    console.log('🔍 useCurrentUser: User changed:', {
+      user: !!user,
       userId: user?.id,
       userRole: user?.role,
       userType: typeof user?.role
@@ -50,15 +56,24 @@ export function useCurrentUser(): CurrentUserData {
   // Transform real user to match expected profile structure
   const profile: Profile | null = user
     ? {
-        id: user.id,
-        role: (mapBackendRoleToFrontend(user.role) as UserRole) || null,
-        firstName: user.firstName || user.username || '',
-        lastName: user.lastName || '',
-        profilePicture: user.profilePicture || null,
-        completionPercentage: 0,
-        primaryColor: user.primaryColor,
-        secondaryColor: user.secondaryColor,
-      }
+      id: user.id,
+      role: (mapBackendRoleToFrontend(user.role) as UserRole) || null,
+      firstName: user.firstName || user.username || '',
+      lastName: user.lastName || '',
+      profilePicture: user.profilePicture || null,
+      completionPercentage: 0,
+      primaryColor: user.primaryColor,
+      secondaryColor: user.secondaryColor,
+      // Include company information if available
+      ...(user.company && {
+        company: {
+          id: user.company.id,
+          name: user.company.name,
+          email: user.company.email,
+          phone: user.company.phone,
+        }
+      }),
+    }
     : null;
 
   console.log('🔍 useCurrentUser: Profile:', profile);

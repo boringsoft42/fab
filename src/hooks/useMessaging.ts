@@ -1,6 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useCurrentUser } from './use-current-user';
-import { useAuth } from './use-auth';
 
 interface Message {
   id: string;
@@ -47,21 +45,24 @@ export const useMessaging = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const { profile: currentUser, user } = useCurrentUser();
-  
+  // const { profile: currentUser, user } = useCurrentUser();
+
   const getToken = () => {
     const token = localStorage.getItem('token');
     console.log('🔍 Token from localStorage:', !!token);
     return token;
   };
 
+  // Usar directamente el backend en lugar de las API routes
+  const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://192.168.10.91:3001";
+
   const fetchConversations = async () => {
     try {
-      console.log('🔍 Fetching conversations...');
+      console.log('🔍 Fetching conversations directly from backend...');
       const token = getToken();
       if (!token) throw new Error('No token available');
 
-      const response = await fetch('/api/messages/conversations', {
+      const response = await fetch(`${BACKEND_URL}/messages/conversations`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -69,17 +70,17 @@ export const useMessaging = () => {
       });
 
       console.log('🔍 Conversations response status:', response.status);
-      
+
       if (!response.ok) {
         const errorText = await response.text();
         console.error('🔍 Conversations error response:', errorText);
         throw new Error(`Error fetching conversations: ${response.status} ${errorText}`);
       }
 
-             const data = await response.json();
-       console.log('🔍 Conversations data:', data);
-       console.log('🔍 First conversation participant:', data.conversations?.[0]?.participant);
-       setConversations(data.conversations || []);
+      const data = await response.json();
+      console.log('🔍 Conversations data:', data);
+      console.log('🔍 First conversation participant:', data.conversations?.[0]?.participant);
+      setConversations(data.conversations || []);
     } catch (err) {
       console.error('🔍 Error in fetchConversations:', err);
       setError(err instanceof Error ? err.message : 'Unknown error');
@@ -91,7 +92,7 @@ export const useMessaging = () => {
       const token = getToken();
       if (!token) throw new Error('No token available');
 
-      const response = await fetch(`/api/messages/conversation/${contactId}`, {
+      const response = await fetch(`${BACKEND_URL}/messages/conversation/${contactId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -114,7 +115,7 @@ export const useMessaging = () => {
       const token = getToken();
       if (!token) throw new Error('No token available');
 
-      const response = await fetch('/api/messages/send', {
+      const response = await fetch(`${BACKEND_URL}/messages/send`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -128,10 +129,10 @@ export const useMessaging = () => {
       }
 
       const data = await response.json();
-      
+
       // Agregar el nuevo mensaje a la conversación actual
       setCurrentMessages(prev => [...prev, data.data]);
-      
+
       // Actualizar conversaciones
       await fetchConversations();
     } catch (err) {
@@ -144,7 +145,7 @@ export const useMessaging = () => {
       const token = getToken();
       if (!token) throw new Error('No token available');
 
-      const response = await fetch(`/api/messages/${messageId}/read`, {
+      const response = await fetch(`${BACKEND_URL}/messages/${messageId}/read`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -157,9 +158,9 @@ export const useMessaging = () => {
       }
 
       // Actualizar el estado del mensaje localmente
-      setCurrentMessages(prev => 
-        prev.map(msg => 
-          msg.id === messageId 
+      setCurrentMessages(prev =>
+        prev.map(msg =>
+          msg.id === messageId
             ? { ...msg, status: 'READ', readAt: new Date().toISOString() }
             : msg
         )
@@ -171,11 +172,11 @@ export const useMessaging = () => {
 
   const fetchStats = async () => {
     try {
-      console.log('🔍 Fetching stats...');
+      console.log('🔍 Fetching stats directly from backend...');
       const token = getToken();
       if (!token) throw new Error('No token available');
 
-      const response = await fetch('/api/messages/stats', {
+      const response = await fetch(`${BACKEND_URL}/messages/stats`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -183,7 +184,7 @@ export const useMessaging = () => {
       });
 
       console.log('🔍 Stats response status:', response.status);
-      
+
       if (!response.ok) {
         const errorText = await response.text();
         console.error('🔍 Stats error response:', errorText);
@@ -199,34 +200,24 @@ export const useMessaging = () => {
     }
   };
 
-  useEffect(() => {
-    console.log('🔍 useMessaging: useEffect triggered');
-    
-    const initializeData = async () => {
-      console.log('🔍 Initializing messaging data...');
-      const token = getToken();
-      console.log('🔍 Token obtained:', !!token);
-      
-      if (token) {
-        setLoading(true);
-        try {
-          console.log('🔍 Fetching conversations and stats...');
-          await Promise.all([fetchConversations(), fetchStats()]);
-          console.log('🔍 Data loaded successfully');
-        } catch (error) {
-          console.error('Error initializing messaging data:', error);
-          setError(error instanceof Error ? error.message : 'Unknown error');
-        } finally {
-          setLoading(false);
-        }
-      } else {
-        console.log('🔍 No token available, setting loading to false');
-        setLoading(false);
-        setError('No authentication token available');
-      }
-    };
+  const refetch = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      await Promise.all([
+        fetchConversations(),
+        fetchStats()
+      ]);
+    } catch (err) {
+      console.error('Error in refetch:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    initializeData();
+  // Load data on mount
+  useEffect(() => {
+    refetch();
   }, []);
 
   return {
@@ -240,6 +231,6 @@ export const useMessaging = () => {
     sendMessage,
     markMessageAsRead,
     fetchStats,
-    refetch: () => Promise.all([fetchConversations(), fetchStats()])
+    refetch
   };
 };

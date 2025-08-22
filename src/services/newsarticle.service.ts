@@ -1,41 +1,41 @@
-import { apiCall } from '@/lib/api';
+import { apiCall, API_BASE } from '@/lib/api';
 import { NewsArticle } from '@/types/news';
 
 // Helper function to ensure image URLs are complete
 const processImageUrl = (imageUrl: string): string => {
   if (!imageUrl) return '';
-  
+
   // Replace port 3000 with 3001 if present
   if (imageUrl.includes('localhost:3000')) {
     return imageUrl.replace('localhost:3000', 'localhost:3001');
   }
-  
+
   // If it's already a full URL, return as is
   if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
     return imageUrl;
   }
-  
-  // If it starts with /uploads, make it a full URL
+
+  // If it starts with /uploads, make it a full URL using API_BASE like in job applications
   if (imageUrl.startsWith('/uploads/')) {
-    return `http://localhost:3001${imageUrl}`;
+    return `${API_BASE.replace('/api', '')}${imageUrl}`;
   }
-  
+
   // If it's just a filename, assume it's in uploads
   if (!imageUrl.includes('/')) {
-    return `http://localhost:3001/uploads/${imageUrl}`;
+    return `${API_BASE.replace('/api', '')}/uploads/${imageUrl}`;
   }
-  
+
   return imageUrl;
 };
 
 export class NewsArticleService {
-    // GET /api/newsarticle - Obtener mis noticias (Empresa/Municipio)
+  // GET /api/newsarticle - Obtener mis noticias (Empresa/Municipio)
   static async getAll(): Promise<NewsArticle[]> {
     console.log("📰 NewsArticleService.getAll() - Calling apiCall('/newsarticle')");
     try {
       const result = await apiCall('/newsarticle');
       console.log("✅ NewsArticleService.getAll() - Success:", result);
-      
+
       // Process image URLs
       if (Array.isArray(result)) {
         return result.map(news => ({
@@ -43,7 +43,7 @@ export class NewsArticleService {
           imageUrl: processImageUrl(news.imageUrl)
         }));
       }
-      
+
       return result;
     } catch (error) {
       console.error("❌ NewsArticleService.getAll() - Error:", error);
@@ -57,7 +57,7 @@ export class NewsArticleService {
     try {
       const result = await apiCall(`/newsarticle/${id}`);
       console.log("✅ NewsArticleService.getById() - Success:", result);
-      
+
       // Process image URL
       return {
         ...result,
@@ -115,24 +115,39 @@ export class NewsArticleService {
     }
   }
 
-  // GET /api/newsarticle/public - Obtener noticias públicas (para jóvenes)
+  // GET /api/newsarticle - Obtener noticias públicas (para jóvenes)
   static async getPublicNews(): Promise<NewsArticle[]> {
-    console.log("📰 NewsArticleService.getPublicNews() - Calling apiCall('/newsarticle/public')");
+    console.log("📰 NewsArticleService.getPublicNews() - Calling apiCall('/newsarticle')");
     try {
-      const result = await apiCall('/newsarticle/public');
+      const result = await apiCall('/newsarticle');
       console.log("✅ NewsArticleService.getPublicNews() - Success:", result);
-      
-      const newsArray = result.news || result;
-      
-      // Process image URLs
+
+      // Handle different response formats
+      let newsArray: NewsArticle[] = [];
+
+      if (result && typeof result === 'object') {
+        if (Array.isArray(result)) {
+          newsArray = result;
+        } else if (result.news && Array.isArray(result.news)) {
+          newsArray = result.news;
+        } else if (result.data && Array.isArray(result.data)) {
+          newsArray = result.data;
+        }
+      }
+
+      console.log("📰 NewsArticleService.getPublicNews() - Processed newsArray:", newsArray);
+
+      // Process image URLs and ensure we return an array
       if (Array.isArray(newsArray)) {
         return newsArray.map(news => ({
           ...news,
-          imageUrl: processImageUrl(news.imageUrl)
+          imageUrl: processImageUrl(news.imageUrl || '')
         }));
       }
-      
-      return newsArray;
+
+      // Return empty array if no valid data found
+      console.warn("📰 NewsArticleService.getPublicNews() - No valid news array found, returning empty array");
+      return [];
     } catch (error) {
       console.error("❌ NewsArticleService.getPublicNews() - Error:", error);
       throw error;
@@ -145,7 +160,7 @@ export class NewsArticleService {
     try {
       const result = await apiCall(`/newsarticle?authorId=${authorId}`);
       console.log("✅ NewsArticleService.getByAuthor() - Success:", result);
-      
+
       // Process image URLs
       if (Array.isArray(result)) {
         return result.map(news => ({
@@ -153,7 +168,7 @@ export class NewsArticleService {
           imageUrl: processImageUrl(news.imageUrl)
         }));
       }
-      
+
       return result;
     } catch (error) {
       console.error("❌ NewsArticleService.getByAuthor() - Error:", error);
@@ -270,7 +285,7 @@ export class NewsArticleService {
   // POST /api/newsarticle/{id}/featured - Cambiar estado destacado
   static async toggleFeatured(id: string): Promise<NewsArticle> {
     console.log("📰 NewsArticleService.toggleFeatured() - Calling apiCall(`/newsarticle/${id}/featured`)");
-    try { 
+    try {
       const result = await apiCall(`/newsarticle/${id}/featured`, {
         method: 'POST'
       });
@@ -309,7 +324,7 @@ export class NewsArticleService {
         // No headers needed - apiCall will handle FormData correctly
       });
       console.log("✅ NewsArticleService.createWithImage() - Success:", result);
-      
+
       // Process image URL
       return {
         ...result,
@@ -332,7 +347,7 @@ export class NewsArticleService {
         // No headers needed - apiCall will handle FormData correctly
       });
       console.log("✅ NewsArticleService.updateWithImage() - Success:", result);
-      
+
       // Process image URL
       return {
         ...result,

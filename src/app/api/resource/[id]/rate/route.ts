@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAuthHeaders } from '@/lib/auth-middleware';
+import { getAuthHeaders } from '@/lib/api';
+import { API_BASE } from '@/lib/api';
 
 export async function POST(
   request: NextRequest,
@@ -17,7 +18,7 @@ export async function POST(
     }
 
     const authHeaders = getAuthHeaders();
-    const response = await fetch(`http://localhost:3001/api/resource/${params.id}/rate`, {
+    const response = await fetch(`${API_BASE}/resource/${params.id}/rate`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

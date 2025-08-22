@@ -74,15 +74,15 @@ export async function searchYouthUsers(req: Request, res: Response) {
     // Agregar estado de contacto a cada usuario disponible
     const usersWithContactStatus = availableUsers.map(user => {
       // Buscar si el usuario actual envió una solicitud a este usuario
-      const sentContact = existingContacts.find(c => 
+      const sentContact = existingContacts.find(c =>
         c.userId === user.id && c.contactId === user.userId
       );
-      
+
       // Buscar si el usuario actual recibió una solicitud de este usuario
-      const receivedContact = existingContacts.find(c => 
+      const receivedContact = existingContacts.find(c =>
         c.userId === user.userId && c.contactId === user.id
       );
-      
+
       let contactStatus = null;
       if (sentContact) {
         contactStatus = { type: 'sent', status: sentContact.status };
@@ -354,7 +354,8 @@ export async function getContacts(req: Request, res: Response) {
               currentInstitution: true,
               skills: true,
               department: true,
-              municipality: true
+              municipality: true,
+              birthDate: true
             }
           },
           contact: {
@@ -367,7 +368,8 @@ export async function getContacts(req: Request, res: Response) {
               currentInstitution: true,
               skills: true,
               department: true,
-              municipality: true
+              municipality: true,
+              birthDate: true
             }
           }
         },
@@ -389,7 +391,7 @@ export async function getContacts(req: Request, res: Response) {
     const formattedContacts = contacts.map(contact => {
       const isSender = contact.userId === user.id;
       const contactUser = isSender ? contact.contact : contact.user;
-      
+
       return {
         id: contact.id,
         contact: contactUser,

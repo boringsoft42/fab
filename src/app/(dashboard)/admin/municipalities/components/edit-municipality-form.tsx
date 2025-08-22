@@ -16,7 +16,9 @@ import type { Municipality } from "@/types/municipality";
 
 const updateMunicipalitySchema = z.object({
   name: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
-  department: z.string().min(2, "El departamento debe tener al menos 2 caracteres"),
+  department: z
+    .string()
+    .min(2, "El departamento debe tener al menos 2 caracteres"),
   region: z.string().optional(),
   population: z.string().optional(),
   mayorName: z.string().optional(),
@@ -34,7 +36,10 @@ interface EditMunicipalityFormProps {
   onSuccess: () => void;
 }
 
-export function EditMunicipalityForm({ municipality, onSuccess }: EditMunicipalityFormProps) {
+export function EditMunicipalityForm({
+  municipality,
+  onSuccess,
+}: EditMunicipalityFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const updateMunicipality = useUpdateMunicipality();
   const { toast } = useToast();
@@ -48,7 +53,7 @@ export function EditMunicipalityForm({ municipality, onSuccess }: EditMunicipali
     resolver: zodResolver(updateMunicipalitySchema),
     defaultValues: {
       name: municipality.name,
-      department: municipality.department,
+      department: "Cochabamba",
       region: municipality.region || "",
       population: municipality.population?.toString() || "",
       mayorName: municipality.mayorName || "",
@@ -70,12 +75,12 @@ export function EditMunicipalityForm({ municipality, onSuccess }: EditMunicipali
           population: data.population ? parseInt(data.population) : undefined,
         },
       });
-      
+
       toast({
         title: "Municipio actualizado",
         description: "El municipio ha sido actualizado exitosamente.",
       });
-      
+
       onSuccess();
     } catch (error) {
       toast({
@@ -94,7 +99,7 @@ export function EditMunicipalityForm({ municipality, onSuccess }: EditMunicipali
         {/* Información Básica */}
         <div className="space-y-4">
           <h3 className="text-lg font-medium">Información Básica</h3>
-          
+
           <div className="space-y-2">
             <Label htmlFor="name">Nombre del Municipio *</Label>
             <Input
@@ -111,12 +116,15 @@ export function EditMunicipalityForm({ municipality, onSuccess }: EditMunicipali
             <Label htmlFor="department">Departamento *</Label>
             <Input
               id="department"
-              {...register("department")}
-              placeholder="Ej: Cochabamba"
+              value="Cochabamba"
+              disabled
+              className="bg-gray-50"
             />
-            {errors.department && (
-              <p className="text-sm text-red-600">{errors.department.message}</p>
-            )}
+            <input
+              type="hidden"
+              {...register("department")}
+              value="Cochabamba"
+            />
           </div>
 
           <div className="space-y-2">
@@ -140,7 +148,9 @@ export function EditMunicipalityForm({ municipality, onSuccess }: EditMunicipali
               placeholder="Ej: 100000"
             />
             {errors.population && (
-              <p className="text-sm text-red-600">{errors.population.message}</p>
+              <p className="text-sm text-red-600">
+                {errors.population.message}
+              </p>
             )}
           </div>
         </div>
@@ -148,7 +158,7 @@ export function EditMunicipalityForm({ municipality, onSuccess }: EditMunicipali
         {/* Información del Alcalde */}
         <div className="space-y-4">
           <h3 className="text-lg font-medium">Información del Alcalde</h3>
-          
+
           <div className="space-y-2">
             <Label htmlFor="mayorName">Nombre del Alcalde</Label>
             <Input
@@ -170,7 +180,9 @@ export function EditMunicipalityForm({ municipality, onSuccess }: EditMunicipali
               placeholder="alcalde@municipio.com"
             />
             {errors.mayorEmail && (
-              <p className="text-sm text-red-600">{errors.mayorEmail.message}</p>
+              <p className="text-sm text-red-600">
+                {errors.mayorEmail.message}
+              </p>
             )}
           </div>
 
@@ -182,7 +194,9 @@ export function EditMunicipalityForm({ municipality, onSuccess }: EditMunicipali
               placeholder="Ej: +591 4 1234567"
             />
             {errors.mayorPhone && (
-              <p className="text-sm text-red-600">{errors.mayorPhone.message}</p>
+              <p className="text-sm text-red-600">
+                {errors.mayorPhone.message}
+              </p>
             )}
           </div>
         </div>
@@ -191,7 +205,7 @@ export function EditMunicipalityForm({ municipality, onSuccess }: EditMunicipali
       {/* Información de Contacto */}
       <div className="space-y-4">
         <h3 className="text-lg font-medium">Información de Contacto</h3>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="address">Dirección</Label>
@@ -223,7 +237,7 @@ export function EditMunicipalityForm({ municipality, onSuccess }: EditMunicipali
       {/* Estado */}
       <div className="space-y-4">
         <h3 className="text-lg font-medium">Estado</h3>
-        
+
         <div className="flex items-center space-x-2">
           <Switch
             id="isActive"
@@ -237,7 +251,7 @@ export function EditMunicipalityForm({ municipality, onSuccess }: EditMunicipali
       {/* Información del Sistema */}
       <div className="space-y-4">
         <h3 className="text-lg font-medium">Información del Sistema</h3>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label>Usuario</Label>
@@ -250,11 +264,7 @@ export function EditMunicipalityForm({ municipality, onSuccess }: EditMunicipali
 
           <div className="space-y-2">
             <Label>Email</Label>
-            <Input
-              value={municipality.email}
-              disabled
-              className="bg-gray-50"
-            />
+            <Input value={municipality.email} disabled className="bg-gray-50" />
           </div>
         </div>
       </div>
@@ -276,4 +286,4 @@ export function EditMunicipalityForm({ municipality, onSuccess }: EditMunicipali
       </div>
     </form>
   );
-} 
+}

@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAuthHeaders } from '@/lib/api';
+import { getAuthHeaders , API_BASE} from '@/lib/api';
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const backendUrl = process.env.BACKEND_URL || 'http://localhost:3001';
+    const backendUrl = process.env.BACKEND_URL || '${BACKEND_URL}';
     const url = `${backendUrl}/api/entrepreneurship/${params.id}`;
     
     console.log('🔍 API Route - Getting entrepreneurship:', params.id);
@@ -42,7 +42,7 @@ export async function PUT(
 ) {
   try {
     const body = await request.json();
-    const backendUrl = process.env.BACKEND_URL || 'http://localhost:3001';
+    const backendUrl = process.env.BACKEND_URL || '${BACKEND_URL}';
     const url = `${backendUrl}/api/entrepreneurship/${params.id}`;
     
     console.log('🔍 API Route - Updating entrepreneurship:', params.id, body);
@@ -78,7 +78,7 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const backendUrl = process.env.BACKEND_URL || 'http://localhost:3001';
+    const backendUrl = process.env.BACKEND_URL || '${BACKEND_URL}';
     const url = `${backendUrl}/api/entrepreneurship/${params.id}`;
     
     console.log('🔍 API Route - Deleting entrepreneurship:', params.id);

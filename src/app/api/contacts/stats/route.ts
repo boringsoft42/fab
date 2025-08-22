@@ -1,27 +1,43 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAuthHeaders } from '@/lib/auth-middleware';
 
 export async function GET(request: NextRequest) {
   try {
-    const authHeaders = getAuthHeaders();
-    const response = await fetch(`http://localhost:3001/api/contacts/stats`, {
-      method: 'GET',
+    console.log('🔍 Contacts Stats API called'); // Debug
+    const authHeader = request.headers.get('authorization');
+
+    // Use the same backend URL structure as institutions
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://192.168.10.91:3001';
+
+    const url = `${backendUrl}/api/contacts/stats`;
+
+    console.log('🔍 Contacts Stats API - Calling backend URL:', url); // Debug
+    console.log('🔍 Contacts Stats API - Authorization header:', authHeader ? 'Present' : 'Missing');
+
+    const response = await fetch(url, {
       headers: {
+        'Authorization': authHeader || '',
         'Content-Type': 'application/json',
-        ...authHeaders,
       },
     });
 
+    console.log('🔍 Contacts Stats API - Backend response status:', response.status);
+
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const errorText = await response.text();
+      console.error('🔍 Contacts Stats API - Backend error:', errorText);
+      return NextResponse.json(
+        { message: `Backend error: ${response.status} ${errorText}` },
+        { status: response.status }
+      );
     }
 
     const data = await response.json();
-    return NextResponse.json(data);
+    console.log('🔍 Contacts Stats API - Backend data received:', data);
+    return NextResponse.json(data, { status: response.status });
   } catch (error) {
-    console.error('Error fetching contact stats:', error);
+    console.error('🔍 Contacts Stats API - Error:', error);
     return NextResponse.json(
-      { error: 'Error al cargar estadísticas de contactos' },
+      { message: 'Internal server error' },
       { status: 500 }
     );
   }

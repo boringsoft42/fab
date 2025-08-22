@@ -1,25 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import {
-  Search,
-  MapPin,
-  Users,
-  Building,
-  Phone,
-  Mail,
-  Globe,
-  Calendar,
-} from "lucide-react";
-import Link from "next/link";
+import { Card, CardContent } from "@/components/ui/card";
+import { Search, MapPin } from "lucide-react";
 import Image from "next/image";
-import { BACKEND_ENDPOINTS } from "@/lib/backend-config";
 
 interface Institution {
   id: string;
@@ -32,7 +19,7 @@ interface Institution {
 
 export default function InstitutionsDirectoryPage() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [institutions, setInstitutions] = useState<any[]>([]);
+  const [institutions, setInstitutions] = useState<Institution[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -41,15 +28,15 @@ export default function InstitutionsDirectoryPage() {
     try {
       setLoading(true);
       setError(null);
-      const response = await fetch(BACKEND_ENDPOINTS.INSTITUTIONS_PUBLIC);
+      const response = await fetch("/api/institution/public");
       if (!response.ok) {
-        throw new Error('Error al cargar las instituciones');
+        throw new Error("Error al cargar las instituciones");
       }
       const data = await response.json();
       setInstitutions(data);
     } catch (err) {
-      console.error('Error fetching institutions:', err);
-      setError(err instanceof Error ? err.message : 'Error desconocido');
+      console.error("Error fetching institutions:", err);
+      setError(err instanceof Error ? err.message : "Error desconocido");
     } finally {
       setLoading(false);
     }
@@ -62,10 +49,14 @@ export default function InstitutionsDirectoryPage() {
 
   const filteredInstitutions = institutions.filter(
     (institution) =>
-      institution.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      institution.department.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      institution.region.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      institution.institutionType.toLowerCase().includes(searchQuery.toLowerCase())
+      institution.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      institution.department
+        ?.toLowerCase()
+        .includes(searchQuery.toLowerCase()) ||
+      institution.region?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      institution.institutionType
+        ?.toLowerCase()
+        .includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -116,11 +107,13 @@ export default function InstitutionsDirectoryPage() {
       {error && (
         <div className="text-center py-12">
           <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md mx-auto">
-            <p className="text-red-600 font-medium mb-2">Error al cargar las instituciones</p>
+            <p className="text-red-600 font-medium mb-2">
+              Error al cargar las instituciones
+            </p>
             <p className="text-red-500 text-sm">{error}</p>
-            <Button 
-              onClick={fetchInstitutions} 
-              variant="outline" 
+            <Button
+              onClick={fetchInstitutions}
+              variant="outline"
               className="mt-4"
             >
               Intentar nuevamente
@@ -136,16 +129,23 @@ export default function InstitutionsDirectoryPage() {
             <div className="col-span-full text-center py-12">
               <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 max-w-md mx-auto">
                 <p className="text-gray-600 font-medium mb-2">
-                  {searchQuery ? 'No se encontraron instituciones' : 'No hay instituciones disponibles'}
+                  {searchQuery
+                    ? "No se encontraron instituciones"
+                    : "No hay instituciones disponibles"}
                 </p>
                 <p className="text-gray-500 text-sm">
-                  {searchQuery ? 'Intenta con otros términos de búsqueda' : 'Las instituciones aparecerán aquí cuando estén disponibles'}
+                  {searchQuery
+                    ? "Intenta con otros términos de búsqueda"
+                    : "Las instituciones aparecerán aquí cuando estén disponibles"}
                 </p>
               </div>
             </div>
           ) : (
             filteredInstitutions.map((institution) => (
-              <Card key={institution.id} className="overflow-hidden hover:shadow-lg transition-shadow duration-200">
+              <Card
+                key={institution.id}
+                className="overflow-hidden hover:shadow-lg transition-shadow duration-200"
+              >
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
@@ -155,7 +155,10 @@ export default function InstitutionsDirectoryPage() {
                       <div className="space-y-2">
                         <div className="flex items-center text-sm text-muted-foreground">
                           <MapPin className="h-4 w-4 mr-2" />
-                          <span>{institution.department}, {institution.region}</span>
+                          <span>
+                            {institution.department || "Sin departamento"},{" "}
+                            {institution.region || "Sin región"}
+                          </span>
                         </div>
                         <div className="flex items-center text-sm">
                           <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">
@@ -170,7 +173,7 @@ export default function InstitutionsDirectoryPage() {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="flex justify-between items-center pt-4 border-t border-gray-100">
                     <div className="text-sm text-muted-foreground">
                       ID: {institution.id}

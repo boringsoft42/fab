@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { NewsArticle } from '@/types/news';
+import { API_BASE } from '@/lib/api';
 
 // Mock data - será reemplazado por Prisma
 let mockNews: NewsArticle[] = [
@@ -162,7 +163,7 @@ export async function PUT(
     if (imageFile && imageFile.size > 0) {
       // Aquí se procesaría la imagen y se subiría a un servicio de almacenamiento
       // Por ahora, simulamos una URL completa
-      imageUrl = `http://localhost:3001/uploads/${Date.now()}-${imageFile.name}`;
+      imageUrl = `${BACKEND_URL}/uploads/${Date.now()}-${imageFile.name}`;
     }
     
     // Actualizar la noticia

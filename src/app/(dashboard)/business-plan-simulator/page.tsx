@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -117,7 +117,13 @@ interface FinancialData {
 }
 
 export default function BusinessPlanSimulatorPage() {
-  const { plans: businessPlans, loading, saving, error, saveSimulatorData, calculateCompletion, analyzeTripleImpact: analyzeTripleImpactHook } = useBusinessPlanSimulator();
+  const {
+    plans: businessPlans,
+    loading,
+    saveSimulatorData,
+    calculateCompletion,
+    analyzeTripleImpact: analyzeTripleImpactHook,
+  } = useBusinessPlanSimulator();
   const [currentStep, setCurrentStep] = useState(0);
   const [impacts, setImpacts] = useState({
     economic: false,
@@ -162,11 +168,100 @@ export default function BusinessPlanSimulatorPage() {
   const [activeTab, setActiveTab] = useState("wizard");
   const [autoSaving, setAutoSaving] = useState(false);
 
-    // Cargar datos del backend cuando el componente se monte
+  // Use refs to manage autosave timeout and prevent multiple calls
+  const autoSaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastSavedDataRef = useRef<string>("");
+
+  // Memoize progress calculation to prevent unnecessary recalculations
+  const progress = useMemo(
+    () => calculateCompletion(businessPlan),
+    [businessPlan]
+  );
+
+  // Debounced autosave function
+  const debouncedAutoSave = useCallback(
+    async (data: BusinessPlan) => {
+      // Clear existing timeout
+      if (autoSaveTimeoutRef.current) {
+        clearTimeout(autoSaveTimeoutRef.current);
+      }
+
+      // Create new timeout
+      autoSaveTimeoutRef.current = setTimeout(async () => {
+        try {
+          const completionPercentage = calculateCompletion(data);
+
+          // Mapear al formato que espera el backend
+          const backendData = {
+            entrepreneurshipId: data.entrepreneurshipId,
+            tripleImpactAssessment: data.tripleImpactAssessment,
+            executiveSummary: data.executiveSummary,
+            businessDescription: data.businessDescription,
+            marketAnalysis: data.marketAnalysis,
+            competitiveAnalysis: data.competitiveAnalysis,
+            marketingStrategy: data.marketingPlan,
+            operationalPlan: data.operationalPlan,
+            managementTeam: data.managementTeam,
+            costStructure: {
+              startupCosts: data.financialProjections.startupCosts,
+              monthlyExpenses: data.financialProjections.monthlyExpenses,
+              breakEvenMonth: data.financialProjections.breakEvenMonth,
+            },
+            revenueStreams: data.financialProjections.revenueStreams,
+            riskAnalysis: data.riskAnalysis,
+            currentStep,
+            completionPercentage,
+            isCompleted: completionPercentage === 100,
+          };
+
+          // Only save if data has actually changed
+          const currentDataString = JSON.stringify(backendData);
+          if (currentDataString !== lastSavedDataRef.current) {
+            setAutoSaving(true);
+            await saveSimulatorData(backendData, { silent: true });
+            lastSavedDataRef.current = currentDataString;
+          }
+        } catch (error) {
+          console.error("Auto-save error:", error);
+        } finally {
+          setAutoSaving(false);
+        }
+      }, 3000); // Increased delay to 3 seconds for less aggressive autosave
+    },
+    [saveSimulatorData, currentStep, calculateCompletion]
+  );
+
+  const updateBusinessPlan = useCallback(
+    (field: string, value: unknown) => {
+      setBusinessPlan((prev) => {
+        const updated = {
+          ...prev,
+          [field]: value,
+        };
+
+        // Trigger debounced autosave
+        debouncedAutoSave(updated);
+
+        return updated;
+      });
+    },
+    [debouncedAutoSave]
+  );
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (autoSaveTimeoutRef.current) {
+        clearTimeout(autoSaveTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  // Cargar datos del backend cuando el componente se monte
   useEffect(() => {
     if (businessPlans && businessPlans.length > 0 && businessPlans[0]) {
       const latestPlan = businessPlans[0] as BackendBusinessPlan; // Tomar el plan más reciente
-      
+
       // Mapear los datos del backend al formato del componente
       const mappedPlan: BusinessPlan = {
         id: latestPlan.id,
@@ -175,8 +270,10 @@ export default function BusinessPlanSimulatorPage() {
           problemSolved: latestPlan.tripleImpactAssessment?.problemSolved ?? "",
           beneficiaries: latestPlan.tripleImpactAssessment?.beneficiaries ?? "",
           resourcesUsed: latestPlan.tripleImpactAssessment?.resourcesUsed ?? "",
-          communityInvolvement: latestPlan.tripleImpactAssessment?.communityInvolvement ?? "",
-          longTermImpact: latestPlan.tripleImpactAssessment?.longTermImpact ?? "",
+          communityInvolvement:
+            latestPlan.tripleImpactAssessment?.communityInvolvement ?? "",
+          longTermImpact:
+            latestPlan.tripleImpactAssessment?.longTermImpact ?? "",
         },
         executiveSummary: latestPlan.executiveSummary || "",
         businessDescription: latestPlan.businessDescription || "",
@@ -186,10 +283,21 @@ export default function BusinessPlanSimulatorPage() {
         operationalPlan: latestPlan.operationalPlan || "",
         managementTeam: latestPlan.managementTeam || "",
         financialProjections: {
-          startupCosts: latestPlan.costStructure?.startupCosts || (latestPlan.initialInvestment ? parseFloat(latestPlan.initialInvestment) : 0),
+          startupCosts:
+            latestPlan.costStructure?.startupCosts ||
+            (latestPlan.initialInvestment
+              ? parseFloat(latestPlan.initialInvestment)
+              : 0),
           monthlyRevenue: 0, // No viene en el backend
-          monthlyExpenses: latestPlan.costStructure?.monthlyExpenses || (latestPlan.monthlyExpenses ? parseFloat(latestPlan.monthlyExpenses) : 0),
-          breakEvenMonth: latestPlan.costStructure?.breakEvenMonth || latestPlan.breakEvenPoint || 0,
+          monthlyExpenses:
+            latestPlan.costStructure?.monthlyExpenses ||
+            (latestPlan.monthlyExpenses
+              ? parseFloat(latestPlan.monthlyExpenses)
+              : 0),
+          breakEvenMonth:
+            latestPlan.costStructure?.breakEvenMonth ||
+            latestPlan.breakEvenPoint ||
+            0,
           revenueStreams: latestPlan.revenueStreams || [],
         },
         riskAnalysis: latestPlan.riskAnalysis || "",
@@ -202,28 +310,30 @@ export default function BusinessPlanSimulatorPage() {
       };
 
       setBusinessPlan(mappedPlan);
-      
+
       // Establecer el paso actual basado en lastSection
       if (latestPlan.lastSection) {
         const stepMap: { [key: string]: number } = {
-          'triple_impact_assessment': 0,
-          'executive_summary': 1,
-          'business_description': 2,
-          'market_analysis': 3,
-          'competitive_analysis': 4,
-          'marketing_plan': 5,
-          'operational_plan': 6,
-          'management_team': 7,
-          'financial_projections': 8,
-          'risk_analysis': 9,
+          triple_impact_assessment: 0,
+          executive_summary: 1,
+          business_description: 2,
+          market_analysis: 3,
+          competitive_analysis: 4,
+          marketing_plan: 5,
+          operational_plan: 6,
+          management_team: 7,
+          financial_projections: 8,
+          risk_analysis: 9,
         };
         const step = stepMap[latestPlan.lastSection] || 0;
         setCurrentStep(step);
       }
-      
+
       // Analizar triple impacto cuando se cargan los datos
       if (latestPlan.tripleImpactAssessment) {
-        const impactAnalysis = analyzeTripleImpactHook(latestPlan.tripleImpactAssessment);
+        const impactAnalysis = analyzeTripleImpactHook(
+          latestPlan.tripleImpactAssessment
+        );
         setImpacts({
           economic: impactAnalysis.economic,
           social: impactAnalysis.social,
@@ -231,7 +341,7 @@ export default function BusinessPlanSimulatorPage() {
         });
       }
     }
-  }, [businessPlans]);
+  }, [businessPlans, analyzeTripleImpactHook]);
 
   const planSteps = [
     {
@@ -356,55 +466,6 @@ export default function BusinessPlanSimulatorPage() {
     },
   ];
 
-  const updateBusinessPlan = (field: string, value: unknown) => {
-    setBusinessPlan((prev) => {
-      const updated = {
-        ...prev,
-        [field]: value,
-      };
-      
-      // Auto-save after a delay
-      setTimeout(async () => {
-        const completionPercentage = calculateCompletion(updated);
-        
-        // Mapear al formato que espera el backend
-        const backendData = {
-          entrepreneurshipId: updated.entrepreneurshipId,
-          tripleImpactAssessment: updated.tripleImpactAssessment,
-          executiveSummary: updated.executiveSummary,
-          businessDescription: updated.businessDescription,
-          marketAnalysis: updated.marketAnalysis,
-          competitiveAnalysis: updated.competitiveAnalysis,
-          marketingStrategy: updated.marketingPlan, // Mapear marketingPlan a marketingStrategy
-          operationalPlan: updated.operationalPlan,
-          managementTeam: updated.managementTeam,
-          costStructure: {
-            startupCosts: updated.financialProjections.startupCosts,
-            monthlyExpenses: updated.financialProjections.monthlyExpenses,
-            breakEvenMonth: updated.financialProjections.breakEvenMonth,
-          },
-          revenueStreams: updated.financialProjections.revenueStreams,
-          riskAnalysis: updated.riskAnalysis,
-          currentStep,
-          completionPercentage,
-          isCompleted: completionPercentage === 100
-        } as any; // Usar any temporalmente para evitar conflictos de tipos
-        
-        try {
-          setAutoSaving(true);
-          // Guardado silencioso: no refresca toda la data ni activa loader global
-          await saveSimulatorData(backendData as any, { silent: true });
-        } catch (error) {
-          console.error('Auto-save error:', error);
-        } finally {
-          setAutoSaving(false);
-        }
-      }, 2000); // Auto-save after 2 seconds of inactivity
-      
-      return updated;
-    });
-  };
-
   const calculateBreakEven = () => {
     const netMonthlyProfit =
       financialData.monthlyRevenue -
@@ -444,7 +505,7 @@ export default function BusinessPlanSimulatorPage() {
   const analyzeTripleImpact = () => {
     const assessment = businessPlan.tripleImpactAssessment;
     if (!assessment) return null;
-    
+
     const impactAnalysis = analyzeTripleImpactHook(assessment);
     setImpacts({
       economic: impactAnalysis.economic,
@@ -476,10 +537,6 @@ export default function BusinessPlanSimulatorPage() {
     }
   };
 
-  const progress = calculateCompletion(businessPlan);
-
-
-
   // Mostrar loading mientras se cargan los datos
   if (loading) {
     return (
@@ -496,7 +553,9 @@ export default function BusinessPlanSimulatorPage() {
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-muted-foreground">Cargando datos del plan de negocios...</p>
+            <p className="text-muted-foreground">
+              Cargando datos del plan de negocios...
+            </p>
           </div>
         </div>
       </div>
@@ -554,17 +613,19 @@ export default function BusinessPlanSimulatorPage() {
                     </p>
                   </div>
                 </div>
-                <Badge variant="outline">
+                <Badge variant="outline" className="min-w-[80px] text-center">
                   {currentStep + 1} de {planSteps.length}
                 </Badge>
               </div>
-                             <Progress value={progress} className="mt-4" />
-               {autoSaving && (
-                 <div className="flex items-center gap-2 mt-2 text-sm text-blue-600">
-                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
-                   <span>Guardando cambios...</span>
-                 </div>
-               )}
+              <Progress value={progress} className="mt-4" />
+              <div className="h-6 mt-2">
+                {autoSaving && (
+                  <div className="flex items-center gap-2 text-sm text-blue-600">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+                    <span>Guardando cambios...</span>
+                  </div>
+                )}
+              </div>
             </CardHeader>
             <CardContent className="space-y-6">
               {currentStep === 0 ? (
@@ -598,12 +659,12 @@ export default function BusinessPlanSimulatorPage() {
                             </Label>
                           </div>
 
-                                                     <Textarea
-                             value={
-                               businessPlan.tripleImpactAssessment?.[
-                                 q.field as keyof typeof businessPlan.tripleImpactAssessment
-                               ] ?? ""
-                             }
+                          <Textarea
+                            value={
+                              businessPlan.tripleImpactAssessment?.[
+                                q.field as keyof typeof businessPlan.tripleImpactAssessment
+                              ] ?? ""
+                            }
                             onChange={(e) =>
                               updateBusinessPlan("tripleImpactAssessment", {
                                 ...businessPlan.tripleImpactAssessment,
@@ -636,62 +697,77 @@ export default function BusinessPlanSimulatorPage() {
                   </div>
 
                   {/* Impact Feedback */}
-                  {businessPlan.tripleImpactAssessment && Object.values(businessPlan.tripleImpactAssessment).some(
-                    (value) => value && value.length > 0
-                  ) && (
-                    <div className="mt-8 bg-white rounded-xl p-6 shadow-sm border-2 border-transparent">
-                      <div
-                        className={`text-lg font-medium ${getImpactFeedback().color} flex items-center gap-2 mb-4`}
-                      >
-                        <CheckCircle className="h-5 w-5" />
-                        {getImpactFeedback().message}
-                      </div>
-                      
-                      {/* Impact Analysis Visual */}
-                      <div className="grid grid-cols-3 gap-4">
-                        <div className={`text-center p-3 rounded-lg border-2 ${impacts.economic ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200'}`}>
-                          <div className={`text-2xl mb-1 ${impacts.economic ? 'text-green-600' : 'text-gray-400'}`}>
-                            💰
-                          </div>
-                          <div className="text-sm font-medium">Económico</div>
-                          <div className="text-xs text-muted-foreground">
-                            {impacts.economic ? 'Detectado' : 'Pendiente'}
-                          </div>
-                        </div>
-                        
-                        <div className={`text-center p-3 rounded-lg border-2 ${impacts.social ? 'bg-blue-50 border-blue-200' : 'bg-gray-50 border-gray-200'}`}>
-                          <div className={`text-2xl mb-1 ${impacts.social ? 'text-blue-600' : 'text-gray-400'}`}>
-                            👥
-                          </div>
-                          <div className="text-sm font-medium">Social</div>
-                          <div className="text-xs text-muted-foreground">
-                            {impacts.social ? 'Detectado' : 'Pendiente'}
-                          </div>
-                        </div>
-                        
-                        <div className={`text-center p-3 rounded-lg border-2 ${impacts.environmental ? 'bg-emerald-50 border-emerald-200' : 'bg-gray-50 border-gray-200'}`}>
-                          <div className={`text-2xl mb-1 ${impacts.environmental ? 'text-emerald-600' : 'text-gray-400'}`}>
-                            🌱
-                          </div>
-                          <div className="text-sm font-medium">Ambiental</div>
-                          <div className="text-xs text-muted-foreground">
-                            {impacts.environmental ? 'Detectado' : 'Pendiente'}
-                          </div>
-                        </div>
-                      </div>
-                      
-                      {/* Botón para analizar impacto */}
-                      <div className="mt-6 flex justify-center">
-                        <Button
-                          onClick={analyzeTripleImpact}
-                          className="bg-blue-600 hover:bg-blue-700"
+                  {businessPlan.tripleImpactAssessment &&
+                    Object.values(businessPlan.tripleImpactAssessment).some(
+                      (value) => value && value.length > 0
+                    ) && (
+                      <div className="mt-8 bg-white rounded-xl p-6 shadow-sm border-2 border-transparent">
+                        <div
+                          className={`text-lg font-medium ${getImpactFeedback().color} flex items-center gap-2 mb-4`}
                         >
-                          <Target className="h-4 w-4 mr-2" />
-                          Analizar Triple Impacto
-                        </Button>
+                          <CheckCircle className="h-5 w-5" />
+                          {getImpactFeedback().message}
+                        </div>
+
+                        {/* Impact Analysis Visual */}
+                        <div className="grid grid-cols-3 gap-4">
+                          <div
+                            className={`text-center p-3 rounded-lg border-2 ${impacts.economic ? "bg-green-50 border-green-200" : "bg-gray-50 border-gray-200"}`}
+                          >
+                            <div
+                              className={`text-2xl mb-1 ${impacts.economic ? "text-green-600" : "text-gray-400"}`}
+                            >
+                              💰
+                            </div>
+                            <div className="text-sm font-medium">Económico</div>
+                            <div className="text-xs text-muted-foreground">
+                              {impacts.economic ? "Detectado" : "Pendiente"}
+                            </div>
+                          </div>
+
+                          <div
+                            className={`text-center p-3 rounded-lg border-2 ${impacts.social ? "bg-blue-50 border-blue-200" : "bg-gray-50 border-gray-200"}`}
+                          >
+                            <div
+                              className={`text-2xl mb-1 ${impacts.social ? "text-blue-600" : "text-gray-400"}`}
+                            >
+                              👥
+                            </div>
+                            <div className="text-sm font-medium">Social</div>
+                            <div className="text-xs text-muted-foreground">
+                              {impacts.social ? "Detectado" : "Pendiente"}
+                            </div>
+                          </div>
+
+                          <div
+                            className={`text-center p-3 rounded-lg border-2 ${impacts.environmental ? "bg-emerald-50 border-emerald-200" : "bg-gray-50 border-gray-200"}`}
+                          >
+                            <div
+                              className={`text-2xl mb-1 ${impacts.environmental ? "text-emerald-600" : "text-gray-400"}`}
+                            >
+                              🌱
+                            </div>
+                            <div className="text-sm font-medium">Ambiental</div>
+                            <div className="text-xs text-muted-foreground">
+                              {impacts.environmental
+                                ? "Detectado"
+                                : "Pendiente"}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Botón para analizar impacto */}
+                        <div className="mt-6 flex justify-center">
+                          <Button
+                            onClick={analyzeTripleImpact}
+                            className="bg-blue-600 hover:bg-blue-700"
+                          >
+                            <Target className="h-4 w-4 mr-2" />
+                            Analizar Triple Impacto
+                          </Button>
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
                 </div>
               ) : (
                 <>
@@ -820,56 +896,85 @@ export default function BusinessPlanSimulatorPage() {
                       Anterior
                     </Button>
                     <div className="flex gap-2">
-                                             <Button 
-                         variant="outline" 
-                         onClick={async () => {
-                           const completionPercentage = calculateCompletion(businessPlan);
-                           const result = await saveSimulatorData({
-                             ...businessPlan,
-                             currentStep,
-                             completionPercentage,
-                             isCompleted: completionPercentage === 100
-                           });
-                           
-                           if (result.success && result.data) {
-                             alert(`Plan guardado! Progreso: ${result.data.completionPercentage}%`);
-                             if (result.data.impactAnalysis.recommendations.length > 0) {
-                               alert('Recomendaciones: ' + result.data.impactAnalysis.recommendations.join(', '));
-                             }
-                           } else {
-                             alert('Error: ' + (result.error || 'Error desconocido'));
-                           }
-                         }}
-                         disabled={loading || autoSaving}
-                       >
-                         <Save className="h-4 w-4 mr-2" />
-                         {loading || autoSaving ? 'Guardando...' : 'Guardar Borrador'}
-                       </Button>
+                      <Button
+                        variant="outline"
+                        onClick={async () => {
+                          const completionPercentage =
+                            calculateCompletion(businessPlan);
+                          const result = await saveSimulatorData({
+                            ...businessPlan,
+                            currentStep,
+                            completionPercentage,
+                            isCompleted: completionPercentage === 100,
+                          });
+
+                          if (result.success && result.data) {
+                            alert(
+                              `Plan guardado! Progreso: ${result.data.completionPercentage}%`
+                            );
+                            if (
+                              result.data.impactAnalysis.recommendations
+                                .length > 0
+                            ) {
+                              alert(
+                                "Recomendaciones: " +
+                                  result.data.impactAnalysis.recommendations.join(
+                                    ", "
+                                  )
+                              );
+                            }
+                          } else {
+                            alert(
+                              "Error: " + (result.error || "Error desconocido")
+                            );
+                          }
+                        }}
+                        disabled={loading || autoSaving}
+                      >
+                        <Save className="h-4 w-4 mr-2" />
+                        {loading || autoSaving
+                          ? "Guardando..."
+                          : "Guardar Borrador"}
+                      </Button>
                       {currentStep === planSteps.length - 1 ? (
-                                                 <Button
-                           onClick={async () => {
-                             const completionPercentage = calculateCompletion(businessPlan);
-                             const result = await saveSimulatorData({
-                               ...businessPlan,
-                               currentStep,
-                               completionPercentage: 100,
-                               isCompleted: true
-                             });
-                             
-                             if (result.success && result.data) {
-                               alert(`¡Plan finalizado! Progreso: ${result.data.completionPercentage}%`);
-                               if (result.data.impactAnalysis.recommendations.length > 0) {
-                                 alert('Recomendaciones: ' + result.data.impactAnalysis.recommendations.join(', '));
-                               }
-                             } else {
-                               alert('Error: ' + (result.error || 'Error desconocido'));
-                             }
-                           }}
-                           disabled={loading || autoSaving}
-                         >
-                           <CheckCircle className="h-4 w-4 mr-2" />
-                           {loading || autoSaving ? 'Finalizando...' : 'Finalizar Plan'}
-                         </Button>
+                        <Button
+                          onClick={async () => {
+                            const result = await saveSimulatorData({
+                              ...businessPlan,
+                              currentStep,
+                              completionPercentage: 100,
+                              isCompleted: true,
+                            });
+
+                            if (result.success && result.data) {
+                              alert(
+                                `¡Plan finalizado! Progreso: ${result.data.completionPercentage}%`
+                              );
+                              if (
+                                result.data.impactAnalysis.recommendations
+                                  .length > 0
+                              ) {
+                                alert(
+                                  "Recomendaciones: " +
+                                    result.data.impactAnalysis.recommendations.join(
+                                      ", "
+                                    )
+                                );
+                              }
+                            } else {
+                              alert(
+                                "Error: " +
+                                  (result.error || "Error desconocido")
+                              );
+                            }
+                          }}
+                          disabled={loading || autoSaving}
+                        >
+                          <CheckCircle className="h-4 w-4 mr-2" />
+                          {loading || autoSaving
+                            ? "Finalizando..."
+                            : "Finalizar Plan"}
+                        </Button>
                       ) : (
                         <Button
                           onClick={() =>

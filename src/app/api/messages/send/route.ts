@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAuthHeaders } from '@/lib/auth-middleware';
+import { getAuthHeaders } from '@/lib/api';
+import { API_BASE } from '@/lib/api';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const authHeaders = getAuthHeaders();
-    
-    const response = await fetch(`http://localhost:3001/api/messages/send`, {
+
+    const response = await fetch(`${API_BASE}/messages/send`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

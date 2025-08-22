@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -13,7 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Search, MapPin, Building } from "lucide-react";
-import { BACKEND_ENDPOINTS } from "@/lib/backend-config";
+import { apiCall } from "@/lib/api";
 
 interface Institution {
   id: string;
@@ -26,7 +25,6 @@ interface Institution {
 
 export default function EntrepreneurshipDirectoryPage() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [typeFilter, setTypeFilter] = useState("");
   const [regionFilter, setRegionFilter] = useState("");
   const [institutions, setInstitutions] = useState<Institution[]>([]);
   const [loading, setLoading] = useState(true);
@@ -35,15 +33,11 @@ export default function EntrepreneurshipDirectoryPage() {
   // Fetch institutions from the backend
   const fetchInstitutions = async () => {
     try {
-      const response = await fetch(BACKEND_ENDPOINTS.INSTITUTIONS_PUBLIC);
-      if (!response.ok) {
-        throw new Error('Error al cargar las instituciones');
-      }
-      const data = await response.json();
+      const data = await apiCall("/municipality/public");
       setInstitutions(data);
     } catch (err) {
-      console.error('Error fetching institutions:', err);
-      setError(err instanceof Error ? err.message : 'Error desconocido');
+      console.error("Error fetching institutions:", err);
+      setError(err instanceof Error ? err.message : "Error desconocido");
     }
   };
 
@@ -54,8 +48,8 @@ export default function EntrepreneurshipDirectoryPage() {
       try {
         await fetchInstitutions();
       } catch (err) {
-        console.error('Error fetching data:', err);
-        setError('Error al cargar los datos');
+        console.error("Error fetching data:", err);
+        setError("Error al cargar los datos");
       } finally {
         setLoading(false);
       }
@@ -63,23 +57,21 @@ export default function EntrepreneurshipDirectoryPage() {
     fetchData();
   }, []);
 
-  const filteredInstitutions = institutions.filter(institution => {
-    const matchesSearch = institution.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         institution.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         institution.region.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         institution.institutionType.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesType = typeFilter === "all" || !typeFilter || institution.institutionType === typeFilter;
-    const matchesRegion = regionFilter === "all" || !regionFilter || institution.region === regionFilter;
-    
-    return matchesSearch && matchesType && matchesRegion;
-  });
+  const filteredInstitutions = institutions.filter((institution) => {
+    const matchesSearch =
+      institution.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      institution.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      institution.region.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      institution.institutionType
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+    const matchesRegion =
+      regionFilter === "all" ||
+      !regionFilter ||
+      institution.region === regionFilter;
 
-  const institutionTypes = [
-    { value: "all", label: "Todos los tipos" },
-    { value: "GOBIERNOS_MUNICIPALES", label: "Gobiernos Municipales" },
-    { value: "CENTROS_DE_FORMACION", label: "Centros de Formación" },
-    { value: "ONGS_Y_FUNDACIONES", label: "ONGs y Fundaciones" }
-  ];
+    return matchesSearch && matchesRegion;
+  });
 
   const regions = [
     { value: "all", label: "Todas las regiones" },
@@ -91,14 +83,14 @@ export default function EntrepreneurshipDirectoryPage() {
     { value: "Chuquisaca", label: "Chuquisaca" },
     { value: "Tarija", label: "Tarija" },
     { value: "Beni", label: "Beni" },
-    { value: "Pando", label: "Pando" }
+    { value: "Pando", label: "Pando" },
   ];
 
   const getInstitutionTypeLabel = (type: string) => {
     const types: Record<string, string> = {
-      'GOBIERNOS_MUNICIPALES': 'Gobierno Municipal',
-      'CENTROS_DE_FORMACION': 'Centro de Formación',
-      'ONGS_Y_FUNDACIONES': 'ONG/Fundación'
+      GOBIERNOS_MUNICIPALES: "Gobierno Municipal",
+      CENTROS_DE_FORMACION: "Centro de Formación",
+      ONGS_Y_FUNDACIONES: "ONG/Fundación",
     };
     return types[type] || type;
   };
@@ -119,11 +111,13 @@ export default function EntrepreneurshipDirectoryPage() {
       <div className="container mx-auto p-6">
         <div className="text-center py-12">
           <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md mx-auto">
-            <p className="text-red-600 font-medium mb-2">Error al cargar el directorio</p>
+            <p className="text-red-600 font-medium mb-2">
+              Error al cargar el directorio
+            </p>
             <p className="text-red-500 text-sm">{error}</p>
-            <Button 
-              onClick={() => window.location.reload()} 
-              variant="outline" 
+            <Button
+              onClick={() => window.location.reload()}
+              variant="outline"
               className="mt-4"
             >
               Intentar nuevamente
@@ -139,7 +133,9 @@ export default function EntrepreneurshipDirectoryPage() {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Directorio de Instituciones</h1>
-        <p className="text-muted-foreground">Explora las instituciones disponibles para apoyo y desarrollo</p>
+        <p className="text-muted-foreground">
+          Explora las instituciones disponibles para apoyo y desarrollo
+        </p>
       </div>
 
       {/* Sección (solo instituciones) */}
@@ -161,9 +157,9 @@ export default function EntrepreneurshipDirectoryPage() {
             className="pl-10"
           />
         </div>
-        
+
         {/* Removed type filter as per edit hint */}
-        
+
         <Select value={regionFilter} onValueChange={setRegionFilter}>
           <SelectTrigger className="w-full md:w-48">
             <SelectValue placeholder="Región" />
@@ -184,35 +180,52 @@ export default function EntrepreneurshipDirectoryPage() {
           <div className="col-span-full text-center py-12">
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 max-w-md mx-auto">
               <p className="text-gray-600 font-medium mb-2">
-                {searchTerm || (typeFilter && typeFilter !== "all") || (regionFilter && regionFilter !== "all") ? 'No se encontraron instituciones' : 'No hay instituciones disponibles'}
+                {searchTerm || (regionFilter && regionFilter !== "all")
+                  ? "No se encontraron instituciones"
+                  : "No hay instituciones disponibles"}
               </p>
               <p className="text-gray-500 text-sm">
-                {searchTerm || (typeFilter && typeFilter !== "all") || (regionFilter && regionFilter !== "all") ? 'Intenta con otros filtros' : 'Las instituciones aparecerán aquí cuando estén disponibles'}
+                {searchTerm || (regionFilter && regionFilter !== "all")
+                  ? "Intenta con otros filtros"
+                  : "Las instituciones aparecerán aquí cuando estén disponibles"}
               </p>
             </div>
           </div>
         ) : (
           filteredInstitutions.map((institution) => (
-            <Card key={institution.id} className="overflow-hidden hover:shadow-lg transition-shadow duration-200">
+            <Card
+              key={institution.id}
+              className="overflow-hidden hover:shadow-lg transition-shadow duration-200"
+            >
               <CardContent className="p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
-                    <h3 className="text-xl font-semibold mb-2 text-gray-900">{institution.name}</h3>
+                    <h3 className="text-xl font-semibold mb-2 text-gray-900">
+                      {institution.name}
+                    </h3>
                     <div className="space-y-2">
                       <div className="flex items-center text-sm text-muted-foreground">
                         <Building className="h-4 w-4 mr-2" />
-                        <span>{getInstitutionTypeLabel(institution.institutionType)}</span>
+                        <span>
+                          {getInstitutionTypeLabel(institution.institutionType)}
+                        </span>
                       </div>
                       <div className="flex items-center text-sm text-muted-foreground">
                         <MapPin className="h-4 w-4 mr-2" />
-                        <span>{institution.department}, {institution.region}</span>
+                        <span>
+                          {institution.department}, {institution.region}
+                        </span>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div className="flex justify-between items-center pt-4 border-t border-gray-100">
-                  <div className="text-sm text-muted-foreground">ID: {institution.id}</div>
-                  <Button variant="outline" size="sm">Ver detalles</Button>
+                  <div className="text-sm text-muted-foreground">
+                    ID: {institution.id}
+                  </div>
+                  <Button variant="outline" size="sm">
+                    Ver detalles
+                  </Button>
                 </div>
               </CardContent>
             </Card>

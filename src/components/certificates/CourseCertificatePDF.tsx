@@ -1,173 +1,157 @@
-import React from 'react';
-import {
-  Document,
-  Page,
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  Font,
-} from '@react-pdf/renderer';
-
-// Registrar fuentes
-Font.register({
-  family: 'Helvetica',
-  fonts: [
-    { src: 'https://fonts.gstatic.com/s/helveticaneue/v70/1Ptsg8zYS_SKggPNyC0IT4ttDfA.ttf', fontWeight: 'normal' },
-    { src: 'https://fonts.gstatic.com/s/helveticaneue/v70/1Ptsg8zYS_SKggPNyC0IT4ttDfB.ttf', fontWeight: 'bold' },
-  ],
-});
+import React from "react";
+import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
+import { getMainFont, getMonospaceFont } from "@/lib/pdf-fonts";
 
 // Estilos
 const styles = StyleSheet.create({
   page: {
-    flexDirection: 'column',
-    backgroundColor: '#ffffff',
+    flexDirection: "column",
+    backgroundColor: "#ffffff",
     padding: 40,
-    fontFamily: 'Helvetica',
+    fontFamily: getMainFont(),
   },
   header: {
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 40,
   },
   logo: {
     width: 80,
     height: 80,
     marginBottom: 20,
-    alignSelf: 'center',
+    alignSelf: "center",
   },
   title: {
     fontSize: 32,
-    fontWeight: 'bold',
-    color: '#1f2937',
+    fontWeight: "bold",
+    color: "#1f2937",
     marginBottom: 10,
-    textAlign: 'center',
+    textAlign: "center",
   },
   subtitle: {
     fontSize: 18,
-    color: '#6b7280',
-    textAlign: 'center',
+    color: "#6b7280",
+    textAlign: "center",
     marginBottom: 40,
   },
   certificateContainer: {
-    border: '3px solid #8b5cf6',
+    border: "3px solid #8b5cf6",
     borderRadius: 15,
     padding: 40,
     marginBottom: 30,
-    backgroundColor: '#faf5ff',
+    backgroundColor: "#faf5ff",
   },
   certificateTitle: {
     fontSize: 28,
-    fontWeight: 'bold',
-    color: '#1f2937',
-    textAlign: 'center',
+    fontWeight: "bold",
+    color: "#1f2937",
+    textAlign: "center",
     marginBottom: 25,
   },
   certificateText: {
     fontSize: 16,
-    color: '#374151',
-    textAlign: 'center',
+    color: "#374151",
+    textAlign: "center",
     marginBottom: 20,
     lineHeight: 1.6,
   },
   studentName: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#8b5cf6',
-    textAlign: 'center',
+    fontWeight: "bold",
+    color: "#8b5cf6",
+    textAlign: "center",
     marginBottom: 25,
   },
   courseInfo: {
     fontSize: 18,
-    color: '#6b7280',
-    textAlign: 'center',
+    color: "#6b7280",
+    textAlign: "center",
     marginBottom: 20,
   },
   courseDescription: {
     fontSize: 14,
-    color: '#9ca3af',
-    textAlign: 'center',
+    color: "#9ca3af",
+    textAlign: "center",
     marginBottom: 25,
-    fontStyle: 'italic',
+    fontStyle: "italic",
   },
   templateInfo: {
     fontSize: 16,
-    color: '#059669',
-    textAlign: 'center',
+    color: "#059669",
+    textAlign: "center",
     marginBottom: 25,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   dateInfo: {
     fontSize: 14,
-    color: '#9ca3af',
-    textAlign: 'center',
+    color: "#9ca3af",
+    textAlign: "center",
     marginBottom: 30,
   },
   signatureSection: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 50,
   },
   signatureBox: {
-    width: '45%',
-    textAlign: 'center',
+    width: "45%",
+    textAlign: "center",
   },
   signatureLine: {
-    borderBottom: '2px solid #000',
+    borderBottom: "2px solid #000",
     marginBottom: 15,
     height: 50,
   },
   signatureText: {
     fontSize: 14,
-    color: '#6b7280',
-    fontWeight: 'bold',
+    color: "#6b7280",
+    fontWeight: "bold",
   },
   footer: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 30,
     left: 40,
     right: 40,
-    textAlign: 'center',
+    textAlign: "center",
   },
   footerText: {
     fontSize: 12,
-    color: '#9ca3af',
+    color: "#9ca3af",
   },
   verificationSection: {
     marginTop: 20,
     padding: 15,
-    backgroundColor: '#f3f4f6',
+    backgroundColor: "#f3f4f6",
     borderRadius: 8,
   },
   verificationTitle: {
     fontSize: 14,
-    fontWeight: 'bold',
-    color: '#374151',
-    textAlign: 'center',
+    fontWeight: "bold",
+    color: "#374151",
+    textAlign: "center",
     marginBottom: 10,
   },
   verificationCode: {
     fontSize: 12,
-    color: '#6b7280',
-    textAlign: 'center',
+    color: "#6b7280",
+    textAlign: "center",
     marginBottom: 5,
   },
   digitalSignature: {
     fontSize: 10,
-    color: '#9ca3af',
-    textAlign: 'center',
-    fontFamily: 'monospace',
+    color: "#9ca3af",
+    textAlign: "center",
+    fontFamily: getMonospaceFont(),
   },
   badge: {
-    position: 'absolute',
+    position: "absolute",
     top: 20,
     right: 20,
-    backgroundColor: '#059669',
-    color: '#ffffff',
-    padding: '8px 12px',
+    backgroundColor: "#059669",
+    color: "#ffffff",
+    padding: "8px 12px",
     borderRadius: 20,
     fontSize: 12,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
 
@@ -196,23 +180,25 @@ interface CourseCertificatePDFProps {
   };
 }
 
-const CourseCertificatePDF: React.FC<CourseCertificatePDFProps> = ({ certificate }) => {
+const CourseCertificatePDF: React.FC<CourseCertificatePDFProps> = ({
+  certificate,
+}) => {
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('es-ES', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
+    return new Date(dateString).toLocaleDateString("es-ES", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
   };
 
   const getTemplateLabel = (template: string) => {
     const templates: Record<string, string> = {
-      'default': 'Certificado Estándar',
-      'premium': 'Certificado Premium',
-      'gold': 'Certificado de Oro',
-      'platinum': 'Certificado de Platino',
+      default: "Certificado Estándar",
+      premium: "Certificado Premium",
+      gold: "Certificado de Oro",
+      platinum: "Certificado de Platino",
     };
-    return templates[template] || 'Certificado Personalizado';
+    return templates[template] || "Certificado Personalizado";
   };
 
   return (
@@ -220,7 +206,7 @@ const CourseCertificatePDF: React.FC<CourseCertificatePDFProps> = ({ certificate
       <Page size="A4" style={styles.page}>
         {/* Badge de Validación */}
         <View style={styles.badge}>
-          {certificate.isValid ? 'VÁLIDO' : 'INVÁLIDO'}
+          {certificate.isValid ? "VÁLIDO" : "INVÁLIDO"}
         </View>
 
         {/* Header */}
@@ -231,12 +217,15 @@ const CourseCertificatePDF: React.FC<CourseCertificatePDFProps> = ({ certificate
 
         {/* Certificate Content */}
         <View style={styles.certificateContainer}>
-          <Text style={styles.certificateTitle}>Certificado de Finalización</Text>
-          
+          <Text style={styles.certificateTitle}>
+            Certificado de Finalización
+          </Text>
+
           <Text style={styles.certificateText}>
-            Se certifica que el estudiante ha completado exitosamente todo el programa de formación,
-            demostrando dominio completo de los conocimientos, habilidades y competencias requeridas
-            para la obtención de este certificado de graduación.
+            Se certifica que el estudiante ha completado exitosamente todo el
+            programa de formación, demostrando dominio completo de los
+            conocimientos, habilidades y competencias requeridas para la
+            obtención de este certificado de graduación.
           </Text>
 
           <Text style={styles.studentName}>
@@ -246,10 +235,10 @@ const CourseCertificatePDF: React.FC<CourseCertificatePDFProps> = ({ certificate
           <Text style={styles.courseInfo}>
             Curso: {certificate.course.title}
           </Text>
-          
+
           {certificate.course.description && (
             <Text style={styles.courseDescription}>
-              "{certificate.course.description}"
+              &ldquo;{certificate.course.description}&rdquo;
             </Text>
           )}
 
@@ -276,7 +265,9 @@ const CourseCertificatePDF: React.FC<CourseCertificatePDFProps> = ({ certificate
 
         {/* Verification Section */}
         <View style={styles.verificationSection}>
-          <Text style={styles.verificationTitle}>Información de Verificación</Text>
+          <Text style={styles.verificationTitle}>
+            Información de Verificación
+          </Text>
           <Text style={styles.verificationCode}>
             Código de Verificación: {certificate.verificationCode}
           </Text>
@@ -291,10 +282,12 @@ const CourseCertificatePDF: React.FC<CourseCertificatePDFProps> = ({ certificate
         {/* Footer */}
         <View style={styles.footer}>
           <Text style={styles.footerText}>
-            Este certificado es emitido electrónicamente y es válido sin firma física.
+            Este certificado es emitido electrónicamente y es válido sin firma
+            física.
           </Text>
           <Text style={styles.footerText}>
-            Para verificar la autenticidad de este certificado, visite nuestro portal de verificación.
+            Para verificar la autenticidad de este certificado, visite nuestro
+            portal de verificación.
           </Text>
           <Text style={styles.verificationCode}>
             Emitido el: {formatDate(certificate.issuedAt)}
