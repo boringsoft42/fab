@@ -13,8 +13,8 @@ import { ResourceCard } from '@/components/resources/ResourceCard';
 
 export default function ResourcesPage() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedType, setSelectedType] = useState<string>('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [selectedType, setSelectedType] = useState<string>('all');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [activeTab, setActiveTab] = useState('all');
 
   // Hooks para obtener recursos
@@ -120,7 +120,7 @@ export default function ResourcesPage() {
               <SelectValue placeholder="Tipo de recurso" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">Todos los tipos</SelectItem>
+              <SelectItem value="all">Todos los tipos</SelectItem>
               <SelectItem value="DOCUMENT">Documentos</SelectItem>
               <SelectItem value="VIDEO">Videos</SelectItem>
               <SelectItem value="AUDIO">Audio</SelectItem>
@@ -134,7 +134,7 @@ export default function ResourcesPage() {
               <SelectValue placeholder="Categoría" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">Todas las categorías</SelectItem>
+              <SelectItem value="all">Todas las categorías</SelectItem>
               <SelectItem value="PROGRAMMING">Programación</SelectItem>
               <SelectItem value="DESIGN">Diseño</SelectItem>
               <SelectItem value="BUSINESS">Negocios</SelectItem>

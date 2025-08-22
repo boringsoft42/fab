@@ -6,7 +6,7 @@ import { Resource } from '@/types/api';
 export const useResources = () => {
   return useQuery({
     queryKey: ['resources'],
-    queryFn: () => ResourceService.getAll(),
+    queryFn: () => ResourceService.getAllResources(),
   });
 };
 
@@ -14,7 +14,7 @@ export const useResources = () => {
 export const useResource = (id: string) => {
   return useQuery({
     queryKey: ['resource', id],
-    queryFn: () => ResourceService.getById(id),
+    queryFn: () => ResourceService.getResource(id),
     enabled: !!id,
   });
 };
@@ -24,7 +24,7 @@ export const useCreateResource = () => {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: (data: Partial<Resource> | FormData) => ResourceService.create(data),
+    mutationFn: (data: Partial<Resource> | FormData) => ResourceService.createResource(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['resources'] });
     },
@@ -37,7 +37,7 @@ export const useUpdateResource = () => {
   
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: Partial<Resource> }) =>
-      ResourceService.update(id, data),
+      ResourceService.updateResource(id, data),
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: ['resources'] });
       queryClient.invalidateQueries({ queryKey: ['resource', id] });
@@ -50,7 +50,7 @@ export const useDeleteResource = () => {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: (id: string) => ResourceService.delete(id),
+    mutationFn: (id: string) => ResourceService.deleteResource(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['resources'] });
     },
@@ -62,7 +62,7 @@ export const useSearchResources = () => {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: (query: string) => ResourceService.searchResources(query),
+    mutationFn: (query: string) => ResourceService.getAllResources({ search: query }),
     onSuccess: (data) => {
       queryClient.setQueryData(['resources', 'search'], data);
     },
@@ -73,7 +73,7 @@ export const useSearchResources = () => {
 export const useResourcesByType = (type: string) => {
   return useQuery({
     queryKey: ['resources', 'type', type],
-    queryFn: () => ResourceService.getByType(type),
+    queryFn: () => ResourceService.getAllResources({ type: type === 'all' ? undefined : type }),
     enabled: !!type,
   });
 };
@@ -82,7 +82,7 @@ export const useResourcesByType = (type: string) => {
 export const useResourcesByCategory = (category: string) => {
   return useQuery({
     queryKey: ['resources', 'category', category],
-    queryFn: () => ResourceService.getByCategory(category),
+    queryFn: () => ResourceService.getAllResources({ category: category === 'all' ? undefined : category }),
     enabled: !!category,
   });
 };
@@ -91,42 +91,42 @@ export const useResourcesByCategory = (category: string) => {
 export const usePublicResources = () => {
   return useQuery({
     queryKey: ['resources', 'public'],
-    queryFn: () => ResourceService.getPublicResources(),
+    queryFn: () => ResourceService.getAllResources(),
   });
 };
 
 // Hook para obtener recursos destacados
-export const useFeaturedResources = () => {
-  return useQuery({
-    queryKey: ['resources', 'featured'],
-    queryFn: () => ResourceService.getFeaturedResources(),
-  });
-};
+// export const useFeaturedResources = () => {
+//   return useQuery({
+//     queryKey: ['resources', 'featured'],
+//     queryFn: () => ResourceService.getFeaturedResources(),
+//   });
+// };
 
 // Hook para obtener recursos por autor
-export const useResourcesByAuthor = (authorId: string) => {
-  return useQuery({
-    queryKey: ['resources', 'author', authorId],
-    queryFn: () => ResourceService.getResourcesByAuthor(authorId),
-    enabled: !!authorId,
-  });
-};
+// export const useResourcesByAuthor = (authorId: string) => {
+//   return useQuery({
+//     queryKey: ['resources', 'author', authorId],
+//     queryFn: () => ResourceService.getResourcesByAuthor(authorId),
+//     enabled: !!authorId,
+//   });
+// };
 
 // Hook para obtener recursos populares
-export const usePopularResources = (limit: number = 10) => {
-  return useQuery({
-    queryKey: ['resources', 'popular', limit],
-    queryFn: () => ResourceService.getPopularResources(limit),
-  });
-};
+// export const usePopularResources = (limit: number = 10) => {
+//   return useQuery({
+//     queryKey: ['resources', 'popular', limit],
+//     queryFn: () => ResourceService.getPopularResources(limit),
+//   });
+// };
 
 // Hook para obtener recursos recientes
-export const useRecentResources = (limit: number = 10) => {
-  return useQuery({
-    queryKey: ['resources', 'recent', limit],
-    queryFn: () => ResourceService.getRecentResources(limit),
-  });
-};
+// export const useRecentResources = (limit: number = 10) => {
+//   return useQuery({
+//     queryKey: ['resources', 'recent', limit],
+//     queryFn: () => ResourceService.getRecentResources(limit),
+//   });
+// };
 
 // Hook para descargar un recurso
 export const useDownloadResource = () => {
@@ -163,51 +163,51 @@ export const useRateResource = () => {
 };
 
 // Hook para cambiar visibilidad pública
-export const useTogglePublic = () => {
-  const queryClient = useQueryClient();
-  
-  return useMutation({
-    mutationFn: (id: string) => ResourceService.togglePublic(id),
-    onSuccess: (_, id) => {
-      queryClient.invalidateQueries({ queryKey: ['resource', id] });
-      queryClient.invalidateQueries({ queryKey: ['resources'] });
-    },
-  });
-};
+// export const useTogglePublic = () => {
+//   const queryClient = useQueryClient();
+//   
+//   return useMutation({
+//     mutationFn: (id: string) => ResourceService.togglePublic(id),
+//     onSuccess: (_, id) => {
+//       queryClient.invalidateQueries({ queryKey: ['resource', id] });
+//       queryClient.invalidateQueries({ queryKey: ['resources'] });
+//     },
+//   });
+// };
 
 // Hook para obtener estadísticas de un recurso
-export const useResourceStats = (id: string) => {
-  return useQuery({
-    queryKey: ['resource', 'stats', id],
-    queryFn: () => ResourceService.getResourceStats(id),
-    enabled: !!id,
-  });
-};
+// export const useResourceStats = (id: string) => {
+//   return useQuery({
+//     queryKey: ['resource', 'stats', id],
+//     queryFn: () => ResourceService.getResourceStats(id),
+//     enabled: !!id,
+//   });
+// };
 
 // Hook para obtener categorías de recursos
-export const useResourceCategories = () => {
-  return useQuery({
-    queryKey: ['resources', 'categories'],
-    queryFn: () => ResourceService.getResourceCategories(),
-  });
-};
+// export const useResourceCategories = () => {
+//   return useQuery({
+//     queryKey: ['resources', 'categories'],
+//     queryFn: () => ResourceService.getResourceCategories(),
+//   });
+// };
 
 // Hook para obtener tipos de recursos
-export const useResourceTypes = () => {
-  return useQuery({
-    queryKey: ['resources', 'types'],
-    queryFn: () => ResourceService.getResourceTypes(),
-  });
-};
+// export const useResourceTypes = () => {
+//   return useQuery({
+//     queryKey: ['resources', 'types'],
+//     queryFn: () => ResourceService.getResourceTypes(),
+//   });
+// };
 
 // Hook para subir archivo de recurso
-export const useUploadResourceFile = () => {
-  const queryClient = useQueryClient();
-  
-  return useMutation({
-    mutationFn: (formData: FormData) => ResourceService.uploadResourceFile(formData),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['resources'] });
-    },
-  });
-}; 
+// export const useUploadResourceFile = () => {
+//   const queryClient = useQueryClient();
+//   
+//   return useMutation({
+//     mutationFn: (formData: FormData) => ResourceService.uploadResourceFile(formData),
+//     onSuccess: () => {
+//       queryClient.invalidateQueries({ queryKey: ['resources'] });
+//     },
+//   });
+// }; 
