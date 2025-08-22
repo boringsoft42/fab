@@ -6,12 +6,13 @@ export class ResourceService {
   static async getAllResources(filters?: any) {
     try {
       console.log('🔍 ResourceService.getAllResources - Fetching resources with filters:', filters);
-      
+
       const queryParams = new URLSearchParams();
       if (filters?.category) queryParams.append('category', filters.category);
       if (filters?.type) queryParams.append('type', filters.type);
       if (filters?.search) queryParams.append('search', filters.search);
-      
+      if (filters?.municipalityId) queryParams.append('municipalityId', filters.municipalityId);
+
       const url = `/resource${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
       return await apiCall(url);
     } catch (error) {
@@ -42,26 +43,11 @@ export class ResourceService {
   static async uploadResource(formData: FormData) {
     try {
       console.log('🔍 ResourceService.uploadResource - Uploading resource with file');
-      
-      const token = localStorage.getItem('token');
-      if (!token) {
-        throw new Error('No authentication token available');
-      }
 
-      const response = await fetch('/api/resource/upload', {
+      return await apiCall('/resource', {
         method: 'POST',
-        body: formData,
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        }
+        body: formData
       });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || 'Error uploading resource');
-      }
-
-      return await response.json();
     } catch (error) {
       console.error('❌ ResourceService.uploadResource - Error:', error);
       throw error;

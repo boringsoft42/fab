@@ -184,7 +184,7 @@ export default function NetworkingPage() {
       const params = new URLSearchParams();
       if (query) params.append("query", query);
 
-      const url = `${backendUrl}/contacts/search${params.toString() ? `?${params.toString()}` : ""}`;
+      const url = `${backendUrl}/api/contacts/search${params.toString() ? `?${params.toString()}` : ""}`;
       console.log("🔍 searchUsers - Calling backend URL:", url);
 
       const response = await fetch(url, {
@@ -217,7 +217,7 @@ export default function NetworkingPage() {
     try {
       const backendUrl =
         process.env.NEXT_PUBLIC_BACKEND_URL || "http://192.168.10.91:3001";
-      const url = `${backendUrl}/contacts/request`;
+      const url = `${backendUrl}/api/contacts/request`;
       console.log("🔍 sendRequest - Calling backend URL:", url);
 
       const response = await fetch(url, {
@@ -246,7 +246,7 @@ export default function NetworkingPage() {
     try {
       const backendUrl =
         process.env.NEXT_PUBLIC_BACKEND_URL || "http://192.168.10.91:3001";
-      const url = `${backendUrl}/contacts/requests/received`;
+      const url = `${backendUrl}/api/contacts/requests/received`;
       console.log("🔍 getReceivedRequests - Calling backend URL:", url);
 
       const response = await fetch(url, {
@@ -271,7 +271,7 @@ export default function NetworkingPage() {
     try {
       const backendUrl =
         process.env.NEXT_PUBLIC_BACKEND_URL || "http://192.168.10.91:3001";
-      const url = `${backendUrl}/contacts/requests/${requestId}/accept`;
+      const url = `${backendUrl}/api/contacts/requests/${requestId}/accept`;
       console.log("🔍 acceptRequest - Calling backend URL:", url);
 
       const response = await fetch(url, {
@@ -299,7 +299,7 @@ export default function NetworkingPage() {
     try {
       const backendUrl =
         process.env.NEXT_PUBLIC_BACKEND_URL || "http://192.168.10.91:3001";
-      const url = `${backendUrl}/contacts/requests/${requestId}/reject`;
+      const url = `${backendUrl}/api/contacts/requests/${requestId}/reject`;
       console.log("🔍 rejectRequest - Calling backend URL:", url);
 
       const response = await fetch(url, {
@@ -327,7 +327,7 @@ export default function NetworkingPage() {
     try {
       const backendUrl =
         process.env.NEXT_PUBLIC_BACKEND_URL || "http://192.168.10.91:3001";
-      const url = `${backendUrl}/contacts`;
+      const url = `${backendUrl}/api/contacts`;
       console.log("🔍 getContacts - Calling backend URL:", url);
 
       const response = await fetch(url, {
@@ -402,7 +402,7 @@ export default function NetworkingPage() {
     try {
       const backendUrl =
         process.env.NEXT_PUBLIC_BACKEND_URL || "http://192.168.10.91:3001";
-      const url = `${backendUrl}/contacts/stats`;
+      const url = `${backendUrl}/api/contacts/stats`;
       console.log("🔍 getStats - Calling backend URL:", url);
 
       const response = await fetch(url, {

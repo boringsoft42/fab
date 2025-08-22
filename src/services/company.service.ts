@@ -1,30 +1,30 @@
 import { prisma } from "@/lib/prisma";
-import { UserRole } from "@prisma/client";
+import { isMunicipalityRole, isCompanyRole, isSuperAdminRole } from "@/lib/utils";
 
 export class CompanyService {
   static async listCompanies(userId?: string, userRole?: string, municipalityId?: string) {
     try {
       console.log("🔍 CompanyService.listCompanies - Params:", { userId, userRole, municipalityId });
-      
+
       let whereClause: any = { isActive: true };
-      
+
       // Filter by municipality if user is a municipality
-      if (userRole === 'GOBIERNOS_MUNICIPALES' && municipalityId) {
+      if (isMunicipalityRole(userRole) && municipalityId) {
         console.log("🏛️ Filtering companies by municipality:", municipalityId);
         whereClause.municipalityId = municipalityId;
       }
-      
+
       // Filter by company if user is a company (they only see their own company)
-      if (userRole === 'EMPRESAS' && userId) {
+      if (isCompanyRole(userRole) && userId) {
         console.log("🏢 Filtering companies by user ID:", userId);
         whereClause.createdBy = userId;
       }
-      
+
       // SuperAdmin sees all companies (no additional filter)
-      if (userRole === 'SUPERADMIN') {
+      if (isSuperAdminRole(userRole)) {
         console.log("👑 SuperAdmin - showing all companies");
       }
-      
+
       const companies = await prisma.company.findMany({
         where: whereClause,
         include: {
@@ -46,7 +46,7 @@ export class CompanyService {
         },
         orderBy: { createdAt: "desc" }
       });
-      
+
       console.log("📊 CompanyService.listCompanies - Found companies:", companies.length);
       return { success: true, data: companies };
     } catch (error) {
@@ -112,19 +112,19 @@ export class CompanyService {
 
   static async createCompany(data: any, userId: string) {
     try {
-      const { 
-        name, 
-        description, 
-        taxId, 
-        legalRepresentative, 
-        businessSector, 
-        companySize, 
-        website, 
-        email, 
-        phone, 
-        address, 
+      const {
+        name,
+        description,
+        taxId,
+        legalRepresentative,
+        businessSector,
+        companySize,
+        website,
+        email,
+        phone,
+        address,
         foundedYear,
-        municipalityId 
+        municipalityId
       } = data;
 
       if (!name || !municipalityId) {
@@ -192,20 +192,20 @@ export class CompanyService {
         return { success: false, error: "ID de empresa requerido", status: 400 };
       }
 
-      const { 
-        name, 
-        description, 
-        taxId, 
-        legalRepresentative, 
-        businessSector, 
-        companySize, 
-        website, 
-        email, 
-        phone, 
-        address, 
+      const {
+        name,
+        description,
+        taxId,
+        legalRepresentative,
+        businessSector,
+        companySize,
+        website,
+        email,
+        phone,
+        address,
         foundedYear,
         municipalityId,
-        isActive 
+        isActive
       } = data;
 
       const company = await prisma.company.update({
@@ -278,10 +278,10 @@ export class CompanyService {
       }
 
       if (company.jobOffers.length > 0) {
-        return { 
-          success: false, 
-          error: "No se puede eliminar la empresa porque tiene ofertas de trabajo activas. Desactiva las ofertas primero.", 
-          status: 400 
+        return {
+          success: false,
+          error: "No se puede eliminar la empresa porque tiene ofertas de trabajo activas. Desactiva las ofertas primero.",
+          status: 400
         };
       }
 
@@ -302,21 +302,21 @@ export class CompanyService {
   static async getCompanyStats(userId?: string, userRole?: string, municipalityId?: string) {
     try {
       console.log("📊 CompanyService.getCompanyStats - Params:", { userId, userRole, municipalityId });
-      
+
       let whereClause: any = { isActive: true };
-      
+
       // Filter by municipality if user is a municipality
       if (userRole === 'GOBIERNOS_MUNICIPALES' && municipalityId) {
         console.log("🏛️ Filtering stats by municipality:", municipalityId);
         whereClause.municipalityId = municipalityId;
       }
-      
+
       // Filter by company if user is a company
       if (userRole === 'EMPRESAS' && userId) {
         console.log("🏢 Filtering stats by user ID:", userId);
         whereClause.createdBy = userId;
       }
-      
+
       // Get companies for stats
       const companies = await prisma.company.findMany({
         where: whereClause,
@@ -326,7 +326,7 @@ export class CompanyService {
           municipalityId: true
         }
       });
-      
+
       // Calculate stats
       const stats = {
         totalCompanies: companies.length,
@@ -336,7 +336,7 @@ export class CompanyService {
         totalEmployees: 0, // You can add employee count if needed
         totalRevenue: 0 // You can add revenue tracking if needed
       };
-      
+
       console.log("📊 CompanyService.getCompanyStats - Stats:", stats);
       return { success: true, data: stats };
     } catch (error) {

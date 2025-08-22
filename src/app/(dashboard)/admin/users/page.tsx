@@ -2,23 +2,19 @@
 
 import type React from "react";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
 import {
   Plus,
   MoreVertical,
   Eye,
   Edit,
   Trash2,
-  Building2,
   Users,
   TrendingUp,
   MapPin,
   Download,
   X,
-  Search,
-  MoreHorizontal,
-  UserCheck,
-  UserX,
+  GraduationCap,
 } from "lucide-react";
 import {
   Card,
@@ -31,7 +27,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+
 import {
   Select,
   SelectContent,
@@ -73,129 +69,109 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useProfiles } from "@/hooks/useProfileApi";
+import { useProfilesByRole } from "@/hooks/useProfileApi";
+import { Profile } from "@/types/profile";
 
-interface Company {
-  id: string;
-  name: string;
-  description: string;
-  logo: string;
-  industry: string;
-  size: string;
-  founded: string;
-  website: string;
-  email: string;
-  phone: string;
-  address: string;
-  city: string;
-  country: string;
-  status: "ACTIVE" | "INACTIVE" | "PENDING";
-  employees: number;
-  revenue: number;
-  growth: number;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export default function CompaniesManagementPage() {
-  const { data: companies, loading, error } = useProfiles();
+export default function StudentsManagementPage() {
+  const { data: students, loading } = useProfilesByRole("YOUTH");
   const [searchTerm, setSearchTerm] = useState("");
-  const [industryFilter, setIndustryFilter] = useState("all");
+  const [educationFilter, setEducationFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
+  const [selectedStudent, setSelectedStudent] = useState<Profile | null>(null);
   const [successDialogOpen, setSuccessDialogOpen] = useState(false);
 
-  const [stats, setStats] = useState({
+  const [stats] = useState({
     total: 0,
     active: 0,
     inactive: 0,
     pending: 0,
-    totalEmployees: 0,
-    totalRevenue: 0,
+    totalStudents: 0,
+    averageCompletion: 0,
   });
 
   // Form state for create/edit
-  const [formData, setFormData] = useState<Partial<Company>>({
-    name: "",
-    description: "",
-    logo: "",
-    industry: "",
-    size: "",
-    founded: "",
-    website: "",
+  const [formData, setFormData] = useState<Partial<Profile>>({
+    firstName: "",
+    lastName: "",
     email: "",
     phone: "",
     address: "",
-    city: "",
+    municipality: "",
+    department: "",
     country: "Bolivia",
+    birthDate: undefined,
+    gender: "",
+    educationLevel: "",
+    currentInstitution: "",
+    graduationYear: undefined,
+    isStudying: false,
+    skills: [],
+    interests: [],
     status: "ACTIVE",
-    employees: 0,
-    revenue: 0,
-    growth: 0,
+    profileCompletion: 0,
   });
 
-  const [logoFile, setLogoFile] = useState<File | null>(null);
-  const [logoPreview, setLogoPreview] = useState("");
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState("");
 
-  const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      setLogoFile(file);
+      setAvatarFile(file);
       const reader = new FileReader();
       reader.onload = () => {
         const result = reader.result as string;
-        setLogoPreview(result);
-        setFormData({ ...formData, logo: result });
+        setAvatarPreview(result);
+        setFormData({ ...formData, avatarUrl: result });
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const removeLogo = () => {
-    setLogoFile(null);
-    setLogoPreview("");
-    setFormData({ ...formData, logo: "" });
+  const removeAvatar = () => {
+    setAvatarFile(null);
+    setAvatarPreview("");
+    setFormData({ ...formData, avatarUrl: "" });
   };
 
   const resetForm = () => {
     setFormData({
-      name: "",
-      description: "",
-      logo: "",
-      industry: "",
-      size: "",
-      founded: "",
-      website: "",
+      firstName: "",
+      lastName: "",
       email: "",
       phone: "",
       address: "",
-      city: "",
+      municipality: "",
+      department: "",
       country: "Bolivia",
+      birthDate: undefined,
+      gender: "",
+      educationLevel: "",
+      currentInstitution: "",
+      graduationYear: undefined,
+      isStudying: false,
+      skills: [],
+      interests: [],
       status: "ACTIVE",
-      employees: 0,
-      revenue: 0,
-      growth: 0,
+      profileCompletion: 0,
     });
-    setLogoFile(null);
-    setLogoPreview("");
+    setAvatarFile(null);
+    setAvatarPreview("");
   };
 
   const handleCreate = async () => {
     try {
       if (
-        !formData.name ||
-        !formData.description ||
-        !formData.industry ||
-        !formData.size ||
-        !formData.founded ||
-        !formData.website ||
+        !formData.firstName ||
+        !formData.lastName ||
         !formData.email ||
         !formData.phone ||
         !formData.address ||
-        !formData.city ||
+        !formData.municipality ||
+        !formData.department ||
         !formData.country ||
         !formData.status
       ) {
@@ -203,78 +179,79 @@ export default function CompaniesManagementPage() {
         return;
       }
 
-      const newCompany: Company = {
+      const newStudent: Profile = {
         id: Date.now().toString(),
-        name: formData.name,
-        description: formData.description,
-        logo: formData.logo || "/placeholder.svg",
-        industry: formData.industry,
-        size: formData.size,
-        founded: formData.founded,
-        website: formData.website,
+        userId: Date.now().toString(),
+        firstName: formData.firstName,
+        lastName: formData.lastName,
         email: formData.email,
+        avatarUrl: formData.avatarUrl || "/placeholder.svg",
         phone: formData.phone,
         address: formData.address,
-        city: formData.city,
+        municipality: formData.municipality,
+        department: formData.department,
         country: formData.country,
+        birthDate: formData.birthDate,
+        gender: formData.gender,
+        educationLevel: formData.educationLevel,
+        currentInstitution: formData.currentInstitution,
+        graduationYear: formData.graduationYear,
+        isStudying: formData.isStudying || false,
+        skills: formData.skills || [],
+        interests: formData.interests || [],
         status: formData.status,
-        employees: formData.employees || 0,
-        revenue: formData.revenue || 0,
-        growth: formData.growth || 0,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        profileCompletion: formData.profileCompletion || 0,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
 
-      console.log("Creating company:", newCompany);
+      console.log("Creating student:", newStudent);
 
-      // Aquí iría la lógica para guardar la empresa (API o localStorage)
+      // Aquí iría la lógica para guardar el estudiante (API o localStorage)
       // Por ahora lo dejamos simulado
 
       setShowCreateDialog(false); // cierra el modal de creación
       resetForm();
-      // fetchCompanies(); // This line is no longer needed as data is fetched by useProfiles
       setSuccessDialogOpen(true); // abre el modal de éxito
       setTimeout(() => {
         setShowCreateDialog(true);
       }, 200);
     } catch (error) {
-      console.error("Error creating company:", error);
+      console.error("Error creating student:", error);
     }
   };
 
-  const handleEdit = (company: Company) => {
-    setSelectedCompany(company);
-    setFormData(company);
-    setLogoPreview(company.logo);
+  const handleEdit = (student: Profile) => {
+    setSelectedStudent(student);
+    setFormData(student);
+    setAvatarPreview(student.avatarUrl || "");
     setShowEditDialog(true);
   };
 
   const handleUpdate = async () => {
     try {
-      const updatedCompany = {
+      const updatedStudent = {
         ...formData,
-        id: selectedCompany?.id,
-        updatedAt: new Date().toISOString(),
+        id: selectedStudent?.id,
+        updatedAt: new Date(),
       };
 
-      console.log("Updating company:", updatedCompany);
+      console.log("Updating student:", updatedStudent);
       setShowEditDialog(false);
-      setSelectedCompany(null);
+      setSelectedStudent(null);
       resetForm();
-      // fetchCompanies(); // This line is no longer needed
     } catch (error) {
-      console.error("Error updating company:", error);
+      console.error("Error updating student:", error);
     }
   };
 
   const handleDelete = async () => {
     try {
-      console.log("Deleting company:", selectedCompany?.id);
+      console.log("Deleting student:", selectedStudent?.id);
       setShowDeleteDialog(false);
-      setSelectedCompany(null);
-      // fetchCompanies(); // This line is no longer needed
+      setSelectedStudent(null);
     } catch (error) {
-      console.error("Error deleting company:", error);
+      console.error("Error deleting student:", error);
     }
   };
 
@@ -304,17 +281,20 @@ export default function CompaniesManagementPage() {
     }
   };
 
-  const filteredCompanies = (companies || []).filter((company) => {
-    if (!company) return false;
-    
-    const searchLower = (searchTerm || '').toLowerCase();
-    const companyName = (company.name || '').toLowerCase();
-    const companyDescription = (company.description || '').toLowerCase();
-    const companyCity = (company.city || '').toLowerCase();
-    
-    return companyName.includes(searchLower) ||
-           companyDescription.includes(searchLower) ||
-           companyCity.includes(searchLower);
+  const filteredStudents = (students || []).filter((student) => {
+    if (!student) return false;
+
+    const searchLower = (searchTerm || "").toLowerCase();
+    const studentName =
+      `${student.firstName || ""} ${student.lastName || ""}`.toLowerCase();
+    const studentEmail = (student.email || "").toLowerCase();
+    const studentMunicipality = (student.municipality || "").toLowerCase();
+
+    return (
+      studentName.includes(searchLower) ||
+      studentEmail.includes(searchLower) ||
+      studentMunicipality.includes(searchLower)
+    );
   });
 
   return (
@@ -322,9 +302,9 @@ export default function CompaniesManagementPage() {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold">Gestión de Empresas</h1>
+          <h1 className="text-3xl font-bold">Gestión de Estudiantes</h1>
           <p className="text-muted-foreground">
-            Administra todas las empresas registradas en la plataforma
+            Administra todos los estudiantes registrados en la plataforma
           </p>
         </div>
         <div className="flex gap-2">
@@ -336,63 +316,63 @@ export default function CompaniesManagementPage() {
             <DialogTrigger asChild>
               <Button>
                 <Plus className="w-4 h-4 mr-2" />
-                Nueva Empresa
+                Nuevo Estudiante
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle>Crear Nueva Empresa</DialogTitle>
+                <DialogTitle>Crear Nuevo Estudiante</DialogTitle>
                 <DialogDescription>
-                  Registra una nueva empresa en la plataforma
+                  Registra un nuevo estudiante en la plataforma
                 </DialogDescription>
               </DialogHeader>
 
               <Tabs defaultValue="basic" className="w-full">
                 <TabsList className="grid w-full grid-cols-3">
                   <TabsTrigger value="basic">Información Básica</TabsTrigger>
-                  <TabsTrigger value="contact">Contacto</TabsTrigger>
-                  <TabsTrigger value="metrics">Métricas</TabsTrigger>
+                  <TabsTrigger value="education">Educación</TabsTrigger>
+                  <TabsTrigger value="skills">Habilidades</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="basic" className="space-y-4">
-                  {/* Logo Upload */}
+                  {/* Avatar Upload */}
                   <div className="grid gap-2">
-                    <Label>Logo de la Empresa</Label>
-                    {logoPreview ? (
+                    <Label>Foto de Perfil</Label>
+                    {avatarPreview ? (
                       <div className="relative w-24 h-24">
                         <Avatar className="w-24 h-24">
                           <AvatarImage
-                            src={logoPreview || "/placeholder.svg"}
-                            alt="Logo preview"
+                            src={avatarPreview || "/placeholder.svg"}
+                            alt="Avatar preview"
                           />
                           <AvatarFallback>
-                            <Building2 className="w-8 h-8" />
+                            <Users className="w-8 h-8" />
                           </AvatarFallback>
                         </Avatar>
                         <Button
                           size="sm"
                           variant="destructive"
                           className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0"
-                          onClick={removeLogo}
+                          onClick={removeAvatar}
                         >
                           <X className="w-3 h-3" />
                         </Button>
                       </div>
                     ) : (
                       <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center w-32">
-                        <Building2 className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                        <Users className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                         <Input
                           type="file"
                           accept="image/*"
-                          onChange={handleLogoUpload}
+                          onChange={handleAvatarUpload}
                           className="hidden"
-                          id="logo-upload"
+                          id="avatar-upload"
                         />
                         <Label
-                          htmlFor="logo-upload"
+                          htmlFor="avatar-upload"
                           className="cursor-pointer text-sm text-blue-600 hover:text-blue-800"
                         >
-                          Subir Logo
+                          Subir Foto
                         </Label>
                       </div>
                     )}
@@ -400,99 +380,75 @@ export default function CompaniesManagementPage() {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="grid gap-2">
-                      <Label htmlFor="name">Nombre de la Empresa *</Label>
+                      <Label htmlFor="firstName">Nombre *</Label>
                       <Input
-                        id="name"
-                        value={formData.name}
+                        id="firstName"
+                        value={formData.firstName}
                         onChange={(e) =>
-                          setFormData({ ...formData, name: e.target.value })
+                          setFormData({
+                            ...formData,
+                            firstName: e.target.value,
+                          })
                         }
-                        placeholder="Ej: Cemse Innovación"
+                        placeholder="Juan Carlos"
                       />
                     </div>
                     <div className="grid gap-2">
-                      <Label htmlFor="founded">Año de Fundación</Label>
+                      <Label htmlFor="lastName">Apellido *</Label>
                       <Input
-                        id="founded"
-                        value={formData.founded}
+                        id="lastName"
+                        value={formData.lastName}
                         onChange={(e) =>
-                          setFormData({ ...formData, founded: e.target.value })
+                          setFormData({ ...formData, lastName: e.target.value })
                         }
-                        placeholder="2018"
+                        placeholder="Pérez"
                       />
                     </div>
                   </div>
 
                   <div className="grid gap-2">
-                    <Label htmlFor="description">Descripción</Label>
-                    <Textarea
-                      id="description"
-                      value={formData.description}
+                    <Label htmlFor="email">Email *</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={formData.email}
                       onChange={(e) =>
                         setFormData({
                           ...formData,
-                          description: e.target.value,
+                          email: e.target.value,
                         })
                       }
-                      placeholder="Descripción de la empresa..."
-                      rows={3}
+                      placeholder="juan.perez@email.com"
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="grid gap-2">
-                      <Label htmlFor="industry">Sector</Label>
-                      <Select
-                        value={formData.industry}
-                        onValueChange={(value) =>
-                          setFormData({ ...formData, industry: value })
+                      <Label htmlFor="phone">Teléfono</Label>
+                      <Input
+                        id="phone"
+                        value={formData.phone}
+                        onChange={(e) =>
+                          setFormData({ ...formData, phone: e.target.value })
                         }
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Seleccionar sector" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Tecnología">Tecnología</SelectItem>
-                          <SelectItem value="Finanzas">Finanzas</SelectItem>
-                          <SelectItem value="Salud">Salud</SelectItem>
-                          <SelectItem value="Educación">Educación</SelectItem>
-                          <SelectItem value="Manufactura">
-                            Manufactura
-                          </SelectItem>
-                          <SelectItem value="Servicios">Servicios</SelectItem>
-                          <SelectItem value="Medio Ambiente">
-                            Medio Ambiente
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
+                        placeholder="+591 700 123 456"
+                      />
                     </div>
                     <div className="grid gap-2">
-                      <Label htmlFor="size">Tamaño</Label>
+                      <Label htmlFor="gender">Género</Label>
                       <Select
-                        value={formData.size}
+                        value={formData.gender}
                         onValueChange={(value) =>
-                          setFormData({ ...formData, size: value })
+                          setFormData({ ...formData, gender: value })
                         }
                       >
                         <SelectTrigger>
-                          <SelectValue placeholder="Seleccionar tamaño" />
+                          <SelectValue placeholder="Seleccionar género" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="1-10 empleados">
-                            1-10 empleados
-                          </SelectItem>
-                          <SelectItem value="11-50 empleados">
-                            11-50 empleados
-                          </SelectItem>
-                          <SelectItem value="51-200 empleados">
-                            51-200 empleados
-                          </SelectItem>
-                          <SelectItem value="201-500 empleados">
-                            201-500 empleados
-                          </SelectItem>
-                          <SelectItem value="500+ empleados">
-                            500+ empleados
-                          </SelectItem>
+                          <SelectItem value="MALE">Masculino</SelectItem>
+                          <SelectItem value="FEMALE">Femenino</SelectItem>
+                          <SelectItem value="OTHER">Otro</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -505,7 +461,7 @@ export default function CompaniesManagementPage() {
                       onValueChange={(value) =>
                         setFormData({
                           ...formData,
-                          status: value as Company["status"],
+                          status: value as Student["status"],
                         })
                       }
                     >
@@ -513,50 +469,72 @@ export default function CompaniesManagementPage() {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="ACTIVE">Activa</SelectItem>
+                        <SelectItem value="ACTIVE">Activo</SelectItem>
                         <SelectItem value="PENDING">Pendiente</SelectItem>
-                        <SelectItem value="INACTIVE">Inactiva</SelectItem>
+                        <SelectItem value="INACTIVE">Inactivo</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                 </TabsContent>
 
-                <TabsContent value="contact" className="space-y-4">
+                <TabsContent value="education" className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="grid gap-2">
-                      <Label htmlFor="website">Sitio Web</Label>
-                      <Input
-                        id="website"
-                        value={formData.website}
-                        onChange={(e) =>
-                          setFormData({ ...formData, website: e.target.value })
+                      <Label htmlFor="educationLevel">Nivel Educativo</Label>
+                      <Select
+                        value={formData.educationLevel}
+                        onValueChange={(value) =>
+                          setFormData({ ...formData, educationLevel: value })
                         }
-                        placeholder="https://empresa.com"
-                      />
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Seleccionar nivel" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="PRIMARY">Primaria</SelectItem>
+                          <SelectItem value="SECONDARY">Secundaria</SelectItem>
+                          <SelectItem value="UNIVERSITY">
+                            Universidad
+                          </SelectItem>
+                          <SelectItem value="TECHNICAL">Técnico</SelectItem>
+                          <SelectItem value="POSTGRADUATE">
+                            Postgrado
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                     <div className="grid gap-2">
-                      <Label htmlFor="email">Email</Label>
+                      <Label htmlFor="graduationYear">Año de Graduación</Label>
                       <Input
-                        id="email"
-                        type="email"
-                        value={formData.email}
+                        id="graduationYear"
+                        type="number"
+                        value={formData.graduationYear}
                         onChange={(e) =>
-                          setFormData({ ...formData, email: e.target.value })
+                          setFormData({
+                            ...formData,
+                            graduationYear:
+                              Number.parseInt(e.target.value) || undefined,
+                          })
                         }
-                        placeholder="contacto@empresa.com"
+                        placeholder="2024"
                       />
                     </div>
                   </div>
 
                   <div className="grid gap-2">
-                    <Label htmlFor="phone">Teléfono</Label>
+                    <Label htmlFor="currentInstitution">
+                      Institución Actual
+                    </Label>
                     <Input
-                      id="phone"
-                      value={formData.phone}
+                      id="currentInstitution"
+                      value={formData.currentInstitution}
                       onChange={(e) =>
-                        setFormData({ ...formData, phone: e.target.value })
+                        setFormData({
+                          ...formData,
+                          currentInstitution: e.target.value,
+                        })
                       }
-                      placeholder="+591 2 2345678"
+                      placeholder="Universidad Mayor de San Simón"
                     />
                   </div>
 
@@ -574,15 +552,15 @@ export default function CompaniesManagementPage() {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="grid gap-2">
-                      <Label htmlFor="city">Ciudad</Label>
+                      <Label htmlFor="municipality">Municipio</Label>
                       <Select
-                        value={formData.city}
+                        value={formData.municipality}
                         onValueChange={(value) =>
-                          setFormData({ ...formData, city: value })
+                          setFormData({ ...formData, municipality: value })
                         }
                       >
                         <SelectTrigger>
-                          <SelectValue placeholder="Seleccionar ciudad" />
+                          <SelectValue placeholder="Seleccionar municipio" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="La Paz">La Paz</SelectItem>
@@ -598,66 +576,94 @@ export default function CompaniesManagementPage() {
                       </Select>
                     </div>
                     <div className="grid gap-2">
-                      <Label htmlFor="country">País</Label>
-                      <Input
-                        id="country"
-                        value={formData.country}
-                        onChange={(e) =>
-                          setFormData({ ...formData, country: e.target.value })
+                      <Label htmlFor="department">Departamento</Label>
+                      <Select
+                        value={formData.department}
+                        onValueChange={(value) =>
+                          setFormData({ ...formData, department: value })
                         }
-                        placeholder="Bolivia"
-                      />
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Seleccionar departamento" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="La Paz">La Paz</SelectItem>
+                          <SelectItem value="Santa Cruz">Santa Cruz</SelectItem>
+                          <SelectItem value="Cochabamba">Cochabamba</SelectItem>
+                          <SelectItem value="Chuquisaca">Chuquisaca</SelectItem>
+                          <SelectItem value="Potosí">Potosí</SelectItem>
+                          <SelectItem value="Oruro">Oruro</SelectItem>
+                          <SelectItem value="Tarija">Tarija</SelectItem>
+                          <SelectItem value="Beni">Beni</SelectItem>
+                          <SelectItem value="Pando">Pando</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                   </div>
                 </TabsContent>
 
-                <TabsContent value="metrics" className="space-y-4">
-                  <div className="grid grid-cols-3 gap-4">
-                    <div className="grid gap-2">
-                      <Label htmlFor="employees">Número de Empleados</Label>
-                      <Input
-                        id="employees"
-                        type="number"
-                        value={formData.employees}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            employees: Number.parseInt(e.target.value) || 0,
-                          })
-                        }
-                        placeholder="0"
-                      />
-                    </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="revenue">Ingresos Anuales (Bs.)</Label>
-                      <Input
-                        id="revenue"
-                        type="number"
-                        value={formData.revenue}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            revenue: Number.parseInt(e.target.value) || 0,
-                          })
-                        }
-                        placeholder="0"
-                      />
-                    </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="growth">Crecimiento (%)</Label>
-                      <Input
-                        id="growth"
-                        type="number"
-                        value={formData.growth}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            growth: Number.parseInt(e.target.value) || 0,
-                          })
-                        }
-                        placeholder="0"
-                      />
-                    </div>
+                <TabsContent value="skills" className="space-y-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="skills">
+                      Habilidades (separadas por comas)
+                    </Label>
+                    <Input
+                      id="skills"
+                      value={formData.skills?.join(", ") || ""}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          skills: e.target.value
+                            .split(",")
+                            .map((s) => s.trim())
+                            .filter((s) => s),
+                        })
+                      }
+                      placeholder="JavaScript, React, HTML, CSS, Excel"
+                    />
+                  </div>
+
+                  <div className="grid gap-2">
+                    <Label htmlFor="interests">
+                      Intereses (separados por comas)
+                    </Label>
+                    <Input
+                      id="interests"
+                      value={formData.interests?.join(", ") || ""}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          interests: e.target.value
+                            .split(",")
+                            .map((s) => s.trim())
+                            .filter((s) => s),
+                        })
+                      }
+                      placeholder="Programación, Tecnología, Música, Deportes"
+                    />
+                  </div>
+
+                  <div className="grid gap-2">
+                    <Label htmlFor="isStudying">
+                      ¿Está estudiando actualmente?
+                    </Label>
+                    <Select
+                      value={formData.isStudying ? "true" : "false"}
+                      onValueChange={(value) =>
+                        setFormData({
+                          ...formData,
+                          isStudying: value === "true",
+                        })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="true">Sí</SelectItem>
+                        <SelectItem value="false">No</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </TabsContent>
               </Tabs>
@@ -669,8 +675,11 @@ export default function CompaniesManagementPage() {
                 >
                   Cancelar
                 </Button>
-                <Button onClick={handleCreate} disabled={!formData.name}>
-                  Crear Empresa
+                <Button
+                  onClick={handleCreate}
+                  disabled={!formData.firstName || !formData.lastName}
+                >
+                  Crear Estudiante
                 </Button>
               </div>
             </DialogContent>
@@ -683,9 +692,9 @@ export default function CompaniesManagementPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Total Empresas
+              Total Estudiantes
             </CardTitle>
-            <Building2 className="h-4 w-4 text-muted-foreground" />
+            <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.total}</div>
@@ -693,7 +702,7 @@ export default function CompaniesManagementPage() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Activas</CardTitle>
+            <CardTitle className="text-sm font-medium">Activos</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-green-600">
@@ -713,7 +722,7 @@ export default function CompaniesManagementPage() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Inactivas</CardTitle>
+            <CardTitle className="text-sm font-medium">Inactivos</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-red-600">
@@ -724,27 +733,25 @@ export default function CompaniesManagementPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Total Empleados
+              Total Estudiantes
             </CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+            <GraduationCap className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {stats.totalEmployees.toLocaleString()}
+              {stats.totalStudents.toLocaleString()}
             </div>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Ingresos Totales
+              Completitud Promedio
             </CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              Bs. {(stats.totalRevenue / 1000000).toFixed(1)}M
-            </div>
+            <div className="text-2xl font-bold">{stats.averageCompletion}%</div>
           </CardContent>
         </Card>
       </div>
@@ -758,22 +765,23 @@ export default function CompaniesManagementPage() {
           <div className="flex gap-4">
             <div className="flex-1">
               <Input
-                placeholder="Buscar empresas..."
+                placeholder="Buscar estudiantes..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="max-w-sm"
               />
             </div>
-            <Select value={industryFilter} onValueChange={setIndustryFilter}>
+            <Select value={educationFilter} onValueChange={setEducationFilter}>
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Sector" />
+                <SelectValue placeholder="Nivel Educativo" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Todos los sectores</SelectItem>
-                <SelectItem value="Tecnología">Tecnología</SelectItem>
-                <SelectItem value="Finanzas">Finanzas</SelectItem>
-                <SelectItem value="Salud">Salud</SelectItem>
-                <SelectItem value="Medio Ambiente">Medio Ambiente</SelectItem>
+                <SelectItem value="all">Todos los niveles</SelectItem>
+                <SelectItem value="PRIMARY">Primaria</SelectItem>
+                <SelectItem value="SECONDARY">Secundaria</SelectItem>
+                <SelectItem value="UNIVERSITY">Universidad</SelectItem>
+                <SelectItem value="TECHNICAL">Técnico</SelectItem>
+                <SelectItem value="POSTGRADUATE">Postgrado</SelectItem>
               </SelectContent>
             </Select>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -791,20 +799,20 @@ export default function CompaniesManagementPage() {
         </CardContent>
       </Card>
 
-      {/* Companies Table */}
+      {/* Students Table */}
       <Card>
         <CardHeader>
-          <CardTitle>Lista de Empresas</CardTitle>
+          <CardTitle>Lista de Estudiantes</CardTitle>
           <CardDescription>
-            Gestiona todas las empresas registradas en la plataforma
+            Gestiona todos los estudiantes registrados en la plataforma
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Empresa</TableHead>
-                <TableHead>Sector</TableHead>
+                <TableHead>Estudiante</TableHead>
+                <TableHead>Educación</TableHead>
                 <TableHead>Ubicación</TableHead>
                 <TableHead>Estado</TableHead>
                 <TableHead>Acciones</TableHead>
@@ -813,55 +821,59 @@ export default function CompaniesManagementPage() {
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8">
-                    Cargando empresas...
+                  <TableCell colSpan={5} className="text-center py-8">
+                    Cargando estudiantes...
                   </TableCell>
                 </TableRow>
-              ) : filteredCompanies?.length === 0 ? (
+              ) : filteredStudents?.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8">
-                    No se encontraron empresas
+                  <TableCell colSpan={5} className="text-center py-8">
+                    No se encontraron estudiantes
                   </TableCell>
                 </TableRow>
               ) : (
-                filteredCompanies?.map((company) => (
-                  <TableRow key={company.id}>
+                filteredStudents?.map((student) => (
+                  <TableRow key={student.id}>
                     <TableCell>
                       <div className="flex items-center gap-3">
                         <Avatar className="w-10 h-10">
                           <AvatarImage
-                            src={company.logo || "/placeholder.svg"}
-                            alt={company.name}
+                            src={student.avatarUrl || "/placeholder.svg"}
+                            alt={`${student.firstName} ${student.lastName}`}
                           />
                           <AvatarFallback>
-                            <Building2 className="w-4 h-4" />
+                            <Users className="w-4 h-4" />
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <div className="font-medium">{company.name}</div>
-                          <div className="text-sm text-muted-foreground line-clamp-1">
-                            {company.description}
+                          <div className="font-medium">
+                            {student.firstName} {student.lastName}
+                          </div>
+                          <div className="text-sm text-muted-foreground">
+                            {student.email}
                           </div>
                           <div className="text-xs text-muted-foreground">
-                            Fundada en {company.founded}
+                            {student.currentInstitution || "Sin institución"}
                           </div>
                         </div>
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge variant="secondary">{company.industry}</Badge>
+                      <Badge variant="secondary">
+                        {student.educationLevel || "No especificado"}
+                      </Badge>
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-1">
                         <MapPin className="w-3 h-3" />
                         <span className="text-sm">
-                          {company.city}, {company.country}
+                          {student.municipality}, {student.department}
                         </span>
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge className={getStatusColor(company.status)}>
-                        {getStatusText(company.status)}
+                      <Badge className={getStatusColor(student.status)}>
+                        {getStatusText(student.status)}
                       </Badge>
                     </TableCell>
                     <TableCell>
@@ -876,14 +888,14 @@ export default function CompaniesManagementPage() {
                             <Eye className="w-4 h-4 mr-2" />
                             Ver Detalles
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleEdit(company)}>
+                          <DropdownMenuItem onClick={() => handleEdit(student)}>
                             <Edit className="w-4 h-4 mr-2" />
                             Editar
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             className="text-red-600"
                             onClick={() => {
-                              setSelectedCompany(company);
+                              setSelectedStudent(student);
                               setShowDeleteDialog(true);
                             }}
                           >
@@ -903,286 +915,97 @@ export default function CompaniesManagementPage() {
 
       {/* Edit Dialog */}
       <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Editar Empresa</DialogTitle>
+            <DialogTitle>Editar Estudiante</DialogTitle>
             <DialogDescription>
-              Modifica la información de {selectedCompany?.name}
+              Modifica la información de {selectedStudent?.firstName}{" "}
+              {selectedStudent?.lastName}
             </DialogDescription>
           </DialogHeader>
 
-          <Tabs defaultValue="basic" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="basic">Información Básica</TabsTrigger>
-              <TabsTrigger value="contact">Contacto</TabsTrigger>
-              <TabsTrigger value="metrics">Métricas</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="basic" className="space-y-4">
-              {/* Same form fields as create, but with formData values */}
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
-                <Label>Logo de la Empresa</Label>
-                {logoPreview ? (
-                  <div className="relative w-24 h-24">
-                    <Avatar className="w-24 h-24">
-                      <AvatarImage
-                        src={logoPreview || "/placeholder.svg"}
-                        alt="Logo preview"
-                      />
-                      <AvatarFallback>
-                        <Building2 className="w-8 h-8" />
-                      </AvatarFallback>
-                    </Avatar>
-                    <Button
-                      size="sm"
-                      variant="destructive"
-                      className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0"
-                      onClick={removeLogo}
-                    >
-                      <X className="w-3 h-3" />
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center w-32">
-                    <Building2 className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                    <Input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleLogoUpload}
-                      className="hidden"
-                      id="logo-upload-edit"
-                    />
-                    <Label
-                      htmlFor="logo-upload-edit"
-                      className="cursor-pointer text-sm text-blue-600 hover:text-blue-800"
-                    >
-                      Subir Logo
-                    </Label>
-                  </div>
-                )}
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="edit-name">Nombre de la Empresa *</Label>
-                  <Input
-                    id="edit-name"
-                    value={formData.name}
-                    onChange={(e) =>
-                      setFormData({ ...formData, name: e.target.value })
-                    }
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="edit-founded">Año de Fundación</Label>
-                  <Input
-                    id="edit-founded"
-                    value={formData.founded}
-                    onChange={(e) =>
-                      setFormData({ ...formData, founded: e.target.value })
-                    }
-                  />
-                </div>
-              </div>
-
-              <div className="grid gap-2">
-                <Label htmlFor="edit-description">Descripción</Label>
-                <Textarea
-                  id="edit-description"
-                  value={formData.description}
-                  onChange={(e) =>
-                    setFormData({ ...formData, description: e.target.value })
-                  }
-                  rows={3}
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-2">
-                  <Label>Sector</Label>
-                  <Select
-                    value={formData.industry}
-                    onValueChange={(value) =>
-                      setFormData({ ...formData, industry: value })
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Tecnología">Tecnología</SelectItem>
-                      <SelectItem value="Finanzas">Finanzas</SelectItem>
-                      <SelectItem value="Salud">Salud</SelectItem>
-                      <SelectItem value="Educación">Educación</SelectItem>
-                      <SelectItem value="Manufactura">Manufactura</SelectItem>
-                      <SelectItem value="Servicios">Servicios</SelectItem>
-                      <SelectItem value="Medio Ambiente">
-                        Medio Ambiente
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="grid gap-2">
-                  <Label>Estado</Label>
-                  <Select
-                    value={formData.status}
-                    onValueChange={(value) =>
-                      setFormData({
-                        ...formData,
-                        status: value as Company["status"],
-                      })
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="ACTIVE">Activa</SelectItem>
-                      <SelectItem value="PENDING">Pendiente</SelectItem>
-                      <SelectItem value="INACTIVE">Inactiva</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="contact" className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-2">
-                  <Label>Sitio Web</Label>
-                  <Input
-                    value={formData.website}
-                    onChange={(e) =>
-                      setFormData({ ...formData, website: e.target.value })
-                    }
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label>Email</Label>
-                  <Input
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) =>
-                      setFormData({ ...formData, email: e.target.value })
-                    }
-                  />
-                </div>
-              </div>
-
-              <div className="grid gap-2">
-                <Label>Teléfono</Label>
+                <Label htmlFor="edit-firstName">Nombre *</Label>
                 <Input
-                  value={formData.phone}
+                  id="edit-firstName"
+                  value={formData.firstName || ""}
                   onChange={(e) =>
-                    setFormData({ ...formData, phone: e.target.value })
+                    setFormData({ ...formData, firstName: e.target.value })
                   }
                 />
               </div>
-
               <div className="grid gap-2">
-                <Label>Dirección</Label>
+                <Label htmlFor="edit-lastName">Apellido *</Label>
                 <Input
-                  value={formData.address}
+                  id="edit-lastName"
+                  value={formData.lastName || ""}
                   onChange={(e) =>
-                    setFormData({ ...formData, address: e.target.value })
+                    setFormData({ ...formData, lastName: e.target.value })
                   }
                 />
               </div>
+            </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-2">
-                  <Label>Ciudad</Label>
-                  <Select
-                    value={formData.city}
-                    onValueChange={(value) =>
-                      setFormData({ ...formData, city: value })
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="La Paz">La Paz</SelectItem>
-                      <SelectItem value="Santa Cruz">Santa Cruz</SelectItem>
-                      <SelectItem value="Cochabamba">Cochabamba</SelectItem>
-                      <SelectItem value="Sucre">Sucre</SelectItem>
-                      <SelectItem value="Potosí">Potosí</SelectItem>
-                      <SelectItem value="Oruro">Oruro</SelectItem>
-                      <SelectItem value="Tarija">Tarija</SelectItem>
-                      <SelectItem value="Beni">Beni</SelectItem>
-                      <SelectItem value="Pando">Pando</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="grid gap-2">
-                  <Label>País</Label>
-                  <Input
-                    value={formData.country}
-                    onChange={(e) =>
-                      setFormData({ ...formData, country: e.target.value })
-                    }
-                  />
-                </div>
-              </div>
-            </TabsContent>
+            <div className="grid gap-2">
+              <Label htmlFor="edit-email">Email *</Label>
+              <Input
+                id="edit-email"
+                type="email"
+                value={formData.email || ""}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
+              />
+            </div>
 
-            <TabsContent value="metrics" className="space-y-4">
-              <div className="grid grid-cols-3 gap-4">
-                <div className="grid gap-2">
-                  <Label>Número de Empleados</Label>
-                  <Input
-                    type="number"
-                    value={formData.employees}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        employees: Number.parseInt(e.target.value) || 0,
-                      })
-                    }
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label>Ingresos Anuales (Bs.)</Label>
-                  <Input
-                    type="number"
-                    value={formData.revenue}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        revenue: Number.parseInt(e.target.value) || 0,
-                      })
-                    }
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label>Crecimiento (%)</Label>
-                  <Input
-                    type="number"
-                    value={formData.growth}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        growth: Number.parseInt(e.target.value) || 0,
-                      })
-                    }
-                  />
-                </div>
-              </div>
-            </TabsContent>
-          </Tabs>
+            <div className="grid gap-2">
+              <Label htmlFor="edit-phone">Teléfono</Label>
+              <Input
+                id="edit-phone"
+                value={formData.phone || ""}
+                onChange={(e) =>
+                  setFormData({ ...formData, phone: e.target.value })
+                }
+              />
+            </div>
+
+            <div className="grid gap-2">
+              <Label>Estado</Label>
+              <Select
+                value={formData.status || "ACTIVE"}
+                onValueChange={(value) =>
+                  setFormData({
+                    ...formData,
+                    status: value as Profile["status"],
+                  })
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ACTIVE">Activo</SelectItem>
+                  <SelectItem value="PENDING">Pendiente</SelectItem>
+                  <SelectItem value="INACTIVE">Inactivo</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
 
           <div className="flex justify-end gap-2 pt-4">
             <Button
               variant="outline"
               onClick={() => {
                 setShowEditDialog(false);
-                setSelectedCompany(null);
+                setSelectedStudent(null);
                 resetForm();
               }}
             >
               Cancelar
             </Button>
-            <Button onClick={handleUpdate}>Actualizar Empresa</Button>
+            <Button onClick={handleUpdate}>Actualizar Estudiante</Button>
           </div>
         </DialogContent>
       </Dialog>
@@ -1193,13 +1016,13 @@ export default function CompaniesManagementPage() {
           <AlertDialogHeader>
             <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
             <AlertDialogDescription>
-              Esta acción no se puede deshacer. Se eliminará permanentemente la
-              empresa &quot;{selectedCompany?.name}&quot; y todos sus datos
-              asociados.
+              Esta acción no se puede deshacer. Se eliminará permanentemente el
+              estudiante &quot;{selectedStudent?.firstName}{" "}
+              {selectedStudent?.lastName}&quot; y todos sus datos asociados.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setSelectedCompany(null)}>
+            <AlertDialogCancel onClick={() => setSelectedStudent(null)}>
               Cancelar
             </AlertDialogCancel>
             <AlertDialogAction

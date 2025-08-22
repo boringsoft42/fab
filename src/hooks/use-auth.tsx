@@ -87,7 +87,8 @@ export function useAuth() {
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
             municipality:
-              decoded.type === "municipality"
+              decoded.type === "municipality" ||
+              decoded.type === "GOBIERNOS_MUNICIPALES"
                 ? {
                     id: decoded.id,
                     name: decoded.name,

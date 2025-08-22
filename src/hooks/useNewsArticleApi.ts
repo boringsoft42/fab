@@ -54,7 +54,7 @@ export const useNewsArticle = (id: string) => {
 // Create news article
 export const useCreateNewsArticle = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async (data: Partial<NewsArticle>) => {
       console.log("📰 useCreateNewsArticle - Calling NewsArticleService.create() with data:", data);
@@ -77,7 +77,7 @@ export const useCreateNewsArticle = () => {
 // Create news article with image
 export const useCreateNewsArticleWithImage = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async (formData: FormData) => {
       console.log("📰 useCreateNewsArticleWithImage - Calling NewsArticleService.createWithImage()");
@@ -102,7 +102,7 @@ export const useCreateNewsArticleWithImage = () => {
 // Update news article
 export const useUpdateNewsArticle = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async ({ id, data }: { id: string; data: Partial<NewsArticle> }) => {
       console.log("📰 useUpdateNewsArticle - Calling NewsArticleService.update() with id:", id, "data:", data);
@@ -126,7 +126,7 @@ export const useUpdateNewsArticle = () => {
 // Update news article with image
 export const useUpdateNewsArticleWithImage = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async ({ id, formData }: { id: string; formData: FormData }) => {
       console.log("📰 useUpdateNewsArticleWithImage - Calling NewsArticleService.updateWithImage() with id:", id);
@@ -152,7 +152,7 @@ export const useUpdateNewsArticleWithImage = () => {
 // Delete news article
 export const useDeleteNewsArticle = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async (id: string) => {
       console.log("📰 useDeleteNewsArticle - Calling NewsArticleService.delete() with id:", id);
@@ -287,6 +287,9 @@ export const useSearchNews = (query: string) => {
 
 // Get news by author
 export const useNewsByAuthor = (authorId: string) => {
+  console.log("📰 useNewsByAuthor - Hook called with authorId:", authorId);
+  console.log("📰 useNewsByAuthor - Hook enabled:", !!authorId);
+
   return useQuery({
     queryKey: NEWS_KEYS.author(authorId),
     queryFn: async () => {
@@ -301,6 +304,10 @@ export const useNewsByAuthor = (authorId: string) => {
       }
     },
     enabled: !!authorId,
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
+    staleTime: 0,
+    gcTime: 0,
   });
 };
 
@@ -343,7 +350,7 @@ export const useNewsStats = () => {
 // Increment views
 export const useIncrementViews = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async (id: string) => {
       console.log("📰 useIncrementViews - Calling NewsArticleService.incrementViews() with id:", id);
@@ -366,7 +373,7 @@ export const useIncrementViews = () => {
 // Toggle featured
 export const useToggleFeatured = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async (id: string) => {
       console.log("📰 useToggleFeatured - Calling NewsArticleService.toggleFeatured() with id:", id);
@@ -392,7 +399,7 @@ export const useToggleFeatured = () => {
 // Update status
 export const useUpdateNewsStatus = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
       console.log("📰 useUpdateNewsStatus - Calling NewsArticleService.updateStatus() with id:", id, "status:", status);

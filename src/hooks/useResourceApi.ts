@@ -22,7 +22,7 @@ export const useResource = (id: string) => {
 // Hook para crear un recurso
 export const useCreateResource = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: (data: Partial<Resource> | FormData) => ResourceService.createResource(data),
     onSuccess: () => {
@@ -34,7 +34,7 @@ export const useCreateResource = () => {
 // Hook para actualizar un recurso
 export const useUpdateResource = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: Partial<Resource> }) =>
       ResourceService.updateResource(id, data),
@@ -48,7 +48,7 @@ export const useUpdateResource = () => {
 // Hook para eliminar un recurso
 export const useDeleteResource = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: (id: string) => ResourceService.deleteResource(id),
     onSuccess: () => {
@@ -60,7 +60,7 @@ export const useDeleteResource = () => {
 // Hook para buscar recursos
 export const useSearchResources = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: (query: string) => ResourceService.getAllResources({ search: query }),
     onSuccess: (data) => {
@@ -88,10 +88,11 @@ export const useResourcesByCategory = (category: string) => {
 };
 
 // Hook para obtener recursos públicos
-export const usePublicResources = () => {
+export const usePublicResources = (municipalityId?: string) => {
   return useQuery({
-    queryKey: ['resources', 'public'],
-    queryFn: () => ResourceService.getAllResources(),
+    queryKey: ['resources', 'public', municipalityId],
+    queryFn: () => ResourceService.getAllResources({ municipalityId }),
+    enabled: true,
   });
 };
 
@@ -138,7 +139,7 @@ export const useDownloadResource = () => {
 // Hook para incrementar descargas
 export const useIncrementDownloads = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: (id: string) => ResourceService.incrementDownloads(id),
     onSuccess: (_, id) => {
@@ -151,7 +152,7 @@ export const useIncrementDownloads = () => {
 // Hook para calificar un recurso
 export const useRateResource = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: ({ id, rating }: { id: string; rating: number }) =>
       ResourceService.rateResource(id, rating),
@@ -165,7 +166,7 @@ export const useRateResource = () => {
 // Hook para cambiar visibilidad pública
 // export const useTogglePublic = () => {
 //   const queryClient = useQueryClient();
-//   
+//
 //   return useMutation({
 //     mutationFn: (id: string) => ResourceService.togglePublic(id),
 //     onSuccess: (_, id) => {
@@ -201,13 +202,13 @@ export const useRateResource = () => {
 // };
 
 // Hook para subir archivo de recurso
-// export const useUploadResourceFile = () => {
-//   const queryClient = useQueryClient();
-//   
-//   return useMutation({
-//     mutationFn: (formData: FormData) => ResourceService.uploadResourceFile(formData),
-//     onSuccess: () => {
-//       queryClient.invalidateQueries({ queryKey: ['resources'] });
-//     },
-//   });
-// }; 
+export const useUploadResourceFile = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (formData: FormData) => ResourceService.uploadResource(formData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['resources'] });
+    },
+  });
+}; 

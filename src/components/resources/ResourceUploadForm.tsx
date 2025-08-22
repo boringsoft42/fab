@@ -1,56 +1,65 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Upload, X, FileText, Video, Music, Image, File } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { ResourceService } from '@/services/resource.service';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Upload, X, FileText, Video, Music, Image, File } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { ResourceService } from "@/services/resource.service";
 
 interface ResourceUploadFormProps {
   onSuccess?: () => void;
   onCancel?: () => void;
 }
 
-export function ResourceUploadForm({ onSuccess, onCancel }: ResourceUploadFormProps) {
+export function ResourceUploadForm({
+  onSuccess,
+  onCancel,
+}: ResourceUploadFormProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    type: '',
-    category: '',
-    format: '',
-    author: '',
-    tags: '',
-    isPublic: true
+    title: "",
+    description: "",
+    type: "",
+    category: "",
+    format: "",
+    author: "",
+    tags: "",
+    isPublic: true,
   });
   const { toast } = useToast();
 
   const resourceTypes = [
-    { value: 'DOCUMENT', label: 'Documento', icon: FileText },
-    { value: 'VIDEO', label: 'Video', icon: Video },
-    { value: 'AUDIO', label: 'Audio', icon: Music },
-    { value: 'IMAGE', label: 'Imagen', icon: Image },
-    { value: 'TEXT', label: 'Texto', icon: File }
+    { value: "DOCUMENT", label: "Documento", icon: FileText },
+    { value: "VIDEO", label: "Video", icon: Video },
+    { value: "AUDIO", label: "Audio", icon: Music },
+    { value: "IMAGE", label: "Imagen", icon: Image },
+    { value: "TEXT", label: "Texto", icon: File },
   ];
 
   const categories = [
-    { value: 'PROGRAMMING', label: 'Programación' },
-    { value: 'DESIGN', label: 'Diseño' },
-    { value: 'BUSINESS', label: 'Negocios' },
-    { value: 'EDUCATION', label: 'Educación' },
-    { value: 'HEALTH', label: 'Salud' },
-    { value: 'TECHNOLOGY', label: 'Tecnología' },
-    { value: 'ENTREPRENEURSHIP', label: 'Emprendimiento' },
-    { value: 'FINANCE', label: 'Finanzas' },
-    { value: 'MARKETING', label: 'Marketing' },
-    { value: 'LEADERSHIP', label: 'Liderazgo' }
+    { value: "PROGRAMMING", label: "Programación" },
+    { value: "DESIGN", label: "Diseño" },
+    { value: "BUSINESS", label: "Negocios" },
+    { value: "EDUCATION", label: "Educación" },
+    { value: "HEALTH", label: "Salud" },
+    { value: "TECHNOLOGY", label: "Tecnología" },
+    { value: "ENTREPRENEURSHIP", label: "Emprendimiento" },
+    { value: "FINANCE", label: "Finanzas" },
+    { value: "MARKETING", label: "Marketing" },
+    { value: "LEADERSHIP", label: "Liderazgo" },
   ];
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,18 +78,46 @@ export function ResourceUploadForm({ onSuccess, onCancel }: ResourceUploadFormPr
       // Validar tipo de archivo
       const allowedTypes = [
         // Documentos
-        'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-        'application/zip', 'application/x-rar-compressed',
+        "application/pdf",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "application/vnd.ms-excel",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "application/vnd.ms-powerpoint",
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+        "application/zip",
+        "application/x-rar-compressed",
         // Videos
-        'video/mp4', 'video/webm', 'video/ogg', 'video/x-msvideo', 'video/quicktime', 'video/x-ms-wmv', 'video/x-flv', 'video/x-matroska',
+        "video/mp4",
+        "video/webm",
+        "video/ogg",
+        "video/x-msvideo",
+        "video/quicktime",
+        "video/x-ms-wmv",
+        "video/x-flv",
+        "video/x-matroska",
         // Audio
-        'audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/aac', 'audio/flac',
+        "audio/mpeg",
+        "audio/wav",
+        "audio/ogg",
+        "audio/aac",
+        "audio/flac",
         // Imágenes
-        'image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml', 'image/bmp', 'image/tiff',
+        "image/jpeg",
+        "image/png",
+        "image/gif",
+        "image/webp",
+        "image/svg+xml",
+        "image/bmp",
+        "image/tiff",
         // Texto
-        'text/plain', 'text/csv', 'text/html', 'text/css', 'application/javascript', 'application/json', 'application/xml'
+        "text/plain",
+        "text/csv",
+        "text/html",
+        "text/css",
+        "application/javascript",
+        "application/json",
+        "application/xml",
       ];
 
       if (!allowedTypes.includes(file.type)) {
@@ -93,22 +130,22 @@ export function ResourceUploadForm({ onSuccess, onCancel }: ResourceUploadFormPr
       }
 
       setSelectedFile(file);
-      
+
       // Auto-detectar formato basado en la extensión
-      const extension = file.name.split('.').pop()?.toUpperCase();
+      const extension = file.name.split(".").pop()?.toUpperCase();
       if (extension) {
-        setFormData(prev => ({ ...prev, format: extension }));
+        setFormData((prev) => ({ ...prev, format: extension }));
       }
     }
   };
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    
+
     if (!selectedFile) {
       toast({
         title: "Error",
@@ -118,7 +155,12 @@ export function ResourceUploadForm({ onSuccess, onCancel }: ResourceUploadFormPr
       return;
     }
 
-    if (!formData.title || !formData.description || !formData.type || !formData.category) {
+    if (
+      !formData.title ||
+      !formData.description ||
+      !formData.type ||
+      !formData.category
+    ) {
       toast({
         title: "Error",
         description: "Por favor completa todos los campos obligatorios.",
@@ -131,17 +173,17 @@ export function ResourceUploadForm({ onSuccess, onCancel }: ResourceUploadFormPr
 
     try {
       const uploadFormData = new FormData();
-      uploadFormData.append('file', selectedFile);
-      uploadFormData.append('title', formData.title);
-      uploadFormData.append('description', formData.description);
-      uploadFormData.append('type', formData.type);
-      uploadFormData.append('category', formData.category);
-      uploadFormData.append('format', formData.format);
-      uploadFormData.append('author', formData.author);
-      uploadFormData.append('tags', formData.tags);
-      uploadFormData.append('isPublic', formData.isPublic.toString());
+      uploadFormData.append("file", selectedFile);
+      uploadFormData.append("title", formData.title);
+      uploadFormData.append("description", formData.description);
+      uploadFormData.append("type", formData.type);
+      uploadFormData.append("category", formData.category);
+      uploadFormData.append("format", formData.format);
+      uploadFormData.append("author", formData.author);
+      uploadFormData.append("tags", formData.tags);
+      uploadFormData.append("isPublic", formData.isPublic.toString());
 
-      await ResourceService.uploadResourceFile(uploadFormData);
+      await ResourceService.uploadResource(uploadFormData);
 
       toast({
         title: "Éxito",
@@ -150,23 +192,22 @@ export function ResourceUploadForm({ onSuccess, onCancel }: ResourceUploadFormPr
 
       // Reset form
       setFormData({
-        title: '',
-        description: '',
-        type: '',
-        category: '',
-        format: '',
-        author: '',
-        tags: '',
-        isPublic: true
+        title: "",
+        description: "",
+        type: "",
+        category: "",
+        format: "",
+        author: "",
+        tags: "",
+        isPublic: true,
       });
       setSelectedFile(null);
 
       if (onSuccess) {
         onSuccess();
       }
-
     } catch (error) {
-      console.error('Error uploading resource:', error);
+      console.error("Error uploading resource:", error);
       toast({
         title: "Error",
         description: "Error al subir el recurso. Intenta de nuevo.",
@@ -179,11 +220,11 @@ export function ResourceUploadForm({ onSuccess, onCancel }: ResourceUploadFormPr
 
   const getFileIcon = () => {
     if (!selectedFile) return <Upload className="h-8 w-8" />;
-    
+
     const type = selectedFile.type;
-    if (type.startsWith('video/')) return <Video className="h-8 w-8" />;
-    if (type.startsWith('audio/')) return <Music className="h-8 w-8" />;
-    if (type.startsWith('image/')) return <Image className="h-8 w-8" />;
+    if (type.startsWith("video/")) return <Video className="h-8 w-8" />;
+    if (type.startsWith("audio/")) return <Music className="h-8 w-8" />;
+    if (type.startsWith("image/")) return <Image className="h-8 w-8" />;
     return <FileText className="h-8 w-8" />;
   };
 
@@ -213,10 +254,13 @@ export function ResourceUploadForm({ onSuccess, onCancel }: ResourceUploadFormPr
                   {getFileIcon()}
                   <div>
                     <p className="text-sm font-medium">
-                      {selectedFile ? selectedFile.name : 'Haz clic para seleccionar un archivo'}
+                      {selectedFile
+                        ? selectedFile.name
+                        : "Haz clic para seleccionar un archivo"}
                     </p>
                     <p className="text-xs text-gray-500">
-                      Máximo 100MB. Formatos: PDF, DOC, XLS, PPT, ZIP, MP4, MP3, JPG, etc.
+                      Máximo 100MB. Formatos: PDF, DOC, XLS, PPT, ZIP, MP4, MP3,
+                      JPG, etc.
                     </p>
                   </div>
                 </div>
@@ -246,7 +290,7 @@ export function ResourceUploadForm({ onSuccess, onCancel }: ResourceUploadFormPr
               <Input
                 id="title"
                 value={formData.title}
-                onChange={(e) => handleInputChange('title', e.target.value)}
+                onChange={(e) => handleInputChange("title", e.target.value)}
                 placeholder="Título del recurso"
                 required
               />
@@ -257,7 +301,7 @@ export function ResourceUploadForm({ onSuccess, onCancel }: ResourceUploadFormPr
               <Input
                 id="author"
                 value={formData.author}
-                onChange={(e) => handleInputChange('author', e.target.value)}
+                onChange={(e) => handleInputChange("author", e.target.value)}
                 placeholder="Nombre del autor"
               />
             </div>
@@ -268,7 +312,7 @@ export function ResourceUploadForm({ onSuccess, onCancel }: ResourceUploadFormPr
             <Textarea
               id="description"
               value={formData.description}
-              onChange={(e) => handleInputChange('description', e.target.value)}
+              onChange={(e) => handleInputChange("description", e.target.value)}
               placeholder="Describe el contenido del recurso"
               rows={3}
               required
@@ -278,7 +322,10 @@ export function ResourceUploadForm({ onSuccess, onCancel }: ResourceUploadFormPr
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
               <Label htmlFor="type">Tipo *</Label>
-              <Select value={formData.type} onValueChange={(value) => handleInputChange('type', value)}>
+              <Select
+                value={formData.type}
+                onValueChange={(value) => handleInputChange("type", value)}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Seleccionar tipo" />
                 </SelectTrigger>
@@ -297,7 +344,10 @@ export function ResourceUploadForm({ onSuccess, onCancel }: ResourceUploadFormPr
 
             <div className="space-y-2">
               <Label htmlFor="category">Categoría *</Label>
-              <Select value={formData.category} onValueChange={(value) => handleInputChange('category', value)}>
+              <Select
+                value={formData.category}
+                onValueChange={(value) => handleInputChange("category", value)}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Seleccionar categoría" />
                 </SelectTrigger>
@@ -316,7 +366,7 @@ export function ResourceUploadForm({ onSuccess, onCancel }: ResourceUploadFormPr
               <Input
                 id="format"
                 value={formData.format}
-                onChange={(e) => handleInputChange('format', e.target.value)}
+                onChange={(e) => handleInputChange("format", e.target.value)}
                 placeholder="PDF, MP4, etc."
               />
             </div>
@@ -327,7 +377,7 @@ export function ResourceUploadForm({ onSuccess, onCancel }: ResourceUploadFormPr
             <Input
               id="tags"
               value={formData.tags}
-              onChange={(e) => handleInputChange('tags', e.target.value)}
+              onChange={(e) => handleInputChange("tags", e.target.value)}
               placeholder="programación, backend, nodejs (separadas por comas)"
             />
           </div>
@@ -335,7 +385,7 @@ export function ResourceUploadForm({ onSuccess, onCancel }: ResourceUploadFormPr
           {/* Botones */}
           <div className="flex gap-3 pt-4">
             <Button type="submit" disabled={isUploading} className="flex-1">
-              {isUploading ? 'Subiendo...' : 'Subir Recurso'}
+              {isUploading ? "Subiendo..." : "Subir Recurso"}
             </Button>
             {onCancel && (
               <Button type="button" variant="outline" onClick={onCancel}>

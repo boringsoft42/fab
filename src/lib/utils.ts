@@ -16,22 +16,22 @@ export function buildFileUrl(filePath: string, baseUrl: string = API_BASE.replac
   if (filePath.startsWith('http')) {
     return filePath;
   }
-  
+
   // Extraer el nombre del archivo del path
   const filename = filePath.split('/').pop();
-  
+
   if (!filename) {
     console.warn('buildFileUrl: No se pudo extraer el nombre del archivo de:', filePath);
     return filePath;
   }
-  
+
   // Determinar el tipo de archivo basado en el path
   if (filePath.includes('/uploads/cover-letters/')) {
     return `${baseUrl}/api/files/cover-letters/${filename}`;
   } else if (filePath.includes('/uploads/documents/')) {
     return `${baseUrl}/api/files/documents/${filename}`;
   }
-  
+
   // Fallback: usar el path original
   return `${baseUrl}${filePath}`;
 }
@@ -43,16 +43,16 @@ export async function checkFileAccess(filePath: string, token?: string): Promise
   try {
     const fullUrl = buildFileUrl(filePath);
     const headers: HeadersInit = {};
-    
+
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
     }
-    
+
     const response = await fetch(fullUrl, {
       method: 'HEAD',
       headers
     });
-    
+
     return response.ok;
   } catch (error) {
     console.error('Error checking file access:', error);
@@ -101,17 +101,17 @@ export async function downloadFileWithAuth(filePath: string, filename?: string):
  */
 export function extractFilePath(fullUrl: string | null | undefined): string | undefined {
   if (!fullUrl) return undefined;
-  
+
   // Si es una URL completa del backend, extraemos la ruta
   if (fullUrl.startsWith(BACKEND_BASE_URL)) {
     return fullUrl.replace(BACKEND_BASE_URL, '');
   }
-  
+
   // Si ya es una ruta relativa, la devolvemos tal como está
   if (fullUrl.startsWith('/')) {
     return fullUrl;
   }
-  
+
   return fullUrl;
 }
 
@@ -127,7 +127,75 @@ export function mapBackendRoleToFrontend(backendRole: string): string {
     'MUNICIPAL_GOVERNMENTS': 'GOBIERNOS_MUNICIPALES',
     'TRAINING_CENTERS': 'CENTROS_DE_FORMACION',
     'NGOS_AND_FOUNDATIONS': 'ONGS_Y_FUNDACIONES',
-    'SUPERADMIN': 'SUPERADMIN'
+    'SUPERADMIN': 'SUPERADMIN',
+    // Handle already mapped roles
+    'JOVENES': 'JOVENES',
+    'ADOLESCENTES': 'ADOLESCENTES',
+    'EMPRESAS': 'EMPRESAS',
+    'GOBIERNOS_MUNICIPALES': 'GOBIERNOS_MUNICIPALES',
+    'CENTROS_DE_FORMACION': 'CENTROS_DE_FORMACION',
+    'ONGS_Y_FUNDACIONES': 'ONGS_Y_FUNDACIONES',
+    'SUPER_ADMIN': 'SUPERADMIN'
   };
   return roleMap[backendRole] || backendRole;
+}
+
+/**
+ * Normalizes user roles to ensure consistency across the application
+ * This function handles both backend and frontend role formats
+ */
+export function normalizeUserRole(role: string | null | undefined): string | null {
+  if (!role) return null;
+
+  // First, try to map from backend to frontend
+  const mappedRole = mapBackendRoleToFrontend(role);
+
+  // Validate that the mapped role is a valid frontend role
+  const validFrontendRoles = [
+    'JOVENES',
+    'ADOLESCENTES',
+    'EMPRESAS',
+    'GOBIERNOS_MUNICIPALES',
+    'CENTROS_DE_FORMACION',
+    'ONGS_Y_FUNDACIONES',
+    'SUPERADMIN',
+    'SUPER_ADMIN'
+  ];
+
+  if (validFrontendRoles.includes(mappedRole)) {
+    return mappedRole;
+  }
+
+  // If not a valid role, return the original role
+  return role;
+}
+
+/**
+ * Checks if a user role is a municipality role (handles both formats)
+ */
+export function isMunicipalityRole(role: string | null | undefined): boolean {
+  if (!role) return false;
+
+  const normalizedRole = normalizeUserRole(role);
+  return normalizedRole === 'GOBIERNOS_MUNICIPALES';
+}
+
+/**
+ * Checks if a user role is a company role (handles both formats)
+ */
+export function isCompanyRole(role: string | null | undefined): boolean {
+  if (!role) return false;
+
+  const normalizedRole = normalizeUserRole(role);
+  return normalizedRole === 'EMPRESAS';
+}
+
+/**
+ * Checks if a user role is a super admin role (handles both formats)
+ */
+export function isSuperAdminRole(role: string | null | undefined): boolean {
+  if (!role) return false;
+
+  const normalizedRole = normalizeUserRole(role);
+  return normalizedRole === 'SUPERADMIN' || normalizedRole === 'SUPER_ADMIN';
 }

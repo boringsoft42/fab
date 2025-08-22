@@ -23,19 +23,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { ImageIcon, Upload, X, Eye, EyeOff } from "lucide-react";
+import { Upload, X, Eye, EyeOff } from "lucide-react";
 import { NewsArticle } from "@/types/news";
 import { useToast } from "@/hooks/use-toast";
 
 // Schema de validación
 const newsFormSchema = z.object({
-  title: z.string().min(1, "El título es requerido").max(200, "El título no puede exceder 200 caracteres"),
-  summary: z.string().min(1, "El resumen es requerido").max(500, "El resumen no puede exceder 500 caracteres"),
+  title: z
+    .string()
+    .min(1, "El título es requerido")
+    .max(200, "El título no puede exceder 200 caracteres"),
+  summary: z
+    .string()
+    .min(1, "El resumen es requerido")
+    .max(500, "El resumen no puede exceder 500 caracteres"),
   content: z.string().min(1, "El contenido es requerido"),
   category: z.string().min(1, "La categoría es requerida"),
   tags: z.string().optional(),
@@ -84,14 +88,12 @@ const regions = [
   "Nacional",
 ];
 
-const targetAudiences = [
-  "YOUTH",
-  "ADOLESCENTS",
-  "COMPANIES",
-  "ALL",
-];
-
-export function NewsForm({ initialData, onSubmit, isLoading = false, mode }: NewsFormProps) {
+export function NewsForm({
+  initialData,
+  onSubmit,
+  isLoading = false,
+  mode,
+}: NewsFormProps) {
   const { toast } = useToast();
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
@@ -109,9 +111,11 @@ export function NewsForm({ initialData, onSubmit, isLoading = false, mode }: New
       status: initialData?.status || "DRAFT",
       featured: initialData?.featured || false,
       targetAudience: initialData?.targetAudience?.join(", ") || "YOUTH",
-      region: initialData?.region || "",
+      region: initialData?.region || (mode === "create" ? "Cochabamba" : ""),
       videoUrl: initialData?.videoUrl || "",
-      relatedLinks: initialData?.relatedLinks ? JSON.stringify(initialData.relatedLinks) : "",
+      relatedLinks: initialData?.relatedLinks
+        ? JSON.stringify(initialData.relatedLinks)
+        : "",
     },
   });
 
@@ -162,7 +166,7 @@ export function NewsForm({ initialData, onSubmit, isLoading = false, mode }: New
 
   const handleSubmit = async (data: NewsFormData) => {
     try {
-      await onSubmit(data, imageFile);
+      await onSubmit(data, imageFile || undefined);
     } catch (error) {
       console.error("Error submitting form:", error);
     }
@@ -181,7 +185,7 @@ export function NewsForm({ initialData, onSubmit, isLoading = false, mode }: New
             {/* Información básica */}
             <div className="space-y-4">
               <h3 className="text-lg font-medium">Información Básica</h3>
-              
+
               <FormField
                 control={form.control}
                 name="title"
@@ -203,15 +207,13 @@ export function NewsForm({ initialData, onSubmit, isLoading = false, mode }: New
                   <FormItem>
                     <FormLabel>Resumen *</FormLabel>
                     <FormControl>
-                      <Textarea 
-                        placeholder="Resumen corto de la noticia" 
+                      <Textarea
+                        placeholder="Resumen corto de la noticia"
                         className="min-h-[80px]"
-                        {...field} 
+                        {...field}
                       />
                     </FormControl>
-                    <FormDescription>
-                      Máximo 500 caracteres
-                    </FormDescription>
+                    <FormDescription>Máximo 500 caracteres</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -224,10 +226,10 @@ export function NewsForm({ initialData, onSubmit, isLoading = false, mode }: New
                   <FormItem>
                     <FormLabel>Contenido *</FormLabel>
                     <FormControl>
-                      <Textarea 
-                        placeholder="Contenido completo de la noticia" 
+                      <Textarea
+                        placeholder="Contenido completo de la noticia"
                         className="min-h-[200px]"
-                        {...field} 
+                        {...field}
                       />
                     </FormControl>
                     <FormMessage />
@@ -242,7 +244,10 @@ export function NewsForm({ initialData, onSubmit, isLoading = false, mode }: New
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Categoría *</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Seleccionar categoría" />
@@ -267,7 +272,10 @@ export function NewsForm({ initialData, onSubmit, isLoading = false, mode }: New
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Prioridad</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue />
@@ -293,9 +301,9 @@ export function NewsForm({ initialData, onSubmit, isLoading = false, mode }: New
                   <FormItem>
                     <FormLabel>Etiquetas</FormLabel>
                     <FormControl>
-                      <Input 
-                        placeholder="etiqueta1, etiqueta2, etiqueta3" 
-                        {...field} 
+                      <Input
+                        placeholder="etiqueta1, etiqueta2, etiqueta3"
+                        {...field}
                       />
                     </FormControl>
                     <FormDescription>
@@ -312,7 +320,7 @@ export function NewsForm({ initialData, onSubmit, isLoading = false, mode }: New
             {/* Imagen */}
             <div className="space-y-4">
               <h3 className="text-lg font-medium">Imagen</h3>
-              
+
               <div className="space-y-4">
                 {imagePreview && (
                   <div className="relative">
@@ -338,9 +346,14 @@ export function NewsForm({ initialData, onSubmit, isLoading = false, mode }: New
                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
                       <Upload className="w-8 h-8 mb-4 text-gray-500" />
                       <p className="mb-2 text-sm text-gray-500">
-                        <span className="font-semibold">Haz clic para subir</span> o arrastra y suelta
+                        <span className="font-semibold">
+                          Haz clic para subir
+                        </span>{" "}
+                        o arrastra y suelta
                       </p>
-                      <p className="text-xs text-gray-500">PNG, JPG, GIF hasta 5MB</p>
+                      <p className="text-xs text-gray-500">
+                        PNG, JPG, GIF hasta 5MB
+                      </p>
                     </div>
                     <input
                       type="file"
@@ -365,7 +378,11 @@ export function NewsForm({ initialData, onSubmit, isLoading = false, mode }: New
                   size="sm"
                   onClick={() => setShowAdvanced(!showAdvanced)}
                 >
-                  {showAdvanced ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  {showAdvanced ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
                   {showAdvanced ? "Ocultar avanzado" : "Mostrar avanzado"}
                 </Button>
               </div>
@@ -377,7 +394,10 @@ export function NewsForm({ initialData, onSubmit, isLoading = false, mode }: New
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Estado</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue />
@@ -400,7 +420,10 @@ export function NewsForm({ initialData, onSubmit, isLoading = false, mode }: New
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Región</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Seleccionar región" />
@@ -428,7 +451,8 @@ export function NewsForm({ initialData, onSubmit, isLoading = false, mode }: New
                     <div className="space-y-0.5">
                       <FormLabel className="text-base">Destacada</FormLabel>
                       <FormDescription>
-                        Marca esta noticia como destacada para mostrarla en la página principal
+                        Marca esta noticia como destacada para mostrarla en la
+                        página principal
                       </FormDescription>
                     </div>
                     <FormControl>
@@ -450,9 +474,9 @@ export function NewsForm({ initialData, onSubmit, isLoading = false, mode }: New
                       <FormItem>
                         <FormLabel>Audiencia Objetivo</FormLabel>
                         <FormControl>
-                          <Input 
-                            placeholder="YOUTH, ADOLESCENTS, COMPANIES, ALL" 
-                            {...field} 
+                          <Input
+                            placeholder="YOUTH, ADOLESCENTS, COMPANIES, ALL"
+                            {...field}
                           />
                         </FormControl>
                         <FormDescription>
@@ -470,9 +494,9 @@ export function NewsForm({ initialData, onSubmit, isLoading = false, mode }: New
                       <FormItem>
                         <FormLabel>URL del Video</FormLabel>
                         <FormControl>
-                          <Input 
-                            placeholder="https://ejemplo.com/video.mp4" 
-                            {...field} 
+                          <Input
+                            placeholder="https://ejemplo.com/video.mp4"
+                            {...field}
                           />
                         </FormControl>
                         <FormMessage />
@@ -487,10 +511,10 @@ export function NewsForm({ initialData, onSubmit, isLoading = false, mode }: New
                       <FormItem>
                         <FormLabel>Enlaces Relacionados (JSON)</FormLabel>
                         <FormControl>
-                          <Textarea 
-                            placeholder='[{"title": "Enlace 1", "url": "https://ejemplo.com"}]' 
+                          <Textarea
+                            placeholder='[{"title": "Enlace 1", "url": "https://ejemplo.com"}]'
                             className="min-h-[100px]"
-                            {...field} 
+                            {...field}
                           />
                         </FormControl>
                         <FormDescription>
@@ -511,7 +535,11 @@ export function NewsForm({ initialData, onSubmit, isLoading = false, mode }: New
             Cancelar
           </Button>
           <Button type="submit" disabled={isLoading}>
-            {isLoading ? "Guardando..." : mode === "create" ? "Crear Noticia" : "Actualizar Noticia"}
+            {isLoading
+              ? "Guardando..."
+              : mode === "create"
+                ? "Crear Noticia"
+                : "Actualizar Noticia"}
           </Button>
         </div>
       </form>

@@ -7,7 +7,6 @@ import {
   useCreateCompany,
   useUpdateCompany,
   useDeleteCompany,
-  useCompanyStats,
 } from "@/hooks/useCompanyApi";
 import {
   useCurrentMunicipality,
@@ -113,12 +112,22 @@ export default function CompaniesPage() {
   const { data: allMunicipalities = [] } = useMunicipalities();
 
   // Hooks de datos - usar empresas según el rol del usuario
+  // Siempre usar el ID del municipio, no el username
+  const municipalityIdentifier =
+    !isSuperAdmin && currentMunicipality?.id
+      ? currentMunicipality.id
+      : "no-municipality";
+
   const {
     data: companiesByMunicipality = [],
     isLoading: companiesByMunicipalityLoading,
-  } = useCompaniesByMunicipality(currentMunicipality?.id || "");
-  const { data: allCompanies = [], isLoading: allCompaniesLoading } =
-    useCompanies();
+    error: companiesByMunicipalityError,
+  } = useCompaniesByMunicipality(municipalityIdentifier);
+  const {
+    data: allCompanies = [],
+    isLoading: allCompaniesLoading,
+    error: allCompaniesError,
+  } = useCompanies(isSuperAdmin); // Solo cargar todas las empresas si es superadmin
 
   // Usar todas las empresas si es super admin, o empresas del municipio si no
   const companies = isSuperAdmin ? allCompanies : companiesByMunicipality;
@@ -130,6 +139,7 @@ export default function CompaniesPage() {
     userRole: profile?.role,
     isSuperAdmin,
     currentMunicipalityId: currentMunicipality?.id,
+    municipalityIdentifier,
     currentMunicipality: currentMunicipality,
     municipalityLoading,
     companiesByMunicipalityCount: companiesByMunicipality.length,
@@ -138,8 +148,14 @@ export default function CompaniesPage() {
     companiesLoading,
     allCompaniesLoading,
     companiesByMunicipalityLoading,
+    companiesByMunicipalityError: companiesByMunicipalityError?.message,
+    allCompaniesError: allCompaniesError?.message,
+    API_BASE:
+      process.env.NEXT_PUBLIC_API_BASE_DEV || "http://192.168.10.91:3001/api",
+    backendUrl:
+      process.env.NEXT_PUBLIC_BACKEND_URL || "http://192.168.10.91:3001",
   });
-  const { data: stats } = useCompanyStats();
+  // Removido useCompanyStats ya que ahora calculamos las estadísticas localmente
   const createCompanyMutation = useCreateCompany();
   const updateCompanyMutation = useUpdateCompany();
   const deleteCompanyMutation = useDeleteCompany();
@@ -178,14 +194,14 @@ export default function CompaniesPage() {
     return matchesSearch && matchesStatus;
   });
 
-  // Estadísticas calculadas
+  // Estadísticas calculadas basadas en los datos reales de la lista
   const calculatedStats = {
-    totalCompanies: stats?.totalCompanies || 0,
-    activeCompanies: stats?.activeCompanies || 0,
-    inactiveCompanies: stats?.inactiveCompanies || 0,
-    pendingCompanies: stats?.pendingCompanies || 0,
-    totalEmployees: stats?.totalEmployees || 0,
-    totalRevenue: stats?.totalRevenue || 0,
+    totalCompanies: companies.length,
+    activeCompanies: companies.filter((c) => c.isActive).length,
+    inactiveCompanies: companies.filter((c) => !c.isActive).length,
+    pendingCompanies: 0, // No hay estado "pending" en el modelo actual
+    totalEmployees: 0, // No hay campo employeeCount en el modelo actual
+    totalRevenue: 0, // No hay campo revenue en el modelo actual
   };
 
   // Handlers
@@ -608,7 +624,8 @@ export default function CompaniesPage() {
 
                   <div className="text-xs text-muted-foreground">
                     💡 Puedes escribir tus propias credenciales o usar el botón
-                    "Generar Credenciales" para crearlas automáticamente.
+                    &ldquo;Generar Credenciales&rdquo; para crearlas
+                    automáticamente.
                   </div>
                 </div>
               </div>
@@ -855,7 +872,8 @@ export default function CompaniesPage() {
                               </AlertDialogTitle>
                               <AlertDialogDescription>
                                 Esta acción no se puede deshacer. Se eliminará
-                                permanentemente la empresa "{company.name}".
+                                permanentemente la empresa &ldquo;{company.name}
+                                &rdquo;.
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>

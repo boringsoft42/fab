@@ -6,13 +6,12 @@ import { useAuthContext } from '@/hooks/use-auth';
 // Hook para obtener aplicaciones de la empresa
 export function useCompanyApplications() {
   const { isAuthenticated } = useAuthContext();
-  
+
   return useQuery({
     queryKey: ['company-applications'],
     queryFn: async () => {
       const response = await JobApplicationService.getCompanyApplications();
-      // Transform the response to return only the items array
-      return response.items || response;
+      return response;
     },
     staleTime: 2 * 60 * 1000, // 2 minutes
     enabled: isAuthenticated, // Only run when user is authenticated
@@ -22,13 +21,12 @@ export function useCompanyApplications() {
 // Hook para obtener aplicaciones del usuario
 export function useUserApplications() {
   const { isAuthenticated } = useAuthContext();
-  
+
   return useQuery({
     queryKey: ['user-applications'],
     queryFn: async () => {
       const response = await JobApplicationService.getUserApplications();
-      // Transform the response to return only the items array
-      return response.items || response;
+      return response;
     },
     staleTime: 2 * 60 * 1000, // 2 minutes
     enabled: isAuthenticated, // Only run when user is authenticated

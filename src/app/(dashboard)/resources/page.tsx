@@ -1,27 +1,56 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Search } from 'lucide-react';
-import { usePublicResources, useSearchResources, useResourcesByType, useResourcesByCategory } from '@/hooks/useResourceApi';
-import { Resource } from '@/types/api';
-import { ResourceCard } from '@/components/resources/ResourceCard';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Search } from "lucide-react";
+import {
+  usePublicResources,
+  useSearchResources,
+  useResourcesByType,
+  useResourcesByCategory,
+} from "@/hooks/useResourceApi";
+import { Resource } from "@/types/api";
+import { ResourceCard } from "@/components/resources/ResourceCard";
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { useCurrentMunicipality } from "@/hooks/useMunicipalityApi";
+import { isMunicipalityRole } from "@/lib/utils";
 
 export default function ResourcesPage() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedType, setSelectedType] = useState<string>('all');
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [activeTab, setActiveTab] = useState('all');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedType, setSelectedType] = useState<string>("all");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [activeTab, setActiveTab] = useState("all");
 
-  // Hooks para obtener recursos
-  const { data: publicResources, isLoading: loadingPublic } = usePublicResources();
-  const { mutateAsync: searchResources, data: searchResults, isLoading: loadingSearch } = useSearchResources();
-  const { data: typeResources, isLoading: loadingType } = useResourcesByType(selectedType);
-  const { data: categoryResources, isLoading: loadingCategory } = useResourcesByCategory(selectedCategory);
+  // Get current user and municipality info for filtering
+  const { profile } = useCurrentUser();
+  const { data: currentMunicipality } = useCurrentMunicipality();
+
+  // Determine if user is municipality and get municipality ID
+  const isMunicipality = isMunicipalityRole(profile?.role);
+  const municipalityId = isMunicipality ? currentMunicipality?.id : undefined;
+
+  // Hooks para obtener recursos con municipality filtering
+  const { data: publicResources = [], isLoading: loadingPublic } =
+    usePublicResources(municipalityId);
+  const {
+    mutateAsync: searchResources,
+    data: searchResults = [],
+    isPending: loadingSearch,
+  } = useSearchResources();
+  const { data: typeResources = [], isLoading: loadingType } =
+    useResourcesByType(selectedType);
+  const { data: categoryResources = [], isLoading: loadingCategory } =
+    useResourcesByCategory(selectedCategory);
 
   // Función para manejar búsqueda
   const handleSearch = async () => {
@@ -34,13 +63,13 @@ export default function ResourcesPage() {
   const handleDownload = async (resource: Resource) => {
     try {
       const response = await fetch(`/api/resource/${resource.id}/download`, {
-        method: 'GET',
+        method: "GET",
       });
-      
+
       if (response.ok) {
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
+        const a = document.createElement("a");
         a.href = url;
         a.download = resource.title;
         document.body.appendChild(a);
@@ -49,7 +78,7 @@ export default function ResourcesPage() {
         document.body.removeChild(a);
       }
     } catch (error) {
-      console.error('Error downloading resource:', error);
+      console.error("Error downloading resource:", error);
     }
   };
 
@@ -57,40 +86,44 @@ export default function ResourcesPage() {
   const handleRate = async (resource: Resource, rating: number) => {
     try {
       await fetch(`/api/resource/${resource.id}/rate`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ rating }),
       });
     } catch (error) {
-      console.error('Error rating resource:', error);
+      console.error("Error rating resource:", error);
     }
   };
 
   // Obtener recursos según la pestaña activa
-  const getCurrentResources = () => {
+  const getCurrentResources = (): Resource[] => {
     switch (activeTab) {
-      case 'search':
-        return searchResults || [];
-      case 'type':
-        return typeResources || [];
-      case 'category':
-        return categoryResources || [];
+      case "search":
+        return (searchResults as Resource[]) || [];
+      case "type":
+        return (typeResources as Resource[]) || [];
+      case "category":
+        return (categoryResources as Resource[]) || [];
       default:
-        return publicResources || [];
+        return (publicResources as Resource[]) || [];
     }
   };
 
   const currentResources = getCurrentResources();
-  const isLoading = loadingPublic || loadingSearch || loadingType || loadingCategory;
+  const isLoading =
+    loadingPublic || loadingSearch || loadingType || loadingCategory;
 
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Recursos Educativos</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          Recursos Educativos
+        </h1>
         <p className="text-gray-600">
-          Explora y descarga recursos educativos para tu desarrollo personal y profesional
+          Explora y descarga recursos educativos para tu desarrollo personal y
+          profesional
         </p>
       </div>
 
@@ -104,7 +137,7 @@ export default function ResourcesPage() {
                 placeholder="Buscar recursos..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                onKeyPress={(e) => e.key === "Enter" && handleSearch()}
                 className="pl-10"
               />
             </div>
@@ -181,12 +214,13 @@ export default function ResourcesPage() {
           <div className="text-gray-400 mb-4">
             <Search className="h-16 w-16 mx-auto" />
           </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No se encontraron recursos</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">
+            No se encontraron recursos
+          </h3>
           <p className="text-gray-600">
-            {activeTab === 'search' 
-              ? 'Intenta con otros términos de búsqueda'
-              : 'No hay recursos disponibles en esta categoría'
-            }
+            {activeTab === "search"
+              ? "Intenta con otros términos de búsqueda"
+              : "No hay recursos disponibles en esta categoría"}
           </p>
         </div>
       ) : (

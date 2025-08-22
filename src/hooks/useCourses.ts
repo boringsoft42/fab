@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { apiCall } from '@/lib/api';
 import { Course } from '@/types/api';
 
-export const useCourses = () => {
+export const useCourses = (municipalityId?: string) => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -12,13 +12,19 @@ export const useCourses = () => {
       setLoading(true);
       setError(null);
 
-      const data = await apiCall('/course');
+      // Build URL with municipality filter if provided
+      let url = '/course';
+      if (municipalityId) {
+        url += `?municipalityId=${municipalityId}`;
+      }
+
+      const data = await apiCall(url);
       console.log('🔍 useCourses - Fetched data:', data);
-      
+
       // El backend puede devolver los cursos en diferentes formatos
       const coursesData = data.courses || data || [];
       setCourses(coursesData);
-      
+
       console.log('🔍 useCourses - Set courses:', coursesData);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error al cargar los cursos';

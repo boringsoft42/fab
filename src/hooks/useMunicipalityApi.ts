@@ -2,9 +2,9 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { MunicipalityService } from '@/services/municipality.service';
-import { useAuth } from '@/hooks/use-auth';
+import { useAuthContext } from '@/hooks/use-auth';
+import { isMunicipalityRole } from '@/lib/utils';
 import type {
-  Municipality,
   CreateMunicipalityRequest,
   UpdateMunicipalityRequest,
   MunicipalityAuthRequest,
@@ -94,22 +94,15 @@ export const useMunicipalityLogin = () => {
 
 // Get current municipality
 export const useCurrentMunicipality = () => {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuthContext();
 
-  // Check if user role indicates municipality (flexible check for backend compatibility)
-  const userRoleString = user?.role as string;
-  const isMunicipalityUser = Boolean(userRoleString && (
-    userRoleString === 'MUNICIPAL_GOVERNMENTS' ||
-    userRoleString === 'GOBIERNOS_MUNICIPALES' ||
-    userRoleString === 'municipality' ||
-    userRoleString.toLowerCase().includes('municipality')
-  ));
+  // Check if user role indicates municipality using the normalized function
+  const isMunicipalityUser = isMunicipalityRole(user?.role);
 
   console.log("🏛️ useCurrentMunicipality - Debug info:", {
     user: !!user,
     isAuthenticated,
     userRole: user?.role,
-    userRoleString,
     isMunicipalityUser,
     shouldEnable: isAuthenticated && isMunicipalityUser
   });

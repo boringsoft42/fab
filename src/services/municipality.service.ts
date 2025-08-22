@@ -1,7 +1,7 @@
 import { apiCall } from '@/lib/api';
-import type { 
-  Municipality, 
-  CreateMunicipalityRequest, 
+import type {
+  Municipality,
+  CreateMunicipalityRequest,
   UpdateMunicipalityRequest,
   MunicipalityAuthRequest,
   MunicipalityChangePasswordRequest
@@ -27,6 +27,13 @@ export class MunicipalityService {
   // Get municipality by ID
   static async getById(id: string): Promise<Municipality> {
     const response = await apiCall(`/municipality/${id}`);
+    // Handle the response format: { municipality: {...} } or direct object
+    return response.municipality || response;
+  }
+
+  // Get municipality by identifier (ID or username)
+  static async getByIdentifier(identifier: string): Promise<Municipality> {
+    const response = await apiCall(`/municipality/by-identifier/${identifier}`);
     // Handle the response format: { municipality: {...} } or direct object
     return response.municipality || response;
   }
@@ -69,7 +76,7 @@ export class MunicipalityService {
   // Get current municipality
   static async getCurrentMunicipality(): Promise<Municipality> {
     console.log("🏛️ MunicipalityService.getCurrentMunicipality - Making API call to /municipality/auth/me");
-    
+
     // Use the local API route which will proxy to the backend
     const response = await apiCall('/municipality/auth/me');
     console.log("🏛️ MunicipalityService.getCurrentMunicipality - Raw response:", response);

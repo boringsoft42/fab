@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { CompanyApiService } from '@/services/company-api.service';
+import { CompanyApiService, CreateCompanyRequest, UpdateCompanyRequest } from '@/services/company-api.service';
 
 // Query keys
 const COMPANY_KEYS = {
@@ -15,7 +15,7 @@ const COMPANY_KEYS = {
 };
 
 // Get all companies (filtered by user's municipality automatically)
-export const useCompanies = () => {
+export const useCompanies = (enabled: boolean = true) => {
   return useQuery({
     queryKey: COMPANY_KEYS.lists(),
     queryFn: async () => {
@@ -29,6 +29,7 @@ export const useCompanies = () => {
         throw error;
       }
     },
+    enabled,
   });
 };
 
@@ -39,6 +40,11 @@ export const useCompaniesByMunicipality = (municipalityId: string) => {
     queryFn: async () => {
       console.log("🔍 useCompaniesByMunicipality - Calling CompanyApiService.searchByMunicipality() with id:", municipalityId);
       try {
+        // If municipalityId is "no-municipality", return empty array
+        if (municipalityId === "no-municipality") {
+          console.log("🔍 useCompaniesByMunicipality - No municipality, returning empty array");
+          return [];
+        }
         const result = await CompanyApiService.searchByMunicipality(municipalityId);
         console.log("✅ useCompaniesByMunicipality - Success:", result);
         return result;
@@ -47,7 +53,7 @@ export const useCompaniesByMunicipality = (municipalityId: string) => {
         throw error;
       }
     },
-    enabled: !!municipalityId,
+    enabled: municipalityId !== "no-municipality",
   });
 };
 
@@ -73,9 +79,9 @@ export const useCompany = (id: string) => {
 // Create company
 export const useCreateCompany = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
-    mutationFn: async (data: any) => {
+    mutationFn: async (data: CreateCompanyRequest) => {
       console.log("🔍 useCreateCompany - Calling CompanyApiService.create() with data:", data);
       try {
         const result = await CompanyApiService.create(data);
@@ -94,13 +100,25 @@ export const useCreateCompany = () => {
 };
 
 // Get company statistics
-export const useCompanyStats = () => {
+export const useCompanyStats = (municipalityId?: string) => {
   return useQuery({
-    queryKey: COMPANY_KEYS.stats(),
+    queryKey: [...COMPANY_KEYS.stats(), municipalityId],
     queryFn: async () => {
-      console.log("📊 useCompanyStats - Calling CompanyApiService.getStats()");
+      console.log("📊 useCompanyStats - Calling CompanyApiService.getStats() with municipalityId:", municipalityId);
       try {
-        const result = await CompanyApiService.getStats();
+        // If municipalityId is "no-municipality", return empty stats
+        if (municipalityId === "no-municipality") {
+          console.log("📊 useCompanyStats - No municipality, returning empty stats");
+          return {
+            totalCompanies: 0,
+            activeCompanies: 0,
+            pendingCompanies: 0,
+            inactiveCompanies: 0,
+            totalEmployees: 0,
+            totalRevenue: 0,
+          };
+        }
+        const result = await CompanyApiService.getStats(municipalityId);
         console.log("✅ useCompanyStats - Success:", result);
         return result;
       } catch (error) {
@@ -108,15 +126,16 @@ export const useCompanyStats = () => {
         throw error;
       }
     },
+    enabled: municipalityId !== "no-municipality",
   });
 };
 
 // Update company
 export const useUpdateCompany = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
-    mutationFn: async ({ id, data }: { id: string; data: any }) => {
+    mutationFn: async ({ id, data }: { id: string; data: UpdateCompanyRequest }) => {
       console.log("🔍 useUpdateCompany - Calling CompanyApiService.update() with id:", id, "data:", data);
       try {
         const result = await CompanyApiService.update(id, data);
@@ -138,7 +157,7 @@ export const useUpdateCompany = () => {
 // Delete company
 export const useDeleteCompany = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async (id: string) => {
       console.log("🔍 useDeleteCompany - Calling CompanyApiService.delete() with id:", id);

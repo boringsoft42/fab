@@ -4,10 +4,11 @@ import { useToast } from '@/components/ui/use-toast';
 import { useAuthContext } from '@/hooks/use-auth';
 
 // Hook para obtener puestos de trabajo de la empresa
-export function useCompanyJobOffers() {
+export function useCompanyJobOffers(companyId: string, status?: string) {
   return useQuery({
-    queryKey: ['company-job-offers'],
-    queryFn: JobOfferService.getCompanyJobOffers,
+    queryKey: ['company-job-offers', companyId, status],
+    queryFn: () => JobOfferService.getCompanyJobOffers(companyId, status),
+    enabled: !!companyId,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
@@ -24,7 +25,7 @@ export function useActiveJobOffers() {
 // Hook para obtener un puesto específico
 export function useJobOffer(id: string) {
   const { isAuthenticated } = useAuthContext();
-  
+
   return useQuery({
     queryKey: ['job-offer', id],
     queryFn: () => JobOfferService.getJobOffer(id),

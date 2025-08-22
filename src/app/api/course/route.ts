@@ -142,23 +142,38 @@ const getMockCourses = () => ({
 export async function GET(request: NextRequest) {
   try {
     console.log('🔍 API: Received request for courses');
-    
+
     // Check if backend should be used
     const useBackend = process.env.NEXT_PUBLIC_USE_BACKEND !== 'false';
-    
+
     if (!useBackend) {
       console.log('🔍 API: Backend disabled, returning mock data');
       const mockData = getMockCourses();
       return NextResponse.json(mockData, { status: 200 });
     }
-    
+
     const { searchParams } = new URL(request.url);
-    
+
     // Forward all search parameters to backend
     const url = new URL(`${API_BASE}/course`);
     searchParams.forEach((value, key) => {
       url.searchParams.set(key, value);
     });
+
+    // Add municipality filtering if user is authenticated and is a municipality user
+    const authHeader = request.headers.get('authorization');
+    if (authHeader) {
+      try {
+        // Extract user info from token to check if it's a municipality user
+        // For now, we'll pass the municipalityId if it's provided in the request
+        const municipalityId = searchParams.get('municipalityId');
+        if (municipalityId) {
+          url.searchParams.set('municipalityId', municipalityId);
+        }
+      } catch (error) {
+        console.log('🔍 API: Error parsing auth token for municipality filtering:', error);
+      }
+    }
 
     console.log('🔍 API: Forwarding to backend:', url.toString());
     console.log('🔍 API: Authorization header:', request.headers.get('authorization') ? 'Present' : 'Missing');
@@ -171,7 +186,7 @@ export async function GET(request: NextRequest) {
     });
 
     console.log('🔍 API: Backend response status:', response.status);
-    
+
     if (!response.ok) {
       const errorText = await response.text();
       console.error('🔍 API: Backend error:', errorText);
@@ -186,14 +201,14 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
     console.error('Error in courses route:', error);
-    
+
     // If backend is not available, return mock data
     if (error instanceof Error && error.message.includes('fetch failed')) {
       console.log('🔍 API: Backend not available, returning mock data');
       const mockData = getMockCourses();
       return NextResponse.json(mockData, { status: 200 });
     }
-    
+
     return NextResponse.json(
       { message: 'Internal server error' },
       { status: 500 }

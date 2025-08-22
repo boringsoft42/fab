@@ -90,10 +90,17 @@ export const getUserFromToken = (): {
   const decoded = decodeToken(token);
   if (!decoded) return null;
 
+  const role = (decoded.role || decoded.type) as string;
+  const userId = decoded.id as string;
+
+  // For municipality users, the ID is the municipality ID
+  // For other users, we need to get the municipality ID from their profile
+  const municipalityId = role === 'GOBIERNOS_MUNICIPALES' ? userId : decoded.municipalityId as string;
+
   return {
-    id: decoded.id as string,
-    role: (decoded.role || decoded.type) as string,
-    municipalityId: decoded.id as string, // For municipalities, the ID is the municipality ID
+    id: userId,
+    role: role,
+    municipalityId: municipalityId,
   };
 };
 
@@ -184,11 +191,28 @@ export const apiCall = async (
       throw new Error('Authentication required');
     }
 
-    const headers = {
-      'Content-Type': 'application/json',
-      ...authHeaders,
-      ...options.headers
-    };
+    // Build headers - don't include Content-Type for FormData
+    const headers: Record<string, string> = {};
+
+    // Add auth headers (excluding Content-Type for FormData)
+    if (authHeaders.Authorization) {
+      headers['Authorization'] = authHeaders.Authorization;
+    }
+
+    // Add other headers from options, but exclude Content-Type for FormData
+    if (options.headers) {
+      const optionsHeaders = options.headers as Record<string, string>;
+      Object.keys(optionsHeaders).forEach(key => {
+        if (!(options.body instanceof FormData) || key.toLowerCase() !== 'content-type') {
+          headers[key] = optionsHeaders[key];
+        }
+      });
+    }
+
+    // Only add Content-Type for non-FormData requests
+    if (!(options.body instanceof FormData)) {
+      headers['Content-Type'] = 'application/json';
+    }
 
     const fullUrl = `${API_BASE}${endpoint}`;
 
@@ -199,9 +223,17 @@ export const apiCall = async (
     console.log("🔐 apiCall - Auth headers from getAuthHeaders:", authHeaders);
     console.log("🔐 apiCall - Options headers:", options.headers);
     console.log("🔐 apiCall - Final headers being sent:", headers);
+    console.log("🔐 apiCall - Content-Type in final headers:", headers['Content-Type'] || 'NOT SET (will be set by browser for FormData)');
     console.log("🔐 apiCall - Authorization header in final headers:", (headers as Record<string, string>).Authorization);
     console.log("🔐 apiCall - Token present:", !!token);
     console.log("🔐 apiCall - Is protected endpoint:", isProtectedEndpoint);
+    console.log("🔐 apiCall - Body type:", options.body instanceof FormData ? "FormData" : typeof options.body);
+    if (options.body instanceof FormData) {
+      console.log("🔐 apiCall - FormData entries:");
+      for (const [key, value] of (options.body as FormData).entries()) {
+        console.log(`  ${key}: ${value instanceof File ? `File: ${value.name} (${value.size} bytes)` : value}`);
+      }
+    }
 
     const response = await fetch(fullUrl, {
       ...options,
@@ -218,13 +250,32 @@ export const apiCall = async (
         await refreshToken();
         // Retry the original request with new token
         const newAuthHeaders = getAuthHeaders(options.body instanceof FormData);
+        // Build retry headers - don't include Content-Type for FormData
+        const retryHeaders: Record<string, string> = {};
+
+        // Add auth headers (excluding Content-Type for FormData)
+        if (newAuthHeaders.Authorization) {
+          retryHeaders['Authorization'] = newAuthHeaders.Authorization;
+        }
+
+        // Add other headers from options, but exclude Content-Type for FormData
+        if (options.headers) {
+          const optionsHeaders = options.headers as Record<string, string>;
+          Object.keys(optionsHeaders).forEach(key => {
+            if (!(options.body instanceof FormData) || key.toLowerCase() !== 'content-type') {
+              retryHeaders[key] = optionsHeaders[key];
+            }
+          });
+        }
+
+        // Only add Content-Type for non-FormData requests
+        if (!(options.body instanceof FormData)) {
+          retryHeaders['Content-Type'] = 'application/json';
+        }
+
         const retryResponse = await fetch(fullUrl, {
           ...options,
-          headers: {
-            'Content-Type': 'application/json',
-            ...newAuthHeaders,
-            ...options.headers
-          }
+          headers: retryHeaders
         });
 
         if (!retryResponse.ok) {
@@ -599,6 +650,300 @@ const getMockData = (endpoint: string) => {
           id: 'course_3',
           title: 'Diseño UX/UI'
         }
+      }
+    ];
+  }
+
+  // Mock data for events endpoints
+  if (endpoint.includes('/events')) {
+    // Mock data for events stats
+    if (endpoint.includes('/events/stats')) {
+      return {
+        totalEvents: 15,
+        upcomingEvents: 8,
+        totalAttendees: 245,
+        attendanceRate: 78.5,
+        publishedEvents: 12,
+        featuredEvents: 3
+      };
+    }
+
+    if (endpoint.includes('/events/my-stats')) {
+      return {
+        totalEvents: 5,
+        upcomingEvents: 2,
+        totalAttendees: 45,
+        attendanceRate: 85.2,
+        publishedEvents: 4,
+        featuredEvents: 1
+      };
+    }
+
+    if (endpoint.includes('/events/my-events')) {
+      return [
+        {
+          id: 'event_1',
+          title: 'Workshop de Emprendimiento',
+          organizer: 'Municipio de Cercado',
+          description: 'Taller práctico sobre emprendimiento y desarrollo de negocios',
+          date: '2024-03-15',
+          time: '14:00',
+          type: 'IN_PERSON',
+          category: 'WORKSHOP',
+          location: 'Centro de Convenciones',
+          maxCapacity: 50,
+          currentAttendees: 35,
+          price: 0,
+          status: 'PUBLISHED',
+          isFeatured: true,
+          registrationDeadline: '2024-03-10',
+          imageUrl: 'https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=800',
+          tags: ['Emprendimiento', 'Negocios', 'Desarrollo'],
+          requirements: 'Interés en emprender',
+          agenda: '14:00 - Introducción\n15:00 - Casos de éxito\n16:00 - Networking',
+          speakers: 'Dr. Juan Pérez, Lic. María García',
+          createdAt: '2024-02-01T10:00:00Z',
+          updatedAt: '2024-02-01T10:00:00Z'
+        },
+        {
+          id: 'event_2',
+          title: 'Conferencia de Tecnología',
+          organizer: 'TechCorp',
+          description: 'Conferencia sobre las últimas tendencias en tecnología',
+          date: '2024-03-20',
+          time: '09:00',
+          type: 'HYBRID',
+          category: 'CONFERENCE',
+          location: 'Auditorio Principal',
+          maxCapacity: 100,
+          currentAttendees: 75,
+          price: 50,
+          status: 'PUBLISHED',
+          isFeatured: false,
+          registrationDeadline: '2024-03-18',
+          imageUrl: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800',
+          tags: ['Tecnología', 'Innovación'],
+          requirements: 'Conocimientos básicos de programación',
+          agenda: '09:00 - Apertura\n10:00 - Charlas técnicas\n16:00 - Cierre',
+          speakers: 'Ing. Carlos López, Dra. Ana Martínez',
+          createdAt: '2024-02-05T14:30:00Z',
+          updatedAt: '2024-02-05T14:30:00Z'
+        }
+      ];
+    }
+
+    if (endpoint.includes('/events/my-attendances')) {
+      return [
+        {
+          id: 'event_3',
+          title: 'Networking Empresarial',
+          organizer: 'Cámara de Comercio',
+          description: 'Evento de networking para empresarios y emprendedores',
+          date: '2024-03-25',
+          time: '18:00',
+          type: 'IN_PERSON',
+          category: 'NETWORKING',
+          location: 'Hotel Plaza',
+          maxCapacity: 80,
+          currentAttendees: 60,
+          price: 25,
+          status: 'PUBLISHED',
+          isFeatured: true,
+          registrationDeadline: '2024-03-22',
+          imageUrl: 'https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=800',
+          tags: ['Networking', 'Empresarios'],
+          requirements: 'Ser empresario o emprendedor',
+          agenda: '18:00 - Registro\n18:30 - Presentaciones\n20:00 - Networking',
+          speakers: 'Lic. Roberto Silva',
+          createdAt: '2024-02-10T09:15:00Z',
+          updatedAt: '2024-02-10T09:15:00Z',
+          isRegistered: true,
+          attendeeStatus: 'CONFIRMED'
+        },
+        {
+          id: 'event_4',
+          title: 'Seminario de Marketing Digital',
+          organizer: 'Agencia Digital',
+          description: 'Seminario sobre estrategias de marketing digital',
+          date: '2024-04-05',
+          time: '10:00',
+          type: 'VIRTUAL',
+          category: 'SEMINAR',
+          location: 'Zoom Meeting',
+          maxCapacity: 200,
+          currentAttendees: 150,
+          price: 0,
+          status: 'PUBLISHED',
+          isFeatured: false,
+          registrationDeadline: '2024-04-03',
+          imageUrl: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800',
+          tags: ['Marketing', 'Digital'],
+          requirements: 'Ninguno',
+          agenda: '10:00 - Introducción\n11:00 - Estrategias\n12:00 - Casos prácticos',
+          speakers: 'Lic. Patricia Morales',
+          createdAt: '2024-02-15T16:45:00Z',
+          updatedAt: '2024-02-15T16:45:00Z',
+          isRegistered: true,
+          attendeeStatus: 'REGISTERED'
+        }
+      ];
+    }
+
+    // Mock data for specific event attendees
+    if (endpoint.includes('/events/') && endpoint.includes('/attendees')) {
+      const eventId = endpoint.split('/')[2];
+      return [
+        {
+          id: 'attendee_1',
+          userId: 'user_1',
+          eventId: eventId,
+          status: 'CONFIRMED',
+          registeredAt: '2024-02-20T10:00:00Z',
+          user: {
+            name: 'Juan Pérez',
+            email: 'juan.perez@example.com'
+          }
+        },
+        {
+          id: 'attendee_2',
+          userId: 'user_2',
+          eventId: eventId,
+          status: 'REGISTERED',
+          registeredAt: '2024-02-21T14:30:00Z',
+          user: {
+            name: 'María García',
+            email: 'maria.garcia@example.com'
+          }
+        }
+      ];
+    }
+
+    // Default events list
+    return [
+      {
+        id: 'event_1',
+        title: 'Workshop de Emprendimiento',
+        organizer: 'Municipio de Cercado',
+        description: 'Taller práctico sobre emprendimiento y desarrollo de negocios',
+        date: '2024-03-15',
+        time: '14:00',
+        type: 'IN_PERSON',
+        category: 'WORKSHOP',
+        location: 'Centro de Convenciones',
+        maxCapacity: 50,
+        currentAttendees: 35,
+        price: 0,
+        status: 'PUBLISHED',
+        isFeatured: true,
+        registrationDeadline: '2024-03-10',
+        imageUrl: 'https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=800',
+        tags: ['Emprendimiento', 'Negocios', 'Desarrollo'],
+        requirements: 'Interés en emprender',
+        agenda: '14:00 - Introducción\n15:00 - Casos de éxito\n16:00 - Networking',
+        speakers: 'Dr. Juan Pérez, Lic. María García',
+        createdAt: '2024-02-01T10:00:00Z',
+        updatedAt: '2024-02-01T10:00:00Z',
+        isRegistered: false
+      },
+      {
+        id: 'event_2',
+        title: 'Conferencia de Tecnología',
+        organizer: 'TechCorp',
+        description: 'Conferencia sobre las últimas tendencias en tecnología',
+        date: '2024-03-20',
+        time: '09:00',
+        type: 'HYBRID',
+        category: 'CONFERENCE',
+        location: 'Auditorio Principal',
+        maxCapacity: 100,
+        currentAttendees: 75,
+        price: 50,
+        status: 'PUBLISHED',
+        isFeatured: false,
+        registrationDeadline: '2024-03-18',
+        imageUrl: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800',
+        tags: ['Tecnología', 'Innovación'],
+        requirements: 'Conocimientos básicos de programación',
+        agenda: '09:00 - Apertura\n10:00 - Charlas técnicas\n16:00 - Cierre',
+        speakers: 'Ing. Carlos López, Dra. Ana Martínez',
+        createdAt: '2024-02-05T14:30:00Z',
+        updatedAt: '2024-02-05T14:30:00Z',
+        isRegistered: false
+      },
+      {
+        id: 'event_3',
+        title: 'Networking Empresarial',
+        organizer: 'Cámara de Comercio',
+        description: 'Evento de networking para empresarios y emprendedores',
+        date: '2024-03-25',
+        time: '18:00',
+        type: 'IN_PERSON',
+        category: 'NETWORKING',
+        location: 'Hotel Plaza',
+        maxCapacity: 80,
+        currentAttendees: 60,
+        price: 25,
+        status: 'PUBLISHED',
+        isFeatured: true,
+        registrationDeadline: '2024-03-22',
+        imageUrl: 'https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=800',
+        tags: ['Networking', 'Empresarios'],
+        requirements: 'Ser empresario o emprendedor',
+        agenda: '18:00 - Registro\n18:30 - Presentaciones\n20:00 - Networking',
+        speakers: 'Lic. Roberto Silva',
+        createdAt: '2024-02-10T09:15:00Z',
+        updatedAt: '2024-02-10T09:15:00Z',
+        isRegistered: false
+      },
+      {
+        id: 'event_4',
+        title: 'Seminario de Marketing Digital',
+        organizer: 'Agencia Digital',
+        description: 'Seminario sobre estrategias de marketing digital',
+        date: '2024-04-05',
+        time: '10:00',
+        type: 'VIRTUAL',
+        category: 'SEMINAR',
+        location: 'Zoom Meeting',
+        maxCapacity: 200,
+        currentAttendees: 150,
+        price: 0,
+        status: 'PUBLISHED',
+        isFeatured: false,
+        registrationDeadline: '2024-04-03',
+        imageUrl: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800',
+        tags: ['Marketing', 'Digital'],
+        requirements: 'Ninguno',
+        agenda: '10:00 - Introducción\n11:00 - Estrategias\n12:00 - Casos prácticos',
+        speakers: 'Lic. Patricia Morales',
+        createdAt: '2024-02-15T16:45:00Z',
+        updatedAt: '2024-02-15T16:45:00Z',
+        isRegistered: false
+      },
+      {
+        id: 'event_5',
+        title: 'Feria de Empleo',
+        organizer: 'Ministerio de Trabajo',
+        description: 'Feria de empleo con empresas locales y nacionales',
+        date: '2024-04-10',
+        time: '08:00',
+        type: 'IN_PERSON',
+        category: 'FAIR',
+        location: 'Centro de Exposiciones',
+        maxCapacity: 500,
+        currentAttendees: 300,
+        price: 0,
+        status: 'PUBLISHED',
+        isFeatured: true,
+        registrationDeadline: '2024-04-08',
+        imageUrl: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=800',
+        tags: ['Empleo', 'Oportunidades'],
+        requirements: 'CV actualizado',
+        agenda: '08:00 - Apertura\n09:00 - Presentaciones\n17:00 - Cierre',
+        speakers: 'Lic. Carmen Rodríguez',
+        createdAt: '2024-02-20T11:20:00Z',
+        updatedAt: '2024-02-20T11:20:00Z',
+        isRegistered: false
       }
     ];
   }

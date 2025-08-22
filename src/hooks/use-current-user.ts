@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useAuthContext } from "@/hooks/use-auth";
 import { UserRole, User } from "@/types/api";
-import { mapBackendRoleToFrontend } from "@/lib/utils";
+import { normalizeUserRole } from "@/lib/utils";
 
 type Profile = {
   id: string;
@@ -19,6 +19,14 @@ type Profile = {
     name: string;
     email?: string;
     phone?: string;
+  };
+  municipality?: {
+    id: string;
+    name: string;
+    department: string;
+    email: string;
+    phone: string;
+    address: string;
   };
 };
 
@@ -57,7 +65,7 @@ export function useCurrentUser(): CurrentUserData {
   const profile: Profile | null = user
     ? {
       id: user.id,
-      role: (mapBackendRoleToFrontend(user.role) as UserRole) || null,
+      role: (normalizeUserRole(user.role) as UserRole) || null,
       firstName: user.firstName || user.username || '',
       lastName: user.lastName || '',
       profilePicture: user.profilePicture || null,
@@ -71,6 +79,17 @@ export function useCurrentUser(): CurrentUserData {
           name: user.company.name,
           email: user.company.email,
           phone: user.company.phone,
+        }
+      }),
+      // Include municipality information if available
+      ...(user.municipality && {
+        municipality: {
+          id: user.municipality.id,
+          name: user.municipality.name,
+          department: user.municipality.department,
+          email: user.municipality.email,
+          phone: user.municipality.phone,
+          address: user.municipality.address,
         }
       }),
     }

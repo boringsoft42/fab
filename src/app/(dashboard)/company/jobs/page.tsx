@@ -1,30 +1,39 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
-import { useToast } from '@/hooks/use-toast';
-import { JobOffer } from '@/types/jobs';
-import { JobOfferService } from '@/services/job-offer.service';
-import { useAuthContext } from '@/hooks/use-auth';
-import { Plus, Briefcase, Users, Eye, Edit, Trash2, TrendingUp, Calendar } from 'lucide-react';
-import JobApplicationsModal from '@/components/jobs/company/job-applications-modal';
-import { useRouter } from 'next/navigation';
+import { useToast } from "@/hooks/use-toast";
+import { JobOffer } from "@/types/jobs";
+import { JobOfferService } from "@/services/job-offer.service";
+import { useAuth } from "@/providers/auth-provider";
+import {
+  Plus,
+  Briefcase,
+  Users,
+  Eye,
+  Edit,
+  Trash2,
+  TrendingUp,
+  Calendar,
+} from "lucide-react";
+import JobApplicationsModal from "@/components/jobs/company/job-applications-modal";
+import { useRouter } from "next/navigation";
 
 const statusColors = {
-  ACTIVE: 'bg-green-100 text-green-800',
-  PAUSED: 'bg-yellow-100 text-yellow-800',
-  CLOSED: 'bg-red-100 text-red-800',
-  DRAFT: 'bg-gray-100 text-gray-800'
+  ACTIVE: "bg-green-100 text-green-800",
+  PAUSED: "bg-yellow-100 text-yellow-800",
+  CLOSED: "bg-red-100 text-red-800",
+  DRAFT: "bg-gray-100 text-gray-800",
 };
 
 const statusLabels = {
-  ACTIVE: 'Activo',
-  PAUSED: 'Pausado',
-  CLOSED: 'Cerrado',
-  DRAFT: 'Borrador'
+  ACTIVE: "Activo",
+  PAUSED: "Pausado",
+  CLOSED: "Cerrado",
+  DRAFT: "Borrador",
 };
 
 export default function CompanyJobsPage() {
@@ -33,9 +42,10 @@ export default function CompanyJobsPage() {
   const router = useRouter();
   const [jobOffers, setJobOffers] = useState<JobOffer[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedJobOffer, setSelectedJobOffer] = useState<JobOffer | null>(null);
+  const [selectedJobOffer, setSelectedJobOffer] = useState<JobOffer | null>(
+    null
+  );
   const [isApplicationsModalOpen, setIsApplicationsModalOpen] = useState(false);
-
 
   useEffect(() => {
     if (user?.id) {
@@ -45,30 +55,30 @@ export default function CompanyJobsPage() {
 
   const fetchJobOffers = async () => {
     if (!user?.id) return;
-    
+
     try {
       setLoading(true);
-      console.log('🔍 Fetching job offers for company:', user.id);
-      console.log('🔍 User object:', user);
-      
+      console.log("🔍 Fetching job offers for company:", user.id);
+      console.log("🔍 User object:", user);
+
       // Obtener el usuario actual del backend para asegurar que tenemos el companyId correcto
       const currentUser = await getCurrentUser();
       const companyId = user?.company?.id || user?.id;
-      
-      console.log('🔍 Using companyId:', companyId);
-      
+
+      console.log("🔍 Using companyId:", companyId);
+
       // Usar el método correcto con el parámetro companyId
       const data = await JobOfferService.getJobOffersByCompany(companyId);
-      console.log('✅ Job offers fetched:', data);
-      console.log('✅ Number of job offers:', data?.length || 0);
-      
+      console.log("✅ Job offers fetched:", data);
+      console.log("✅ Number of job offers:", data?.length || 0);
+
       setJobOffers(data || []);
     } catch (error) {
-      console.error('❌ Error fetching job offers:', error);
+      console.error("❌ Error fetching job offers:", error);
       toast({
-        title: 'Error',
-        description: 'No se pudieron cargar los puestos de trabajo',
-        variant: 'destructive'
+        title: "Error",
+        description: "No se pudieron cargar los puestos de trabajo",
+        variant: "destructive",
       });
     } finally {
       setLoading(false);
@@ -76,58 +86,66 @@ export default function CompanyJobsPage() {
   };
 
   const handleJobOfferCreated = (newJobOffer: JobOffer) => {
-    setJobOffers(prev => [newJobOffer, ...prev]);
+    setJobOffers((prev) => [newJobOffer, ...prev]);
     toast({
-      title: 'Éxito',
-      description: 'Puesto de trabajo creado correctamente'
+      title: "Éxito",
+      description: "Puesto de trabajo creado correctamente",
     });
   };
 
   const handleJobOfferUpdated = (updatedJobOffer: JobOffer) => {
-    setJobOffers(prev => prev.map(job => 
-      job.id === updatedJobOffer.id ? updatedJobOffer : job
-    ));
+    setJobOffers((prev) =>
+      prev.map((job) => (job.id === updatedJobOffer.id ? updatedJobOffer : job))
+    );
     toast({
-      title: 'Éxito',
-      description: 'Puesto de trabajo actualizado correctamente'
+      title: "Éxito",
+      description: "Puesto de trabajo actualizado correctamente",
     });
   };
 
   const handleDeleteJobOffer = async (jobOfferId: string) => {
-    if (!confirm('¿Estás seguro de que quieres eliminar este puesto de trabajo?')) {
+    if (
+      !confirm("¿Estás seguro de que quieres eliminar este puesto de trabajo?")
+    ) {
       return;
     }
 
     try {
       await JobOfferService.deleteJobOffer(jobOfferId);
-      setJobOffers(prev => prev.filter(job => job.id !== jobOfferId));
+      setJobOffers((prev) => prev.filter((job) => job.id !== jobOfferId));
       toast({
-        title: 'Éxito',
-        description: 'Puesto de trabajo eliminado correctamente'
+        title: "Éxito",
+        description: "Puesto de trabajo eliminado correctamente",
       });
     } catch (error) {
-      console.error('Error deleting job offer:', error);
+      console.error("Error deleting job offer:", error);
       toast({
-        title: 'Error',
-        description: 'No se pudo eliminar el puesto de trabajo',
-        variant: 'destructive'
+        title: "Error",
+        description: "No se pudo eliminar el puesto de trabajo",
+        variant: "destructive",
       });
     }
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('es-ES', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
+    return new Date(dateString).toLocaleDateString("es-ES", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
   };
 
   const getStats = () => {
     const total = jobOffers.length;
-    const active = jobOffers.filter(job => job.status === 'ACTIVE').length;
-    const totalApplications = jobOffers.reduce((sum, job) => sum + (job.applicationsCount || 0), 0);
-    const totalViews = jobOffers.reduce((sum, job) => sum + (job.viewsCount || 0), 0);
+    const active = jobOffers.filter((job) => job.status === "ACTIVE").length;
+    const totalApplications = jobOffers.reduce(
+      (sum, job) => sum + (job.applicationsCount || 0),
+      0
+    );
+    const totalViews = jobOffers.reduce(
+      (sum, job) => sum + (job.viewsCount || 0),
+      0
+    );
 
     return { total, active, totalApplications, totalViews };
   };
@@ -158,10 +176,10 @@ export default function CompanyJobsPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold">Gestión de Puestos de Trabajo</h1>
-                 <Button onClick={() => router.push('/jobs/create')}>
-           <Plus className="w-4 h-4 mr-2" />
-           Crear Puesto
-         </Button>
+        <Button onClick={() => router.push("/jobs/create")}>
+          <Plus className="w-4 h-4 mr-2" />
+          Crear Puesto
+        </Button>
       </div>
 
       {/* Estadísticas */}
@@ -170,43 +188,51 @@ export default function CompanyJobsPage() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Total Puestos</p>
+                <p className="text-sm font-medium text-gray-600">
+                  Total Puestos
+                </p>
                 <p className="text-2xl font-bold">{stats.total}</p>
               </div>
               <Briefcase className="w-8 h-8 text-blue-600" />
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Puestos Activos</p>
+                <p className="text-sm font-medium text-gray-600">
+                  Puestos Activos
+                </p>
                 <p className="text-2xl font-bold">{stats.active}</p>
               </div>
               <TrendingUp className="w-8 h-8 text-green-600" />
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Total Aplicaciones</p>
+                <p className="text-sm font-medium text-gray-600">
+                  Total Aplicaciones
+                </p>
                 <p className="text-2xl font-bold">{stats.totalApplications}</p>
               </div>
               <Users className="w-8 h-8 text-purple-600" />
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Total Visualizaciones</p>
+                <p className="text-sm font-medium text-gray-600">
+                  Total Visualizaciones
+                </p>
                 <p className="text-2xl font-bold">{stats.totalViews}</p>
               </div>
               <Eye className="w-8 h-8 text-orange-600" />
@@ -228,44 +254,55 @@ export default function CompanyJobsPage() {
           <Card>
             <CardContent className="text-center py-12">
               <Briefcase className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No hay puestos de trabajo</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                No hay puestos de trabajo
+              </h3>
               <p className="text-gray-500 mb-4">
-                Comienza creando tu primer puesto de trabajo para atraer candidatos
+                Comienza creando tu primer puesto de trabajo para atraer
+                candidatos
               </p>
-                             <Button onClick={() => router.push('/jobs/create')}>
-                 <Plus className="w-4 h-4 mr-2" />
-                 Crear Primer Puesto
-               </Button>
+              <Button onClick={() => router.push("/jobs/create")}>
+                <Plus className="w-4 h-4 mr-2" />
+                Crear Primer Puesto
+              </Button>
             </CardContent>
           </Card>
         ) : (
           <div className="grid gap-4">
             {jobOffers.map((jobOffer) => (
-              <Card key={jobOffer.id} className="hover:shadow-md transition-shadow">
+              <Card
+                key={jobOffer.id}
+                className="hover:shadow-md transition-shadow"
+              >
                 <CardContent className="p-6">
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-lg font-semibold">{jobOffer.title}</h3>
+                        <h3 className="text-lg font-semibold">
+                          {jobOffer.title}
+                        </h3>
                         <Badge className={statusColors[jobOffer.status]}>
                           {statusLabels[jobOffer.status]}
                         </Badge>
                       </div>
-                      
+
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600 mb-4">
                         <div>
-                          <span className="font-medium">Ubicación:</span> {jobOffer.location}
+                          <span className="font-medium">Ubicación:</span>{" "}
+                          {jobOffer.location}
                         </div>
                         <div>
-                          <span className="font-medium">Tipo de contrato:</span> {jobOffer.contractType}
+                          <span className="font-medium">Tipo de contrato:</span>{" "}
+                          {jobOffer.contractType}
                         </div>
                         <div>
-                          <span className="font-medium">Modalidad:</span> {jobOffer.workModality}
+                          <span className="font-medium">Modalidad:</span>{" "}
+                          {jobOffer.workModality}
                         </div>
                       </div>
 
                       <div className="flex items-center gap-6 text-sm">
-                        <div 
+                        <div
                           className="flex items-center gap-1 cursor-pointer hover:text-blue-600 transition-colors"
                           onClick={() => {
                             setSelectedJobOffer(jobOffer);
@@ -290,7 +327,7 @@ export default function CompanyJobsPage() {
                       <Button
                         variant="outline"
                         size="sm"
-                                                 onClick={() => router.push(`/jobs/${jobOffer.id}/edit`)}
+                        onClick={() => router.push(`/jobs/${jobOffer.id}/edit`)}
                       >
                         <Edit className="w-4 h-4 mr-2" />
                         Editar
@@ -334,4 +371,4 @@ export default function CompanyJobsPage() {
       />
     </div>
   );
-} 
+}

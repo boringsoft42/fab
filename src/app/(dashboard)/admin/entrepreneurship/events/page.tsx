@@ -36,6 +36,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Checkbox } from "@/components/ui/checkbox";
+import { ListInput } from "@/components/ui/list-input";
 import {
   Calendar,
   Users,
@@ -135,14 +136,13 @@ export default function AdminEventsPage() {
     organizer: string;
     maxAttendees: number;
     price: number;
-    image: string;
-    tags: string;
+    tags: string[];
     featured: boolean;
     status: "published" | "draft" | "cancelled";
     registrationDeadline: string;
-    requirements: string;
-    agenda: string;
-    speakers: string;
+    requirements: string[];
+    agenda: string[];
+    speakers: string[];
   }>({
     title: "",
     description: "",
@@ -154,14 +154,13 @@ export default function AdminEventsPage() {
     organizer: "",
     maxAttendees: 50,
     price: 0,
-    image: "",
-    tags: "",
+    tags: [],
     featured: false,
     status: "draft",
     registrationDeadline: "",
-    requirements: "",
-    agenda: "",
-    speakers: "",
+    requirements: [],
+    agenda: [],
+    speakers: [],
   });
 
   const fetchEvents = useCallback(async () => {
@@ -199,19 +198,15 @@ export default function AdminEventsPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...formData,
-          tags: formData.tags.split(",").map((tag) => tag.trim()),
-          requirements: formData.requirements
-            .split("\n")
-            .filter((req) => req.trim()),
+          tags: formData.tags,
+          requirements: formData.requirements,
           agenda: formData.agenda
-            .split("\n")
             .map((line) => {
               const [time, activity] = line.split(" - ");
               return { time: time?.trim(), activity: activity?.trim() };
             })
             .filter((item) => item.time && item.activity),
           speakers: formData.speakers
-            .split("\n")
             .map((line) => {
               const [name, role] = line.split(" - ");
               return { name: name?.trim(), role: role?.trim() };
@@ -233,14 +228,13 @@ export default function AdminEventsPage() {
           organizer: "",
           maxAttendees: 50,
           price: 0,
-          image: "",
-          tags: "",
+          tags: [],
           featured: false,
           status: "draft",
           registrationDeadline: "",
-          requirements: "",
-          agenda: "",
-          speakers: "",
+          requirements: [],
+          agenda: [],
+          speakers: [],
         });
         fetchEvents();
       }
@@ -295,7 +289,7 @@ export default function AdminEventsPage() {
     "Feria",
     "Conferencia",
     "Panel",
-  ];
+  ].filter((category) => category && category.trim() !== "");
 
   if (loading) {
     return (
@@ -453,11 +447,15 @@ export default function AdminEventsPage() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {categories.map((category) => (
-                        <SelectItem key={category} value={category}>
-                          {category}
-                        </SelectItem>
-                      ))}
+                      {categories
+                        .filter(
+                          (category) => category && category.trim() !== ""
+                        )
+                        .map((category) => (
+                          <SelectItem key={category} value={category}>
+                            {category}
+                          </SelectItem>
+                        ))}
                     </SelectContent>
                   </Select>
                 </div>
@@ -530,83 +528,41 @@ export default function AdminEventsPage() {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="image">URL de Imagen</Label>
-                <Input
-                  id="image"
-                  value={formData.image}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, image: e.target.value }))
-                  }
-                  placeholder="URL de la imagen del evento"
-                />
-              </div>
+              <ListInput
+                label="Etiquetas"
+                placeholder="Ej: tecnología, innovación, startup"
+                value={formData.tags}
+                onChange={(value) =>
+                  setFormData((prev) => ({ ...prev, tags: value }))
+                }
+              />
 
-              <div className="space-y-2">
-                <Label htmlFor="tags">Etiquetas</Label>
-                <Input
-                  id="tags"
-                  value={formData.tags}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, tags: e.target.value }))
-                  }
-                  placeholder="etiqueta1, etiqueta2, etiqueta3"
-                />
-                <p className="text-xs text-muted-foreground">
-                  Separar con comas
-                </p>
-              </div>
+              <ListInput
+                label="Requisitos"
+                placeholder="Ej: Conocimientos básicos de programación"
+                value={formData.requirements}
+                onChange={(value) =>
+                  setFormData((prev) => ({ ...prev, requirements: value }))
+                }
+              />
 
-              <div className="space-y-2">
-                <Label htmlFor="requirements">Requisitos</Label>
-                <Textarea
-                  id="requirements"
-                  value={formData.requirements}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      requirements: e.target.value,
-                    }))
-                  }
-                  placeholder="Un requisito por línea"
-                  rows={3}
-                />
-              </div>
+              <ListInput
+                label="Agenda"
+                placeholder="Ej: 09:00 - Registro y bienvenida"
+                value={formData.agenda}
+                onChange={(value) =>
+                  setFormData((prev) => ({ ...prev, agenda: value }))
+                }
+              />
 
-              <div className="space-y-2">
-                <Label htmlFor="agenda">Agenda</Label>
-                <Textarea
-                  id="agenda"
-                  value={formData.agenda}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, agenda: e.target.value }))
-                  }
-                  placeholder="09:00 - Registro y bienvenida&#10;10:00 - Presentación principal&#10;11:30 - Coffee break"
-                  rows={4}
-                />
-                <p className="text-xs text-muted-foreground">
-                  Formato: HH:MM - Actividad (una por línea)
-                </p>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="speakers">Ponentes/Facilitadores</Label>
-                <Textarea
-                  id="speakers"
-                  value={formData.speakers}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      speakers: e.target.value,
-                    }))
-                  }
-                  placeholder="Dr. Roberto Silva - Inversionista Ángel&#10;María González - Mentora Startup"
-                  rows={3}
-                />
-                <p className="text-xs text-muted-foreground">
-                  Formato: Nombre - Cargo (uno por línea)
-                </p>
-              </div>
+              <ListInput
+                label="Ponentes/Facilitadores"
+                placeholder="Ej: Dr. Juan Pérez - Inversionista Ángel"
+                value={formData.speakers}
+                onChange={(value) =>
+                  setFormData((prev) => ({ ...prev, speakers: value }))
+                }
+              />
 
               <div className="flex items-center space-x-2">
                 <Checkbox
@@ -757,11 +713,13 @@ export default function AdminEventsPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Todas</SelectItem>
-                  {categories.map((category) => (
-                    <SelectItem key={category} value={category}>
-                      {category}
-                    </SelectItem>
-                  ))}
+                  {categories
+                    .filter((category) => category && category.trim() !== "")
+                    .map((category) => (
+                      <SelectItem key={category} value={category}>
+                        {category}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
 

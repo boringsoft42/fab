@@ -170,6 +170,11 @@ export const youthSidebarData: SidebarData = {
           icon: Newspaper,
           url: "/news",
         },
+        {
+          title: "Eventos",
+          icon: Calendar,
+          url: "/events",
+        },
       ],
     },
     {
@@ -442,9 +447,15 @@ export const municipalGovernmentSidebarData: SidebarData = {
               title: "Gestión de Contenido",
               url: "/admin/youth-content",
             },
+          ],
+        },
+        {
+          title: "Eventos",
+          icon: Calendar,
+          items: [
             {
               title: "Gestión de Eventos",
-              url: "/admin/entrepreneurship/events",
+              url: "/municipalities/events",
             },
           ],
         },
@@ -453,8 +464,8 @@ export const municipalGovernmentSidebarData: SidebarData = {
           icon: FileText,
           items: [
             {
-              title: "Ver Recursos",
-              url: "/resources",
+              title: "Gestión de Recursos",
+              url: "/municipalities/resources",
             },
             {
               title: "Crear Recurso",
@@ -795,10 +806,15 @@ export const superAdminSidebarData: SidebarData = {
           url: "/admin/entrepreneurship",
           icon: Lightbulb,
         },
+      ],
+    },
+    {
+      title: "Eventos",
+      items: [
         {
           title: "Gestión de Eventos",
           url: "/admin/events",
-          icon: Lightbulb,
+          icon: Calendar,
         },
       ],
     },

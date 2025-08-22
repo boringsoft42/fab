@@ -8,25 +8,26 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { DashboardYouth } from "./role-specific/dashboard-youth";
 import { DashboardAdolescent } from "./role-specific/dashboard-adolescent";
+import { DashboardMunicipality } from "./role-specific/dashboard-municipality";
 
 export function AdaptiveDashboard() {
   const { profile, isLoading, error } = useCurrentUser();
-  
+
   // Aplicar colores personalizados del municipio
   const colors = useUserColors();
 
   // Debug logs
-    console.log("🔍 AdaptiveDashboard - Debug Info:", {
-      profile,
-      isLoading,
-      error,
-      profileRole: profile?.role,
-      profileRoleType: typeof profile?.role,
-      colors: {
-        primaryColor: colors.primaryColor,
-        secondaryColor: colors.secondaryColor
-      }
-    });
+  console.log("🔍 AdaptiveDashboard - Debug Info:", {
+    profile,
+    isLoading,
+    error,
+    profileRole: profile?.role,
+    profileRoleType: typeof profile?.role,
+    colors: {
+      primaryColor: colors.primaryColor,
+      secondaryColor: colors.secondaryColor,
+    },
+  });
 
   // Show skeleton while loading
   if (isLoading) {
@@ -72,16 +73,16 @@ export function AdaptiveDashboard() {
       <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-          <p className="text-muted-foreground">
-            Bienvenido al sistema CEMSE
-          </p>
+          <p className="text-muted-foreground">Bienvenido al sistema CEMSE</p>
         </div>
         <Card>
           <CardHeader>
             <CardTitle>No hay perfil disponible</CardTitle>
           </CardHeader>
           <CardContent>
-            <p>No se pudo cargar tu perfil. Por favor, inicia sesión nuevamente.</p>
+            <p>
+              No se pudo cargar tu perfil. Por favor, inicia sesión nuevamente.
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -90,36 +91,38 @@ export function AdaptiveDashboard() {
 
   // Get role display name
   const getRoleDisplayName = (role: string | null) => {
-    if (!role) return 'Usuario';
-    
+    if (!role) return "Usuario";
+
     const roleMap: Record<string, string> = {
-      'SUPER_ADMIN': 'Super Administrador',
-      'SUPERADMIN': 'Super Administrador', // Agregado para compatibilidad
-      'JOVENES': 'Jóvenes',
-      'ADOLESCENTES': 'Adolescentes',
-      'EMPRESAS': 'Empresas',
-      'GOBIERNOS_MUNICIPALES': 'Gobiernos Municipales',
-      'CENTROS_DE_FORMACION': 'Centros de Formación',
-      'ONGS_Y_FUNDACIONES': 'ONGs y Fundaciones',
-      'CLIENT': 'Cliente',
-      'AGENT': 'Agente'
+      SUPER_ADMIN: "Super Administrador",
+      SUPERADMIN: "Super Administrador", // Agregado para compatibilidad
+      JOVENES: "Jóvenes",
+      ADOLESCENTES: "Adolescentes",
+      EMPRESAS: "Empresas",
+      GOBIERNOS_MUNICIPALES: "Gobiernos Municipales",
+      CENTROS_DE_FORMACION: "Centros de Formación",
+      ONGS_Y_FUNDACIONES: "ONGs y Fundaciones",
+      CLIENT: "Cliente",
+      AGENT: "Agente",
     };
-    
+
     return roleMap[role] || role;
   };
 
   // Render role-specific dashboards
   switch (profile.role) {
-    case 'JOVENES':
+    case "JOVENES":
       return <DashboardYouth />;
-    
-    case 'ADOLESCENTES':
+
+    case "ADOLESCENTES":
       return <DashboardAdolescent />;
-    
-    case 'GOBIERNOS_MUNICIPALES':
-    case 'CENTROS_DE_FORMACION':
-    case 'ONGS_Y_FUNDACIONES':
-      // For institutions, use the generic dashboard with custom colors
+
+    case "GOBIERNOS_MUNICIPALES":
+      return <DashboardMunicipality />;
+
+    case "CENTROS_DE_FORMACION":
+    case "ONGS_Y_FUNDACIONES":
+      // For other institutions, use the generic dashboard with custom colors
       return (
         <div className="space-y-6">
           <div>
@@ -128,14 +131,14 @@ export function AdaptiveDashboard() {
               Bienvenido al sistema CEMSE - {getRoleDisplayName(profile.role)}
             </p>
           </div>
-          
+
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <Card className="border-2 hover:shadow-lg transition-shadow">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Cursos</CardTitle>
               </CardHeader>
               <CardContent>
-                <div 
+                <div
                   className="text-2xl font-bold"
                   style={{ color: colors.primaryColor }}
                 >
@@ -146,13 +149,13 @@ export function AdaptiveDashboard() {
                 </p>
               </CardContent>
             </Card>
-            
+
             <Card className="border-2 hover:shadow-lg transition-shadow">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Empleos</CardTitle>
               </CardHeader>
               <CardContent>
-                <div 
+                <div
                   className="text-2xl font-bold"
                   style={{ color: colors.secondaryColor }}
                 >
@@ -163,13 +166,13 @@ export function AdaptiveDashboard() {
                 </p>
               </CardContent>
             </Card>
-            
+
             <Card className="border-2 hover:shadow-lg transition-shadow">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Noticias</CardTitle>
               </CardHeader>
               <CardContent>
-                <div 
+                <div
                   className="text-2xl font-bold"
                   style={{ color: colors.primaryColor }}
                 >
@@ -180,21 +183,19 @@ export function AdaptiveDashboard() {
                 </p>
               </CardContent>
             </Card>
-            
+
             <Card className="border-2 hover:shadow-lg transition-shadow">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Progreso</CardTitle>
               </CardHeader>
               <CardContent>
-                <div 
+                <div
                   className="text-2xl font-bold"
                   style={{ color: colors.secondaryColor }}
                 >
                   {profile.completionPercentage || 0}%
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  Completado
-                </p>
+                <p className="text-xs text-muted-foreground">Completado</p>
               </CardContent>
             </Card>
           </div>
@@ -202,7 +203,7 @@ export function AdaptiveDashboard() {
           <div className="grid gap-6 md:grid-cols-2">
             <Card className="border-2 hover:shadow-lg transition-shadow">
               <CardHeader>
-                <CardTitle 
+                <CardTitle
                   className="text-lg font-semibold"
                   style={{ color: colors.primaryColor }}
                 >
@@ -211,27 +212,31 @@ export function AdaptiveDashboard() {
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex justify-between items-center p-2 rounded bg-gray-50">
-                  <strong>ID:</strong> 
+                  <strong>ID:</strong>
                   <span className="font-mono text-sm">{profile.id}</span>
                 </div>
                 <div className="flex justify-between items-center p-2 rounded bg-gray-50">
-                  <strong>Usuario:</strong> 
-                  <span style={{ color: colors.primaryColor }}>{profile.firstName}</span>
+                  <strong>Usuario:</strong>
+                  <span style={{ color: colors.primaryColor }}>
+                    {profile.firstName}
+                  </span>
                 </div>
                 <div className="flex justify-between items-center p-2 rounded bg-gray-50">
-                  <strong>Rol:</strong> 
-                  <span style={{ color: colors.secondaryColor }}>{getRoleDisplayName(profile.role)}</span>
+                  <strong>Rol:</strong>
+                  <span style={{ color: colors.secondaryColor }}>
+                    {getRoleDisplayName(profile.role)}
+                  </span>
                 </div>
                 <div className="flex justify-between items-center p-2 rounded bg-gray-50">
-                  <strong>Rol Original:</strong> 
+                  <strong>Rol Original:</strong>
                   <span className="font-mono text-sm">"{profile.role}"</span>
                 </div>
               </CardContent>
             </Card>
-            
+
             <Card className="border-2 hover:shadow-lg transition-shadow">
               <CardHeader>
-                <CardTitle 
+                <CardTitle
                   className="text-lg font-semibold"
                   style={{ color: colors.secondaryColor }}
                 >
@@ -239,22 +244,22 @@ export function AdaptiveDashboard() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div 
+                <div
                   className="p-4 rounded-lg border-2 border-dashed"
                   style={{
                     borderColor: colors.primaryColor,
-                    backgroundColor: `${colors.primaryColor}08`
+                    backgroundColor: `${colors.primaryColor}08`,
                   }}
                 >
                   <p className="text-muted-foreground text-center">
                     Aquí aparecerán las acciones específicas para tu rol.
                   </p>
                   <div className="mt-3 text-center">
-                    <span 
+                    <span
                       className="text-xs px-2 py-1 rounded-full"
                       style={{
                         backgroundColor: colors.secondaryColor,
-                        color: 'white'
+                        color: "white",
                       }}
                     >
                       Personalizado con colores del municipio
@@ -266,8 +271,8 @@ export function AdaptiveDashboard() {
           </div>
         </div>
       );
-    
-    case 'EMPRESAS':
+
+    case "EMPRESAS":
       // Generic dashboard for companies with neutral colors
       return (
         <div className="space-y-6">
@@ -277,50 +282,44 @@ export function AdaptiveDashboard() {
               Bienvenido al sistema CEMSE - {getRoleDisplayName(profile.role)}
             </p>
           </div>
-          
+
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <Card className="border-2 hover:shadow-lg transition-shadow">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Cursos</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-gray-700">
-                  0
-                </div>
+                <div className="text-2xl font-bold text-gray-700">0</div>
                 <p className="text-xs text-muted-foreground">
                   Cursos disponibles
                 </p>
               </CardContent>
             </Card>
-            
+
             <Card className="border-2 hover:shadow-lg transition-shadow">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Empleos</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-gray-700">
-                  0
-                </div>
+                <div className="text-2xl font-bold text-gray-700">0</div>
                 <p className="text-xs text-muted-foreground">
                   Ofertas de trabajo
                 </p>
               </CardContent>
             </Card>
-            
+
             <Card className="border-2 hover:shadow-lg transition-shadow">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Noticias</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-gray-700">
-                  0
-                </div>
+                <div className="text-2xl font-bold text-gray-700">0</div>
                 <p className="text-xs text-muted-foreground">
                   Artículos disponibles
                 </p>
               </CardContent>
             </Card>
-            
+
             <Card className="border-2 hover:shadow-lg transition-shadow">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Progreso</CardTitle>
@@ -329,9 +328,7 @@ export function AdaptiveDashboard() {
                 <div className="text-2xl font-bold text-gray-700">
                   {profile.completionPercentage || 0}%
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  Completado
-                </p>
+                <p className="text-xs text-muted-foreground">Completado</p>
               </CardContent>
             </Card>
           </div>
@@ -345,24 +342,26 @@ export function AdaptiveDashboard() {
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex justify-between items-center p-2 rounded bg-gray-50">
-                  <strong>ID:</strong> 
+                  <strong>ID:</strong>
                   <span className="font-mono text-sm">{profile.id}</span>
                 </div>
                 <div className="flex justify-between items-center p-2 rounded bg-gray-50">
-                  <strong>Usuario:</strong> 
+                  <strong>Usuario:</strong>
                   <span className="text-gray-700">{profile.firstName}</span>
                 </div>
                 <div className="flex justify-between items-center p-2 rounded bg-gray-50">
-                  <strong>Rol:</strong> 
-                  <span className="text-gray-700">{getRoleDisplayName(profile.role)}</span>
+                  <strong>Rol:</strong>
+                  <span className="text-gray-700">
+                    {getRoleDisplayName(profile.role)}
+                  </span>
                 </div>
                 <div className="flex justify-between items-center p-2 rounded bg-gray-50">
-                  <strong>Rol Original:</strong> 
+                  <strong>Rol Original:</strong>
                   <span className="font-mono text-sm">"{profile.role}"</span>
                 </div>
               </CardContent>
             </Card>
-            
+
             <Card className="border-2 hover:shadow-lg transition-shadow">
               <CardHeader>
                 <CardTitle className="text-lg font-semibold text-gray-700">
@@ -385,7 +384,7 @@ export function AdaptiveDashboard() {
           </div>
         </div>
       );
-    
+
     default:
       // Generic dashboard for other roles (companies, etc.)
       return (
@@ -396,50 +395,44 @@ export function AdaptiveDashboard() {
               Bienvenido al sistema CEMSE - {getRoleDisplayName(profile.role)}
             </p>
           </div>
-          
+
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <Card className="border-2 hover:shadow-lg transition-shadow">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Cursos</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-blue-600">
-                  0
-                </div>
+                <div className="text-2xl font-bold text-blue-600">0</div>
                 <p className="text-xs text-muted-foreground">
                   Cursos disponibles
                 </p>
               </CardContent>
             </Card>
-            
+
             <Card className="border-2 hover:shadow-lg transition-shadow">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Empleos</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-orange-600">
-                  0
-                </div>
+                <div className="text-2xl font-bold text-orange-600">0</div>
                 <p className="text-xs text-muted-foreground">
                   Ofertas de trabajo
                 </p>
               </CardContent>
             </Card>
-            
+
             <Card className="border-2 hover:shadow-lg transition-shadow">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Noticias</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-blue-600">
-                  0
-                </div>
+                <div className="text-2xl font-bold text-blue-600">0</div>
                 <p className="text-xs text-muted-foreground">
                   Artículos disponibles
                 </p>
               </CardContent>
             </Card>
-            
+
             <Card className="border-2 hover:shadow-lg transition-shadow">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Progreso</CardTitle>
@@ -448,9 +441,7 @@ export function AdaptiveDashboard() {
                 <div className="text-2xl font-bold text-orange-600">
                   {profile.completionPercentage || 0}%
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  Completado
-                </p>
+                <p className="text-xs text-muted-foreground">Completado</p>
               </CardContent>
             </Card>
           </div>
@@ -464,24 +455,26 @@ export function AdaptiveDashboard() {
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex justify-between items-center p-2 rounded bg-gray-50">
-                  <strong>ID:</strong> 
+                  <strong>ID:</strong>
                   <span className="font-mono text-sm">{profile.id}</span>
                 </div>
                 <div className="flex justify-between items-center p-2 rounded bg-gray-50">
-                  <strong>Usuario:</strong> 
+                  <strong>Usuario:</strong>
                   <span className="text-blue-600">{profile.firstName}</span>
                 </div>
                 <div className="flex justify-between items-center p-2 rounded bg-gray-50">
-                  <strong>Rol:</strong> 
-                  <span className="text-orange-600">{getRoleDisplayName(profile.role)}</span>
+                  <strong>Rol:</strong>
+                  <span className="text-orange-600">
+                    {getRoleDisplayName(profile.role)}
+                  </span>
                 </div>
                 <div className="flex justify-between items-center p-2 rounded bg-gray-50">
-                  <strong>Rol Original:</strong> 
+                  <strong>Rol Original:</strong>
                   <span className="font-mono text-sm">"{profile.role}"</span>
                 </div>
               </CardContent>
             </Card>
-            
+
             <Card className="border-2 hover:shadow-lg transition-shadow">
               <CardHeader>
                 <CardTitle className="text-lg font-semibold text-orange-600">

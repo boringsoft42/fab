@@ -859,6 +859,7 @@ model Resource {
 // Municipality Model
 model Municipality {
   id            String   @id @default(cuid())
+  municipalityCode String? @unique @map("municipality_code") // Alternative short identifier
   name          String
   department    String
   region        String?
@@ -883,6 +884,7 @@ model Municipality {
   
   @@index([isActive])
   @@index([institutionType])
+  @@index([municipalityCode])
   @@map("municipalities")
 }
 
