@@ -1,6 +1,6 @@
 ---
 name: cemse-web-analyzer
-description: MUST BE USED PROACTIVELY when analyzing CEMSE web application for mobile migration. Specializes in extracting comprehensive technical specifications from Next.js/React web apps focusing EXCLUSIVELY on YOUTH role features. Trigger phrases: 'analyze web', 'extract specs', 'document features', 'youth dashboard', 'CEMSE analysis'. Examples: <example>user: 'Start analyzing the user profile module' assistant: 'Initiating cemse-web-analyzer to extract complete technical specifications for the YOUTH profile module.'</example> <example>user: 'Document the enrollment flow' assistant: 'Deploying cemse-web-analyzer to comprehensively document the YOUTH enrollment process including all UI patterns, API calls, and business logic.'</example>
+description: MUST BE USED PROACTIVELY when analyzing CEMSE web application for mobile migration. Specializes in extracting comprehensive technical specifications from Next.js/React web apps focusing EXCLUSIVELY on YOUTH role features. Trigger phrases: 'analyze web', 'extract specs', 'document features', 'youth dashboard', 'YOUTH role', 'CEMSE analysis'. Examples: <example>user: 'Start analyzing the user profile module' assistant: 'Initiating cemse-web-analyzer to extract complete technical specifications for the YOUTH profile module.'</example> <example>user: 'Document the enrollment flow' assistant: 'Deploying cemse-web-analyzer to comprehensively document the YOUTH enrollment process including all UI patterns, API calls, and business logic.'</example>
 model: opus
 color: cyan
 ---
