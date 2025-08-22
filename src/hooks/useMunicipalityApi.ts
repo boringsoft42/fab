@@ -3,9 +3,9 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { MunicipalityService } from '@/services/municipality.service';
 import { useAuth } from '@/hooks/use-auth';
-import type { 
-  Municipality, 
-  CreateMunicipalityRequest, 
+import type {
+  Municipality,
+  CreateMunicipalityRequest,
   UpdateMunicipalityRequest,
   MunicipalityAuthRequest,
   MunicipalityChangePasswordRequest
@@ -50,7 +50,7 @@ export const useMunicipality = (id: string) => {
 // Create municipality
 export const useCreateMunicipality = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: (data: CreateMunicipalityRequest) => MunicipalityService.create(data),
     onSuccess: () => {
@@ -62,7 +62,7 @@ export const useCreateMunicipality = () => {
 // Update municipality
 export const useUpdateMunicipality = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: UpdateMunicipalityRequest }) =>
       MunicipalityService.update(id, data),
@@ -76,7 +76,7 @@ export const useUpdateMunicipality = () => {
 // Delete municipality
 export const useDeleteMunicipality = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: (id: string) => MunicipalityService.delete(id),
     onSuccess: () => {
@@ -95,18 +95,18 @@ export const useMunicipalityLogin = () => {
 // Get current municipality
 export const useCurrentMunicipality = () => {
   const { user, isAuthenticated } = useAuth();
-  
+
   console.log("🏛️ useCurrentMunicipality - Debug info:", {
     user: !!user,
     isAuthenticated,
     userRole: user?.role,
-    shouldEnable: isAuthenticated && (user?.role === 'MUNICIPAL_GOVERNMENTS' || user?.role === 'GOBIERNOS_MUNICIPALES')
+    shouldEnable: isAuthenticated && (user?.role === 'MUNICIPAL_GOVERNMENTS' || user?.role === 'GOBIERNOS_MUNICIPALES' || user?.role === 'municipality')
   });
-  
+
   return useQuery({
     queryKey: ['municipality', 'current'],
     queryFn: MunicipalityService.getCurrentMunicipality,
-    enabled: isAuthenticated && (user?.role === 'MUNICIPAL_GOVERNMENTS' || user?.role === 'GOBIERNOS_MUNICIPALES'),
+    enabled: isAuthenticated && (user?.role === 'MUNICIPAL_GOVERNMENTS' || user?.role === 'GOBIERNOS_MUNICIPALES' || user?.role === 'municipality'),
   });
 };
 
