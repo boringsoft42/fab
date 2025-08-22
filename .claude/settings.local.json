@@ -1,12 +1,65 @@
 {
+  "cleanupPeriodDays": 60,
+  "includeCoAuthoredBy": true,
+  "enableAllProjectMcpServers": true,
+  "env": {
+    "CLAUDE_CODE_MAX_OUTPUT_TOKENS": "8192",
+    "DISABLE_COST_WARNINGS": "0",
+    "MAX_THINKING_TOKENS": "32768"
+  },
   "permissions": {
+    "defaultMode": "acceptEdits",
     "allow": [
-      "Bash(find:*)",
-      "Bash(for file in \"src/app/api/contacts/requests/[id]/accept/route.ts\" \"src/app/api/contacts/requests/[id]/reject/route.ts\" \"src/app/api/contacts/route.ts\" \"src/app/api/contacts/search/route.ts\" \"src/app/api/contacts/stats/route.ts\")",
-      "Bash(do echo \"Processing: $file\")",
-      "Bash(sed:*)",
-      "Bash(done)"
+      "Bash(git:*)",
+      "Bash(npm:*)",
+      "Bash(yarn:*)",
+      "Bash(pnpm:*)",
+      "Bash(bun:*)",
+      "Bash(python:*)",
+      "Bash(pip:*)",
+      "Bash(pytest:*)",
+      "Bash(ruff:*)",
+      "Bash(mypy:*)",
+      "WebFetch",
+      "WebSearch",
+      "Edit",
+      "Write",
+      "MultiEdit",
+      "Task"
     ],
-    "defaultMode": "acceptEdits"
+    "additionalDirectories": ["../docs/", "./PRPs/", "./ai_docs/"]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'Creating file: ${CLAUDE_TOOL_ARG_PATH}'"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'Editing file: ${CLAUDE_TOOL_ARG_PATH}'"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'Command completed: ${CLAUDE_TOOL_ARG_PATH}'"
+          }
+        ]
+      }
+    ]
   }
 }
