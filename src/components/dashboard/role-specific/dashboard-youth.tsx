@@ -28,6 +28,7 @@ import {
   ArrowRight,
   Briefcase,
   BookOpen,
+  AlertCircle,
 } from "lucide-react";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -35,53 +36,33 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { useDashboard } from "@/hooks/useDashboard";
+import { usePublicNews } from "@/hooks/useNewsArticleApi";
 
-// News types
-interface NewsArticle {
-  id: string;
-  title: string;
-  summary: string;
-  imageUrl?: string;
-  authorName: string;
-  authorType: "COMPANY" | "GOVERNMENT" | "NGO";
-  authorLogo?: string;
-  publishedAt: string;
-}
+// Import the real NewsArticle type
+import { NewsArticle } from "@/types/news";
 
 function NewsCarousel() {
-  const [companyNews, setCompanyNews] = useState<NewsArticle[]>([]);
-  const [governmentNews, setGovernmentNews] = useState<NewsArticle[]>([]);
-  const [loading, setLoading] = useState(true);
   const [companyIndex, setCompanyIndex] = useState(0);
   const [governmentIndex, setGovernmentIndex] = useState(0);
 
-  useEffect(() => {
-    fetchNews();
-  }, []);
+  // Use the real news hook
+  const { data: allNews, isLoading: loading, error } = usePublicNews();
 
-  const fetchNews = async () => {
-    try {
-      setLoading(true);
-      const companyResponse = await fetch(
-        "/api/news?type=company&featured=true&targetAudience=YOUTH&limit=6"
-      );
-      const companyData = await companyResponse.json();
-      const govResponse = await fetch(
-        "/api/news?type=government&targetAudience=YOUTH&limit=6"
-      );
-      const govData = await govResponse.json();
-      const ngoResponse = await fetch(
-        "/api/news?type=ngo&targetAudience=YOUTH&limit=6"
-      );
-      const ngoData = await ngoResponse.json();
-      setCompanyNews(companyData.news || []);
-      setGovernmentNews([...(govData.news || []), ...(ngoData.news || [])]);
-    } catch (error) {
-      console.error("Error fetching news:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Filter news by type
+  const companyNews =
+    allNews?.filter(
+      (news) => news.authorType === "COMPANY" || news.authorType === "company"
+    ) || [];
+
+  const governmentNews =
+    allNews?.filter(
+      (news) =>
+        news.authorType === "GOVERNMENT" ||
+        news.authorType === "government" ||
+        news.authorType === "NGO" ||
+        news.authorType === "ngo"
+    ) || [];
 
   const formatTimeAgo = (dateString: string) => {
     const date = new Date(dateString);
@@ -140,8 +121,13 @@ function NewsCarousel() {
           <h3 className="font-medium text-sm line-clamp-2 mb-2 group-hover:text-blue-600 transition-colors">
             {article.title}
           </h3>
+          <p className="text-xs text-muted-foreground line-clamp-2 mb-3">
+            {article.summary}
+          </p>
           <div className="flex items-center justify-between text-xs text-muted-foreground">
-            <span>{formatTimeAgo(article.publishedAt)}</span>
+            <span>
+              {formatTimeAgo(article.publishedAt || article.createdAt)}
+            </span>
             <div className="flex items-center gap-2">
               <span className="flex items-center gap-1">
                 <Eye className="w-3 h-3" />
@@ -163,6 +149,30 @@ function NewsCarousel() {
             <Skeleton className="h-[300px] w-full rounded-lg" />
           </div>
         ))}
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-8">
+        <div className="text-center space-y-2">
+          <h2 className="text-2xl font-bold text-gray-900">
+            Centro de Noticias
+          </h2>
+          <p className="text-muted-foreground">
+            Mantente informado sobre las últimas novedades
+          </p>
+        </div>
+        <div className="text-center py-8">
+          <AlertCircle className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+          <p className="text-sm text-gray-500">
+            No se pudieron cargar las noticias
+          </p>
+          <p className="text-xs text-gray-400 mt-1">
+            Por favor, intenta de nuevo más tarde
+          </p>
+        </div>
       </div>
     );
   }
@@ -287,6 +297,43 @@ function NewsCarousel() {
 }
 
 export function DashboardYouth() {
+  const { data: dashboardData, isLoading, error } = useDashboard();
+
+  // Default values for when data is loading or not available
+  const stats = dashboardData?.statistics || {
+    totalCourses: 0,
+    totalJobs: 0,
+    totalEntrepreneurships: 0,
+    totalInstitutions: 0,
+    userCourses: 0,
+    userJobApplications: 0,
+    userEntrepreneurships: 0,
+  };
+
+  const activities = dashboardData?.recentActivities || [];
+
+  // Show error state if there's an error
+  if (error) {
+    return (
+      <div className="space-y-8 px-10 py-4">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-6">
+          <div className="flex items-center gap-3">
+            <AlertCircle className="w-5 h-5 text-red-600" />
+            <div>
+              <h3 className="text-sm font-medium text-red-800">
+                Error al cargar el dashboard
+              </h3>
+              <p className="text-sm text-red-700">
+                No se pudieron cargar los datos. Por favor, intenta de nuevo más
+                tarde.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const modules = [
     {
       title: "Empleos",
@@ -294,7 +341,11 @@ export function DashboardYouth() {
       icon: Rocket,
       href: "/jobs",
       color: "bg-gray-600",
-      metric: { label: "Ofertas", value: "156", icon: Sparkles },
+      metric: {
+        label: "Ofertas",
+        value: stats.totalJobs.toString(),
+        icon: Sparkles,
+      },
       actions: [
         { label: "Explorar", href: "/jobs/browse" },
         { label: "Mis Postulaciones", href: "/jobs/applications" },
@@ -306,7 +357,11 @@ export function DashboardYouth() {
       icon: GraduationCap,
       href: "/courses",
       color: "bg-gray-600",
-      metric: { label: "En curso", value: "2", icon: Play },
+      metric: {
+        label: "En curso",
+        value: stats.userCourses.toString(),
+        icon: Play,
+      },
       actions: [
         { label: "Explorar Cursos", href: "/courses" },
         { label: "Mis Cursos", href: "/my-courses" },
@@ -318,7 +373,11 @@ export function DashboardYouth() {
       icon: Zap,
       href: "/entrepreneurship",
       color: "bg-gray-600",
-      metric: { label: "Proyectos", value: "1", icon: Target },
+      metric: {
+        label: "Proyectos",
+        value: stats.userEntrepreneurships.toString(),
+        icon: Target,
+      },
       actions: [
         { label: "Empezar", href: "/entrepreneurship/ideas" },
         { label: "Mi Proyecto", href: "/entrepreneurship/my-project" },
@@ -330,7 +389,11 @@ export function DashboardYouth() {
       icon: Building2,
       href: "/institutions",
       color: "bg-gray-600",
-      metric: { label: "Disponibles", value: "25", icon: Shield },
+      metric: {
+        label: "Disponibles",
+        value: stats.totalInstitutions.toString(),
+        icon: Shield,
+      },
       actions: [
         { label: "Ver Directorio", href: "/institutions" },
         { label: "Municipios", href: "/municipalities" },
@@ -388,27 +451,44 @@ export function DashboardYouth() {
 
       {/* Quick Stats with Animation - Single Row */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-        {modules.map((module, index) => (
-          <motion.div
-            key={module.title}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 * index, duration: 0.5 }}
-            whileHover={{ scale: 1.05 }}
-            className={`${module.color} rounded-2xl p-6 text-white shadow-lg`}
-          >
-            <div className="flex flex-col items-center text-center space-y-3">
+        {isLoading
+          ? // Loading skeleton for stats
+            [...Array(4)].map((_, i) => (
               <motion.div
-                whileHover={{ rotate: 10 }}
-                className="bg-white/20 rounded-xl p-3"
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 * i, duration: 0.5 }}
+                className="bg-gray-600 rounded-2xl p-6 text-white shadow-lg"
               >
-                <module.metric.icon className="w-8 h-8" />
+                <div className="flex flex-col items-center text-center space-y-3">
+                  <Skeleton className="w-14 h-14 rounded-xl bg-white/20" />
+                  <Skeleton className="h-8 w-16 bg-white/80" />
+                  <Skeleton className="h-4 w-20 bg-white/60" />
+                </div>
               </motion.div>
-              <p className="text-3xl font-bold">{module.metric.value}</p>
-              <p className="text-sm text-white/90">{module.metric.label}</p>
-            </div>
-          </motion.div>
-        ))}
+            ))
+          : modules.map((module, index) => (
+              <motion.div
+                key={module.title}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 * index, duration: 0.5 }}
+                whileHover={{ scale: 1.05 }}
+                className={`${module.color} rounded-2xl p-6 text-white shadow-lg`}
+              >
+                <div className="flex flex-col items-center text-center space-y-3">
+                  <motion.div
+                    whileHover={{ rotate: 10 }}
+                    className="bg-white/20 rounded-xl p-3"
+                  >
+                    <module.metric.icon className="w-8 h-8" />
+                  </motion.div>
+                  <p className="text-3xl font-bold">{module.metric.value}</p>
+                  <p className="text-sm text-white/90">{module.metric.label}</p>
+                </div>
+              </motion.div>
+            ))}
       </div>
 
       {/* Main Modules with Animation */}
@@ -480,37 +560,49 @@ export function DashboardYouth() {
           </CardHeader>
           <CardContent>
             <motion.div className="space-y-4">
-              {[
-                {
-                  icon: Briefcase,
-                  text: "¡Postulaste a un trabajo!",
-                  time: "Hace 2 días",
-                },
-                {
-                  icon: BookOpen,
-                  text: "¡Completaste un curso!",
-                  time: "Hace 5 días",
-                },
-                {
-                  icon: Target,
-                  text: "¡Nueva idea de negocio!",
-                  time: "Hace 1 semana",
-                },
-              ].map((activity, index) => (
-                <motion.div
-                  key={index}
-                  whileHover={{ x: 5 }}
-                  className="flex items-center justify-between p-4 bg-gray-50 rounded-xl"
-                >
-                  <div className="flex items-center gap-3">
-                    <activity.icon
-                      className="w-6 h-6 text-gray-600"
-                    />
-                    <span className="text-lg">{activity.text}</span>
-                  </div>
-                  <Badge variant="secondary">{activity.time}</Badge>
-                </motion.div>
-              ))}
+              {isLoading ? (
+                // Loading skeleton for activities
+                [...Array(3)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className="flex items-center justify-between p-4 bg-gray-50 rounded-xl"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Skeleton className="w-6 h-6 rounded" />
+                      <Skeleton className="h-6 w-64" />
+                    </div>
+                    <Skeleton className="h-6 w-20" />
+                  </motion.div>
+                ))
+              ) : activities.length > 0 ? (
+                // Real activities
+                activities.slice(0, 3).map((activity, index) => (
+                  <motion.div
+                    key={activity.id}
+                    whileHover={{ x: 5 }}
+                    className="flex items-center justify-between p-4 bg-gray-50 rounded-xl"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 text-gray-600">
+                        {activity.icon}
+                      </div>
+                      <span className="text-lg">{activity.title}</span>
+                    </div>
+                    <Badge variant="secondary">{activity.timestamp}</Badge>
+                  </motion.div>
+                ))
+              ) : (
+                // No activities
+                <div className="text-center py-8">
+                  <FileText className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                  <p className="text-sm text-gray-500">
+                    No hay actividades recientes
+                  </p>
+                  <p className="text-xs text-gray-400 mt-1">
+                    Comienza a explorar oportunidades para ver tu actividad aquí
+                  </p>
+                </div>
+              )}
             </motion.div>
           </CardContent>
         </Card>

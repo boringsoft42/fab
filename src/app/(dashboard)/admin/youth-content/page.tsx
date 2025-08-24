@@ -1260,10 +1260,6 @@ export default function YouthContentManagementPage() {
                 {getTabIcon("contacts")}
                 Red de Contactos
               </TabsTrigger>
-              <TabsTrigger value="mentors" className="flex items-center gap-2">
-                {getTabIcon("mentors")}
-                Mentorías
-              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="resources" className="space-y-4">
@@ -1359,31 +1355,6 @@ export default function YouthContentManagementPage() {
               <div className="text-center py-8 text-muted-foreground">
                 Los contactos de networking aparecen aquí. Agrega emprendedores
                 para la red.
-              </div>
-            </TabsContent>
-
-            <TabsContent value="mentors" className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold">Mentorías</h3>
-                <Button
-                  onClick={() => {
-                    setActiveTab("mentors");
-                    setShowCreateDialog(true);
-                  }}
-                  size="sm"
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  Nuevo Mentor
-                </Button>
-              </div>
-              <p className="text-muted-foreground">
-                Gestiona mentores y programas de mentoría disponibles para
-                jóvenes
-              </p>
-
-              <div className="text-center py-8 text-muted-foreground">
-                Los mentores aparecen aquí. Agrega mentores y programas de
-                mentoría.
               </div>
             </TabsContent>
           </Tabs>

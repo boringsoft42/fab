@@ -38,7 +38,7 @@ const statusLabels = {
 
 export default function CompanyJobsPage() {
   const { toast } = useToast();
-  const { user, getCurrentUser } = useAuthContext();
+  const { user, getCurrentUser } = useAuth();
   const router = useRouter();
   const [jobOffers, setJobOffers] = useState<JobOffer[]>([]);
   const [loading, setLoading] = useState(true);

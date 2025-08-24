@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   Search,
   FileText,
@@ -26,7 +25,6 @@ import {
   Calendar,
   ThumbsUp,
   Bookmark,
-  CheckCircle,
   AlertCircle,
   Share,
   ChevronLeft,
@@ -37,6 +35,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CardDescription } from "@/components/ui/card";
+import { useDashboard } from "@/hooks/useDashboard";
+
 // News types
 interface NewsArticle {
   id: string;
@@ -592,6 +592,43 @@ export function LocalNewsCarousel() {
 }
 
 export function DashboardAdolescent() {
+  const { data: dashboardData, isLoading, error } = useDashboard();
+
+  // Show error state if there's an error
+  if (error) {
+    return (
+      <div className="space-y-8">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-6">
+          <div className="flex items-center gap-3">
+            <AlertCircle className="w-5 h-5 text-red-600" />
+            <div>
+              <h3 className="text-sm font-medium text-red-800">
+                Error al cargar el dashboard
+              </h3>
+              <p className="text-sm text-red-700">
+                No se pudieron cargar los datos. Por favor, intenta de nuevo más
+                tarde.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Default values for when data is loading or not available
+  const stats = dashboardData?.statistics || {
+    totalCourses: 0,
+    totalJobs: 0,
+    totalEntrepreneurships: 0,
+    totalInstitutions: 0,
+    userCourses: 0,
+    userJobApplications: 0,
+    userEntrepreneurships: 0,
+  };
+
+  const activities = dashboardData?.recentActivities || [];
+
   return (
     <div className="space-y-8">
       {/* Welcome Section */}
@@ -627,7 +664,7 @@ export function DashboardAdolescent() {
       </div>
 
       {/* Enhanced News Carousel */}
-        <LocalNewsCarousel />
+      <LocalNewsCarousel />
 
       {/* Quick Access Modules */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -708,35 +745,46 @@ export function DashboardAdolescent() {
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-              <div className="flex items-center gap-3">
-                <CheckCircle className="w-4 h-4 text-gray-600" />
-                <span className="text-sm">
-                  Completaste &quot;Orientación Vocacional - Módulo 1&quot;
-                </span>
+            {isLoading ? (
+              // Loading skeleton for activities
+              [...Array(3)].map((_, i) => (
+                <div
+                  key={i}
+                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                >
+                  <div className="flex items-center gap-3">
+                    <Skeleton className="w-4 h-4 rounded" />
+                    <Skeleton className="h-4 w-64" />
+                  </div>
+                  <Skeleton className="h-6 w-20" />
+                </div>
+              ))
+            ) : activities.length > 0 ? (
+              // Real activities
+              activities.slice(0, 5).map((activity) => (
+                <div
+                  key={activity.id}
+                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-4 h-4 text-gray-600">{activity.icon}</div>
+                    <span className="text-sm">{activity.title}</span>
+                  </div>
+                  <Badge variant="secondary">{activity.timestamp}</Badge>
+                </div>
+              ))
+            ) : (
+              // No activities
+              <div className="text-center py-8">
+                <FileText className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                <p className="text-sm text-gray-500">
+                  No hay actividades recientes
+                </p>
+                <p className="text-xs text-gray-400 mt-1">
+                  Comienza a explorar oportunidades para ver tu actividad aquí
+                </p>
               </div>
-              <Badge variant="secondary">Hace 1 día</Badge>
-            </div>
-
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-              <div className="flex items-center gap-3">
-                <Target className="w-4 h-4 text-gray-600" />
-                <span className="text-sm">
-                  Participaste en taller &quot;Educación Financiera Básica&quot;
-                </span>
-              </div>
-              <Badge variant="secondary">Hace 3 días</Badge>
-            </div>
-
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-              <div className="flex items-center gap-3">
-                <Bookmark className="w-4 h-4 text-gray-600" />
-                <span className="text-sm">
-                  Guardaste oferta de trabajo de medio tiempo
-                </span>
-              </div>
-              <Badge variant="secondary">Hace 5 días</Badge>
-            </div>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -763,87 +811,124 @@ export function DashboardAdolescent() {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div className="text-center space-y-3">
-              <div className="flex items-center justify-center w-16 h-16 bg-gray-100 rounded-xl mx-auto">
-                <Search className="w-8 h-8 text-gray-600" />
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-gray-900">3</div>
-                <p className="text-sm font-medium text-gray-600">
-                  Postulaciones Activas
-                </p>
-                <div className="w-full bg-gray-100 rounded-full h-2 mt-2">
-                  <div
-                    className="bg-gray-500 h-2 rounded-full"
-                    style={{ width: "60%" }}
-                  ></div>
+          {isLoading ? (
+            // Loading skeleton for metrics
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="text-center space-y-3">
+                  <Skeleton className="w-16 h-16 rounded-xl mx-auto" />
+                  <div>
+                    <Skeleton className="h-8 w-12 mx-auto mb-2" />
+                    <Skeleton className="h-4 w-32 mx-auto mb-2" />
+                    <Skeleton className="h-2 w-full rounded-full" />
+                    <Skeleton className="h-3 w-24 mx-auto mt-1" />
+                  </div>
                 </div>
-                <p className="text-xs text-gray-500 mt-1">
-                  60% tasa de respuesta
-                </p>
-              </div>
+              ))}
             </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <div className="text-center space-y-3">
+                <div className="flex items-center justify-center w-16 h-16 bg-gray-100 rounded-xl mx-auto">
+                  <Search className="w-8 h-8 text-gray-600" />
+                </div>
+                <div>
+                  <div className="text-3xl font-bold text-gray-900">
+                    {stats.userJobApplications}
+                  </div>
+                  <p className="text-sm font-medium text-gray-600">
+                    Postulaciones Activas
+                  </p>
+                  <div className="w-full bg-gray-100 rounded-full h-2 mt-2">
+                    <div
+                      className="bg-gray-500 h-2 rounded-full"
+                      style={{
+                        width: stats.userJobApplications > 0 ? "60%" : "0%",
+                      }}
+                    ></div>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {stats.userJobApplications > 0
+                      ? "60% tasa de respuesta"
+                      : "Sin postulaciones"}
+                  </p>
+                </div>
+              </div>
 
-            <div className="text-center space-y-3">
-              <div className="flex items-center justify-center w-16 h-16 bg-gray-100 rounded-xl mx-auto">
-                <GraduationCap className="w-8 h-8 text-gray-600" />
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-gray-900">2</div>
-                <p className="text-sm font-medium text-gray-600">
-                  Cursos en Progreso
-                </p>
-                <div className="w-full bg-gray-100 rounded-full h-2 mt-2">
-                  <div
-                    className="bg-gray-500 h-2 rounded-full"
-                    style={{ width: "75%" }}
-                  ></div>
+              <div className="text-center space-y-3">
+                <div className="flex items-center justify-center w-16 h-16 bg-gray-100 rounded-xl mx-auto">
+                  <GraduationCap className="w-8 h-8 text-gray-600" />
                 </div>
-                <p className="text-xs text-gray-500 mt-1">75% completado</p>
+                <div>
+                  <div className="text-3xl font-bold text-gray-900">
+                    {stats.userCourses}
+                  </div>
+                  <p className="text-sm font-medium text-gray-600">
+                    Cursos en Progreso
+                  </p>
+                  <div className="w-full bg-gray-100 rounded-full h-2 mt-2">
+                    <div
+                      className="bg-gray-500 h-2 rounded-full"
+                      style={{ width: stats.userCourses > 0 ? "75%" : "0%" }}
+                    ></div>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {stats.userCourses > 0
+                      ? "75% completado"
+                      : "Sin cursos activos"}
+                  </p>
+                </div>
               </div>
-            </div>
 
-            <div className="text-center space-y-3">
-              <div className="flex items-center justify-center w-16 h-16 bg-purple-100 rounded-xl mx-auto">
-                <Target className="w-8 h-8 text-purple-600" />
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-gray-900">1</div>
-                <p className="text-sm font-medium text-gray-600">
-                  Proyecto Emprendimiento
-                </p>
-                <div className="w-full bg-purple-100 rounded-full h-2 mt-2">
-                  <div
-                    className="bg-purple-500 h-2 rounded-full"
-                    style={{ width: "40%" }}
-                  ></div>
+              <div className="text-center space-y-3">
+                <div className="flex items-center justify-center w-16 h-16 bg-purple-100 rounded-xl mx-auto">
+                  <Target className="w-8 h-8 text-purple-600" />
                 </div>
-                <p className="text-xs text-gray-500 mt-1">En desarrollo</p>
+                <div>
+                  <div className="text-3xl font-bold text-gray-900">
+                    {stats.userEntrepreneurships}
+                  </div>
+                  <p className="text-sm font-medium text-gray-600">
+                    Proyecto Emprendimiento
+                  </p>
+                  <div className="w-full bg-purple-100 rounded-full h-2 mt-2">
+                    <div
+                      className="bg-purple-500 h-2 rounded-full"
+                      style={{
+                        width: stats.userEntrepreneurships > 0 ? "40%" : "0%",
+                      }}
+                    ></div>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {stats.userEntrepreneurships > 0
+                      ? "En desarrollo"
+                      : "Sin proyectos"}
+                  </p>
+                </div>
               </div>
-            </div>
 
-            <div className="text-center space-y-3">
-              <div className="flex items-center justify-center w-16 h-16 bg-orange-100 rounded-xl mx-auto">
-                <Award className="w-8 h-8 text-orange-600" />
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-gray-900">4</div>
-                <p className="text-sm font-medium text-gray-600">
-                  Certificados Obtenidos
-                </p>
-                <div className="w-full bg-orange-100 rounded-full h-2 mt-2">
-                  <div
-                    className="bg-orange-500 h-2 rounded-full"
-                    style={{ width: "80%" }}
-                  ></div>
+              <div className="text-center space-y-3">
+                <div className="flex items-center justify-center w-16 h-16 bg-orange-100 rounded-xl mx-auto">
+                  <Award className="w-8 h-8 text-orange-600" />
                 </div>
-                <p className="text-xs text-gray-500 mt-1">
-                  Meta: 5 certificados
-                </p>
+                <div>
+                  <div className="text-3xl font-bold text-gray-900">4</div>
+                  <p className="text-sm font-medium text-gray-600">
+                    Certificados Obtenidos
+                  </p>
+                  <div className="w-full bg-orange-100 rounded-full h-2 mt-2">
+                    <div
+                      className="bg-orange-500 h-2 rounded-full"
+                      style={{ width: "80%" }}
+                    ></div>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Meta: 5 certificados
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* Additional Metrics Row */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-8 pt-6 border-t border-gray-200">

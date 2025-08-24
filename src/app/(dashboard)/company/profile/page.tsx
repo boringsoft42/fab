@@ -19,6 +19,16 @@ import {
   Award,
   DollarSign,
   ExternalLink,
+  FileText,
+  Plus,
+  Search,
+  MoreHorizontal,
+  Trash2,
+  Download,
+  Play,
+  Headphones,
+  Calculator,
+  BookOpen,
 } from "lucide-react";
 import {
   Card,
@@ -43,6 +53,20 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Checkbox } from "@/components/ui/checkbox";
 import MapMarker from "@/components/MapMarker";
 import Image from "next/image";
 import { useProfile } from "@/hooks/useProfileApi";
@@ -84,13 +108,62 @@ interface CompanyProfile {
   };
 }
 
+interface CompanyResource {
+  id: string;
+  title: string;
+  description: string;
+  type:
+    | "template"
+    | "guide"
+    | "video"
+    | "podcast"
+    | "tool"
+    | "case_study"
+    | "whitepaper";
+  category: string;
+  fileUrl: string;
+  thumbnail: string;
+  tags: string[];
+  status: "published" | "draft";
+  featured: boolean;
+  downloads: number;
+  views: number;
+  createdAt: Date;
+  companyId: string;
+}
+
 export default function CompanyProfilePage() {
   const { data: profile, loading, error } = useProfile("current");
 
   const [isEditing, setIsEditing] = useState(false);
-  const [editedProfile, setEditedProfile] = useState<CompanyProfile | null>(null);
+  const [editedProfile, setEditedProfile] = useState<CompanyProfile | null>(
+    null
+  );
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [coverFile, setCoverFile] = useState<File | null>(null);
+
+  // Resources state
+  const [resources, setResources] = useState<CompanyResource[]>([]);
+  const [showCreateResourceDialog, setShowCreateResourceDialog] =
+    useState(false);
+  const [resourceForm, setResourceForm] = useState<CompanyResource>({
+    id: "",
+    title: "",
+    description: "",
+    type: "template",
+    category: "Planificación",
+    fileUrl: "",
+    thumbnail: "",
+    tags: [],
+    status: "draft",
+    featured: false,
+    downloads: 0,
+    views: 0,
+    createdAt: new Date(),
+    companyId: "",
+  });
+  const [searchTerm, setSearchTerm] = useState("");
+  const [typeFilter, setTypeFilter] = useState<string>("all");
 
   // Update editedProfile when profile data is loaded
   React.useEffect(() => {
@@ -118,6 +191,99 @@ export default function CompanyProfilePage() {
     setLogoFile(null);
     setCoverFile(null);
   };
+
+  // Resource management functions
+  const handleCreateResource = async () => {
+    try {
+      // Simulate API call
+      const newResource = {
+        ...resourceForm,
+        id: Date.now().toString(),
+        companyId: profile?.id || "",
+        createdAt: new Date(),
+      };
+      setResources([...resources, newResource]);
+      setShowCreateResourceDialog(false);
+      resetResourceForm();
+    } catch (error) {
+      console.error("Error creating resource:", error);
+    }
+  };
+
+  const handleDeleteResource = (resourceId: string) => {
+    setResources(resources.filter((r) => r.id !== resourceId));
+  };
+
+  const resetResourceForm = () => {
+    setResourceForm({
+      id: "",
+      title: "",
+      description: "",
+      type: "template",
+      category: "Planificación",
+      fileUrl: "",
+      thumbnail: "",
+      tags: [],
+      status: "draft",
+      featured: false,
+      downloads: 0,
+      views: 0,
+      createdAt: new Date(),
+      companyId: "",
+    });
+  };
+
+  const getResourceIcon = (type: string) => {
+    switch (type) {
+      case "template":
+        return <FileText className="h-4 w-4" />;
+      case "guide":
+        return <BookOpen className="h-4 w-4" />;
+      case "video":
+        return <Play className="h-4 w-4" />;
+      case "podcast":
+        return <Headphones className="h-4 w-4" />;
+      case "tool":
+        return <Calculator className="h-4 w-4" />;
+      case "case_study":
+        return <FileText className="h-4 w-4" />;
+      case "whitepaper":
+        return <FileText className="h-4 w-4" />;
+      default:
+        return <FileText className="h-4 w-4" />;
+    }
+  };
+
+  const resourceCategories = [
+    "Planificación",
+    "Validación",
+    "Finanzas",
+    "Marketing",
+    "Legal",
+    "Tecnología",
+    "Operaciones",
+    "Recursos Humanos",
+    "Ventas",
+    "Estrategia",
+  ];
+
+  const resourceTypes = [
+    { value: "template", label: "Plantilla" },
+    { value: "guide", label: "Guía" },
+    { value: "video", label: "Video" },
+    { value: "podcast", label: "Podcast" },
+    { value: "tool", label: "Herramienta" },
+    { value: "case_study", label: "Caso de Estudio" },
+    { value: "whitepaper", label: "White Paper" },
+  ];
+
+  const filteredResources = resources.filter((resource) => {
+    const matchesSearch =
+      resource.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      resource.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesType = typeFilter === "all" || resource.type === typeFilter;
+    return matchesSearch && matchesType;
+  });
 
   const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -179,7 +345,9 @@ export default function CompanyProfilePage() {
         </div>
         <div className="flex items-center justify-center p-8">
           <div className="text-center">
-            <p className="text-red-600">Error al cargar el perfil: {error.message}</p>
+            <p className="text-red-600">
+              Error al cargar el perfil: {error.message}
+            </p>
           </div>
         </div>
       </div>
@@ -218,8 +386,10 @@ export default function CompanyProfilePage() {
       </div>
 
       <Tabs defaultValue="general" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-1">
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="general">Información General</TabsTrigger>
+          <TabsTrigger value="resources">Recursos</TabsTrigger>
+          <TabsTrigger value="metrics">Métricas</TabsTrigger>
         </TabsList>
 
         <TabsContent value="general" className="space-y-6">
@@ -264,10 +434,10 @@ export default function CompanyProfilePage() {
                 <div className="flex items-start gap-4">
                   <div className="relative">
                     <Avatar className="w-20 h-20">
-                                          <AvatarImage
-                      src={editedProfile?.logo || "/placeholder.svg"}
-                      alt={editedProfile?.name || "Empresa"}
-                    />
+                      <AvatarImage
+                        src={editedProfile?.logo || "/placeholder.svg"}
+                        alt={editedProfile?.name || "Empresa"}
+                      />
                       <AvatarFallback>
                         <Building2 className="w-8 h-8" />
                       </AvatarFallback>
@@ -301,11 +471,17 @@ export default function CompanyProfilePage() {
                         className="text-2xl font-bold"
                       />
                     ) : (
-                      <h2 className="text-2xl font-bold">{profile?.name || "Empresa"}</h2>
+                      <h2 className="text-2xl font-bold">
+                        {profile?.name || "Empresa"}
+                      </h2>
                     )}
                     <div className="flex gap-2">
-                      <Badge variant="secondary">{profile?.industry || "Sector"}</Badge>
-                      <Badge variant="outline">{profile?.size || "Tamaño"}</Badge>
+                      <Badge variant="secondary">
+                        {profile?.industry || "Sector"}
+                      </Badge>
+                      <Badge variant="outline">
+                        {profile?.size || "Tamaño"}
+                      </Badge>
                     </div>
                   </div>
                 </div>
@@ -642,6 +818,299 @@ export default function CompanyProfilePage() {
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="resources" className="space-y-6">
+          {/* Resources Header */}
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-semibold">Centro de Recursos</h3>
+              <p className="text-muted-foreground">
+                Comparte plantillas, guías, videos y herramientas con la
+                comunidad
+              </p>
+            </div>
+            <Dialog
+              open={showCreateResourceDialog}
+              onOpenChange={setShowCreateResourceDialog}
+            >
+              <DialogTrigger asChild>
+                <Button>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Crear Recurso
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle>Crear Nuevo Recurso</DialogTitle>
+                </DialogHeader>
+
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="title">Título *</Label>
+                      <Input
+                        id="title"
+                        value={resourceForm.title}
+                        onChange={(e) =>
+                          setResourceForm((prev) => ({
+                            ...prev,
+                            title: e.target.value,
+                          }))
+                        }
+                        placeholder="Título del recurso"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="type">Tipo *</Label>
+                      <Select
+                        value={resourceForm.type}
+                        onValueChange={(value: any) =>
+                          setResourceForm((prev) => ({ ...prev, type: value }))
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {resourceTypes.map((type) => (
+                            <SelectItem key={type.value} value={type.value}>
+                              {type.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="description">Descripción *</Label>
+                    <Textarea
+                      id="description"
+                      value={resourceForm.description}
+                      onChange={(e) =>
+                        setResourceForm((prev) => ({
+                          ...prev,
+                          description: e.target.value,
+                        }))
+                      }
+                      placeholder="Descripción detallada del recurso"
+                      rows={3}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="category">Categoría *</Label>
+                      <Select
+                        value={resourceForm.category}
+                        onValueChange={(value) =>
+                          setResourceForm((prev) => ({
+                            ...prev,
+                            category: value,
+                          }))
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Seleccionar categoría" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {resourceCategories.map((category) => (
+                            <SelectItem key={category} value={category}>
+                              {category}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="fileUrl">URL del Archivo</Label>
+                      <Input
+                        id="fileUrl"
+                        value={resourceForm.fileUrl}
+                        onChange={(e) =>
+                          setResourceForm((prev) => ({
+                            ...prev,
+                            fileUrl: e.target.value,
+                          }))
+                        }
+                        placeholder="https://... o /downloads/..."
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="tags">Etiquetas</Label>
+                    <Input
+                      id="tags"
+                      value={resourceForm.tags.join(", ")}
+                      onChange={(e) =>
+                        setResourceForm((prev) => ({
+                          ...prev,
+                          tags: e.target.value
+                            .split(",")
+                            .map((tag) => tag.trim())
+                            .filter(Boolean),
+                        }))
+                      }
+                      placeholder="etiqueta1, etiqueta2, etiqueta3"
+                    />
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="featured"
+                      checked={resourceForm.featured}
+                      onCheckedChange={(checked) =>
+                        setResourceForm((prev) => ({
+                          ...prev,
+                          featured: !!checked,
+                        }))
+                      }
+                    />
+                    <Label htmlFor="featured">Recurso destacado</Label>
+                  </div>
+
+                  <div className="flex justify-end space-x-2 pt-4">
+                    <Button
+                      variant="outline"
+                      onClick={() => setShowCreateResourceDialog(false)}
+                    >
+                      Cancelar
+                    </Button>
+                    <Button onClick={handleCreateResource}>
+                      Crear Recurso
+                    </Button>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
+
+          {/* Search and Filters */}
+          <div className="flex gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Buscar recursos..."
+                className="pl-10"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            <Select value={typeFilter} onValueChange={setTypeFilter}>
+              <SelectTrigger className="w-[150px]">
+                <SelectValue placeholder="Tipo" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos</SelectItem>
+                {resourceTypes.map((type) => (
+                  <SelectItem key={type.value} value={type.value}>
+                    {type.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Resources Grid */}
+          {filteredResources.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredResources.map((resource) => (
+                <Card
+                  key={resource.id}
+                  className="hover:shadow-md transition-shadow"
+                >
+                  <CardHeader className="pb-3">
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center gap-2">
+                        {getResourceIcon(resource.type)}
+                        <Badge variant="outline" className="text-xs">
+                          {
+                            resourceTypes.find((t) => t.value === resource.type)
+                              ?.label
+                          }
+                        </Badge>
+                      </div>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="sm">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem>
+                            <Download className="h-4 w-4 mr-2" />
+                            Descargar
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <Edit className="h-4 w-4 mr-2" />
+                            Editar
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            className="text-red-600"
+                            onClick={() => handleDeleteResource(resource.id)}
+                          >
+                            <Trash2 className="h-4 w-4 mr-2" />
+                            Eliminar
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                    <CardTitle className="text-lg">{resource.title}</CardTitle>
+                    <CardDescription className="line-clamp-2">
+                      {resource.description}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="pt-0">
+                    <div className="flex items-center justify-between text-sm text-muted-foreground">
+                      <div className="flex items-center gap-4">
+                        <span>{resource.downloads} descargas</span>
+                        <span>{resource.views} vistas</span>
+                      </div>
+                      {resource.featured && (
+                        <Badge variant="secondary" className="text-xs">
+                          Destacado
+                        </Badge>
+                      )}
+                    </div>
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {resource.tags.slice(0, 3).map((tag, index) => (
+                        <Badge
+                          key={index}
+                          variant="outline"
+                          className="text-xs"
+                        >
+                          {tag}
+                        </Badge>
+                      ))}
+                      {resource.tags.length > 3 && (
+                        <Badge variant="outline" className="text-xs">
+                          +{resource.tags.length - 3}
+                        </Badge>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+              <h3 className="text-lg font-medium mb-2">No hay recursos aún</h3>
+              <p className="text-muted-foreground mb-4">
+                {searchTerm || typeFilter !== "all"
+                  ? "No se encontraron recursos con los filtros aplicados"
+                  : "Comienza creando tu primer recurso para compartir con la comunidad"}
+              </p>
+              {!searchTerm && typeFilter === "all" && (
+                <Button onClick={() => setShowCreateResourceDialog(true)}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Crear Primer Recurso
+                </Button>
+              )}
+            </div>
+          )}
         </TabsContent>
 
         <TabsContent value="metrics" className="space-y-6">

@@ -15,6 +15,8 @@ import {
   UserCheck,
   ArrowRight,
   Building,
+  Newspaper,
+  Plus,
 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -105,9 +107,12 @@ export function DashboardCompany() {
       <div className="bg-gray-100 rounded-lg p-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold mb-2 text-gray-900">Panel de Empresa</h1>
+            <h1 className="text-3xl font-bold mb-2 text-gray-900">
+              Panel de Empresa
+            </h1>
             <p className="text-gray-600">
-              Publica ofertas de empleo y gestiona tus procesos de selección
+              Publica ofertas de empleo, gestiona noticias y tus procesos de
+              selección
             </p>
           </div>
           <Building className="w-16 h-16 text-gray-400 hidden md:block" />
@@ -189,22 +194,43 @@ export function DashboardCompany() {
         </Card>
       </div>
 
-      {/* Crear Nueva Oferta */}
-      <Card className="border-dashed">
-        <CardContent className="p-6 text-center">
-          <Briefcase className="w-8 h-8 text-gray-500 mx-auto mb-4" />
-          <h3 className="text-lg font-medium mb-2">Publicar Nueva Oferta</h3>
-          <p className="text-gray-600 mb-4">
-            Crea una nueva publicación para atraer talento ideal
-          </p>
-          <Button asChild>
-            <Link href="/jobs/create">
-              Crear Oferta
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Link>
-          </Button>
-        </CardContent>
-      </Card>
+      {/* Quick Actions Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Crear Nueva Oferta */}
+        <Card className="border-dashed">
+          <CardContent className="p-6 text-center">
+            <Briefcase className="w-8 h-8 text-gray-500 mx-auto mb-4" />
+            <h3 className="text-lg font-medium mb-2">Publicar Nueva Oferta</h3>
+            <p className="text-gray-600 mb-4">
+              Crea una nueva publicación para atraer talento ideal
+            </p>
+            <Button asChild>
+              <Link href="/jobs/create">
+                Crear Oferta
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Crear Nueva Noticia */}
+        <Card className="border-dashed">
+          <CardContent className="p-6 text-center">
+            <Newspaper className="w-8 h-8 text-blue-500 mx-auto mb-4" />
+            <h3 className="text-lg font-medium mb-2">Publicar Nueva Noticia</h3>
+            <p className="text-gray-600 mb-4">
+              Comparte novedades y oportunidades con la comunidad
+            </p>
+            <Button asChild>
+              <Link href="/company/news">
+                <Plus className="w-4 h-4 mr-2" />
+                Gestionar Noticias
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Ofertas activas destacadas */}
       <Card>

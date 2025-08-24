@@ -25,18 +25,17 @@ import {
   Play,
   FileText,
   Headphones,
+  Download,
+  Video,
+  Music,
+  Image as ImageIcon,
+  File,
 } from "lucide-react";
-
-interface Resource {
-  id: string;
-  title: string;
-  description: string;
-  type: "template" | "guide" | "video" | "podcast" | "tool";
-  thumbnail: string;
-  category: string;
-  downloads: number;
-  rating: number;
-}
+import { usePublicResources } from "@/hooks/useResourceApi";
+import { Resource } from "@/types/api";
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { useCurrentMunicipality } from "@/hooks/useMunicipalityApi";
+import { isMunicipalityRole } from "@/lib/utils";
 
 interface Program {
   id: string;
@@ -62,59 +61,30 @@ interface SuccessStory {
 }
 
 export default function EntrepreneurshipPage() {
-  const [resources, setResources] = useState<Resource[]>([]);
   const [programs, setPrograms] = useState<Program[]>([]);
   const [stories, setStories] = useState<SuccessStory[]>([]);
-  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
+  // Get current user and municipality info for filtering
+  const { profile } = useCurrentUser();
+  const { data: currentMunicipality } = useCurrentMunicipality();
+
+  // Determine if user is municipality and get municipality ID
+  const isMunicipality = isMunicipalityRole(profile?.role);
+  const municipalityId = isMunicipality ? currentMunicipality?.id : undefined;
+
+  // Get real resources from API
+  const { data: resources = [], isLoading: loadingResources } =
+    usePublicResources(municipalityId);
+
   useEffect(() => {
-    // TODO: Integrar hooks reales para recursos, programas y historias de éxito (useResources, useBusinessPlans, useProfiles, etc.) cuando estén disponibles
-    // Reemplazar fetchEntrepreneurshipData y mockResources, mockPrograms, mockStories por datos reales de la API
+    // TODO: Integrar hooks reales para programas y historias de éxito cuando estén disponibles
     fetchEntrepreneurshipData();
   }, []);
 
   const fetchEntrepreneurshipData = async () => {
     try {
-      setLoading(true);
-
-      // Mock data for demonstration
-      const mockResources: Resource[] = [
-        {
-          id: "resource-1",
-          title: "Plantilla de Plan de Negocios",
-          description:
-            "Plantilla completa en Word para crear tu plan de negocios paso a paso",
-          type: "template",
-          thumbnail: "/api/placeholder/300/200",
-          category: "Planificación",
-          downloads: 2847,
-          rating: 4.8,
-        },
-        {
-          id: "resource-2",
-          title: "Cómo Validar tu Idea de Negocio",
-          description:
-            "Guía práctica para validar tu idea antes de invertir tiempo y dinero",
-          type: "guide",
-          thumbnail: "/api/placeholder/300/200",
-          category: "Validación",
-          downloads: 1923,
-          rating: 4.6,
-        },
-        {
-          id: "resource-3",
-          title: "Finanzas para Emprendedores",
-          description:
-            "Video curso sobre gestión financiera básica para startups",
-          type: "video",
-          thumbnail: "/api/placeholder/300/200",
-          category: "Finanzas",
-          downloads: 3456,
-          rating: 4.9,
-        },
-      ];
-
+      // Mock data for demonstration - TODO: Replace with real API calls
       const mockPrograms: Program[] = [
         {
           id: "program-1",
@@ -167,28 +137,25 @@ export default function EntrepreneurshipPage() {
         },
       ];
 
-      setResources(mockResources);
       setPrograms(mockPrograms);
       setStories(mockStories);
     } catch (error) {
       console.error("Error fetching entrepreneurship data:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
   const getResourceIcon = (type: string) => {
     switch (type) {
-      case "template":
+      case "DOCUMENT":
         return <FileText className="h-5 w-5" />;
-      case "guide":
-        return <BookOpen className="h-5 w-5" />;
-      case "video":
-        return <Play className="h-5 w-5" />;
-      case "podcast":
-        return <Headphones className="h-5 w-5" />;
-      case "tool":
-        return <Calculator className="h-5 w-5" />;
+      case "VIDEO":
+        return <Video className="h-5 w-5" />;
+      case "AUDIO":
+        return <Music className="h-5 w-5" />;
+      case "IMAGE":
+        return <ImageIcon className="h-5 w-5" />;
+      case "TEXT":
+        return <File className="h-5 w-5" />;
       default:
         return <FileText className="h-5 w-5" />;
     }
@@ -209,7 +176,12 @@ export default function EntrepreneurshipPage() {
     }
   };
 
-  if (loading) {
+  // Get top 10 resources by downloads
+  const topResources = resources
+    .sort((a, b) => (b.downloads || 0) - (a.downloads || 0))
+    .slice(0, 10);
+
+  if (loadingResources) {
     return (
       <div className="container mx-auto p-6">
         <div className="animate-pulse space-y-6">
@@ -326,48 +298,64 @@ export default function EntrepreneurshipPage() {
           <div className="flex justify-between items-center">
             <h2 className="text-2xl font-bold">Recursos Más Populares</h2>
             <Button asChild variant="outline">
-              <Link href="/entrepreneurship/resources">
+              <Link href="/resources">
                 Ver Todos
                 <ArrowRight className="h-4 w-4 ml-2" />
               </Link>
             </Button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {resources.map((resource) => (
-              <Card
-                key={resource.id}
-                className="hover:shadow-lg transition-shadow"
-              >
-                <div className="aspect-video relative">
-                  <div className="w-full h-full bg-gradient-to-br from-blue-100 to-purple-100 rounded-t-lg flex items-center justify-center">
-                    {getResourceIcon(resource.type)}
-                  </div>
-                  <div className="absolute top-3 left-3">
-                    <div className="bg-white rounded-full p-2">
+          {topResources.length === 0 ? (
+            <div className="text-center py-12">
+              <div className="text-gray-400 mb-4">
+                <BookOpen className="h-16 w-16 mx-auto" />
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                No hay recursos disponibles
+              </h3>
+              <p className="text-gray-600">
+                Pronto tendremos recursos educativos para ti
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {topResources.map((resource) => (
+                <Card
+                  key={resource.id}
+                  className="hover:shadow-lg transition-shadow"
+                >
+                  <div className="aspect-video relative">
+                    <div className="w-full h-full bg-gradient-to-br from-blue-100 to-purple-100 rounded-t-lg flex items-center justify-center">
                       {getResourceIcon(resource.type)}
                     </div>
-                  </div>
-                </div>
-                <CardContent className="p-4">
-                  <Badge variant="secondary" className="mb-2">
-                    {resource.category}
-                  </Badge>
-                  <h3 className="font-semibold mb-2">{resource.title}</h3>
-                  <p className="text-sm text-muted-foreground mb-3">
-                    {resource.description}
-                  </p>
-                  <div className="flex items-center justify-between text-xs text-muted-foreground">
-                    <div className="flex items-center gap-1">
-                      <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                      {resource.rating}
+                    <div className="absolute top-3 left-3">
+                      <div className="bg-white rounded-full p-2">
+                        {getResourceIcon(resource.type)}
+                      </div>
                     </div>
-                    <span>{resource.downloads.toLocaleString()} descargas</span>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                  <CardContent className="p-4">
+                    <Badge variant="secondary" className="mb-2">
+                      {resource.category}
+                    </Badge>
+                    <h3 className="font-semibold mb-2">{resource.title}</h3>
+                    <p className="text-sm text-muted-foreground mb-3">
+                      {resource.description}
+                    </p>
+                    <div className="flex items-center justify-between text-xs text-muted-foreground">
+                      <div className="flex items-center gap-1">
+                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                        {resource.rating || 0}
+                      </div>
+                      <span>
+                        {(resource.downloads || 0).toLocaleString()} descargas
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
         </TabsContent>
 
         {/* Available Programs */}
@@ -437,7 +425,6 @@ export default function EntrepreneurshipPage() {
         </TabsContent>
 
         {/* Success Stories */}
-     
       </Tabs>
 
       {/* Call to Action */}
