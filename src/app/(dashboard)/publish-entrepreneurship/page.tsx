@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -86,26 +86,10 @@ export default function PublishEntrepreneurshipPage() {
   const router = useRouter();
   const { toast } = useToast();
   const { user } = useAuthContext();
-  const { create, loading: createLoading, error: createError } = useCreateEntrepreneurship();
+  const { create, loading: createLoading } = useCreateEntrepreneurship();
+  
+  // Move all useState hooks to the top before any conditional returns
   const [currentStep, setCurrentStep] = useState(0);
-
-  // Redirect if not authenticated
-  useEffect(() => {
-    if (!user) {
-      toast({
-        title: "Acceso requerido",
-        description: "Debes iniciar sesión para publicar un emprendimiento",
-        variant: "destructive",
-      });
-      router.push("/login");
-    }
-  }, [user, router, toast]);
-
-  // Don't render if not authenticated
-  if (!user) {
-    return null;
-  }
-
   const [formData, setFormData] = useState<EntrepreneurshipForm>({
     basicInfo: {
       businessName: "",
@@ -149,10 +133,27 @@ export default function PublishEntrepreneurshipPage() {
       featured: false,
     },
   });
-
   const [newService, setNewService] = useState("");
   const [previewMode, setPreviewMode] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [selectedMunicipality, setSelectedMunicipality] = useState("");
+
+  // Redirect if not authenticated
+  useEffect(() => {
+    if (!user) {
+      toast({
+        title: "Acceso requerido",
+        description: "Debes iniciar sesión para publicar un emprendimiento",
+        variant: "destructive",
+      });
+      router.push("/login");
+    }
+  }, [user, router, toast]);
+
+  // Early returns after all hooks
+  if (!user) {
+    return null;
+  }
 
   const steps = [
     {
@@ -263,7 +264,6 @@ export default function PublishEntrepreneurshipPage() {
     Beni: ["Trinidad"],
     Pando: ["Cobija"],
   };
-  const [selectedMunicipality, setSelectedMunicipality] = useState("");
 
   const updateFormData = (
     section: keyof EntrepreneurshipForm,
@@ -290,7 +290,7 @@ export default function PublishEntrepreneurshipPage() {
       [section]: {
         ...prev[section],
         [subsection]: {
-          ...(prev[section] as any)[subsection],
+          ...(prev[section] as Record<string, unknown>)[subsection],
           [field]: value,
         },
       },
@@ -321,7 +321,7 @@ export default function PublishEntrepreneurshipPage() {
         updateFormData("media", "images", [...formData.media.images, ...files]);
       }
     },
-    []
+    [formData.media.images]
   );
 
   const removeImage = (index: number) => {
@@ -361,7 +361,7 @@ export default function PublishEntrepreneurshipPage() {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    
+
     if (!user) {
       toast({
         title: "Error",
@@ -392,7 +392,9 @@ export default function PublishEntrepreneurshipPage() {
           instagram: formData.basicInfo.socialMedia.instagram || undefined,
           linkedin: formData.basicInfo.socialMedia.linkedin || undefined,
         },
-        founded: formData.basicInfo.foundedYear ? new Date(parseInt(formData.basicInfo.foundedYear), 0, 1) : undefined,
+        founded: formData.basicInfo.foundedYear
+          ? new Date(parseInt(formData.basicInfo.foundedYear), 0, 1)
+          : undefined,
         businessModel: formData.services.serviceDetails || undefined,
         targetMarket: "General", // Default target market
         isPublic: formData.visibility.isPublic,
@@ -404,7 +406,7 @@ export default function PublishEntrepreneurshipPage() {
       console.log("Submitting entrepreneurship data:", entrepreneurshipData);
       console.log("User ID:", user.id);
 
-      const result = await create(entrepreneurshipData);
+      await create(entrepreneurshipData);
 
       toast({
         title: "¡Éxito!",
@@ -462,7 +464,8 @@ export default function PublishEntrepreneurshipPage() {
       console.error("Error submitting form:", error);
       toast({
         title: "Error",
-        description: "No se pudo publicar el emprendimiento. Intenta nuevamente.",
+        description:
+          "No se pudo publicar el emprendimiento. Intenta nuevamente.",
         variant: "destructive",
       });
     } finally {
@@ -703,7 +706,11 @@ export default function PublishEntrepreneurshipPage() {
                       <Textarea
                         value={formData.basicInfo.description}
                         onChange={(e) =>
-                          updateFormData("basicInfo", "description", e.target.value)
+                          updateFormData(
+                            "basicInfo",
+                            "description",
+                            e.target.value
+                          )
                         }
                         placeholder="Describe tu emprendimiento, qué hace, cuál es su propósito..."
                         className="min-h-[120px]"
@@ -748,11 +755,16 @@ export default function PublishEntrepreneurshipPage() {
                             <SelectValue placeholder="Selecciona una subcategoría" />
                           </SelectTrigger>
                           <SelectContent>
-                            {selectedCategory?.subcategories.map((subcategory) => (
-                              <SelectItem key={subcategory} value={subcategory}>
-                                {subcategory}
-                              </SelectItem>
-                            ))}
+                            {selectedCategory?.subcategories.map(
+                              (subcategory) => (
+                                <SelectItem
+                                  key={subcategory}
+                                  value={subcategory}
+                                >
+                                  {subcategory}
+                                </SelectItem>
+                              )
+                            )}
                           </SelectContent>
                         </Select>
                       </div>
@@ -795,8 +807,9 @@ export default function PublishEntrepreneurshipPage() {
                           </SelectTrigger>
                           <SelectContent>
                             {(
-                              municipalitiesByCity[formData.basicInfo.location] ||
-                              []
+                              municipalitiesByCity[
+                                formData.basicInfo.location
+                              ] || []
                             ).map((muni) => (
                               <SelectItem key={muni} value={muni}>
                                 {muni}
@@ -899,7 +912,11 @@ export default function PublishEntrepreneurshipPage() {
                       <Textarea
                         value={formData.basicInfo.description}
                         onChange={(e) =>
-                          updateFormData("basicInfo", "description", e.target.value)
+                          updateFormData(
+                            "basicInfo",
+                            "description",
+                            e.target.value
+                          )
                         }
                         placeholder="Describe tu emprendimiento, qué hace, cuál es su propósito..."
                         className="min-h-[120px]"
@@ -944,11 +961,16 @@ export default function PublishEntrepreneurshipPage() {
                             <SelectValue placeholder="Selecciona una subcategoría" />
                           </SelectTrigger>
                           <SelectContent>
-                            {selectedCategory?.subcategories.map((subcategory) => (
-                              <SelectItem key={subcategory} value={subcategory}>
-                                {subcategory}
-                              </SelectItem>
-                            ))}
+                            {selectedCategory?.subcategories.map(
+                              (subcategory) => (
+                                <SelectItem
+                                  key={subcategory}
+                                  value={subcategory}
+                                >
+                                  {subcategory}
+                                </SelectItem>
+                              )
+                            )}
                           </SelectContent>
                         </Select>
                       </div>
@@ -991,8 +1013,9 @@ export default function PublishEntrepreneurshipPage() {
                           </SelectTrigger>
                           <SelectContent>
                             {(
-                              municipalitiesByCity[formData.basicInfo.location] ||
-                              []
+                              municipalitiesByCity[
+                                formData.basicInfo.location
+                              ] || []
                             ).map((muni) => (
                               <SelectItem key={muni} value={muni}>
                                 {muni}
@@ -1044,7 +1067,11 @@ export default function PublishEntrepreneurshipPage() {
                       <Textarea
                         value={formData.basicInfo.description}
                         onChange={(e) =>
-                          updateFormData("basicInfo", "description", e.target.value)
+                          updateFormData(
+                            "basicInfo",
+                            "description",
+                            e.target.value
+                          )
                         }
                         placeholder="Describe tu emprendimiento, qué hace, cuál es su propósito..."
                         className="min-h-[120px]"
@@ -1089,11 +1116,16 @@ export default function PublishEntrepreneurshipPage() {
                             <SelectValue placeholder="Selecciona una subcategoría" />
                           </SelectTrigger>
                           <SelectContent>
-                            {selectedCategory?.subcategories.map((subcategory) => (
-                              <SelectItem key={subcategory} value={subcategory}>
-                                {subcategory}
-                              </SelectItem>
-                            ))}
+                            {selectedCategory?.subcategories.map(
+                              (subcategory) => (
+                                <SelectItem
+                                  key={subcategory}
+                                  value={subcategory}
+                                >
+                                  {subcategory}
+                                </SelectItem>
+                              )
+                            )}
                           </SelectContent>
                         </Select>
                       </div>
@@ -1136,8 +1168,9 @@ export default function PublishEntrepreneurshipPage() {
                           </SelectTrigger>
                           <SelectContent>
                             {(
-                              municipalitiesByCity[formData.basicInfo.location] ||
-                              []
+                              municipalitiesByCity[
+                                formData.basicInfo.location
+                              ] || []
                             ).map((muni) => (
                               <SelectItem key={muni} value={muni}>
                                 {muni}
@@ -1189,7 +1222,11 @@ export default function PublishEntrepreneurshipPage() {
                       <Textarea
                         value={formData.basicInfo.description}
                         onChange={(e) =>
-                          updateFormData("basicInfo", "description", e.target.value)
+                          updateFormData(
+                            "basicInfo",
+                            "description",
+                            e.target.value
+                          )
                         }
                         placeholder="Describe tu emprendimiento, qué hace, cuál es su propósito..."
                         className="min-h-[120px]"
@@ -1234,11 +1271,16 @@ export default function PublishEntrepreneurshipPage() {
                             <SelectValue placeholder="Selecciona una subcategoría" />
                           </SelectTrigger>
                           <SelectContent>
-                            {selectedCategory?.subcategories.map((subcategory) => (
-                              <SelectItem key={subcategory} value={subcategory}>
-                                {subcategory}
-                              </SelectItem>
-                            ))}
+                            {selectedCategory?.subcategories.map(
+                              (subcategory) => (
+                                <SelectItem
+                                  key={subcategory}
+                                  value={subcategory}
+                                >
+                                  {subcategory}
+                                </SelectItem>
+                              )
+                            )}
                           </SelectContent>
                         </Select>
                       </div>
@@ -1281,8 +1323,9 @@ export default function PublishEntrepreneurshipPage() {
                           </SelectTrigger>
                           <SelectContent>
                             {(
-                              municipalitiesByCity[formData.basicInfo.location] ||
-                              []
+                              municipalitiesByCity[
+                                formData.basicInfo.location
+                              ] || []
                             ).map((muni) => (
                               <SelectItem key={muni} value={muni}>
                                 {muni}
@@ -1334,7 +1377,11 @@ export default function PublishEntrepreneurshipPage() {
                       <Textarea
                         value={formData.basicInfo.description}
                         onChange={(e) =>
-                          updateFormData("basicInfo", "description", e.target.value)
+                          updateFormData(
+                            "basicInfo",
+                            "description",
+                            e.target.value
+                          )
                         }
                         placeholder="Describe tu emprendimiento, qué hace, cuál es su propósito..."
                         className="min-h-[120px]"
@@ -1379,11 +1426,16 @@ export default function PublishEntrepreneurshipPage() {
                             <SelectValue placeholder="Selecciona una subcategoría" />
                           </SelectTrigger>
                           <SelectContent>
-                            {selectedCategory?.subcategories.map((subcategory) => (
-                              <SelectItem key={subcategory} value={subcategory}>
-                                {subcategory}
-                              </SelectItem>
-                            ))}
+                            {selectedCategory?.subcategories.map(
+                              (subcategory) => (
+                                <SelectItem
+                                  key={subcategory}
+                                  value={subcategory}
+                                >
+                                  {subcategory}
+                                </SelectItem>
+                              )
+                            )}
                           </SelectContent>
                         </Select>
                       </div>
@@ -1426,8 +1478,9 @@ export default function PublishEntrepreneurshipPage() {
                           </SelectTrigger>
                           <SelectContent>
                             {(
-                              municipalitiesByCity[formData.basicInfo.location] ||
-                              []
+                              municipalitiesByCity[
+                                formData.basicInfo.location
+                              ] || []
                             ).map((muni) => (
                               <SelectItem key={muni} value={muni}>
                                 {muni}
@@ -1479,7 +1532,11 @@ export default function PublishEntrepreneurshipPage() {
                       <Textarea
                         value={formData.basicInfo.description}
                         onChange={(e) =>
-                          updateFormData("basicInfo", "description", e.target.value)
+                          updateFormData(
+                            "basicInfo",
+                            "description",
+                            e.target.value
+                          )
                         }
                         placeholder="Describe tu emprendimiento, qué hace, cuál es su propósito..."
                         className="min-h-[120px]"
@@ -1524,11 +1581,16 @@ export default function PublishEntrepreneurshipPage() {
                             <SelectValue placeholder="Selecciona una subcategoría" />
                           </SelectTrigger>
                           <SelectContent>
-                            {selectedCategory?.subcategories.map((subcategory) => (
-                              <SelectItem key={subcategory} value={subcategory}>
-                                {subcategory}
-                              </SelectItem>
-                            ))}
+                            {selectedCategory?.subcategories.map(
+                              (subcategory) => (
+                                <SelectItem
+                                  key={subcategory}
+                                  value={subcategory}
+                                >
+                                  {subcategory}
+                                </SelectItem>
+                              )
+                            )}
                           </SelectContent>
                         </Select>
                       </div>
@@ -1571,8 +1633,9 @@ export default function PublishEntrepreneurshipPage() {
                           </SelectTrigger>
                           <SelectContent>
                             {(
-                              municipalitiesByCity[formData.basicInfo.location] ||
-                              []
+                              municipalitiesByCity[
+                                formData.basicInfo.location
+                              ] || []
                             ).map((muni) => (
                               <SelectItem key={muni} value={muni}>
                                 {muni}
@@ -1626,11 +1689,7 @@ export default function PublishEntrepreneurshipPage() {
                 <Textarea
                   value={formData.services.serviceDetails}
                   onChange={(e) =>
-                    updateFormData(
-                      "services",
-                      "serviceDetails",
-                      e.target.value
-                    )
+                    updateFormData("services", "serviceDetails", e.target.value)
                   }
                   placeholder="Describe en detalle los servicios que ofreces, metodología, tiempos de entrega..."
                   className="min-h-[120px]"
@@ -1713,7 +1772,11 @@ export default function PublishEntrepreneurshipPage() {
                   <Input
                     value={formData.contact.availableHours}
                     onChange={(e) =>
-                      updateFormData("contact", "availableHours", e.target.value)
+                      updateFormData(
+                        "contact",
+                        "availableHours",
+                        e.target.value
+                      )
                     }
                     placeholder="Lunes a Viernes 9:00 - 18:00"
                   />
@@ -1810,7 +1873,7 @@ export default function PublishEntrepreneurshipPage() {
               </Button>
 
               {currentStep === steps.length - 1 ? (
-                <Button 
+                <Button
                   disabled={!isStepValid() || createLoading}
                   onClick={handleSubmit}
                 >

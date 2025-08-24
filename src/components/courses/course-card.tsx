@@ -18,9 +18,11 @@ import {
   Play,
   CheckCircle,
 } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
-import { es } from "date-fns/locale";
-import { getCourseThumbnail, getCourseVideoPreview, isYouTubeVideo, getYouTubeThumbnail } from "@/lib/utils/image-utils";
+import {
+  getCourseThumbnail,
+  isYouTubeVideo,
+  getYouTubeThumbnail,
+} from "@/lib/utils/image-utils";
 import { VideoPreview } from "./video-preview";
 import { getCourseUrl, getCourseLearnUrl } from "@/lib/utils/url-utils";
 
@@ -41,7 +43,7 @@ export const CourseCard = ({
   enrollment,
 }: CourseCardProps) => {
   const [imageError, setImageError] = useState(false);
-  const [currentImageSrc, setCurrentImageSrc] = useState(() => {
+  const [currentImageSrc] = useState(() => {
     // If course has a YouTube video preview, use its thumbnail
     if (course.videoPreview && isYouTubeVideo(course.videoPreview)) {
       console.log("Using YouTube thumbnail for course:", course.title);
@@ -58,7 +60,7 @@ export const CourseCard = ({
   };
 
   const formatPrice = (price: number | string) => {
-    const numPrice = typeof price === 'string' ? parseFloat(price) : price;
+    const numPrice = typeof price === "string" ? parseFloat(price) : price;
     if (numPrice === 0) return "Gratis";
     return `$${numPrice.toLocaleString()} BOB`;
   };
@@ -103,29 +105,34 @@ export const CourseCard = ({
             {/* Course Image */}
             <div className="relative lg:w-80 h-48 lg:h-auto">
               <Link href={getCourseUrl(course.id)}>
-                                 {!imageError ? (
-                   <Image
-                     src={currentImageSrc}
-                     alt={course.title}
-                     fill
-                     className="object-cover rounded-l-lg"
-                     onError={() => setImageError(true)}
-                   />
+                {!imageError ? (
+                  <Image
+                    src={currentImageSrc}
+                    alt={course.title}
+                    fill
+                    className="object-cover rounded-l-lg"
+                    onError={() => setImageError(true)}
+                  />
                 ) : (
                   <div className="w-full h-full bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center rounded-l-lg">
                     <BookOpen className="h-12 w-12 text-blue-600" />
                   </div>
                 )}
-                                 {course.videoPreview && (
-                   <>
-                     {console.log("Rendering VideoPreview for course:", course.title, "URL:", course.videoPreview)}
-                     <VideoPreview 
-                       videoUrl={course.videoPreview} 
-                       title={course.title}
-                       className="opacity-100 transition-opacity"
-                     />
-                   </>
-                 )}
+                {course.videoPreview && (
+                  <>
+                    {console.log(
+                      "Rendering VideoPreview for course:",
+                      course.title,
+                      "URL:",
+                      course.videoPreview
+                    )}
+                    <VideoPreview
+                      videoUrl={course.videoPreview}
+                      title={course.title}
+                      className="opacity-100 transition-opacity"
+                    />
+                  </>
+                )}
               </Link>
 
               {/* Badges */}
@@ -199,8 +206,8 @@ export const CourseCard = ({
                       {enrollment.status === "COMPLETED"
                         ? "Completado"
                         : enrollment.status === "IN_PROGRESS"
-                        ? "En Progreso"
-                        : "Inscrito"}
+                          ? "En Progreso"
+                          : "Inscrito"}
                     </Badge>
                   )}
                 </div>
@@ -226,7 +233,12 @@ export const CourseCard = ({
                 <div className="flex items-center gap-1">
                   <Users className="h-4 w-4" />
                   <span>
-                    {(course.studentCount || course.enrollmentCount || 0).toLocaleString()} estudiantes
+                    {(
+                      course.studentCount ||
+                      course.enrollmentCount ||
+                      0
+                    ).toLocaleString()}{" "}
+                    estudiantes
                   </span>
                 </div>
                 <div className="flex items-center gap-1">
@@ -261,28 +273,32 @@ export const CourseCard = ({
 
               {/* Action Buttons */}
               <div className="flex gap-3">
-                                 {enrollment?.isEnrolled ? (
-                   <Button asChild className="flex-1">
-                     <Link href={getCourseLearnUrl(enrollment.enrollmentId || course.id)}>
-                       {enrollment.status === "COMPLETED" ? (
-                         <>
-                           <CheckCircle className="h-4 w-4 mr-2" />
-                           Ver Certificado
-                         </>
-                       ) : enrollment.status === "IN_PROGRESS" ? (
-                         <>
-                           <Play className="h-4 w-4 mr-2" />
-                           Continuar
-                         </>
-                       ) : (
-                         <>
-                           <BookOpen className="h-4 w-4 mr-2" />
-                           Ir al Curso
-                         </>
-                       )}
-                     </Link>
-                   </Button>
-                 ) : (
+                {enrollment?.isEnrolled ? (
+                  <Button asChild className="flex-1">
+                    <Link
+                      href={getCourseLearnUrl(
+                        enrollment.enrollmentId || course.id
+                      )}
+                    >
+                      {enrollment.status === "COMPLETED" ? (
+                        <>
+                          <CheckCircle className="h-4 w-4 mr-2" />
+                          Ver Certificado
+                        </>
+                      ) : enrollment.status === "IN_PROGRESS" ? (
+                        <>
+                          <Play className="h-4 w-4 mr-2" />
+                          Continuar
+                        </>
+                      ) : (
+                        <>
+                          <BookOpen className="h-4 w-4 mr-2" />
+                          Ir al Curso
+                        </>
+                      )}
+                    </Link>
+                  </Button>
+                ) : (
                   <Button asChild className="flex-1">
                     <Link href={getCourseUrl(course.id)} prefetch={false}>
                       <BookOpen className="h-4 w-4 mr-2" />
@@ -303,27 +319,27 @@ export const CourseCard = ({
     <Card className="group hover:shadow-lg transition-all duration-200 overflow-hidden">
       <div className="relative">
         <Link href={getCourseUrl(course.id)}>
-                     {!imageError ? (
-             <Image
-               src={currentImageSrc}
-               alt={course.title}
-               width={400}
-               height={250}
-               className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-200"
-               onError={() => setImageError(true)}
-             />
+          {!imageError ? (
+            <Image
+              src={currentImageSrc}
+              alt={course.title}
+              width={400}
+              height={250}
+              className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-200"
+              onError={() => setImageError(true)}
+            />
           ) : (
             <div className="w-full h-48 bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center">
               <BookOpen className="h-12 w-12 text-blue-600" />
             </div>
           )}
-                     {course.videoPreview && (
-             <VideoPreview 
-               videoUrl={course.videoPreview} 
-               title={course.title}
-               className="opacity-100 transition-opacity"
-             />
-           )}
+          {course.videoPreview && (
+            <VideoPreview
+              videoUrl={course.videoPreview}
+              title={course.title}
+              className="opacity-100 transition-opacity"
+            />
+          )}
         </Link>
 
         {/* Badges */}
@@ -430,29 +446,31 @@ export const CourseCard = ({
           )}
         </div>
 
-                 {/* Action Button */}
-         {enrollment?.isEnrolled ? (
-           <Button asChild className="w-full" size="sm">
-             <Link href={getCourseLearnUrl(enrollment.enrollmentId || course.id)}>
-               {enrollment.status === "COMPLETED" ? (
-                 <>
-                   <CheckCircle className="h-4 w-4 mr-2" />
-                   Ver Certificado
-                 </>
-               ) : enrollment.status === "IN_PROGRESS" ? (
-                 <>
-                   <Play className="h-4 w-4 mr-2" />
-                   Continuar
-                 </>
-               ) : (
-                 <>
-                   <BookOpen className="h-4 w-4 mr-2" />
-                   Ir al Curso
-                 </>
-               )}
-             </Link>
-           </Button>
-         ) : (
+        {/* Action Button */}
+        {enrollment?.isEnrolled ? (
+          <Button asChild className="w-full" size="sm">
+            <Link
+              href={getCourseLearnUrl(enrollment.enrollmentId || course.id)}
+            >
+              {enrollment.status === "COMPLETED" ? (
+                <>
+                  <CheckCircle className="h-4 w-4 mr-2" />
+                  Ver Certificado
+                </>
+              ) : enrollment.status === "IN_PROGRESS" ? (
+                <>
+                  <Play className="h-4 w-4 mr-2" />
+                  Continuar
+                </>
+              ) : (
+                <>
+                  <BookOpen className="h-4 w-4 mr-2" />
+                  Ir al Curso
+                </>
+              )}
+            </Link>
+          </Button>
+        ) : (
           <Button asChild className="w-full" size="sm">
             <Link href={getCourseUrl(course.id)} prefetch={false}>
               <BookOpen className="h-4 w-4 mr-2" />

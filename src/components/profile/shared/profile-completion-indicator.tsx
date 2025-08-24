@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, AlertCircle, Target, ArrowRight } from "lucide-react";
-import { UserRole } from "@prisma/client";
+import { UserRole } from "@/types/profile";
 import type { Profile } from "@/types/profile";
 
 interface ProfileSection {

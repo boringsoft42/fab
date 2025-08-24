@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { ResourceController } from '@/controllers/ResourceController';
 
 // GET /api/resources/categories - Obtener categorías de recursos
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const controller = new ResourceController();
     const categories = await controller.getResourceCategories();

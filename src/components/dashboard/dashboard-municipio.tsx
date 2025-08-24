@@ -12,7 +12,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -69,71 +68,8 @@ interface Company {
 }
 
 export function DashboardMunicipio() {
+  // Move all useState hooks to the top before any conditional returns
   const [showCreateDialog, setShowCreateDialog] = useState(false);
-  
-  // Obtener colores del usuario actual desde el contexto
-  const { user, isAuthenticated, loading } = useAuthContext();
-  const primaryColor = user?.primaryColor || "#1E40AF";
-  const secondaryColor = user?.secondaryColor || "#F59E0B";
-  
-  // Debug authentication state
-  useEffect(() => {
-    console.log("🔐 DashboardMunicipio - User:", user);
-    console.log("🔐 DashboardMunicipio - isAuthenticated:", isAuthenticated);
-    console.log("🔐 DashboardMunicipio - loading:", loading);
-    console.log("🔐 DashboardMunicipio - Token exists:", !!getToken());
-    console.log("🔐 DashboardMunicipio - Token value:", getToken() ? `${getToken()?.substring(0, 20)}...` : 'null');
-    console.log("🔐 DashboardMunicipio - User ID:", user?.id);
-    console.log("🔐 DashboardMunicipio - User Role:", user?.role);
-    console.log("🔐 DashboardMunicipio - User Municipality:", user?.municipality);
-    
-    // Check if we're on client side
-    console.log("🔐 DashboardMunicipio - Window available:", typeof window !== 'undefined');
-    console.log("🔐 DashboardMunicipio - LocalStorage available:", typeof localStorage !== 'undefined');
-    
-    if (typeof window !== 'undefined') {
-      console.log("🔐 DashboardMunicipio - All localStorage keys:", Object.keys(localStorage));
-      console.log("🔐 DashboardMunicipio - Token from localStorage:", localStorage.getItem('token'));
-    }
-  }, [user, isAuthenticated, loading]);
-  
-  // Show loading state while authentication is being checked
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Verificando autenticación...</p>
-        </div>
-      </div>
-    );
-  }
-  
-  // Show error if not authenticated
-  if (!isAuthenticated || !user) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">No autenticado</h2>
-          <p className="text-gray-600">Debes iniciar sesión para acceder al dashboard.</p>
-          <p className="text-sm text-gray-500 mt-2">Token: {getToken() ? 'Presente' : 'Ausente'}</p>
-        </div>
-      </div>
-    );
-  }
-  
-  // Función para calcular el contraste de colores
-  const getContrastColor = (hexColor: string): string => {
-    const hex = hexColor.replace('#', '');
-    const r = parseInt(hex.substr(0, 2), 16);
-    const g = parseInt(hex.substr(2, 2), 16);
-    const b = parseInt(hex.substr(4, 2), 16);
-    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-    return luminance > 0.5 ? '#000000' : '#FFFFFF';
-  };
-  
-  const primaryTextColor = getContrastColor(primaryColor);
-  const secondaryTextColor = getContrastColor(secondaryColor);
   const [companies, setCompanies] = useState<Company[]>([
     {
       id: "1",
@@ -185,6 +121,94 @@ export function DashboardMunicipio() {
     values: [],
   });
 
+  // Obtener colores del usuario actual desde el contexto
+  const { user, isAuthenticated, loading } = useAuthContext();
+  const primaryColor = user?.primaryColor || "#1E40AF";
+  const secondaryColor = user?.secondaryColor || "#F59E0B";
+
+  // Debug authentication state
+  useEffect(() => {
+    console.log("🔐 DashboardMunicipio - User:", user);
+    console.log("🔐 DashboardMunicipio - isAuthenticated:", isAuthenticated);
+    console.log("🔐 DashboardMunicipio - loading:", loading);
+    console.log("🔐 DashboardMunicipio - Token exists:", !!getToken());
+    console.log(
+      "🔐 DashboardMunicipio - Token value:",
+      getToken() ? `${getToken()?.substring(0, 20)}...` : "null"
+    );
+    console.log("🔐 DashboardMunicipio - User ID:", user?.id);
+    console.log("🔐 DashboardMunicipio - User Role:", user?.role);
+    console.log(
+      "🔐 DashboardMunicipio - User Municipality:",
+      user?.municipality
+    );
+
+    // Check if we're on client side
+    console.log(
+      "🔐 DashboardMunicipio - Window available:",
+      typeof window !== "undefined"
+    );
+    console.log(
+      "🔐 DashboardMunicipio - LocalStorage available:",
+      typeof localStorage !== "undefined"
+    );
+
+    if (typeof window !== "undefined") {
+      console.log(
+        "🔐 DashboardMunicipio - All localStorage keys:",
+        Object.keys(localStorage)
+      );
+      console.log(
+        "🔐 DashboardMunicipio - Token from localStorage:",
+        localStorage.getItem("token")
+      );
+    }
+  }, [user, isAuthenticated, loading]);
+
+  // Show loading state while authentication is being checked
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Verificando autenticación...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error if not authenticated
+  if (!isAuthenticated || !user) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-red-600 mb-4">
+            No autenticado
+          </h2>
+          <p className="text-gray-600">
+            Debes iniciar sesión para acceder al dashboard.
+          </p>
+          <p className="text-sm text-gray-500 mt-2">
+            Token: {getToken() ? "Presente" : "Ausente"}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Función para calcular el contraste de colores
+  const getContrastColor = (hexColor: string): string => {
+    const hex = hexColor.replace("#", "");
+    const r = parseInt(hex.substr(0, 2), 16);
+    const g = parseInt(hex.substr(2, 2), 16);
+    const b = parseInt(hex.substr(4, 2), 16);
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    return luminance > 0.5 ? "#000000" : "#FFFFFF";
+  };
+
+  const primaryTextColor = getContrastColor(primaryColor);
+  const secondaryTextColor = getContrastColor(secondaryColor);
+
   const companyStats = {
     totalCompanies: companies.length,
     totalEmployees: companies.reduce(
@@ -202,9 +226,9 @@ export function DashboardMunicipio() {
     try {
       // Obtener el token de autenticación
       const token = getToken();
-      
+
       if (!token) {
-        console.error('No se encontró token de autenticación');
+        console.error("No se encontró token de autenticación");
         return;
       }
 
@@ -214,7 +238,9 @@ export function DashboardMunicipio() {
         description: newCompany.description,
         businessSector: newCompany.industry,
         companySize: newCompany.size,
-        foundedYear: newCompany.founded ? parseInt(newCompany.founded) : undefined,
+        foundedYear: newCompany.founded
+          ? parseInt(newCompany.founded)
+          : undefined,
         website: newCompany.website,
         email: newCompany.email,
         phone: newCompany.phone,
@@ -223,23 +249,23 @@ export function DashboardMunicipio() {
       };
 
       // Llamar a la API para crear la empresa
-      const response = await fetch('/api/company', {
-        method: 'POST',
+      const response = await fetch("/api/company", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(companyData),
       });
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('Error al crear empresa:', errorText);
+        console.error("Error al crear empresa:", errorText);
         return;
       }
 
       const result = await response.json();
-      console.log('Empresa creada exitosamente:', result);
+      console.log("Empresa creada exitosamente:", result);
 
       // Limpiar el formulario
       setNewCompany({
@@ -264,9 +290,8 @@ export function DashboardMunicipio() {
 
       // Opcional: Recargar la lista de empresas
       // Aquí podrías llamar a una función para actualizar la lista
-      
     } catch (error) {
-      console.error('Error al crear empresa:', error);
+      console.error("Error al crear empresa:", error);
     }
   };
 
@@ -274,8 +299,8 @@ export function DashboardMunicipio() {
   const testAuth = async () => {
     console.log("🧪 Testing authentication...");
     const token = getToken();
-    console.log("🧪 Token:", token ? `${token.substring(0, 20)}...` : 'null');
-    
+    console.log("🧪 Token:", token ? `${token.substring(0, 20)}...` : "null");
+
     // Decode JWT token to check expiration
     if (token) {
       try {
@@ -298,25 +323,28 @@ export function DashboardMunicipio() {
         console.error("🧪 Error decoding token:", error);
       }
     }
-    
+
     try {
       // Test multiple endpoints
       const endpoints = [
-        '/company',
-        '/auth/me', 
-        '/municipality',
-        '/user/profile'
+        "/company",
+        "/auth/me",
+        "/municipality",
+        "/user/profile",
       ];
-      
+
       for (const endpoint of endpoints) {
         try {
           console.log(`🧪 Testing endpoint: ${endpoint}`);
-          const response = await fetch(`http://192.168.10.91:3001/api${endpoint}`, {
-            headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json'
+          const response = await fetch(
+            `http://192.168.10.91:3001/api${endpoint}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
             }
-          });
+          );
           console.log(`🧪 ${endpoint} - Status:`, response.status);
           if (response.ok) {
             const data = await response.json();
@@ -337,13 +365,13 @@ export function DashboardMunicipio() {
   return (
     <div className="space-y-6 px-4">
       {/* Header con colores personalizados */}
-      <div 
+      <div
         className="rounded-lg p-6 mb-6"
         style={{ backgroundColor: primaryColor }}
       >
         <div className="flex justify-between items-center">
           <div>
-            <h1 
+            <h1
               className="text-3xl font-bold tracking-tight"
               style={{ color: primaryTextColor }}
             >
@@ -357,9 +385,9 @@ export function DashboardMunicipio() {
             <Button
               variant="outline"
               onClick={testAuth}
-              style={{ 
+              style={{
                 color: primaryTextColor,
-                borderColor: primaryTextColor
+                borderColor: primaryTextColor,
               }}
             >
               Test Auth
@@ -367,10 +395,10 @@ export function DashboardMunicipio() {
             <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
               <DialogTrigger asChild>
                 <Button
-                  style={{ 
+                  style={{
                     backgroundColor: secondaryColor,
                     color: secondaryTextColor,
-                    border: 'none'
+                    border: "none",
                   }}
                 >
                   <Plus className="w-4 h-4 mr-2" />
@@ -378,263 +406,287 @@ export function DashboardMunicipio() {
                 </Button>
               </DialogTrigger>
               <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle>Crear Nueva Empresa</DialogTitle>
-                <DialogDescription>
-                  Registra una nueva empresa en la plataforma CEMSE
-                </DialogDescription>
-              </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="grid gap-2">
-                    <Label htmlFor="name">Nombre de la Empresa *</Label>
-                    <Input
-                      id="name"
-                      value={newCompany.name}
-                      onChange={(e) =>
-                        setNewCompany({ ...newCompany, name: e.target.value })
-                      }
-                      placeholder="Ej: Cemse Innovación"
-                    />
+                <DialogHeader>
+                  <DialogTitle>Crear Nueva Empresa</DialogTitle>
+                  <DialogDescription>
+                    Registra una nueva empresa en la plataforma CEMSE
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="grid gap-2">
+                      <Label htmlFor="name">Nombre de la Empresa *</Label>
+                      <Input
+                        id="name"
+                        value={newCompany.name}
+                        onChange={(e) =>
+                          setNewCompany({ ...newCompany, name: e.target.value })
+                        }
+                        placeholder="Ej: Cemse Innovación"
+                      />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="founded">Año de Fundación</Label>
+                      <Input
+                        id="founded"
+                        value={newCompany.founded}
+                        onChange={(e) =>
+                          setNewCompany({
+                            ...newCompany,
+                            founded: e.target.value,
+                          })
+                        }
+                        placeholder="2018"
+                      />
+                    </div>
                   </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="founded">Año de Fundación</Label>
-                    <Input
-                      id="founded"
-                      value={newCompany.founded}
-                      onChange={(e) =>
-                        setNewCompany({ ...newCompany, founded: e.target.value })
-                      }
-                      placeholder="2018"
-                    />
-                  </div>
-                </div>
 
-                <div className="grid gap-2">
-                  <Label htmlFor="description">Descripción</Label>
-                  <Textarea
-                    id="description"
-                    value={newCompany.description}
-                    onChange={(e) =>
-                      setNewCompany({
-                        ...newCompany,
-                        description: e.target.value,
-                      })
-                    }
-                    placeholder="Descripción de la empresa..."
-                    rows={3}
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
                   <div className="grid gap-2">
-                    <Label htmlFor="industry">Sector</Label>
-                    <Select
-                      value={newCompany.industry}
-                      onValueChange={(value) =>
-                        setNewCompany({ ...newCompany, industry: value })
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Seleccionar sector" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Tecnología">Tecnología</SelectItem>
-                        <SelectItem value="Finanzas">Finanzas</SelectItem>
-                        <SelectItem value="Salud">Salud</SelectItem>
-                        <SelectItem value="Educación">Educación</SelectItem>
-                        <SelectItem value="Manufactura">Manufactura</SelectItem>
-                        <SelectItem value="Servicios">Servicios</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="size">Tamaño</Label>
-                    <Select
-                      value={newCompany.size}
-                      onValueChange={(value) =>
-                        setNewCompany({ ...newCompany, size: value })
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Seleccionar tamaño" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="1-10 empleados">
-                          1-10 empleados
-                        </SelectItem>
-                        <SelectItem value="11-50 empleados">
-                          11-50 empleados
-                        </SelectItem>
-                        <SelectItem value="51-200 empleados">
-                          51-200 empleados
-                        </SelectItem>
-                        <SelectItem value="201-500 empleados">
-                          201-500 empleados
-                        </SelectItem>
-                        <SelectItem value="500+ empleados">
-                          500+ empleados
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="grid gap-2">
-                    <Label htmlFor="website">Sitio Web</Label>
-                    <Input
-                      id="website"
-                      value={newCompany.website}
-                      onChange={(e) =>
-                        setNewCompany({ ...newCompany, website: e.target.value })
-                      }
-                      placeholder="https://empresa.com"
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={newCompany.email}
-                      onChange={(e) =>
-                        setNewCompany({ ...newCompany, email: e.target.value })
-                      }
-                      placeholder="contacto@empresa.com"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="grid gap-2">
-                    <Label htmlFor="phone">Teléfono</Label>
-                    <Input
-                      id="phone"
-                      value={newCompany.phone}
-                      onChange={(e) =>
-                        setNewCompany({ ...newCompany, phone: e.target.value })
-                      }
-                      placeholder="+591 2 2345678"
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="city">Ciudad</Label>
-                    <Select
-                      value={newCompany.city}
-                      onValueChange={(value) =>
-                        setNewCompany({ ...newCompany, city: value })
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Seleccionar ciudad" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="La Paz">La Paz</SelectItem>
-                        <SelectItem value="Santa Cruz">Santa Cruz</SelectItem>
-                        <SelectItem value="Cochabamba">Cochabamba</SelectItem>
-                        <SelectItem value="Sucre">Sucre</SelectItem>
-                        <SelectItem value="Potosí">Potosí</SelectItem>
-                        <SelectItem value="Oruro">Oruro</SelectItem>
-                        <SelectItem value="Tarija">Tarija</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-
-                <div className="grid gap-2">
-                  <Label htmlFor="address">Dirección</Label>
-                  <Input
-                    id="address"
-                    value={newCompany.address}
-                    onChange={(e) =>
-                      setNewCompany({ ...newCompany, address: e.target.value })
-                    }
-                    placeholder="Av. Principal 123"
-                  />
-                </div>
-
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="grid gap-2">
-                    <Label htmlFor="employees">Número de Empleados</Label>
-                    <Input
-                      id="employees"
-                      type="number"
-                      value={newCompany.employees}
+                    <Label htmlFor="description">Descripción</Label>
+                    <Textarea
+                      id="description"
+                      value={newCompany.description}
                       onChange={(e) =>
                         setNewCompany({
                           ...newCompany,
-                          employees: Number.parseInt(e.target.value) || 0,
+                          description: e.target.value,
                         })
                       }
-                      placeholder="0"
+                      placeholder="Descripción de la empresa..."
+                      rows={3}
                     />
                   </div>
-                </div>
 
-                <div className="grid gap-2">
-                  <Label htmlFor="mission">Misión</Label>
-                  <Textarea
-                    id="mission"
-                    value={newCompany.mission}
-                    onChange={(e) =>
-                      setNewCompany({ ...newCompany, mission: e.target.value })
-                    }
-                    placeholder="Misión de la empresa..."
-                    rows={2}
-                  />
-                </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="grid gap-2">
+                      <Label htmlFor="industry">Sector</Label>
+                      <Select
+                        value={newCompany.industry}
+                        onValueChange={(value) =>
+                          setNewCompany({ ...newCompany, industry: value })
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Seleccionar sector" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Tecnología">Tecnología</SelectItem>
+                          <SelectItem value="Finanzas">Finanzas</SelectItem>
+                          <SelectItem value="Salud">Salud</SelectItem>
+                          <SelectItem value="Educación">Educación</SelectItem>
+                          <SelectItem value="Manufactura">
+                            Manufactura
+                          </SelectItem>
+                          <SelectItem value="Servicios">Servicios</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="size">Tamaño</Label>
+                      <Select
+                        value={newCompany.size}
+                        onValueChange={(value) =>
+                          setNewCompany({ ...newCompany, size: value })
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Seleccionar tamaño" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="1-10 empleados">
+                            1-10 empleados
+                          </SelectItem>
+                          <SelectItem value="11-50 empleados">
+                            11-50 empleados
+                          </SelectItem>
+                          <SelectItem value="51-200 empleados">
+                            51-200 empleados
+                          </SelectItem>
+                          <SelectItem value="201-500 empleados">
+                            201-500 empleados
+                          </SelectItem>
+                          <SelectItem value="500+ empleados">
+                            500+ empleados
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
 
-                <div className="grid gap-2">
-                  <Label htmlFor="vision">Visión</Label>
-                  <Textarea
-                    id="vision"
-                    value={newCompany.vision}
-                    onChange={(e) =>
-                      setNewCompany({ ...newCompany, vision: e.target.value })
-                    }
-                    placeholder="Visión de la empresa..."
-                    rows={2}
-                  />
-                </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="grid gap-2">
+                      <Label htmlFor="website">Sitio Web</Label>
+                      <Input
+                        id="website"
+                        value={newCompany.website}
+                        onChange={(e) =>
+                          setNewCompany({
+                            ...newCompany,
+                            website: e.target.value,
+                          })
+                        }
+                        placeholder="https://empresa.com"
+                      />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="email">Email</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        value={newCompany.email}
+                        onChange={(e) =>
+                          setNewCompany({
+                            ...newCompany,
+                            email: e.target.value,
+                          })
+                        }
+                        placeholder="contacto@empresa.com"
+                      />
+                    </div>
+                  </div>
 
-                <div className="grid gap-2">
-                  <Label htmlFor="values">Valores Corporativos</Label>
-                  <Input
-                    id="values"
-                    value={
-                      Array.isArray(newCompany.values)
-                        ? newCompany.values.join(", ")
-                        : newCompany.values
-                    }
-                    onChange={(e) =>
-                      setNewCompany({
-                        ...newCompany,
-                        values: e.target.value.split(",").map((v) => v.trim()),
-                      })
-                    }
-                    placeholder="Innovación, Excelencia, Integridad (separados por comas)"
-                  />
-                </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="grid gap-2">
+                      <Label htmlFor="phone">Teléfono</Label>
+                      <Input
+                        id="phone"
+                        value={newCompany.phone}
+                        onChange={(e) =>
+                          setNewCompany({
+                            ...newCompany,
+                            phone: e.target.value,
+                          })
+                        }
+                        placeholder="+591 2 2345678"
+                      />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="city">Ciudad</Label>
+                      <Select
+                        value={newCompany.city}
+                        onValueChange={(value) =>
+                          setNewCompany({ ...newCompany, city: value })
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Seleccionar ciudad" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="La Paz">La Paz</SelectItem>
+                          <SelectItem value="Santa Cruz">Santa Cruz</SelectItem>
+                          <SelectItem value="Cochabamba">Cochabamba</SelectItem>
+                          <SelectItem value="Sucre">Sucre</SelectItem>
+                          <SelectItem value="Potosí">Potosí</SelectItem>
+                          <SelectItem value="Oruro">Oruro</SelectItem>
+                          <SelectItem value="Tarija">Tarija</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
 
-                <div className="flex justify-end gap-2 pt-4">
-                  <Button
-                    variant="outline"
-                    onClick={() => setShowCreateDialog(false)}
-                  >
-                    Cancelar
-                  </Button>
-                  <Button
-                    onClick={handleCreateCompany}
-                    disabled={!newCompany.name}
-                  >
-                    Crear Empresa
-                  </Button>
+                  <div className="grid gap-2">
+                    <Label htmlFor="address">Dirección</Label>
+                    <Input
+                      id="address"
+                      value={newCompany.address}
+                      onChange={(e) =>
+                        setNewCompany({
+                          ...newCompany,
+                          address: e.target.value,
+                        })
+                      }
+                      placeholder="Av. Principal 123"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="grid gap-2">
+                      <Label htmlFor="employees">Número de Empleados</Label>
+                      <Input
+                        id="employees"
+                        type="number"
+                        value={newCompany.employees}
+                        onChange={(e) =>
+                          setNewCompany({
+                            ...newCompany,
+                            employees: Number.parseInt(e.target.value) || 0,
+                          })
+                        }
+                        placeholder="0"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid gap-2">
+                    <Label htmlFor="mission">Misión</Label>
+                    <Textarea
+                      id="mission"
+                      value={newCompany.mission}
+                      onChange={(e) =>
+                        setNewCompany({
+                          ...newCompany,
+                          mission: e.target.value,
+                        })
+                      }
+                      placeholder="Misión de la empresa..."
+                      rows={2}
+                    />
+                  </div>
+
+                  <div className="grid gap-2">
+                    <Label htmlFor="vision">Visión</Label>
+                    <Textarea
+                      id="vision"
+                      value={newCompany.vision}
+                      onChange={(e) =>
+                        setNewCompany({ ...newCompany, vision: e.target.value })
+                      }
+                      placeholder="Visión de la empresa..."
+                      rows={2}
+                    />
+                  </div>
+
+                  <div className="grid gap-2">
+                    <Label htmlFor="values">Valores Corporativos</Label>
+                    <Input
+                      id="values"
+                      value={
+                        Array.isArray(newCompany.values)
+                          ? newCompany.values.join(", ")
+                          : newCompany.values
+                      }
+                      onChange={(e) =>
+                        setNewCompany({
+                          ...newCompany,
+                          values: e.target.value
+                            .split(",")
+                            .map((v) => v.trim()),
+                        })
+                      }
+                      placeholder="Innovación, Excelencia, Integridad (separados por comas)"
+                    />
+                  </div>
+
+                  <div className="flex justify-end gap-2 pt-4">
+                    <Button
+                      variant="outline"
+                      onClick={() => setShowCreateDialog(false)}
+                    >
+                      Cancelar
+                    </Button>
+                    <Button
+                      onClick={handleCreateCompany}
+                      disabled={!newCompany.name}
+                    >
+                      Crear Empresa
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            </DialogContent>
-          </Dialog>
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
+      </div>
 
       {/* Stats Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

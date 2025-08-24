@@ -41,7 +41,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         title: "Success",
         description: "You have been successfully signed in.",
       });
-    } catch (error) {
+    } catch {
       toast({
         title: "Error",
         description: "Your sign in request failed. Please try again.",
@@ -77,16 +77,17 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <PasswordInput placeholder="Enter your password" {...field} />
+                    <PasswordInput
+                      placeholder="Enter your password"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <Button disabled={isLoading}>
-              {isLoading && (
-                <div className="mr-2 h-4 w-4 animate-spin" />
-              )}
+              {isLoading && <div className="mr-2 h-4 w-4 animate-spin" />}
               Sign In
             </Button>
           </div>

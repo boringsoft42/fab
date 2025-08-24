@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAuthHeaders , API_BASE} from '@/lib/api';
+import { getAuthHeaders } from '@/lib/api';
 
 // GET /api/company/news - Fetch company news
 export async function GET(request: NextRequest) {

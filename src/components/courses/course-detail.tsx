@@ -6,20 +6,24 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { 
-  Clock, 
-  Users, 
-  BookOpen, 
-  Award, 
-  CheckCircle, 
+import {
+  Clock,
+  Users,
+  BookOpen,
+  Award,
+  CheckCircle,
   Star,
-  Play,
+  // Play,
   Target,
   FileText,
-  Tag
+  Tag,
 } from "lucide-react";
 import { Course } from "@/types/api";
-import { getCourseThumbnail, isYouTubeVideo, getYouTubeThumbnail } from "@/lib/utils/image-utils";
+import {
+  getCourseThumbnail,
+  isYouTubeVideo,
+  getYouTubeThumbnail,
+} from "@/lib/utils/image-utils";
 import { VideoPreview } from "./video-preview";
 
 interface CourseDetailProps {
@@ -32,9 +36,13 @@ interface CourseDetailProps {
   };
 }
 
-export const CourseDetail = ({ course, onEnroll, enrollment }: CourseDetailProps) => {
+export const CourseDetail = ({
+  course,
+  onEnroll,
+  enrollment,
+}: CourseDetailProps) => {
   const [imageError, setImageError] = useState(false);
-  const [currentImageSrc, setCurrentImageSrc] = useState(() => {
+  const [currentImageSrc] = useState(() => {
     if (course.videoPreview && isYouTubeVideo(course.videoPreview)) {
       return getYouTubeThumbnail(course.videoPreview);
     }
@@ -42,13 +50,13 @@ export const CourseDetail = ({ course, onEnroll, enrollment }: CourseDetailProps
   });
 
   // Debug logs
-  console.log('🔍 CourseDetail - course data:', course);
-  console.log('🔍 CourseDetail - studentsCount:', course.studentsCount);
-  console.log('🔍 CourseDetail - totalLessons:', course.totalLessons);
-  console.log('🔍 CourseDetail - totalQuizzes:', course.totalQuizzes);
-  console.log('🔍 CourseDetail - totalResources:', course.totalResources);
-  console.log('🔍 CourseDetail - completionRate:', course.completionRate);
-  console.log('🔍 CourseDetail - rating:', course.rating);
+  console.log("🔍 CourseDetail - course data:", course);
+  console.log("🔍 CourseDetail - studentsCount:", course.studentsCount);
+  console.log("🔍 CourseDetail - totalLessons:", course.totalLessons);
+  console.log("🔍 CourseDetail - totalQuizzes:", course.totalQuizzes);
+  console.log("🔍 CourseDetail - totalResources:", course.totalResources);
+  console.log("🔍 CourseDetail - completionRate:", course.completionRate);
+  console.log("🔍 CourseDetail - rating:", course.rating);
 
   const formatDuration = (hours: number) => {
     if (hours < 1) return `${Math.round(hours * 60)} min`;
@@ -56,7 +64,7 @@ export const CourseDetail = ({ course, onEnroll, enrollment }: CourseDetailProps
   };
 
   const formatPrice = (price: number | string) => {
-    const numPrice = typeof price === 'string' ? parseFloat(price) : price;
+    const numPrice = typeof price === "string" ? parseFloat(price) : price;
     if (numPrice === 0) return "Gratis";
     return `$${numPrice.toLocaleString()} BOB`;
   };
@@ -113,15 +121,15 @@ export const CourseDetail = ({ course, onEnroll, enrollment }: CourseDetailProps
                 <BookOpen className="h-24 w-24 text-blue-600" />
               </div>
             )}
-            
-                         {/* Video Preview Overlay */}
-             {course.videoPreview && (
-               <VideoPreview 
-                 videoUrl={course.videoPreview} 
-                 title={course.title}
-                 className="absolute inset-0 opacity-100"
-               />
-             )}
+
+            {/* Video Preview Overlay */}
+            {course.videoPreview && (
+              <VideoPreview
+                videoUrl={course.videoPreview}
+                title={course.title}
+                className="absolute inset-0 opacity-100"
+              />
+            )}
           </div>
         </div>
 
@@ -136,10 +144,12 @@ export const CourseDetail = ({ course, onEnroll, enrollment }: CourseDetailProps
                 {getCategoryLabel(course.category)}
               </Badge>
             </div>
-            
+
             <h1 className="text-3xl font-bold mb-2">{course.title}</h1>
-            <p className="text-muted-foreground mb-4">{course.shortDescription}</p>
-            
+            <p className="text-muted-foreground mb-4">
+              {course.shortDescription}
+            </p>
+
             <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
               <div className="flex items-center gap-1">
                 <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
@@ -163,10 +173,12 @@ export const CourseDetail = ({ course, onEnroll, enrollment }: CourseDetailProps
             <div className="text-3xl font-bold text-blue-600 mb-2">
               {formatPrice(course.price)}
             </div>
-            
+
             {enrollment?.isEnrolled ? (
               <Button className="w-full" disabled>
-                {enrollment.status === "completed" ? "Curso Completado" : "Ya Inscrito"}
+                {enrollment.status === "completed"
+                  ? "Curso Completado"
+                  : "Ya Inscrito"}
               </Button>
             ) : (
               <Button className="w-full" onClick={onEnroll}>
@@ -188,12 +200,18 @@ export const CourseDetail = ({ course, onEnroll, enrollment }: CourseDetailProps
                   <div className="text-muted-foreground">Evaluaciones</div>
                 </div>
                 <div className="text-center">
-                  <div className="font-bold text-lg">{course.totalResources}</div>
+                  <div className="font-bold text-lg">
+                    {course.totalResources}
+                  </div>
                   <div className="text-muted-foreground">Recursos</div>
                 </div>
                 <div className="text-center">
-                  <div className="font-bold text-lg">{course.completionRate}%</div>
-                  <div className="text-muted-foreground">Tasa de Finalización</div>
+                  <div className="font-bold text-lg">
+                    {course.completionRate}%
+                  </div>
+                  <div className="text-muted-foreground">
+                    Tasa de Finalización
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -314,7 +332,8 @@ export const CourseDetail = ({ course, onEnroll, enrollment }: CourseDetailProps
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground">
-                  Al completar este curso recibirás un certificado de finalización.
+                  Al completar este curso recibirás un certificado de
+                  finalización.
                 </p>
               </CardContent>
             </Card>

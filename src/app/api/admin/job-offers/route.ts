@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+// import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
@@ -7,7 +7,7 @@ import { authOptions } from "@/lib/auth";
 export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
-    
+
     if (!session?.user || session.user.role !== "SUPERADMIN") {
       return NextResponse.json(
         { error: "Unauthorized. Super Admin access required." },
@@ -25,16 +25,16 @@ export async function GET(request: NextRequest) {
     const skip = (page - 1) * limit;
 
     // Build where clause
-    const where: any = {};
-    
+    const where: Record<string, unknown> = {};
+
     if (status) {
       where.status = status;
     }
-    
+
     if (companyId) {
       where.companyId = companyId;
     }
-    
+
     if (search) {
       where.OR = [
         { title: { contains: search, mode: "insensitive" } },
@@ -95,7 +95,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
-    
+
     if (!session?.user || session.user.role !== "SUPERADMIN") {
       return NextResponse.json(
         { error: "Unauthorized. Super Admin access required." },
@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
     }
 
     const jobData = await request.json();
-    
+
     const {
       title,
       description,

@@ -23,14 +23,15 @@ export default function CourseDetailPage() {
   const fetchCourseDetails = async () => {
     try {
       setLoading(true);
-      console.log('🔍 CourseDetailPage: Fetching course with ID:', params.id);
-      
-      const data = await apiCall(`/course/${params.id}`);
-      console.log('🔍 CourseDetailPage: API response:', data);
-      
+      const courseId = params.id as string;
+      console.log("🔍 CourseDetailPage: Fetching course with ID:", courseId);
+
+      const data = await apiCall(`/course/${courseId}`);
+      console.log("🔍 CourseDetailPage: API response:", data);
+
       const courseData = data.course || data;
-      console.log('🔍 CourseDetailPage: Course data:', courseData);
-      
+      console.log("🔍 CourseDetailPage: Course data:", courseData);
+
       setCourse(courseData);
     } catch (error) {
       console.error("Error fetching course:", error);
@@ -40,7 +41,8 @@ export default function CourseDetailPage() {
   };
 
   const handleEnroll = () => {
-    router.push(`/development/courses/${params.id}/enroll`);
+    const courseId = params.id as string;
+    router.push(`/development/courses/${courseId}/enroll`);
   };
 
   const handleBack = () => {
@@ -69,36 +71,31 @@ export default function CourseDetailPage() {
     );
   }
 
-     if (!course) {
-     return (
-       <div className="container mx-auto p-6 text-center">
-         <h1 className="text-2xl font-bold mb-4">Curso no encontrado</h1>
-         <Button onClick={handleBack}>
-           Volver
-         </Button>
-       </div>
-     );
-   }
+  if (!course) {
+    return (
+      <div className="container mx-auto p-6 text-center">
+        <h1 className="text-2xl font-bold mb-4">Curso no encontrado</h1>
+        <Button onClick={handleBack}>Volver</Button>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto p-6">
-             {/* Breadcrumb */}
-       <div className="flex items-center gap-2 mb-6 text-sm text-muted-foreground">
-         <button
-           onClick={handleBack}
-           className="hover:text-foreground flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
-         >
-           <ArrowLeft className="h-4 w-4" />
-           Volver
-         </button>
-         <span>/</span>
-         <span className="text-foreground">{course.title}</span>
-       </div>
+      {/* Breadcrumb */}
+      <div className="flex items-center gap-2 mb-6 text-sm text-muted-foreground">
+        <button
+          onClick={handleBack}
+          className="hover:text-foreground flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Volver
+        </button>
+        <span>/</span>
+        <span className="text-foreground">{course.title}</span>
+      </div>
 
-      <CourseDetail 
-        course={course} 
-        onEnroll={handleEnroll}
-      />
+      <CourseDetail course={course} onEnroll={handleEnroll} />
     </div>
   );
 }

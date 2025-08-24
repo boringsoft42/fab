@@ -43,9 +43,9 @@ export const useLessons = (moduleId?: string) => {
     queryKey: ['lessons', moduleId],
     queryFn: async () => {
       if (!moduleId) return { lessons: [] };
-      
+
       const data = await apiCall(`/lesson?moduleId=${moduleId}`);
-      
+
       if (Array.isArray(data)) {
         return { lessons: data };
       }
@@ -55,10 +55,13 @@ export const useLessons = (moduleId?: string) => {
   });
 };
 
+// Alias for useLessons to maintain compatibility
+export const useModuleLessons = useLessons;
+
 // Create lesson mutation
 export const useCreateLesson = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async (lessonData: CreateLessonData) => {
       const data = await apiCall('/lesson', {
@@ -76,7 +79,7 @@ export const useCreateLesson = () => {
 // Update lesson mutation
 export const useUpdateLesson = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async (lessonData: UpdateLessonData) => {
       const data = await apiCall(`/lesson/${lessonData.id}`, {
@@ -94,7 +97,7 @@ export const useUpdateLesson = () => {
 // Delete lesson mutation
 export const useDeleteLesson = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async (id: string) => {
       const data = await apiCall(`/lesson/${id}`, {

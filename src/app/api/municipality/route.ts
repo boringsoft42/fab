@@ -4,7 +4,7 @@ export async function POST(request: NextRequest) {
   try {
     // Mock authentication check for development
     const mockUserRole = "SUPERADMIN";
-    
+
     if (mockUserRole !== "SUPERADMIN") {
       return NextResponse.json(
         { error: "Acceso denegado. Solo super administradores pueden crear instituciones." },
@@ -13,10 +13,10 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { 
-      name, 
-      department, 
-      region, 
+    const {
+      name,
+      department,
+      region,
       address,
       website,
       username,
@@ -97,11 +97,11 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Mock authentication check for development
     const mockUserRole = "SUPERADMIN";
-    
+
     if (mockUserRole !== "SUPERADMIN") {
       return NextResponse.json(
         { error: "Acceso denegado" },

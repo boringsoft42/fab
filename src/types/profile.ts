@@ -1,9 +1,11 @@
-import type {
-  UserRole,
-  UserStatus,
-  EducationLevel,
-  CompanySize,
-} from "@prisma/client";
+// Define types locally since we're not using Prisma
+export type UserRole = "YOUTH" | "ADOLESCENTS" | "COMPANIES" | "MUNICIPAL_GOVERNMENTS" | "TRAINING_CENTERS" | "NGOS_AND_FOUNDATIONS";
+
+export type UserStatus = "ACTIVE" | "INACTIVE" | "PENDING" | "SUSPENDED";
+
+export type EducationLevel = "PRIMARY" | "SECONDARY" | "HIGH_SCHOOL" | "TECHNICAL" | "UNIVERSITY" | "POSTGRADUATE" | "OTHER";
+
+export type CompanySize = "MICRO" | "SMALL" | "MEDIUM" | "LARGE";
 
 export interface Profile {
   id: string;

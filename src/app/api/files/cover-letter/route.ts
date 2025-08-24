@@ -4,11 +4,11 @@ import { join } from 'path';
 import { existsSync } from 'fs';
 import { getCurrentUserId } from '@/lib/auth';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Verificar autenticación
     const userId = await getCurrentUserId();
-    
+
     if (!userId) {
       return NextResponse.json(
         { error: "No autorizado" },
@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
       );
     }
     const uploadsDir = join(process.cwd(), 'public', 'uploads', 'documents');
-    
+
     if (!existsSync(uploadsDir)) {
       return NextResponse.json({
         hasCoverLetter: false,
@@ -26,10 +26,10 @@ export async function GET(request: NextRequest) {
 
     // Buscar archivos de carta de presentación específicos del usuario
     const files = await readdir(uploadsDir);
-    const userCoverLetterFiles = files.filter(file => 
+    const userCoverLetterFiles = files.filter(file =>
       file.startsWith(`cover-letter-${userId}-`) && file.endsWith('.pdf')
     );
-    
+
     if (userCoverLetterFiles.length > 0) {
       // Retornar la carta de presentación más reciente del usuario
       const latestCoverLetter = userCoverLetterFiles.sort().pop();
@@ -57,7 +57,7 @@ export async function DELETE(request: NextRequest) {
   try {
     // Verificar autenticación
     const userId = await getCurrentUserId();
-    
+
     if (!userId) {
       return NextResponse.json(
         { error: "No autorizado" },
@@ -65,7 +65,7 @@ export async function DELETE(request: NextRequest) {
       );
     }
     const uploadsDir = join(process.cwd(), 'public', 'uploads', 'documents');
-    
+
     if (!existsSync(uploadsDir)) {
       return NextResponse.json({
         message: 'No hay carta de presentación para eliminar'
@@ -74,17 +74,17 @@ export async function DELETE(request: NextRequest) {
 
     // Buscar y eliminar archivos de carta de presentación del usuario
     const files = await readdir(uploadsDir);
-    const userCoverLetterFiles = files.filter(file => 
+    const userCoverLetterFiles = files.filter(file =>
       file.startsWith(`cover-letter-${userId}-`) && file.endsWith('.pdf')
     );
-    
+
     if (userCoverLetterFiles.length > 0) {
       // Eliminar todas las cartas de presentación del usuario
       for (const file of userCoverLetterFiles) {
         const filepath = join(uploadsDir, file);
         await unlink(filepath);
       }
-      
+
       return NextResponse.json({
         message: `Se eliminaron ${userCoverLetterFiles.length} carta(s) de presentación del usuario`
       });

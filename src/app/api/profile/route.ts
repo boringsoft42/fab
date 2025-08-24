@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
+// import { prisma } from "@/lib/prisma";
 
 // GET /api/profile - Obtener perfil del usuario actual
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const session = await getServerSession(authOptions);
-    
+
     if (!session?.user?.id) {
       return NextResponse.json(
         { error: "No autorizado" },
@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
-    
+
     if (!session?.user?.id) {
       return NextResponse.json(
         { error: "No autorizado" },
@@ -57,7 +57,7 @@ export async function PUT(request: NextRequest) {
     }
 
     const body = await request.json();
-    
+
     const updatedProfile = await prisma.profile.update({
       where: { userId: session.user.id },
       data: body,

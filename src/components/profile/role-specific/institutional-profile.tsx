@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { UserRole } from "@prisma/client";
+import { UserRole } from "@/types/profile";
 import type { Profile } from "@/types/profile";
 import { Button } from "@/components/ui/button";
 import {
@@ -37,18 +37,18 @@ interface InstitutionalProfileProps {
 // Función para calcular el contraste de colores
 const getContrastColor = (hexColor: string): string => {
   // Remover el # si está presente
-  const hex = hexColor.replace('#', '');
-  
+  const hex = hexColor.replace("#", "");
+
   // Convertir a RGB
   const r = parseInt(hex.substr(0, 2), 16);
   const g = parseInt(hex.substr(2, 2), 16);
   const b = parseInt(hex.substr(4, 2), 16);
-  
+
   // Calcular luminancia
   const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-  
+
   // Retornar blanco para colores oscuros, negro para colores claros
-  return luminance > 0.5 ? '#000000' : '#FFFFFF';
+  return luminance > 0.5 ? "#000000" : "#FFFFFF";
 };
 
 export function InstitutionalProfile({
@@ -64,7 +64,7 @@ export function InstitutionalProfile({
   // Obtener colores del perfil (simulando datos del login)
   const primaryColor = profile.primaryColor || "#1E40AF";
   const secondaryColor = profile.secondaryColor || "#F59E0B";
-  
+
   // Calcular colores de texto basados en el contraste
   const primaryTextColor = getContrastColor(primaryColor);
   const secondaryTextColor = getContrastColor(secondaryColor);
@@ -74,7 +74,8 @@ export function InstitutionalProfile({
       case "MUNICIPAL_GOVERNMENTS":
         return {
           title: "Perfil de Institución",
-          description: "Gestión de programas de empleabilidad y emprendimiento institucional",
+          description:
+            "Gestión de programas de empleabilidad y emprendimiento institucional",
           badge: "Institución",
           icon: Building,
         };
@@ -122,13 +123,10 @@ export function InstitutionalProfile({
   return (
     <div className="max-w-7xl mx-auto p-6 space-y-6">
       {/* Header con colores personalizados */}
-      <div 
-        className="rounded-lg p-6"
-        style={{ backgroundColor: primaryColor }}
-      >
+      <div className="rounded-lg p-6" style={{ backgroundColor: primaryColor }}>
         <div className="flex items-center justify-between">
           <div className="space-y-1">
-            <h1 
+            <h1
               className="text-3xl font-bold"
               style={{ color: primaryTextColor }}
             >
@@ -140,23 +138,31 @@ export function InstitutionalProfile({
           </div>
 
           <div className="flex items-center gap-2">
-            <Badge 
+            <Badge
               variant="default"
-              style={{ 
+              style={{
                 backgroundColor: secondaryColor,
                 color: secondaryTextColor,
-                border: 'none'
+                border: "none",
               }}
             >
               {roleInfo.badge}
             </Badge>
             {profile.profileCompletion !== undefined && (
               <Badge
-                variant={profile.profileCompletion >= 80 ? "default" : "outline"}
-                style={{ 
-                  backgroundColor: profile.profileCompletion >= 80 ? secondaryColor : 'transparent',
-                  color: profile.profileCompletion >= 80 ? secondaryTextColor : primaryTextColor,
-                  borderColor: primaryTextColor
+                variant={
+                  profile.profileCompletion >= 80 ? "default" : "outline"
+                }
+                style={{
+                  backgroundColor:
+                    profile.profileCompletion >= 80
+                      ? secondaryColor
+                      : "transparent",
+                  color:
+                    profile.profileCompletion >= 80
+                      ? secondaryTextColor
+                      : primaryTextColor,
+                  borderColor: primaryTextColor,
                 }}
               >
                 {profile.profileCompletion}% Completo
@@ -185,9 +191,11 @@ export function InstitutionalProfile({
                       className="w-full justify-start text-left h-auto p-3"
                       onClick={() => setActiveSection(section.id)}
                       style={{
-                        backgroundColor: isActive ? secondaryColor : 'transparent',
-                        color: isActive ? secondaryTextColor : 'inherit',
-                        border: 'none'
+                        backgroundColor: isActive
+                          ? secondaryColor
+                          : "transparent",
+                        color: isActive ? secondaryTextColor : "inherit",
+                        border: "none",
                       }}
                     >
                       <Icon className="h-4 w-4 mr-3 flex-shrink-0" />
@@ -234,8 +242,8 @@ export function InstitutionalProfile({
                   <Card>
                     <CardContent className="p-4">
                       <div className="flex items-center gap-2">
-                        <Building 
-                          className="h-5 w-5" 
+                        <Building
+                          className="h-5 w-5"
                           style={{ color: primaryColor }}
                         />
                         <div>
@@ -253,8 +261,8 @@ export function InstitutionalProfile({
                   <Card>
                     <CardContent className="p-4">
                       <div className="flex items-center gap-2">
-                        <Target 
-                          className="h-5 w-5" 
+                        <Target
+                          className="h-5 w-5"
                           style={{ color: secondaryColor }}
                         />
                         <div>

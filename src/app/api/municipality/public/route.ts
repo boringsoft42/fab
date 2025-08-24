@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { API_BASE } from '@/lib/api';
+// import { API_BASE } from '@/lib/api';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const backendUrl = process.env.BACKEND_URL || '${BACKEND_URL}';
     const response = await fetch(`${backendUrl}/api/municipality/public`, {

@@ -4,11 +4,11 @@ import { join } from 'path';
 import { existsSync } from 'fs';
 import { getCurrentUserId } from '@/lib/auth';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Verificar autenticación
     const userId = await getCurrentUserId();
-    
+
     if (!userId) {
       return NextResponse.json(
         { error: "No autorizado" },
@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
       );
     }
     const uploadsDir = join(process.cwd(), 'public', 'uploads', 'documents');
-    
+
     if (!existsSync(uploadsDir)) {
       return NextResponse.json({
         hasCV: false,
@@ -26,10 +26,10 @@ export async function GET(request: NextRequest) {
 
     // Buscar archivos CV específicos del usuario
     const files = await readdir(uploadsDir);
-    const userCVFiles = files.filter(file => 
+    const userCVFiles = files.filter(file =>
       file.startsWith(`cv-${userId}-`) && file.endsWith('.pdf')
     );
-    
+
     if (userCVFiles.length > 0) {
       // Retornar el CV más reciente del usuario
       const latestCV = userCVFiles.sort().pop();
@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
     // const generalCVFiles = files.filter(file => 
     //   file.startsWith('cv-') && file.endsWith('.pdf') && !file.includes('-')
     // );
-    
+
     // if (generalCVFiles.length > 0) {
     //   const latestGeneralCV = generalCVFiles.sort().pop();
     //   return NextResponse.json({
@@ -66,11 +66,11 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function DELETE(request: NextRequest) {
+export async function DELETE() {
   try {
     // Verificar autenticación
     const userId = await getCurrentUserId();
-    
+
     if (!userId) {
       return NextResponse.json(
         { error: "No autorizado" },
@@ -78,7 +78,7 @@ export async function DELETE(request: NextRequest) {
       );
     }
     const uploadsDir = join(process.cwd(), 'public', 'uploads', 'documents');
-    
+
     if (!existsSync(uploadsDir)) {
       return NextResponse.json({
         message: 'No hay CV para eliminar'
@@ -87,17 +87,17 @@ export async function DELETE(request: NextRequest) {
 
     // Buscar y eliminar archivos CV del usuario
     const files = await readdir(uploadsDir);
-    const userCVFiles = files.filter(file => 
+    const userCVFiles = files.filter(file =>
       file.startsWith(`cv-${userId}-`) && file.endsWith('.pdf')
     );
-    
+
     if (userCVFiles.length > 0) {
       // Eliminar todos los CV del usuario
       for (const file of userCVFiles) {
         const filepath = join(uploadsDir, file);
         await unlink(filepath);
       }
-      
+
       return NextResponse.json({
         message: `Se eliminaron ${userCVFiles.length} CV(s) del usuario`
       });

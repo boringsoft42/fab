@@ -71,7 +71,7 @@ export default function PostDetailPage() {
     <div className="container mx-auto py-8">
       <div className="mb-6">
         <Button variant="ghost" asChild>
-          <Link href={`/entrepreneurship/directory/${params.id}`}>
+          <Link href={`/entrepreneurship/directory/${params.id as string}`}>
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Profile
           </Link>

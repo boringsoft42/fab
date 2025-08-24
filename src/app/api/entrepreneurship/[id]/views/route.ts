@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+// import { prisma } from "@/lib/prisma";
 
 // POST /api/entrepreneurship/[id]/views - Increment view count
 export async function POST(

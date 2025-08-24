@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
+// import { prisma } from "@/lib/prisma";
 
 // GET /api/cv/cover-letter - Obtener carta de presentación del usuario
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const session = await getServerSession(authOptions);
-    
+
     if (!session?.user?.id) {
       return NextResponse.json(
         { error: "No autorizado" },
@@ -68,7 +68,7 @@ ${profile.firstName || ""} ${profile.lastName || ""}`,
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
-    
+
     if (!session?.user?.id) {
       return NextResponse.json(
         { error: "No autorizado" },

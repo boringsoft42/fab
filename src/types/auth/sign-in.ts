@@ -13,4 +13,10 @@ export const signInFormSchema = object({
     .min(1, { message: "La contraseña es requerida" }),
 });
 
-export type SignInFormData = z.infer<typeof signInFormSchema>; 
+export type SignInFormData = z.infer<typeof signInFormSchema>;
+
+// Alias for signInFormSchema to maintain compatibility
+export const userAuthFormSchema = signInFormSchema;
+
+// Alias for SignInFormData to maintain compatibility  
+export type UserAuthFormData = SignInFormData; 

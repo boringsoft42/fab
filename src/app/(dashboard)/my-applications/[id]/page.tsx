@@ -41,7 +41,7 @@ export default function YouthApplicationDetailPage({
     data: application,
     isLoading,
     error,
-  } = useYouthApplication(params.id);
+  } = useYouthApplication(params.id as string);
 
   const [activeTab, setActiveTab] = useState<
     "details" | "messages" | "interests"

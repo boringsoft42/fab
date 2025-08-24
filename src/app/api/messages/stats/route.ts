@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAuthHeaders, API_BASE } from '@/lib/api';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const authHeaders = getAuthHeaders();
     const response = await fetch(`${API_BASE}/messages/stats`, {

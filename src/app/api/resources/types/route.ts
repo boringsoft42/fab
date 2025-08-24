@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { ResourceController } from '@/controllers/ResourceController';
 
 // GET /api/resources/types - Obtener tipos de recursos
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const controller = new ResourceController();
     const types = await controller.getResourceTypes();

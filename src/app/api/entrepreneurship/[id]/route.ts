@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAuthHeaders , API_BASE} from '@/lib/api';
+import { getAuthHeaders } from '@/lib/api';
 
 export async function GET(
   request: NextRequest,
@@ -8,9 +8,9 @@ export async function GET(
   try {
     const backendUrl = process.env.BACKEND_URL || '${BACKEND_URL}';
     const url = `${backendUrl}/api/entrepreneurship/${params.id}`;
-    
+
     console.log('🔍 API Route - Getting entrepreneurship:', params.id);
-    
+
     const response = await fetch(url, {
       method: 'GET',
       headers: {
@@ -25,7 +25,7 @@ export async function GET(
 
     const data = await response.json();
     console.log('🔍 API Route - Entrepreneurship data:', data);
-    
+
     return NextResponse.json(data);
   } catch (error) {
     console.error('🔍 API Route - Error:', error);
@@ -44,9 +44,9 @@ export async function PUT(
     const body = await request.json();
     const backendUrl = process.env.BACKEND_URL || '${BACKEND_URL}';
     const url = `${backendUrl}/api/entrepreneurship/${params.id}`;
-    
+
     console.log('🔍 API Route - Updating entrepreneurship:', params.id, body);
-    
+
     const response = await fetch(url, {
       method: 'PUT',
       headers: {
@@ -62,7 +62,7 @@ export async function PUT(
 
     const data = await response.json();
     console.log('🔍 API Route - Updated entrepreneurship:', data);
-    
+
     return NextResponse.json(data);
   } catch (error) {
     console.error('🔍 API Route - Error updating entrepreneurship:', error);
@@ -80,9 +80,9 @@ export async function DELETE(
   try {
     const backendUrl = process.env.BACKEND_URL || '${BACKEND_URL}';
     const url = `${backendUrl}/api/entrepreneurship/${params.id}`;
-    
+
     console.log('🔍 API Route - Deleting entrepreneurship:', params.id);
-    
+
     const response = await fetch(url, {
       method: 'DELETE',
       headers: {
@@ -97,7 +97,7 @@ export async function DELETE(
 
     const data = await response.json();
     console.log('🔍 API Route - Deleted entrepreneurship:', data);
-    
+
     return NextResponse.json(data);
   } catch (error) {
     console.error('🔍 API Route - Error deleting entrepreneurship:', error);

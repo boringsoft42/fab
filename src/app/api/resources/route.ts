@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateToken, requireOrganization, requireSuperAdmin } from '@/lib/auth-middleware';
+import { authenticateToken, requireOrganization } from '@/lib/auth-middleware';
 import { ResourceController } from '@/controllers/ResourceController';
 
 // GET /api/resources - Obtener todos los recursos (público)
@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get('q');
 
     const controller = new ResourceController();
-    
+
     if (search) {
       const results = await controller.searchResources(search);
       return NextResponse.json({ success: true, data: results });
