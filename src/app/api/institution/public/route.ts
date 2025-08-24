@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 export async function GET() {
   try {
     // Use the same configuration as other API routes
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://192.168.10.91:3001';
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://cemse-back-production.up.railway.app';
 
     try {
       const response = await fetch(`${backendUrl}/api/municipality/public`, {

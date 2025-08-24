@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
     const authHeader = request.headers.get('authorization');
 
     // Use the same backend URL structure as institutions
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://192.168.10.91:3001';
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://cemse-back-production.up.railway.app';
 
     const url = `${backendUrl}/api/contacts/request`;
 

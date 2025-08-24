@@ -72,7 +72,7 @@ export default function MunicipalityNewsPage() {
   console.log("🔍 MunicipalityNewsPage - User ID being used:", userId);
   console.log(
     "🔍 MunicipalityNewsPage - Expected backend URL:",
-    `http://192.168.10.91:3001/api/newsarticle?authorId=${userId}`
+    `https://cemse-back-production.up.railway.app/api/newsarticle?authorId=${userId}`
   );
 
   // Debug logging
@@ -295,11 +295,11 @@ export default function MunicipalityNewsPage() {
             onClick={async () => {
               console.log(
                 "🔍 Manual API call to:",
-                `http://192.168.10.91:3001/api/newsarticle?authorId=${userId}`
+                `https://cemse-back-production.up.railway.app/api/newsarticle?authorId=${userId}`
               );
               try {
                 const response = await fetch(
-                  `http://192.168.10.91:3001/api/newsarticle?authorId=${userId}`
+                  `https://cemse-back-production.up.railway.app/api/newsarticle?authorId=${userId}`
                 );
                 const data = await response.json();
                 console.log("✅ Manual API response:", data);

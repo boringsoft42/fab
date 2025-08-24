@@ -33,6 +33,7 @@ export default function CVBuilderPage() {
 ```
 
 **Mobile Migration Impact**: ✅ **LOW COMPLEXITY**
+
 - Simple container component requiring minimal adaptation
 - React Native equivalent: `<View>` with appropriate styling
 - No complex routing or navigation logic
@@ -44,6 +45,7 @@ export default function CVBuilderPage() {
 **Architecture Pattern**: Monolithic Component with Multiple Responsibilities
 
 #### State Management Complexity
+
 ```typescript
 interface CVManagerState {
   activeTab: "edit" | "cv" | "cover-letter";
@@ -67,6 +69,7 @@ interface CVManagerState {
 ```
 
 **Mobile Migration Challenges**:
+
 - 🔴 **HIGH COMPLEXITY**: Large monolithic component (1,500+ lines)
 - 🔴 **CRITICAL**: No React.memo or performance optimizations
 - 🔴 **CRITICAL**: Direct DOM manipulation for tab switching
@@ -80,7 +83,9 @@ const cvTab = document.querySelector('[data-value="cv"]') as HTMLElement;
 if (cvTab) cvTab.click();
 
 setTimeout(() => {
-  const downloadBtn = document.querySelector('[data-cv-download]') as HTMLElement;
+  const downloadBtn = document.querySelector(
+    "[data-cv-download]"
+  ) as HTMLElement;
   if (downloadBtn) downloadBtn.click();
 }, 100);
 ```
@@ -90,6 +95,7 @@ setTimeout(() => {
 #### Tab Navigation Implementation
 
 **Current Web Implementation**:
+
 ```typescript
 <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
   <TabsList className="grid w-full grid-cols-4">
@@ -101,6 +107,7 @@ setTimeout(() => {
 ```
 
 **Mobile Adaptation Strategy**:
+
 - Use React Native Tab Navigator or custom tab implementation
 - Maintain state-based active tab management
 - Implement swipe gestures for tab switching
@@ -128,6 +135,7 @@ const handleDrop = (e: React.DragEvent) => {
 ```
 
 **Mobile Migration Requirements**:
+
 - 🔴 **CRITICAL**: Drag-and-drop not available on mobile
 - ✅ **SOLUTION**: Replace with camera/gallery picker
 - 📱 **LIBRARY**: `expo-image-picker` or `react-native-image-picker`
@@ -137,13 +145,13 @@ const handleDrop = (e: React.DragEvent) => {
 
 ```typescript
 // ✅ This validation logic can be directly ported to mobile
-if (!file.type.startsWith('image/')) {
-  setError('Por favor selecciona un archivo de imagen válido');
+if (!file.type.startsWith("image/")) {
+  setError("Por favor selecciona un archivo de imagen válido");
   return;
 }
 
 if (file.size > 5 * 1024 * 1024) {
-  setError('El archivo es demasiado grande. Máximo 5MB');
+  setError("El archivo es demasiado grande. Máximo 5MB");
   return;
 }
 ```
@@ -157,9 +165,9 @@ if (file.size > 5 * 1024 * 1024) {
 ```typescript
 export const useCV = () => {
   return useQuery({
-    queryKey: ['cv'],
+    queryKey: ["cv"],
     queryFn: async () => {
-      const data = await apiCall('/cv');
+      const data = await apiCall("/cv");
       return data;
     },
   });
@@ -167,6 +175,7 @@ export const useCV = () => {
 ```
 
 **Mobile Compatibility**: ✅ **FULL COMPATIBILITY**
+
 - React Query works identically in React Native
 - Query invalidation and caching strategies preserved
 - No adaptation required
@@ -176,34 +185,37 @@ export const useCV = () => {
 ```typescript
 export const useUpdateCV = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async (cvData: Partial<CVData>) => {
-      const data = await apiCall('/cv', {
-        method: 'PUT',
+      const data = await apiCall("/cv", {
+        method: "PUT",
         body: JSON.stringify(cvData),
       });
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['cv'] });
+      queryClient.invalidateQueries({ queryKey: ["cv"] });
     },
   });
 };
 ```
 
 **Performance Issues Identified**:
+
 - 🔴 **CRITICAL**: No debouncing on form field updates
 - 🔴 **CRITICAL**: Immediate API calls on every field change
 - 🔴 **HIGH IMPACT**: Poor mobile network performance expected
 
 **Mobile Optimization Strategy**:
+
 ```typescript
 // Recommended implementation with debouncing
 const debouncedUpdateCV = useMemo(
-  () => debounce((data: Partial<CVData>) => {
-    updateCVData(data);
-  }, 500),
+  () =>
+    debounce((data: Partial<CVData>) => {
+      updateCVData(data);
+    }, 500),
   [updateCVData]
 );
 ```
@@ -214,7 +226,7 @@ const debouncedUpdateCV = useMemo(
 
 ```typescript
 export const getToken = () => {
-  if (typeof window !== 'undefined') {
+  if (typeof window !== "undefined") {
     return localStorage.getItem("token");
   }
   return null;
@@ -222,13 +234,14 @@ export const getToken = () => {
 ```
 
 **Mobile Migration Requirements**:
+
 - 🔴 **BREAKING**: `localStorage` not available in React Native
 - ✅ **SOLUTION**: Use `AsyncStorage` or `expo-secure-store`
 - 🔧 **REFACTOR**: Create platform-agnostic storage abstraction
 
 ```typescript
 // Mobile-compatible storage abstraction needed
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const getToken = async () => {
   try {
@@ -261,11 +274,13 @@ const handleDownloadPDF = async () => {
 ```
 
 **Mobile Compatibility Analysis**:
+
 - ✅ **LIBRARY COMPATIBLE**: `@react-pdf/renderer` supports React Native
 - 🔴 **CRITICAL**: Blob API and document.createElement not available
 - 🔴 **CRITICAL**: Direct file download pattern incompatible
 
 **Mobile PDF Generation Solution**:
+
 ```typescript
 // React Native PDF generation approach
 import { pdf } from '@react-pdf/renderer';
@@ -276,12 +291,12 @@ const handleDownloadPDF = async () => {
   const pdfComponent = <ModernProfessionalPDF cvData={cvData} />;
   const pdfDocument = pdf(pdfComponent);
   const pdfBuffer = await pdfDocument.toBuffer();
-  
+
   const fileUri = FileSystem.documentDirectory + 'cv.pdf';
   await FileSystem.writeAsStringAsync(fileUri, pdfBuffer.toString('base64'), {
     encoding: FileSystem.EncodingType.Base64,
   });
-  
+
   await Sharing.shareAsync(fileUri);
 };
 ```
@@ -289,11 +304,13 @@ const handleDownloadPDF = async () => {
 ### Template System Architecture
 
 **Three Templates Implemented**:
+
 1. Modern Professional (Blue theme)
-2. Creative Portfolio (Purple theme)  
+2. Creative Portfolio (Purple theme)
 3. Minimalist (Gray theme)
 
 **PDF Styles Analysis**: ✅ **FULLY PORTABLE**
+
 ```typescript
 const modernCVStyles = StyleSheet.create({
   page: {
@@ -317,7 +334,9 @@ const modernCVStyles = StyleSheet.create({
 **File**: `src/lib/backend-config.ts`
 
 ```typescript
-export const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://192.168.10.91:3001';
+export const BACKEND_URL =
+  process.env.NEXT_PUBLIC_BACKEND_URL ||
+  "https://cemse-back-production.up.railway.app";
 
 export const BACKEND_ENDPOINTS = {
   PROFILE: `${BACKEND_URL}/api/profile`,
@@ -327,6 +346,7 @@ export const BACKEND_ENDPOINTS = {
 ```
 
 **Mobile Compatibility**: ✅ **FULL COMPATIBILITY**
+
 - Environment variable approach works identically
 - Endpoint configuration preserved
 - No platform-specific changes required
@@ -334,25 +354,27 @@ export const BACKEND_ENDPOINTS = {
 ### File Upload Implementation
 
 **Current Web Implementation**:
+
 ```typescript
 const uploadProfileImage = async (file: File) => {
   const formData = new FormData();
-  formData.append('image', file);
+  formData.append("image", file);
 
   const response = await fetch(BACKEND_ENDPOINTS.FILES_UPLOAD_PROFILE_IMAGE, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Authorization': `Bearer ${localStorage.getItem('token')}`
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
-    body: formData
+    body: formData,
   });
 };
 ```
 
 **Mobile Adaptation Required**:
+
 ```typescript
 // React Native file upload adaptation
-import * as ImagePicker from 'expo-image-picker';
+import * as ImagePicker from "expo-image-picker";
 
 const uploadProfileImage = async () => {
   const result = await ImagePicker.launchImageLibraryAsync({
@@ -364,10 +386,10 @@ const uploadProfileImage = async () => {
 
   if (!result.canceled) {
     const formData = new FormData();
-    formData.append('image', {
+    formData.append("image", {
       uri: result.assets[0].uri,
-      type: 'image/jpeg',
-      name: 'profile.jpg',
+      type: "image/jpeg",
+      name: "profile.jpg",
     } as any);
 
     // Rest of upload logic preserved
@@ -378,20 +400,28 @@ const uploadProfileImage = async () => {
 ### Error Handling and Fallbacks
 
 **Mock Data System**: ✅ **HIGHLY SOPHISTICATED**
+
 ```typescript
 const getMockData = (endpoint: string) => {
-  if (endpoint.includes('/cv')) {
+  if (endpoint.includes("/cv")) {
     return {
-      personalInfo: { /* complete mock data */ },
-      skills: [/* mock skills */],
-      education: { /* mock education */ },
+      personalInfo: {
+        /* complete mock data */
+      },
+      skills: [
+        /* mock skills */
+      ],
+      education: {
+        /* mock education */
+      },
     };
   }
-  return { message: 'Mock data - Backend not available' };
+  return { message: "Mock data - Backend not available" };
 };
 ```
 
 **Mobile Benefits**:
+
 - Excellent offline development experience
 - Comprehensive test data available
 - Network failure resilience
@@ -401,6 +431,7 @@ const getMockData = (endpoint: string) => {
 ### Collapsible Sections Implementation
 
 **Current Web Pattern**:
+
 ```typescript
 const [collapsedSections, setCollapsedSections] = useState({
   education: false,
@@ -412,7 +443,7 @@ const [collapsedSections, setCollapsedSections] = useState({
   interests: false
 });
 
-<CardHeader 
+<CardHeader
   className="cursor-pointer hover:bg-gray-50 transition-colors"
   onClick={() => toggleSection('education')}
 >
@@ -428,6 +459,7 @@ const [collapsedSections, setCollapsedSections] = useState({
 ```
 
 **Mobile Adaptation**: ✅ **EXCELLENT PATTERN**
+
 - Accordion pattern perfect for mobile screens
 - Touch-friendly interaction
 - Visual feedback with icons
@@ -436,6 +468,7 @@ const [collapsedSections, setCollapsedSections] = useState({
 ### Form Field Patterns
 
 **Complex Nested Forms**:
+
 ```typescript
 // Education History - Dynamic Array Management
 {cvData?.education?.educationHistory?.map((item, index) => (
@@ -455,6 +488,7 @@ const [collapsedSections, setCollapsedSections] = useState({
 ```
 
 **Mobile Optimization Needed**:
+
 - 🟡 **MEDIUM**: Complex nested state updates
 - 🟡 **MEDIUM**: Grid layouts need responsive adaptation
 - ✅ **GOOD**: Dynamic array management pattern works well
@@ -462,12 +496,13 @@ const [collapsedSections, setCollapsedSections] = useState({
 ### Skills and Interests Management
 
 **Tag-based Interface**:
+
 ```typescript
 const addSkill = () => {
   if (newSkill.trim() && !cvData?.skills?.some(skill => skill.name === newSkill.trim())) {
-    handleSkillsChange([...(cvData?.skills || []), { 
-      name: newSkill.trim(), 
-      experienceLevel: "Skillful" 
+    handleSkillsChange([...(cvData?.skills || []), {
+      name: newSkill.trim(),
+      experienceLevel: "Skillful"
     }]);
     setNewSkill("");
   }
@@ -484,6 +519,7 @@ const addSkill = () => {
 ```
 
 **Mobile Suitability**: ✅ **EXCELLENT**
+
 - Tag-based UI ideal for mobile
 - Touch-friendly add/remove interactions
 - Visual feedback with badges
@@ -494,11 +530,13 @@ const addSkill = () => {
 ### Current Performance Issues
 
 1. **No Memoization**:
+
    - Large component re-renders on every state change
    - Complex form field calculations repeated unnecessarily
    - Template switching triggers full re-render
 
 2. **Synchronous API Calls**:
+
    - No debouncing on form inputs
    - Immediate server updates on field changes
    - Poor mobile network performance
@@ -519,15 +557,15 @@ const EducationSection = React.memo(EducationSection);
 // 2. Field-level Debouncing
 const useDebouncedCV = (value: any, delay: number) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
-  
+
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedValue(value);
     }, delay);
-    
+
     return () => clearTimeout(handler);
   }, [value, delay]);
-  
+
   return debouncedValue;
 };
 
@@ -551,6 +589,7 @@ const EducationHistoryList = ({ data }) => (
 ### 1. Component Decomposition Strategy
 
 **Current Monolithic Structure** (1,512 lines):
+
 ```
 CVManager
 ├── Header Section (50 lines)
@@ -569,6 +608,7 @@ CVManager
 ```
 
 **Recommended Mobile Architecture**:
+
 ```
 screens/
 ├── CVBuilderScreen.tsx (Main navigator)
@@ -591,6 +631,7 @@ screens/
 ### 2. Navigation Architecture
 
 **Current Web Tabs** → **Mobile Stack Navigator**:
+
 ```typescript
 // React Navigation v6 structure
 const CVBuilderStack = createStackNavigator();
@@ -598,18 +639,18 @@ const CVBuilderStack = createStackNavigator();
 function CVBuilderNavigator() {
   return (
     <CVBuilderStack.Navigator>
-      <CVBuilderStack.Screen 
-        name="EditData" 
+      <CVBuilderStack.Screen
+        name="EditData"
         component={EditDataScreen}
         options={{ title: "Editar Datos" }}
       />
-      <CVBuilderStack.Screen 
-        name="CVPreview" 
+      <CVBuilderStack.Screen
+        name="CVPreview"
         component={CVPreviewScreen}
         options={{ title: "Vista Previa CV" }}
       />
-      <CVBuilderStack.Screen 
-        name="CoverLetter" 
+      <CVBuilderStack.Screen
+        name="CoverLetter"
         component={CoverLetterScreen}
         options={{ title: "Carta de Presentación" }}
       />
@@ -621,6 +662,7 @@ function CVBuilderNavigator() {
 ### 3. Form State Management Refactoring
 
 **Current Approach** (Scattered state updates):
+
 ```typescript
 // Multiple individual state updates throughout component
 const handlePersonalInfoChange = async (field: string, value: string) => {
@@ -629,25 +671,26 @@ const handlePersonalInfoChange = async (field: string, value: string) => {
       firstName: cvData?.personalInfo?.firstName || "",
       lastName: cvData?.personalInfo?.lastName || "",
       // ... spread all fields manually
-      [field]: value
-    }
+      [field]: value,
+    },
   });
 };
 ```
 
 **Mobile-Optimized Approach** (Centralized form management):
+
 ```typescript
 // Use react-hook-form for better performance and validation
 import { useForm, useController } from 'react-hook-form';
 
 const CVForm = () => {
   const { control, handleSubmit, formState } = useForm<CVData>();
-  
+
   const debouncedSubmit = useMemo(
     () => debounce(handleSubmit(updateCVData), 1000),
     [handleSubmit, updateCVData]
   );
-  
+
   return (
     <FormProvider {...methods}>
       {/* Form fields automatically managed */}
@@ -659,24 +702,28 @@ const CVForm = () => {
 ## Development Timeline and Milestones
 
 ### Phase 1: Foundation (Week 1-2)
+
 - **Milestone 1.1**: Project setup with Expo/React Native CLI
 - **Milestone 1.2**: Navigation architecture implementation
 - **Milestone 1.3**: API integration with mobile-compatible auth
 - **Milestone 1.4**: Basic form structure and state management
 
 ### Phase 2: Core Features (Week 2-3)
+
 - **Milestone 2.1**: Personal information section
 - **Milestone 2.2**: Education management with dynamic arrays
 - **Milestone 2.3**: Skills and interests tag management
 - **Milestone 2.4**: Work experience and projects sections
 
 ### Phase 3: Advanced Features (Week 3-4)
+
 - **Milestone 3.1**: Image picker integration
 - **Milestone 3.2**: PDF generation and sharing
 - **Milestone 3.3**: Template system implementation
 - **Milestone 3.4**: Cover letter functionality
 
 ### Phase 4: Optimization and Polish (Week 4-5)
+
 - **Milestone 4.1**: Performance optimization
 - **Milestone 4.2**: Offline functionality
 - **Milestone 4.3**: Error handling and user feedback
@@ -709,10 +756,12 @@ Based on functionality analysis:
 ### High-Risk Areas
 
 1. **PDF Generation Performance** (🔴 HIGH RISK)
+
    - **Risk**: Large PDF generation causing app freezing
    - **Mitigation**: Implement background processing with loading indicators
 
 2. **Form Performance** (🔴 HIGH RISK)
+
    - **Risk**: Lag on complex forms with many fields
    - **Mitigation**: Implement field-level memoization and debouncing
 
@@ -723,6 +772,7 @@ Based on functionality analysis:
 ### Low-Risk Areas
 
 1. **API Integration** (✅ LOW RISK)
+
    - Well-structured endpoints with comprehensive error handling
    - Mock data system provides excellent development experience
 
@@ -733,18 +783,21 @@ Based on functionality analysis:
 ## Testing Strategy
 
 ### Unit Testing Focus Areas
+
 1. Form validation logic
 2. Data transformation functions
 3. PDF generation components
 4. API integration layers
 
 ### Integration Testing
+
 1. End-to-end CV creation flow
 2. Image upload and processing
 3. PDF generation and sharing
 4. Offline data persistence
 
 ### Performance Testing
+
 1. Memory usage during PDF generation
 2. Form responsiveness with large datasets
 3. Network performance on slow connections
@@ -755,14 +808,16 @@ Based on functionality analysis:
 The CV Builder module presents a **MODERATE to HIGH complexity** migration challenge with several critical technical hurdles. However, the underlying architecture is solid with good separation of concerns in the API layer and comprehensive error handling.
 
 ### Key Success Factors:
+
 1. **Component Decomposition**: Break down the monolithic CVManager into smaller, focused components
 2. **Performance Optimization**: Implement debouncing, memoization, and virtualization
 3. **Progressive Migration**: Start with core functionality, gradually add advanced features
 4. **Comprehensive Testing**: Focus on performance and offline functionality
 
-### Estimated Effort: 4-5 weeks** with 1-2 senior developers
+### Estimated Effort: 4-5 weeks\*\* with 1-2 senior developers
 
 The mobile version will likely provide a **SUPERIOR user experience** compared to the web version due to:
+
 - Touch-optimized interactions
 - Better form handling with native keyboard support
 - Smoother PDF generation and sharing

@@ -131,7 +131,8 @@ export default function NetworkingPage() {
   const fetchCurrentUserProfile = async () => {
     try {
       const backendUrl =
-        process.env.NEXT_PUBLIC_BACKEND_URL || "http://192.168.10.91:3001";
+        process.env.NEXT_PUBLIC_BACKEND_URL ||
+        "https://cemse-back-production.up.railway.app";
       const response = await fetch(`${backendUrl}/profile/me`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -180,7 +181,8 @@ export default function NetworkingPage() {
   const searchUsers = async (query?: string) => {
     try {
       const backendUrl =
-        process.env.NEXT_PUBLIC_BACKEND_URL || "http://192.168.10.91:3001";
+        process.env.NEXT_PUBLIC_BACKEND_URL ||
+        "https://cemse-back-production.up.railway.app";
       const params = new URLSearchParams();
       if (query) params.append("query", query);
 
@@ -216,7 +218,8 @@ export default function NetworkingPage() {
   const sendRequest = async (contactId: string, message?: string) => {
     try {
       const backendUrl =
-        process.env.NEXT_PUBLIC_BACKEND_URL || "http://192.168.10.91:3001";
+        process.env.NEXT_PUBLIC_BACKEND_URL ||
+        "https://cemse-back-production.up.railway.app";
       const url = `${backendUrl}/api/contacts/request`;
       console.log("🔍 sendRequest - Calling backend URL:", url);
 
@@ -245,7 +248,8 @@ export default function NetworkingPage() {
   const getReceivedRequests = async () => {
     try {
       const backendUrl =
-        process.env.NEXT_PUBLIC_BACKEND_URL || "http://192.168.10.91:3001";
+        process.env.NEXT_PUBLIC_BACKEND_URL ||
+        "https://cemse-back-production.up.railway.app";
       const url = `${backendUrl}/api/contacts/requests/received`;
       console.log("🔍 getReceivedRequests - Calling backend URL:", url);
 
@@ -270,7 +274,8 @@ export default function NetworkingPage() {
   const acceptRequest = async (requestId: string) => {
     try {
       const backendUrl =
-        process.env.NEXT_PUBLIC_BACKEND_URL || "http://192.168.10.91:3001";
+        process.env.NEXT_PUBLIC_BACKEND_URL ||
+        "https://cemse-back-production.up.railway.app";
       const url = `${backendUrl}/api/contacts/requests/${requestId}/accept`;
       console.log("🔍 acceptRequest - Calling backend URL:", url);
 
@@ -298,7 +303,8 @@ export default function NetworkingPage() {
   const rejectRequest = async (requestId: string) => {
     try {
       const backendUrl =
-        process.env.NEXT_PUBLIC_BACKEND_URL || "http://192.168.10.91:3001";
+        process.env.NEXT_PUBLIC_BACKEND_URL ||
+        "https://cemse-back-production.up.railway.app";
       const url = `${backendUrl}/api/contacts/requests/${requestId}/reject`;
       console.log("🔍 rejectRequest - Calling backend URL:", url);
 
@@ -326,7 +332,8 @@ export default function NetworkingPage() {
   const getContacts = async () => {
     try {
       const backendUrl =
-        process.env.NEXT_PUBLIC_BACKEND_URL || "http://192.168.10.91:3001";
+        process.env.NEXT_PUBLIC_BACKEND_URL ||
+        "https://cemse-back-production.up.railway.app";
       const url = `${backendUrl}/api/contacts`;
       console.log("🔍 getContacts - Calling backend URL:", url);
 
@@ -401,7 +408,8 @@ export default function NetworkingPage() {
   const getStats = async () => {
     try {
       const backendUrl =
-        process.env.NEXT_PUBLIC_BACKEND_URL || "http://192.168.10.91:3001";
+        process.env.NEXT_PUBLIC_BACKEND_URL ||
+        "https://cemse-back-production.up.railway.app";
       const url = `${backendUrl}/api/contacts/stats`;
       console.log("🔍 getStats - Calling backend URL:", url);
 

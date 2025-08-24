@@ -151,9 +151,11 @@ export default function CompaniesPage() {
     companiesByMunicipalityError: companiesByMunicipalityError?.message,
     allCompaniesError: allCompaniesError?.message,
     API_BASE:
-      process.env.NEXT_PUBLIC_API_BASE_DEV || "http://192.168.10.91:3001/api",
+      process.env.NEXT_PUBLIC_API_BASE_DEV ||
+      "https://cemse-back-production.up.railway.app/api",
     backendUrl:
-      process.env.NEXT_PUBLIC_BACKEND_URL || "http://192.168.10.91:3001",
+      process.env.NEXT_PUBLIC_BACKEND_URL ||
+      "https://cemse-back-production.up.railway.app",
   });
   // Removido useCompanyStats ya que ahora calculamos las estadísticas localmente
   const createCompanyMutation = useCreateCompany();

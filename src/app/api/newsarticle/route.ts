@@ -151,7 +151,7 @@ export async function GET(request: NextRequest) {
     console.log("🔍 Fetching from real backend...");
 
     // Construir URL con parámetros
-    const backendUrl = new URL('http://192.168.10.91:3001/api/newsarticle');
+    const backendUrl = new URL('https://cemse-back-production.up.railway.app/api/newsarticle');
     const authorId = searchParams.get('authorId');
     const status = searchParams.get('status');
     const category = searchParams.get('category');

@@ -66,11 +66,17 @@ import {
   Upload,
   HelpCircle,
 } from "lucide-react";
-import { useLessons, useCreateLesson, useUpdateLesson, useDeleteLesson, type Lesson } from "@/hooks/useLessonApi";
+import {
+  useLessons,
+  useCreateLesson,
+  useUpdateLesson,
+  useDeleteLesson,
+  type Lesson,
+} from "@/hooks/useLessonApi";
 import { useQueryClient } from "@tanstack/react-query";
 import { useLessonResources } from "@/hooks/useLessonResourceApi";
 import { toast } from "sonner";
-import { getAuthHeaders , API_BASE} from '@/lib/api';
+import { getAuthHeaders, API_BASE } from "@/lib/api";
 
 export default function ModuleLessonsPage() {
   const params = useParams();
@@ -116,42 +122,48 @@ export default function ModuleLessonsPage() {
   const handleCreateLesson = async () => {
     try {
       // Check if we have a video file to upload
-      if (formData.contentType === "VIDEO" && formData.videoType === "upload" && formData.videoFile) {
+      if (
+        formData.contentType === "VIDEO" &&
+        formData.videoType === "upload" &&
+        formData.videoFile
+      ) {
         // Use MinIO route for video upload
         setIsUploadingVideo(true);
-        
+
         const formDataToSend = new FormData();
-        
+
         // Add text fields
-        formDataToSend.append('title', formData.title);
-        formDataToSend.append('description', formData.description || '');
-        formDataToSend.append('content', formData.content);
-        formDataToSend.append('moduleId', moduleId);
-        formDataToSend.append('contentType', formData.contentType);
-        formDataToSend.append('duration', formData.duration.toString());
-        formDataToSend.append('orderIndex', formData.orderIndex.toString());
-        formDataToSend.append('isRequired', formData.isRequired.toString());
-        formDataToSend.append('isPreview', formData.isPreview.toString());
-        
+        formDataToSend.append("title", formData.title);
+        formDataToSend.append("description", formData.description || "");
+        formDataToSend.append("content", formData.content);
+        formDataToSend.append("moduleId", moduleId);
+        formDataToSend.append("contentType", formData.contentType);
+        formDataToSend.append("duration", formData.duration.toString());
+        formDataToSend.append("orderIndex", formData.orderIndex.toString());
+        formDataToSend.append("isRequired", formData.isRequired.toString());
+        formDataToSend.append("isPreview", formData.isPreview.toString());
+
         // Add video file
-        formDataToSend.append('video', formData.videoFile);
-        
-        const response = await fetch('${API_BASE}/lesson/with-video', {
-          method: 'POST',
+        formDataToSend.append("video", formData.videoFile);
+
+        const response = await fetch(`${API_BASE}/lesson/with-video`, {
+          method: "POST",
           headers: getAuthHeaders(true), // excludeContentType = true for FormData
           body: formDataToSend,
         });
-        
+
         if (!response.ok) {
-          throw new Error('Failed to create lesson with video');
+          throw new Error("Failed to create lesson with video");
         }
-        
+
         const result = await response.json();
-        console.log('Lección creada con video:', result);
-        
+        console.log("Lección creada con video:", result);
+
         // Manually invalidate queries to refresh the lessons list
-        queryClient.invalidateQueries({ queryKey: ['lessons', moduleId] });
-        queryClient.invalidateQueries({ queryKey: ['moduleLessons', moduleId] });
+        queryClient.invalidateQueries({ queryKey: ["lessons", moduleId] });
+        queryClient.invalidateQueries({
+          queryKey: ["moduleLessons", moduleId],
+        });
       } else {
         // Use regular JSON route for text-only or YouTube videos
         await createLesson.mutateAsync({
@@ -168,7 +180,7 @@ export default function ModuleLessonsPage() {
           attachments: formData.attachments,
         });
       }
-      
+
       setIsCreateDialogOpen(false);
       setIsUploadingVideo(false);
       setFormData({
@@ -187,7 +199,7 @@ export default function ModuleLessonsPage() {
       });
       toast.success("Lección creada exitosamente");
     } catch (error) {
-      console.error('Error creating lesson:', error);
+      console.error("Error creating lesson:", error);
       setIsUploadingVideo(false);
       toast.error("Error al crear la lección");
     }
@@ -195,13 +207,13 @@ export default function ModuleLessonsPage() {
 
   const handleEditLesson = async () => {
     if (!editingLesson) return;
-    
+
     try {
       await updateLesson.mutateAsync({
         id: editingLesson.id,
         ...formData,
       });
-      
+
       setIsEditDialogOpen(false);
       setEditingLesson(null);
       setFormData({
@@ -256,15 +268,15 @@ export default function ModuleLessonsPage() {
 
   const getContentTypeIcon = (type: string) => {
     switch (type) {
-      case 'VIDEO':
+      case "VIDEO":
         return <Video className="h-4 w-4" />;
-      case 'TEXT':
+      case "TEXT":
         return <FileText className="h-4 w-4" />;
-      case 'QUIZ':
+      case "QUIZ":
         return <Target className="h-4 w-4" />;
-      case 'ASSIGNMENT':
+      case "ASSIGNMENT":
         return <CheckCircle className="h-4 w-4" />;
-      case 'LIVE':
+      case "LIVE":
         return <Play className="h-4 w-4" />;
       default:
         return <FileText className="h-4 w-4" />;
@@ -273,18 +285,18 @@ export default function ModuleLessonsPage() {
 
   const getContentTypeLabel = (type: string) => {
     switch (type) {
-      case 'VIDEO':
-        return 'Video';
-      case 'TEXT':
-        return 'Texto';
-      case 'QUIZ':
-        return 'Quiz';
-      case 'ASSIGNMENT':
-        return 'Asignación';
-      case 'LIVE':
-        return 'En Vivo';
+      case "VIDEO":
+        return "Video";
+      case "TEXT":
+        return "Texto";
+      case "QUIZ":
+        return "Quiz";
+      case "ASSIGNMENT":
+        return "Asignación";
+      case "LIVE":
+        return "En Vivo";
       default:
-        return 'Texto';
+        return "Texto";
     }
   };
 
@@ -338,7 +350,8 @@ export default function ModuleLessonsPage() {
             <DialogHeader>
               <DialogTitle>Crear Nueva Lección</DialogTitle>
               <DialogDescription>
-                Agrega una nueva lección al módulo con su contenido y configuración.
+                Agrega una nueva lección al módulo con su contenido y
+                configuración.
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
@@ -347,7 +360,9 @@ export default function ModuleLessonsPage() {
                 <Input
                   id="title"
                   value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title: e.target.value })
+                  }
                   placeholder="Ej: Introducción a HTML"
                 />
               </div>
@@ -356,7 +371,9 @@ export default function ModuleLessonsPage() {
                 <Textarea
                   id="description"
                   value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
                   placeholder="Describe el contenido de la lección..."
                 />
               </div>
@@ -364,7 +381,9 @@ export default function ModuleLessonsPage() {
                 <label htmlFor="contentType">Tipo de Contenido</label>
                 <Select
                   value={formData.contentType}
-                  onValueChange={(value: any) => setFormData({ ...formData, contentType: value })}
+                  onValueChange={(value: any) =>
+                    setFormData({ ...formData, contentType: value })
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -390,9 +409,17 @@ export default function ModuleLessonsPage() {
                           name="videoType"
                           value="youtube"
                           checked={formData.videoType === "youtube"}
-                          onChange={(e) => setFormData({ ...formData, videoType: e.target.value as "youtube" | "upload" })}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              videoType: e.target.value as "youtube" | "upload",
+                            })
+                          }
                         />
-                        <label htmlFor="youtube" className="flex items-center gap-2">
+                        <label
+                          htmlFor="youtube"
+                          className="flex items-center gap-2"
+                        >
                           <Video className="h-4 w-4" />
                           YouTube
                         </label>
@@ -404,23 +431,33 @@ export default function ModuleLessonsPage() {
                           name="videoType"
                           value="upload"
                           checked={formData.videoType === "upload"}
-                          onChange={(e) => setFormData({ ...formData, videoType: e.target.value as "youtube" | "upload" })}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              videoType: e.target.value as "youtube" | "upload",
+                            })
+                          }
                         />
-                        <label htmlFor="upload" className="flex items-center gap-2">
+                        <label
+                          htmlFor="upload"
+                          className="flex items-center gap-2"
+                        >
                           <Upload className="h-4 w-4" />
                           Subir Archivo
                         </label>
                       </div>
                     </div>
                   </div>
-                  
+
                   {formData.videoType === "youtube" && (
                     <div className="grid gap-2">
                       <label htmlFor="videoUrl">URL de YouTube</label>
                       <Input
                         id="videoUrl"
                         value={formData.videoUrl}
-                        onChange={(e) => setFormData({ ...formData, videoUrl: e.target.value })}
+                        onChange={(e) =>
+                          setFormData({ ...formData, videoUrl: e.target.value })
+                        }
                         placeholder="https://www.youtube.com/watch?v=..."
                       />
                       <p className="text-xs text-muted-foreground">
@@ -428,14 +465,16 @@ export default function ModuleLessonsPage() {
                       </p>
                     </div>
                   )}
-                  
+
                   {formData.videoType === "upload" && (
                     <div className="grid gap-2">
                       <label>Subir Video</label>
                       <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
                         <Upload className="h-8 w-8 mx-auto text-gray-400 mb-2" />
                         <p className="text-sm text-gray-600 mb-2">
-                          {formData.videoFile ? formData.videoFile.name : "Arrastra un video aquí o haz clic para seleccionar"}
+                          {formData.videoFile
+                            ? formData.videoFile.name
+                            : "Arrastra un video aquí o haz clic para seleccionar"}
                         </p>
                         <input
                           type="file"
@@ -449,11 +488,13 @@ export default function ModuleLessonsPage() {
                           className="hidden"
                           id="videoFile"
                         />
-                        <Button 
-                          variant="outline" 
+                        <Button
+                          variant="outline"
                           size="sm"
                           type="button"
-                          onClick={() => document.getElementById('videoFile')?.click()}
+                          onClick={() =>
+                            document.getElementById("videoFile")?.click()
+                          }
                         >
                           Seleccionar Video
                         </Button>
@@ -465,7 +506,9 @@ export default function ModuleLessonsPage() {
                         <div className="flex items-center gap-2 p-2 bg-green-50 rounded">
                           <CheckCircle className="h-4 w-4 text-green-600" />
                           <span className="text-sm text-green-700">
-                            {formData.videoFile.name} ({(formData.videoFile.size / 1024 / 1024).toFixed(2)} MB)
+                            {formData.videoFile.name} (
+                            {(formData.videoFile.size / 1024 / 1024).toFixed(2)}{" "}
+                            MB)
                           </span>
                         </div>
                       )}
@@ -478,7 +521,9 @@ export default function ModuleLessonsPage() {
                 <Textarea
                   id="content"
                   value={formData.content}
-                  onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, content: e.target.value })
+                  }
                   placeholder="Contenido de la lección..."
                   rows={4}
                 />
@@ -490,7 +535,12 @@ export default function ModuleLessonsPage() {
                     id="orderIndex"
                     type="number"
                     value={formData.orderIndex}
-                    onChange={(e) => setFormData({ ...formData, orderIndex: parseInt(e.target.value) })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        orderIndex: parseInt(e.target.value),
+                      })
+                    }
                     min="1"
                   />
                 </div>
@@ -500,7 +550,12 @@ export default function ModuleLessonsPage() {
                     id="duration"
                     type="number"
                     value={formData.duration}
-                    onChange={(e) => setFormData({ ...formData, duration: parseInt(e.target.value) })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        duration: parseInt(e.target.value),
+                      })
+                    }
                     min="1"
                   />
                 </div>
@@ -511,7 +566,9 @@ export default function ModuleLessonsPage() {
                     type="checkbox"
                     id="isRequired"
                     checked={formData.isRequired}
-                    onChange={(e) => setFormData({ ...formData, isRequired: e.target.checked })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, isRequired: e.target.checked })
+                    }
                   />
                   <label htmlFor="isRequired">Obligatoria</label>
                 </div>
@@ -520,22 +577,29 @@ export default function ModuleLessonsPage() {
                     type="checkbox"
                     id="isPreview"
                     checked={formData.isPreview}
-                    onChange={(e) => setFormData({ ...formData, isPreview: e.target.checked })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, isPreview: e.target.checked })
+                    }
                   />
                   <label htmlFor="isPreview">Vista previa</label>
                 </div>
               </div>
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
+              <Button
+                variant="outline"
+                onClick={() => setIsCreateDialogOpen(false)}
+              >
                 Cancelar
               </Button>
-                             <Button 
-                 onClick={handleCreateLesson} 
-                 disabled={createLesson.isPending || isUploadingVideo}
-               >
-                 {createLesson.isPending || isUploadingVideo ? "Creando..." : "Crear Lección"}
-               </Button>
+              <Button
+                onClick={handleCreateLesson}
+                disabled={createLesson.isPending || isUploadingVideo}
+              >
+                {createLesson.isPending || isUploadingVideo
+                  ? "Creando..."
+                  : "Crear Lección"}
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -601,7 +665,10 @@ export default function ModuleLessonsPage() {
                             )}
                             <div className="flex gap-1 mt-1">
                               {lesson.isRequired && (
-                                <Badge variant="destructive" className="text-xs">
+                                <Badge
+                                  variant="destructive"
+                                  className="text-xs"
+                                >
                                   Obligatoria
                                 </Badge>
                               )}
@@ -618,7 +685,9 @@ export default function ModuleLessonsPage() {
                       <TableCell>
                         <Badge variant="outline">
                           {getContentTypeIcon(lesson.contentType)}
-                          <span className="ml-1">{getContentTypeLabel(lesson.contentType)}</span>
+                          <span className="ml-1">
+                            {getContentTypeLabel(lesson.contentType)}
+                          </span>
                         </Badge>
                       </TableCell>
                       <TableCell>
@@ -644,12 +713,12 @@ export default function ModuleLessonsPage() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Badge variant="default">
-                          Activa
-                        </Badge>
+                        <Badge variant="default">Activa</Badge>
                       </TableCell>
                       <TableCell>
-                        {lesson.updatedAt ? new Date(lesson.updatedAt).toLocaleDateString() : "N/A"}
+                        {lesson.updatedAt
+                          ? new Date(lesson.updatedAt).toLocaleDateString()
+                          : "N/A"}
                       </TableCell>
                       <TableCell className="text-right">
                         <DropdownMenu>
@@ -660,30 +729,40 @@ export default function ModuleLessonsPage() {
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
                             <DropdownMenuItem asChild>
-                              <Link href={`/admin/courses/${courseId}/modules/${moduleId}/lessons/${lesson.id}/resources`}>
+                              <Link
+                                href={`/admin/courses/${courseId}/modules/${moduleId}/lessons/${lesson.id}/resources`}
+                              >
                                 <Download className="h-4 w-4 mr-2" />
                                 Gestionar recursos
                               </Link>
                             </DropdownMenuItem>
                             <DropdownMenuItem asChild>
-                              <Link href={`/admin/courses/${courseId}/modules/${moduleId}/lessons/${lesson.id}/quizzes`}>
+                              <Link
+                                href={`/admin/courses/${courseId}/modules/${moduleId}/lessons/${lesson.id}/quizzes`}
+                              >
                                 <HelpCircle className="h-4 w-4 mr-2" />
                                 Gestionar quizzes
                               </Link>
                             </DropdownMenuItem>
                             <DropdownMenuItem asChild>
-                              <Link href={`/admin/courses/${courseId}/modules/${moduleId}/lessons/${lesson.id}/preview`}>
+                              <Link
+                                href={`/admin/courses/${courseId}/modules/${moduleId}/lessons/${lesson.id}/preview`}
+                              >
                                 <Eye className="h-4 w-4 mr-2" />
                                 Vista previa
                               </Link>
                             </DropdownMenuItem>
                             <DropdownMenuItem asChild>
-                              <Link href={`/admin/courses/${courseId}/modules/${moduleId}/lessons/${lesson.id}/progress`}>
+                              <Link
+                                href={`/admin/courses/${courseId}/modules/${moduleId}/lessons/${lesson.id}/progress`}
+                              >
                                 <Target className="h-4 w-4 mr-2" />
                                 Progreso
                               </Link>
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => openEditDialog(lesson)}>
+                            <DropdownMenuItem
+                              onClick={() => openEditDialog(lesson)}
+                            >
                               <Edit className="h-4 w-4 mr-2" />
                               Editar
                             </DropdownMenuItem>
@@ -739,7 +818,9 @@ export default function ModuleLessonsPage() {
               <Input
                 id="edit-title"
                 value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, title: e.target.value })
+                }
                 placeholder="Ej: Introducción a HTML"
               />
             </div>
@@ -748,7 +829,9 @@ export default function ModuleLessonsPage() {
               <Textarea
                 id="edit-description"
                 value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, description: e.target.value })
+                }
                 placeholder="Describe el contenido de la lección..."
               />
             </div>
@@ -756,7 +839,9 @@ export default function ModuleLessonsPage() {
               <label htmlFor="edit-contentType">Tipo de Contenido</label>
               <Select
                 value={formData.contentType}
-                onValueChange={(value: any) => setFormData({ ...formData, contentType: value })}
+                onValueChange={(value: any) =>
+                  setFormData({ ...formData, contentType: value })
+                }
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -782,9 +867,17 @@ export default function ModuleLessonsPage() {
                         name="edit-videoType"
                         value="youtube"
                         checked={formData.videoType === "youtube"}
-                        onChange={(e) => setFormData({ ...formData, videoType: e.target.value as "youtube" | "upload" })}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            videoType: e.target.value as "youtube" | "upload",
+                          })
+                        }
                       />
-                      <label htmlFor="edit-youtube" className="flex items-center gap-2">
+                      <label
+                        htmlFor="edit-youtube"
+                        className="flex items-center gap-2"
+                      >
                         <Video className="h-4 w-4" />
                         YouTube
                       </label>
@@ -796,23 +889,33 @@ export default function ModuleLessonsPage() {
                         name="edit-videoType"
                         value="upload"
                         checked={formData.videoType === "upload"}
-                        onChange={(e) => setFormData({ ...formData, videoType: e.target.value as "youtube" | "upload" })}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            videoType: e.target.value as "youtube" | "upload",
+                          })
+                        }
                       />
-                      <label htmlFor="edit-upload" className="flex items-center gap-2">
+                      <label
+                        htmlFor="edit-upload"
+                        className="flex items-center gap-2"
+                      >
                         <Upload className="h-4 w-4" />
                         Subir Archivo
                       </label>
                     </div>
                   </div>
                 </div>
-                
+
                 {formData.videoType === "youtube" && (
                   <div className="grid gap-2">
                     <label htmlFor="edit-videoUrl">URL de YouTube</label>
                     <Input
                       id="edit-videoUrl"
                       value={formData.videoUrl}
-                      onChange={(e) => setFormData({ ...formData, videoUrl: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, videoUrl: e.target.value })
+                      }
                       placeholder="https://www.youtube.com/watch?v=..."
                     />
                     <p className="text-xs text-muted-foreground">
@@ -820,14 +923,16 @@ export default function ModuleLessonsPage() {
                     </p>
                   </div>
                 )}
-                
+
                 {formData.videoType === "upload" && (
                   <div className="grid gap-2">
                     <label>Subir Video</label>
                     <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
                       <Upload className="h-8 w-8 mx-auto text-gray-400 mb-2" />
                       <p className="text-sm text-gray-600 mb-2">
-                        {formData.videoFile ? formData.videoFile.name : "Arrastra un video aquí o haz clic para seleccionar"}
+                        {formData.videoFile
+                          ? formData.videoFile.name
+                          : "Arrastra un video aquí o haz clic para seleccionar"}
                       </p>
                       <input
                         type="file"
@@ -841,11 +946,13 @@ export default function ModuleLessonsPage() {
                         className="hidden"
                         id="edit-videoFile"
                       />
-                      <Button 
-                        variant="outline" 
+                      <Button
+                        variant="outline"
                         size="sm"
                         type="button"
-                        onClick={() => document.getElementById('edit-videoFile')?.click()}
+                        onClick={() =>
+                          document.getElementById("edit-videoFile")?.click()
+                        }
                       >
                         Seleccionar Video
                       </Button>
@@ -857,7 +964,9 @@ export default function ModuleLessonsPage() {
                       <div className="flex items-center gap-2 p-2 bg-green-50 rounded">
                         <CheckCircle className="h-4 w-4 text-green-600" />
                         <span className="text-sm text-green-700">
-                          {formData.videoFile.name} ({(formData.videoFile.size / 1024 / 1024).toFixed(2)} MB)
+                          {formData.videoFile.name} (
+                          {(formData.videoFile.size / 1024 / 1024).toFixed(2)}{" "}
+                          MB)
                         </span>
                       </div>
                     )}
@@ -870,7 +979,9 @@ export default function ModuleLessonsPage() {
               <Textarea
                 id="edit-content"
                 value={formData.content}
-                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, content: e.target.value })
+                }
                 placeholder="Contenido de la lección..."
                 rows={4}
               />
@@ -882,7 +993,12 @@ export default function ModuleLessonsPage() {
                   id="edit-orderIndex"
                   type="number"
                   value={formData.orderIndex}
-                  onChange={(e) => setFormData({ ...formData, orderIndex: parseInt(e.target.value) })}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      orderIndex: parseInt(e.target.value),
+                    })
+                  }
                   min="1"
                 />
               </div>
@@ -892,7 +1008,12 @@ export default function ModuleLessonsPage() {
                   id="edit-duration"
                   type="number"
                   value={formData.duration}
-                  onChange={(e) => setFormData({ ...formData, duration: parseInt(e.target.value) })}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      duration: parseInt(e.target.value),
+                    })
+                  }
                   min="1"
                 />
               </div>
@@ -903,7 +1024,9 @@ export default function ModuleLessonsPage() {
                   type="checkbox"
                   id="edit-isRequired"
                   checked={formData.isRequired}
-                  onChange={(e) => setFormData({ ...formData, isRequired: e.target.checked })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, isRequired: e.target.checked })
+                  }
                 />
                 <label htmlFor="edit-isRequired">Obligatoria</label>
               </div>
@@ -912,18 +1035,28 @@ export default function ModuleLessonsPage() {
                   type="checkbox"
                   id="edit-isPreview"
                   checked={formData.isPreview}
-                  onChange={(e) => setFormData({ ...formData, isPreview: e.target.checked })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, isPreview: e.target.checked })
+                  }
                 />
                 <label htmlFor="edit-isPreview">Vista previa</label>
               </div>
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+            <Button
+              variant="outline"
+              onClick={() => setIsEditDialogOpen(false)}
+            >
               Cancelar
             </Button>
-            <Button onClick={handleEditLesson} disabled={updateLesson.isPending}>
-              {updateLesson.isPending ? "Actualizando..." : "Actualizar Lección"}
+            <Button
+              onClick={handleEditLesson}
+              disabled={updateLesson.isPending}
+            >
+              {updateLesson.isPending
+                ? "Actualizando..."
+                : "Actualizar Lección"}
             </Button>
           </DialogFooter>
         </DialogContent>

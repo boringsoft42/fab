@@ -12,7 +12,9 @@ export default function TestBackendConnectionPage() {
     try {
       setTestResults("🔄 Probando conexión al servidor...\n");
 
-      const response = await fetch("http://192.168.10.91:3001/health");
+      const response = await fetch(
+        "https://cemse-back-production.up.railway.app/health"
+      );
       const data = await response.text();
 
       setTestResults(
@@ -31,7 +33,7 @@ export default function TestBackendConnectionPage() {
       );
 
       const response = await fetch(
-        "http://192.168.10.91:3001/api/youthapplication"
+        "https://cemse-back-production.up.railway.app/api/youthapplication"
       );
       const data = await response.text();
 
@@ -63,7 +65,7 @@ export default function TestBackendConnectionPage() {
         return;
       }
 
-      const url = `http://192.168.10.91:3001/api/youthapplication?youthProfileId=${userFromToken.id}`;
+      const url = `https://cemse-back-production.up.railway.app/api/youthapplication?youthProfileId=${userFromToken.id}`;
       setTestResults((prev) => prev + `🌐 URL: ${url}\n`);
 
       const response = await fetch(url, {
