@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { prisma } from "../lib/prisma";
+// import { prisma } from "../lib/prisma";
 
 // Buscar jóvenes para conectar
 export async function searchYouthUsers(req: Request, res: Response) {
