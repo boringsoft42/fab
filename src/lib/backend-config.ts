@@ -1,5 +1,5 @@
 // Backend configuration - use localhost:3001 for development
-export const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001';
+export const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://cemse-back-production.up.railway.app';
 
 // Backend API endpoints
 export const BACKEND_ENDPOINTS = {
