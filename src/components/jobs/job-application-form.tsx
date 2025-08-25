@@ -28,7 +28,7 @@ import { JobQuestion, JobOffer } from "@/types/jobs";
 import { useCVStatus } from "@/hooks/use-cv-status";
 import CVCheckModal from "./cv-check-modal";
 import { extractFilePath, buildFileUrl } from "@/lib/utils";
-import { API_BASE } from "@/lib/api";
+import { API_BASE, apiCall } from "@/lib/api";
 
 interface JobApplicationFormProps {
   jobOffer: JobOffer;
@@ -61,20 +61,17 @@ export default function JobApplicationForm({ jobOffer, onSuccess, onCancel }: Jo
 
   const fetchQuestions = async () => {
     try {
-      const response = await fetch(`/api/jobquestion?jobOfferId=${jobOffer.id}`);
-      if (response.ok) {
-        const data = await response.json();
-        setQuestions(data);
-        // Initialize question answers
-        setFormData(prev => ({
-          ...prev,
-          questionAnswers: data.map((q: JobQuestion) => ({
-            questionId: q.id,
-            question: q.question,
-            answer: ""
-          }))
-        }));
-      }
+      const data = await apiCall(`/jobquestion?jobOfferId=${jobOffer.id}`);
+      setQuestions(data);
+      // Initialize question answers
+      setFormData(prev => ({
+        ...prev,
+        questionAnswers: data.map((q: JobQuestion) => ({
+          questionId: q.id,
+          question: q.question,
+          answer: ""
+        }))
+      }));
     } catch (error) {
       console.error("Error fetching questions:", error);
     }

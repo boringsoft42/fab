@@ -24,97 +24,99 @@ export function useCVStatus() {
   });
 
   useEffect(() => {
+    console.log('🎯 useCVStatus - useEffect triggered:', { userId: user?.id });
     if (user?.id) {
       checkCVStatus();
     } else {
       // Verificar si hay token pero no usuario (sesión expirada)
       const token = localStorage.getItem('token');
       if (token) {
-        setStatus(prev => ({ 
-          ...prev, 
-          loading: false, 
-          error: 'Sesión expirada. Por favor, inicia sesión nuevamente.' 
+        setStatus(prev => ({
+          ...prev,
+          loading: false,
+          error: 'Sesión expirada. Por favor, inicia sesión nuevamente.'
         }));
       } else {
-        setStatus(prev => ({ 
-          ...prev, 
-          loading: false, 
-          error: 'No estás autenticado. Por favor, inicia sesión.' 
+        setStatus(prev => ({
+          ...prev,
+          loading: false,
+          error: 'No estás autenticado. Por favor, inicia sesión.'
         }));
       }
     }
   }, [user?.id]);
 
-    const checkCVStatus = async () => {
+  const checkCVStatus = async () => {
+    console.log('🎯 useCVStatus - checkCVStatus called');
     try {
       setStatus(prev => ({ ...prev, loading: true, error: undefined }));
-      
+
       let hasCVData = false;
       let hasCVFile = false;
       let cvData = null;
       let cvFileData = null;
       let coverLetterData = null;
       let cvSource: 'builder' | 'file' | null = null;
-      
+
       // Check if user has CV data from builder (mock data for now)
       // TODO: Implement proper CV builder integration
       hasCVData = false;
       cvSource = null;
-      
-             // Check if user has uploaded CV file (only if no builder CV)
-       if (!hasCVData) {
-         try {
-           const token = localStorage.getItem('token');
-           if (token) {
-             // Verificar si hay archivos CV guardados en localStorage de sesiones anteriores
-             const savedCVUrl = localStorage.getItem('userCVUrl');
-             if (savedCVUrl) {
-               const exists = await checkFileAccess(savedCVUrl, token);
-               if (exists) {
-                 hasCVFile = true;
-                 cvFileData = { files: [savedCVUrl.split('/').pop() || 'cv.pdf'] };
-                 cvSource = 'file';
-               } else {
-                 // Si el archivo ya no existe, limpiar localStorage
-                 localStorage.removeItem('userCVUrl');
-               }
-             }
-             
-                           // Si no hay archivos guardados, asumimos que no hay
-              if (!hasCVFile) {
-                hasCVFile = false;
-                cvFileData = { files: [] };
+
+      // Check if user has uploaded CV file (only if no builder CV)
+      if (!hasCVData) {
+        try {
+          const token = localStorage.getItem('token');
+          if (token) {
+            // Verificar si hay archivos CV guardados en localStorage de sesiones anteriores
+            const savedCVUrl = localStorage.getItem('userCVUrl');
+            if (savedCVUrl) {
+              const exists = await checkFileAccess(savedCVUrl, token);
+              if (exists) {
+                hasCVFile = true;
+                cvFileData = { files: [savedCVUrl.split('/').pop() || 'cv.pdf'] };
+                cvSource = 'file';
+              } else {
+                // Si el archivo ya no existe, limpiar localStorage
+                localStorage.removeItem('userCVUrl');
               }
-           }
-         } catch (error) {
-           hasCVFile = false;
-         }
-       }
-      
-             // Check if user has uploaded cover letter file
-       try {
-         const token = localStorage.getItem('token');
-         if (token) {
-           // Verificar si hay archivos de carta guardados en localStorage de sesiones anteriores
-           const savedCoverLetterUrl = localStorage.getItem('userCoverLetterUrl');
-           if (savedCoverLetterUrl) {
-             const exists = await checkFileAccess(savedCoverLetterUrl, token);
-             if (exists) {
-               coverLetterData = { files: [savedCoverLetterUrl.split('/').pop() || 'cover-letter.pdf'] };
-             } else {
-               // Si el archivo ya no existe, limpiar localStorage
-               localStorage.removeItem('userCoverLetterUrl');
-             }
-           }
-           
-                       // Si no hay archivos guardados, asumimos que no hay
-            if (!coverLetterData) {
-              coverLetterData = { files: [] };
             }
-         }
-                } catch (error) {
-           coverLetterData = { files: [] };
-         }
+
+            // Si no hay archivos guardados, asumimos que no hay
+            if (!hasCVFile) {
+              hasCVFile = false;
+              cvFileData = { files: [] };
+            }
+          }
+        } catch (error) {
+          hasCVFile = false;
+        }
+      }
+
+      // Check if user has uploaded cover letter file
+      try {
+        const token = localStorage.getItem('token');
+        if (token) {
+          // Verificar si hay archivos de carta guardados en localStorage de sesiones anteriores
+          const savedCoverLetterUrl = localStorage.getItem('userCoverLetterUrl');
+          if (savedCoverLetterUrl) {
+            const exists = await checkFileAccess(savedCoverLetterUrl, token);
+            if (exists) {
+              coverLetterData = { files: [savedCoverLetterUrl.split('/').pop() || 'cover-letter.pdf'] };
+            } else {
+              // Si el archivo ya no existe, limpiar localStorage
+              localStorage.removeItem('userCoverLetterUrl');
+            }
+          }
+
+          // Si no hay archivos guardados, asumimos que no hay
+          if (!coverLetterData) {
+            coverLetterData = { files: [] };
+          }
+        }
+      } catch (error) {
+        coverLetterData = { files: [] };
+      }
 
       const hasCoverLetterFile = coverLetterData && coverLetterData.files && coverLetterData.files.length > 0;
 
@@ -130,9 +132,9 @@ export function useCVStatus() {
         const cvExists = await checkFileAccess(cvPath, token || undefined);
         if (cvExists) {
           finalCVUrl = cvPath;
-                 } else {
-           finalHasCV = false;
-         }
+        } else {
+          finalHasCV = false;
+        }
       }
 
       if (hasCoverLetterFile && coverLetterData?.files?.[0]) {
@@ -141,9 +143,9 @@ export function useCVStatus() {
         const coverLetterExists = await checkFileAccess(coverLetterPath, token || undefined);
         if (coverLetterExists) {
           finalCoverLetterUrl = coverLetterPath;
-                 } else {
-           finalHasCoverLetter = false;
-         }
+        } else {
+          finalHasCoverLetter = false;
+        }
       }
 
       const finalStatus = {
@@ -155,7 +157,8 @@ export function useCVStatus() {
         loading: false,
         cvSource
       };
-      
+
+      console.log('🎯 useCVStatus - Final Status:', finalStatus);
       setStatus(finalStatus);
     } catch (error) {
       console.error('Error checking CV status:', error);
@@ -178,22 +181,24 @@ export function useCVStatus() {
         method: 'POST',
         body: formData
       });
-      
-             // Actualizar el estado con la URL devuelta por el backend
-       setStatus(prev => ({
-         ...prev,
-         hasCV: true,
-         cvUrl: result.cvUrl, // Usar la URL devuelta por el backend
-         cvSource: 'file',
-         loading: false,
-         hasCoverLetter: prev.hasCoverLetter ?? false
-       }));
-       
-       // Guardar la URL en localStorage para futuras sesiones
-       if (result.cvUrl) {
-         localStorage.setItem('userCVUrl', result.cvUrl);
-       }
-      
+
+      // Actualizar el estado con la URL devuelta por el backend
+      const newStatus = {
+        ...status,
+        hasCV: true,
+        cvUrl: result.cvUrl, // Usar la URL devuelta por el backend
+        cvSource: 'file',
+        loading: false,
+        hasCoverLetter: status.hasCoverLetter ?? false
+      };
+      console.log('🎯 useCVStatus - After CV upload:', newStatus);
+      setStatus(newStatus);
+
+      // Guardar la URL en localStorage para futuras sesiones
+      if (result.cvUrl) {
+        localStorage.setItem('userCVUrl', result.cvUrl);
+      }
+
       return result;
     } catch (error) {
       console.error('Error uploading CV file:', error);
@@ -210,20 +215,22 @@ export function useCVStatus() {
         method: 'POST',
         body: formData
       });
-      
-             // Actualizar el estado con la URL devuelta por el backend
-       setStatus(prev => ({
-         ...prev,
-         hasCoverLetter: true,
-         coverLetterUrl: result.coverLetterUrl, // Usar la URL devuelta por el backend
-         loading: false
-       }));
-       
-       // Guardar la URL en localStorage para futuras sesiones
-       if (result.coverLetterUrl) {
-         localStorage.setItem('userCoverLetterUrl', result.coverLetterUrl);
-       }
-      
+
+      // Actualizar el estado con la URL devuelta por el backend
+      const newStatus = {
+        ...status,
+        hasCoverLetter: true,
+        coverLetterUrl: result.coverLetterUrl, // Usar la URL devuelta por el backend
+        loading: false
+      };
+      console.log('🎯 useCVStatus - After Cover Letter upload:', newStatus);
+      setStatus(newStatus);
+
+      // Guardar la URL en localStorage para futuras sesiones
+      if (result.coverLetterUrl) {
+        localStorage.setItem('userCoverLetterUrl', result.coverLetterUrl);
+      }
+
       return result;
     } catch (error) {
       console.error('Error uploading cover letter file:', error);
@@ -238,18 +245,18 @@ export function useCVStatus() {
         throw new Error('No se encontró token de autorización');
       }
 
-             // Actualizar el estado para indicar que no hay CV
-       setStatus(prev => ({
-         ...prev,
-         hasCV: false,
-         cvUrl: undefined,
-         cvSource: null
-       }));
-       
-       // Limpiar localStorage
-       localStorage.removeItem('userCVUrl');
-       
-       return { message: 'CV eliminado del estado local' };
+      // Actualizar el estado para indicar que no hay CV
+      setStatus(prev => ({
+        ...prev,
+        hasCV: false,
+        cvUrl: undefined,
+        cvSource: null
+      }));
+
+      // Limpiar localStorage
+      localStorage.removeItem('userCVUrl');
+
+      return { message: 'CV eliminado del estado local' };
     } catch (error) {
       console.error('Error deleting CV file:', error);
       throw error;
@@ -263,17 +270,17 @@ export function useCVStatus() {
         throw new Error('No se encontró token de autorización');
       }
 
-             // Actualizar el estado para indicar que no hay carta de presentación
-       setStatus(prev => ({
-         ...prev,
-         hasCoverLetter: false,
-         coverLetterUrl: undefined
-       }));
-       
-       // Limpiar localStorage
-       localStorage.removeItem('userCoverLetterUrl');
-       
-       return { message: 'Carta de presentación eliminada del estado local' };
+      // Actualizar el estado para indicar que no hay carta de presentación
+      setStatus(prev => ({
+        ...prev,
+        hasCoverLetter: false,
+        coverLetterUrl: undefined
+      }));
+
+      // Limpiar localStorage
+      localStorage.removeItem('userCoverLetterUrl');
+
+      return { message: 'Carta de presentación eliminada del estado local' };
     } catch (error) {
       console.error('Error deleting cover letter file:', error);
       throw error;

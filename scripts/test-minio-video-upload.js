@@ -3,7 +3,7 @@ const FormData = require('form-data');
 const fetch = require('node-fetch');
 
 // Configuration
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = 'https://cemse-back-production.up.railway.app';
 const AUTH_TOKEN = 'your-auth-token-here'; // Replace with actual token
 
 // Test video file path (create a small test video or use existing one)
@@ -40,7 +40,7 @@ async function testVideoUpload() {
 
 async function testSingleVideoUpload() {
   const formData = new FormData();
-  
+
   // Add lesson data
   formData.append('title', 'Test Video Lesson');
   formData.append('description', 'This is a test video lesson');
@@ -51,7 +51,7 @@ async function testSingleVideoUpload() {
   formData.append('orderIndex', '1');
   formData.append('isRequired', 'true');
   formData.append('isPreview', 'false');
-  
+
   // Add video file if exists
   if (fs.existsSync(TEST_VIDEO_PATH)) {
     formData.append('video', fs.createReadStream(TEST_VIDEO_PATH));
@@ -81,7 +81,7 @@ async function testSingleVideoUpload() {
 
 async function testMultipleFilesUpload() {
   const formData = new FormData();
-  
+
   // Add lesson data
   formData.append('title', 'Test Multiple Files Lesson');
   formData.append('description', 'This is a test lesson with multiple files');
@@ -92,7 +92,7 @@ async function testMultipleFilesUpload() {
   formData.append('orderIndex', '2');
   formData.append('isRequired', 'true');
   formData.append('isPreview', 'false');
-  
+
   // Add video file
   if (fs.existsSync(TEST_VIDEO_PATH)) {
     formData.append('video', fs.createReadStream(TEST_VIDEO_PATH));
@@ -100,7 +100,7 @@ async function testMultipleFilesUpload() {
     const dummyVideo = Buffer.from('dummy video content');
     formData.append('video', dummyVideo, { filename: 'test-video.mp4', contentType: 'video/mp4' });
   }
-  
+
   // Add thumbnail if exists
   if (fs.existsSync(TEST_THUMBNAIL_PATH)) {
     formData.append('thumbnail', fs.createReadStream(TEST_THUMBNAIL_PATH));
@@ -108,7 +108,7 @@ async function testMultipleFilesUpload() {
     const dummyThumbnail = Buffer.from('dummy thumbnail content');
     formData.append('thumbnail', dummyThumbnail, { filename: 'test-thumbnail.jpg', contentType: 'image/jpeg' });
   }
-  
+
   // Add document if exists
   if (fs.existsSync(TEST_DOCUMENT_PATH)) {
     formData.append('attachments', fs.createReadStream(TEST_DOCUMENT_PATH));
@@ -139,7 +139,7 @@ async function testMultipleFilesUpload() {
 
 async function testErrorHandling() {
   const formData = new FormData();
-  
+
   // Test without required video file
   formData.append('title', 'Test Error Lesson');
   formData.append('description', 'This should fail');
@@ -171,21 +171,21 @@ async function testErrorHandling() {
 // Helper function to create test files
 function createTestFiles() {
   console.log('📝 Creating test files...');
-  
+
   // Create dummy video file
   if (!fs.existsSync(TEST_VIDEO_PATH)) {
     const dummyVideo = Buffer.from('dummy video content for testing');
     fs.writeFileSync(TEST_VIDEO_PATH, dummyVideo);
     console.log('   ✅ Created test video file');
   }
-  
+
   // Create dummy thumbnail file
   if (!fs.existsSync(TEST_THUMBNAIL_PATH)) {
     const dummyThumbnail = Buffer.from('dummy thumbnail content for testing');
     fs.writeFileSync(TEST_THUMBNAIL_PATH, dummyThumbnail);
     console.log('   ✅ Created test thumbnail file');
   }
-  
+
   // Create dummy document file
   if (!fs.existsSync(TEST_DOCUMENT_PATH)) {
     const dummyDocument = Buffer.from('dummy document content for testing');
@@ -197,7 +197,7 @@ function createTestFiles() {
 // Main execution
 async function main() {
   console.log('🚀 MinIO Video Upload Test Script\n');
-  
+
   // Check if API is running
   try {
     const healthCheck = await fetch(`${API_BASE_URL}/api/health`);
@@ -207,10 +207,10 @@ async function main() {
   } catch (error) {
     console.log('⚠️ Warning: Could not connect to API. Make sure your Next.js app is running on port 3000.');
   }
-  
+
   // Create test files
   createTestFiles();
-  
+
   // Run tests
   await testVideoUpload();
 }

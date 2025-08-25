@@ -1,12 +1,11 @@
 // Base API configuration and utilities
-const API_BASE_DEV = process.env.NEXT_PUBLIC_API_BASE_DEV || "http://localhost:3001/api";
 const API_BASE_PROD = process.env.NEXT_PUBLIC_API_BASE_PROD || "https://cemse-back-production.up.railway.app/api";
 
-// Use development URL for now, switch based on environment
-export const API_BASE = process.env.NODE_ENV === 'production' ? API_BASE_PROD : API_BASE_DEV;
+// Use production URL for both environments to ensure consistency
+export const API_BASE = API_BASE_PROD;
 
 // Backend URL configuration - ensure it matches the API_BASE without /api suffix
-export const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3001";
+export const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "https://cemse-back-production.up.railway.app";
 
 // Utility function to make direct backend calls
 export const backendCall = async (endpoint: string, options: RequestInit = {}) => {

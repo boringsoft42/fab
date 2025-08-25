@@ -26,6 +26,7 @@ const nextConfig = {
       "localhost",
       "192.168.0.87",
       "cemse-back-production.up.railway.app",
+      "bucket-production-1a58.up.railway.app",
     ],
     remotePatterns: [
       {
@@ -53,6 +54,10 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "cemse-back-production.up.railway.app",
+      },
+      {
+        protocol: "https",
+        hostname: "bucket-production-1a58.up.railway.app",
       },
     ],
   },
@@ -91,7 +96,11 @@ const nextConfig = {
           {
             key: "Content-Security-Policy",
             value:
-              "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://*.supabase.co; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.stripe.com http://localhost:3001 http://localhost:3000 https://cemse-back-production.up.railway.app https://cemse-back-production.up.railway.app  https://cemse-back-production.up.railway.app; style-src 'self' 'unsafe-inline' https://unpkg.com; img-src 'self' data: https://*.supabase.co https://* http://localhost:3001 http://192.168.0.87:3001 https://cemse-back-production.up.railway.app blob:; font-src 'self' data:; frame-src 'self' https://js.stripe.com; object-src 'none'",
+              "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://*.supabase.co; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.stripe.com https://cemse-back-production.up.railway.app https://bucket-production-1a58.up.railway.app; style-src 'self' 'unsafe-inline' https://unpkg.com; img-src 'self' data: https://*.supabase.co https://* https://cemse-back-production.up.railway.app https://bucket-production-1a58.up.railway.app blob:; media-src *; font-src 'self' data:; frame-src 'self' https://js.stripe.com; object-src 'none'",
+          },
+          {
+            key: "Cache-Control",
+            value: "no-cache, no-store, must-revalidate",
           },
         ],
       },

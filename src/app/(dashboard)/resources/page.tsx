@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import {
   usePublicResources,
   useSearchResources,
@@ -26,6 +27,7 @@ import { useCurrentMunicipality } from "@/hooks/useMunicipalityApi";
 import { isMunicipalityRole } from "@/lib/utils";
 
 export default function ResourcesPage() {
+  const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedType, setSelectedType] = useState<string>("all");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
@@ -62,23 +64,70 @@ export default function ResourcesPage() {
   // Función para descargar recurso
   const handleDownload = async (resource: Resource) => {
     try {
-      const response = await fetch(`/api/resource/${resource.id}/download`, {
-        method: "GET",
-      });
+      // Si el recurso tiene una URL de descarga directa, usarla
+      if (resource.downloadUrl) {
+        const response = await fetch(resource.downloadUrl, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
 
-      if (response.ok) {
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = resource.title;
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
+        if (response.ok) {
+          const blob = await response.blob();
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = resource.title || "resource";
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+          document.body.removeChild(a);
+
+          // Show success message
+          toast({
+            title: "Descarga exitosa",
+            description: "El recurso se ha descargado correctamente",
+          });
+        } else {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+      } else {
+        // Si no tiene URL directa, usar el endpoint de descarga
+        const response = await fetch(`/api/resource/${resource.id}/download`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        if (response.ok) {
+          const blob = await response.blob();
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = resource.title || "resource";
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+          document.body.removeChild(a);
+
+          // Show success message
+          toast({
+            title: "Descarga exitosa",
+            description: "El recurso se ha descargado correctamente",
+          });
+        } else {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
       }
     } catch (error) {
       console.error("Error downloading resource:", error);
+      toast({
+        title: "Error al descargar",
+        description: "No se pudo descargar el recurso. Inténtalo de nuevo.",
+        variant: "destructive",
+      });
     }
   };
 

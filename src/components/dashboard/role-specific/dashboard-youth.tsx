@@ -47,22 +47,32 @@ function NewsCarousel() {
   const [governmentIndex, setGovernmentIndex] = useState(0);
 
   // Use the real news hook
-  const { data: allNews, isLoading: loading, error } = usePublicNews();
+  const { data: allNews, isLoading: loading, error, refetch } = usePublicNews();
 
-  // Filter news by type
-  const companyNews =
-    allNews?.filter(
-      (news) => news.authorType === "COMPANY" || news.authorType === "company"
-    ) || [];
+  // Debug: Log all news and their author types
+  console.log("🔍 Dashboard Youth - All news:", allNews);
+  console.log(
+    "🔍 Dashboard Youth - Author types:",
+    allNews?.map((news) => ({
+      id: news.id,
+      authorType: news.authorType,
+      authorName: news.authorName,
+    }))
+  );
 
-  const governmentNews =
-    allNews?.filter(
-      (news) =>
-        news.authorType === "GOVERNMENT" ||
-        news.authorType === "government" ||
-        news.authorType === "NGO" ||
-        news.authorType === "ngo"
-    ) || [];
+  // Show all news without filtering by type for now
+  const allNewsArray = allNews || [];
+
+  // Split news into two columns for display
+  const companyNews = allNewsArray.slice(0, Math.ceil(allNewsArray.length / 2));
+  const governmentNews = allNewsArray.slice(Math.ceil(allNewsArray.length / 2));
+
+  // Debug: Log filtered results
+  console.log("🔍 Dashboard Youth - Company news count:", companyNews.length);
+  console.log(
+    "🔍 Dashboard Youth - Government news count:",
+    governmentNews.length
+  );
 
   const formatTimeAgo = (dateString: string) => {
     const date = new Date(dateString);
@@ -184,6 +194,18 @@ function NewsCarousel() {
         <p className="text-muted-foreground">
           Mantente informado sobre las últimas novedades
         </p>
+        {/* Debug button */}
+        <Button
+          onClick={() => {
+            console.log("🔄 Debug - Forcing refetch");
+            refetch();
+          }}
+          variant="outline"
+          size="sm"
+          className="mt-2"
+        >
+          🔄 Forzar Actualización
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -194,7 +216,7 @@ function NewsCarousel() {
               <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
                 <Building2 className="w-4 h-4 text-white" />
               </div>
-              <h3 className="font-semibold">Noticias Empresariales</h3>
+              <h3 className="font-semibold">Noticias Recientes</h3>
             </div>
             <div className="flex gap-1">
               <Button
@@ -228,7 +250,7 @@ function NewsCarousel() {
             <Card className="p-6 text-center border-dashed">
               <Building2 className="w-12 h-12 text-gray-300 mx-auto mb-3" />
               <p className="text-sm text-muted-foreground">
-                No hay noticias empresariales disponibles
+                No hay noticias disponibles
               </p>
             </Card>
           )}
@@ -241,7 +263,7 @@ function NewsCarousel() {
               <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
                 <Shield className="w-4 h-4 text-white" />
               </div>
-              <h3 className="font-semibold">Noticias Institucionales</h3>
+              <h3 className="font-semibold">Más Noticias</h3>
             </div>
             <div className="flex gap-1">
               <Button
@@ -277,7 +299,7 @@ function NewsCarousel() {
             <Card className="p-6 text-center border-dashed">
               <Shield className="w-12 h-12 text-gray-300 mx-auto mb-3" />
               <p className="text-sm text-muted-foreground">
-                No hay noticias institucionales disponibles
+                No hay más noticias disponibles
               </p>
             </Card>
           )}

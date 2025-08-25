@@ -9,8 +9,10 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ error: 'URL parameter is required' }, { status: 400 });
         }
 
-        // Validar que la URL sea de MinIO
-        if (!imageUrl.includes('127.0.0.1:9000') && !imageUrl.includes('localhost:9000')) {
+        // Validar que la URL sea de MinIO (local o producción)
+        if (!imageUrl.includes('127.0.0.1:9000') &&
+            !imageUrl.includes('localhost:9000') &&
+            !imageUrl.includes('bucket-production-1a58.up.railway.app')) {
             return NextResponse.json({ error: 'Invalid image URL' }, { status: 400 });
         }
 

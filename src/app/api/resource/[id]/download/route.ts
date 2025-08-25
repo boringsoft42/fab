@@ -11,7 +11,6 @@ export async function GET(
     const response = await fetch(`${API_BASE}/resource/${params.id}/download`, {
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
         ...authHeaders,
       },
     });
@@ -20,8 +19,26 @@ export async function GET(
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data = await response.json();
-    return NextResponse.json(data);
+    // Get the file as a blob
+    const blob = await response.blob();
+    
+    // Get the filename from the response headers or use a default
+    const contentDisposition = response.headers.get('content-disposition');
+    let filename = 'resource';
+    if (contentDisposition) {
+      const filenameMatch = contentDisposition.match(/filename="(.+)"/);
+      if (filenameMatch) {
+        filename = filenameMatch[1];
+      }
+    }
+
+    // Return the file as a blob response
+    return new NextResponse(blob, {
+      headers: {
+        'Content-Type': response.headers.get('content-type') || 'application/octet-stream',
+        'Content-Disposition': `attachment; filename="${filename}"`,
+      },
+    });
 
   } catch (error) {
     console.error('Error downloading resource:', error);
@@ -41,7 +58,6 @@ export async function POST(
     const response = await fetch(`${API_BASE}/resource/${params.id}/download`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
         ...authHeaders,
       },
     });
@@ -50,8 +66,26 @@ export async function POST(
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data = await response.json();
-    return NextResponse.json(data);
+    // Get the file as a blob
+    const blob = await response.blob();
+    
+    // Get the filename from the response headers or use a default
+    const contentDisposition = response.headers.get('content-disposition');
+    let filename = 'resource';
+    if (contentDisposition) {
+      const filenameMatch = contentDisposition.match(/filename="(.+)"/);
+      if (filenameMatch) {
+        filename = filenameMatch[1];
+      }
+    }
+
+    // Return the file as a blob response
+    return new NextResponse(blob, {
+      headers: {
+        'Content-Type': response.headers.get('content-type') || 'application/octet-stream',
+        'Content-Disposition': `attachment; filename="${filename}"`,
+      },
+    });
 
   } catch (error) {
     console.error('Error downloading resource:', error);

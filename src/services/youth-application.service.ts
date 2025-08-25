@@ -367,7 +367,8 @@ export class YouthApplicationService {
 
             console.log('👥 YouthApplicationService.getMyApplications - User ID from token:', userFromToken.id);
 
-            const response = await apiCall(`/youthapplication?youthProfileId=${userFromToken.id}`, {
+            // Usar el userId para obtener las aplicaciones del usuario actual
+            const response = await apiCall(`/youthapplication?userId=${userFromToken.id}`, {
                 method: 'GET',
                 headers: getAuthHeaders()
             });

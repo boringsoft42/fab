@@ -57,7 +57,7 @@ export const getBaseUrl = (): string => {
     // Client-side: use the current origin
     return window.location.origin;
   }
-  
+
   // Server-side: use environment variable or default
-  return process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+  return process.env.NEXT_PUBLIC_SITE_URL || 'https://cemse-back-production.up.railway.app';
 };

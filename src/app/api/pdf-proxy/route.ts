@@ -9,8 +9,10 @@ export async function GET(request: NextRequest) {
     let targetUrl: string | null = null;
 
     if (pdfPath) {
-      // Validar que la URL sea de MinIO local
-      if (!pdfPath.startsWith('http://127.0.0.1:9000/') && !pdfPath.startsWith('http://localhost:9000/')) {
+      // Validar que la URL sea de MinIO (local o producción)
+      if (!pdfPath.startsWith('http://127.0.0.1:9000/') &&
+        !pdfPath.startsWith('http://localhost:9000/') &&
+        !pdfPath.startsWith('https://bucket-production-1a58.up.railway.app/')) {
         return NextResponse.json({ error: 'Invalid PDF URL' }, { status: 400 });
       }
       targetUrl = pdfPath;
@@ -19,7 +21,8 @@ export async function GET(request: NextRequest) {
       const allowedDomains = [
         'minio.example.com',
         'localhost:9000',
-        '127.0.0.1:9000'
+        '127.0.0.1:9000',
+        'bucket-production-1a58.up.railway.app'
       ];
 
       const urlObj = new URL(pdfUrl);
@@ -87,8 +90,10 @@ export async function HEAD(request: NextRequest) {
     let targetUrl: string | null = null;
 
     if (pdfPath) {
-      // Validar que la URL sea de MinIO local
-      if (!pdfPath.startsWith('http://127.0.0.1:9000/') && !pdfPath.startsWith('http://localhost:9000/')) {
+      // Validar que la URL sea de MinIO (local o producción)
+      if (!pdfPath.startsWith('http://127.0.0.1:9000/') &&
+        !pdfPath.startsWith('http://localhost:9000/') &&
+        !pdfPath.startsWith('https://bucket-production-1a58.up.railway.app/')) {
         return new NextResponse(null, { status: 400 });
       }
       targetUrl = pdfPath;
@@ -97,7 +102,8 @@ export async function HEAD(request: NextRequest) {
       const allowedDomains = [
         'minio.example.com',
         'localhost:9000',
-        '127.0.0.1:9000'
+        '127.0.0.1:9000',
+        'bucket-production-1a58.up.railway.app'
       ];
 
       const urlObj = new URL(pdfUrl);

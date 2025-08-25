@@ -25,6 +25,7 @@ export interface Event {
     requirements?: string[];
     agenda?: string[];
     speakers?: string[];
+    municipalityId?: string;
     createdAt: string;
     updatedAt: string;
     isRegistered?: boolean;

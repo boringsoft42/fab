@@ -5,9 +5,9 @@ import { NewsArticle } from '@/types/news';
 const processImageUrl = (imageUrl: string): string => {
   if (!imageUrl) return '';
 
-  // Replace port 3000 with 3001 if present
-  if (imageUrl.includes('localhost:3000')) {
-    return imageUrl.replace('localhost:3000', 'localhost:3001');
+  // Replace localhost URLs with production URL
+  if (imageUrl.includes('localhost:3000') || imageUrl.includes('localhost:3001')) {
+    return imageUrl.replace(/localhost:\d+/, 'cemse-back-production.up.railway.app').replace('http://', 'https://');
   }
 
   // If it's already a full URL, return as is

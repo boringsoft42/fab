@@ -36,11 +36,10 @@ export function NewsCard({ news }: NewsCardProps) {
       >
         <div className="relative h-48">
           {news.imageUrl ? (
-            <Image
+            <img
               src={news.imageUrl}
               alt={news.title}
-              fill
-              className="object-cover transition-transform duration-300 group-hover:scale-110"
+              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
             />
           ) : (
             <div className="w-full h-full bg-gray-200 flex items-center justify-center">
@@ -61,12 +60,10 @@ export function NewsCard({ news }: NewsCardProps) {
         <div className="p-4 space-y-4">
           <div className="flex items-center gap-2 mb-3">
             {news.authorLogo ? (
-              <Image
+              <img
                 src={news.authorLogo}
                 alt={news.authorName}
-                width={24}
-                height={24}
-                className="rounded-full"
+                className="w-6 h-6 rounded-full object-cover"
               />
             ) : (
               <div className="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center">

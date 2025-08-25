@@ -52,6 +52,8 @@ import {
   Event,
   CreateEventData,
 } from "@/hooks/use-events";
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { useMunicipalities } from "@/hooks/useMunicipalityApi";
 
 export default function AdminEventsPage() {
   const {
@@ -63,6 +65,13 @@ export default function AdminEventsPage() {
     deleteEvent,
   } = useEvents();
   const { stats, fetchStats } = useEventStats();
+
+  // Get current user and check if super admin
+  const { profile } = useCurrentUser();
+  const isSuperAdmin = profile?.role === "SUPERADMIN" || profile?.role === "SUPER_ADMIN";
+
+  // Get municipalities for super admin
+  const { data: allMunicipalities = [] } = useMunicipalities();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [typeFilter, setTypeFilter] = useState<string>("all");
@@ -95,6 +104,7 @@ export default function AdminEventsPage() {
     requirements: undefined,
     agenda: undefined,
     speakers: undefined,
+    municipalityId: undefined,
   });
 
   const eventTypes = [
@@ -130,7 +140,15 @@ export default function AdminEventsPage() {
 
   const handleCreateEvent = async () => {
     try {
-      await createEvent(formData);
+      // Add municipalityId to the form data for super admin
+      const eventDataWithMunicipality = {
+        ...formData,
+        municipalityId: formData.municipalityId,
+      };
+
+      console.log("🔍 handleCreateEvent - Event data:", eventDataWithMunicipality);
+
+      await createEvent(eventDataWithMunicipality);
       setIsCreateDialogOpen(false);
       resetForm();
     } catch {
@@ -182,6 +200,7 @@ export default function AdminEventsPage() {
       requirements: undefined,
       agenda: undefined,
       speakers: undefined,
+      municipalityId: undefined,
     });
   };
 
@@ -207,6 +226,7 @@ export default function AdminEventsPage() {
       requirements: event.requirements,
       agenda: event.agenda,
       speakers: event.speakers,
+      municipalityId: event.municipalityId,
     });
     setIsEditDialogOpen(true);
   };
@@ -296,6 +316,8 @@ export default function AdminEventsPage() {
               eventTypes={eventTypes}
               eventCategories={eventCategories}
               eventStatuses={eventStatuses}
+              isSuperAdmin={isSuperAdmin}
+              municipalities={allMunicipalities}
             />
           </DialogContent>
         </Dialog>
@@ -563,6 +585,8 @@ export default function AdminEventsPage() {
             eventTypes={eventTypes}
             eventCategories={eventCategories}
             eventStatuses={eventStatuses}
+            isSuperAdmin={isSuperAdmin}
+            municipalities={allMunicipalities}
           />
         </DialogContent>
       </Dialog>
@@ -577,6 +601,8 @@ interface EventFormProps {
   eventTypes: { value: string; label: string }[];
   eventCategories: { value: string; label: string }[];
   eventStatuses: { value: string; label: string }[];
+  isSuperAdmin?: boolean;
+  municipalities?: any[];
 }
 
 function EventForm({
@@ -586,6 +612,8 @@ function EventForm({
   eventTypes,
   eventCategories,
   eventStatuses,
+  isSuperAdmin = false,
+  municipalities = [],
 }: EventFormProps) {
   return (
     <div className="space-y-4">
@@ -613,6 +641,33 @@ function EventForm({
           />
         </div>
       </div>
+
+      {/* Municipality selector for super admin */}
+      {isSuperAdmin && (
+        <div className="space-y-2">
+          <Label htmlFor="municipalityId">Municipio/Institución *</Label>
+          <Select
+            value={formData.municipalityId || ""}
+            onValueChange={(value) =>
+              setFormData({ ...formData, municipalityId: value })
+            }
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Selecciona un municipio" />
+            </SelectTrigger>
+            <SelectContent>
+              {municipalities.map((municipality) => (
+                <SelectItem
+                  key={municipality.id}
+                  value={municipality.id}
+                >
+                  {municipality.name} - {municipality.department}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      )}
 
       <div className="space-y-2">
         <Label htmlFor="description">Descripción *</Label>

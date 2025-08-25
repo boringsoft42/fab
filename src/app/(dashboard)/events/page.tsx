@@ -18,7 +18,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 import {
   Calendar,
   Clock,
@@ -33,16 +33,14 @@ import {
 } from "lucide-react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { useEvents, useMyAttendances, Event } from "@/hooks/use-events";
+import { useEvents, Event } from "@/hooks/use-events";
 import { getImageUrl } from "@/lib/video-utils";
+import { apiCall } from "@/lib/api";
+import { useToast } from "@/hooks/use-toast";
 
 export default function EventsPage() {
   const { events: allEvents, fetchEvents } = useEvents();
-  const {
-    myAttendances: myEvents,
-    attendEvent,
-    unattendEvent,
-  } = useMyAttendances();
+  const { toast } = useToast();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [typeFilter, setTypeFilter] = useState<string>("all");
@@ -74,11 +72,59 @@ export default function EventsPage() {
     fetchEvents();
   }, [fetchEvents]);
 
+  const attendEvent = async (eventId: string) => {
+    try {
+      await apiCall(`/events/${eventId}/attend`, {
+        method: "POST",
+      });
+      await fetchEvents(); // Refresh events to update registration status
+      toast({
+        title: "Éxito",
+        description: "Te has registrado al evento correctamente",
+      });
+    } catch (error) {
+      console.error("Error attending event:", error);
+      toast({
+        title: "Error",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Error al registrarse al evento",
+        variant: "destructive",
+      });
+      throw error;
+    }
+  };
+
+  const unattendEvent = async (eventId: string) => {
+    try {
+      await apiCall(`/events/${eventId}/unattend`, {
+        method: "DELETE",
+      });
+      await fetchEvents(); // Refresh events to update registration status
+      toast({
+        title: "Éxito",
+        description: "Has cancelado tu asistencia al evento",
+      });
+    } catch (error) {
+      console.error("Error unattending event:", error);
+      toast({
+        title: "Error",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Error al cancelar asistencia",
+        variant: "destructive",
+      });
+      throw error;
+    }
+  };
+
   const handleAttendEvent = async (eventId: string) => {
     try {
       await attendEvent(eventId);
     } catch {
-      // Error handling is done in the hook
+      // Error handling is done in the function
     }
   };
 
@@ -86,7 +132,7 @@ export default function EventsPage() {
     try {
       await unattendEvent(eventId);
     } catch {
-      // Error handling is done in the hook
+      // Error handling is done in the function
     }
   };
 
@@ -229,196 +275,109 @@ export default function EventsPage() {
         </CardContent>
       </Card>
 
-      {/* Events Tabs */}
-      <Tabs defaultValue="all" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="all">
-            Todos los Eventos ({filteredAllEvents.length})
-          </TabsTrigger>
-          <TabsTrigger value="my">
-            Mis Eventos ({Array.isArray(myEvents) ? myEvents.length : 0})
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="all" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredAllEvents.map((event) => (
-              <Card key={event.id} className="overflow-hidden">
-                {event.imageUrl && (
-                  <div className="aspect-video bg-muted">
-                    <img
-                      src={getImageUrl(event.imageUrl)}
-                      alt={event.title}
-                      className="w-full h-full object-cover"
-                    />
+      {/* Events List */}
+      <div className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredAllEvents.map((event) => (
+            <Card key={event.id} className="overflow-hidden">
+              {event.imageUrl && (
+                <div className="aspect-video bg-muted">
+                  <img
+                    src={getImageUrl(event.imageUrl)}
+                    alt={event.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+              <CardHeader className="pb-3">
+                <div className="flex items-start justify-between">
+                  <div className="space-y-1">
+                    <CardTitle className="text-lg">{event.title}</CardTitle>
+                    <p className="text-sm text-muted-foreground">
+                      {event.organizer}
+                    </p>
+                  </div>
+                  {event.isFeatured && (
+                    <Star className="w-5 h-5 text-yellow-500 fill-current" />
+                  )}
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Calendar className="w-4 h-4" />
+                  <span>
+                    {format(new Date(event.date), "dd/MM/yyyy", {
+                      locale: es,
+                    })}
+                  </span>
+                  <Clock className="w-4 h-4 ml-2" />
+                  <span>{event.time}</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <MapPin className="w-4 h-4" />
+                  <span>{event.location}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  {getTypeBadge(event.type)}
+                  <Badge variant="outline">{event.category}</Badge>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Users className="w-4 h-4" />
+                  <span>
+                    {event.currentAttendees || event.attendeesCount || 0}
+                  </span>
+                  {event.maxCapacity && <span>/ {event.maxCapacity}</span>}
+                </div>
+                {event.price && event.price > 0 && (
+                  <div className="text-sm font-medium">
+                    Precio: ${event.price}
                   </div>
                 )}
-                <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between">
-                    <div className="space-y-1">
-                      <CardTitle className="text-lg">{event.title}</CardTitle>
-                      <p className="text-sm text-muted-foreground">
-                        {event.organizer}
-                      </p>
-                    </div>
-                    {event.isFeatured && (
-                      <Star className="w-5 h-5 text-yellow-500 fill-current" />
-                    )}
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Calendar className="w-4 h-4" />
-                    <span>
-                      {format(new Date(event.date), "dd/MM/yyyy", {
-                        locale: es,
-                      })}
-                    </span>
-                    <Clock className="w-4 h-4 ml-2" />
-                    <span>{event.time}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <MapPin className="w-4 h-4" />
-                    <span>{event.location}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    {getTypeBadge(event.type)}
-                    <Badge variant="outline">{event.category}</Badge>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Users className="w-4 h-4" />
-                    <span>
-                      {event.currentAttendees || event.attendeesCount || 0}
-                    </span>
-                    {event.maxCapacity && <span>/ {event.maxCapacity}</span>}
-                  </div>
-                  {event.price && event.price > 0 && (
-                    <div className="text-sm font-medium">
-                      Precio: ${event.price}
-                    </div>
-                  )}
-                  <div className="flex items-center gap-2 pt-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => openEventDetail(event)}
-                      className="flex-1"
-                    >
-                      <Eye className="w-4 h-4 mr-2" />
-                      Ver Detalles
-                    </Button>
-                    {event.isRegistered ? (
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => handleUnattendEvent(event.id)}
-                        disabled={!isRegistrationOpen(event)}
-                      >
-                        <XCircle className="w-4 h-4 mr-2" />
-                        Cancelar
-                      </Button>
-                    ) : (
-                      <Button
-                        size="sm"
-                        onClick={() => handleAttendEvent(event.id)}
-                        disabled={
-                          !isRegistrationOpen(event) || isEventFull(event)
-                        }
-                        className="flex-1"
-                      >
-                        <CheckCircle className="w-4 h-4 mr-2" />
-                        {isEventFull(event) ? "Lleno" : "Asistir"}
-                      </Button>
-                    )}
-                  </div>
-                  {!isRegistrationOpen(event) && (
-                    <div className="text-xs text-red-500">Registro cerrado</div>
-                  )}
-                  {isEventFull(event) && !event.isRegistered && (
-                    <div className="text-xs text-red-500">Evento lleno</div>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="my" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {(Array.isArray(myEvents) ? myEvents : []).map((event) => (
-              <Card key={event.id} className="overflow-hidden">
-                {event.imageUrl && (
-                  <div className="aspect-video bg-muted">
-                    <img
-                      src={getImageUrl(event.imageUrl)}
-                      alt={event.title}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                )}
-                <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between">
-                    <div className="space-y-1">
-                      <CardTitle className="text-lg">{event.title}</CardTitle>
-                      <p className="text-sm text-muted-foreground">
-                        {event.organizer}
-                      </p>
-                    </div>
-                    {(event.isFeatured || event.featured) && (
-                      <Star className="w-5 h-5 text-yellow-500 fill-current" />
-                    )}
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Calendar className="w-4 h-4" />
-                    <span>
-                      {format(new Date(event.date), "dd/MM/yyyy", {
-                        locale: es,
-                      })}
-                    </span>
-                    <Clock className="w-4 h-4 ml-2" />
-                    <span>{event.time}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <MapPin className="w-4 h-4" />
-                    <span>{event.location}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    {getTypeBadge(event.type)}
-                    <Badge variant="outline">{event.category}</Badge>
-                  </div>
-                  {event.attendeeStatus && (
-                    <div className="flex items-center gap-2">
-                      <Users className="w-4 h-4" />
-                      <Badge variant="secondary">{event.attendeeStatus}</Badge>
-                    </div>
-                  )}
-                  <div className="flex items-center gap-2 pt-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => openEventDetail(event)}
-                      className="flex-1"
-                    >
-                      <Eye className="w-4 h-4 mr-2" />
-                      Ver Detalles
-                    </Button>
+                <div className="flex items-center gap-2 pt-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => openEventDetail(event)}
+                    className="flex-1"
+                  >
+                    <Eye className="w-4 h-4 mr-2" />
+                    Ver Detalles
+                  </Button>
+                  {event.isRegistered ? (
                     <Button
                       variant="destructive"
                       size="sm"
                       onClick={() => handleUnattendEvent(event.id)}
+                      disabled={!isRegistrationOpen(event)}
                     >
                       <XCircle className="w-4 h-4 mr-2" />
                       Cancelar
                     </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-      </Tabs>
+                  ) : (
+                    <Button
+                      size="sm"
+                      onClick={() => handleAttendEvent(event.id)}
+                      disabled={
+                        !isRegistrationOpen(event) || isEventFull(event)
+                      }
+                      className="flex-1"
+                    >
+                      <CheckCircle className="w-4 h-4 mr-2" />
+                      {isEventFull(event) ? "Lleno" : "Asistir"}
+                    </Button>
+                  )}
+                </div>
+                {!isRegistrationOpen(event) && (
+                  <div className="text-xs text-red-500">Registro cerrado</div>
+                )}
+                {isEventFull(event) && !event.isRegistered && (
+                  <div className="text-xs text-red-500">Evento lleno</div>
+                )}
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
 
       {/* Event Detail Dialog */}
       <Dialog open={isEventDetailOpen} onOpenChange={setIsEventDetailOpen}>

@@ -1,14 +1,24 @@
 "use client";
 
 import { useState } from "react";
-import { useNewsArticles, useCreateNewsArticleWithImage, useUpdateNewsArticleWithImage, useDeleteNewsArticle } from "@/hooks/useNewsArticleApi";
+import {
+  useNewsArticles,
+  useCreateNewsArticleWithImage,
+  useUpdateNewsArticleWithImage,
+  useDeleteNewsArticle,
+} from "@/hooks/useNewsArticleApi";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { NewsForm } from "@/components/news/news-form";
 import { NewsTable } from "@/components/news/news-table";
 import { NewsDetail } from "@/components/news/news-detail";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Plus, FileText, Eye, TrendingUp, Calendar, Users } from "lucide-react";
 import type { NewsArticle } from "@/types/news";
 
@@ -16,11 +26,10 @@ export default function AdminNewsPage() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [editingNews, setEditingNews] = useState<NewsArticle | null>(null);
   const [selectedNews, setSelectedNews] = useState<NewsArticle | null>(null);
-  const [imageFile, setImageFile] = useState<File | null>(null);
 
   // Obtener el usuario actual
   const { profile } = useCurrentUser();
-  
+
   // Hooks para noticias - Super Admin puede ver todas las noticias del sistema
   const { data: news = [], isLoading } = useNewsArticles();
   const createNewsMutation = useCreateNewsArticleWithImage();
@@ -30,69 +39,106 @@ export default function AdminNewsPage() {
   // Estadísticas calculadas
   const stats = {
     totalNews: news.length,
-    publishedNews: news.filter(n => n.status === 'PUBLISHED').length,
-    draftNews: news.filter(n => n.status === 'DRAFT').length,
-    featuredNews: news.filter(n => n.featured).length,
+    publishedNews: news.filter((n) => n.status === "PUBLISHED").length,
+    draftNews: news.filter((n) => n.status === "DRAFT").length,
+    featuredNews: news.filter((n) => n.featured).length,
   };
 
   // Handlers
-  const handleCreateNews = async (newsData: any) => {
+  const handleCreateNews = async (newsData: any, imageFile?: File) => {
     const formData = new FormData();
-    
+
     // Agregar campos de texto
-    Object.keys(newsData).forEach(key => {
-      if (key !== 'image' && newsData[key] !== undefined && newsData[key] !== null) {
+    Object.keys(newsData).forEach((key) => {
+      if (
+        key !== "image" &&
+        newsData[key] !== undefined &&
+        newsData[key] !== null
+      ) {
         formData.append(key, newsData[key].toString());
       }
     });
 
     // Agregar imagen si existe
     if (imageFile) {
-      formData.append('image', imageFile);
+      console.log(
+        "📰 Adding image to FormData:",
+        imageFile.name,
+        imageFile.size,
+        imageFile.type
+      );
+      formData.append("image", imageFile);
     }
 
     // Agregar campos específicos para Super Admin
-    formData.append('authorType', 'SUPERADMIN');
-    formData.append('authorId', profile?.id || '');
+    formData.append("authorType", "SUPERADMIN");
+    formData.append("authorId", profile?.id || "");
+
+    // Verificar contenido del FormData antes de enviar
+    console.log("📰 FormData contents:");
+    for (const [key, value] of formData.entries()) {
+      console.log(
+        `  ${key}: ${value instanceof File ? `File: ${value.name} (${value.size} bytes)` : value}`
+      );
+    }
 
     createNewsMutation.mutate(formData, {
       onSuccess: () => {
         setIsCreateDialogOpen(false);
-        setImageFile(null);
-      }
+      },
     });
   };
 
-  const handleUpdateNews = async (newsData: any) => {
+  const handleUpdateNews = async (newsData: any, imageFile?: File) => {
     if (!editingNews) return;
 
     const formData = new FormData();
-    
+
     // Agregar campos de texto
-    Object.keys(newsData).forEach(key => {
-      if (key !== 'image' && newsData[key] !== undefined && newsData[key] !== null) {
+    Object.keys(newsData).forEach((key) => {
+      if (
+        key !== "image" &&
+        newsData[key] !== undefined &&
+        newsData[key] !== null
+      ) {
         formData.append(key, newsData[key].toString());
       }
     });
 
     // Agregar imagen si existe
     if (imageFile) {
-      formData.append('image', imageFile);
+      console.log(
+        "📰 Adding image to FormData for update:",
+        imageFile.name,
+        imageFile.size,
+        imageFile.type
+      );
+      formData.append("image", imageFile);
     }
 
     // Agregar campos específicos para Super Admin
-    formData.append('authorType', 'SUPERADMIN');
-    formData.append('authorId', profile?.id || '');
+    formData.append("authorType", "SUPERADMIN");
+    formData.append("authorId", profile?.id || "");
 
-    updateNewsMutation.mutate({
-      id: editingNews.id,
-      formData
-    }, {
-      onSuccess: () => {
-        setEditingNews(null);
-        setImageFile(null);
+    // Verificar contenido del FormData antes de enviar
+    console.log("📰 FormData contents for update:");
+    for (const [key, value] of formData.entries()) {
+      console.log(
+        `  ${key}: ${value instanceof File ? `File: ${value.name} (${value.size} bytes)` : value}`
+      );
+    }
+
+    updateNewsMutation.mutate(
+      {
+        id: editingNews.id,
+        formData,
+      },
+      {
+        onSuccess: () => {
+          setEditingNews(null);
+        },
       }
-    });
+    );
   };
 
   const handleDeleteNews = async (newsId: string) => {
@@ -101,7 +147,6 @@ export default function AdminNewsPage() {
 
   const handleEditNews = (news: NewsArticle) => {
     setEditingNews(news);
-    setImageFile(null);
   };
 
   const handleViewNews = (news: NewsArticle) => {
@@ -131,8 +176,8 @@ export default function AdminNewsPage() {
             Administra las noticias del sistema como Super Administrador
           </p>
         </div>
-        
-        <Button 
+
+        <Button
           onClick={() => setIsCreateDialogOpen(true)}
           className="hover:opacity-90 transition-opacity"
         >
@@ -145,7 +190,9 @@ export default function AdminNewsPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="border-2 hover:shadow-lg transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Noticias</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Total Noticias
+            </CardTitle>
             <FileText className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
@@ -157,7 +204,7 @@ export default function AdminNewsPage() {
             </p>
           </CardContent>
         </Card>
-        
+
         <Card className="border-2 hover:shadow-lg transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Publicadas</CardTitle>
@@ -167,35 +214,35 @@ export default function AdminNewsPage() {
             <div className="text-2xl font-bold text-green-600">
               {stats.publishedNews}
             </div>
-            <p className="text-xs text-muted-foreground">
-              Noticias publicadas
-            </p>
+            <p className="text-xs text-muted-foreground">Noticias publicadas</p>
           </CardContent>
         </Card>
-        
+
         <Card className="border-2 hover:shadow-lg transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Borradores</CardTitle>
             <Calendar className="h-4 w-4 text-yellow-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-yellow-600">{stats.draftNews}</div>
+            <div className="text-2xl font-bold text-yellow-600">
+              {stats.draftNews}
+            </div>
             <p className="text-xs text-muted-foreground">
               Noticias en borrador
             </p>
           </CardContent>
         </Card>
-        
+
         <Card className="border-2 hover:shadow-lg transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Destacadas</CardTitle>
             <TrendingUp className="h-4 w-4 text-blue-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-blue-600">{stats.featuredNews}</div>
-            <p className="text-xs text-muted-foreground">
-              Noticias destacadas
-            </p>
+            <div className="text-2xl font-bold text-blue-600">
+              {stats.featuredNews}
+            </div>
+            <p className="text-xs text-muted-foreground">Noticias destacadas</p>
           </CardContent>
         </Card>
       </div>

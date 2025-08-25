@@ -4,14 +4,11 @@ import { BACKEND_URL } from './api';
  * Converts MinIO video URLs to proxy URLs to avoid CORS issues
  */
 export const convertMinioUrlToProxy = (minioUrl: string): string => {
-  // Check if it's a MinIO URL (127.0.0.1:9000 or localhost:9000)
-  if (minioUrl.includes('127.0.0.1:9000') || minioUrl.includes('localhost:9000')) {
+  // Check if it's a MinIO URL (local or production)
+  if (isMinioUrl(minioUrl)) {
     try {
-      const url = new URL(minioUrl);
-      const path = url.pathname;
-
-      // Convert to proxy URL
-      const proxyUrl = `/api/video-proxy?path=${encodeURIComponent(path)}`;
+      // Convert to proxy URL using the full URL
+      const proxyUrl = `/api/video-proxy?url=${encodeURIComponent(minioUrl)}`;
       console.log('🎥 Converting MinIO URL to proxy:', { original: minioUrl, proxy: proxyUrl });
 
       return proxyUrl;
@@ -29,7 +26,9 @@ export const convertMinioUrlToProxy = (minioUrl: string): string => {
  * Checks if a URL is a MinIO URL
  */
 export const isMinioUrl = (url: string): boolean => {
-  return url.includes('127.0.0.1:9000') || url.includes('localhost:9000');
+  return url.includes('127.0.0.1:9000') ||
+    url.includes('localhost:9000') ||
+    url.includes('bucket-production-1a58.up.railway.app');
 };
 
 /**
@@ -43,11 +42,11 @@ export const isYouTubeUrl = (url: string): boolean => {
  * Converts MinIO PDF URLs to proxy URLs to avoid CSP issues
  */
 export const convertMinioPdfUrlToProxy = (minioUrl: string): string => {
-  // Check if it's a MinIO URL (127.0.0.1:9000 or localhost:9000)
+  // Check if it's a MinIO URL (local or production)
   if (isMinioUrl(minioUrl)) {
     try {
-      // Convert to PDF proxy URL
-      const proxyUrl = `/api/pdf-proxy?path=${encodeURIComponent(minioUrl)}`;
+      // Convert to PDF proxy URL using the full URL
+      const proxyUrl = `/api/pdf-proxy?url=${encodeURIComponent(minioUrl)}`;
       console.log('📄 Converting MinIO PDF URL to proxy:', { original: minioUrl, proxy: proxyUrl });
 
       return proxyUrl;
@@ -65,10 +64,10 @@ export const convertMinioPdfUrlToProxy = (minioUrl: string): string => {
  * Converts MinIO image URLs to proxy URLs to avoid CSP issues
  */
 export const convertMinioImageUrlToProxy = (minioUrl: string): string => {
-  // Check if it's a MinIO URL (127.0.0.1:9000 or localhost:9000)
+  // Check if it's a MinIO URL (local or production)
   if (isMinioUrl(minioUrl)) {
     try {
-      // Convert to image proxy URL
+      // Convert to image proxy URL using the full URL
       const proxyUrl = `/api/image-proxy?url=${encodeURIComponent(minioUrl)}`;
       console.log('🖼️ Converting MinIO image URL to proxy:', { original: minioUrl, proxy: proxyUrl });
 

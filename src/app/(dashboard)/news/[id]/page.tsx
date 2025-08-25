@@ -58,12 +58,10 @@ export default function NewsDetailPage() {
         <div className="flex items-center gap-4 mb-6">
           <div className="flex items-center">
             {news.authorLogo ? (
-              <Image
+              <img
                 src={news.authorLogo}
                 alt={news.authorName}
-                width={32}
-                height={32}
-                className="rounded-full"
+                className="w-8 h-8 rounded-full object-cover"
               />
             ) : (
               <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
@@ -87,11 +85,10 @@ export default function NewsDetailPage() {
       <div className="relative h-[400px] mb-8 rounded-xl overflow-hidden group">
         {news.imageUrl ? (
           <>
-            <Image
+            <img
               src={news.imageUrl}
               alt={news.title}
-              fill
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
+              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
             <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               <Button

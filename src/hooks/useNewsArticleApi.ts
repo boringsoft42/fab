@@ -326,6 +326,11 @@ export const usePublicNews = () => {
         throw error;
       }
     },
+    // Force fresh data every time
+    staleTime: 0,
+    cacheTime: 0,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
   });
 };
 

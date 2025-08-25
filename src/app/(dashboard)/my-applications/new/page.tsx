@@ -89,7 +89,7 @@ export default function NewYouthApplicationPage() {
         description: "Tu postulación ha sido creada correctamente",
       });
 
-      router.push("/my-applications");
+      router.push("/my-youth-applications");
     } catch (error) {
       console.error("Error creating application:", error);
       toast({

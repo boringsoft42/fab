@@ -8,15 +8,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { 
-  ArrowLeft, 
-  Plus, 
-  Edit, 
-  Trash2, 
-  Save, 
+import {
+  ArrowLeft,
+  Plus,
+  Edit,
+  Trash2,
+  Save,
   X,
   MessageSquare,
-  AlertCircle
+  AlertCircle,
 } from "lucide-react";
 import {
   Dialog,
@@ -35,10 +35,11 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import { JobQuestion } from "@/types/jobs";
+import { apiCall } from "@/lib/api";
 
 interface QuestionFormData {
   question: string;
-  type: 'text' | 'multiple_choice' | 'boolean';
+  type: "text" | "multiple_choice" | "boolean";
   required: boolean;
   options: string[];
 }
@@ -52,12 +53,14 @@ export default function JobQuestionsPage() {
   const [questions, setQuestions] = useState<JobQuestion[]>([]);
   const [loading, setLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [editingQuestion, setEditingQuestion] = useState<JobQuestion | null>(null);
+  const [editingQuestion, setEditingQuestion] = useState<JobQuestion | null>(
+    null
+  );
   const [formData, setFormData] = useState<QuestionFormData>({
     question: "",
     type: "text",
     required: false,
-    options: []
+    options: [],
   });
   const [newOption, setNewOption] = useState("");
 
@@ -68,11 +71,8 @@ export default function JobQuestionsPage() {
   const fetchQuestions = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/jobquestion?jobOfferId=${jobId}`);
-      if (response.ok) {
-        const data = await response.json();
-        setQuestions(data);
-      }
+      const data = await apiCall(`/jobquestion?jobOfferId=${jobId}`);
+      setQuestions(data);
     } catch (error) {
       console.error("Error fetching questions:", error);
       toast({
@@ -87,7 +87,7 @@ export default function JobQuestionsPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       const questionData = {
         jobOfferId: jobId,
@@ -95,26 +95,21 @@ export default function JobQuestionsPage() {
         type: formData.type,
         required: formData.required,
         options: formData.type === "text" ? [] : formData.options,
-        orderIndex: questions.length + 1
+        orderIndex: questions.length + 1,
       };
 
-      const response = await fetch("/api/jobquestion", {
+      await apiCall("/jobquestion", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify(questionData),
       });
 
-      if (response.ok) {
-        toast({
-          title: "Éxito",
-          description: "Pregunta creada correctamente",
-        });
-        setIsDialogOpen(false);
-        resetForm();
-        fetchQuestions();
-      }
+      toast({
+        title: "Éxito",
+        description: "Pregunta creada correctamente",
+      });
+      setIsDialogOpen(false);
+      resetForm();
+      fetchQuestions();
     } catch (error) {
       console.error("Error creating question:", error);
       toast({
@@ -127,7 +122,7 @@ export default function JobQuestionsPage() {
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!editingQuestion) return;
 
     try {
@@ -138,24 +133,19 @@ export default function JobQuestionsPage() {
         options: formData.type === "text" ? [] : formData.options,
       };
 
-      const response = await fetch(`/api/jobquestion/${editingQuestion.id}`, {
+      await apiCall(`/jobquestion/${editingQuestion.id}`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify(questionData),
       });
 
-      if (response.ok) {
-        toast({
-          title: "Éxito",
-          description: "Pregunta actualizada correctamente",
-        });
-        setIsDialogOpen(false);
-        setEditingQuestion(null);
-        resetForm();
-        fetchQuestions();
-      }
+      toast({
+        title: "Éxito",
+        description: "Pregunta actualizada correctamente",
+      });
+      setIsDialogOpen(false);
+      setEditingQuestion(null);
+      resetForm();
+      fetchQuestions();
     } catch (error) {
       console.error("Error updating question:", error);
       toast({
@@ -167,20 +157,19 @@ export default function JobQuestionsPage() {
   };
 
   const handleDelete = async (questionId: string) => {
-    if (!confirm("¿Estás seguro de que quieres eliminar esta pregunta?")) return;
+    if (!confirm("¿Estás seguro de que quieres eliminar esta pregunta?"))
+      return;
 
     try {
-      const response = await fetch(`/api/jobquestion/${questionId}`, {
+      await apiCall(`/jobquestion/${questionId}`, {
         method: "DELETE",
       });
 
-      if (response.ok) {
-        toast({
-          title: "Éxito",
-          description: "Pregunta eliminada correctamente",
-        });
-        fetchQuestions();
-      }
+      toast({
+        title: "Éxito",
+        description: "Pregunta eliminada correctamente",
+      });
+      fetchQuestions();
     } catch (error) {
       console.error("Error deleting question:", error);
       toast({
@@ -197,7 +186,7 @@ export default function JobQuestionsPage() {
       question: question.question,
       type: question.type,
       required: question.required,
-      options: question.options || []
+      options: question.options || [],
     });
     setIsDialogOpen(true);
   };
@@ -213,34 +202,38 @@ export default function JobQuestionsPage() {
       question: "",
       type: "text",
       required: false,
-      options: []
+      options: [],
     });
     setNewOption("");
   };
 
   const addOption = () => {
     if (newOption.trim() && !formData.options.includes(newOption.trim())) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        options: [...prev.options, newOption.trim()]
+        options: [...prev.options, newOption.trim()],
       }));
       setNewOption("");
     }
   };
 
   const removeOption = (option: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      options: prev.options.filter(o => o !== option)
+      options: prev.options.filter((o) => o !== option),
     }));
   };
 
   const getTypeLabel = (type: string) => {
     switch (type) {
-      case "text": return "Texto libre";
-      case "multiple_choice": return "Opción múltiple";
-      case "boolean": return "Sí/No";
-      default: return type;
+      case "text":
+        return "Texto libre";
+      case "multiple_choice":
+        return "Opción múltiple";
+      case "boolean":
+        return "Sí/No";
+      default:
+        return type;
     }
   };
 
@@ -253,7 +246,9 @@ export default function JobQuestionsPage() {
             Volver
           </Button>
           <div className="space-y-1">
-            <h1 className="text-2xl font-semibold tracking-tight">Cargando preguntas...</h1>
+            <h1 className="text-2xl font-semibold tracking-tight">
+              Cargando preguntas...
+            </h1>
           </div>
         </div>
       </div>
@@ -270,13 +265,15 @@ export default function JobQuestionsPage() {
             Volver
           </Button>
           <div className="space-y-1">
-            <h1 className="text-2xl font-semibold tracking-tight">Preguntas del Empleo</h1>
+            <h1 className="text-2xl font-semibold tracking-tight">
+              Preguntas del Empleo
+            </h1>
             <p className="text-sm text-muted-foreground">
               Gestiona las preguntas que se harán a los candidatos
             </p>
           </div>
         </div>
-        
+
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button onClick={openCreateDialog}>
@@ -290,20 +287,24 @@ export default function JobQuestionsPage() {
                 {editingQuestion ? "Editar Pregunta" : "Nueva Pregunta"}
               </DialogTitle>
               <DialogDescription>
-                {editingQuestion 
+                {editingQuestion
                   ? "Modifica los detalles de la pregunta"
-                  : "Crea una nueva pregunta para los candidatos"
-                }
+                  : "Crea una nueva pregunta para los candidatos"}
               </DialogDescription>
             </DialogHeader>
-            
-            <form onSubmit={editingQuestion ? handleUpdate : handleSubmit} className="space-y-4">
+
+            <form
+              onSubmit={editingQuestion ? handleUpdate : handleSubmit}
+              className="space-y-4"
+            >
               <div>
                 <Label htmlFor="question">Pregunta *</Label>
                 <Textarea
                   id="question"
                   value={formData.question}
-                  onChange={(e) => setFormData({ ...formData, question: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, question: e.target.value })
+                  }
                   placeholder="Ej: ¿Cuántos años de experiencia tienes con React?"
                   required
                   rows={3}
@@ -315,8 +316,14 @@ export default function JobQuestionsPage() {
                   <Label htmlFor="type">Tipo de pregunta *</Label>
                   <Select
                     value={formData.type}
-                    onValueChange={(value: 'text' | 'multiple_choice' | 'boolean') => 
-                      setFormData({ ...formData, type: value, options: value === 'text' ? [] : formData.options })
+                    onValueChange={(
+                      value: "text" | "multiple_choice" | "boolean"
+                    ) =>
+                      setFormData({
+                        ...formData,
+                        type: value,
+                        options: value === "text" ? [] : formData.options,
+                      })
                     }
                   >
                     <SelectTrigger>
@@ -324,7 +331,9 @@ export default function JobQuestionsPage() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="text">Texto libre</SelectItem>
-                      <SelectItem value="multiple_choice">Opción múltiple</SelectItem>
+                      <SelectItem value="multiple_choice">
+                        Opción múltiple
+                      </SelectItem>
                       <SelectItem value="boolean">Sí/No</SelectItem>
                     </SelectContent>
                   </Select>
@@ -335,14 +344,17 @@ export default function JobQuestionsPage() {
                     type="checkbox"
                     id="required"
                     checked={formData.required}
-                    onChange={(e) => setFormData({ ...formData, required: e.target.checked })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, required: e.target.checked })
+                    }
                     className="rounded"
                   />
                   <Label htmlFor="required">Pregunta obligatoria</Label>
                 </div>
               </div>
 
-              {(formData.type === "multiple_choice" || formData.type === "boolean") && (
+              {(formData.type === "multiple_choice" ||
+                formData.type === "boolean") && (
                 <div>
                   <Label>Opciones</Label>
                   <div className="space-y-2">
@@ -352,20 +364,28 @@ export default function JobQuestionsPage() {
                         onChange={(e) => setNewOption(e.target.value)}
                         placeholder="Agregar opción..."
                         onKeyPress={(e) => {
-                          if (e.key === 'Enter') {
+                          if (e.key === "Enter") {
                             e.preventDefault();
                             addOption();
                           }
                         }}
                       />
-                      <Button type="button" variant="outline" onClick={addOption}>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={addOption}
+                      >
                         <Plus className="h-4 w-4" />
                       </Button>
                     </div>
-                    
+
                     <div className="flex flex-wrap gap-2">
                       {formData.options.map((option, index) => (
-                        <Badge key={index} variant="secondary" className="flex items-center gap-1">
+                        <Badge
+                          key={index}
+                          variant="secondary"
+                          className="flex items-center gap-1"
+                        >
                           {option}
                           <button
                             type="button"
@@ -382,7 +402,11 @@ export default function JobQuestionsPage() {
               )}
 
               <div className="flex justify-end gap-2 pt-4">
-                <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsDialogOpen(false)}
+                >
                   Cancelar
                 </Button>
                 <Button type="submit">
@@ -405,30 +429,38 @@ export default function JobQuestionsPage() {
                 No hay preguntas configuradas para este empleo
               </p>
               <p className="text-sm text-muted-foreground mt-1">
-                Los candidatos podrán aplicar sin responder preguntas específicas
+                Los candidatos podrán aplicar sin responder preguntas
+                específicas
               </p>
             </CardContent>
           </Card>
         ) : (
           questions.map((question, index) => (
-            <Card key={question.id} className="hover:shadow-md transition-shadow">
+            <Card
+              key={question.id}
+              className="hover:shadow-md transition-shadow"
+            >
               <CardContent className="p-6">
                 <div className="flex items-start justify-between">
                   <div className="flex-1 space-y-3">
                     <div className="flex items-start gap-3">
                       <div className="flex-shrink-0 w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
-                        <span className="text-sm font-medium text-primary">{index + 1}</span>
+                        <span className="text-sm font-medium text-primary">
+                          {index + 1}
+                        </span>
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
-                          <h3 className="text-lg font-semibold">{question.question}</h3>
+                          <h3 className="text-lg font-semibold">
+                            {question.question}
+                          </h3>
                           {question.required && (
                             <Badge variant="destructive" className="text-xs">
                               Obligatoria
                             </Badge>
                           )}
                         </div>
-                        
+
                         <div className="flex items-center gap-4 text-sm text-muted-foreground">
                           <Badge variant="outline">
                             {getTypeLabel(question.type)}
@@ -437,10 +469,16 @@ export default function JobQuestionsPage() {
 
                         {question.options && question.options.length > 0 && (
                           <div className="mt-3">
-                            <p className="text-sm font-medium mb-2">Opciones:</p>
+                            <p className="text-sm font-medium mb-2">
+                              Opciones:
+                            </p>
                             <div className="flex flex-wrap gap-2">
                               {question.options.map((option, optionIndex) => (
-                                <Badge key={optionIndex} variant="secondary" className="text-xs">
+                                <Badge
+                                  key={optionIndex}
+                                  variant="secondary"
+                                  className="text-xs"
+                                >
                                   {option}
                                 </Badge>
                               ))}

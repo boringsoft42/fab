@@ -31,22 +31,8 @@ export function ImageUpload({
   const [error, setError] = useState<string | null>(null);
 
   const uploadImage = async (file: File): Promise<string> => {
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("type", type);
-
-    const response = await fetch("/api/upload/image", {
-      method: "POST",
-      body: formData,
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || "Error al subir la imagen");
-    }
-
-    const data = await response.json();
-    return data.url;
+    // Simplemente crear una URL local para la imagen sin subir al servidor
+    return URL.createObjectURL(file);
   };
 
   const onDrop = useCallback(

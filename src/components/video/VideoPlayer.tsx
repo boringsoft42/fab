@@ -37,6 +37,9 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
 }) => {
   const videoSrc = getVideoUrl(src);
 
+  console.log("🎥 VideoPlayer - Original src:", src);
+  console.log("🎥 VideoPlayer - Processed videoSrc:", videoSrc);
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -94,6 +97,15 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
 
   const handleLoadedMetadata = useCallback(() => {
     if (videoRef.current) {
+      console.log("🎥 VideoPlayer - Metadata loaded successfully");
+      console.log("🎥 VideoPlayer - Duration:", videoRef.current.duration);
+      console.log(
+        "🎥 VideoPlayer - Video dimensions:",
+        videoRef.current.videoWidth,
+        "x",
+        videoRef.current.videoHeight
+      );
+
       setDuration(videoRef.current.duration);
       setIsLoading(false);
       setIsInitialLoading(false);
@@ -204,6 +216,11 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
     const handleError = (e: Event) => {
       const video = e.target as HTMLVideoElement;
       const error = video.error;
+
+      console.error("🎥 VideoPlayer - Error event triggered:", error);
+      console.error("🎥 VideoPlayer - Video src:", video.src);
+      console.error("🎥 VideoPlayer - Video networkState:", video.networkState);
+      console.error("🎥 VideoPlayer - Video readyState:", video.readyState);
 
       let errorMessage = "Error al cargar el video";
       if (error) {
