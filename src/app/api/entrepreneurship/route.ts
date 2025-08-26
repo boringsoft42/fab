@@ -1,49 +1,52 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAuthHeaders } from '@/lib/api';
+import { prisma } from '@/lib/prisma';
+import jwt from 'jsonwebtoken';
+
+const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-key';
 
 export async function GET(request: NextRequest) {
   try {
+    console.log('🔍 API: Received request for entrepreneurships');
+    
     const { searchParams } = new URL(request.url);
-
-    const backendUrl = process.env.BACKEND_URL || '${BACKEND_URL}';
-    let url = `${backendUrl}/api/entrepreneurship`;
-
-    // Add query parameters for filtering
     const category = searchParams.get('category');
     const municipality = searchParams.get('municipality');
     const ownerId = searchParams.get('ownerId');
     const isPublic = searchParams.get('isPublic');
 
-    const queryParams = new URLSearchParams();
-    if (category) queryParams.append('category', category);
-    if (municipality) queryParams.append('municipality', municipality);
-    if (ownerId) queryParams.append('ownerId', ownerId);
-    if (isPublic) queryParams.append('isPublic', isPublic);
+    // Build filter conditions
+    const where: any = {
+      isActive: true, // Only show active entrepreneurships
+    };
 
-    if (queryParams.toString()) {
-      url += `?${queryParams.toString()}`;
-    }
+    if (category) where.category = category;
+    if (municipality) where.municipality = municipality;
+    if (ownerId) where.ownerId = ownerId;
+    if (isPublic !== null) where.isPublic = isPublic === 'true';
 
-    console.log('🔍 API Route - Calling backend URL:', url);
-
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        ...getAuthHeaders()
-      }
+    // Get entrepreneurships from database
+    const entrepreneurships = await prisma.entrepreneurship.findMany({
+      where,
+      include: {
+        owner: {
+          select: {
+            userId: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+            municipality: true,
+            phone: true,
+            avatarUrl: true,
+          }
+        }
+      },
+      orderBy: { createdAt: 'desc' }
     });
 
-    if (!response.ok) {
-      console.error('🔍 API Route - Backend error:', response.status, response.statusText);
-      throw new Error(`Backend responded with status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    console.log('🔍 API Route - Backend response:', data);
-
-    return NextResponse.json(data);
+    console.log('🔍 API: Found', entrepreneurships.length, 'entrepreneurships');
+    return NextResponse.json(entrepreneurships);
   } catch (error) {
-    console.error('🔍 API Route - Error:', error);
+    console.error('Error in entrepreneurships route:', error);
     return NextResponse.json(
       { error: 'Error al cargar emprendimientos' },
       { status: 500 }
@@ -53,30 +56,103 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const backendUrl = process.env.BACKEND_URL || '${BACKEND_URL}';
+    console.log('🔍 API: Received request to create entrepreneurship');
 
-    console.log('🔍 API Route - Creating entrepreneurship with data:', body);
-
-    const response = await fetch(`${backendUrl}/api/entrepreneurship`, {
-      method: 'POST',
-      headers: {
-        ...getAuthHeaders()
-      },
-      body: JSON.stringify(body)
-    });
-
-    if (!response.ok) {
-      console.error('🔍 API Route - Backend error:', response.status, response.statusText);
-      throw new Error(`Backend responded with status: ${response.status}`);
+    // Get auth token
+    const token = request.headers.get('authorization')?.replace('Bearer ', '');
+    if (!token) {
+      return NextResponse.json(
+        { error: 'Authorization required' },
+        { status: 401 }
+      );
     }
 
-    const data = await response.json();
-    console.log('🔍 API Route - Created entrepreneurship:', data);
+    // Verify token
+    const decoded = jwt.verify(token, JWT_SECRET) as any;
+    console.log('🔍 API: Authenticated user:', decoded.username);
 
-    return NextResponse.json(data);
+    const body = await request.json();
+    console.log('🔍 API: Request body:', body);
+
+    const {
+      name,
+      description,
+      category,
+      subcategory,
+      businessStage,
+      logo,
+      images,
+      website,
+      email,
+      phone,
+      address,
+      municipality,
+      department,
+      socialMedia,
+      founded,
+      employees,
+      annualRevenue,
+      businessModel,
+      targetMarket,
+      isPublic = true
+    } = body;
+
+    // Validate required fields
+    if (!name || !description || !category || !businessStage || !municipality) {
+      return NextResponse.json(
+        { error: 'Faltan campos requeridos: name, description, category, businessStage, municipality' },
+        { status: 400 }
+      );
+    }
+
+    // Create entrepreneurship
+    const entrepreneurship = await prisma.entrepreneurship.create({
+      data: {
+        ownerId: decoded.id,
+        name: name.trim(),
+        description: description.trim(),
+        category,
+        subcategory,
+        businessStage,
+        logo,
+        images: images || [],
+        website,
+        email,
+        phone,
+        address,
+        municipality,
+        department: department || 'Cochabamba',
+        socialMedia,
+        founded: founded ? new Date(founded) : null,
+        employees,
+        annualRevenue,
+        businessModel,
+        targetMarket,
+        isPublic,
+        isActive: true,
+        viewsCount: 0,
+        rating: 0,
+        reviewsCount: 0,
+      },
+      include: {
+        owner: {
+          select: {
+            userId: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+            municipality: true,
+            phone: true,
+            avatarUrl: true,
+          }
+        }
+      }
+    });
+
+    console.log('🔍 API: Entrepreneurship created:', entrepreneurship.id);
+    return NextResponse.json(entrepreneurship, { status: 201 });
   } catch (error) {
-    console.error('🔍 API Route - Error creating entrepreneurship:', error);
+    console.error('Error creating entrepreneurship:', error);
     return NextResponse.json(
       { error: 'Error al crear emprendimiento' },
       { status: 500 }

@@ -1,53 +1,74 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAuthHeaders } from "@/lib/api";
+import { prisma } from '@/lib/prisma';
+import jwt from 'jsonwebtoken';
+
+const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-key';
 
 // GET /api/events - List events
 export async function GET(request: NextRequest) {
     try {
+        console.log('🔍 API: Received request for events');
+        
         const { searchParams } = new URL(request.url);
         const municipality = searchParams.get("municipality");
+        const category = searchParams.get("category");
+        const type = searchParams.get("type");
+        const status = searchParams.get("status");
+        const featured = searchParams.get("featured");
+        const createdBy = searchParams.get("createdBy");
 
-        // Forward to backend
-        const backendUrl = process.env.BACKEND_URL || 'http://localhost:3001';
+        // Build filter conditions
+        const where: any = {};
 
-        let url: string;
         if (municipality) {
-            // Use the specific municipality endpoint with municipality in the path
-            url = `${backendUrl}/api/events/by-municipality/${municipality}`;
-        } else {
-            // Use the general events endpoint
-            url = `${backendUrl}/api/events`;
+            // Filter by municipality through creator's profile
+            where.creator = {
+                municipality: municipality
+            };
+        }
+        
+        if (category) where.category = category;
+        if (type) where.type = type;
+        if (status) where.status = status;
+        if (featured !== null) where.featured = featured === 'true';
+        if (createdBy) where.createdBy = createdBy;
+
+        // Default to showing only published events for public access
+        // Unless specifically requesting other statuses
+        if (!status && !createdBy) {
+            where.status = 'PUBLISHED';
         }
 
-        // Add other query parameters (excluding municipality since it's in the URL path)
-        const otherParams = new URLSearchParams();
-        searchParams.forEach((value, key) => {
-            if (key !== 'municipality') {
-                otherParams.append(key, value);
-            }
-        });
-
-        if (otherParams.toString()) {
-            url += `?${otherParams.toString()}`;
-        }
-
-        console.log('🔍 Events API - Forwarding to backend:', url);
-
-        const response = await fetch(url, {
-            headers: {
-                ...getAuthHeaders(),
-                'Content-Type': 'application/json',
+        // Get events from database
+        const events = await prisma.event.findMany({
+            where,
+            include: {
+                creator: {
+                    select: {
+                        userId: true,
+                        firstName: true,
+                        lastName: true,
+                        email: true,
+                        municipality: true,
+                        institutionName: true,
+                        companyName: true,
+                        avatarUrl: true,
+                    }
+                },
+                _count: {
+                    select: {
+                        attendees: true
+                    }
+                }
             },
+            orderBy: [
+                { featured: 'desc' },
+                { date: 'asc' }
+            ]
         });
 
-        if (!response.ok) {
-            console.error('🔍 Events API - Backend error:', response.status, response.statusText);
-            throw new Error(`Backend responded with status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log('🔍 Events API - Backend response:', data);
-        return NextResponse.json(data);
+        console.log('🔍 API: Found', events.length, 'events');
+        return NextResponse.json(events);
     } catch (error) {
         console.error("Error fetching events:", error);
         return NextResponse.json(
@@ -60,9 +81,24 @@ export async function GET(request: NextRequest) {
 // POST /api/events - Create new event
 export async function POST(request: NextRequest) {
     try {
+        console.log('🔍 API: Received request to create event');
+
+        // Get auth token
+        const token = request.headers.get('authorization')?.replace('Bearer ', '');
+        if (!token) {
+            return NextResponse.json(
+                { error: 'Authorization required' },
+                { status: 401 }
+            );
+        }
+
+        // Verify token
+        const decoded = jwt.verify(token, JWT_SECRET) as any;
+        console.log('🔍 API: Authenticated user:', decoded.username);
+
         // Check if it's FormData or JSON
         const contentType = request.headers.get('content-type') || '';
-        let eventData: Record<string, unknown> = {};
+        let eventData: any = {};
 
         if (contentType.includes('multipart/form-data')) {
             // Handle FormData
@@ -79,7 +115,7 @@ export async function POST(request: NextRequest) {
                 category: formData.get('category') as string,
                 location: formData.get('location') as string,
                 maxCapacity: formData.get('maxCapacity') ? parseInt(formData.get('maxCapacity') as string) : undefined,
-                price: formData.get('price') ? parseFloat(formData.get('price') as string) : undefined,
+                price: formData.get('price') ? parseFloat(formData.get('price') as string) : 0,
                 status: formData.get('status') as string || 'DRAFT',
                 featured: formData.get('featured') === 'true',
                 registrationDeadline: formData.get('registrationDeadline') as string,
@@ -94,6 +130,8 @@ export async function POST(request: NextRequest) {
                 } catch {
                     eventData.tags = [];
                 }
+            } else {
+                eventData.tags = [];
             }
 
             const requirements = formData.get('requirements') as string;
@@ -103,6 +141,8 @@ export async function POST(request: NextRequest) {
                 } catch {
                     eventData.requirements = [];
                 }
+            } else {
+                eventData.requirements = [];
             }
 
             const agenda = formData.get('agenda') as string;
@@ -112,6 +152,8 @@ export async function POST(request: NextRequest) {
                 } catch {
                     eventData.agenda = [];
                 }
+            } else {
+                eventData.agenda = [];
             }
 
             const speakers = formData.get('speakers') as string;
@@ -121,6 +163,8 @@ export async function POST(request: NextRequest) {
                 } catch {
                     eventData.speakers = [];
                 }
+            } else {
+                eventData.speakers = [];
             }
 
             // Handle image file if present
@@ -135,25 +179,66 @@ export async function POST(request: NextRequest) {
             eventData = await request.json();
         }
 
-        // Forward to backend
-        const backendUrl = process.env.BACKEND_URL || 'http://localhost:3001';
-        const url = `${backendUrl}/api/events`;
+        console.log('🔍 API: Request body:', eventData);
 
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                ...getAuthHeaders(),
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(eventData),
-        });
-
-        if (!response.ok) {
-            throw new Error(`Backend responded with status: ${response.status}`);
+        // Validate required fields
+        if (!eventData.title || !eventData.organizer || !eventData.description || !eventData.date || !eventData.location) {
+            return NextResponse.json(
+                { error: 'Faltan campos requeridos: title, organizer, description, date, location' },
+                { status: 400 }
+            );
         }
 
-        const data = await response.json();
-        return NextResponse.json(data, { status: response.status });
+        // Create event
+        const event = await prisma.event.create({
+            data: {
+                title: eventData.title.trim(),
+                organizer: eventData.organizer.trim(),
+                description: eventData.description.trim(),
+                date: new Date(eventData.date),
+                time: eventData.time || "Por confirmar",
+                type: eventData.type || 'IN_PERSON',
+                category: eventData.category || 'NETWORKING',
+                location: eventData.location.trim(),
+                maxCapacity: eventData.maxCapacity,
+                price: eventData.price || 0,
+                status: eventData.status || 'DRAFT',
+                imageUrl: eventData.imageUrl,
+                tags: eventData.tags || [],
+                requirements: eventData.requirements || [],
+                agenda: eventData.agenda || [],
+                speakers: eventData.speakers || [],
+                featured: eventData.featured || false,
+                registrationDeadline: eventData.registrationDeadline ? new Date(eventData.registrationDeadline) : null,
+                createdBy: decoded.id,
+                viewsCount: 0,
+                attendeesCount: 0,
+                attendanceRate: 0,
+                publishedAt: eventData.status === 'PUBLISHED' ? new Date() : null,
+            },
+            include: {
+                creator: {
+                    select: {
+                        userId: true,
+                        firstName: true,
+                        lastName: true,
+                        email: true,
+                        municipality: true,
+                        institutionName: true,
+                        companyName: true,
+                        avatarUrl: true,
+                    }
+                },
+                _count: {
+                    select: {
+                        attendees: true
+                    }
+                }
+            }
+        });
+
+        console.log('🔍 API: Event created:', event.id);
+        return NextResponse.json(event, { status: 201 });
     } catch (error) {
         console.error("Error creating event:", error);
         return NextResponse.json(
@@ -161,4 +246,4 @@ export async function POST(request: NextRequest) {
             { status: 500 }
         );
     }
-} 
+}

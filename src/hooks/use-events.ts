@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { useToast } from "./use-toast";
 import { apiCall, getUserFromToken } from "@/lib/api";
+import { EventService } from "@/services/event.service";
 
 export interface Event {
     id: string;
@@ -96,7 +97,7 @@ export function useEvents() {
     const fetchEvents = useCallback(async () => {
         setLoading(true);
         try {
-            const data = await apiCall("/events");
+            const data = await EventService.getAll();
             console.log('🔍 useEvents - Raw data from API:', data);
 
             // Get current user info to check registration status
@@ -169,13 +170,7 @@ export function useEvents() {
                 console.log(`  ${key}: ${value}`);
             }
 
-            const newEvent = await apiCall("/events", {
-                method: "POST",
-                body: formData,
-                headers: {
-                    // No incluir Content-Type para FormData, se establece automáticamente
-                }
-            });
+            const newEvent = await EventService.create(formData);
             setEvents(prev => [...prev, newEvent as Event]);
             toast({
                 title: "Éxito",
@@ -208,13 +203,7 @@ export function useEvents() {
                 }
             });
 
-            const updatedEvent = await apiCall(`/events/${eventId}`, {
-                method: "PUT",
-                body: formData,
-                headers: {
-                    // No incluir Content-Type para FormData, se establece automáticamente
-                }
-            });
+            const updatedEvent = await EventService.update(eventId, formData);
             setEvents(prev => prev.map(event => event.id === eventId ? updatedEvent as Event : event));
             toast({
                 title: "Éxito",
@@ -234,9 +223,7 @@ export function useEvents() {
 
     const deleteEvent = useCallback(async (eventId: string) => {
         try {
-            await apiCall(`/events/${eventId}`, {
-                method: "DELETE",
-            });
+            await EventService.delete(eventId);
             setEvents(prev => prev.filter(event => event.id !== eventId));
             toast({
                 title: "Éxito",
@@ -272,11 +259,9 @@ export function useMyEvents() {
         setLoading(true);
         try {
             // Use the new endpoint that automatically gets municipalityId from token
-            const endpoint = "/events/my-municipality";
+            console.log('🔍 useMyEvents - Getting municipality events from token');
 
-            console.log('🔍 useMyEvents - Calling endpoint:', endpoint);
-
-            const data = await apiCall(endpoint);
+            const data = await EventService.getByMunicipality(''); // Will be handled by API based on token
             // Ensure data is an array, if not, set empty array
             setMyEvents(Array.isArray(data) ? data as Event[] : []);
         } catch (error) {
@@ -308,7 +293,7 @@ export function useMyAttendances() {
     const fetchMyAttendances = useCallback(async () => {
         setLoading(true);
         try {
-            const data = await apiCall("/events/my-attendances");
+            const data = await EventService.getMyAttendances();
             // Ensure data is an array, if not, set empty array
             setMyAttendances(Array.isArray(data) ? data as Event[] : []);
         } catch (error) {
@@ -327,9 +312,7 @@ export function useMyAttendances() {
 
     const attendEvent = useCallback(async (eventId: string) => {
         try {
-            await apiCall(`/events/${eventId}/attend`, {
-                method: "POST",
-            });
+            await EventService.attend(eventId);
             await fetchMyAttendances();
             toast({
                 title: "Éxito",
@@ -348,9 +331,7 @@ export function useMyAttendances() {
 
     const unattendEvent = useCallback(async (eventId: string) => {
         try {
-            await apiCall(`/events/${eventId}/unattend`, {
-                method: "DELETE",
-            });
+            await EventService.unattend(eventId);
             await fetchMyAttendances();
             toast({
                 title: "Éxito",
@@ -390,7 +371,7 @@ export function useEventStats() {
     const fetchStats = useCallback(async () => {
         setLoading(true);
         try {
-            const data = await apiCall("/events/stats");
+            const data = await EventService.getStats();
             setStats(data as EventStats);
         } catch (error) {
             console.error("Error fetching stats:", error);
@@ -421,9 +402,7 @@ export function useMyEventStats() {
         setLoading(true);
         try {
             // Use the new endpoint that automatically gets municipalityId from token
-            const endpoint = "/events/my-municipality";
-
-            const data = await apiCall(endpoint);
+            const data = await EventService.getByMunicipality(''); // Will be handled by API based on token
             // Extract stats from the response
             const eventsData = Array.isArray(data) ? data : ((data as Record<string, unknown>)?.events as Event[] || []);
 
@@ -463,7 +442,7 @@ export function useEventAttendees() {
     const fetchEventAttendees = useCallback(async (eventId: string) => {
         setLoading(true);
         try {
-            const data = await apiCall(`/events/${eventId}/attendees`);
+            const data = await EventService.getAttendees(eventId);
             // Ensure data is an array, if not, set empty array
             setAttendees(Array.isArray(data) ? data as Attendee[] : []);
         } catch (error) {
@@ -482,10 +461,7 @@ export function useEventAttendees() {
 
     const updateAttendeeStatus = useCallback(async (eventId: string, attendeeId: string, status: string) => {
         try {
-            await apiCall(`/events/${eventId}/attendees/${attendeeId}`, {
-                method: "PUT",
-                body: JSON.stringify({ status }),
-            });
+            await EventService.updateAttendeeStatus(eventId, attendeeId, status);
             await fetchEventAttendees(eventId);
             toast({
                 title: "Éxito",

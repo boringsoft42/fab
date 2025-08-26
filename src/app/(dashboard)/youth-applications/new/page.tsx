@@ -63,22 +63,12 @@ export default function NewYouthApplicationPage() {
       return;
     }
 
-    if (!user?.profile?.id) {
-      toast({
-        title: "Error",
-        description: "No se pudo obtener tu perfil de usuario",
-        variant: "destructive",
-      });
-      return;
-    }
-
     setIsSubmitting(true);
 
     try {
       await createApplication.mutateAsync({
         title: formData.title.trim(),
         description: formData.description.trim(),
-        youthProfileId: user.profile.id,
         isPublic: formData.isPublic,
         cvFile: cvFile || undefined,
         coverLetterFile: coverLetterFile || undefined,

@@ -72,7 +72,7 @@ const getMockProfiles = (): Profile[] => [
   },
 ];
 
-export class ProfileService {g
+export class ProfileService {
   static async getAll(): Promise<Profile[]> {
     try {
       console.log("👤 ProfileService.getAll - Attempting API call");

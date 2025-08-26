@@ -85,10 +85,9 @@ export interface Company {
 export interface CreateYouthApplicationRequest {
     title: string;
     description: string;
-    youthProfileId: string;
+    isPublic?: boolean;
     cvUrl?: string;
     coverLetterUrl?: string;
-    isPublic?: boolean;
     cvFile?: File;
     coverLetterFile?: File;
 }
@@ -106,6 +105,7 @@ export interface UpdateYouthApplicationRequest {
 
 export interface SendMessageRequest {
     content: string;
+    senderType: 'YOUTH' | 'COMPANY';
 }
 
 export interface ExpressInterestRequest {
@@ -126,39 +126,19 @@ export class YouthApplicationService {
                 tokenValue: getToken() ? `${getToken()?.substring(0, 20)}...` : 'null'
             });
 
-            const formData = new FormData();
-            formData.append('title', data.title);
-            formData.append('description', data.description);
-            formData.append('youthProfileId', data.youthProfileId);
+            // Create JSON payload instead of FormData
+            const payload = {
+                title: data.title,
+                description: data.description,
+                isPublic: data.isPublic ?? true
+            };
 
-            if (data.isPublic !== undefined) {
-                formData.append('isPublic', data.isPublic.toString());
-            }
-
-            if (data.cvUrl) {
-                formData.append('cvUrl', data.cvUrl);
-            }
-
-            if (data.coverLetterUrl) {
-                formData.append('coverLetterUrl', data.coverLetterUrl);
-            }
-
-            if (data.cvFile) {
-                formData.append('cvFile', data.cvFile);
-            }
-
-            if (data.coverLetterFile) {
-                formData.append('coverLetterFile', data.coverLetterFile);
-            }
-
-            // Para FormData, solo necesitamos el Authorization header, no Content-Type
-            const authHeaders = getAuthHeaders(true); // excludeContentType = true
-            console.log('🔐 YouthApplicationService.createYouthApplication - Auth headers:', authHeaders);
+            console.log('🔐 YouthApplicationService.createYouthApplication - Sending payload:', payload);
 
             const response = await apiCall('/youthapplication', {
                 method: 'POST',
-                headers: authHeaders,
-                body: formData
+                headers: getAuthHeaders(),
+                body: JSON.stringify(payload)
             });
 
             console.log('✅ YouthApplicationService.createYouthApplication - Application created:', response);
@@ -277,7 +257,7 @@ export class YouthApplicationService {
         try {
             console.log('👥 YouthApplicationService.getMessages - Getting messages for application:', applicationId);
 
-            const response = await apiCall(`/youthapplication/${applicationId}/messages`, {
+            const response = await apiCall(`/youthapplication/${applicationId}/message`, {
                 method: 'GET',
                 headers: getAuthHeaders()
             });
@@ -300,7 +280,7 @@ export class YouthApplicationService {
             const response = await apiCall(`/youthapplication/${applicationId}/message`, {
                 method: 'POST',
                 headers: getAuthHeaders(),
-                body: JSON.stringify(data)
+                body: JSON.stringify({ ...data, senderType: data.senderType || 'YOUTH' })
             });
 
             console.log('✅ YouthApplicationService.sendMessage - Message sent:', response);
@@ -318,7 +298,7 @@ export class YouthApplicationService {
         try {
             console.log('👥 YouthApplicationService.getCompanyInterests - Getting company interests for application:', applicationId);
 
-            const response = await apiCall(`/youthapplication/${applicationId}/company-interests`, {
+            const response = await apiCall(`/youthapplication/${applicationId}/company-interest`, {
                 method: 'GET',
                 headers: getAuthHeaders()
             });

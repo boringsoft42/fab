@@ -14,10 +14,11 @@ function verifyToken(token: string) {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { userId: string } }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
   try {
-    console.log('📊 API: Fetching dashboard data for user:', params.userId);
+    const { userId } = await params;
+    console.log('📊 API: Fetching dashboard data for user:', userId);
 
     // Get token from Authorization header
     const authHeader = request.headers.get('Authorization');
@@ -37,8 +38,6 @@ export async function GET(
         { status: 401 }
       );
     }
-
-    const userId = params.userId;
 
     // Get user and profile data
     const user = await prisma.user.findUnique({

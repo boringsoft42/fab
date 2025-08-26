@@ -1,38 +1,62 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { API_BASE } from '@/lib/api';
+import { prisma } from '@/lib/prisma';
+import jwt from 'jsonwebtoken';
+
+const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-key';
 
 // GET: Obtener intereses de empresas en una postulación
 export async function GET(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        console.log('🔍 API: Received request for company interests in youth application:', params.id);
+        const { id } = await params;
+        console.log('🔍 API: Received request for company interests in youth application:', id);
 
-        const url = `${API_BASE}/youthapplication/${params.id}/company-interests`;
-        console.log('🔍 API: Forwarding to backend:', url);
-
-        const response = await fetch(url, {
-            headers: {
-                'Authorization': request.headers.get('authorization') || '',
-                'Content-Type': 'application/json',
-            },
-        });
-
-        console.log('🔍 API: Backend response status:', response.status);
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('🔍 API: Backend error:', errorText);
+        // Get auth token
+        const token = request.headers.get('authorization')?.replace('Bearer ', '');
+        if (!token) {
             return NextResponse.json(
-                { message: `Backend error: ${response.status} ${errorText}` },
-                { status: response.status }
+                { message: 'Authorization required' },
+                { status: 401 }
             );
         }
 
-        const data = await response.json();
-        console.log('🔍 API: Backend data received, interests count:', data.length || 0);
-        return NextResponse.json(data, { status: response.status });
+        // Verify token
+        const decoded = jwt.verify(token, JWT_SECRET) as any;
+        console.log('🔍 API: Authenticated user:', decoded.username);
+
+        // Check if application exists
+        const youthApplication = await prisma.youthApplication.findUnique({
+            where: { id },
+            select: { id: true }
+        });
+
+        if (!youthApplication) {
+            return NextResponse.json(
+                { message: 'Youth application not found' },
+                { status: 404 }
+            );
+        }
+
+        // Get company interests for this application
+        const interests = await prisma.youthApplicationCompanyInterest.findMany({
+            where: { applicationId: id },
+            include: {
+                company: {
+                    select: {
+                        id: true,
+                        name: true,
+                        businessSector: true,
+                        companySize: true
+                    }
+                }
+            },
+            orderBy: { createdAt: 'desc' }
+        });
+
+        console.log('🔍 API: Found', interests.length, 'company interests');
+        return NextResponse.json(interests);
     } catch (error) {
         console.error('Error in get company interests route:', error);
         return NextResponse.json(
@@ -42,43 +66,29 @@ export async function GET(
     }
 }
 
-// POST: Expresar interés de empresa en una postulación
+// POST: Expresar interés de empresa en una postulación (Not fully implemented - requires Company authentication)
 export async function POST(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        console.log('🔍 API: Received request to express company interest in youth application:', params.id);
+        const { id } = await params;
+        console.log('🔍 API: Received request to express company interest in youth application:', id);
 
-        const body = await request.json();
-        console.log('🔍 API: Request body:', body);
-
-        const url = `${API_BASE}/youthapplication/${params.id}/company-interest`;
-        console.log('🔍 API: Forwarding to backend:', url);
-
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Authorization': request.headers.get('authorization') || '',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(body),
-        });
-
-        console.log('🔍 API: Backend response status:', response.status);
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('🔍 API: Backend error:', errorText);
+        // Get auth token
+        const token = request.headers.get('authorization')?.replace('Bearer ', '');
+        if (!token) {
             return NextResponse.json(
-                { message: `Backend error: ${response.status} ${errorText}` },
-                { status: response.status }
+                { message: 'Authorization required' },
+                { status: 401 }
             );
         }
 
-        const data = await response.json();
-        console.log('🔍 API: Backend data received:', data);
-        return NextResponse.json(data, { status: response.status });
+        // Note: This endpoint requires Company role authentication which is not implemented in this phase
+        return NextResponse.json(
+            { message: 'Company interest functionality not implemented in this phase' },
+            { status: 501 }
+        );
     } catch (error) {
         console.error('Error in express company interest route:', error);
         return NextResponse.json(

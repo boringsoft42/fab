@@ -3,9 +3,10 @@ import { API_BASE } from '@/lib/api';
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { applicationId: string; messageId: string } }
+  { params }: { params: Promise<{ applicationId: string; messageId: string }> }
 ) {
   try {
+    const { applicationId, messageId } = await params;
     const token = request.headers.get('authorization');
     
     if (!token) {
@@ -13,7 +14,7 @@ export async function PUT(
     }
 
     const response = await fetch(
-      `${API_BASE}/jobapplication-messages/${params.applicationId}/messages/${params.messageId}/read`,
+      `${API_BASE}/jobapplication-messages/${applicationId}/messages/${messageId}/read`,
       {
         method: 'PUT',
         headers: {

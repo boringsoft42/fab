@@ -2,10 +2,10 @@
 const API_BASE_PROD = process.env.NEXT_PUBLIC_API_BASE_PROD || "https://cemse-back-production.up.railway.app/api";
 const API_BASE_LOCAL = "/api"; // Use local Next.js API routes
 
-// Use local API routes for development since backend is not migrated yet
+// Use local API routes for development - all youth application APIs are implemented in Next.js
 export const API_BASE = API_BASE_LOCAL;
 
-// Backend URL configuration - use local for now
+// Backend URL configuration - use local Next.js server
 export const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3000";
 
 // Utility function to make direct backend calls

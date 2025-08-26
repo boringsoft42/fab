@@ -6,8 +6,13 @@ const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-key';
 
 function verifyToken(token: string) {
   try {
-    return jwt.verify(token, JWT_SECRET) as any;
+    console.log('🔐 Profile API - Verifying token with JWT_SECRET:', JWT_SECRET.substring(0, 10) + '...');
+    console.log('🔐 Profile API - Token to verify:', token.substring(0, 50) + '...');
+    const decoded = jwt.verify(token, JWT_SECRET) as any;
+    console.log('🔐 Profile API - Token verified successfully for user:', decoded.username);
+    return decoded;
   } catch (error) {
+    console.error('🔐 Profile API - Token verification failed:', error);
     return null;
   }
 }

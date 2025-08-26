@@ -1,30 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-// import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/prisma";
+import jwt from 'jsonwebtoken';
+
+const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-key';
 
 // GET /api/cv - Obtener CV del usuario actual
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    console.log('🔍 API: Received request for CV data');
 
-    if (!session?.user?.id) {
+    // Get auth token
+    const token = request.headers.get('authorization')?.replace('Bearer ', '');
+    if (!token) {
       return NextResponse.json(
-        { error: "No autorizado" },
+        { error: 'Authorization required' },
         { status: 401 }
       );
     }
 
+    // Verify token
+    const decoded = jwt.verify(token, JWT_SECRET) as any;
+    console.log('🔍 API: Authenticated user:', decoded.username);
+
     const profile = await prisma.profile.findUnique({
-      where: { userId: session.user.id },
-      include: {
-        user: {
-          select: {
-            email: true,
-            name: true,
-          },
-        },
-      },
+      where: { userId: decoded.id },
     });
 
     if (!profile) {
@@ -39,7 +38,7 @@ export async function GET() {
       personalInfo: {
         firstName: profile.firstName || "",
         lastName: profile.lastName || "",
-        email: profile.email || profile.user?.email || "",
+        email: profile.email || "",
         phone: profile.phone || "",
         address: profile.address || "",
         municipality: profile.municipality || "",
@@ -47,20 +46,51 @@ export async function GET() {
         country: profile.country || "Bolivia",
         birthDate: profile.birthDate,
         gender: profile.gender || "",
+        documentType: profile.documentType || "",
+        documentNumber: profile.documentNumber || "",
       },
       education: {
         level: profile.educationLevel || "",
         institution: profile.currentInstitution || "",
         graduationYear: profile.graduationYear,
         isStudying: profile.isStudying || false,
+        currentDegree: profile.currentDegree || "",
+        universityName: profile.universityName || "",
+        universityStartDate: profile.universityStartDate,
+        universityEndDate: profile.universityEndDate,
+        universityStatus: profile.universityStatus || "",
+        gpa: profile.gpa,
+        academicAchievements: profile.academicAchievements || [],
+        educationHistory: profile.educationHistory || [],
       },
-      skills: profile.skills || [],
-      interests: profile.interests || [],
-      workExperience: profile.workExperience || [],
-      achievements: [], // Se puede expandir con una tabla separada
-      certifications: [], // Se puede expandir con una tabla separada
+      professional: {
+        skills: profile.skills || [],
+        skillsWithLevel: profile.skillsWithLevel || [],
+        interests: profile.interests || [],
+        workExperience: profile.workExperience || [],
+        jobTitle: profile.jobTitle || "",
+        languages: profile.languages || [],
+        websites: profile.websites || [],
+      },
+      additional: {
+        achievements: profile.achievements || [],
+        extracurricularActivities: profile.extracurricularActivities || [],
+        projects: profile.projects || [],
+      },
+      coverLetter: {
+        recipient: profile.coverLetterRecipient || "",
+        subject: profile.coverLetterSubject || "",
+        content: profile.coverLetterContent || "",
+        template: profile.coverLetterTemplate || "default",
+      },
+      metadata: {
+        profileCompletion: profile.profileCompletion || 0,
+        lastUpdated: profile.updatedAt,
+        createdAt: profile.createdAt,
+      }
     };
 
+    console.log('🔍 API: CV data prepared for user:', decoded.username);
     return NextResponse.json(cvData);
   } catch (error) {
     console.error("Error al obtener CV:", error);
@@ -74,17 +104,25 @@ export async function GET() {
 // PUT /api/cv - Actualizar datos del CV
 export async function PUT(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    console.log('🔍 API: Received request to update CV data');
 
-    if (!session?.user?.id) {
+    // Get auth token
+    const token = request.headers.get('authorization')?.replace('Bearer ', '');
+    if (!token) {
       return NextResponse.json(
-        { error: "No autorizado" },
+        { error: 'Authorization required' },
         { status: 401 }
       );
     }
 
+    // Verify token
+    const decoded = jwt.verify(token, JWT_SECRET) as any;
+    console.log('🔍 API: Authenticated user:', decoded.username);
+
     const body = await request.json();
-    const { personalInfo, education, skills, interests, workExperience } = body;
+    console.log('🔍 API: Request body:', body);
+
+    const { personalInfo, education, professional, additional, coverLetter } = body;
 
     const updateData: any = {};
 
@@ -98,8 +136,10 @@ export async function PUT(request: NextRequest) {
       updateData.municipality = personalInfo.municipality;
       updateData.department = personalInfo.department;
       updateData.country = personalInfo.country;
-      updateData.birthDate = personalInfo.birthDate;
+      updateData.birthDate = personalInfo.birthDate ? new Date(personalInfo.birthDate) : null;
       updateData.gender = personalInfo.gender;
+      updateData.documentType = personalInfo.documentType;
+      updateData.documentNumber = personalInfo.documentNumber;
     }
 
     // Actualizar educación
@@ -108,21 +148,61 @@ export async function PUT(request: NextRequest) {
       updateData.currentInstitution = education.institution;
       updateData.graduationYear = education.graduationYear;
       updateData.isStudying = education.isStudying;
+      updateData.currentDegree = education.currentDegree;
+      updateData.universityName = education.universityName;
+      updateData.universityStartDate = education.universityStartDate ? new Date(education.universityStartDate) : null;
+      updateData.universityEndDate = education.universityEndDate ? new Date(education.universityEndDate) : null;
+      updateData.universityStatus = education.universityStatus;
+      updateData.gpa = education.gpa;
+      updateData.academicAchievements = education.academicAchievements;
+      updateData.educationHistory = education.educationHistory;
     }
 
-    // Actualizar habilidades e intereses
-    if (skills) updateData.skills = skills;
-    if (interests) updateData.interests = interests;
-    if (workExperience) updateData.workExperience = workExperience;
+    // Actualizar información profesional
+    if (professional) {
+      if (professional.skills) updateData.skills = professional.skills;
+      if (professional.skillsWithLevel) updateData.skillsWithLevel = professional.skillsWithLevel;
+      if (professional.interests) updateData.interests = professional.interests;
+      if (professional.workExperience) updateData.workExperience = professional.workExperience;
+      if (professional.jobTitle) updateData.jobTitle = professional.jobTitle;
+      if (professional.languages) updateData.languages = professional.languages;
+      if (professional.websites) updateData.websites = professional.websites;
+    }
+
+    // Actualizar información adicional
+    if (additional) {
+      if (additional.achievements) updateData.achievements = additional.achievements;
+      if (additional.extracurricularActivities) updateData.extracurricularActivities = additional.extracurricularActivities;
+      if (additional.projects) updateData.projects = additional.projects;
+    }
+
+    // Actualizar carta de presentación
+    if (coverLetter) {
+      updateData.coverLetterRecipient = coverLetter.recipient;
+      updateData.coverLetterSubject = coverLetter.subject;
+      updateData.coverLetterContent = coverLetter.content;
+      updateData.coverLetterTemplate = coverLetter.template;
+    }
+
+    // Calculate profile completion percentage
+    const completionFields = [
+      updateData.firstName, updateData.lastName, updateData.email, updateData.phone,
+      updateData.municipality, updateData.educationLevel, updateData.skills,
+      updateData.interests
+    ];
+    const completedFields = completionFields.filter(field => field && (Array.isArray(field) ? field.length > 0 : true));
+    updateData.profileCompletion = Math.round((completedFields.length / completionFields.length) * 100);
 
     const updatedProfile = await prisma.profile.update({
-      where: { userId: session.user.id },
+      where: { userId: decoded.id },
       data: updateData,
     });
 
+    console.log('🔍 API: CV updated for user:', decoded.username);
     return NextResponse.json({
       message: "CV actualizado exitosamente",
-      profile: updatedProfile,
+      profileCompletion: updateData.profileCompletion,
+      updatedAt: updatedProfile.updatedAt,
     });
   } catch (error) {
     console.error("Error al actualizar CV:", error);
