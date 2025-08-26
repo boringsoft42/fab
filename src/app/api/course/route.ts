@@ -154,51 +154,31 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
 
-    // Forward all search parameters to backend
-    const url = new URL(`${API_BASE}/course`);
-    searchParams.forEach((value, key) => {
-      url.searchParams.set(key, value);
-    });
-
-    // Add municipality filtering if user is authenticated and is a municipality user
-    const authHeader = request.headers.get('authorization');
-    if (authHeader) {
-      try {
-        // Extract user info from token to check if it's a municipality user
-        // For now, we'll pass the municipalityId if it's provided in the request
-        const municipalityId = searchParams.get('municipalityId');
-        if (municipalityId) {
-          url.searchParams.set('municipalityId', municipalityId);
-        }
-      } catch (error) {
-        console.log('🔍 API: Error parsing auth token for municipality filtering:', error);
-      }
+    // Use mock data for now since we don't have courses in the database yet
+    console.log('🔍 API: Using mock course data');
+    const mockData = getMockCourses();
+    
+    // Apply basic filtering if parameters provided
+    const category = searchParams.get('category');
+    const level = searchParams.get('level');
+    const institutionId = searchParams.get('institutionId');
+    
+    let filteredCourses = mockData.courses;
+    
+    if (category) {
+      filteredCourses = filteredCourses.filter(course => course.category === category);
+    }
+    
+    if (level) {
+      filteredCourses = filteredCourses.filter(course => course.level === level);
+    }
+    
+    if (institutionId) {
+      filteredCourses = filteredCourses.filter(course => course.organization.id === institutionId);
     }
 
-    console.log('🔍 API: Forwarding to backend:', url.toString());
-    console.log('🔍 API: Authorization header:', request.headers.get('authorization') ? 'Present' : 'Missing');
-
-    const response = await fetch(url.toString(), {
-      headers: {
-        'Authorization': request.headers.get('authorization') || '',
-        'Content-Type': 'application/json',
-      },
-    });
-
-    console.log('🔍 API: Backend response status:', response.status);
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('🔍 API: Backend error:', errorText);
-      return NextResponse.json(
-        { message: `Backend error: ${response.status} ${errorText}` },
-        { status: response.status }
-      );
-    }
-
-    const data = await response.json();
-    console.log('🔍 API: Backend data received, courses count:', data.courses?.length || 0);
-    return NextResponse.json(data, { status: response.status });
+    console.log('🔍 API: Returning filtered courses:', filteredCourses.length);
+    return NextResponse.json({ ...mockData, courses: filteredCourses }, { status: 200 });
   } catch (error) {
     console.error('Error in courses route:', error);
 

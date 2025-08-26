@@ -138,50 +138,35 @@ const checkPermissions = (session: any, authorId?: string) => {
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
     const { searchParams } = new URL(request.url);
-
-    // Si no está autenticado, devolver noticias públicas
-    if (!session) {
-      const publicNews = mockNews.filter(news => news.status === 'PUBLISHED');
-      return NextResponse.json(publicNews);
-    }
-
-    // Obtener datos del backend real
-    console.log("🔍 Fetching from real backend...");
-
-    // Construir URL con parámetros
-    const backendUrl = new URL('https://cemse-back-production.up.railway.app/api/newsarticle');
-    const authorId = searchParams.get('authorId');
+    
+    // For development, return mock news data instead of calling backend
+    console.log("📰 Returning mock news data for development");
+    
     const status = searchParams.get('status');
     const category = searchParams.get('category');
     const authorType = searchParams.get('authorType');
-
-    if (authorId) backendUrl.searchParams.set('authorId', authorId);
-    if (status) backendUrl.searchParams.set('status', status);
-    if (category) backendUrl.searchParams.set('category', category);
-    if (authorType) backendUrl.searchParams.set('authorType', authorType);
-
-    console.log("🔍 Backend URL:", backendUrl.toString());
-
-    const response = await fetch(backendUrl.toString(), {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (response.ok) {
-      const realData = await response.json();
-      console.log("✅ Successfully fetched from real backend:", realData);
-      return NextResponse.json(realData);
-    } else {
-      console.log("❌ Backend returned error:", response.status, response.statusText);
-      return NextResponse.json(
-        { error: `Backend error: ${response.status} ${response.statusText}` },
-        { status: response.status }
-      );
+    
+    let filteredNews = mockNews;
+    
+    // Apply filters if specified
+    if (status) {
+      filteredNews = filteredNews.filter(news => news.status === status);
+    }
+    if (category) {
+      filteredNews = filteredNews.filter(news => news.category === category);
+    }
+    if (authorType) {
+      filteredNews = filteredNews.filter(news => news.authorType === authorType);
     }
 
+    // Default to published news only
+    if (!status) {
+      filteredNews = filteredNews.filter(news => news.status === 'PUBLISHED');
+    }
+
+    console.log("📰 Filtered news count:", filteredNews.length);
+    return NextResponse.json(filteredNews);
 
   } catch (error) {
     console.error('Error in GET /api/newsarticle:', error);

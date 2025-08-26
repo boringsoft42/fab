@@ -1,41 +1,85 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { API_BASE } from '@/lib/api';
+import { prisma } from '@/lib/prisma';
+import jwt from 'jsonwebtoken';
+
+const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-key';
+
+function verifyToken(token: string) {
+  try {
+    return jwt.verify(token, JWT_SECRET) as any;
+  } catch (error) {
+    return null;
+  }
+}
 
 export async function GET(request: NextRequest) {
   try {
     console.log('🔍 API: Received request for company search');
-    const { searchParams } = new URL(request.url);
-    
-    // Forward all search parameters to backend
-    const url = new URL(`${API_BASE}/company/search`);
-    searchParams.forEach((value, key) => {
-      url.searchParams.set(key, value);
-    });
 
-    console.log('🔍 API: Forwarding to backend:', url.toString());
-    console.log('🔍 API: Authorization header:', request.headers.get('authorization') ? 'Present' : 'Missing');
-
-    const response = await fetch(url.toString(), {
-      headers: {
-        'Authorization': request.headers.get('authorization') || '',
-        'Content-Type': 'application/json',
-      },
-    });
-
-    console.log('🔍 API: Backend response status:', response.status);
-    
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('🔍 API: Backend error:', errorText);
+    // Get token from Authorization header
+    const authHeader = request.headers.get('Authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return NextResponse.json(
-        { message: `Backend error: ${response.status} ${errorText}` },
-        { status: response.status }
+        { error: 'No token provided' },
+        { status: 401 }
       );
     }
 
-    const data = await response.json();
-    console.log('🔍 API: Backend data received, companies count:', data.companies?.length || 0);
-    return NextResponse.json(data, { status: response.status });
+    const token = authHeader.substring(7);
+    const decoded = verifyToken(token);
+    
+    if (!decoded) {
+      return NextResponse.json(
+        { error: 'Invalid token' },
+        { status: 401 }
+      );
+    }
+
+    const { searchParams } = new URL(request.url);
+    const municipalityId = searchParams.get('municipalityId');
+    const name = searchParams.get('name');
+    const sector = searchParams.get('sector');
+    
+    console.log('🔍 API: Search parameters:', { municipalityId, name, sector });
+
+    // Build query filters
+    const whereClause: any = {
+      isActive: true
+    };
+    
+    if (municipalityId && municipalityId !== '') {
+      whereClause.municipalityId = municipalityId;
+    }
+    
+    if (name) {
+      whereClause.name = {
+        contains: name,
+        mode: 'insensitive'
+      };
+    }
+    
+    if (sector) {
+      whereClause.sector = sector;
+    }
+
+    // Fetch companies from database
+    const companies = await prisma.company.findMany({
+      where: whereClause,
+      include: {
+        municipality: {
+          select: {
+            id: true,
+            name: true
+          }
+        }
+      },
+      orderBy: {
+        name: 'asc'
+      }
+    });
+
+    console.log('🔍 API: Companies found:', companies.length);
+    return NextResponse.json({ companies }, { status: 200 });
   } catch (error) {
     console.error('Error in company search route:', error);
     return NextResponse.json(

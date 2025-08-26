@@ -35,7 +35,7 @@ export function DashboardMunicipality() {
   } = useCurrentMunicipality();
   const { data: companies = [], isLoading: companiesLoading } =
     useCompaniesByMunicipality(municipality?.id || "");
-  const { data: courses = [], isLoading: coursesLoading } = useCourses();
+  const { courses = [], loading: coursesLoading } = useCourses();
   const { data: jobs = [], isLoading: jobsLoading } = useJobOffers();
   const { data: news = [], isLoading: newsLoading } = useNewsArticles();
   const colors = useUserColors();

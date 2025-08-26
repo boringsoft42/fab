@@ -14,33 +14,33 @@ function verifyToken(token: string) {
 
 export async function GET(request: NextRequest) {
   try {
-    console.log('🔍 /api/auth/me - Request received');
-    
-    // Get the authorization header from the request
-    const authHeader = request.headers.get('authorization');
-    console.log('🔍 /api/auth/me - Authorization header:', authHeader);
-    
+    const authHeader = request.headers.get('Authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      console.log('🔍 /api/auth/me - No valid authorization header found');
-      return NextResponse.json({ error: 'No authorization header found' }, { status: 401 });
+      return NextResponse.json(
+        { error: 'No token provided' },
+        { status: 401 }
+      );
     }
 
     const token = authHeader.substring(7);
     const decoded = verifyToken(token);
     
     if (!decoded) {
-      console.log('🔍 /api/auth/me - Invalid token');
-      return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
+      return NextResponse.json(
+        { error: 'Invalid token' },
+        { status: 401 }
+      );
     }
 
-    // Get user from database
     const user = await prisma.user.findUnique({
       where: { id: decoded.id },
     });
 
     if (!user) {
-      console.log('🔍 /api/auth/me - User not found');
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+      return NextResponse.json(
+        { error: 'User not found' },
+        { status: 404 }
+      );
     }
 
     let profile = null;
@@ -58,8 +58,8 @@ export async function GET(request: NextRequest) {
         username: user.username,
         role: user.role,
         isActive: user.isActive,
-        firstName: profile?.firstName || profile?.first_name || '',
-        lastName: profile?.lastName || profile?.last_name || '',
+        firstName: profile?.firstName || '',
+        lastName: profile?.lastName || '',
         email: profile?.email || '',
         phone: profile?.phone || '',
         profilePicture: profile?.avatarUrl || null,
@@ -68,10 +68,12 @@ export async function GET(request: NextRequest) {
       }
     };
 
-    console.log('🔍 /api/auth/me - Returning user data for:', userData.user.username);
     return NextResponse.json(userData);
   } catch (error) {
-    console.error('Error in /api/auth/me:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error('Get user API error:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
   }
 }

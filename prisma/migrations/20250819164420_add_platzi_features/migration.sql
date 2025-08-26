@@ -51,6 +51,11 @@ CREATE INDEX "module_certificates_module_id_idx" ON "module_certificates"("modul
 -- CreateIndex
 CREATE INDEX "module_certificates_student_id_idx" ON "module_certificates"("student_id");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "module_certificates_module_id_student_id_key" ON "module_certificates"("module_id", "student_id");
+
+-- AddForeignKey
+ALTER TABLE "lesson_resources" ADD CONSTRAINT "lesson_resources_lesson_id_fkey" FOREIGN KEY ("lesson_id") REFERENCES "lessons"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "module_certificates" ADD CONSTRAINT "module_certificates_module_id_fkey" FOREIGN KEY ("module_id") REFERENCES "course_modules"("id") ON DELETE CASCADE ON UPDATE CASCADE;

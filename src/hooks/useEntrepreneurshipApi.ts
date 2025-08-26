@@ -197,21 +197,50 @@ export function usePublicEntrepreneurships() {
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    const fetchPublicEntrepreneurships = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        // Usar el método específico para emprendimientos públicos
-        const result = await EntrepreneurshipService.getPublicEntrepreneurships();
-        setData(Array.isArray(result) ? result : result.items || []);
-      } catch (err) {
-        setError(err as Error);
-      } finally {
-        setLoading(false);
+    // Mock data for development - since backend is not yet migrated
+    const mockEntrepreneurships: Entrepreneurship[] = [
+      {
+        id: '1',
+        name: 'EcoTech Solutions',
+        description: 'Soluciones tecnológicas sostenibles para el medio ambiente',
+        category: 'Tecnología Verde',
+        businessStage: 'STARTUP' as any,
+        logo: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=200&h=200&fit=crop&crop=center',
+        images: ['https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=300&fit=crop'],
+        municipality: 'Cochabamba',
+        isPublic: true,
+        isActive: true,
+        rating: 4.5,
+        viewsCount: 120,
+        ownerId: 'user1',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      },
+      {
+        id: '2', 
+        name: 'Artesanías Bolivianas',
+        description: 'Productos artesanales tradicionales con diseño moderno',
+        category: 'Artesanías',
+        businessStage: 'GROWING' as any,
+        logo: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=200&h=200&fit=crop',
+        images: ['https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop'],
+        municipality: 'Cochabamba',
+        isPublic: true,
+        isActive: true,
+        rating: 4.2,
+        viewsCount: 85,
+        ownerId: 'user2',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
       }
-    };
+    ];
 
-    fetchPublicEntrepreneurships();
+    // Simulate API call delay
+    setTimeout(() => {
+      setData(mockEntrepreneurships);
+      setLoading(false);
+      setError(null);
+    }, 1000);
   }, []);
 
   return { data, loading, error };

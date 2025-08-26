@@ -1,57 +1,147 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-// import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/prisma";
+import jwt from 'jsonwebtoken';
 
-// GET /api/profile - Obtener perfil del usuario actual
-export async function GET() {
+const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-key';
+
+function verifyToken(token: string) {
   try {
-    const session = await getServerSession(authOptions);
+    return jwt.verify(token, JWT_SECRET) as any;
+  } catch (error) {
+    return null;
+  }
+}
 
-    if (!session?.user?.id) {
+// GET /api/profile - Get profiles with optional role filtering
+export async function GET(request: NextRequest) {
+  try {
+    console.log('👤 /api/profile - Profile request received');
+
+    // Get token from Authorization header
+    const authHeader = request.headers.get('Authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return NextResponse.json(
-        { error: "No autorizado" },
+        { error: 'No token provided' },
         { status: 401 }
       );
     }
 
-    const profile = await prisma.profile.findUnique({
-      where: { userId: session.user.id },
-      include: {
-        user: {
-          select: {
-            email: true,
-            name: true,
-          },
-        },
-      },
-    });
-
-    if (!profile) {
+    const token = authHeader.substring(7);
+    const decoded = verifyToken(token);
+    
+    if (!decoded) {
       return NextResponse.json(
-        { error: "Perfil no encontrado" },
-        { status: 404 }
+        { error: 'Invalid token' },
+        { status: 401 }
       );
     }
 
-    return NextResponse.json(profile);
+    const { searchParams } = new URL(request.url);
+    const role = searchParams.get('role');
+    
+    console.log('👤 /api/profile - Fetching profiles with role:', role);
+
+    // Build query based on parameters
+    if (role) {
+      // First find users with the specified role
+      const users = await prisma.user.findMany({
+        where: {
+          role: role,
+          isActive: true
+        },
+        select: {
+          id: true,
+          username: true,
+          role: true,
+          isActive: true
+        }
+      });
+
+      // Get user IDs to find their profiles
+      const userIds = users.map(user => user.id);
+      
+      // Find profiles for these users
+      const profiles = await prisma.profile.findMany({
+        where: {
+          userId: {
+            in: userIds
+          }
+        }
+      });
+
+      // Combine profile data with user data
+      const profilesWithUsers = profiles.map(profile => {
+        const user = users.find(u => u.id === profile.userId);
+        return {
+          ...profile,
+          user: user
+        };
+      });
+
+      console.log('👤 /api/profile - Found profiles with role', role, ':', profilesWithUsers.length);
+      return NextResponse.json(profilesWithUsers);
+    } else {
+      // Get current user's profile if no role specified
+      const profile = await prisma.profile.findUnique({
+        where: { userId: decoded.id }
+      });
+
+      if (!profile) {
+        return NextResponse.json(
+          { error: "Profile not found" },
+          { status: 404 }
+        );
+      }
+
+      // Get user data separately
+      const user = await prisma.user.findUnique({
+        where: { id: decoded.id },
+        select: {
+          id: true,
+          username: true,
+          role: true,
+          isActive: true
+        }
+      });
+
+      const profileWithUser = {
+        ...profile,
+        user: user
+      };
+
+      console.log('👤 /api/profile - Found user profile:', profile.id);
+      return NextResponse.json(profileWithUser);
+    }
+
   } catch (error) {
-    console.error("Error al obtener perfil:", error);
+    console.error("Error in /api/profile:", error);
     return NextResponse.json(
-      { error: "Error interno del servidor" },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }
 }
 
-// PUT /api/profile - Actualizar perfil del usuario actual
+// PUT /api/profile - Update current user's profile
 export async function PUT(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    console.log('👤 /api/profile PUT - Profile update request received');
 
-    if (!session?.user?.id) {
+    // Get token from Authorization header
+    const authHeader = request.headers.get('Authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return NextResponse.json(
-        { error: "No autorizado" },
+        { error: 'No token provided' },
+        { status: 401 }
+      );
+    }
+
+    const token = authHeader.substring(7);
+    const decoded = verifyToken(token);
+    
+    if (!decoded) {
+      return NextResponse.json(
+        { error: 'Invalid token' },
         { status: 401 }
       );
     }
@@ -59,18 +149,19 @@ export async function PUT(request: NextRequest) {
     const body = await request.json();
 
     const updatedProfile = await prisma.profile.update({
-      where: { userId: session.user.id },
+      where: { userId: decoded.id },
       data: body,
     });
 
+    console.log('👤 /api/profile PUT - Profile updated:', updatedProfile.id);
     return NextResponse.json({
-      message: "Perfil actualizado exitosamente",
+      message: "Profile updated successfully",
       profile: updatedProfile,
     });
   } catch (error) {
-    console.error("Error al actualizar perfil:", error);
+    console.error("Error updating profile:", error);
     return NextResponse.json(
-      { error: "Error interno del servidor" },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }
