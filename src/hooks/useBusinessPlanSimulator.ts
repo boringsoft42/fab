@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuthContext } from './use-auth';
 import { API_BASE, getAuthHeaders, apiCall } from '@/lib/api';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -172,7 +172,7 @@ export const useBusinessPlanSimulator = () => {
     }
   };
 
-  const fetchPlans = async () => {
+  const fetchPlans = useCallback(async () => {
     try {
       setLoading(true);
       const response = await apiCall('/businessplan');
@@ -192,7 +192,7 @@ export const useBusinessPlanSimulator = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const getPlan = async (planId: string): Promise<{ success: boolean; data?: BusinessPlan; error?: string }> => {
     try {
@@ -319,7 +319,7 @@ export const useBusinessPlanSimulator = () => {
   };
 
   // Analyze triple impact locally
-  const analyzeTripleImpact = (assessment: TripleImpactAssessment): ImpactAnalysis => {
+  const analyzeTripleImpact = useCallback((assessment: TripleImpactAssessment): ImpactAnalysis => {
     const text = JSON.stringify(assessment).toLowerCase();
     
     const economic = text.includes('trabajo') || 
@@ -357,13 +357,13 @@ export const useBusinessPlanSimulator = () => {
       impactScore: Math.round(impactScore),
       recommendations
     };
-  };
+  }, []);
 
   useEffect(() => {
     if (user) {
       fetchPlans();
     }
-  }, [user]);
+  }, [user, fetchPlans]);
 
   return {
     plans,

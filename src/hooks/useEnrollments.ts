@@ -62,7 +62,13 @@ export const useEnrollments = () => {
   useEffect(() => {
     const fetchEnrollments = async () => {
       const data = await loadEnrollments();
-      setEnrollments(data);
+      // Handle response structure: { enrollments: [...] } or direct array
+      const enrollmentsArray = data && typeof data === 'object' && 'enrollments' in data 
+        ? data.enrollments 
+        : Array.isArray(data) 
+        ? data 
+        : [];
+      setEnrollments(enrollmentsArray);
     };
     
     fetchEnrollments();

@@ -1,14 +1,12 @@
 {
   "cleanupPeriodDays": 60,
-  "includeCoAuthoredBy": true,
-  "enableAllProjectMcpServers": true,
   "env": {
     "CLAUDE_CODE_MAX_OUTPUT_TOKENS": "8192",
     "DISABLE_COST_WARNINGS": "0",
     "MAX_THINKING_TOKENS": "32768"
   },
+  "includeCoAuthoredBy": true,
   "permissions": {
-    "defaultMode": "acceptEdits",
     "allow": [
       "Bash(git:*)",
       "Bash(npm:*)",
@@ -25,10 +23,17 @@
       "Edit",
       "Write",
       "MultiEdit",
-      "Task"
+      "Task",
+      "Bash(docker:*)"
     ],
-    "additionalDirectories": ["../docs/", "./PRPs/", "./ai_docs/"]
+    "defaultMode": "acceptEdits",
+    "additionalDirectories": [
+      "../docs/",
+      "./PRPs/",
+      "./ai_docs/"
+    ]
   },
+  "enableAllProjectMcpServers": true,
   "hooks": {
     "PreToolUse": [
       {

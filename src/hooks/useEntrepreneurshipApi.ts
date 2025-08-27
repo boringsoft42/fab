@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { EntrepreneurshipService } from '@/services/entrepreneurship.service';
 import { Entrepreneurship } from '@/types/profile';
+import { useCurrentUser } from '@/hooks/use-current-user';
 
 export const useCreateEntrepreneurship = () => {
   const [loading, setLoading] = useState(false);
@@ -27,12 +28,19 @@ export const useMyEntrepreneurships = () => {
   const [entrepreneurships, setEntrepreneurships] = useState<Entrepreneurship[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { profile } = useCurrentUser();
 
   const fetchMyEntrepreneurships = useCallback(async () => {
+    if (!profile?.id) {
+      setError('User not authenticated');
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     setError(null);
     try {
-      const result = await EntrepreneurshipService.getMyEntrepreneurships();
+      const result = await EntrepreneurshipService.getMyEntrepreneurships(profile.id);
       // El backend devuelve directamente el array, no con propiedad 'items'
       setEntrepreneurships(Array.isArray(result) ? result : result.items || []);
       return result;
@@ -43,7 +51,7 @@ export const useMyEntrepreneurships = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [profile?.id]);
 
   // Auto-fetch on mount
   useEffect(() => {

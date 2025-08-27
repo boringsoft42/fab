@@ -91,7 +91,15 @@ export const useResourcesByCategory = (category: string) => {
 export const usePublicResources = (municipalityId?: string) => {
   return useQuery({
     queryKey: ['resources', 'public', municipalityId],
-    queryFn: () => ResourceService.getAllResources({ municipalityId }),
+    queryFn: async () => {
+      const response = await ResourceService.getAllResources({ municipalityId });
+      // Handle response structure: { success: true, resources: [...] } or direct array
+      if (response && typeof response === 'object' && 'resources' in response) {
+        return response.resources;
+      }
+      // Fallback: return as array if it's already an array
+      return Array.isArray(response) ? response : [];
+    },
     enabled: true,
   });
 };

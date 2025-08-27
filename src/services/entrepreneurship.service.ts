@@ -38,19 +38,15 @@ export class EntrepreneurshipService {
   }
 
   // Get current user's entrepreneurships
-  static async getMyEntrepreneurships() {
+  static async getMyEntrepreneurships(userId?: string) {
     try {
-      console.log('🔍 EntrepreneurshipService.getMyEntrepreneurships - Fetching user entrepreneurships');
+      console.log('🔍 EntrepreneurshipService.getMyEntrepreneurships - Fetching user entrepreneurships for:', userId);
       
-      // Get current user info from auth service first, then filter by ownerId
-      const { user } = await import('./auth.service');
-      const currentUser = user; // This should be populated by auth context
-      
-      if (!currentUser?.id) {
-        throw new Error('User not authenticated');
+      if (!userId) {
+        throw new Error('User ID is required');
       }
       
-      const data = await apiCall(`/entrepreneurship?ownerId=${currentUser.id}`);
+      const data = await apiCall(`/entrepreneurship?ownerId=${userId}`);
       console.log('✅ EntrepreneurshipService.getMyEntrepreneurships - Success:', data);
       return data;
     } catch (error) {
