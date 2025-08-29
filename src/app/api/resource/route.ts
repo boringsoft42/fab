@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateToken } from '@/lib/auth-middleware';
 import { prisma } from '@/lib/prisma';
+import { saveUploadedFile, getMimeType } from '@/lib/file-upload';
 
 // GET /api/resource - Obtener todos los recursos (público)
 export async function GET(request: NextRequest) {
@@ -102,6 +103,7 @@ export async function POST(request: NextRequest) {
     // Verificar si es multipart/form-data (con archivo) o JSON
     const contentType = request.headers.get('content-type') || '';
     console.log('📚 API: Content-Type:', contentType);
+    console.log('📚 API: Request headers:', Object.fromEntries(request.headers.entries()));
 
     let resourceData: any = {};
 
@@ -119,15 +121,37 @@ export async function POST(request: NextRequest) {
       const publishedDate = formData.get('publishedDate') as string;
       const tags = formData.get('tags') as string;
 
+      console.log('📚 API: FormData fields received:', {
+        title, description, type, category, format, author, externalUrl, tags,
+        hasFile: !!file,
+        fileName: file?.name
+      });
+
+      // Handle file upload if present
+      let fileUrl = null;
+      if (file) {
+        console.log('📚 API: Processing file upload:', file.name);
+        try {
+          fileUrl = await saveUploadedFile(file, 'resources');
+          console.log('📚 API: File saved successfully at:', fileUrl);
+        } catch (error) {
+          console.error('📚 API: File upload failed:', error);
+          return NextResponse.json(
+            { success: false, message: 'File upload failed' },
+            { status: 500 }
+          );
+        }
+      }
+
       resourceData = {
         title,
         description,
         type,
         category,
-        format: format || (file ? file.type : 'URL'),
-        author: author || authResult.user?.username || 'Usuario',
-        downloadUrl: externalUrl || (file ? `/uploads/${file.name}` : null),
-        externalUrl: externalUrl,
+        format: format || (file ? getMimeType(file.name) : 'URL'),
+        author: author || (authResult.user?.username) || 'Usuario',
+        downloadUrl: fileUrl || externalUrl || null,
+        externalUrl: externalUrl || null,
         thumbnail: '/images/resources/default.jpg',
         publishedDate: publishedDate ? new Date(publishedDate) : new Date(),
         tags: tags ? tags.split(',').map(t => t.trim()) : [],
@@ -135,14 +159,10 @@ export async function POST(request: NextRequest) {
         rating: 0
       };
 
-      // TODO: Handle file upload to storage service (MinIO, S3, etc.)
-      if (file) {
-        console.log('📚 API: File upload requested but not implemented yet:', file.name);
-      }
-
     } else {
       // Manejar JSON sin archivo
       const body = await request.json();
+      console.log('📚 API: JSON body received:', body);
 
       resourceData = {
         title: body.title,
@@ -150,7 +170,7 @@ export async function POST(request: NextRequest) {
         type: body.type,
         category: body.category,
         format: body.format || 'URL',
-        author: body.author || authResult.user?.username || 'Usuario',
+        author: body.author || (authResult.user?.username) || 'Usuario',
         downloadUrl: body.downloadUrl || body.externalUrl,
         externalUrl: body.externalUrl,
         thumbnail: body.thumbnail || '/images/resources/default.jpg',
@@ -161,8 +181,18 @@ export async function POST(request: NextRequest) {
       };
     }
 
+    // Debug: Log the final resourceData before validation
+    console.log('📚 API: Final resourceData before validation:', resourceData);
+    console.log('📚 API: Validation check:', {
+      hasTitle: !!resourceData.title,
+      hasDescription: !!resourceData.description,
+      hasType: !!resourceData.type,
+      hasCategory: !!resourceData.category
+    });
+
     // Validate required fields
     if (!resourceData.title || !resourceData.description || !resourceData.type || !resourceData.category) {
+      console.log('📚 API: Validation failed - missing required fields');
       return NextResponse.json(
         { success: false, message: 'Missing required fields: title, description, type, category' },
         { status: 400 }

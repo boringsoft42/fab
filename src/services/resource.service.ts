@@ -37,10 +37,21 @@ export class ResourceService {
 
   // Create resource (without file)
   static async createResource(data: any) {
-    return await apiCall('/resource', {
-      method: 'POST',
-      body: JSON.stringify(data)
-    });
+    // If data is FormData, send as-is; otherwise, send as JSON
+    if (data instanceof FormData) {
+      return await apiCall('/resource', {
+        method: 'POST',
+        body: data
+      });
+    } else {
+      return await apiCall('/resource', {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+    }
   }
 
   // Upload resource with file

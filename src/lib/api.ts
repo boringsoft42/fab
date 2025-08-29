@@ -495,7 +495,7 @@ const getMockData = (endpoint: string, options?: RequestInit) => {
   }
 
   // Mock data for events endpoints
-  if (endpoint.includes('/events')) {
+  if (false && endpoint.includes('/events')) {
     // Mock data for events stats
     if (endpoint.includes('/events/stats')) {
       return {

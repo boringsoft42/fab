@@ -109,7 +109,7 @@ export default function ModuleLessonsPage() {
   // Hooks
   const queryClient = useQueryClient();
   const { data: lessonsData, isLoading: lessonsLoading } = useLessons(moduleId);
-  const lessons = lessonsData?.lessons || [];
+  const lessons = (lessonsData as any)?.lessons || [];
   const createLesson = useCreateLesson();
   const updateLesson = useUpdateLesson();
   const deleteLesson = useDeleteLesson();

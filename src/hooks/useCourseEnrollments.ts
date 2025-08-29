@@ -61,8 +61,7 @@ export const useCourseEnrollments = () => {
       const data = await apiCall('/course-enrollments', {
         method: 'POST',
         body: JSON.stringify({
-          courseId,
-          enrollmentDate: new Date().toISOString()
+          courseId
         })
       });
       

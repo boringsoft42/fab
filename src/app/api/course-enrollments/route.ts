@@ -32,7 +32,17 @@ export async function GET(request: NextRequest) {
     
     // If no specific filters, get enrollments for the authenticated user
     if (!courseId && !studentId) {
-      where.studentId = decoded.id;
+      // Get user's profile to use the correct studentId
+      const userProfile = await prisma.profile.findUnique({
+        where: { userId: decoded.id }
+      });
+      
+      if (userProfile) {
+        where.studentId = userProfile.userId;
+      } else {
+        // If no profile found, return empty enrollments
+        return NextResponse.json({ enrollments: [] });
+      }
     }
 
     // Get course enrollments from database
@@ -63,40 +73,7 @@ export async function GET(request: NextRequest) {
       orderBy: { enrolledAt: 'desc' }
     });
 
-    // If no enrollments found in database, return mock data for development
-    if (enrollments.length === 0) {
-      console.log('📚 API: No enrollments found in database, using mock data');
-      const mockEnrollments = [
-        {
-          id: 'enroll_1',
-          courseId: '1',
-          studentId: decoded.id,
-          enrolledAt: new Date().toISOString(),
-          progress: 25,
-          status: 'ACTIVE',
-          completedAt: null,
-          course: {
-            id: '1',
-            title: 'React para Principiantes',
-            description: 'Aprende React desde cero con proyectos prácticos',
-            thumbnail: '/images/react-course.jpg',
-            level: 'BEGINNER',
-            duration: 480,
-            category: 'TECHNICAL_SKILLS',
-            isActive: true,
-          },
-          student: {
-            id: decoded.id,
-            firstName: 'Usuario',
-            lastName: 'Demo',
-            email: decoded.username + '@email.com',
-          }
-        }
-      ];
-
-      console.log('📚 API: Returning', mockEnrollments.length, 'mock enrollments');
-      return NextResponse.json({ enrollments: mockEnrollments });
-    }
+    // Return actual enrollments from database
 
     console.log('📚 API: Found', enrollments.length, 'course enrollments');
     return NextResponse.json({ enrollments });
@@ -136,11 +113,23 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // First, check if the user has a profile
+    const userProfile = await prisma.profile.findUnique({
+      where: { userId: decoded.id }
+    });
+
+    if (!userProfile) {
+      return NextResponse.json(
+        { error: 'Perfil de usuario no encontrado' },
+        { status: 404 }
+      );
+    }
+
     // Check if user is already enrolled
     const existingEnrollment = await prisma.courseEnrollment.findFirst({
       where: {
         courseId,
-        studentId: decoded.id,
+        studentId: userProfile.userId,
       }
     });
 
@@ -155,10 +144,10 @@ export async function POST(request: NextRequest) {
     const enrollment = await prisma.courseEnrollment.create({
       data: {
         courseId,
-        studentId: decoded.id,
+        studentId: userProfile.userId,
         enrolledAt: new Date(),
         progress: 0,
-        status: 'ACTIVE',
+        status: 'ENROLLED',
       },
       include: {
         course: {
@@ -188,8 +177,20 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(enrollment, { status: 201 });
   } catch (error) {
     console.error('Error creating course enrollment:', error);
+    
+    const errorDetails = error instanceof Error ? {
+      message: error.message,
+      code: (error as any).code,
+      meta: (error as any).meta
+    } : { message: 'Unknown error' };
+    
+    console.error('❌ Error details:', errorDetails);
+    
     return NextResponse.json(
-      { error: 'Error al crear inscripción al curso' },
+      { 
+        error: 'Error al crear inscripción al curso',
+        details: process.env.NODE_ENV === 'development' ? errorDetails.message : undefined
+      },
       { status: 500 }
     );
   }

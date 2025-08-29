@@ -47,6 +47,7 @@ import {
   QuestionType,
 } from "@/types/courses";
 import { LessonPlayer } from "@/components/courses/lesson-player";
+import { useCourseEnrollments } from "@/hooks/useCourseEnrollments";
 import confetti from "canvas-confetti";
 import { useRouter } from "next/navigation";
 import {
@@ -112,6 +113,7 @@ function CourseLearnClient({ params }: PageProps) {
   }, [params]);
 
   const { data: courseData, loading, error } = useCourse(courseId);
+  const { enrollments, loading: enrollmentsLoading } = useCourseEnrollments();
 
   const [course, setCourse] = useState<ExtendedCourse | null>(null);
   const [currentModuleId, setCurrentModuleId] = useState<string>("");
@@ -122,6 +124,18 @@ function CourseLearnClient({ params }: PageProps) {
 
   const [showMotivationModal, setShowMotivationModal] = useState(false);
   const [motivationMessage, setMotivationMessage] = useState("");
+
+  // Check if user is enrolled in this course
+  const userEnrollment = enrollments.find(e => e.courseId === courseId);
+  const isEnrolled = !!userEnrollment;
+
+  // Redirect if not enrolled (after loading is complete)
+  useEffect(() => {
+    if (!enrollmentsLoading && !loading && courseId && !isEnrolled) {
+      console.log('❌ User not enrolled in course:', courseId);
+      router.push(`/dashboard/courses/${courseId}?error=not-enrolled`);
+    }
+  }, [enrollmentsLoading, loading, courseId, isEnrolled, router]);
 
   // Update local course state when data is loaded
   useEffect(() => {
@@ -333,7 +347,7 @@ function CourseLearnClient({ params }: PageProps) {
   const currentLesson = getCurrentLesson();
   const currentModule = getCurrentModule();
 
-  if (loading) {
+  if (loading || enrollmentsLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">

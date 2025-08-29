@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { prisma } from "@/lib/prisma";
+import bcrypt from 'bcrypt';
 
 // Helper function to decode JWT token
 function decodeToken(token: string) {
@@ -26,20 +28,7 @@ function decodeToken(token: string) {
   }
 }
 
-// In-memory storage for created municipalities (for development/testing)
-// In production, this would be replaced with proper database storage
-let createdMunicipalities: any[] = [];
 
-// Get stored municipalities from memory
-function getStoredMunicipalities() {
-  return createdMunicipalities;
-}
-
-// Add municipality to storage
-function addMunicipalityToStorage(municipality: any) {
-  createdMunicipalities.push(municipality);
-  console.log("🏛️ Municipality added to storage. Total count:", createdMunicipalities.length);
-}
 
 export async function POST(request: NextRequest) {
   try {
@@ -119,50 +108,119 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Mock validation - in real implementation, check against backend
-    // Check if institution already exists by name
-    // Check if username already exists
-    // Check if email already exists
+    // Get the creator user ID from the token
+    const creatorUserId = decoded.id || "admin123"; // fallback for mock tokens
 
-    // Mock institution creation - in real implementation, call backend API
-    const mockMunicipality = {
-      id: `municipality_${Date.now()}`,
-      name,
-      department,
-      region: region || "",
-      address: address || "",
-      website: website || "",
-      phone: phone || "",
-      institutionType,
-      customType: customType || null,
-      primaryColor: primaryColor || "#1E40AF",
-      secondaryColor: secondaryColor || "#F59E0B",
-      isActive: true,
-      username,
-      email,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      creator: {
-        id: "admin123",
-        username: "superadmin",
-        role: "SUPERADMIN"
+    // Validate unique constraints before creating
+    console.log("🔍 Checking for existing municipality with:", { name, department, username, email });
+    
+    // Check for duplicate name + department combination
+    const existingNameDept = await prisma.municipality.findFirst({
+      where: {
+        AND: [
+          { name: name.trim() },
+          { department: department.trim() }
+        ]
       }
-    };
+    });
 
-    // Store the created municipality in memory so it persists
-    addMunicipalityToStorage(mockMunicipality);
+    if (existingNameDept) {
+      console.log("❌ Found existing municipality with same name and department:", existingNameDept.name);
+      return NextResponse.json(
+        { error: "Ya existe una institución con este nombre en el departamento" },
+        { status: 400 }
+      );
+    }
 
-    // In real implementation, here you would:
-    // 1. Call your backend API to create the institution
-    // 2. Create the user account for the institution
-    // 3. Handle any errors from the backend
+    // Check for duplicate username
+    const existingUsername = await prisma.municipality.findFirst({
+      where: { username: username.trim() }
+    });
 
-    console.log("🏛️ Municipality created successfully:", mockMunicipality.name);
+    if (existingUsername) {
+      console.log("❌ Found existing municipality with same username:", existingUsername.username);
+      return NextResponse.json(
+        { error: "El nombre de usuario ya está en uso" },
+        { status: 400 }
+      );
+    }
+
+    // Check for duplicate email
+    const existingEmail = await prisma.municipality.findFirst({
+      where: { email: email.trim() }
+    });
+
+    if (existingEmail) {
+      console.log("❌ Found existing municipality with same email:", existingEmail.email);
+      return NextResponse.json(
+        { error: "El email ya está registrado" },
+        { status: 400 }
+      );
+    }
+
+    console.log("✅ No conflicts found, proceeding with creation");
+
+    // Hash the password for secure storage
+    const saltRounds = 12;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    // Use database transaction to ensure data consistency
+    const result = await prisma.$transaction(async (tx) => {
+      // Create the municipality record
+      const municipality = await tx.municipality.create({
+        data: {
+          name: name.trim(),
+          department: department.trim(),
+          region: region?.trim() || null,
+          address: address?.trim() || null,
+          website: website?.trim() || null,
+          phone: phone?.trim() || null,
+          institutionType,
+          customType: customType?.trim() || null,
+          primaryColor: primaryColor || "#1E40AF",
+          secondaryColor: secondaryColor || "#F59E0B",
+          username: username.trim(),
+          password: hashedPassword,
+          email: email.trim(),
+          createdBy: creatorUserId,
+          isActive: true
+        },
+        include: {
+          creator: {
+            select: {
+              id: true,
+              username: true,
+              role: true
+            }
+          }
+        }
+      });
+
+      // Create a corresponding user account for authentication
+      const municipalityUser = await tx.user.create({
+        data: {
+          username: username.trim(),
+          password: hashedPassword,
+          role: "MUNICIPAL_GOVERNMENTS", // Map to the correct role
+          isActive: true
+        }
+      });
+
+      console.log("🏛️ Municipality and user created successfully:", {
+        municipalityId: municipality.id,
+        userId: municipalityUser.id,
+        name: municipality.name
+      });
+
+      return municipality;
+    });
+
+    console.log("✅ Municipality creation transaction completed successfully");
 
     return NextResponse.json(
       {
         message: "Institución creada exitosamente",
-        municipality: mockMunicipality,
+        municipality: result,
       },
       { status: 201 }
     );
@@ -219,73 +277,38 @@ export async function GET() {
 
     console.log("✅ GET /api/municipality - Authentication successful");
 
-    // Default mock municipalities (static data)
-    const defaultMunicipalities = [
-      {
-        id: "municipality_1",
-        name: "Municipio de Cochabamba",
-        department: "Cochabamba",
-        region: "Valle",
-        address: "Plaza Principal 14 de Septiembre",
-        website: "https://cochabamba.gob.bo",
-        phone: "+591 4 4222222",
-        institutionType: "MUNICIPALITY",
-        customType: null,
-        primaryColor: "#1E40AF",
-        secondaryColor: "#F59E0B",
-        isActive: true,
-        username: "cochabamba_muni",
-        email: "info@cochabamba.gob.bo",
-        createdAt: "2025-01-15T10:00:00.000Z",
-        updatedAt: "2025-01-15T10:00:00.000Z",
+    // Fetch municipalities from database
+    const municipalities = await prisma.municipality.findMany({
+      include: {
         creator: {
-          id: "admin123",
-          username: "superadmin",
-          role: "SUPERADMIN"
+          select: {
+            id: true,
+            username: true,
+            role: true
+          }
+        },
+        companies: {
+          select: {
+            id: true,
+            name: true,
+            isActive: true
+          }
         }
       },
-      {
-        id: "municipality_2",
-        name: "Municipio de La Paz",
-        department: "La Paz",
-        region: "Altiplano",
-        address: "Plaza Murillo",
-        website: "https://lapaz.gob.bo",
-        phone: "+591 2 2200000",
-        institutionType: "MUNICIPALITY",
-        customType: null,
-        primaryColor: "#DC2626",
-        secondaryColor: "#FCD34D",
-        isActive: true,
-        username: "lapaz_muni",
-        email: "info@lapaz.gob.bo",
-        createdAt: "2025-01-10T10:00:00.000Z",
-        updatedAt: "2025-01-10T10:00:00.000Z",
-        creator: {
-          id: "admin123",
-          username: "superadmin",
-          role: "SUPERADMIN"
-        }
-      }
-    ];
-
-    // Get dynamically created municipalities from storage
-    const dynamicMunicipalities = getStoredMunicipalities();
-    
-    // Combine default municipalities with created ones
-    const allMunicipalities = [...defaultMunicipalities, ...dynamicMunicipalities];
-
-    console.log("🏛️ GET municipalities - Returning data:", {
-      default: defaultMunicipalities.length,
-      created: dynamicMunicipalities.length,
-      total: allMunicipalities.length
+      orderBy: [
+        { isActive: 'desc' },
+        { createdAt: 'desc' }
+      ]
     });
 
-    // In real implementation, here you would:
-    // 1. Call your backend API to get institutions
-    // 2. Handle any errors from the backend
+    console.log("🏛️ GET municipalities - Returning data from database:", {
+      total: municipalities.length,
+      active: municipalities.filter(m => m.isActive).length,
+      inactive: municipalities.filter(m => !m.isActive).length,
+      names: municipalities.map(m => `${m.name} (${m.department})`)
+    });
 
-    return NextResponse.json({ municipalities: allMunicipalities });
+    return NextResponse.json({ municipalities });
   } catch (error) {
     console.error("Error fetching municipalities:", error);
     return NextResponse.json(

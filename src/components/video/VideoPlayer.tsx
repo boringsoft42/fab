@@ -16,7 +16,7 @@ import {
   Settings,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { getVideoUrl } from "@/lib/utils/video-utils";
+import { getVideoUrl, isYouTubeUrl, extractYouTubeId } from "@/lib/utils/video-utils";
 
 interface VideoPlayerProps {
   src: string;
@@ -35,10 +35,15 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   onEnded,
   className,
 }) => {
-  const videoSrc = getVideoUrl(src);
+  const isYouTube = isYouTubeUrl(src);
+  const videoSrc = isYouTube ? src : getVideoUrl(src);
+  const youTubeId = isYouTube ? extractYouTubeId(src) : null;
 
   console.log("🎥 VideoPlayer - Original src:", src);
+  console.log("🎥 VideoPlayer - Is YouTube:", isYouTube);
+  console.log("🎥 VideoPlayer - YouTube ID:", youTubeId);
   console.log("🎥 VideoPlayer - Processed videoSrc:", videoSrc);
+  console.log("🎥 VideoPlayer - Will render iframe:", isYouTube && youTubeId);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -196,11 +201,21 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
     setIsPlaying(false);
     setShowControls(true);
 
-    // Forzar recarga del video element
-    if (videoRef.current) {
+    // Para videos de YouTube, simular la carga completada después de un breve retraso
+    if (isYouTube && youTubeId) {
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+        setIsInitialLoading(false);
+        console.log("🎥 VideoPlayer - YouTube video loaded");
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+
+    // Forzar recarga del video element para videos normales
+    if (videoRef.current && !isYouTube) {
       videoRef.current.load();
     }
-  }, [src]);
+  }, [src, isYouTube, youTubeId]);
 
   // Event listeners
   useEffect(() => {
@@ -432,21 +447,46 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
       }}
     >
       {/* Video Element */}
-      <video
-        ref={videoRef}
-        src={videoSrc}
-        key={videoSrc} // Forzar re-render cuando cambia la fuente
-        className={cn(
-          "w-full h-full object-cover transition-opacity duration-500",
-          isInitialLoading ? "opacity-0" : "opacity-100"
-        )}
-        preload="metadata"
-        playsInline
-        onDoubleClick={toggleFullscreen}
-      />
+      {isYouTube && youTubeId ? (
+        <iframe
+          src={`https://www.youtube.com/embed/${youTubeId}?enablejsapi=1&origin=${typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000'}`}
+          className={cn(
+            "w-full h-full transition-opacity duration-500",
+            isInitialLoading ? "opacity-0" : "opacity-100"
+          )}
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          title={title || "Video"}
+          onLoad={() => {
+            console.log("🎥 VideoPlayer - YouTube iframe loaded");
+            setIsLoading(false);
+            setIsInitialLoading(false);
+          }}
+          onError={(e) => {
+            console.error("🎥 VideoPlayer - YouTube iframe error:", e);
+            setError("Error al cargar el video de YouTube");
+            setIsLoading(false);
+            setIsInitialLoading(false);
+          }}
+        />
+      ) : (
+        <video
+          ref={videoRef}
+          src={videoSrc}
+          key={videoSrc} // Forzar re-render cuando cambia la fuente
+          className={cn(
+            "w-full h-full object-cover transition-opacity duration-500",
+            isInitialLoading ? "opacity-0" : "opacity-100"
+          )}
+          preload="metadata"
+          playsInline
+          onDoubleClick={toggleFullscreen}
+        />
+      )}
 
-      {/* Initial Loading Overlay */}
-      {isInitialLoading && (
+      {/* Initial Loading Overlay - Hidden for YouTube videos */}
+      {!isYouTube && isInitialLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-900 via-purple-900 to-black">
           <div className="text-center">
             <div className="relative mb-6">
@@ -465,8 +505,8 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
         </div>
       )}
 
-      {/* Buffering Overlay */}
-      {isLoading && !isInitialLoading && (
+      {/* Buffering Overlay - Hidden for YouTube videos */}
+      {!isYouTube && isLoading && !isInitialLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
           <div className="text-center">
             <div className="animate-spin rounded-full h-10 w-10 border-3 border-gray-600 border-t-purple-500 mb-3"></div>
@@ -475,8 +515,8 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
         </div>
       )}
 
-      {/* Play Button Overlay */}
-      {!isPlaying && !isLoading && (
+      {/* Play Button Overlay - Hidden for YouTube videos */}
+      {!isYouTube && !isPlaying && !isLoading && (
         <div className="absolute inset-0 flex items-center justify-center z-10">
           <Button
             onClick={togglePlay}
@@ -488,13 +528,14 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
         </div>
       )}
 
-      {/* Controls Overlay */}
-      <div
-        className={cn(
-          "absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/95 via-black/70 to-transparent p-4 transition-opacity duration-300 backdrop-blur-md z-10",
-          showControls ? "opacity-100" : "opacity-0"
-        )}
-      >
+      {/* Controls Overlay - Hidden for YouTube videos */}
+      {!isYouTube && (
+        <div
+          className={cn(
+            "absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/95 via-black/70 to-transparent p-4 transition-opacity duration-300 backdrop-blur-md z-10",
+            showControls ? "opacity-100" : "opacity-0"
+          )}
+        >
         {/* Progress Bar */}
         <div className="relative mb-4">
           <Slider
@@ -633,7 +674,8 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
             </Button>
           </div>
         </div>
-      </div>
+        </div>
+      )}
 
       {/* Title Overlay */}
       {title && (

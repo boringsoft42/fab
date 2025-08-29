@@ -158,7 +158,7 @@ export default function CourseLearningPage() {
                 if (lesson.resources === undefined) {
                   const resourcesResponse = await apiCall(
                     `/lesson/${lesson.id}/resources`
-                  );
+                  ) as any;
                   lesson.resources = resourcesResponse.resources || [];
                 }
 
@@ -166,7 +166,7 @@ export default function CourseLearningPage() {
                 if (lesson.quizzes === undefined) {
                   const quizzesResponse = await apiCall(
                     `/lesson/${lesson.id}/quizzes`
-                  );
+                  ) as any;
                   lesson.quizzes = quizzesResponse.quizzes || [];
                 }
               } catch (err) {
@@ -203,11 +203,15 @@ export default function CourseLearningPage() {
 
           // Actualizar el progreso de lecciones
           const lessonProgressMap: Record<string, boolean> = {};
-          progressData.modules.forEach((module: any) => {
-            module.lessons.forEach((lesson: any) => {
-              lessonProgressMap[lesson.id] = lesson.isCompleted;
+          if (progressData.modules && Array.isArray(progressData.modules)) {
+            progressData.modules.forEach((module: any) => {
+              if (module.lessons && Array.isArray(module.lessons)) {
+                module.lessons.forEach((lesson: any) => {
+                  lessonProgressMap[lesson.id] = lesson.isCompleted;
+                });
+              }
             });
-          });
+          }
           setLessonProgress(lessonProgressMap);
         }
 
@@ -447,7 +451,7 @@ export default function CourseLearningPage() {
           timeSpent: selectedLesson.duration * 60, // Tiempo en segundos
           videoProgress: 1.0, // Video progress completo
         }),
-      });
+      }) as any;
 
       if (response) {
         console.log(
@@ -691,7 +695,19 @@ export default function CourseLearningPage() {
     );
   }
 
-  if (showQuiz && currentQuiz) {
+  if (showQuiz) {
+    // Show loading if quiz is being loaded
+    if (!currentQuiz) {
+      return (
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="text-center">
+            <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+            <p>Cargando quiz...</p>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="min-h-screen bg-gray-50">
         <div className="bg-white border-b sticky top-0 z-10">
@@ -806,16 +822,14 @@ export default function CourseLearningPage() {
                     selectedLesson.videoUrl
                   );
                 })() ? (
-                  <div className="relative border-4 border-red-500 bg-red-100">
-                    <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 text-xs z-50">
-                      DEBUG: Video Player Area
-                    </div>
+                  <>
                     <VideoPlayer
-                      src={selectedLesson.videoUrl}
+                      src={selectedLesson.videoUrl || ''}
                       onProgress={handleVideoProgress}
                       onTimeUpdate={(currentTime) => {
                         // Video time tracking
                       }}
+                      className="w-full h-full"
                     />
 
                     {/* Navegación de Lecciones sobre el Video */}
@@ -853,7 +867,7 @@ export default function CourseLearningPage() {
                         </Button>
                       </div>
                     </div>
-                  </div>
+                  </>
                 ) : (
                   <div className="flex items-center justify-center h-[300px] bg-gradient-to-br from-gray-900 to-black">
                     <div className="text-center text-white">

@@ -72,6 +72,8 @@ export function CreateResourceDialog({ onResourceCreated }: CreateResourceDialog
 
   const onSubmit = async (data: ResourceFormData) => {
     try {
+      console.log('📝 Creating resource with data:', data);
+      
       const resourceData = {
         ...data,
         tags: data.tags ? data.tags.split(',').map(tag => tag.trim()) : [],
@@ -82,19 +84,22 @@ export function CreateResourceDialog({ onResourceCreated }: CreateResourceDialog
         // Create FormData for file upload
         const formData = new FormData();
         formData.append('file', file);
-        Object.entries(resourceData).forEach(([key, value]) => {
-          if (value !== undefined && value !== null) {
-            if (Array.isArray(value)) {
-              formData.append(key, value.join(','));
-            } else {
-              formData.append(key, value.toString());
-            }
-          }
-        });
+        
+        // Append all form fields to FormData
+        formData.append('title', resourceData.title);
+        formData.append('description', resourceData.description);
+        formData.append('type', resourceData.type);
+        formData.append('category', resourceData.category);
+        formData.append('format', resourceData.format);
+        if (resourceData.author) formData.append('author', resourceData.author);
+        if (resourceData.externalUrl) formData.append('externalUrl', resourceData.externalUrl);
+        if (resourceData.tags.length > 0) formData.append('tags', resourceData.tags.join(','));
 
+        console.log('📝 Uploading resource with file:', file.name);
         await createResource(formData);
       } else {
         // Create resource without file
+        console.log('📝 Creating resource without file');
         await createResource(resourceData);
       }
 
@@ -140,7 +145,9 @@ export function CreateResourceDialog({ onResourceCreated }: CreateResourceDialog
         </DialogHeader>
         
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit, (errors) => {
+            console.log('❌ Form validation errors:', errors);
+          })} className="space-y-4">
             <FormField
               control={form.control}
               name="title"
@@ -315,7 +322,11 @@ export function CreateResourceDialog({ onResourceCreated }: CreateResourceDialog
               <Button type="button" variant="outline" onClick={() => setOpen(false)}>
                 Cancelar
               </Button>
-              <Button type="submit" disabled={isPending}>
+              <Button 
+                type="submit" 
+                disabled={isPending}
+                onClick={() => console.log('🔥 Submit button clicked')}
+              >
                 {isPending ? 'Creando...' : 'Crear Recurso'}
               </Button>
             </div>
