@@ -214,34 +214,6 @@ export const useCertificates = () => {
     }
   }, []);
 
-  // Generar certificados faltantes para cursos completados
-  const generateMissingCertificates = useCallback(async (): Promise<boolean> => {
-    try {
-      setLoading(true);
-      setError(null);
-      
-      console.log('🔍 Generating missing certificates...');
-      
-      const response = await apiCall('/certificates/generate-missing', {
-        method: 'POST'
-      });
-      
-      if (response && response.success) {
-        console.log('✅ Missing certificates generated:', response.message);
-        return true;
-      } else {
-        throw new Error('No se pudieron generar los certificados faltantes');
-      }
-    } catch (error) {
-      console.error('Error generating missing certificates:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Error al generar certificados faltantes';
-      setError(errorMessage);
-      return false;
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
   return {
     loading,
     error,
@@ -253,7 +225,6 @@ export const useCertificates = () => {
     getModuleCertificate,
     getCourseCertificate,
     verifyCertificate,
-    generateMissingCertificates,
     setError
   };
 };
