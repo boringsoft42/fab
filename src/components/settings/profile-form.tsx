@@ -2,7 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAuth } from "@/providers/auth-provider";
+import { useAuthContext } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -19,27 +19,27 @@ import { profileFormSchema } from "@/lib/validations/profile";
 import type { ProfileFormValues } from "@/lib/validations/profile";
 
 export function ProfileForm() {
-  const { profile } = useAuth();
+  const { user } = useAuthContext();
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
-      firstName: profile?.firstName || "",
-      lastName: profile?.lastName || "",
+      firstName: user?.firstName || "",
+      lastName: user?.lastName || "",
     },
   });
 
   async function onSubmit(data: ProfileFormValues) {
     try {
-      const response = await fetch(`/api/profile/${profile?.userId}`, {
+      const response = await fetch(`/api/profile/${user?.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || "Failed to update profile");
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || "Failed to update profile");
       }
 
       await response.json(); // Wait for response to be fully read
@@ -51,7 +51,10 @@ export function ProfileForm() {
     } catch (error) {
       toast({
         title: "Error",
-        description: error instanceof Error ? error.message : "Failed to update profile. Please try again.",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Failed to update profile. Please try again.",
         variant: "destructive",
       });
     }
@@ -67,10 +70,15 @@ export function ProfileForm() {
             <FormItem>
               <FormLabel>First Name</FormLabel>
               <FormControl>
-                <Input placeholder="shadcn" {...field} value={field.value ?? ""} />
+                <Input
+                  placeholder="shadcn"
+                  {...field}
+                  value={field.value ?? ""}
+                />
               </FormControl>
               <FormDescription>
-                This is your public display name. It can be your real name or a pseudonym.
+                This is your public display name. It can be your real name or a
+                pseudonym.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -84,7 +92,11 @@ export function ProfileForm() {
             <FormItem>
               <FormLabel>Last Name</FormLabel>
               <FormControl>
-                <Input placeholder="John Doe" {...field} value={field.value ?? ""} />
+                <Input
+                  placeholder="John Doe"
+                  {...field}
+                  value={field.value ?? ""}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -99,4 +111,4 @@ export function ProfileForm() {
       </form>
     </Form>
   );
-} 
+}

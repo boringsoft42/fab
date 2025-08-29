@@ -55,7 +55,7 @@ export default function About() {
               <p className="text-muted-foreground">
                 We envision a world where everyone has the tools and knowledge to
                 cultivate a positive, resilient mindset. Through POSITIVE-Next,
-                we&apos;re making mental fitness accessible and engaging for all.
+                we're making mental fitness accessible and engaging for all.
               </p>
             </BlurFade>
           </ShineBorder>

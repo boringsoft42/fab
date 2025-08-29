@@ -1,20 +1,19 @@
-'use client';
+"use client";
 
-import { useAuth } from "@/providers/auth-provider";
+import { useAuthContext } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export function DashboardHeader() {
-  const { user, signOut } = useAuth();
+  const { user, signOut } = useAuthContext();
   const router = useRouter();
-
   const handleSignOut = async () => {
     try {
       await signOut();
-      router.push('/');
+      router.push("/");
     } catch (error) {
-      console.error('Error signing out:', error);
+      console.error("Error signing out:", error);
     }
   };
 
@@ -37,4 +36,4 @@ export function DashboardHeader() {
       </div>
     </header>
   );
-} 
+}

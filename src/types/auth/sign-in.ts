@@ -6,11 +6,17 @@ export type UserAuthFormProps = HTMLAttributes<HTMLDivElement>;
 
 export const signInFormSchema = object({
   email: string()
-    .min(1, { message: "Please enter your email" })
-    .email({ message: "Invalid email address" }),
+    .min(1, { message: "Por favor ingresa tu usuario" })
+    .min(3, { message: "El usuario debe tener al menos 3 caracteres" }),
   password: string()
-    .min(1, { message: "Please enter your password" })
-    .min(7, { message: "Password must be at least 7 characters long" }),
+    .min(1, { message: "Por favor ingresa tu contraseña" })
+    .min(1, { message: "La contraseña es requerida" }),
 });
 
-export type SignInFormData = z.infer<typeof signInFormSchema>; 
+export type SignInFormData = z.infer<typeof signInFormSchema>;
+
+// Alias for signInFormSchema to maintain compatibility
+export const userAuthFormSchema = signInFormSchema;
+
+// Alias for SignInFormData to maintain compatibility  
+export type UserAuthFormData = SignInFormData; 

@@ -1,7 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
-import prisma from "@/lib/prisma";
 
 export async function GET(
   request: NextRequest,
@@ -10,41 +7,22 @@ export async function GET(
   try {
     const userId = (await params).userId;
 
-    // Create Supabase client with awaited cookies
-    const supabase = createRouteHandlerClient({ cookies });
+    // Return mock profile data for development
+    const mockProfile = {
+      id: "mock-profile-id",
+      userId: userId,
+      firstName: "John",
+      lastName: "Doe",
+      avatarUrl: null,
+      active: true,
+      role: "YOUTH",
+      bio: "Mock user bio",
+      location: "Mock City",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
 
-    // Get the current user's session
-    const {
-      data: { session },
-      error: sessionError,
-    } = await supabase.auth.getSession();
-
-    if (sessionError || !session) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-    }
-
-    // Only allow users to view their own profile (or admin users to view any profile)
-    const currentUser = session.user;
-    const userProfile = await prisma.profile.findUnique({
-      where: { userId: currentUser.id },
-    });
-
-    if (userId !== currentUser.id && userProfile?.role !== "SUPERADMIN") {
-      return NextResponse.json(
-        { error: "Unauthorized to view this profile" },
-        { status: 403 }
-      );
-    }
-
-    const profile = await prisma.profile.findUnique({
-      where: { userId },
-    });
-
-    if (!profile) {
-      return NextResponse.json({ error: "Profile not found" }, { status: 404 });
-    }
-
-    return NextResponse.json({ profile });
+    return NextResponse.json({ profile: mockProfile });
   } catch (error) {
     console.error("Error fetching profile:", error);
     return NextResponse.json(
@@ -60,44 +38,22 @@ export async function PATCH(
 ) {
   try {
     const userId = (await params).userId;
-
-    // Create Supabase client with awaited cookies
-    const supabase = createRouteHandlerClient({ cookies });
-
-    // Get the current user's session
-    const {
-      data: { session },
-      error: sessionError,
-    } = await supabase.auth.getSession();
-
-    if (sessionError || !session) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-    }
-
-    // Only allow users to update their own profile (or admin users to update any profile)
-    const currentUser = session.user;
-    const userProfile = await prisma.profile.findUnique({
-      where: { userId: currentUser.id },
-    });
-
-    if (userId !== currentUser.id && userProfile?.role !== "SUPERADMIN") {
-      return NextResponse.json(
-        { error: "Unauthorized to update this profile" },
-        { status: 403 }
-      );
-    }
-
     const json = await request.json();
 
-    const updatedProfile = await prisma.profile.update({
-      where: { userId },
-      data: {
-        firstName: json.firstName || undefined,
-        lastName: json.lastName || undefined,
-        avatarUrl: json.avatarUrl || undefined,
-        active: json.active !== undefined ? json.active : undefined,
-      },
-    });
+    // Return mock updated profile data for development
+    const updatedProfile = {
+      id: "mock-profile-id",
+      userId: userId,
+      firstName: json.firstName || "John",
+      lastName: json.lastName || "Doe",
+      avatarUrl: json.avatarUrl || null,
+      active: json.active !== undefined ? json.active : true,
+      role: "YOUTH",
+      bio: json.bio || "Mock user bio",
+      location: json.location || "Mock City",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
 
     return NextResponse.json({ profile: updatedProfile });
   } catch (error) {

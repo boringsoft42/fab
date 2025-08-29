@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useAuth } from "@/providers/auth-provider";
+import { useAuthContext } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { LayoutDashboard } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -9,11 +9,13 @@ interface DashboardButtonProps {
   className?: string;
 }
 
-export default function DashboardButton({ className }: DashboardButtonProps = {}) {
-  const { user, isLoading } = useAuth();
+export default function DashboardButton({
+  className,
+}: DashboardButtonProps = {}) {
   const router = useRouter();
+  const { user, loading } = useAuthContext();
 
-  if (isLoading || !user) return null;
+  if (loading || !user) return null;
 
   return (
     <Button
@@ -24,4 +26,4 @@ export default function DashboardButton({ className }: DashboardButtonProps = {}
       Go to Dashboard
     </Button>
   );
-} 
+}

@@ -62,7 +62,7 @@ export function AvatarUpload({
       <div className="relative h-24 w-24">
         {previewUrl || currentAvatarUrl ? (
           <Image
-            src={previewUrl || currentAvatarUrl || ""}
+            src={previewUrl || currentAvatarUrl || "/images/default-avatar.png"}
             alt="Avatar preview"
             fill
             className="rounded-full object-cover"

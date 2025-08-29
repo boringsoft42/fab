@@ -48,9 +48,9 @@ export function ResetPasswordForm({
   className,
   ...props
 }: ResetPasswordFormProps) {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [password, setPassword] = useState("");
-  const router = useRouter();
   const supabase = createClientComponentClient();
 
   const form = useForm<FormValues>({

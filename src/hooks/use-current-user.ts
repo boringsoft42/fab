@@ -1,9 +1,34 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import type { User } from "@supabase/supabase-js";
-import type { Profile } from "@prisma/client";
+import { useEffect } from "react";
+import { useAuthContext } from "@/hooks/use-auth";
+import { UserRole, User } from "@/types/api";
+import { normalizeUserRole } from "@/lib/utils";
+
+type Profile = {
+  id: string;
+  role: UserRole | null;
+  firstName?: string;
+  lastName?: string;
+  profilePicture?: string | null;
+  completionPercentage?: number;
+  primaryColor?: string;
+  secondaryColor?: string;
+  company?: {
+    id: string;
+    name: string;
+    email?: string;
+    phone?: string;
+  };
+  municipality?: {
+    id: string;
+    name: string;
+    department: string;
+    email: string;
+    phone: string;
+    address: string;
+  };
+};
 
 type CurrentUserData = {
   user: User | null;
@@ -14,78 +39,83 @@ type CurrentUserData = {
 };
 
 export function useCurrentUser(): CurrentUserData {
-  const [user, setUser] = useState<User | null>(null);
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-  const supabase = createClientComponentClient();
+  const { user, loading } = useAuthContext();
 
-  const fetchUserData = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      setError(null);
+  console.log('🔍 useCurrentUser: Auth state:', {
+    user: !!user,
+    loading,
+    userId: user?.id,
+    userRole: user?.role,
+    userType: typeof user?.role
+  });
 
-      // Get current user from Supabase
-      const { data: userData, error: userError } =
-        await supabase.auth.getUser();
-
-      if (userError) {
-        throw userError;
-      }
-
-      if (userData.user) {
-        setUser(userData.user);
-
-        // Fetch the user's profile from the API
-        const response = await fetch("/api/profile");
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch profile");
-        }
-
-        const profileData = await response.json();
-        setProfile(profileData);
-      }
-    } catch (err) {
-      console.error("Error fetching user data:", err);
-      setError(err instanceof Error ? err : new Error(String(err)));
-    } finally {
-      setIsLoading(false);
-    }
-  }, [supabase.auth]);
-
+  // Log when user changes
   useEffect(() => {
-    fetchUserData();
+    console.log('🔍 useCurrentUser: User changed:', {
+      user: !!user,
+      userId: user?.id,
+      userRole: user?.role,
+      userType: typeof user?.role
+    });
+  }, [user]);
 
-    // Listen for auth state changes
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED") {
-          if (session) {
-            setUser(session.user);
 
-            // Fetch the user's profile when auth state changes
-            try {
-              const response = await fetch("/api/profile");
-              if (response.ok) {
-                const profileData = await response.json();
-                setProfile(profileData);
-              }
-            } catch (err) {
-              console.error("Error fetching profile:", err);
-            }
-          }
-        } else if (event === "SIGNED_OUT") {
-          setUser(null);
-          setProfile(null);
+
+  // Transform real user to match expected profile structure
+  const profile: Profile | null = user
+    ? {
+      id: user.id,
+      role: (normalizeUserRole(user.role) as UserRole) || null,
+      firstName: user.firstName || user.username || '',
+      lastName: user.lastName || '',
+      profilePicture: user.profilePicture || null,
+      completionPercentage: 0,
+      primaryColor: user.primaryColor,
+      secondaryColor: user.secondaryColor,
+      // Include company information if available
+      ...(user.company && {
+        company: {
+          id: user.company.id,
+          name: user.company.name,
+          email: user.company.email,
+          phone: user.company.phone,
         }
-      }
-    );
+      }),
+      // Include municipality information if available
+      ...(user.municipality && {
+        municipality: {
+          id: user.municipality.id,
+          name: user.municipality.name,
+          department: user.municipality.department,
+          email: user.municipality.email,
+          phone: user.municipality.phone,
+          address: user.municipality.address,
+        }
+      }),
+    }
+    : null;
 
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
-  }, [supabase.auth, fetchUserData]);
+  console.log('🔍 useCurrentUser: Profile:', profile);
+  console.log('🔍 useCurrentUser: Raw user data:', {
+    id: user?.id,
+    role: user?.role,
+    firstName: user?.firstName,
+    lastName: user?.lastName,
+    username: user?.username,
+    profilePicture: user?.profilePicture
+  });
 
-  return { user, profile, isLoading, error, refetch: fetchUserData };
+  const refetch = async () => {
+    // In real app this would refetch from API
+    // For now, just return a resolved promise
+    return Promise.resolve();
+  };
+
+  return {
+    user: user,
+    profile,
+    isLoading: loading,
+    error: null, // No error handling for now
+    refetch,
+  };
 }
