@@ -18,6 +18,7 @@ import {
   Loader2,
   AlertCircle,
   CheckCircle,
+  HelpCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getVideoUrl, isYouTubeUrl } from "@/lib/video-utils";
@@ -169,6 +170,8 @@ export const ModernVideoPlayer: React.FC<ModernVideoPlayerProps> = ({
   const [playbackRate, setPlaybackRate] = useState(1);
   const [showControlsOverlay, setShowControlsOverlay] = useState(true);
   const [showSettings, setShowSettings] = useState(false);
+  const [showVolumeSlider, setShowVolumeSlider] = useState(false);
+  const [showKeyboardHelp, setShowKeyboardHelp] = useState(false);
 
   // Auto-hide controls
   const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -202,10 +205,53 @@ export const ModernVideoPlayer: React.FC<ModernVideoPlayerProps> = ({
   };
 
   // Video event handlers
+  const handleDurationChange = () => {
+    const video = videoRef.current;
+    if (video) {
+      const videoDuration = video.duration;
+      console.log("🎥 ModernVideoPlayer - Duration changed:", videoDuration);
+
+      if (!isNaN(videoDuration) && videoDuration > 0) {
+        setDuration(videoDuration);
+        console.log(
+          "✅ Duration updated to:",
+          videoDuration.toFixed(2),
+          "seconds"
+        );
+      }
+    }
+  };
+
   const handleLoadedMetadata = () => {
     const video = videoRef.current;
     if (video) {
-      setDuration(video.duration);
+      const videoDuration = video.duration;
+      console.log("🎥 ModernVideoPlayer - Metadata loaded:", {
+        duration: videoDuration,
+        isValidDuration: !isNaN(videoDuration) && videoDuration > 0,
+        videoWidth: video.videoWidth,
+        videoHeight: video.videoHeight,
+        readyState: video.readyState,
+      });
+
+      if (!isNaN(videoDuration) && videoDuration > 0) {
+        setDuration(videoDuration);
+        console.log("✅ Duration set to:", videoDuration.toFixed(2), "seconds");
+      } else {
+        console.warn("⚠️ Invalid duration detected:", videoDuration);
+        // Try to get duration again after a short delay
+        setTimeout(() => {
+          if (video.duration && !isNaN(video.duration) && video.duration > 0) {
+            setDuration(video.duration);
+            console.log(
+              "✅ Duration set after retry:",
+              video.duration.toFixed(2),
+              "seconds"
+            );
+          }
+        }, 500);
+      }
+
       setIsLoading(false);
     }
   };
@@ -214,6 +260,18 @@ export const ModernVideoPlayer: React.FC<ModernVideoPlayerProps> = ({
     const video = videoRef.current;
     if (video) {
       setCurrentTime(video.currentTime);
+
+      // Sync play/pause state with actual video state
+      const actuallyPlaying = !video.paused && !video.ended;
+      if (actuallyPlaying !== isPlaying) {
+        console.log("🎥 ModernVideoPlayer - State sync correction:", {
+          reactState: isPlaying,
+          actualState: actuallyPlaying,
+          videoPaused: video.paused,
+          videoEnded: video.ended,
+        });
+        setIsPlaying(actuallyPlaying);
+      }
 
       // Update buffered
       if (video.buffered.length > 0) {
@@ -235,12 +293,14 @@ export const ModernVideoPlayer: React.FC<ModernVideoPlayerProps> = ({
   };
 
   const handlePlay = () => {
+    console.log("🎥 ModernVideoPlayer - Video play event fired");
     setIsPlaying(true);
     hideControlsAfterDelay();
     if (onPlay) onPlay();
   };
 
   const handlePause = () => {
+    console.log("🎥 ModernVideoPlayer - Video pause event fired");
     setIsPlaying(false);
     setShowControlsOverlay(true);
     if (onPause) onPause();
@@ -518,6 +578,19 @@ export const ModernVideoPlayer: React.FC<ModernVideoPlayerProps> = ({
       clearTimeout(waitingTimeoutRef.current);
       waitingTimeoutRef.current = null;
     }
+
+    // Check if we still don't have duration and try to get it
+    const video = videoRef.current;
+    if (video && (duration === 0 || isNaN(duration))) {
+      const videoDuration = video.duration;
+      if (!isNaN(videoDuration) && videoDuration > 0) {
+        console.log(
+          "🎥 ModernVideoPlayer - Getting duration from canplay event:",
+          videoDuration
+        );
+        setDuration(videoDuration);
+      }
+    }
   };
 
   const handleWaiting = () => {
@@ -549,6 +622,19 @@ export const ModernVideoPlayer: React.FC<ModernVideoPlayerProps> = ({
     if (waitingTimeoutRef.current) {
       clearTimeout(waitingTimeoutRef.current);
       waitingTimeoutRef.current = null;
+    }
+
+    // Final check for duration
+    const video = videoRef.current;
+    if (video && (duration === 0 || isNaN(duration))) {
+      const videoDuration = video.duration;
+      if (!isNaN(videoDuration) && videoDuration > 0) {
+        console.log(
+          "🎥 ModernVideoPlayer - Getting duration from canplaythrough event:",
+          videoDuration
+        );
+        setDuration(videoDuration);
+      }
     }
   };
 
@@ -590,7 +676,14 @@ export const ModernVideoPlayer: React.FC<ModernVideoPlayerProps> = ({
   const handleSeeked = () => {
     const video = videoRef.current;
     if (video) {
-      console.log("🎥 ModernVideoPlayer - Video seeked to:", video.currentTime);
+      console.log("🎥 ModernVideoPlayer - Video seeked to:", {
+        currentTime: video.currentTime.toFixed(2),
+        duration: video.duration.toFixed(2),
+        readyState: video.readyState,
+      });
+
+      // Update our state to match the actual video time
+      setCurrentTime(video.currentTime);
 
       // Check if seeking caused any issues
       if (video.error) {
@@ -599,6 +692,8 @@ export const ModernVideoPlayer: React.FC<ModernVideoPlayerProps> = ({
           video.error
         );
         handleError();
+      } else {
+        console.log("✅ Seek completed without errors");
       }
     }
   };
@@ -665,22 +760,93 @@ export const ModernVideoPlayer: React.FC<ModernVideoPlayerProps> = ({
   // Control functions
   const togglePlay = () => {
     const video = videoRef.current;
-    if (!video) return;
+    if (!video) {
+      console.warn("🎥 ModernVideoPlayer - togglePlay: No video element");
+      return;
+    }
+
+    console.log("🎥 ModernVideoPlayer - togglePlay called:", {
+      isPlaying,
+      videoPaused: video.paused,
+      videoCurrentTime: video.currentTime.toFixed(2),
+      videoReadyState: video.readyState,
+    });
 
     if (isPlaying) {
-      video.pause();
+      console.log("🎥 ModernVideoPlayer - Attempting to pause video");
+      try {
+        video.pause();
+        // Force state update if pause doesn't trigger event
+        setTimeout(() => {
+          if (!video.paused) {
+            console.warn("⚠️ Video didn't pause, forcing state update");
+            setIsPlaying(false);
+          }
+        }, 100);
+      } catch (error) {
+        console.error("❌ Failed to pause video:", error);
+        setIsPlaying(false); // Force state update on error
+      }
     } else {
-      video.play().catch(console.error);
+      console.log("🎥 ModernVideoPlayer - Attempting to play video");
+      video.play().catch((error) => {
+        console.error("❌ Failed to play video:", error);
+        setIsPlaying(false); // Ensure state is correct on play failure
+      });
     }
   };
 
   const handleSeek = (value: number[]) => {
     const video = videoRef.current;
-    if (!video || duration === 0) return;
+    if (!video || duration === 0) {
+      console.warn(
+        "🎥 ModernVideoPlayer - Cannot seek: video not ready or duration is 0",
+        {
+          hasVideo: !!video,
+          duration,
+          readyState: video?.readyState,
+        }
+      );
+      return;
+    }
 
-    const newTime = (value[0] / 100) * duration;
-    video.currentTime = newTime;
-    setCurrentTime(newTime);
+    const percentage = value[0];
+    const newTime = Math.max(
+      0,
+      Math.min((percentage / 100) * duration, duration)
+    );
+    const wasPlaying = !video.paused;
+
+    console.log("🎥 ModernVideoPlayer - Seeking to:", {
+      percentage: percentage.toFixed(1),
+      newTime: newTime.toFixed(2),
+      duration: duration.toFixed(2),
+      currentTime: video.currentTime.toFixed(2),
+      wasPlaying,
+    });
+
+    try {
+      video.currentTime = newTime;
+      setCurrentTime(newTime);
+
+      // If video was playing before seeking, resume playback after seek
+      if (wasPlaying) {
+        // Small delay to ensure seek completes before resuming
+        setTimeout(() => {
+          video.play().catch((error) => {
+            console.error("❌ Failed to resume playback after seek:", error);
+          });
+        }, 50);
+      }
+
+      // Show controls when seeking
+      setShowControlsOverlay(true);
+      hideControlsAfterDelay();
+
+      console.log("✅ Seek completed successfully");
+    } catch (error) {
+      console.error("❌ Seek failed:", error);
+    }
   };
 
   const handleVolumeChange = (value: number[]) => {
@@ -688,7 +854,10 @@ export const ModernVideoPlayer: React.FC<ModernVideoPlayerProps> = ({
     if (!video) return;
 
     const newVolume = value[0] / 100;
+    console.log("🎥 ModernVideoPlayer - Volume changed to:", newVolume);
+
     video.volume = newVolume;
+    video.muted = newVolume === 0;
     setVolume(newVolume);
     setIsMuted(newVolume === 0);
   };
@@ -697,10 +866,21 @@ export const ModernVideoPlayer: React.FC<ModernVideoPlayerProps> = ({
     const video = videoRef.current;
     if (!video) return;
 
+    console.log("🎥 ModernVideoPlayer - Toggling mute, current state:", {
+      isMuted,
+      volume,
+    });
+
     if (isMuted) {
-      video.volume = volume || 0.5;
+      // Unmute: restore previous volume or set to 50% if it was 0
+      const restoreVolume = volume > 0 ? volume : 0.5;
+      video.volume = restoreVolume;
+      video.muted = false;
+      setVolume(restoreVolume);
       setIsMuted(false);
     } else {
+      // Mute: save current volume and set to 0
+      video.muted = true;
       video.volume = 0;
       setIsMuted(true);
     }
@@ -708,14 +888,38 @@ export const ModernVideoPlayer: React.FC<ModernVideoPlayerProps> = ({
 
   const skipForward = () => {
     const video = videoRef.current;
-    if (!video) return;
-    video.currentTime = Math.min(video.currentTime + 10, duration);
+    if (!video || duration === 0) return;
+
+    const newTime = Math.min(video.currentTime + 10, duration);
+    video.currentTime = newTime;
+    setCurrentTime(newTime);
+
+    console.log(
+      "🎥 ModernVideoPlayer - Skipped forward 10s to:",
+      newTime.toFixed(2)
+    );
+
+    // Show controls when skipping
+    setShowControlsOverlay(true);
+    hideControlsAfterDelay();
   };
 
   const skipBackward = () => {
     const video = videoRef.current;
     if (!video) return;
-    video.currentTime = Math.max(video.currentTime - 10, 0);
+
+    const newTime = Math.max(video.currentTime - 10, 0);
+    video.currentTime = newTime;
+    setCurrentTime(newTime);
+
+    console.log(
+      "🎥 ModernVideoPlayer - Skipped backward 10s to:",
+      newTime.toFixed(2)
+    );
+
+    // Show controls when skipping
+    setShowControlsOverlay(true);
+    hideControlsAfterDelay();
   };
 
   const changePlaybackRate = (rate: number) => {
@@ -730,16 +934,175 @@ export const ModernVideoPlayer: React.FC<ModernVideoPlayerProps> = ({
     const container = containerRef.current;
     if (!container) return;
 
+    console.log(
+      "🎥 ModernVideoPlayer - Toggling fullscreen, current state:",
+      isFullscreen
+    );
+
     if (!isFullscreen) {
+      // Enter fullscreen with browser compatibility
       if (container.requestFullscreen) {
-        container.requestFullscreen();
+        container.requestFullscreen().catch(console.error);
+      } else if ((container as any).webkitRequestFullscreen) {
+        (container as any).webkitRequestFullscreen();
+      } else if ((container as any).mozRequestFullScreen) {
+        (container as any).mozRequestFullScreen();
+      } else if ((container as any).msRequestFullscreen) {
+        (container as any).msRequestFullscreen();
       }
     } else {
+      // Exit fullscreen with browser compatibility
       if (document.exitFullscreen) {
-        document.exitFullscreen();
+        document.exitFullscreen().catch(console.error);
+      } else if ((document as any).webkitExitFullscreen) {
+        (document as any).webkitExitFullscreen();
+      } else if ((document as any).mozCancelFullScreen) {
+        (document as any).mozCancelFullScreen();
+      } else if ((document as any).msExitFullscreen) {
+        (document as any).msExitFullscreen();
       }
     }
   };
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Only handle if video player is focused or visible
+      if (!containerRef.current) return;
+
+      const video = videoRef.current;
+      if (!video || isYouTube) return;
+
+      // Prevent default for handled keys
+      const handledKeys = [
+        " ",
+        "ArrowLeft",
+        "ArrowRight",
+        "ArrowUp",
+        "ArrowDown",
+        "f",
+        "m",
+        "k",
+      ];
+      if (handledKeys.includes(e.key)) {
+        e.preventDefault();
+      }
+
+      console.log("🎥 ModernVideoPlayer - Key pressed:", e.key);
+
+      switch (e.key) {
+        case " ":
+        case "k":
+          // Spacebar or K to play/pause
+          togglePlay();
+          break;
+        case "ArrowLeft":
+          // Left arrow to skip back 10s
+          skipBackward();
+          break;
+        case "ArrowRight":
+          // Right arrow to skip forward 10s
+          skipForward();
+          break;
+        case "ArrowUp":
+          // Up arrow to increase volume
+          const newVolumeUp = Math.min(1, volume + 0.1);
+          handleVolumeChange([newVolumeUp * 100]);
+          break;
+        case "ArrowDown":
+          // Down arrow to decrease volume
+          const newVolumeDown = Math.max(0, volume - 0.1);
+          handleVolumeChange([newVolumeDown * 100]);
+          break;
+        case "f":
+          // F to toggle fullscreen
+          toggleFullscreen();
+          break;
+        case "m":
+          // M to toggle mute
+          toggleMute();
+          break;
+        case "0":
+        case "1":
+        case "2":
+        case "3":
+        case "4":
+        case "5":
+        case "6":
+        case "7":
+        case "8":
+        case "9":
+          // Number keys to jump to percentage of video
+          const percentage = parseInt(e.key) * 10;
+          if (duration > 0) {
+            const newTime = (percentage / 100) * duration;
+            video.currentTime = newTime;
+            setCurrentTime(newTime);
+          }
+          break;
+      }
+
+      // Show controls when using keyboard
+      setShowControlsOverlay(true);
+      hideControlsAfterDelay();
+    };
+
+    // Add event listener to document for global shortcuts
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [
+    isYouTube,
+    volume,
+    duration,
+    togglePlay,
+    skipBackward,
+    skipForward,
+    handleVolumeChange,
+    toggleFullscreen,
+    toggleMute,
+    hideControlsAfterDelay,
+  ]);
+
+  // Manual duration check when video source changes
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || isYouTube) return;
+
+    // Reset duration when source changes
+    setDuration(0);
+    setCurrentTime(0);
+
+    // Try to get duration periodically until we have it
+    const checkDuration = () => {
+      if (video.duration && !isNaN(video.duration) && video.duration > 0) {
+        console.log(
+          "🎥 ModernVideoPlayer - Manual duration check successful:",
+          video.duration
+        );
+        setDuration(video.duration);
+        return true;
+      }
+      return false;
+    };
+
+    // Check immediately
+    if (!checkDuration()) {
+      // If duration not available, check periodically
+      const interval = setInterval(() => {
+        if (checkDuration()) {
+          clearInterval(interval);
+        }
+      }, 100);
+
+      // Clear interval after 10 seconds to avoid infinite checking
+      setTimeout(() => {
+        clearInterval(interval);
+      }, 10000);
+    }
+  }, [videoSrc, isYouTube]);
 
   // Effects
   useEffect(() => {
@@ -774,6 +1137,7 @@ export const ModernVideoPlayer: React.FC<ModernVideoPlayerProps> = ({
       const video = videoRef.current;
       if (!video) return;
 
+      video.addEventListener("durationchange", handleDurationChange);
       video.addEventListener("loadedmetadata", handleLoadedMetadata);
       video.addEventListener("timeupdate", handleTimeUpdate);
       video.addEventListener("play", handlePlay);
@@ -802,6 +1166,7 @@ export const ModernVideoPlayer: React.FC<ModernVideoPlayerProps> = ({
         waitingTimeoutRef.current = null;
       }
 
+      video.removeEventListener("durationchange", handleDurationChange);
       video.removeEventListener("loadedmetadata", handleLoadedMetadata);
       video.removeEventListener("timeupdate", handleTimeUpdate);
       video.removeEventListener("play", handlePlay);
@@ -823,12 +1188,34 @@ export const ModernVideoPlayer: React.FC<ModernVideoPlayerProps> = ({
 
   useEffect(() => {
     const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
+      const isCurrentlyFullscreen = !!document.fullscreenElement;
+      setIsFullscreen(isCurrentlyFullscreen);
+      console.log(
+        "🎥 ModernVideoPlayer - Fullscreen changed:",
+        isCurrentlyFullscreen
+      );
     };
 
+    // Add multiple fullscreen event listeners for better browser compatibility
     document.addEventListener("fullscreenchange", handleFullscreenChange);
+    document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
+    document.addEventListener("mozfullscreenchange", handleFullscreenChange);
+    document.addEventListener("MSFullscreenChange", handleFullscreenChange);
+
     return () => {
       document.removeEventListener("fullscreenchange", handleFullscreenChange);
+      document.removeEventListener(
+        "webkitfullscreenchange",
+        handleFullscreenChange
+      );
+      document.removeEventListener(
+        "mozfullscreenchange",
+        handleFullscreenChange
+      );
+      document.removeEventListener(
+        "MSFullscreenChange",
+        handleFullscreenChange
+      );
     };
   }, []);
 
@@ -1062,11 +1449,22 @@ export const ModernVideoPlayer: React.FC<ModernVideoPlayerProps> = ({
           ref={videoRef}
           src={videoSrc}
           className="w-full h-full object-cover"
-          preload="auto"
+          preload="metadata"
           playsInline
           crossOrigin="anonymous"
           autoPlay={autoPlay}
+          onClick={togglePlay}
           onDoubleClick={toggleFullscreen}
+          onLoadedData={() => {
+            const video = videoRef.current;
+            if (video) {
+              console.log("🎥 ModernVideoPlayer - Video data loaded:", {
+                duration: video.duration,
+                readyState: video.readyState,
+                networkState: video.networkState,
+              });
+            }
+          }}
         />
       )}
 
@@ -1189,7 +1587,9 @@ export const ModernVideoPlayer: React.FC<ModernVideoPlayerProps> = ({
 
                 <div className="flex justify-between text-xs text-white/80">
                   <span>{formatTime(currentTime)}</span>
-                  <span>{formatTime(duration)}</span>
+                  <span>
+                    {duration > 0 ? formatTime(duration) : "Loading..."}
+                  </span>
                 </div>
               </div>
 
