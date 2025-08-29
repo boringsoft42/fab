@@ -1,7 +1,8 @@
 import { useState, useCallback } from "react";
 import { useToast } from "./use-toast";
-import { apiCall, getUserFromToken } from "@/lib/api";
+import { apiCall } from "@/lib/api";
 import { EventService } from "@/services/event.service";
+import { useCurrentUser } from "./use-current-user";
 
 export interface Event {
     id: string;
@@ -93,6 +94,7 @@ export function useEvents() {
     const [events, setEvents] = useState<Event[]>([]);
     const [loading, setLoading] = useState(false);
     const { toast } = useToast();
+    const { user: currentUser } = useCurrentUser();
 
     const fetchEvents = useCallback(async () => {
         setLoading(true);
@@ -100,8 +102,7 @@ export function useEvents() {
             const data = await EventService.getAll();
             console.log('🔍 useEvents - Raw data from API:', data);
 
-            // Get current user info to check registration status
-            const currentUser = getUserFromToken();
+            // Use current user info to check registration status
             console.log('🔍 useEvents - Current user:', currentUser);
 
             // Handle the new response structure with events array and statistics

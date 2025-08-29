@@ -273,6 +273,7 @@ export function AdaptiveDashboard() {
       );
 
     case "EMPRESAS":
+    case "COMPANIES":
       // Generic dashboard for companies with neutral colors
       return (
         <div className="space-y-6">

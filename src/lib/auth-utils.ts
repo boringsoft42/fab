@@ -1,69 +1,71 @@
-// Utilidades para manejo de autenticación
-import { clearTokens } from './api';
-
 /**
- * Limpia todos los datos de autenticación del localStorage
+ * Limpia todos los datos de autenticación del localStorage y cookies
  */
 export function clearAllAuthData() {
   console.log('🧹 clearAllAuthData - Clearing all authentication data');
   
-  // Limpiar tokens usando la función existente
-  clearTokens();
-  
-  // Limpiar cualquier otro dato relacionado con auth
+  // Clear localStorage data
   const keysToRemove = [
     'token',
-    'refreshToken',
+    'refreshToken', 
     'user',
     'auth',
     'session',
+    'mockUser',
+    'mock-companies-data',
+    'userProfile',
     'app-theme',
-    'ui-theme'
+    'ui-theme',
+    'enable-mock-auth'
   ];
   
   keysToRemove.forEach(key => {
-    if (localStorage.getItem(key)) {
+    if (typeof window !== 'undefined' && localStorage.getItem(key)) {
       console.log(`🧹 clearAllAuthData - Removing ${key} from localStorage`);
       localStorage.removeItem(key);
     }
   });
   
+  // Clear all keys that start with 'mock-' or 'cemse-'
+  if (typeof window !== 'undefined') {
+    const allKeys = Object.keys(localStorage);
+    allKeys.forEach(key => {
+      if (key.startsWith('mock-') || key.startsWith('cemse-')) {
+        console.log(`🧹 clearAllAuthData - Removing mock/app data: ${key}`);
+        localStorage.removeItem(key);
+      }
+    });
+  }
+  
+  // Clear authentication cookies (client-side cleanup)
+  if (typeof window !== 'undefined') {
+    // Clear new auth cookies
+    document.cookie = 'cemse-auth-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Lax;';
+    document.cookie = 'cemse-refresh-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Lax;';
+    
+    // Clear legacy cookies if they exist
+    document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Lax;';
+    document.cookie = 'refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Lax;';
+    document.cookie = 'auth-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Lax;';
+    
+    console.log('🧹 clearAllAuthData - Authentication cookies cleared');
+    
+    // Mark recent logout to prevent auto-login
+    sessionStorage.setItem('recent-logout', Date.now().toString());
+    document.cookie = `recent-logout=${Date.now()}; path=/; max-age=30; SameSite=Lax`;
+  }
+  
   console.log('🧹 clearAllAuthData - All authentication data cleared');
 }
 
 /**
- * Verifica si el token existe y es válido
+ * Cookie-based authentication - token validation handled server-side
+ * This function is kept for compatibility but always returns false since
+ * we can't access httpOnly cookies from client-side JavaScript
  */
 export function isTokenValid(): boolean {
-  const token = localStorage.getItem('token');
-  if (!token) {
-    console.log('🔍 isTokenValid - No token found');
-    return false;
-  }
-  
-  try {
-    // Verificar que el token tenga el formato correcto (3 partes separadas por puntos)
-    const parts = token.split('.');
-    if (parts.length !== 3) {
-      console.log('🔍 isTokenValid - Token format invalid (not 3 parts)');
-      return false;
-    }
-    
-    // Decodificar el payload para verificar la expiración
-    const payload = JSON.parse(atob(parts[1]));
-    const currentTime = Math.floor(Date.now() / 1000);
-    
-    if (payload.exp && payload.exp < currentTime) {
-      console.log('🔍 isTokenValid - Token expired');
-      return false;
-    }
-    
-    console.log('🔍 isTokenValid - Token appears valid');
-    return true;
-  } catch (error) {
-    console.log('🔍 isTokenValid - Error validating token:', error);
-    return false;
-  }
+  console.log('🔍 isTokenValid - Cookie-based auth: tokens are httpOnly and not accessible from client');
+  return false;
 }
 
 /**
@@ -73,8 +75,8 @@ export function forceLogout() {
   console.log('🚪 forceLogout - Forcing logout');
   clearAllAuthData();
   
-  // Redirigir a la página de login
+  // Redirigir a la página principal
   if (typeof window !== 'undefined') {
-    window.location.href = '/login';
+    window.location.href = '/';
   }
 }

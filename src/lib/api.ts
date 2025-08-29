@@ -29,32 +29,21 @@ export const backendCall = async (endpoint: string, options: RequestInit = {}) =
   return response.json();
 };
 
-// Token management
-export const setTokens = (accessToken: string, refreshToken: string) => {
-  if (typeof window !== 'undefined') {
-    localStorage.setItem("token", accessToken);
-    localStorage.setItem("refreshToken", refreshToken);
-  }
-};
+// Cookie-based authentication - tokens are managed via httpOnly cookies
+// No client-side token management needed
 
-export const getToken = () => {
-  if (typeof window !== 'undefined') {
-    return localStorage.getItem("token");
-  }
+// Legacy token functions for backward compatibility (deprecated)
+export const getToken = (): string | null => {
+  console.warn("getToken is deprecated - use cookie-based authentication");
   return null;
 };
 
-export const getRefreshToken = () => {
+export const clearTokens = (): void => {
+  console.warn("clearTokens is deprecated - use clearAllAuthData instead");
+  // For compatibility, still clear localStorage tokens if they exist
   if (typeof window !== 'undefined') {
-    return localStorage.getItem("refreshToken");
-  }
-  return null;
-};
-
-export const clearTokens = () => {
-  if (typeof window !== 'undefined') {
-    localStorage.removeItem("token");
-    localStorage.removeItem("refreshToken");
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
   }
 };
 
@@ -78,48 +67,33 @@ export const decodeToken = (token: string): Record<string, unknown> | null => {
   }
 };
 
-// Function to get user info from token
+// Function to get user info from token (cookie-based authentication)
+// Note: This function is deprecated as we use cookie-based authentication
+// User info should be retrieved from API endpoints like /api/auth/me
 export const getUserFromToken = (): {
   id?: string;
   role?: string;
   municipalityId?: string;
 } | null => {
-  const token = getToken();
-  if (!token) return null;
-
-  const decoded = decodeToken(token);
-  if (!decoded) return null;
-
-  const role = (decoded.role || decoded.type) as string;
-  const userId = decoded.id as string;
-
-  // For municipality users, the ID is the municipality ID
-  // For other users, we need to get the municipality ID from their profile
-  const municipalityId = role === 'GOBIERNOS_MUNICIPALES' ? userId : decoded.municipalityId as string;
-
-  return {
-    id: userId,
-    role: role,
-    municipalityId: municipalityId,
-  };
+  // With cookie-based authentication, we cannot access tokens on client-side
+  // This function should not be used. Use API calls to get user info instead.
+  console.warn("getUserFromToken is deprecated - use API endpoints to get user info");
+  return null;
 };
 
-// Check if user is authenticated
+// Check if user is authenticated (cookie-based authentication)
+// Note: This function is deprecated as we use cookie-based authentication
+// Authentication should be checked via API endpoints
 export const isAuthenticated = () => {
-  const token = getToken();
-  console.log("🔐 isAuthenticated - Token exists:", !!token);
-  return !!token;
+  // With cookie-based authentication, we cannot reliably check auth status on client-side
+  // This should be checked via API calls instead
+  console.warn("isAuthenticated is deprecated - use API endpoints to check authentication");
+  return true; // Assume authenticated, let API endpoints handle auth validation
 };
 
-// Get authentication headers
+// Get basic headers for API calls - authentication handled by cookies
 export const getAuthHeaders = (excludeContentType = false) => {
-  const token = getToken();
-  console.log("🔐 getAuthHeaders - Token exists:", !!token);
-  console.log(
-    "🔐 getAuthHeaders - Token value:",
-    token ? `${token.substring(0, 20)}...` : "null"
-  );
-  console.log("🔐 getAuthHeaders - Full token:", token);
+  console.log("🔐 getAuthHeaders - Using cookie-based authentication");
 
   const headers: Record<string, string> = {};
 
@@ -128,75 +102,81 @@ export const getAuthHeaders = (excludeContentType = false) => {
     headers['Content-Type'] = 'application/json';
   }
 
-  // Add authorization header if token exists
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
-
-  console.log("🔐 getAuthHeaders - Final headers:", headers);
-  console.log(
-    "🔐 getAuthHeaders - Authorization header:",
-    headers.Authorization
-  );
+  console.log("🔐 getAuthHeaders - Headers (no manual auth needed):", headers);
   return headers;
 };
 
-// Refresh token function
-export const refreshToken = async () => {
-  const refreshTokenValue = getRefreshToken();
-  if (!refreshTokenValue) {
-    throw new Error("No refresh token available");
-  }
+// Cookie-based authentication doesn't require manual token refresh
 
-  try {
-    const response = await fetch(`${BACKEND_URL}/auth/refresh`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ refreshToken: refreshTokenValue }),
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to refresh token");
-    }
-
-    const data = await response.json();
-    setTokens(data.token, data.refreshToken);
-    return data.token;
-  } catch (error) {
-    clearTokens();
-    // Don't redirect automatically, let the calling code handle it
-    throw error;
-  }
-};
-
-// Enhanced API call function with better error handling
+// Enhanced API call function with cookie-based authentication
 export const apiCall = async (
   endpoint: string,
   options: RequestInit = {}
 ): Promise<unknown> => {
   try {
-    // Always get fresh auth headers
-    const authHeaders = getAuthHeaders(options.body instanceof FormData);
-
-    // Ensure we have a token for protected endpoints
-    const token = getToken();
-    const isProtectedEndpoint = !endpoint.includes('/auth/login') &&
-      !endpoint.includes('/auth/register') &&
-      !endpoint.includes('/public');
-
-    if (isProtectedEndpoint && !token) {
-      console.error('🔐 apiCall - No token available for protected endpoint:', endpoint);
-      throw new Error('Authentication required');
-    }
-
     // Build headers - don't include Content-Type for FormData
     const headers: Record<string, string> = {};
 
-    // Add auth headers (excluding Content-Type for FormData)
-    if (authHeaders.Authorization) {
-      headers['Authorization'] = authHeaders.Authorization;
+    // For external backend API calls, we need to extract JWT token from cookies
+    // and send it as Bearer token in Authorization header
+    const isExternalAPI = !endpoint.startsWith('/api/');
+    
+    if (isExternalAPI) {
+      console.log("🔐 apiCall - External API call detected, extracting JWT token from cookies");
+      
+      // Extract JWT token from httpOnly cookies via a server-side call
+      try {
+        const tokenResponse = await fetch('/api/auth/get-token', {
+          method: 'GET',
+          credentials: 'include'
+        });
+        
+        if (tokenResponse.ok) {
+          const { token } = await tokenResponse.json();
+          if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+            console.log("🔐 apiCall - Added JWT Bearer token to Authorization header");
+          }
+        }
+      } catch (error) {
+        console.error("🔐 apiCall - Failed to get JWT token for external API:", error);
+      }
+    } else {
+      // For local Next.js API routes, also try to get JWT token for consistency
+      console.log("🔐 apiCall - Local API call detected, extracting JWT token for auth consistency");
+      
+      try {
+        const tokenResponse = await fetch('/api/auth/get-token', {
+          method: 'GET',
+          credentials: 'include'
+        });
+        
+        if (tokenResponse.ok) {
+          const { token } = await tokenResponse.json();
+          if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+            console.log("🔐 apiCall - Added JWT Bearer token to local API call");
+          }
+        } else {
+          console.log("🔐 apiCall - No JWT token available for local API call");
+        }
+      } catch (error) {
+        console.log("🔐 apiCall - Could not get JWT token for local API call:", error);
+      }
+    }
+    
+    // Debug cookie information
+    if (typeof document !== 'undefined') {
+      console.log("🔐 apiCall - All cookies:", document.cookie);
+      const cookies = document.cookie.split(';');
+      const authCookie = cookies.find(cookie => 
+        cookie.trim().startsWith('cemse-auth-token=')
+      );
+      console.log("🔐 apiCall - Auth cookie found:", authCookie ? 'YES' : 'NO');
+      
+      // Since cookies are httpOnly, they won't show in document.cookie
+      // but they should still be sent with the request
+      console.log("🔐 apiCall - Note: Auth cookies are httpOnly and won't show in document.cookie");
     }
 
     // Add other headers from options, but exclude Content-Type for FormData
@@ -216,81 +196,47 @@ export const apiCall = async (
 
     const fullUrl = `${API_BASE}${endpoint}`;
 
-    console.log("🔐 apiCall - Starting request...");
-    console.log("🔐 apiCall - API_BASE:", API_BASE);
-    console.log("🔐 apiCall - endpoint:", endpoint);
-    console.log("🔐 apiCall - Full URL:", fullUrl);
-    console.log("🔐 apiCall - Auth headers from getAuthHeaders:", authHeaders);
-    console.log("🔐 apiCall - Options headers:", options.headers);
-    console.log("🔐 apiCall - Final headers being sent:", headers);
-    console.log("🔐 apiCall - Content-Type in final headers:", headers['Content-Type'] || 'NOT SET (will be set by browser for FormData)');
-    console.log("🔐 apiCall - Authorization header in final headers:", (headers as Record<string, string>).Authorization);
-    console.log("🔐 apiCall - Token present:", !!token);
-    console.log("🔐 apiCall - Is protected endpoint:", isProtectedEndpoint);
-    console.log("🔐 apiCall - Body type:", options.body instanceof FormData ? "FormData" : typeof options.body);
-    if (options.body instanceof FormData) {
-      console.log("🔐 apiCall - FormData entries:");
-      for (const [key, value] of (options.body as FormData).entries()) {
-        console.log(`  ${key}: ${value instanceof File ? `File: ${value.name} (${value.size} bytes)` : value}`);
-      }
-    }
+    console.log("🔐 apiCall - Making request to:", fullUrl);
+    console.log("🔐 apiCall - Using cookie-based authentication");
+    console.log("🔐 apiCall - Headers:", headers);
+    console.log("🔐 apiCall - Method:", options.method || 'GET');
+    console.log("🔐 apiCall - Credentials: include");
+    console.log("🔐 apiCall - Document cookies:", typeof document !== 'undefined' ? document.cookie : 'Server-side');
 
     const response = await fetch(fullUrl, {
       ...options,
       headers,
+      credentials: 'include', // Important: Include cookies for authentication
     });
 
     console.log("🔐 apiCall - Response status:", response.status);
-    console.log("🔐 apiCall - Response URL:", response.url);
-
-    if (response.status === 401) {
-      console.log("🔐 apiCall - Received 401, attempting token refresh");
-      // Try to refresh token
-      try {
-        await refreshToken();
-        // Retry the original request with new token
-        const newAuthHeaders = getAuthHeaders(options.body instanceof FormData);
-        // Build retry headers - don't include Content-Type for FormData
-        const retryHeaders: Record<string, string> = {};
-
-        // Add auth headers (excluding Content-Type for FormData)
-        if (newAuthHeaders.Authorization) {
-          retryHeaders['Authorization'] = newAuthHeaders.Authorization;
-        }
-
-        // Add other headers from options, but exclude Content-Type for FormData
-        if (options.headers) {
-          const optionsHeaders = options.headers as Record<string, string>;
-          Object.keys(optionsHeaders).forEach(key => {
-            if (!(options.body instanceof FormData) || key.toLowerCase() !== 'content-type') {
-              retryHeaders[key] = optionsHeaders[key];
-            }
-          });
-        }
-
-        // Only add Content-Type for non-FormData requests
-        if (!(options.body instanceof FormData)) {
-          retryHeaders['Content-Type'] = 'application/json';
-        }
-
-        const retryResponse = await fetch(fullUrl, {
-          ...options,
-          headers: retryHeaders
-        });
-
-        if (!retryResponse.ok) {
-          throw new Error(`HTTP error! status: ${retryResponse.status}`);
-        }
-
-        return await retryResponse.json();
-      } catch {
-        // Refresh failed, clear tokens but don't redirect automatically
-        clearTokens();
-        throw new Error("Authentication failed");
-      }
-    }
+    console.log("🔐 apiCall - Using cookie-based authentication");
 
     if (!response.ok) {
+      if (response.status === 401) {
+        console.log("🔐 apiCall - Received 401, authentication failed");
+        throw new Error("Authentication failed");
+      }
+      
+      // For 400 and 500 errors, try to get the specific error message from response
+      if (response.status === 400 || response.status === 500) {
+        try {
+          const errorData = await response.json();
+          const errorMessage = errorData.error || errorData.message || `HTTP error! status: ${response.status}`;
+          console.error(`🔐 apiCall - ${response.status} error details:`, errorData);
+          
+          // Log debug information if available
+          if (errorData.debug) {
+            console.error(`🔐 apiCall - Debug info:`, errorData.debug);
+          }
+          
+          throw new Error(errorMessage);
+        } catch (parseError) {
+          console.error(`🔐 apiCall - Could not parse ${response.status} error response:`, parseError);
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+      }
+      
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
@@ -301,16 +247,18 @@ export const apiCall = async (
     // If backend is not available, return mock data
     if (error instanceof Error && error.message.includes('fetch failed')) {
       console.log("🔐 apiCall - Backend not available, returning mock data for:", endpoint);
-      return getMockData(endpoint);
+      return getMockData(endpoint, options);
     }
 
     throw error;
   }
 };
 
+// Mock data persistence helpers - removed mock companies data
+
 // Mock data function
-const getMockData = (endpoint: string) => {
-  console.log("🔐 getMockData - Generating mock data for:", endpoint);
+const getMockData = (endpoint: string, options?: RequestInit) => {
+  console.log("🔐 getMockData - Generating mock data for:", endpoint, options?.method || 'GET');
 
   // Mock data for different endpoints
   if (endpoint.includes('/joboffer')) {
@@ -343,129 +291,21 @@ const getMockData = (endpoint: string) => {
   }
 
   if (endpoint.includes('/company')) {
-    // Mock data for company statistics
+    // No mock data for companies - return empty results
+    console.log("🔐 getMockData - No mock data for companies, returning empty results");
+    
     if (endpoint.includes('/company/stats')) {
       return {
-        totalCompanies: 3,
-        activeCompanies: 3,
+        totalCompanies: 0,
+        activeCompanies: 0,
         pendingCompanies: 0,
         inactiveCompanies: 0,
-        totalEmployees: 45,
-        totalRevenue: 1250000
+        totalEmployees: 0,
+        totalRevenue: 0
       };
     }
-
-    // Mock data for company search by municipality
-    if (endpoint.includes('/company/search')) {
-      const urlParams = new URLSearchParams(endpoint.split('?')[1] || '');
-      const municipalityId = urlParams.get('municipalityId');
-
-      console.log("🔍 getMockData - Company search by municipality:", municipalityId);
-
-      // Return companies based on municipality
-      const companies = [
-        {
-          id: '1',
-          name: 'TechCorp Innovación',
-          description: 'Empresa de tecnología innovadora especializada en desarrollo de software',
-          businessSector: 'Tecnología',
-          companySize: 'MEDIUM',
-          foundedYear: 2020,
-          website: 'https://techcorp.com',
-          email: 'contacto@techcorp.com',
-          phone: '+591 2 1234567',
-          address: 'Av. Principal 123',
-          isActive: true,
-          municipality: {
-            id: municipalityId || '1',
-            name: 'Cercado',
-            department: 'La Paz'
-          },
-          creator: {
-            id: 'user_1',
-            firstName: 'Juan',
-            lastName: 'Pérez',
-            role: 'ADMIN'
-          },
-          createdAt: '2024-01-15T10:00:00Z',
-          updatedAt: '2024-01-15T10:00:00Z'
-        },
-        {
-          id: '2',
-          name: 'DesignStudio Creativo',
-          description: 'Estudio de diseño creativo para proyectos digitales',
-          businessSector: 'Diseño',
-          companySize: 'SMALL',
-          foundedYear: 2021,
-          website: 'https://designstudio.com',
-          email: 'info@designstudio.com',
-          phone: '+591 2 7654321',
-          address: 'Calle Comercial 456',
-          isActive: true,
-          municipality: {
-            id: municipalityId || '1',
-            name: 'Cercado',
-            department: 'La Paz'
-          },
-          creator: {
-            id: 'user_2',
-            firstName: 'María',
-            lastName: 'García',
-            role: 'ADMIN'
-          },
-          createdAt: '2024-02-20T14:30:00Z',
-          updatedAt: '2024-02-20T14:30:00Z'
-        },
-        {
-          id: '3',
-          name: 'Consultoría Empresarial ABC',
-          description: 'Servicios de consultoría empresarial y asesoría financiera',
-          businessSector: 'Consultoría',
-          companySize: 'MICRO',
-          foundedYear: 2022,
-          website: 'https://consultoriaabc.com',
-          email: 'asesoria@consultoriaabc.com',
-          phone: '+591 2 9876543',
-          address: 'Plaza Mayor 789',
-          isActive: true,
-          municipality: {
-            id: municipalityId || '1',
-            name: 'Cercado',
-            department: 'La Paz'
-          },
-          creator: {
-            id: 'user_3',
-            firstName: 'Carlos',
-            lastName: 'López',
-            role: 'ADMIN'
-          },
-          createdAt: '2024-03-10T09:15:00Z',
-          updatedAt: '2024-03-10T09:15:00Z'
-        }
-      ];
-
-      return companies;
-    }
-
-    // Mock data for general company endpoints
-    return {
-      companies: [
-        {
-          id: '1',
-          name: 'TechCorp',
-          description: 'Empresa de tecnología innovadora',
-          location: 'Buenos Aires',
-          industry: 'Tecnología'
-        },
-        {
-          id: '2',
-          name: 'DesignStudio',
-          description: 'Estudio de diseño creativo',
-          location: 'Córdoba',
-          industry: 'Diseño'
-        }
-      ]
-    };
+    
+    return { companies: [] };
   }
 
   if (endpoint.includes('/course')) {
@@ -1018,6 +858,157 @@ const getMockData = (endpoint: string) => {
         },
         issuedAt: '2024-01-15T10:00:00Z'
       }
+    };
+  }
+
+  // Mock data for job questions
+  if (endpoint.includes('/jobquestion')) {
+    return [
+      {
+        id: 'question_1',
+        jobOfferId: 'mock-job-1',
+        question: '¿Por qué te interesa trabajar en nuestra empresa?',
+        type: 'TEXT',
+        required: true,
+        orderIndex: 1,
+        createdAt: '2024-01-15T10:00:00Z',
+        updatedAt: '2024-01-15T10:00:00Z'
+      },
+      {
+        id: 'question_2',
+        jobOfferId: 'mock-job-1',
+        question: '¿Tienes experiencia previa en este tipo de roles?',
+        type: 'MULTIPLE_CHOICE',
+        required: true,
+        options: ['Sí, tengo mucha experiencia', 'Tengo algo de experiencia', 'No, pero estoy dispuesto/a a aprender'],
+        orderIndex: 2,
+        createdAt: '2024-01-15T10:00:00Z',
+        updatedAt: '2024-01-15T10:00:00Z'
+      },
+      {
+        id: 'question_3',
+        jobOfferId: 'mock-job-1',
+        question: '¿Estás disponible para trabajar tiempo completo?',
+        type: 'BOOLEAN',
+        required: true,
+        orderIndex: 3,
+        createdAt: '2024-01-15T10:00:00Z',
+        updatedAt: '2024-01-15T10:00:00Z'
+      }
+    ];
+  }
+
+  // Mock data for profile endpoints
+  if (endpoint.includes('/profile')) {
+    // Handle profile by role query
+    if (endpoint.includes('role=YOUTH') || endpoint.includes('role=JOVENES')) {
+      return {
+        profiles: [
+          {
+            id: 'profile_1',
+            userId: 'youth_1',
+            firstName: 'Ana',
+            lastName: 'Martínez',
+            email: 'ana.martinez@email.com',
+            phone: '+591 700 111 222',
+            address: 'Av. Estudiantes 456',
+            municipality: 'La Paz',
+            department: 'La Paz',
+            country: 'Bolivia',
+            birthDate: new Date('2003-05-15'),
+            gender: 'FEMALE',
+            educationLevel: 'SECONDARY',
+            currentInstitution: 'Colegio San Patricio',
+            graduationYear: 2024,
+            isStudying: true,
+            skills: ['JavaScript', 'React', 'Python'],
+            interests: ['Programación', 'Tecnología', 'Arte'],
+            role: 'YOUTH',
+            avatarUrl: 'https://ui-avatars.com/api/?name=Ana+Martinez&background=random',
+            active: true,
+            status: 'ACTIVE',
+            profileCompletion: 75,
+            parentalConsent: true,
+            createdAt: new Date('2024-01-15T10:00:00Z'),
+            updatedAt: new Date('2024-01-15T10:00:00Z')
+          },
+          {
+            id: 'profile_2',
+            userId: 'youth_2',
+            firstName: 'Carlos',
+            lastName: 'Rodríguez',
+            email: 'carlos.rodriguez@email.com',
+            phone: '+591 700 333 444',
+            address: 'Calle Libertad 789',
+            municipality: 'El Alto',
+            department: 'La Paz',
+            country: 'Bolivia',
+            birthDate: new Date('2002-08-22'),
+            gender: 'MALE',
+            educationLevel: 'UNIVERSITY',
+            currentInstitution: 'Universidad Mayor de San Andrés',
+            graduationYear: 2025,
+            isStudying: true,
+            skills: ['Java', 'Spring', 'MySQL'],
+            interests: ['Desarrollo Backend', 'Base de Datos', 'Deportes'],
+            role: 'YOUTH',
+            avatarUrl: 'https://ui-avatars.com/api/?name=Carlos+Rodriguez&background=random',
+            active: true,
+            status: 'ACTIVE',
+            profileCompletion: 80,
+            parentalConsent: true,
+            createdAt: new Date('2024-01-20T14:30:00Z'),
+            updatedAt: new Date('2024-01-20T14:30:00Z')
+          },
+          {
+            id: 'profile_3',
+            userId: 'youth_3',
+            firstName: 'Lucía',
+            lastName: 'Vargas',
+            email: 'lucia.vargas@email.com',
+            phone: '+591 700 555 666',
+            address: 'Zona Norte 321',
+            municipality: 'Cochabamba',
+            department: 'Cochabamba',
+            country: 'Bolivia',
+            birthDate: new Date('2004-12-03'),
+            gender: 'FEMALE',
+            educationLevel: 'SECONDARY',
+            currentInstitution: 'Colegio Nacional Bolívar',
+            graduationYear: 2023,
+            isStudying: false,
+            skills: ['Photoshop', 'Illustrator', 'Diseño Gráfico'],
+            interests: ['Arte Digital', 'Fotografía', 'Música'],
+            role: 'YOUTH',
+            avatarUrl: 'https://ui-avatars.com/api/?name=Lucia+Vargas&background=random',
+            active: true,
+            status: 'ACTIVE',
+            profileCompletion: 65,
+            parentalConsent: true,
+            createdAt: new Date('2024-02-01T09:15:00Z'),
+            updatedAt: new Date('2024-02-01T09:15:00Z')
+          }
+        ]
+      };
+    }
+
+    // Handle general profile endpoints
+    return {
+      profiles: [
+        {
+          id: 'profile_general_1',
+          userId: 'user_1',
+          firstName: 'Juan',
+          lastName: 'Pérez',
+          email: 'juan.perez@email.com',
+          phone: '+591 700 123 456',
+          role: 'YOUTH',
+          status: 'ACTIVE',
+          profileCompletion: 85,
+          createdAt: new Date('2024-01-01T00:00:00Z'),
+          updatedAt: new Date('2024-01-01T00:00:00Z')
+        }
+      ]
     };
   }
 

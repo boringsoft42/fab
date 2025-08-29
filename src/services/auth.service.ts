@@ -1,16 +1,17 @@
-import { apiCall, setTokens, clearTokens, API_BASE, getToken, getAuthHeaders } from '@/lib/api';
+import { clearAllAuthData } from '@/lib/auth-utils';
 import { LoginRequest, RegisterRequest, LoginResponse, User } from '@/types/api';
+import { API_BASE } from '@/lib/api';
 
 export class AuthService {
   /**
-   * Login user
+   * Login user using cookie-based authentication
    */
   static async login(credentials: LoginRequest): Promise<LoginResponse> {
-    console.log('Attempting login to:', `${API_BASE}/auth/login`);
-    console.log('Credentials:', { username: credentials.username, password: '***' });
+    console.log('🔐 AuthService.login - Starting cookie-based login');
     
     try {
-      const response = await fetch(`${API_BASE}/auth/login`, {
+      // Use the new login API that sets cookies
+      const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -19,71 +20,48 @@ export class AuthService {
         body: JSON.stringify(credentials)
       });
 
-      console.log('Login response status:', response.status);
-      console.log('Login response headers:', response.headers);
+      console.log('🔐 AuthService.login - Response status:', response.status);
 
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Login failed with status:', response.status);
-        console.error('Error response:', errorText);
-        throw new Error(`Login failed: ${response.status} - ${errorText}`);
+        const errorData = await response.json();
+        console.error('🔐 AuthService.login - Login failed:', errorData);
+        throw new Error(errorData.error || 'Login failed');
       }
 
       const data = await response.json();
-      console.log('Login successful, received data:', { 
-        token: data.token ? 'present' : 'missing',
-        refreshToken: data.refreshToken ? 'present' : 'missing',
-        role: data.role,
-        user: data.user ? 'present' : 'missing',
-        municipality: data.municipality ? 'present' : 'missing',
-        company: data.company ? 'present' : 'missing',
-        type: data.type,
-        fullResponse: data
-      });
+      console.log('🔐 AuthService.login - Login successful, cookies set by server');
+      
+      // Log user details if present
+      if (data.user) {
+        console.log('🔐 AuthService.login - User data:', {
+          id: data.user.id,
+          username: data.user.username,
+          role: data.user.role || data.role,
+          firstName: data.user.firstName
+        });
+      }
       
       // Log municipality details if present
       if (data.municipality) {
-        console.log('🔐 Municipality data:', {
+        console.log('🔐 AuthService.login - Municipality data:', {
           id: data.municipality.id,
           name: data.municipality.name,
-          type: data.municipality.type,
-          username: data.municipality.username,
-          email: data.municipality.email
+          username: data.municipality.username
         });
       }
       
       // Log company details if present
       if (data.company) {
-        console.log('🔐 Company data:', {
+        console.log('🔐 AuthService.login - Company data:', {
           id: data.company.id,
           name: data.company.name,
-          type: data.type,
-          username: data.company.username,
-          email: data.company.email,
-          businessSector: data.company.businessSector
+          username: data.company.username
         });
-      }
-      
-      // Store tokens
-      if (data.token) {
-        console.log('🔐 Login - Storing token');
-        console.log('🔐 Login - Token to store:', data.token ? `${data.token.substring(0, 20)}...` : 'null');
-        // Use the same token as refresh token if not provided
-        const refreshToken = data.refreshToken || data.token;
-        setTokens(data.token, refreshToken);
-        console.log('🔐 Login - Tokens stored, verifying...');
-        console.log('🔐 Login - Stored token:', getToken());
-        console.log('🔐 Login - Token verification successful');
-      } else {
-        console.warn('Missing token in login response');
       }
       
       return data;
     } catch (error) {
-      console.error('Login error:', error);
-      if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
-        throw new Error(`No se pudo conectar al servidor. Verifica que el backend esté ejecutándose en ${API_BASE.replace('/api', '')}`);
-      }
+      console.error('🔐 AuthService.login - Login error:', error);
       throw error;
     }
   }
@@ -126,55 +104,83 @@ export class AuthService {
   }
 
   /**
-   * Get current authenticated user
+   * Get current authenticated user from cookie session
    */
   static async getCurrentUser(): Promise<{ user: User }> {
     try {
-      console.log('🔍 getCurrentUser - Starting request to:', `${API_BASE}/auth/me`);
-      console.log('🔍 getCurrentUser - Token before request:', getToken());
-      console.log('🔍 getCurrentUser - Auth headers:', getAuthHeaders());
-      
-      const result = await apiCall('/auth/me');
-      console.log('Current user retrieved successfully');
-      console.log('🔍 getCurrentUser - Raw result:', result);
-      console.log('🔍 getCurrentUser - User object:', result.user);
-      console.log('🔍 getCurrentUser - User role:', result.user?.role);
-      console.log('🔍 getCurrentUser - User role type:', typeof result.user?.role);
+      // Call our session API that reads from cookies
+      const response = await fetch('/api/auth/me', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include', // Include cookies in request
+      });
+
+      if (!response.ok) {
+        // Handle 401 as expected behavior (user not authenticated)
+        if (response.status === 401) {
+          throw new Error('UNAUTHENTICATED');
+        } else {
+          const errorText = await response.text();
+          console.error('🔍 AuthService.getCurrentUser - Unexpected error:', errorText);
+          throw new Error(`Failed to get current user: ${response.status}`);
+        }
+      }
+
+      const result = await response.json();
       return result;
     } catch (error) {
-      console.error('🔍 getCurrentUser - Failed to get current user:', error);
-      
-      // Log more details about the error
-      if (error instanceof Error) {
-        console.error('🔍 getCurrentUser - Error message:', error.message);
-        console.error('🔍 getCurrentUser - Error stack:', error.stack);
+      // Handle expected unauthenticated state silently
+      if (error instanceof Error && error.message === 'UNAUTHENTICATED') {
+        throw error;
+      } else {
+        console.error('🔍 AuthService.getCurrentUser - Error:', error);
+        throw error;
       }
-      
-      throw error;
     }
   }
 
   /**
-   * Logout user
+   * Logout user using cookie-based authentication
    */
   static async logout(): Promise<void> {
     try {
-      console.log('Attempting logout');
-      const refreshToken = localStorage.getItem('refreshToken');
-      if (refreshToken) {
-        await apiCall('/auth/logout', { 
-          method: 'POST',
-          body: JSON.stringify({ refreshToken })
-        });
-        console.log('Logout successful');
+      console.log('🚪 AuthService.logout - Starting logout process');
+      
+      // Call the logout API to clear cookies
+      const response = await fetch('/api/auth/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        console.warn('⚠️ AuthService.logout - Server logout failed, but continuing with client cleanup');
       } else {
-        console.log('No refresh token found, skipping logout request');
+        console.log('✅ AuthService.logout - Server logout successful, cookies cleared');
       }
+      
     } catch (error) {
-      console.error('Logout error:', error);
+      console.warn('⚠️ AuthService.logout - Logout API call failed:', error);
     } finally {
-      clearTokens();
-      console.log('Tokens cleared');
+      // Always clear client-side authentication data
+      console.log('🧹 AuthService.logout - Clearing client-side authentication data');
+      clearAllAuthData();
+      
+      // Clear any cached data
+      if (typeof window !== 'undefined') {
+        sessionStorage.clear();
+      }
+      
+      // Force redirect to home page
+      console.log('🔄 AuthService.logout - Redirecting to home page');
+      if (typeof window !== 'undefined') {
+        window.location.href = '/';
+      }
+      
+      console.log('✅ AuthService.logout - Logout process completed');
     }
   }
 } 

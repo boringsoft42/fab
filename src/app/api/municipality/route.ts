@@ -1,16 +1,89 @@
 import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
+
+// Helper function to decode JWT token
+function decodeToken(token: string) {
+  try {
+    const tokenParts = token.split(".");
+    if (tokenParts.length !== 3) {
+      return null;
+    }
+
+    const base64Url = tokenParts[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split("")
+        .map(function (c) {
+          return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+        })
+        .join("")
+    );
+    return JSON.parse(jsonPayload);
+  } catch (error) {
+    console.error("Error decoding token:", error);
+    return null;
+  }
+}
+
+// In-memory storage for created municipalities (for development/testing)
+// In production, this would be replaced with proper database storage
+let createdMunicipalities: any[] = [];
+
+// Get stored municipalities from memory
+function getStoredMunicipalities() {
+  return createdMunicipalities;
+}
+
+// Add municipality to storage
+function addMunicipalityToStorage(municipality: any) {
+  createdMunicipalities.push(municipality);
+  console.log("🏛️ Municipality added to storage. Total count:", createdMunicipalities.length);
+}
 
 export async function POST(request: NextRequest) {
   try {
-    // Mock authentication check for development
-    const mockUserRole = "SUPERADMIN";
+    console.log("🏛️ POST /api/municipality - Starting municipality creation");
 
-    if (mockUserRole !== "SUPERADMIN") {
+    // Get token from cookies
+    const cookieStore = await cookies();
+    const token = cookieStore.get("cemse-auth-token")?.value;
+
+    if (!token) {
+      console.log("❌ POST /api/municipality - No auth token found in cookies");
       return NextResponse.json(
         { error: "Acceso denegado. Solo super administradores pueden crear instituciones." },
         { status: 403 }
       );
     }
+
+    // Handle mock development tokens
+    let decoded = null;
+    if (token.startsWith('mock-dev-token-')) {
+      console.log("🔐 POST /api/municipality - Mock token detected, allowing access");
+      decoded = { role: 'SUPERADMIN', type: 'SUPERADMIN' };
+    } else {
+      decoded = decodeToken(token);
+      if (!decoded) {
+        console.log("❌ POST /api/municipality - Invalid token format");
+        return NextResponse.json(
+          { error: "Acceso denegado. Token inválido." },
+          { status: 403 }
+        );
+      }
+    }
+
+    // Check if user has SUPERADMIN role
+    const userRole = decoded.role || decoded.type;
+    if (userRole !== "SUPERADMIN") {
+      console.log(`❌ POST /api/municipality - Insufficient permissions. Role: ${userRole}`);
+      return NextResponse.json(
+        { error: "Acceso denegado. Solo super administradores pueden crear instituciones." },
+        { status: 403 }
+      );
+    }
+
+    console.log("✅ POST /api/municipality - Authentication successful");
 
     const body = await request.json();
     const {
@@ -76,10 +149,15 @@ export async function POST(request: NextRequest) {
       }
     };
 
+    // Store the created municipality in memory so it persists
+    addMunicipalityToStorage(mockMunicipality);
+
     // In real implementation, here you would:
     // 1. Call your backend API to create the institution
     // 2. Create the user account for the institution
     // 3. Handle any errors from the backend
+
+    console.log("🏛️ Municipality created successfully:", mockMunicipality.name);
 
     return NextResponse.json(
       {
@@ -99,18 +177,50 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
-    // Mock authentication check for development
-    const mockUserRole = "SUPERADMIN";
+    console.log("🏛️ GET /api/municipality - Fetching municipalities list");
 
-    if (mockUserRole !== "SUPERADMIN") {
+    // Get token from cookies
+    const cookieStore = await cookies();
+    const token = cookieStore.get("cemse-auth-token")?.value;
+
+    if (!token) {
+      console.log("❌ GET /api/municipality - No auth token found in cookies");
       return NextResponse.json(
         { error: "Acceso denegado" },
         { status: 403 }
       );
     }
 
-    // Mock institutions data - in real implementation, call backend API
-    const mockMunicipalities = [
+    // Handle mock development tokens
+    let decoded = null;
+    if (token.startsWith('mock-dev-token-')) {
+      console.log("🔐 GET /api/municipality - Mock token detected, allowing access");
+      decoded = { role: 'SUPERADMIN', type: 'SUPERADMIN' };
+    } else {
+      decoded = decodeToken(token);
+      if (!decoded) {
+        console.log("❌ GET /api/municipality - Invalid token format");
+        return NextResponse.json(
+          { error: "Acceso denegado. Token inválido." },
+          { status: 403 }
+        );
+      }
+    }
+
+    // Check if user has SUPERADMIN role
+    const userRole = decoded.role || decoded.type;
+    if (userRole !== "SUPERADMIN") {
+      console.log(`❌ GET /api/municipality - Insufficient permissions. Role: ${userRole}`);
+      return NextResponse.json(
+        { error: "Acceso denegado" },
+        { status: 403 }
+      );
+    }
+
+    console.log("✅ GET /api/municipality - Authentication successful");
+
+    // Default mock municipalities (static data)
+    const defaultMunicipalities = [
       {
         id: "municipality_1",
         name: "Municipio de Cochabamba",
@@ -159,11 +269,23 @@ export async function GET() {
       }
     ];
 
+    // Get dynamically created municipalities from storage
+    const dynamicMunicipalities = getStoredMunicipalities();
+    
+    // Combine default municipalities with created ones
+    const allMunicipalities = [...defaultMunicipalities, ...dynamicMunicipalities];
+
+    console.log("🏛️ GET municipalities - Returning data:", {
+      default: defaultMunicipalities.length,
+      created: dynamicMunicipalities.length,
+      total: allMunicipalities.length
+    });
+
     // In real implementation, here you would:
     // 1. Call your backend API to get institutions
     // 2. Handle any errors from the backend
 
-    return NextResponse.json({ municipalities: mockMunicipalities });
+    return NextResponse.json({ municipalities: allMunicipalities });
   } catch (error) {
     console.error("Error fetching municipalities:", error);
     return NextResponse.json(

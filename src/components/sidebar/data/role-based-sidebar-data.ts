@@ -890,6 +890,7 @@ export function getSidebarDataByRole(role: UserRole): SidebarData {
     case "ADOLESCENTES":
       return adolescentSidebarData;
     case "EMPRESAS":
+    case "COMPANIES":
       return companySidebarData;
     case "GOBIERNOS_MUNICIPALES":
       return municipalGovernmentSidebarData;

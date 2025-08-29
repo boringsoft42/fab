@@ -60,12 +60,13 @@ export default function JobDetailPage() {
 
   // Check if current user is the company that created this job
   // Temporarily show owner actions for any company user for testing
+  const isCompanyUser = user && (user.role === "EMPRESAS" || user.role === "COMPANIES");
   const isJobOwner =
     user &&
     job &&
     (user.id === job.companyId ||
-      (user.role === "EMPRESAS" && user.id === job.companyId) ||
-      user.role === "EMPRESAS"); // Temporary: show for any company user
+      (isCompanyUser && user.id === job.companyId) ||
+      isCompanyUser); // Temporary: show for any company user
 
   // Debug logging
   console.log("🔍 Debug isJobOwner:", {
@@ -78,7 +79,7 @@ export default function JobDetailPage() {
     isJobOwner,
     isAuthenticated: !!user,
     comparison1: user?.id === job?.companyId,
-    comparison2: user?.role === "EMPRESAS" && user?.id === job?.companyId,
+    comparison2: isCompanyUser && user?.id === job?.companyId,
     fullUserObject: user,
   });
 

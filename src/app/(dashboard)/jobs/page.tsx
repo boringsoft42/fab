@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { JobSearchFilters } from "@/components/jobs/job-search-filters";
 import { JobCard } from "@/components/jobs/job-card";
-import { JobOffer } from "@/types/api";
+import { JobOffer, JobSearchFilters as JobFilters } from "@/types/jobs";
 import { useJobOfferSearch } from "@/hooks/useJobOfferApi";
 
 export default function JobsPage() {
@@ -20,7 +20,7 @@ export default function JobsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showFilters, setShowFilters] = useState(false);
-  const [filters, setFilters] = useState<any>({}); // Changed to any as JobFilters is removed
+  const [filters, setFilters] = useState<JobFilters>({});
 
   const searchParams = useSearchParams();
 
@@ -134,7 +134,7 @@ export default function JobsPage() {
     }
   };
 
-  const handleFiltersChange = (newFilters: any) => { // Changed to any as JobFilters is removed
+  const handleFiltersChange = (newFilters: JobFilters) => {
     setFilters(newFilters);
   };
 

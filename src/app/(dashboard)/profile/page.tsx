@@ -22,13 +22,13 @@ import {
   Upload,
   Trash2,
 } from "lucide-react";
-import { useAuth } from "@/hooks/use-auth";
+import { useAuthContext } from "@/hooks/use-auth";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 
 export default function ProfilePage() {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuthContext();
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
 

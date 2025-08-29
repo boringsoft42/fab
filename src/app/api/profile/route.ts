@@ -1,18 +1,28 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import jwt from 'jsonwebtoken';
+import { cookies } from "next/headers";
 
-const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-key';
-
-function verifyToken(token: string) {
+// Function to decode JWT token (same as in auth/me)
+function decodeToken(token: string) {
   try {
-    console.log('🔐 Profile API - Verifying token with JWT_SECRET:', JWT_SECRET.substring(0, 10) + '...');
-    console.log('🔐 Profile API - Token to verify:', token.substring(0, 50) + '...');
-    const decoded = jwt.verify(token, JWT_SECRET) as any;
-    console.log('🔐 Profile API - Token verified successfully for user:', decoded.username);
-    return decoded;
+    const tokenParts = token.split(".");
+    if (tokenParts.length !== 3) {
+      return null;
+    }
+
+    const base64Url = tokenParts[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split("")
+        .map(function (c) {
+          return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+        })
+        .join("")
+    );
+    return JSON.parse(jsonPayload);
   } catch (error) {
-    console.error('🔐 Profile API - Token verification failed:', error);
+    console.error("Error decoding token:", error);
     return null;
   }
 }
@@ -22,21 +32,33 @@ export async function GET(request: NextRequest) {
   try {
     console.log('👤 /api/profile - Profile request received');
 
-    // Get token from Authorization header
-    const authHeader = request.headers.get('Authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    // Get token from cookies (consistent with auth/me)
+    const cookieStore = await cookies();
+    const token = cookieStore.get("cemse-auth-token")?.value;
+
+    if (!token) {
+      console.log("👤 /api/profile - No auth token found in cookies");
       return NextResponse.json(
-        { error: 'No token provided' },
+        { error: "No authentication token found" },
         { status: 401 }
       );
     }
 
-    const token = authHeader.substring(7);
-    const decoded = verifyToken(token);
-    
+    // Decode token to check expiration and get user info
+    const decoded = decodeToken(token);
     if (!decoded) {
+      console.log("👤 /api/profile - Invalid token format");
       return NextResponse.json(
-        { error: 'Invalid token' },
+        { error: "Invalid authentication token" },
+        { status: 401 }
+      );
+    }
+
+    // Check if token is expired
+    if (decoded.exp && Date.now() > decoded.exp * 1000) {
+      console.log("👤 /api/profile - Token expired");
+      return NextResponse.json(
+        { error: "Authentication token expired" },
         { status: 401 }
       );
     }
@@ -51,7 +73,7 @@ export async function GET(request: NextRequest) {
       // First find users with the specified role
       const users = await prisma.user.findMany({
         where: {
-          role: role,
+          role: role as any,
           isActive: true
         },
         select: {
@@ -87,15 +109,30 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(profilesWithUsers);
     } else {
       // Get current user's profile if no role specified
-      const profile = await prisma.profile.findUnique({
+      let profile = await prisma.profile.findUnique({
         where: { userId: decoded.id }
       });
 
+      // If no profile exists, create a basic one automatically
       if (!profile) {
-        return NextResponse.json(
-          { error: "Profile not found" },
-          { status: 404 }
-        );
+        console.log('🔍 Creating basic profile for user:', decoded.id);
+        try {
+          profile = await prisma.profile.create({
+            data: {
+              userId: decoded.id,
+              firstName: decoded.username || 'Usuario',
+              lastName: '',
+              role: 'YOUTH', // Default role
+            }
+          });
+          console.log('🔍 Basic profile created for API:', profile.id);
+        } catch (createError) {
+          console.error('🔍 Error creating profile:', createError);
+          return NextResponse.json(
+            { error: "Could not create user profile" },
+            { status: 500 }
+          );
+        }
       }
 
       // Get user data separately
@@ -132,21 +169,33 @@ export async function PUT(request: NextRequest) {
   try {
     console.log('👤 /api/profile PUT - Profile update request received');
 
-    // Get token from Authorization header
-    const authHeader = request.headers.get('Authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    // Get token from cookies (consistent with auth/me)
+    const cookieStore = await cookies();
+    const token = cookieStore.get("cemse-auth-token")?.value;
+
+    if (!token) {
+      console.log("👤 /api/profile PUT - No auth token found in cookies");
       return NextResponse.json(
-        { error: 'No token provided' },
+        { error: "No authentication token found" },
         { status: 401 }
       );
     }
 
-    const token = authHeader.substring(7);
-    const decoded = verifyToken(token);
-    
+    // Decode token to check expiration and get user info
+    const decoded = decodeToken(token);
     if (!decoded) {
+      console.log("👤 /api/profile PUT - Invalid token format");
       return NextResponse.json(
-        { error: 'Invalid token' },
+        { error: "Invalid authentication token" },
+        { status: 401 }
+      );
+    }
+
+    // Check if token is expired
+    if (decoded.exp && Date.now() > decoded.exp * 1000) {
+      console.log("👤 /api/profile PUT - Token expired");
+      return NextResponse.json(
+        { error: "Authentication token expired" },
         { status: 401 }
       );
     }
