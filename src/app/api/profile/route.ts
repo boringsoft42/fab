@@ -30,7 +30,7 @@ function decodeToken(token: string) {
 // GET /api/profile - Get profiles with optional role filtering
 export async function GET(request: NextRequest) {
   try {
-    console.log('👤 /api/profile - Profile request received');
+    console.log("👤 /api/profile - Profile request received");
 
     // Get token from cookies (consistent with auth/me)
     const cookieStore = await cookies();
@@ -64,9 +64,9 @@ export async function GET(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url);
-    const role = searchParams.get('role');
-    
-    console.log('👤 /api/profile - Fetching profiles with role:', role);
+    const role = searchParams.get("role");
+
+    console.log("👤 /api/profile - Fetching profiles with role:", role);
 
     // Build query based on parameters
     if (role) {
@@ -74,60 +74,65 @@ export async function GET(request: NextRequest) {
       const users = await prisma.user.findMany({
         where: {
           role: role as any,
-          isActive: true
+          isActive: true,
         },
         select: {
           id: true,
           username: true,
           role: true,
-          isActive: true
-        }
+          isActive: true,
+        },
       });
 
       // Get user IDs to find their profiles
-      const userIds = users.map(user => user.id);
-      
+      const userIds = users.map((user) => user.id);
+
       // Find profiles for these users
       const profiles = await prisma.profile.findMany({
         where: {
           userId: {
-            in: userIds
-          }
-        }
+            in: userIds,
+          },
+        },
       });
 
       // Combine profile data with user data
-      const profilesWithUsers = profiles.map(profile => {
-        const user = users.find(u => u.id === profile.userId);
+      const profilesWithUsers = profiles.map((profile) => {
+        const user = users.find((u) => u.id === profile.userId);
         return {
           ...profile,
-          user: user
+          user: user,
         };
       });
 
-      console.log('👤 /api/profile - Found profiles with role', role, ':', profilesWithUsers.length);
+      console.log(
+        "👤 /api/profile - Found profiles with role",
+        role,
+        ":",
+        profilesWithUsers.length
+      );
       return NextResponse.json(profilesWithUsers);
     } else {
       // Get current user's profile if no role specified
       let profile = await prisma.profile.findUnique({
-        where: { userId: decoded.id }
+        where: { userId: decoded.id },
       });
 
       // If no profile exists, create a basic one automatically
       if (!profile) {
-        console.log('🔍 Creating basic profile for user:', decoded.id);
+        console.log("🔍 Creating basic profile for user:", decoded.id);
         try {
           profile = await prisma.profile.create({
             data: {
               userId: decoded.id,
-              firstName: decoded.username || 'Usuario',
-              lastName: '',
-              role: 'YOUTH', // Default role
-            }
+              firstName: decoded.username || "Usuario",
+              lastName: "",
+              role: "YOUTH", // Default role
+            },
           });
-          console.log('🔍 Basic profile created for API:', profile.id);
+          console.log("🔍 Basic profile created for API:", profile.id);
         } catch (createError) {
-          console.error('🔍 Error creating profile:', createError);
+          console.error("🔍 Error creating profile:", createError);
           return NextResponse.json(
             { error: "Could not create user profile" },
             { status: 500 }
@@ -142,19 +147,18 @@ export async function GET(request: NextRequest) {
           id: true,
           username: true,
           role: true,
-          isActive: true
-        }
+          isActive: true,
+        },
       });
 
       const profileWithUser = {
         ...profile,
-        user: user
+        user: user,
       };
 
-      console.log('👤 /api/profile - Found user profile:', profile.id);
+      console.log("👤 /api/profile - Found user profile:", profile.id);
       return NextResponse.json(profileWithUser);
     }
-
   } catch (error) {
     console.error("Error in /api/profile:", error);
     return NextResponse.json(
@@ -167,7 +171,7 @@ export async function GET(request: NextRequest) {
 // PUT /api/profile - Update current user's profile
 export async function PUT(request: NextRequest) {
   try {
-    console.log('👤 /api/profile PUT - Profile update request received');
+    console.log("👤 /api/profile PUT - Profile update request received");
 
     // Get token from cookies (consistent with auth/me)
     const cookieStore = await cookies();
@@ -207,7 +211,7 @@ export async function PUT(request: NextRequest) {
       data: body,
     });
 
-    console.log('👤 /api/profile PUT - Profile updated:', updatedProfile.id);
+    console.log("👤 /api/profile PUT - Profile updated:", updatedProfile.id);
     return NextResponse.json({
       message: "Profile updated successfully",
       profile: updatedProfile,
@@ -221,26 +225,65 @@ export async function PUT(request: NextRequest) {
   }
 }
 
-// POST: Create mock profile data since we're using mock authentication
+// POST: Create profile data in database
 export async function POST(request: NextRequest) {
   try {
+    console.log("👤 /api/profile POST - Profile creation request received");
+
     const data = await request.json();
-    const { userId, firstName, lastName, avatarUrl } = data;
+    const { userId, firstName, lastName, avatarUrl, birthDate } = data;
 
-    // Return mock new profile data for development
-    const newProfile = {
-      id: "mock-profile-id",
-      userId: userId || "mock-user-id",
-      firstName: firstName || "John",
-      lastName: lastName || "Doe",
-      role: "YOUTH",
-      avatarUrl: avatarUrl || null,
-      active: true,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      completionPercentage: 10,
-    };
+    if (!userId) {
+      return NextResponse.json(
+        { error: "userId is required" },
+        { status: 400 }
+      );
+    }
 
+    // Check if user exists
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        username: true,
+        role: true,
+      },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    // Check if profile already exists
+    const existingProfile = await prisma.profile.findUnique({
+      where: { userId },
+    });
+
+    if (existingProfile) {
+      console.log(
+        "👤 /api/profile POST - Profile already exists for user:",
+        userId
+      );
+      return NextResponse.json(existingProfile, { status: 200 });
+    }
+
+    // Create new profile
+    const newProfile = await prisma.profile.create({
+      data: {
+        userId,
+        firstName: firstName || user.username || "Usuario",
+        lastName: lastName || "",
+        avatarUrl: avatarUrl || null,
+        birthDate: birthDate ? new Date(birthDate) : null,
+        role: user.role, // Use the user's role from the User table
+        active: true,
+      },
+    });
+
+    console.log(
+      "👤 /api/profile POST - Profile created successfully:",
+      newProfile.id
+    );
     return NextResponse.json(newProfile, { status: 201 });
   } catch (error) {
     console.error("Error creating profile:", error);

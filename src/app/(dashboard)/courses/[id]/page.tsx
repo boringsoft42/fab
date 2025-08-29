@@ -8,7 +8,7 @@ import { ArrowLeft } from "lucide-react";
 import { CourseDetail } from "@/components/courses/course-detail";
 import { Course } from "@/types/api";
 import { apiCall } from "@/lib/api";
-import { useCourseEnrollments } from "@/hooks/useCourseEnrollments";
+import { useEnrollments } from "@/hooks/useEnrollments";
 import { toast } from "sonner";
 
 export default function CourseDetailPage() {
@@ -16,24 +16,29 @@ export default function CourseDetailPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const courseId = params.id as string;
-  
+
   // Check for error messages
-  const errorParam = searchParams.get('error');
+  const errorParam = searchParams.get("error");
 
   const [course, setCourse] = useState<Course | null>(null);
   const [loading, setLoading] = useState(true);
   const [enrolling, setEnrolling] = useState(false);
 
   // Get user's enrollments to check if already enrolled
-  const { enrollments, loading: enrollmentsLoading, enrollInCourse } = useCourseEnrollments();
-  
+  const {
+    enrollments,
+    loading: enrollmentsLoading,
+    enrollInCourse,
+  } = useEnrollments();
+
   // Check if user is enrolled in this course
-  const userEnrollment = enrollments.find(e => e.courseId === courseId);
+  const userEnrollment = enrollments.find((e) => e.courseId === courseId);
   const isEnrolled = !!userEnrollment;
   const enrollmentStatus = {
     isEnrolled,
     progress: userEnrollment?.progress || 0,
-    status: userEnrollment?.status || 'NOT_ENROLLED'
+    status: userEnrollment?.status || "NOT_ENROLLED",
+    enrollmentId: userEnrollment?.id,
   };
 
   useEffect(() => {
@@ -42,8 +47,8 @@ export default function CourseDetailPage() {
 
   // Show error message if redirected from learn page
   useEffect(() => {
-    if (errorParam === 'not-enrolled') {
-      toast.error('Debes inscribirte en el curso para acceder al contenido');
+    if (errorParam === "not-enrolled") {
+      toast.error("Debes inscribirte en el curso para acceder al contenido");
       // Clean up the URL
       router.replace(`/dashboard/courses/${courseId}`, { scroll: false });
     }
@@ -78,17 +83,39 @@ export default function CourseDetailPage() {
     try {
       setEnrolling(true);
       console.log("🔍 CourseDetailPage: Enrolling in course:", courseId);
-      
-      await enrollInCourse(courseId);
-      
+
+      const enrollment = await enrollInCourse(courseId);
+
       toast.success("¡Te has inscrito exitosamente al curso!");
-      console.log("✅ CourseDetailPage: Successfully enrolled in course");
-      
-      // Optionally redirect to course content or dashboard
-      // router.push(`/dashboard/courses/${courseId}`);
+      console.log(
+        "✅ CourseDetailPage: Successfully enrolled in course:",
+        enrollment.id
+      );
+
+      // Stay on the current page - the enrollment status will be updated automatically
+      // through the useEnrollments hook which will trigger a re-render
     } catch (error) {
       console.error("❌ CourseDetailPage: Error enrolling:", error);
-      toast.error("Error al inscribirse al curso. Inténtalo de nuevo.");
+
+      // Handle specific error messages
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Error al inscribirse al curso";
+
+      if (
+        errorMessage.includes("already enrolled") ||
+        errorMessage.includes("ya estás inscrito")
+      ) {
+        toast.error("Ya estás inscrito en este curso");
+      } else if (
+        errorMessage.includes("not found") ||
+        errorMessage.includes("no encontrado")
+      ) {
+        toast.error("Curso no encontrado o no disponible");
+      } else {
+        toast.error("Error al inscribirse al curso. Inténtalo de nuevo.");
+      }
     } finally {
       setEnrolling(false);
     }
@@ -96,6 +123,10 @@ export default function CourseDetailPage() {
 
   const handleBack = () => {
     router.back();
+  };
+
+  const handleStartLearning = () => {
+    router.push(`/development/courses/${courseId}/learn`);
   };
 
   if (loading || enrollmentsLoading) {
@@ -144,9 +175,10 @@ export default function CourseDetailPage() {
         <span className="text-foreground">{course.title}</span>
       </div>
 
-      <CourseDetail 
-        course={course} 
-        onEnroll={handleEnroll} 
+      <CourseDetail
+        course={course}
+        onEnroll={handleEnroll}
+        onStartLearning={handleStartLearning}
         enrollment={enrollmentStatus}
         enrolling={enrolling}
       />

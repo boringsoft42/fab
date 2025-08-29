@@ -31,6 +31,7 @@ import { VideoPreview } from "./video-preview";
 interface CourseDetailProps {
   course: Course;
   onEnroll?: () => void;
+  onStartLearning?: () => void;
   enrollment?: {
     isEnrolled: boolean;
     progress?: number;
@@ -42,6 +43,7 @@ interface CourseDetailProps {
 export const CourseDetail = ({
   course,
   onEnroll,
+  onStartLearning,
   enrollment,
   enrolling = false,
 }: CourseDetailProps) => {
@@ -179,14 +181,21 @@ export const CourseDetail = ({
             </div>
 
             {enrollment?.isEnrolled ? (
-              <Button className="w-full" disabled>
-                {enrollment.status === "COMPLETED"
-                  ? "Curso Completado"
-                  : "Ya Inscrito"}
-              </Button>
+              <div className="space-y-2">
+                <Button className="w-full" onClick={onStartLearning}>
+                  {enrollment.progress && enrollment.progress > 0
+                    ? "Continuar Aprendiendo"
+                    : "Comenzar Curso"}
+                </Button>
+                {enrollment.status === "COMPLETED" && (
+                  <Badge variant="secondary" className="w-full justify-center">
+                    Curso Completado
+                  </Badge>
+                )}
+              </div>
             ) : (
-              <Button 
-                className="w-full" 
+              <Button
+                className="w-full"
                 onClick={onEnroll}
                 disabled={enrolling}
               >
@@ -205,13 +214,12 @@ export const CourseDetail = ({
                     Tu Progreso
                   </span>
                 </div>
-                <Progress 
-                  value={enrollment.progress || 0} 
-                  className="mb-2"
-                />
+                <Progress value={enrollment.progress || 0} className="mb-2" />
                 <div className="flex justify-between text-xs text-green-600">
                   <span>{enrollment.progress || 0}% completado</span>
-                  <span className="capitalize">{enrollment.status?.toLowerCase().replace('_', ' ')}</span>
+                  <span className="capitalize">
+                    {enrollment.status?.toLowerCase().replace("_", " ")}
+                  </span>
                 </div>
               </CardContent>
             </Card>
