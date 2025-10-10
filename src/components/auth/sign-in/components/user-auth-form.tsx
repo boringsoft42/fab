@@ -1,9 +1,11 @@
 "use client";
 
-import * as React from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAuthContext } from "@/hooks/use-auth";
+import Link from "next/link";
+import { FacebookIcon, GithubIcon } from "lucide-react";
+import { useAuth } from "@/providers/auth-provider";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,35 +18,45 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/utils/password-input";
-import type { UserAuthFormProps, UserAuthFormData } from "@/types/auth/sign-in";
-import { userAuthFormSchema } from "@/types/auth/sign-in";
+import type { SignInFormData, UserAuthFormProps } from "@/types/auth/sign-in";
+import { signInFormSchema } from "@/types/auth/sign-in";
 import { toast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
+import { saltAndHashPassword } from "@/lib/auth/password-crypto";
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
-  const { login } = useAuthContext();
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { signIn } = useAuth();
+  const router = useRouter();
 
-  const form = useForm<UserAuthFormData>({
-    resolver: zodResolver(userAuthFormSchema),
+  const form = useForm<SignInFormData>({
+    resolver: zodResolver(signInFormSchema),
     defaultValues: {
-      username: "",
+      email: "",
       password: "",
     },
   });
 
-  async function onSubmit(data: UserAuthFormData) {
-    setIsLoading(true);
-
+  async function onSubmit(data: SignInFormData) {
     try {
-      await login(data);
+      setIsLoading(true);
+
+      // Hash the password with email as salt before sending to server
+      const hashedPassword = await saltAndHashPassword(
+        data.password,
+        data.email
+      );
+
+      await signIn(data.email, hashedPassword);
       toast({
         title: "Success",
-        description: "You have been successfully signed in.",
+        description: "You have been signed in.",
       });
+      router.push("/dashboard");
     } catch {
       toast({
         title: "Error",
-        description: "Your sign in request failed. Please try again.",
+        description: "Invalid email or password.",
         variant: "destructive",
       });
     } finally {
@@ -56,15 +68,15 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     <div className={cn("grid gap-6", className)} {...props}>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="grid gap-4">
+          <div className="grid gap-2">
             <FormField
               control={form.control}
-              name="username"
+              name="email"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Username</FormLabel>
+                <FormItem className="space-y-1">
+                  <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter your username" {...field} />
+                    <Input placeholder="name@example.com" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -74,22 +86,56 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
               control={form.control}
               name="password"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
+                <FormItem className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <FormLabel>Password</FormLabel>
+                    <Link
+                      href="/forgot-password"
+                      className="text-sm font-medium text-muted-foreground hover:opacity-75"
+                    >
+                      Forgot password?
+                    </Link>
+                  </div>
                   <FormControl>
-                    <PasswordInput
-                      placeholder="Enter your password"
-                      {...field}
-                    />
+                    <PasswordInput placeholder="********" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button disabled={isLoading}>
-              {isLoading && <div className="mr-2 h-4 w-4 animate-spin" />}
-              Sign In
+            <Button className="mt-2" disabled={isLoading}>
+              Login
             </Button>
+
+            <div className="relative my-2">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-background px-2 text-muted-foreground">
+                  Or continue with
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                className="w-full"
+                type="button"
+                disabled={isLoading}
+              >
+                <GithubIcon className="h-4 w-4" /> GitHub
+              </Button>
+              <Button
+                variant="outline"
+                className="w-full"
+                type="button"
+                disabled={isLoading}
+              >
+                <FacebookIcon className="h-4 w-4" /> Facebook
+              </Button>
+            </div>
           </div>
         </form>
       </Form>

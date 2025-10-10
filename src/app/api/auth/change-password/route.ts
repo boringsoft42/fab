@@ -1,25 +1,73 @@
+import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, currentPassword, newPassword } = await request.json();
+    const supabase = createRouteHandlerClient({ cookies });
 
-    // Validate required fields
-    if (!email || !currentPassword || !newPassword) {
+    // Get the current user's session
+    const {
+      data: { session },
+      error: sessionError,
+    } = await supabase.auth.getSession();
+
+    if (sessionError || !session) {
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+    }
+
+    // Get request body
+    const { currentPassword, newPassword } = await request.json();
+
+    if (!currentPassword || !newPassword) {
       return NextResponse.json(
-        { error: "Email, current password, and new password are required" },
+        { error: "Current and new password are required" },
         { status: 400 }
       );
     }
 
-    // Mock password change response for development
-    return NextResponse.json({
-      message: "Password changed successfully",
+    // Get user email from session
+    const userEmail = session.user.email;
+
+    if (!userEmail) {
+      return NextResponse.json(
+        { error: "User email not found in session" },
+        { status: 400 }
+      );
+    }
+
+    // First verify the current password by signing in
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: userEmail,
+      password: currentPassword,
     });
+
+    if (signInError) {
+      console.error("Sign in error:", signInError);
+      return NextResponse.json(
+        { error: "Current password is incorrect" },
+        { status: 401 }
+      );
+    }
+
+    // Change the password
+    const { error: updateError } = await supabase.auth.updateUser({
+      password: newPassword,
+    });
+
+    if (updateError) {
+      console.error("Update error:", updateError);
+      return NextResponse.json({ error: updateError.message }, { status: 500 });
+    }
+
+    return NextResponse.json(
+      { message: "Password changed successfully" },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Error changing password:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: "An unexpected error occurred" },
       { status: 500 }
     );
   }

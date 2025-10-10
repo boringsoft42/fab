@@ -48,9 +48,9 @@ export default function Testimonials() {
                   />
                 ))}
               </div>
-              <blockquote className="mt-6 border-l-2 pl-6 italic">
-                &ldquo;{testimonial.quote}&rdquo;
-              </blockquote>
+              <p className="text-foreground mb-4">
+                &quot;{testimonial.quote}&quot;
+              </p>
               <p className="text-primary font-semibold">{testimonial.author}</p>
             </div>
           ))}

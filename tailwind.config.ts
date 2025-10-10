@@ -5,16 +5,7 @@ export default {
     content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/(dashboard)/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/(auth)/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/landing/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/news/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/test-*/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/verify-email/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/login/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/globals.css",
-    "./src/app/layout.tsx",
-    "./src/app/page.tsx",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
   	extend: {

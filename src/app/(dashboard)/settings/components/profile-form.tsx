@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
-import { useAuthContext } from "@/hooks/use-auth";
+import { useAuth } from "@/providers/auth-provider";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -22,7 +22,7 @@ import { profileFormSchema } from "@/lib/validations/profile";
 import type { ProfileFormValues } from "@/lib/validations/profile";
 
 export function ProfileForm() {
-  const { user } = useAuthContext();
+  const { profile } = useAuth();
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [pendingChanges, setPendingChanges] =
     useState<ProfileFormValues | null>(null);
@@ -32,8 +32,8 @@ export function ProfileForm() {
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
-      firstName: user?.firstName || "",
-      lastName: user?.lastName || "",
+      firstName: profile?.firstName || "",
+      lastName: profile?.lastName || "",
     },
   });
 
@@ -43,17 +43,17 @@ export function ProfileForm() {
   }
 
   async function handleConfirmUpdate() {
-    if (!pendingChanges || !user?.id) return;
+    if (!pendingChanges || !profile?.userId) return;
 
     try {
       setIsUpdating(true);
 
-      const response = await fetch(`/api/profile/${user.id}`, {
+      const response = await fetch(`/api/profile/${profile.userId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...pendingChanges,
-          avatarUrl: newAvatarUrl || user.profilePicture,
+          avatarUrl: newAvatarUrl || profile.avatarUrl,
         }),
       });
 
@@ -82,10 +82,10 @@ export function ProfileForm() {
     <>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
-          {user && (
+          {profile && (
             <AvatarUpload
-              userId={user.id}
-              currentAvatarUrl={user.profilePicture || null}
+              userId={profile.userId}
+              currentAvatarUrl={profile.avatarUrl || null}
               onUploadComplete={(url) => setNewAvatarUrl(url)}
               onUploadError={(error) => {
                 toast({

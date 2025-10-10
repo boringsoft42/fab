@@ -5,7 +5,7 @@ import { SettingsForm } from "./components/settings-form";
 import { PasswordDialog } from "./components/password-dialog";
 import { AccountSection } from "./components/account-section";
 import { SettingsLoader } from "./components/settings-loader";
-import { useProfile } from "@/hooks/useProfileApi";
+import { useCurrentUser } from "@/hooks/use-current-user";
 import { Button } from "@/components/ui/button";
 import { LockKeyhole, RefreshCw } from "lucide-react";
 import {
@@ -19,7 +19,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function SettingsPage() {
-  const { data: profile, loading, error } = useProfile("current");
+  const { profile, isLoading, refetch } = useCurrentUser();
   const [passwordDialogOpen, setPasswordDialogOpen] = useState(false);
   const [pageLoading, setPageLoading] = useState(true);
   const [retryLoading, setRetryLoading] = useState(false);
@@ -27,25 +27,26 @@ export default function SettingsPage() {
   // Simulate data loading and ensure everything is ready
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (!loading) {
+      if (!isLoading) {
         setPageLoading(false);
       }
     }, 500); // Small delay to ensure smooth transitions
 
     return () => clearTimeout(timer);
-  }, [loading]);
+  }, [isLoading]);
 
   const handleRetry = async () => {
     setRetryLoading(true);
-    // The original code had `refetch` which was not defined.
-    // Assuming the intent was to refetch the profile if `useProfile` had a `refetch` option.
-    // Since `useProfile` is now a hook, there's no direct `refetch` here.
-    // For now, we'll just set retryLoading to false after a short delay.
-    setTimeout(() => setRetryLoading(false), 500);
+    if (refetch) {
+      await refetch();
+      setTimeout(() => setRetryLoading(false), 500);
+    } else {
+      setRetryLoading(false);
+    }
   };
 
   // Handle error case
-  if (!loading && !profile) {
+  if (!isLoading && !profile) {
     return (
       <div className="container mx-auto py-10">
         <Card className="max-w-md mx-auto">
@@ -80,7 +81,7 @@ export default function SettingsPage() {
   }
 
   // Show loader while loading
-  if (pageLoading || loading) {
+  if (pageLoading || isLoading) {
     return <SettingsLoader />;
   }
 

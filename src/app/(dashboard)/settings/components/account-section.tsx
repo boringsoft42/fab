@@ -16,12 +16,14 @@ export function AccountSection() {
 
   if (!profile || !user) return null;
 
-  // Format user creation date (mock fallback since created_at doesn't exist)
-  const createdAt = new Date(2024, 0, 1).toLocaleDateString("es-ES", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  // Format user creation date
+  const createdAt = user.created_at
+    ? new Date(user.created_at).toLocaleDateString("es-ES", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    : "N/A";
 
   return (
     <Card>
@@ -33,20 +35,27 @@ export function AccountSection() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-1">
             <p className="text-sm font-medium">Email</p>
-            <p className="text-sm text-muted-foreground">
-              {(user as any)?.email || "No disponible"}
-            </p>
+            <p className="text-sm text-muted-foreground">{user.email}</p>
           </div>
 
           <div className="space-y-1">
             <p className="text-sm font-medium">Estado</p>
             <div>
-              <Badge
-                variant="outline"
-                className="bg-green-50 text-green-700 hover:bg-green-50 border-green-200"
-              >
-                Activo
-              </Badge>
+              {profile.active ? (
+                <Badge
+                  variant="outline"
+                  className="bg-green-50 text-green-700 hover:bg-green-50 border-green-200"
+                >
+                  Activo
+                </Badge>
+              ) : (
+                <Badge
+                  variant="outline"
+                  className="bg-red-50 text-red-700 hover:bg-red-50 border-red-200"
+                >
+                  Inactivo
+                </Badge>
+              )}
             </div>
           </div>
 
