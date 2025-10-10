@@ -37,7 +37,7 @@ export default function Hero() {
               <BlurFade delay={0.2}>
                 <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto">
                   Learn to harness the power of your mind with
-                  POSITIVE-Nexts science-backed mental fitness platform.
+                  POSITIVE-Next&apos;s science-backed mental fitness platform.
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">

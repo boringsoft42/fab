@@ -87,6 +87,8 @@ body {
   }
 }
 
+
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -94,124 +96,4 @@ body {
   body {
     @apply bg-background text-foreground;
   }
-}
-
-/* Estilos específicos para el sidebar de municipios - DESHABILITADOS TEMPORALMENTE */
-/* .municipality-sidebar {
-  background-color: hsl(var(--sidebar-primary)) !important;
-  color: hsl(var(--sidebar-primary-foreground)) !important;
-}
-
-.municipality-sidebar [data-sidebar-menu-button] {
-  color: hsl(var(--sidebar-primary-foreground)) !important;
-}
-
-.municipality-sidebar [data-sidebar-menu-button]:hover {
-  background-color: hsl(var(--sidebar-accent)) !important;
-  color: hsl(var(--sidebar-accent-foreground)) !important;
-}
-
-.municipality-sidebar [data-sidebar-menu-button][data-state="open"] {
-  background-color: hsl(var(--sidebar-accent)) !important;
-  color: hsl(var(--sidebar-accent-foreground)) !important;
-}
-
-.municipality-sidebar [data-sidebar-group-label] {
-  color: hsl(var(--sidebar-foreground)) !important;
-}
-
-.municipality-sidebar [data-sidebar-menu-sub-button] {
-  color: hsl(var(--sidebar-foreground)) !important;
-}
-
-.municipality-sidebar [data-sidebar-menu-sub-button]:hover {
-  background-color: hsl(var(--sidebar-accent)) !important;
-  color: hsl(var(--sidebar-accent-foreground)) !important;
-}
-
-.municipality-sidebar [data-sidebar-menu-sub-button][data-state="active"] {
-  background-color: hsl(var(--sidebar-primary)) !important;
-  color: hsl(var(--sidebar-primary-foreground)) !important;
-} */
-
-/* Estilos para arreglar problemas de layout del sidebar */
-[data-sidebar-menu-button] {
-  min-height: 2.5rem !important;
-  padding: 0.5rem 0.75rem !important;
-  white-space: nowrap !important;
-  overflow: visible !important;
-}
-
-[data-sidebar-menu-button] span {
-  white-space: nowrap !important;
-  overflow: visible !important;
-  text-overflow: unset !important;
-  max-width: none !important;
-  flex-shrink: 0 !important;
-}
-
-[data-sidebar-menu-sub-button] {
-  min-height: 2.25rem !important;
-  padding: 0.375rem 0.75rem !important;
-  white-space: nowrap !important;
-  overflow: visible !important;
-}
-
-[data-sidebar-menu-sub-button] span {
-  white-space: nowrap !important;
-  overflow: visible !important;
-  text-overflow: unset !important;
-  max-width: none !important;
-  flex-shrink: 0 !important;
-}
-
-[data-sidebar-group-label] {
-  padding: 0.5rem 0.75rem 0.25rem !important;
-  font-size: 0.75rem !important;
-  font-weight: 600 !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.05em !important;
-  color: hsl(var(--muted-foreground)) !important;
-  white-space: nowrap !important;
-  overflow: visible !important;
-}
-
-/* Asegurar que los iconos no se corten */
-[data-sidebar-menu-button] svg,
-[data-sidebar-menu-sub-button] svg {
-  flex-shrink: 0 !important;
-  width: 1rem !important;
-  height: 1rem !important;
-  min-width: 1rem !important;
-  min-height: 1rem !important;
-}
-
-/* Mejorar el espaciado y alineación */
-[data-sidebar-menu] {
-  padding: 0.25rem !important;
-}
-
-[data-sidebar-menu-sub] {
-  padding-left: 1rem !important;
-}
-
-/* Asegurar que el sidebar tenga suficiente ancho */
-[data-sidebar] {
-  min-width: 16rem !important;
-  width: 16rem !important;
-}
-
-/* Estilos para elementos deshabilitados */
-[data-sidebar-menu-button][data-disabled="true"],
-[data-sidebar-menu-sub-button][data-disabled="true"] {
-  opacity: 0.5 !important;
-  pointer-events: none !important;
-}
-
-/* Mejorar la legibilidad del texto */
-[data-sidebar-menu-button] span,
-[data-sidebar-menu-sub-button] span {
-  font-size: 0.875rem !important;
-  line-height: 1.25rem !important;
-  font-weight: 500 !important;
 }

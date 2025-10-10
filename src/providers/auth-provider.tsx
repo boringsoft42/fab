@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { BACKEND_ENDPOINTS } from "@/lib/backend-config";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import type { User, Session } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
 import type { Profile } from "@/types/profile";
@@ -14,7 +14,6 @@ type AuthContextType = {
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
-  getCurrentUser: () => Promise<any>;
 };
 
 const AuthContext = createContext<AuthContextType>({
@@ -25,7 +24,6 @@ const AuthContext = createContext<AuthContextType>({
   signIn: async () => {},
   signUp: async () => {},
   signOut: async () => {},
-  getCurrentUser: async () => null,
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -111,58 +109,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     router.push("/sign-in");
   };
 
-  const getCurrentUser = async () => {
-    try {
-      const response = await fetch(BACKEND_ENDPOINTS.AUTH_ME);
-      if (!response.ok) throw new Error('Failed to get current user');
-      const data = await response.json();
-      return data.user;
-    } catch (error) {
-      console.error('Error getting current user:', error);
-      return null;
-    }
-  };
-
-  const checkAuthStatus = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        setIsAuthenticated(false);
-        setUser(null);
-        return;
-      }
-
-      const response = await fetch(BACKEND_ENDPOINTS.AUTH_ME, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      if (response.ok) {
-        const userData = await response.json();
-        setUser(userData);
-        setIsAuthenticated(true);
-      } else {
-        // Token is invalid, clear it
-        localStorage.removeItem('token');
-        setIsAuthenticated(false);
-        setUser(null);
-      }
-    } catch (error) {
-      console.error('Auth check error:', error);
-      localStorage.removeItem('token');
-      setIsAuthenticated(false);
-      setUser(null);
-    }
-  };
-
   return (
     <AuthContext.Provider
-      value={{ user, session, profile, isLoading, signIn, signUp, signOut, getCurrentUser }}
+      value={{ user, session, profile, isLoading, signIn, signUp, signOut }}
     >
       {children}
     </AuthContext.Provider>
   );
 }
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => useContext(AuthContext); 

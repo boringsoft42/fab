@@ -1,60 +1,43 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
+import { cookies } from "next/headers";
+import prisma from "@/lib/prisma";
+import type { UserRole, Prisma } from "@prisma/client";
 
-type UserRole = "YOUTH" | "COMPANIES" | "MUNICIPAL_GOVERNMENTS";
-
-// GET: Fetch mock profiles data since we're using mock authentication
+// GET: Fetch all profiles with optional filtering
 export async function GET(req: NextRequest) {
   try {
+    // Check authentication
+    const supabase = createRouteHandlerClient({ cookies });
+    const {
+      data: { session },
+      error: sessionError,
+    } = await supabase.auth.getSession();
+
+    if (sessionError || !session) {
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+    }
+
     // Get query parameters for filtering
     const { searchParams } = new URL(req.url);
     const role = searchParams.get("role");
     const active = searchParams.get("active");
 
-    // Mock profiles data
-    let mockProfiles = [
-      {
-        id: "mock-profile-1",
-        userId: "mock-user-1",
-        firstName: "John",
-        lastName: "Doe",
-        role: "YOUTH" as UserRole,
-        avatarUrl: null,
-        active: true,
-        createdAt: new Date().toISOString(),
-      },
-      {
-        id: "mock-profile-2",
-        userId: "mock-user-2",
-        firstName: "Jane",
-        lastName: "Smith",
-        role: "COMPANIES" as UserRole,
-        avatarUrl: null,
-        active: true,
-        createdAt: new Date().toISOString(),
-      },
-      {
-        id: "mock-profile-3",
-        userId: "mock-user-3",
-        firstName: "Bob",
-        lastName: "Wilson",
-        role: "MUNICIPAL_GOVERNMENTS" as UserRole,
-        avatarUrl: null,
-        active: false,
-        createdAt: new Date().toISOString(),
-      },
-    ];
+    // Build the where clause for filtering
+    const whereClause: Prisma.ProfileWhereInput = {};
 
-    // Apply filters if provided
-    if (role) {
-      mockProfiles = mockProfiles.filter((profile) => profile.role === role);
-    }
-    if (active !== null) {
-      mockProfiles = mockProfiles.filter(
-        (profile) => profile.active === (active === "true")
-      );
-    }
+    if (role) whereClause.role = role as UserRole;
+    if (active !== null) whereClause.active = active === "true";
 
-    return NextResponse.json({ profiles: mockProfiles });
+    // Fetch profiles from the database
+    const profiles = await prisma.profile.findMany({
+      where: whereClause,
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return NextResponse.json({ profiles });
   } catch (error) {
     console.error("Error fetching profiles:", error);
     return NextResponse.json(

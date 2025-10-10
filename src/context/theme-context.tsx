@@ -22,7 +22,7 @@ type ThemeProviderState = {
 };
 
 const initialState: ThemeProviderState = {
-  theme: "light",
+  theme: "system",
   setTheme: () => null,
 };
 
@@ -30,33 +30,38 @@ const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 
 export function ThemeProvider({
   children,
-  defaultTheme = "light",
+  defaultTheme = "system",
   storageKey = "ui-theme",
   ...props
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(defaultTheme);
 
   useEffect(() => {
-    // Forzar tema claro siempre
-    setTheme("light");
+    const stored = localStorage.getItem(storageKey);
+    if (stored) setTheme(stored as Theme);
   }, [storageKey]);
 
   useEffect(() => {
     const root = window.document.documentElement;
     root.classList.remove("light", "dark");
-    
-    // Siempre aplicar tema claro
-    root.classList.add("light");
-    
-    // Guardar tema claro en localStorage
-    localStorage.setItem(storageKey, "light");
+
+    if (theme === "system") {
+      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
+        .matches
+        ? "dark"
+        : "light";
+      root.classList.add(systemTheme);
+    } else {
+      root.classList.add(theme);
+    }
+
+    localStorage.setItem(storageKey, theme);
   }, [theme, storageKey]);
 
   const value = {
-    theme: "light" as const,
+    theme,
     setTheme: (theme: Theme) => {
-      // Ignorar cualquier cambio de tema y mantener siempre claro
-      setTheme("light");
+      setTheme(theme);
     },
   };
 

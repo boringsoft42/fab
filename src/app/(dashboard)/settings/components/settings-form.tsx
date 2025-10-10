@@ -54,8 +54,8 @@ export function SettingsForm() {
     defaultValues: {
       firstName: profile?.firstName || "",
       lastName: profile?.lastName || "",
-      avatarUrl: profile?.profilePicture || "",
-      active: true,
+      avatarUrl: profile?.avatarUrl || "",
+      active: profile?.active ?? true,
     },
   });
 
@@ -65,8 +65,8 @@ export function SettingsForm() {
       form.reset({
         firstName: profile.firstName || "",
         lastName: profile.lastName || "",
-        avatarUrl: profile.profilePicture || "",
-        active: true,
+        avatarUrl: profile.avatarUrl || "",
+        active: profile.active ?? true,
       });
     }
   }, [profile, form]);
@@ -185,8 +185,8 @@ export function SettingsForm() {
             <CardContent className="space-y-4">
               {profile && (
                 <AvatarUpload
-                  userId={profile.id}
-                  currentAvatarUrl={profile.profilePicture || ""}
+                  userId={profile.userId}
+                  currentAvatarUrl={profile.avatarUrl}
                   onUploadComplete={(url) => setNewAvatarUrl(url)}
                   onUploadError={(error) => {
                     toast({

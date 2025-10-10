@@ -29,21 +29,21 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { useAuthContext } from "@/hooks/use-auth";
+import { useAuth } from "@/providers/auth-provider";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
-  const { signOut, user } = useAuthContext();
+  const { signOut, profile, user } = useAuth();
 
-  if (!user) return null;
+  if (!profile || !user) return null;
 
-  const displayName = [user.firstName, user.lastName]
+  const displayName = [profile.firstName, profile.lastName]
     .filter(Boolean)
     .join(" ");
 
   const getInitials = () => {
-    if (user.firstName || user.lastName) {
-      return [user.firstName?.[0], user.lastName?.[0]]
+    if (profile.firstName || profile.lastName) {
+      return [profile.firstName?.[0], profile.lastName?.[0]]
         .filter(Boolean)
         .join("")
         .toUpperCase();
@@ -62,7 +62,7 @@ export function NavUser() {
             >
               <Avatar className="h-8 w-8 rounded-lg ring-2 ring-primary/10">
                 <AvatarImage 
-                  src={user.profilePicture || null} 
+                  src={profile.avatarUrl || ""} 
                   alt={displayName || user.email || "User"} 
                 />
                 <AvatarFallback className="rounded-lg bg-primary/10">
@@ -88,7 +88,7 @@ export function NavUser() {
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg ring-2 ring-primary/10">
                   <AvatarImage 
-                    src={user.profilePicture || null} 
+                    src={profile.avatarUrl || ""} 
                     alt={displayName || user.email || "User"} 
                   />
                   <AvatarFallback className="rounded-lg bg-primary/10">

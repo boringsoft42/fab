@@ -1,14 +1,16 @@
-"use client";
+'use client';
 
-import { useAuthContext } from "@/hooks/use-auth";
+import { useAuth } from "@/providers/auth-provider";
 import DashboardButton from "@/components/dashboard/dashboard-button";
 import Link from "next/link";
 
 export function AuthHeader() {
-  const { user, loading } = useAuthContext();
+  const { user, isLoading } = useAuth();
 
-  if (loading) {
-    return <div className="h-9 w-[100px] animate-pulse rounded-md bg-muted" />;
+  if (isLoading) {
+    return (
+      <div className="h-9 w-[100px] animate-pulse rounded-md bg-muted" />
+    );
   }
 
   if (user) {
@@ -31,4 +33,4 @@ export function AuthHeader() {
       </Link>
     </div>
   );
-}
+} 

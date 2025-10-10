@@ -16,7 +16,6 @@ interface BaseNavItem {
   title: string;
   icon?: LucideIcon;
   badge?: string;
-  disabled?: boolean;
 }
 
 export interface NavLink extends BaseNavItem {
@@ -40,25 +39,6 @@ export interface SidebarData {
   user: User;
   teams: Team[];
   navGroups: NavGroup[];
-  customColors?: {
-    primary: string;
-    secondary: string;
-    primaryForeground: string;
-    secondaryForeground: string;
-  };
 }
 
 export type NavGroupProps = NavGroup;
-
-export interface SidebarItem {
-  title: string;
-  items: {
-    title: string;
-    icon?: LucideIcon;
-    href: string;
-    items?: {
-      title: string;
-      href: string;
-    }[];
-  }[];
-}
