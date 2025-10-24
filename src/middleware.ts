@@ -78,7 +78,7 @@ export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   // Define public routes (accessible without authentication)
-  const publicRoutes = ['/auth/login', '/auth/register', '/auth/reset-password', '/auth/callback', '/sign-in', '/sign-up'];
+  const publicRoutes = ['/sign-in', '/sign-up', '/forgot-password', '/reset-password', '/magic-link', '/auth/callback'];
   const isPublicRoute = publicRoutes.some((route) => pathname.startsWith(route));
 
   // Define static/asset routes to ignore
@@ -94,7 +94,7 @@ export async function middleware(request: NextRequest) {
 
   // If no user and trying to access protected route, redirect to login
   if (!user && !isPublicRoute) {
-    const redirectUrl = new URL('/auth/login', request.url);
+    const redirectUrl = new URL('/sign-in', request.url);
     redirectUrl.searchParams.set('redirect', pathname);
     return NextResponse.redirect(redirectUrl);
   }
@@ -110,7 +110,7 @@ export async function middleware(request: NextRequest) {
     if (!userRecord) {
       // User exists in auth but not in users table - something is wrong
       // Redirect to logout
-      return NextResponse.redirect(new URL('/auth/login?error=invalid_user', request.url));
+      return NextResponse.redirect(new URL('/sign-in?error=invalid_user', request.url));
     }
 
     const { rol, estado } = userRecord;
@@ -124,7 +124,7 @@ export async function middleware(request: NextRequest) {
       // Sign out and redirect to login with error
       await supabase.auth.signOut();
       return NextResponse.redirect(
-        new URL('/auth/login?error=account_rejected', request.url)
+        new URL('/sign-in?error=account_rejected', request.url)
       );
     }
 
@@ -151,7 +151,7 @@ export async function middleware(request: NextRequest) {
     if (estado === 'inactivo') {
       await supabase.auth.signOut();
       return NextResponse.redirect(
-        new URL('/auth/login?error=account_inactive', request.url)
+        new URL('/sign-in?error=account_inactive', request.url)
       );
     }
 

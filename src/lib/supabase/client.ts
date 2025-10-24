@@ -8,7 +8,8 @@ if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error("Missing Supabase environment variables");
 }
 
-// Create base client
+// Create base client without password hashing (for FAB system)
+// FAB uses standard Supabase authentication without client-side password hashing
 const baseClient = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     persistSession: true,
@@ -17,5 +18,9 @@ const baseClient = createClient(supabaseUrl, supabaseAnonKey, {
   },
 });
 
-// Apply password hash middleware to handle client-side hashed passwords
-export const supabase = applyPasswordHashMiddleware(baseClient);
+// Export the clean client for FAB authentication
+export const supabase = baseClient;
+
+// Legacy client with password hash middleware (for backward compatibility)
+// This is NOT used in the FAB system
+export const legacySupabase = applyPasswordHashMiddleware(baseClient);

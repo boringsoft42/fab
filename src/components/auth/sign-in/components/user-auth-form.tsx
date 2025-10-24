@@ -41,19 +41,32 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     try {
       setIsLoading(true);
 
-      // Hash the password with email as salt before sending to server
-      const hashedPassword = await saltAndHashPassword(
-        data.password,
-        data.email
-      );
+      // Import Supabase client and sign in directly
+      const { supabase } = await import("@/lib/supabase/client");
 
-      await signIn(data.email, hashedPassword);
+      const { data: authData, error } = await supabase.auth.signInWithPassword({
+        email: data.email,
+        password: data.password,
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      if (!authData.user) {
+        throw new Error("No user returned from authentication");
+      }
+
       toast({
         title: "Success",
         description: "You have been signed in.",
       });
+
+      // Redirect will be handled by middleware based on user's rol + estado
       router.push("/dashboard");
-    } catch {
+      router.refresh();
+    } catch (error) {
+      console.error("Sign in error:", error);
       toast({
         title: "Error",
         description: "Invalid email or password.",
