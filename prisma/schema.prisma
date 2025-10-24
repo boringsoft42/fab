@@ -1,35 +1,463 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
-enum UserRole {
-  USER
-  SUPERADMIN
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model asociaciones {
+  id                      String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nombre                  String                    @unique
+  departamento            String
+  ciudad                  String?
+  contacto                String?
+  email                   String?
+  telefono                String?
+  estado                  Boolean                   @default(true)
+  created_at              DateTime?                 @default(now()) @db.Timestamptz(6)
+  updated_at              DateTime?                 @default(now()) @db.Timestamptz(6)
+  atletas                 atletas[]
+  entrenadores            entrenadores[]
+  eventos                 eventos[]
+  jueces                  jueces[]
+  pagos_evento_asociacion pagos_evento_asociacion[]
+  users                   users[]
 }
 
-model Profile {
-  id            String               @id @default(cuid())
-  userId        String               @unique
-  avatarUrl     String?
-  createdAt     DateTime             @default(now())
-  updatedAt     DateTime             @updatedAt
-  active        Boolean              @default(true)
-  firstName     String?              @map("first_name")
-  lastName      String?              @map("last_name")
-  role          UserRole             @default(USER)
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model atletas {
+  user_id                               String              @id @db.Uuid
+  nombre                                String
+  apellido                              String
+  ci                                    String              @unique
+  fecha_nacimiento                      DateTime            @db.Date
+  genero                                genero_enum
+  nacionalidad                          String
+  estado_civil                          String?
+  telefono                              String
+  email                                 String              @unique
+  direccion                             String
+  ciudad_residencia                     String
+  departamento_residencia               String
+  asociacion_id                         String              @db.Uuid
+  municipio                             String?
+  categoria_fab                         String
+  especialidad                          String
+  anios_practica                        Int?
+  altura_cm                             Int?
+  peso_kg                               Decimal?            @db.Decimal(5, 2)
+  talla_camiseta                        String?
+  talla_pantalon                        String?
+  talla_zapatos                         String?
+  tipo_sangre                           String
+  marca_personal_mejor                  String?
+  evento_de_la_marca                    String?
+  fecha_de_la_marca                     DateTime?           @db.Date
+  contacto_emergencia                   String
+  telefono_emergencia                   String
+  parentesco_emergencia                 String
+  foto_url                              String
+  ci_frente_url                         String
+  ci_reverso_url                        String
+  certificado_medico_url                String?
+  carnet_vacunacion_url                 String?
+  estado                                estado_usuario_enum @default(pendiente)
+  fecha_registro                        DateTime?           @default(now()) @db.Timestamptz(6)
+  aprobado_por_fab                      String?             @db.Uuid
+  fecha_aprobacion                      DateTime?           @db.Timestamptz(6)
+  observaciones                         String?
+  created_at                            DateTime?           @default(now()) @db.Timestamptz(6)
+  updated_at                            DateTime?           @default(now()) @db.Timestamptz(6)
+  users_atletas_aprobado_por_fabTousers users?              @relation("atletas_aprobado_por_fabTousers", fields: [aprobado_por_fab], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+  asociaciones                          asociaciones        @relation(fields: [asociacion_id], references: [id], onDelete: NoAction)
+  users_atletas_user_idTousers          users               @relation("atletas_user_idTousers", fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+  dorsales                              dorsales[]
+  inscripciones                         inscripciones[]
+  startlist_items                       startlist_items[]
 
-  @@index([userId])
-  @@map("profiles")
+  @@index([asociacion_id], map: "idx_atletas_asociacion")
+  @@index([categoria_fab], map: "idx_atletas_categoria")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model dorsales {
+  id               String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  evento_id        String            @db.Uuid
+  atleta_id        String            @db.Uuid
+  numero           Int
+  estado           String            @default("activo")
+  fecha_asignacion DateTime?         @default(now()) @db.Timestamptz(6)
+  asignado_por     String?           @db.Uuid
+  users            users?            @relation(fields: [asignado_por], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+  atletas          atletas           @relation(fields: [atleta_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+  eventos          eventos           @relation(fields: [evento_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  startlist_items  startlist_items[]
+
+  @@unique([evento_id, atleta_id])
+  @@unique([evento_id, numero])
+  @@index([evento_id], map: "idx_dorsales_evento")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model entrenadores {
+  user_id                                    String              @id @db.Uuid
+  nombre                                     String
+  apellido                                   String
+  ci                                         String              @unique
+  fecha_nacimiento                           DateTime            @db.Date
+  genero                                     genero_enum
+  nacionalidad                               String
+  estado_civil                               String?
+  telefono                                   String
+  email                                      String              @unique
+  direccion                                  String
+  ciudad_residencia                          String
+  departamento_residencia                    String
+  asociacion_id                              String              @db.Uuid
+  especialidad                               String
+  anios_experiencia                          Int
+  certificaciones                            String?
+  titulos_deportivos                         String?
+  altura_cm                                  Int?
+  peso_kg                                    Decimal?            @db.Decimal(5, 2)
+  tipo_sangre                                String
+  contacto_emergencia                        String
+  telefono_emergencia                        String
+  parentesco_emergencia                      String
+  foto_url                                   String
+  ci_frente_url                              String
+  ci_reverso_url                             String
+  certificado_medico_url                     String?
+  titulos_profesionales_url                  String?
+  certificaciones_deportivas_url             String?
+  estado                                     estado_usuario_enum @default(pendiente)
+  fecha_registro                             DateTime?           @default(now()) @db.Timestamptz(6)
+  aprobado_por_fab                           String?             @db.Uuid
+  fecha_aprobacion                           DateTime?           @db.Timestamptz(6)
+  observaciones                              String?
+  created_at                                 DateTime?           @default(now()) @db.Timestamptz(6)
+  updated_at                                 DateTime?           @default(now()) @db.Timestamptz(6)
+  users_entrenadores_aprobado_por_fabTousers users?              @relation("entrenadores_aprobado_por_fabTousers", fields: [aprobado_por_fab], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+  asociaciones                               asociaciones        @relation(fields: [asociacion_id], references: [id], onDelete: NoAction)
+  users_entrenadores_user_idTousers          users               @relation("entrenadores_user_idTousers", fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([asociacion_id], map: "idx_entrenadores_asociacion")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model eventos {
+  id                      String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nombre                  String
+  tipo                    tipo_evento_enum
+  estado                  estado_evento_enum        @default(borrador)
+  descripcion             String?
+  logo_url                String?
+  ciudad                  String
+  lugar                   String
+  direccion               String
+  fecha_evento            DateTime                  @db.Date
+  hora_inicio             DateTime                  @db.Time(6)
+  hora_fin                DateTime?                 @db.Time(6)
+  fecha_insc_inicio       DateTime                  @db.Date
+  fecha_insc_fin          DateTime                  @db.Date
+  limite_participantes    Int?
+  limite_por_prueba       Int?
+  limite_por_asociacion   Int?
+  edad_minima             Int?
+  edad_maxima             Int?
+  genero_permitido        String
+  costo_fab               Decimal?                  @db.Decimal(12, 2)
+  costo_por_atleta        Decimal?                  @db.Decimal(12, 2)
+  requiere_pago           Boolean                   @default(false)
+  banco                   String?
+  numero_cuenta           String?
+  titular_cuenta          String?
+  qr_pago_url             String?
+  asociacion_creadora_id  String?                   @db.Uuid
+  creado_por_user         String?                   @db.Uuid
+  creado_por_rol          rol_enum?
+  director_tecnico        String?
+  jefe_competencia        String?
+  comisario               String?
+  created_at              DateTime?                 @default(now()) @db.Timestamptz(6)
+  updated_at              DateTime?                 @default(now()) @db.Timestamptz(6)
+  dorsales                dorsales[]
+  asociaciones            asociaciones?             @relation(fields: [asociacion_creadora_id], references: [id], onDelete: NoAction)
+  users                   users?                    @relation(fields: [creado_por_user], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+  inscripciones           inscripciones[]
+  pagos_evento_asociacion pagos_evento_asociacion[]
+  pruebas                 pruebas[]
+  startlists              startlists[]
+
+  @@index([fecha_evento, fecha_insc_inicio, fecha_insc_fin], map: "idx_eventos_fechas")
+  @@index([tipo], map: "idx_eventos_tipo")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model inscripciones {
+  id                                                 String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  evento_id                                          String                 @db.Uuid
+  prueba_id                                          String                 @db.Uuid
+  atleta_id                                          String                 @db.Uuid
+  categoria_atleta                                   String
+  marca_previa                                       String?
+  mejor_marca_personal                               String?
+  fecha_mejor_marca                                  DateTime?              @db.Date
+  estado_asociacion                                  estado_insc_assoc_enum @default(pendiente)
+  aprobado_por_asociacion                            String?                @db.Uuid
+  fecha_aprobacion_asociacion                        DateTime?              @db.Timestamptz(6)
+  estado_fab                                         estado_insc_assoc_enum @default(pendiente)
+  aprobado_por_fab                                   String?                @db.Uuid
+  fecha_aprobacion_fab                               DateTime?              @db.Timestamptz(6)
+  pago_verificado                                    Boolean                @default(false)
+  metodo_pago                                        String?
+  comprobante_pago_url                               String?
+  fecha_pago                                         DateTime?              @db.Timestamptz(6)
+  dorsal_asignado                                    Int?
+  fecha_asignacion_dorsal                            DateTime?              @db.Timestamptz(6)
+  dorsal_asignado_por                                String?                @db.Uuid
+  fecha_inscripcion                                  DateTime?              @default(now()) @db.Timestamptz(6)
+  fecha_actualizacion                                DateTime?              @default(now()) @db.Timestamptz(6)
+  observaciones                                      String?
+  motivo_rechazo                                     String?
+  users_inscripciones_aprobado_por_asociacionTousers users?                 @relation("inscripciones_aprobado_por_asociacionTousers", fields: [aprobado_por_asociacion], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+  users_inscripciones_aprobado_por_fabTousers        users?                 @relation("inscripciones_aprobado_por_fabTousers", fields: [aprobado_por_fab], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+  atletas                                            atletas                @relation(fields: [atleta_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+  users_inscripciones_dorsal_asignado_porTousers     users?                 @relation("inscripciones_dorsal_asignado_porTousers", fields: [dorsal_asignado_por], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+  eventos                                            eventos                @relation(fields: [evento_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  pruebas                                            pruebas                @relation(fields: [prueba_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([evento_id, prueba_id, atleta_id])
+  @@index([atleta_id], map: "idx_insc_atleta")
+  @@index([estado_asociacion], map: "idx_insc_estado_assoc")
+  @@index([evento_id], map: "idx_insc_evento")
+  @@index([pago_verificado], map: "idx_insc_pago")
+  @@index([prueba_id], map: "idx_insc_prueba")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model jueces {
+  user_id                              String              @id @db.Uuid
+  nombre                               String
+  apellido                             String
+  ci                                   String              @unique
+  fecha_nacimiento                     DateTime            @db.Date
+  genero                               genero_enum
+  nacionalidad                         String
+  estado_civil                         String?
+  telefono                             String
+  email                                String              @unique
+  direccion                            String
+  ciudad_residencia                    String
+  departamento_residencia              String
+  asociacion_id                        String              @db.Uuid
+  especialidad                         String
+  anios_experiencia                    Int
+  nivel_juez                           String
+  certificaciones                      String?
+  eventos_juzgados                     String?
+  altura_cm                            Int?
+  peso_kg                              Decimal?            @db.Decimal(5, 2)
+  tipo_sangre                          String
+  contacto_emergencia                  String
+  telefono_emergencia                  String
+  parentesco_emergencia                String
+  foto_url                             String
+  ci_frente_url                        String
+  ci_reverso_url                       String
+  certificado_medico_url               String?
+  certificaciones_juez_url             String?
+  licencia_juez_url                    String?
+  estado                               estado_usuario_enum @default(pendiente)
+  fecha_registro                       DateTime?           @default(now()) @db.Timestamptz(6)
+  aprobado_por_fab                     String?             @db.Uuid
+  fecha_aprobacion                     DateTime?           @db.Timestamptz(6)
+  observaciones                        String?
+  created_at                           DateTime?           @default(now()) @db.Timestamptz(6)
+  updated_at                           DateTime?           @default(now()) @db.Timestamptz(6)
+  users_jueces_aprobado_por_fabTousers users?              @relation("jueces_aprobado_por_fabTousers", fields: [aprobado_por_fab], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+  asociaciones                         asociaciones        @relation(fields: [asociacion_id], references: [id], onDelete: NoAction)
+  users_jueces_user_idTousers          users               @relation("jueces_user_idTousers", fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([asociacion_id], map: "idx_jueces_asociacion")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model pagos_evento_asociacion {
+  id                 String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  asociacion_id      String           @db.Uuid
+  evento_id          String           @db.Uuid
+  monto              Decimal          @db.Decimal(12, 2)
+  estado_pago        estado_pago_enum @default(pendiente)
+  comprobante_url    String?
+  fecha_pago         DateTime?        @db.Timestamptz(6)
+  metodo_pago        String?
+  verificado_por     String?          @db.Uuid
+  fecha_verificacion DateTime?        @db.Timestamptz(6)
+  observaciones      String?
+  created_at         DateTime?        @default(now()) @db.Timestamptz(6)
+  updated_at         DateTime?        @default(now()) @db.Timestamptz(6)
+  asociaciones       asociaciones     @relation(fields: [asociacion_id], references: [id], onDelete: NoAction)
+  eventos            eventos          @relation(fields: [evento_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users              users?           @relation(fields: [verificado_por], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([asociacion_id, evento_id])
+  @@index([asociacion_id, evento_id], map: "idx_pagos_asoc_evento")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model pruebas {
+  id                   String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  evento_id            String                   @db.Uuid
+  nombre               String
+  categoria_fab        String
+  genero               String
+  distancia            String
+  es_con_carriles      Boolean
+  numero_carriles      Int?
+  es_campo             Boolean
+  es_pista             Boolean
+  es_fondo             Boolean
+  limite_participantes Int?
+  tiempo_limite        String?
+  marca_minima         String?
+  marca_maxima         String?
+  edad_minima          Int?
+  edad_maxima          Int?
+  hora_inicio          DateTime?                @db.Time(6)
+  hora_fin             DateTime?                @db.Time(6)
+  duracion_estimada    Unsupported("interval")?
+  orden_competencia    Int?
+  estado               String                   @default("activa")
+  observaciones        String?
+  created_at           DateTime?                @default(now()) @db.Timestamptz(6)
+  inscripciones        inscripciones[]
+  eventos              eventos                  @relation(fields: [evento_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  startlists           startlists[]
+
+  @@index([evento_id], map: "idx_pruebas_evento")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model startlist_items {
+  id                          String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  startlist_id                String     @db.Uuid
+  dorsal_id                   String     @db.Uuid
+  atleta_id                   String     @db.Uuid
+  carril                      Int?
+  posicion_salida             Int?
+  orden                       Int
+  semilla                     String?
+  nombre_completo             String?
+  apellido_completo           String?
+  asociacion_nombre           String?
+  categoria_atleta            String?
+  es_con_carriles             Boolean?
+  numero_carriles_disponibles Int?
+  created_at                  DateTime?  @default(now()) @db.Timestamptz(6)
+  atletas                     atletas    @relation(fields: [atleta_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+  dorsales                    dorsales   @relation(fields: [dorsal_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  startlists                  startlists @relation(fields: [startlist_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([orden], map: "idx_startlist_items_orden")
+  @@index([startlist_id], map: "idx_startlist_items_startlist")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model startlists {
+  id              String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  evento_id       String                @db.Uuid
+  prueba_id       String                @db.Uuid
+  nombre          String
+  tipo            String
+  indice          Int
+  numero_carriles Int?
+  estado          estado_startlist_enum @default(borrador)
+  created_at      DateTime?             @default(now()) @db.Timestamptz(6)
+  startlist_items startlist_items[]
+  eventos         eventos               @relation(fields: [evento_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  pruebas         pruebas               @relation(fields: [prueba_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([evento_id, prueba_id, indice], map: "ux_startlists_unique")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model users {
+  user_id                                                    String                    @id @db.Uuid
+  rol                                                        rol_enum
+  estado                                                     estado_usuario_enum       @default(pendiente)
+  asociacion_id                                              String                    @db.Uuid
+  created_at                                                 DateTime?                 @default(now()) @db.Timestamptz(6)
+  updated_at                                                 DateTime?                 @default(now()) @db.Timestamptz(6)
+  atletas_atletas_aprobado_por_fabTousers                    atletas[]                 @relation("atletas_aprobado_por_fabTousers")
+  atletas_atletas_user_idTousers                             atletas?                  @relation("atletas_user_idTousers")
+  dorsales                                                   dorsales[]
+  entrenadores_entrenadores_aprobado_por_fabTousers          entrenadores[]            @relation("entrenadores_aprobado_por_fabTousers")
+  entrenadores_entrenadores_user_idTousers                   entrenadores?             @relation("entrenadores_user_idTousers")
+  eventos                                                    eventos[]
+  inscripciones_inscripciones_aprobado_por_asociacionTousers inscripciones[]           @relation("inscripciones_aprobado_por_asociacionTousers")
+  inscripciones_inscripciones_aprobado_por_fabTousers        inscripciones[]           @relation("inscripciones_aprobado_por_fabTousers")
+  inscripciones_inscripciones_dorsal_asignado_porTousers     inscripciones[]           @relation("inscripciones_dorsal_asignado_porTousers")
+  jueces_jueces_aprobado_por_fabTousers                      jueces[]                  @relation("jueces_aprobado_por_fabTousers")
+  jueces_jueces_user_idTousers                               jueces?                   @relation("jueces_user_idTousers")
+  pagos_evento_asociacion                                    pagos_evento_asociacion[]
+  asociaciones                                               asociaciones              @relation(fields: [asociacion_id], references: [id], onDelete: NoAction)
+
+  @@index([asociacion_id], map: "idx_users_asociacion")
+  @@index([estado], map: "idx_users_estado")
+}
+
+enum estado_evento_enum {
+  borrador
+  en_revision
+  aprobado
+  rechazado
+  finalizado
+}
+
+enum estado_insc_assoc_enum {
+  pendiente
+  aprobada
+  rechazada
+}
+
+enum estado_pago_enum {
+  pendiente
+  verificado
+  observado
+}
+
+enum estado_startlist_enum {
+  borrador
+  finalizada
+}
+
+enum estado_usuario_enum {
+  pendiente
+  activo
+  inactivo
+  rechazado
+}
+
+enum genero_enum {
+  M
+  F
+}
+
+enum rol_enum {
+  admin_fab
+  admin_asociacion
+  atleta
+  entrenador
+  juez
+}
+
+enum tipo_evento_enum {
+  federativo
+  asociacion
 }

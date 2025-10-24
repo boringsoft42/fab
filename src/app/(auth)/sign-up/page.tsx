@@ -5,8 +5,8 @@ import { SignUpForm } from "@/components/auth/sign-up/components/sign-up-form";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Sign Up",
-  description: "Create a new account",
+  title: "Sign Up - FAB Management System",
+  description: "Register as an atleta, entrenador, or juez",
 };
 
 export default function SignUpPage() {
@@ -18,7 +18,7 @@ export default function SignUpPage() {
             Create an account
           </h1>
           <p className="text-sm text-muted-foreground">
-            Enter your email and password to create an account. <br />
+            Register as an atleta, entrenador, or juez. Your account will be pending approval by a FAB administrator. <br />
             Already have an account?{" "}
             <Link
               href="/sign-in"

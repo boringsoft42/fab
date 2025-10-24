@@ -1,9 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FacebookIcon, GithubIcon, UploadCloud } from "lucide-react";
-import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,24 +11,34 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { PasswordInput } from "@/components/utils/password-input";
 import { PasswordStrengthIndicator } from "@/components/utils/password-strength-indicator";
 import type { SignUpFormProps, SignUpFormData } from "@/types/auth/sign-up";
-import { signUpFormSchema } from "@/types/auth/sign-up";
+import { signUpFormSchema, publicRoles } from "@/types/auth/sign-up";
 import { toast } from "@/components/ui/use-toast";
-import Image from "next/image";
-import { uploadAvatar } from "@/lib/supabase/upload-avatar";
 import { useRouter } from "next/navigation";
-import { saltAndHashPassword } from "@/lib/auth/password-crypto";
+import { supabase } from "@/lib/supabase/client";
+
+interface Asociacion {
+  id: string;
+  nombre: string;
+  departamento: string;
+}
 
 export function SignUpForm({ className, ...props }: SignUpFormProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const { signUp } = useAuth();
-  const [avatarFile, setAvatarFile] = useState<File | null>(null);
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [password, setPassword] = useState("");
+  const [asociaciones, setAsociaciones] = useState<Asociacion[]>([]);
   const router = useRouter();
 
   const form = useForm<SignUpFormData>({
@@ -44,18 +52,29 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
     },
   });
 
-  const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setAvatarFile(file);
-      // Create preview URL
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setAvatarPreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+  // Fetch asociaciones on mount
+  useEffect(() => {
+    async function fetchAsociaciones() {
+      const { data, error } = await supabase
+        .from('asociaciones')
+        .select('id, nombre, departamento')
+        .eq('estado', true)
+        .order('nombre');
+
+      if (error) {
+        console.error('Error fetching asociaciones:', error);
+        toast({
+          title: "Error",
+          description: "Failed to load asociaciones. Please refresh the page.",
+          variant: "destructive",
+        });
+      } else {
+        setAsociaciones(data || []);
+      }
     }
-  };
+
+    fetchAsociaciones();
+  }, []);
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
@@ -66,88 +85,34 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
     try {
       setIsLoading(true);
 
-      // Hash the password with email as salt before sending to server
-      const hashedPassword = await saltAndHashPassword(
-        data.password,
-        data.email
-      );
+      // Import the Server Action dynamically
+      const { registerUser } = await import("@/app/actions/auth/register");
 
-      const { success, user, session, confirmEmail, error } = await signUp(
-        data.email,
-        hashedPassword
-      );
+      // Call Server Action for FAB user registration
+      // REQ-1.1.1 through REQ-1.1.7: Public registration flow
+      const result = await registerUser({
+        email: data.email,
+        password: data.password,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        rol: data.rol,
+        asociacion_id: data.asociacion_id,
+      });
 
-      if (!success || error) {
-        throw error || new Error("Failed to sign up");
+      if (!result.success) {
+        throw new Error(result.error || "Failed to create account");
       }
 
-      if (user) {
-        let avatarUrl = null;
-        if (avatarFile) {
-          try {
-            avatarUrl = await uploadAvatar(avatarFile, user.id);
-          } catch (error) {
-            console.error("Avatar upload failed:", error);
-            toast({
-              title: "Warning",
-              description:
-                "Failed to upload avatar, you can add it later from your profile.",
-              variant: "default",
-            });
-          }
-        }
+      // Success! User created with estado="pendiente"
+      toast({
+        title: "Account Created",
+        description:
+          "Your account has been created and is pending approval. Please check your email to verify your address. You will receive another email once an administrator approves your account.",
+      });
 
-        const response = await fetch("/api/profile", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId: user.id,
-            firstName: data.firstName,
-            lastName: data.lastName,
-            birthDate: data.birthDate,
-            avatarUrl,
-          }),
-        });
+      // Redirect to a pending approval page or login
+      router.push("/auth/login?status=pending");
 
-        let result: Record<string, unknown>;
-        let text = ""; // Define text outside the try block
-
-        try {
-          text = await response.text(); // Assign value inside try
-          result = text ? JSON.parse(text) : {};
-
-          if (!response.ok) {
-            throw new Error(
-              typeof result.error === "string"
-                ? result.error
-                : `Server responded with status ${response.status}`
-            );
-          }
-        } catch (parseError) {
-          console.error(
-            "Response parsing error:",
-            parseError,
-            "Response text:",
-            text
-          );
-          throw new Error("Invalid server response");
-        }
-
-        toast({
-          title: "Success",
-          description:
-            "Your account has been created! Please verify your email to continue.",
-        });
-
-        // Redirect to verification page instead of dashboard if email confirmation is required
-        if (confirmEmail) {
-          router.push("/verify-email");
-        } else if (session) {
-          router.push("/dashboard");
-        }
-      }
     } catch (error) {
       console.error("Sign up error:", error);
       const errorMessage =
@@ -169,29 +134,6 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
     <div className={cn("grid gap-6", className)} {...props}>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <div className="flex flex-col items-center gap-4">
-            <div className="relative h-24 w-24">
-              {avatarPreview ? (
-                <Image
-                  src={avatarPreview}
-                  alt="Avatar preview"
-                  fill
-                  className="rounded-full object-cover"
-                />
-              ) : (
-                <div className="flex h-24 w-24 items-center justify-center rounded-full bg-muted">
-                  <UploadCloud className="h-8 w-8 text-muted-foreground" />
-                </div>
-              )}
-            </div>
-            <Input
-              type="file"
-              accept="image/*"
-              onChange={handleAvatarChange}
-              className="w-full max-w-xs"
-            />
-          </div>
-
           <FormField
             control={form.control}
             name="email"
@@ -237,6 +179,62 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
 
           <FormField
             control={form.control}
+            name="rol"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Role</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select your role" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {publicRoles.map((role) => (
+                      <SelectItem key={role} value={role}>
+                        {role.charAt(0).toUpperCase() + role.slice(1)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormDescription>
+                  Choose the role that best describes you
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="asociacion_id"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Asociación</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select your asociación" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {asociaciones.map((asoc) => (
+                      <SelectItem key={asoc.id} value={asoc.id}>
+                        {asoc.nombre} - {asoc.departamento}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormDescription>
+                  Select the asociación you belong to
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
             name="password"
             render={({ field }) => (
               <FormItem>
@@ -269,40 +267,10 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
           />
 
           <Button className="w-full" disabled={isLoading}>
-            Create Account
+            {isLoading ? "Creating account..." : "Create Account"}
           </Button>
         </form>
       </Form>
-
-      <div className="relative">
-        <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t" />
-        </div>
-        <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-background px-2 text-muted-foreground">
-            Or continue with
-          </span>
-        </div>
-      </div>
-
-      <div className="flex items-center gap-2">
-        <Button
-          variant="outline"
-          className="w-full"
-          type="button"
-          disabled={isLoading}
-        >
-          <GithubIcon className="h-4 w-4" /> GitHub
-        </Button>
-        <Button
-          variant="outline"
-          className="w-full"
-          type="button"
-          disabled={isLoading}
-        >
-          <FacebookIcon className="h-4 w-4" /> Facebook
-        </Button>
-      </div>
     </div>
   );
 }
