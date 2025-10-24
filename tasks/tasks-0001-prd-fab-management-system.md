@@ -166,31 +166,31 @@ Generated from: `0001-prd-fab-management-system.md`
   - [x] 1.5 Create seed script for initial admin_fab user (`scripts/seed-admin.ts`)
   - [x] 1.6 Create seed script for test data (`scripts/seed-test-data.ts`) - 9 asociaciones, sample users, events
 
-- [ ] 2.0 Authentication System with Multi-Role Support
-  - [ ] 2.1 Update Supabase client configuration to support service role operations (`src/lib/supabase/server.ts`)
-  - [ ] 2.2 Create middleware for route protection and role-based access control (`src/middleware.ts`)
-    - [ ] 2.2.1 **[REQ-1.2.3, REQ-1.3.4]** Implement role-based redirects based on user rol + estado (admin_fab → admin dashboard, atleta+pendiente → pendiente dashboard, etc.)
-    - [ ] 2.2.2 **[REQ-1.3.6]** Block access for users with estado="rechazado" (redirect to login with error message)
-    - [ ] 2.2.3 **[REQ-1.3.5, REQ-1.1.7]** Allow login for estado="pendiente" users but restrict routes (only /dashboard/[role]-pending and /profile/edit)
-  - [ ] 2.3 Implement `useUser` hook that fetches user + role + estado + asociacion (`src/hooks/useUser.ts`)
-    - [ ] 2.3.1 **[REQ-1.3.1]** Include estado field in returned data (pendiente, activo, inactivo, rechazado)
-  - [ ] 2.4 Implement `usePermissions` hook with role checking helpers (`src/hooks/usePermissions.ts`)
-  - [ ] 2.5 **[REQ-1.1.1, REQ-1.1.2, REQ-10.2.1]** Update sign-up page to public registration - **ONLY show atleta/entrenador/juez options** (`src/app/(auth)/sign-up/page.tsx`)
-    - [ ] 2.5.1 **[REQ-1.1.2]** Ensure admin_fab and admin_asociacion are NOT visible as role options in the UI
-    - [ ] 2.5.2 **[REQ-1.1.3]** Collect email, password, rol (atleta/entrenador/juez), asociacion_id during registration
-  - [ ] 2.6 Create validation schemas for auth forms with rol and asociacion selection (`src/lib/validations/auth.ts`)
-  - [ ] 2.7 **[REQ-1.1.4, REQ-1.1.5, REQ-1.1.6]** Implement Server Action for public registration (`src/app/(auth)/sign-up/actions.ts`)
-    - [ ] 2.7.1 Create user in Supabase Auth
-    - [ ] 2.7.2 Create record in users table with estado="pendiente"
+- [x] 2.0 Authentication System with Multi-Role Support
+  - [x] 2.1 Update Supabase client configuration to support service role operations (`src/lib/supabase/server.ts`)
+  - [x] 2.2 Create middleware for route protection and role-based access control (`src/middleware.ts`)
+    - [x] 2.2.1 **[REQ-1.2.3, REQ-1.3.4]** Implement role-based redirects based on user rol + estado (admin_fab → admin dashboard, atleta+pendiente → pendiente dashboard, etc.)
+    - [x] 2.2.2 **[REQ-1.3.6]** Block access for users with estado="rechazado" (redirect to login with error message)
+    - [x] 2.2.3 **[REQ-1.3.5, REQ-1.1.7]** Allow login for estado="pendiente" users but restrict routes (only /dashboard/[role]-pending and /profile/edit)
+  - [x] 2.3 Implement `useUser` hook that fetches user + role + estado + asociacion (`src/hooks/useUser.ts`)
+    - [x] 2.3.1 **[REQ-1.3.1]** Include estado field in returned data (pendiente, activo, inactivo, rechazado)
+  - [x] 2.4 Implement `usePermissions` hook with role checking helpers (`src/hooks/usePermissions.ts`)
+  - [x] 2.5 **[REQ-1.1.1, REQ-1.1.2, REQ-10.2.1]** Update sign-up page to public registration - **ONLY show atleta/entrenador/juez options** (`src/app/(auth)/sign-up/page.tsx`)
+    - [x] 2.5.1 **[REQ-1.1.2]** Ensure admin_fab and admin_asociacion are NOT visible as role options in the UI
+    - [x] 2.5.2 **[REQ-1.1.3]** Collect email, password, rol (atleta/entrenador/juez), asociacion_id during registration
+  - [x] 2.6 Create validation schemas for auth forms with rol and asociacion selection (`src/types/auth/sign-up.ts`)
+  - [x] 2.7 **[REQ-1.1.4, REQ-1.1.5, REQ-1.1.6]** Implement Server Action for public registration (`src/app/actions/auth/register.ts`)
+    - [x] 2.7.1 Create user in Supabase Auth
+    - [x] 2.7.2 Create record in users table with estado="pendiente"
     - [ ] 2.7.3 Send notification to admin_fab (email or in-app) about new pending user
     - [ ] 2.7.4 Send confirmation email to user (account created but pending approval)
-  - [ ] 2.8 Update login page to handle all roles and redirect based on rol + estado (`src/app/(auth)/login/page.tsx`)
-    - [ ] 2.8.1 **[REQ-1.3.6]** Implement login blocking for estado="rechazado" with explanatory message (show error: "Tu cuenta ha sido rechazada. Contacta a FAB para más información.")
-    - [ ] 2.8.2 **[REQ-1.3.5, REQ-1.1.7]** Allow login for estado="pendiente" but redirect to restricted dashboard (atleta-pending, entrenador-pending, etc.)
-  - [ ] 2.9 **[REQ-10.2.6]** Create persistent banner component for users with estado="pendiente" (`src/components/auth/pending-account-banner.tsx`)
-    - [ ] 2.9.1 Display message: "Tu cuenta está en revisión. Serás notificado cuando sea aprobada."
-    - [ ] 2.9.2 Show in all pages while estado="pendiente"
-  - [ ] 2.10 **[REQ-1.3.6]** Create message component for rejected users explaining they cannot access (`src/components/auth/rejected-account-message.tsx`)
+  - [x] 2.8 Update login page to handle all roles and redirect based on rol + estado (`src/app/(auth)/sign-in/page.tsx`)
+    - [x] 2.8.1 **[REQ-1.3.6]** Implement login blocking for estado="rechazado" with explanatory message (show error: "Tu cuenta ha sido rechazada. Contacta a FAB para más información.")
+    - [x] 2.8.2 **[REQ-1.3.5, REQ-1.1.7]** Allow login for estado="pendiente" but redirect to restricted dashboard (atleta-pending, entrenador-pending, etc.)
+  - [x] 2.9 **[REQ-10.2.6]** Create persistent banner component for users with estado="pendiente" (`src/components/auth/pending-approval-banner.tsx`)
+    - [x] 2.9.1 Display message: "Tu cuenta está en revisión. Serás notificado cuando sea aprobada."
+    - [x] 2.9.2 Show in all pages while estado="pendiente"
+  - [x] 2.10 **[REQ-1.3.6]** Create message component for rejected users explaining they cannot access (implemented in login page with Alert component)
 
 - [ ] 3.0 User Management and Profile Systems
   - [ ] 3.1 Create pending users page for admin_fab (`src/app/(dashboard)/users/pending/page.tsx`)
