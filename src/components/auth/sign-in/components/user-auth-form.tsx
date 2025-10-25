@@ -38,41 +38,33 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   });
 
   async function onSubmit(data: SignInFormData) {
+    setIsLoading(true);
+
     try {
-      setIsLoading(true);
+      // Use Server Action for authentication
+      const { signInAction } = await import("@/app/actions/auth/sign-in");
 
-      // Import Supabase client and sign in directly
-      const { supabase } = await import("@/lib/supabase/client");
+      await signInAction(data.email, data.password);
 
-      const { data: authData, error } = await supabase.auth.signInWithPassword({
-        email: data.email,
-        password: data.password,
-      });
-
-      if (error) {
-        throw error;
-      }
-
-      if (!authData.user) {
-        throw new Error("No user returned from authentication");
-      }
-
+      // If we reach here, redirect didn't happen (shouldn't occur)
       toast({
-        title: "Success",
-        description: "You have been signed in.",
+        title: "Éxito",
+        description: "Redirigiendo...",
       });
+    } catch (error: any) {
+      // Check if this is a redirect error (Next.js throws on redirect in Server Actions)
+      if (error?.digest?.startsWith('NEXT_REDIRECT')) {
+        // This is expected - the redirect is happening
+        return;
+      }
 
-      // Redirect will be handled by middleware based on user's rol + estado
-      router.push("/dashboard");
-      router.refresh();
-    } catch (error) {
+      // Handle actual errors
       console.error("Sign in error:", error);
       toast({
         title: "Error",
-        description: "Invalid email or password.",
+        description: error?.message || "Email o contraseña inválidos",
         variant: "destructive",
       });
-    } finally {
       setIsLoading(false);
     }
   }

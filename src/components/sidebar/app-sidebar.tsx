@@ -6,7 +6,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { NavGroup } from "./nav-group";
-import { NavUser } from "./nav-user";
+import { NavUserSimple } from "./nav-user-simple";
 import { TeamSwitcher } from "./team-switcher";
 import { sidebarData } from "./data/sidebar-data";
 import type { NavGroupProps } from "./types";
@@ -23,7 +23,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         ))}
       </SidebarContent>
       <SidebarFooter>
-        <NavUser />
+        <NavUserSimple />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

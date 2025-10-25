@@ -16,6 +16,11 @@ import {
   ServerCrash,
   UserX,
   Users,
+  Building2,
+  UserCheck,
+  Award,
+  Calendar,
+  CreditCard,
 } from "lucide-react";
 import type { SidebarData } from "../types";
 
@@ -48,106 +53,68 @@ export const sidebarData: SidebarData = {
       items: [
         {
           title: "Dashboard",
-          url: "/",
+          url: "/dashboard",
           icon: LayoutDashboard,
         },
+      ],
+    },
+    {
+      title: "Administración",
+      items: [
         {
-          title: "Tasks",
-          url: "/tasks",
-          icon: CheckSquare,
-        },
-        {
-          title: "Apps",
-          url: "/apps",
-          icon: AppWindow,
-        },
-        {
-          title: "Chats",
-          url: "/chats",
-          badge: "3",
-          icon: MessageSquare,
-        },
-        {
-          title: "Users",
-          url: "/users",
+          title: "Usuarios",
           icon: Users,
-        },
-      ],
-    },
-    {
-      title: "Pages",
-      items: [
-        {
-          title: "Auth",
-          icon: Lock,
           items: [
             {
-              title: "Sign In",
-              url: "/sign-in",
+              title: "Usuarios Pendientes",
+              url: "/users/pending",
+              icon: UserCheck,
             },
             {
-              title: "Sign In (2 Col)",
-              url: "/sign-in-2",
-            },
-            {
-              title: "Sign Up",
-              url: "/sign-up",
-            },
-            {
-              title: "Forgot Password",
-              url: "/forgot-password",
-            },
-            {
-              title: "OTP",
-              url: "/otp",
+              title: "Administradores",
+              url: "/users/admins",
+              icon: Award,
             },
           ],
         },
         {
-          title: "Errors",
-          icon: Bug,
+          title: "Asociaciones",
+          icon: Building2,
           items: [
             {
-              title: "Unauthorized",
-              url: "/401",
-              icon: LockKeyhole,
+              title: "Ver Todas",
+              url: "/associations",
             },
             {
-              title: "Forbidden",
-              url: "/403",
-              icon: UserX,
-            },
-            {
-              title: "Not Found",
-              url: "/404",
-              icon: AlertCircle,
-            },
-            {
-              title: "Internal Server Error",
-              url: "/500",
-              icon: ServerCrash,
-            },
-            {
-              title: "Maintenance Error",
-              url: "/503",
-              icon: Ban,
+              title: "Crear Nueva",
+              url: "/associations/new",
             },
           ],
+        },
+        {
+          title: "Eventos",
+          url: "/events",
+          icon: Calendar,
+        },
+        {
+          title: "Pagos",
+          url: "/payments",
+          icon: CreditCard,
         },
       ],
     },
     {
-      title: "Other",
+      title: "Configuración",
       items: [
         {
-          title: "Settings",
+          title: "Mi Perfil",
+          icon: Users,
+          url: "/profile",
+        },
+        {
+          title: "Ajustes",
           icon: Settings,
           url: "/settings",
-        },
-        {
-          title: "Help Center",
-          url: "/help-center",
-          icon: HelpCircle,
         },
       ],
     },

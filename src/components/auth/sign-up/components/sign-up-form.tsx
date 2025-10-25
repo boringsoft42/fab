@@ -39,6 +39,7 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [password, setPassword] = useState("");
   const [asociaciones, setAsociaciones] = useState<Asociacion[]>([]);
+  const [loadingAsociaciones, setLoadingAsociaciones] = useState(true);
   const router = useRouter();
 
   const form = useForm<SignUpFormData>({
@@ -55,21 +56,33 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
   // Fetch asociaciones on mount
   useEffect(() => {
     async function fetchAsociaciones() {
-      const { data, error } = await supabase
-        .from('asociaciones')
-        .select('id, nombre, departamento')
-        .eq('estado', true)
-        .order('nombre');
+      try {
+        setLoadingAsociaciones(true);
+        console.log('🔍 Fetching asociaciones...');
 
-      if (error) {
-        console.error('Error fetching asociaciones:', error);
-        toast({
-          title: "Error",
-          description: "Failed to load asociaciones. Please refresh the page.",
-          variant: "destructive",
-        });
-      } else {
-        setAsociaciones(data || []);
+        const { data, error } = await supabase
+          .from('asociaciones')
+          .select('id, nombre, departamento')
+          .eq('estado', true)
+          .order('nombre');
+
+        console.log('📊 Asociaciones result:', { data, error });
+
+        if (error) {
+          console.error('❌ Error fetching asociaciones:', error);
+          toast({
+            title: "Error al cargar asociaciones",
+            description: `No se pudieron cargar las asociaciones: ${error.message}`,
+            variant: "destructive",
+          });
+        } else {
+          console.log(`✅ Loaded ${data?.length || 0} asociaciones`);
+          setAsociaciones(data || []);
+        }
+      } catch (err) {
+        console.error('❌ Unexpected error:', err);
+      } finally {
+        setLoadingAsociaciones(false);
       }
     }
 
@@ -211,18 +224,32 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Asociación</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  disabled={loadingAsociaciones}
+                >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select your asociación" />
+                      <SelectValue placeholder={
+                        loadingAsociaciones
+                          ? "Cargando asociaciones..."
+                          : "Selecciona tu asociación"
+                      } />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {asociaciones.map((asoc) => (
-                      <SelectItem key={asoc.id} value={asoc.id}>
-                        {asoc.nombre} - {asoc.departamento}
-                      </SelectItem>
-                    ))}
+                    {asociaciones.length === 0 ? (
+                      <div className="px-2 py-4 text-sm text-muted-foreground text-center">
+                        {loadingAsociaciones ? "Cargando..." : "No hay asociaciones disponibles"}
+                      </div>
+                    ) : (
+                      asociaciones.map((asoc) => (
+                        <SelectItem key={asoc.id} value={asoc.id}>
+                          {asoc.nombre} - {asoc.departamento}
+                        </SelectItem>
+                      ))
+                    )}
                   </SelectContent>
                 </Select>
                 <FormDescription>
