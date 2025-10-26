@@ -109,7 +109,8 @@ export async function middleware(request: NextRequest) {
 
     if (!userRecord) {
       // User exists in auth but not in users table - something is wrong
-      // Redirect to logout
+      // Sign out the user and redirect to login
+      await supabase.auth.signOut();
       return NextResponse.redirect(new URL('/sign-in?error=invalid_user', request.url));
     }
 

@@ -11,8 +11,19 @@ export default async function AuthLayout({
     data: { session },
   } = await supabase.auth.getSession();
 
+  // Only redirect if user has valid session AND exists in database
   if (session) {
-    redirect("/dashboard");
+    const { data: userRecord } = await supabase
+      .from('users')
+      .select('user_id')
+      .eq('user_id', session.user.id)
+      .single();
+
+    // If user exists in database, redirect to dashboard
+    // If not, let them see the sign-in page with error message
+    if (userRecord) {
+      redirect("/dashboard");
+    }
   }
 
   return <>{children}</>;
